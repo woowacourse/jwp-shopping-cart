@@ -2,6 +2,8 @@ package cart.controller.api;
 
 import cart.annotation.BasicAuthorization;
 import cart.argumentresolver.basicauthorization.BasicAuthInfo;
+import cart.dto.response.CartProductResponseDto;
+import cart.dtomapper.CartProductResponseDtoMapper;
 import cart.entity.CartEntity;
 import cart.entity.product.ProductEntity;
 import cart.service.CartService;
@@ -29,10 +31,10 @@ public final class CartApiController {
     }
 
     @GetMapping("/items")
-    public ResponseEntity<List<ProductEntity>> showCart(@BasicAuthorization BasicAuthInfo basicAuthInfo) {
+    public ResponseEntity<List<CartProductResponseDto>> showCart(@BasicAuthorization BasicAuthInfo basicAuthInfo) {
         final Long customerId = customerService.findCustomerIdByBasicAuthInfo(basicAuthInfo);
         final List<ProductEntity> products = cartService.findAllProductsByCustomerId(customerId);
-        return ResponseEntity.ok().body(products);
+        return ResponseEntity.ok().body(CartProductResponseDtoMapper.mapToDto(products));
     }
 
     @PostMapping("/{productId}")

@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 public class ProductResponseDto {
 
     private final Long id;
-
     private final String name;
     private final String imageUrl;
     private final Integer price;

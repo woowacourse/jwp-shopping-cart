@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dto.request.ProductRequestDto;
+import cart.dto.response.CartProductResponseDto;
 import cart.entity.CartEntity;
-import cart.entity.product.ProductEntity;
 import cart.service.CartService;
 import cart.service.ProductService;
 import io.restassured.RestAssured;
@@ -54,18 +54,18 @@ class CartApiControllerTest {
 
         //when
         //then
-        final ProductEntity[] productEntities = RestAssured.given()
+        final CartProductResponseDto[] cartProductResponseDtos = RestAssured.given()
             .auth().preemptive().basic("split@wooteco.com", "dazzle")
             .when().get("/cart/items")
             .then()
-            .statusCode(HttpStatus.OK.value()).extract().as(ProductEntity[].class);
+            .statusCode(HttpStatus.OK.value()).extract().as(CartProductResponseDto[].class);
 
         assertAll(
-            () -> assertThat(productEntities).hasSize(1),
-            () -> assertThat(productEntities[0].getName()).isEqualTo("name"),
-            () -> assertThat(productEntities[0].getImageUrl()).isEqualTo("imageUrl"),
-            () -> assertThat(productEntities[0].getPrice()).isEqualTo(1000),
-            () -> assertThat(productEntities[0].getDescription()).isEqualTo("description")
+            () -> assertThat(cartProductResponseDtos).hasSize(1),
+            () -> assertThat(cartProductResponseDtos[0].getName()).isEqualTo("name"),
+            () -> assertThat(cartProductResponseDtos[0].getImageUrl()).isEqualTo("imageUrl"),
+            () -> assertThat(cartProductResponseDtos[0].getPrice()).isEqualTo(1000),
+            () -> assertThat(cartProductResponseDtos[0].getDescription()).isEqualTo("description")
         );
     }
 
@@ -88,7 +88,7 @@ class CartApiControllerTest {
             .auth().preemptive().basic("split@wooteco.com", "dazzle")
             .when().post("/cart/" + savedProductId)
             .then()
-            .statusCode(HttpStatus.OK.value());
+            .statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("고객의 Basic 인증 정보와 상품의 Id를 통해 장바구니에 상품을 제거한다.")
