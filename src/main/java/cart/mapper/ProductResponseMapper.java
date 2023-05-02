@@ -1,7 +1,7 @@
 package cart.mapper;
 
 import cart.dto.ProductResponse;
-import cart.entity.ProductEntity;
+import cart.domain.product.ProductEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;

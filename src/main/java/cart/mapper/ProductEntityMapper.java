@@ -2,7 +2,7 @@ package cart.mapper;
 
 import cart.dto.ProductCreationRequest;
 import cart.dto.ProductModificationRequest;
-import cart.entity.ProductEntity;
+import cart.domain.product.ProductEntity;
 
 public class ProductEntityMapper {
 

@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.dto.ProductResponse;
-import cart.entity.ProductEntity;
+import cart.domain.product.ProductEntity;
 import cart.mapper.ProductResponseMapper;
 import org.springframework.stereotype.Service;
 

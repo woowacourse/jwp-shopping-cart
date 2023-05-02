@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
+import cart.domain.product.ProductEntity;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;

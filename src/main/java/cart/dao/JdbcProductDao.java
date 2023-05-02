@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
+import cart.domain.product.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

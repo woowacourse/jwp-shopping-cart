@@ -1,8 +1,4 @@
-package cart.entity;
-
-import cart.domain.product.ImageUrl;
-import cart.domain.product.Name;
-import cart.domain.product.Price;
+package cart.domain.product;
 
 public class ProductEntity {
 

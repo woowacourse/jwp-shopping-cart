@@ -3,7 +3,7 @@ package cart.controller;
 import cart.dao.ProductDao;
 import cart.dto.ProductCreationRequest;
 import cart.dto.ProductModificationRequest;
-import cart.entity.ProductEntity;
+import cart.domain.product.ProductEntity;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
