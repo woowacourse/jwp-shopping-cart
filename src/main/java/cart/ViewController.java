@@ -40,4 +40,10 @@ public class ViewController {
         model.addAttribute("members", members);
         return "settings";
     }
+
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
+    }
+
 }

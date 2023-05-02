@@ -4,12 +4,16 @@ import cart.auth.AuthInfo;
 import cart.auth.BasicAuthorizationExtractor;
 import cart.cart.dto.CartInsertRequestDto;
 import cart.cart.dto.CartInsertResponseDto;
+import cart.cart.dto.CartSelectResponseDto;
 import cart.cart.service.CartService;
 import cart.member.entity.MemberEntity;
 import cart.member.service.MemberService;
 import java.net.URI;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +34,9 @@ public class CartApiController {
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<CartInsertResponseDto> addProduct(HttpServletRequest request, @RequestBody CartInsertRequestDto cartInsertRequestDto) {
+    public ResponseEntity<CartInsertResponseDto> addProduct(
+            HttpServletRequest request,
+            @RequestBody CartInsertRequestDto cartInsertRequestDto) {
         final AuthInfo authInfo = authorizationExtractor.extract(request);
         if (authInfo == null) {
             throw new IllegalArgumentException("사용자가 선택되지 않았습니다.");
@@ -41,11 +47,27 @@ public class CartApiController {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        final CartInsertResponseDto cartInsertResponseDto = cartService.addCart(member, cartInsertRequestDto.getProductId());
+        final int productId = cartInsertRequestDto.getProductId();
+        final CartInsertResponseDto cartInsertResponseDto = cartService.addCart(member, productId);
         final int savedId = cartInsertResponseDto.getId();
 
         return ResponseEntity.created(URI.create("/cart/" + savedId))
                 .body(cartInsertResponseDto);
     }
 
+    @GetMapping(value = "/cart", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CartSelectResponseDto>> getCart(HttpServletRequest request) {
+        final AuthInfo authInfo = authorizationExtractor.extract(request);
+        if (authInfo == null) {
+            throw new IllegalArgumentException("사용자가 선택되지 않았습니다.");
+        }
+
+        final MemberEntity member = memberService.findMemberByEmail(authInfo.getEmail());
+        if (!member.getPassword().equals(authInfo.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        final List<CartSelectResponseDto> cartSelectResponse = cartService.getCartByMemberID(member.getId());
+        return ResponseEntity.ok(cartSelectResponse);
+    }
 }
