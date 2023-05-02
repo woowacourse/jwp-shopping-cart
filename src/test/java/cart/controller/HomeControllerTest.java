@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 
 @AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class MainControllerTest {
+class HomeControllerTest {
 
     @LocalServerPort
     int port;
