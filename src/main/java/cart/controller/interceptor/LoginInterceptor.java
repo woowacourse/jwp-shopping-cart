@@ -10,16 +10,20 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class LoginInterceptor implements HandlerInterceptor {
 
     public static final String AUTHORIZATION = "Authorization";
-    public static final String BASIC_TYPE = "Basic";
+    private final String authType;
+
+    public LoginInterceptor(String authType) {
+        this.authType = authType;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         final String authorization = request.getHeader(AUTHORIZATION);
-        if (authorization == null || !authorization.startsWith(BASIC_TYPE)) {
+        if (authorization == null || !authorization.startsWith(authType)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인 정보를 다시 확인해주세요.");
         }
-        request.setAttribute(BASIC_TYPE, authorization.substring(BASIC_TYPE.length()).trim());
+        request.setAttribute(authType, authorization.substring(authType.length()).trim());
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
