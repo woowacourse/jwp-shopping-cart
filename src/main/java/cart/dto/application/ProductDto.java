@@ -1,22 +1,23 @@
-package cart.request;
+package cart.dto.application;
 
+import cart.dto.request.ProductRequest;
 import java.util.Objects;
-import javax.validation.constraints.NotBlank;
-import org.hibernate.validator.constraints.URL;
 
-public class ProductRequest {
-
-    @NotBlank(message = "이름은 공백일 수 없습니다.")
+public class ProductDto {
     private final String name;
     private final int price;
-    @NotBlank(message = "이미지 URL은 공백일 수 없습니다.")
-    @URL(message = "유효한 url을 입력해 주세요.")
     private final String imageUrl;
 
-    public ProductRequest(final String name, final int price, final String imageUrl) {
+    public ProductDto(final String name, final int price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public ProductDto(final ProductRequest productRequest) {
+        this.name = productRequest.getName();
+        this.price = productRequest.getPrice();
+        this.imageUrl = productRequest.getImageUrl();
     }
 
     public String getName() {
@@ -39,9 +40,9 @@ public class ProductRequest {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ProductRequest that = (ProductRequest) o;
-        return Objects.equals(name, that.name) && Objects.equals(price, that.price)
-                && Objects.equals(imageUrl, that.imageUrl);
+        final ProductDto that = (ProductDto) o;
+        return price == that.price && Objects.equals(name, that.name) && Objects.equals(imageUrl,
+                that.imageUrl);
     }
 
     @Override

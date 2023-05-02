@@ -1,9 +1,9 @@
 package cart.controller;
 
-import cart.domain.Product;
-import cart.dto.ProductDto;
-import cart.request.ProductRequest;
-import cart.response.ProductResponse;
+import cart.domain.product.Product;
+import cart.dto.application.ProductDto;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import cart.service.ProductService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;

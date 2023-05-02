@@ -5,8 +5,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.ProductDao;
-import cart.domain.Product;
-import cart.dto.ProductDto;
+import cart.domain.product.Product;
+import cart.dto.application.ProductDto;
 import io.restassured.RestAssured;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
