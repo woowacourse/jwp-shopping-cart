@@ -42,7 +42,7 @@ public class BasicAuthProvider {
     }
 
     private static String trimToken(String token) {
-        return token.substring(BASIC_HEADER.length()).trim();
+        return token.substring(BASIC_HEADER.length()).strip();
     }
 
     private String getDecodeToken(String token) {
