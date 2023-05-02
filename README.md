@@ -89,9 +89,9 @@ Product
 
 ## 🎯 기능 목록
 
-- [ ]  테이블 생성
-    - [ ]  사용자 테이블
-    - [ ]  장바구니 테이블
+- [x]  테이블 생성
+    - [x]  사용자 테이블
+    - [x]  장바구니 테이블
 - [ ]  사용자 기능 구현
     - [ ]  사용자 목록 표시
     - [ ]  사용자 선택
@@ -113,8 +113,8 @@ Product
 | column   | type        |                    |
 |----------|-------------|--------------------|
 | id       | BIGINT      | PK, AUTO_INCREMENT |
-| email    | VARCHAR(16) |                    |
-| password | VARCHAR(16) |                    |
+| email    | VARCHAR(32) |                    |
+| password | VARCHAR(32) |                    |
 
 - cart
 
