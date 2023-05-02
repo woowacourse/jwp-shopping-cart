@@ -36,4 +36,5 @@ class NameTest {
         assertThat(nameOfLength1.getValue()).isEqualTo(length1);
         assertThat(nameOfLength100.getValue()).isEqualTo(length100);
     }
+
 }

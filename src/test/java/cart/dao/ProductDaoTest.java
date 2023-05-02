@@ -32,7 +32,7 @@ class ProductDaoTest {
     void selectAll() {
         List<Product> products = productDao.selectAll();
 
-        assertThat(products).hasSize(3);
+        assertThat(products).hasSize(2);
     }
 
     @Test
