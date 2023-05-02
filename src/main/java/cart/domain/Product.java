@@ -68,7 +68,7 @@ public class Product {
         }
 
         if (price < MIN_PRICE || price > MAX_PRICE) {
-            throw new InvalidProductException("상품 금액은 0원 이상 100,000,000원 이하만 가능합니다.");
+            throw new InvalidProductException("상품 금액은 1원 이상 100,000,000원 이하만 가능합니다.");
         }
     }
 
