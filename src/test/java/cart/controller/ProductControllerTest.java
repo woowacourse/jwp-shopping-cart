@@ -36,10 +36,38 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequestDto)
-                .accept(MediaType.TEXT_HTML_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/admin/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("/admin/products 로 요청을 보내 상품을 추가하는 경우, price 가 양수가 아닌 경우에 Bad Request 반환")
+    void validProductOfPostMappingByPrice() {
+        ProductRequestDto productRequestDto = new ProductRequestDto("김재연", 0, "미성씨");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequestDto)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/admin/products")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @DisplayName("/admin/products 로 요청을 보내 상품을 추가하는 경우, imageUrl 과 name 이 null 인 경우 Bad Request 반환")
+    void validProductOfPostMappingByNameAndImageUrl() {
+        ProductRequestDto productRequestDto = new ProductRequestDto(null, 2, null);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequestDto)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/admin/products")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
@@ -54,6 +82,34 @@ class ProductControllerTest {
                 .when().put("/admin/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("/admin/products/{id} 로 요청을 보내 상품을 수정하는 경우, price 가 양수가 아닌 경우에 Bad Request 반환")
+    void validProductOfPutMappingByPrice() {
+        ProductRequestDto productRequestDto = new ProductRequestDto("샐러드", 0, "밋밋엉");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequestDto)
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when().put("/admin/products/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @DisplayName("/admin/products/{id} 로 요청을 보내 상품을 수정하는 경우, imageUrl 과 name 이 null 인 경우 Bad Request 반환")
+    void validProductOfPutMappingByNameAndImageUrl() {
+        ProductRequestDto productRequestDto = new ProductRequestDto(null, 10000, null);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequestDto)
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when().put("/admin/products/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
