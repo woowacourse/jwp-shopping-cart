@@ -1,7 +1,6 @@
 package cart.controller;
 
 
-import cart.service.CartService;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -12,12 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class CartController {
     private final ProductService productService;
     private final MemberService memberService;
-    private final CartService cartService;
 
-    public CartController(ProductService productService, MemberService memberService, CartService cartService) {
+    public CartController(ProductService productService, MemberService memberService) {
         this.productService = productService;
         this.memberService = memberService;
-        this.cartService = cartService;
     }
 
     @GetMapping("/")
@@ -39,8 +36,7 @@ public class CartController {
     }
 
     @GetMapping("/cart")
-    public String showCarts(Model model) {
-        model.addAttribute("cartItem", cartService.findAll());
+    public String showCart() {
         return "cart";
     }
 }

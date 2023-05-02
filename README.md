@@ -10,7 +10,6 @@
 
 - [x] 어노테이션
 - [x] ArgumentResolver
--
 
 ### 도메인
 
@@ -41,7 +40,7 @@
 
 - [ ] Cart
     - [ ] create
-    - [ ] read
+    - [x] read
     - [ ] delete
 
 ### Service

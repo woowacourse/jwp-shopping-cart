@@ -36,4 +36,9 @@ public class MemberDao {
         return jdbcTemplate.query(sql, (rs, rownum) ->
                 new MemberEntity(rs.getLong(1), rs.getString("email"), rs.getString("password")));
     }
+
+    public MemberEntity findByEmail(String memberEmail) {
+        String sql = "SELECT * FROM members WHERE email LIKE ?";
+        return jdbcTemplate.queryForObject(sql, MemberEntity.class, memberEmail);
+    }
 }

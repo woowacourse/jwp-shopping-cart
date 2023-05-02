@@ -1,5 +1,7 @@
 package cart.controller;
 
+import cart.common.CustomMember;
+import cart.domain.Member;
 import cart.dto.entity.MemberCartEntity;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +19,8 @@ public class CartsRestController {
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<MemberCartEntity>> getCarts() {
-        List<MemberCartEntity> carts = cartService.findAll();
+    public ResponseEntity<List<MemberCartEntity>> getCarts(@CustomMember Member member) {
+        List<MemberCartEntity> carts = cartService.findAll(member.getEmail());
 
         return ResponseEntity.ok(carts);
     }

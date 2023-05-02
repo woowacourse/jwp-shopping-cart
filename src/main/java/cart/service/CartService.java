@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.CartDao;
+import cart.dao.CartMemberRepository;
 import cart.dto.entity.MemberCartEntity;
 import org.springframework.stereotype.Service;
 
@@ -9,14 +9,14 @@ import java.util.List;
 @Service
 public class CartService {
 
-    private final CartDao cartDao;
+    private final CartMemberRepository cartMemberRepository;
 
-    public CartService(CartDao cartDao) {
-        this.cartDao = cartDao;
+    public CartService(CartMemberRepository cartMemberRepository) {
+        this.cartMemberRepository = cartMemberRepository;
     }
 
-    public List<MemberCartEntity> findAll() {
-        return cartDao.findCartByMember(1L);
+    public List<MemberCartEntity> findAll(String email) {
+        return cartMemberRepository.findCartByMember(email);
     }
 
 }
