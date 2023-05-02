@@ -25,7 +25,7 @@ class SettingControllerTest {
     void 사용사_설정_페이지_연동_성공() {
         final String htmlBody = RestAssured.when()
                 .get("/settings")
-                .then().log().all()
+                .then()
                 .contentType(ContentType.HTML)
                 .statusCode(HttpStatus.OK.value())
                 .extract()
