@@ -11,9 +11,9 @@ public interface ProductDao {
 
     List<ProductEntity> selectAll();
 
-    void insert(@Valid final ProductEntity productEntity);
+    void insert(final ProductEntity productEntity);
 
-    void updateById(final Long id, @Valid final ProductEntity productEntity);
+    void updateById(final Long id, final ProductEntity productEntity);
 
     void deleteById(final Long id);
 }
