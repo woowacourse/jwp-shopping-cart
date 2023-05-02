@@ -7,20 +7,11 @@ public class User {
 
     private final String email;
     private final String password;
-    private final Cart cart;
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
-        this.cart = new Cart(List.of());
     }
-
-    public User(String email, String password, Cart cart) {
-        this.email = email;
-        this.password = password;
-        this.cart = cart;
-    }
-
     public String getEmail() {
         return email;
     }
