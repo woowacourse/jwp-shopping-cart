@@ -1,4 +1,4 @@
-package cart.controller.dto;
+package cart.dto;
 
 public class CartRequest {
 

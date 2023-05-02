@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.dto.ErrorResponse;
+import cart.dto.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

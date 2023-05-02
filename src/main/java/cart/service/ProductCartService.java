@@ -33,10 +33,19 @@ public class ProductCartService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public ProductCart addCart(Long productId, Member member) {
         Product product = productDao.findById(productId)
                 .orElseThrow();
         ProductCart productCart = productCartDao.save(new ProductCart(product.getId(), member.getId()));
         return productCart;
+    }
+
+    @Transactional
+    public void deleteProductInMyCart(Long cartId, Member member) {
+        if (!productCartDao.existByCartIdAndMember(cartId, member)) {
+            throw new IllegalArgumentException();
+        }
+        productCartDao.deleteById(cartId);
     }
 }

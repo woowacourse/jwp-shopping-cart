@@ -5,8 +5,8 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.controller.dto.ProductRequest;
 import cart.dao.ProductDao;
+import cart.dto.ProductRequest;
 import cart.entity.Product;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;

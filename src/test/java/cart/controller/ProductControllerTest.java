@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.auth.AuthenticationArgumentResolver;
 import cart.config.WebMvcConfig;
-import cart.controller.dto.ProductRequest;
+import cart.dto.ProductRequest;
 import cart.entity.Product;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
