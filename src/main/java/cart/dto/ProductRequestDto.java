@@ -1,12 +1,20 @@
 package cart.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 public class ProductRequestDto {
 
+    @NotNull
     private final String name;
-    private final int price;
+
+    @Positive
+    private final Integer price;
+
+    @NotNull
     private final String imageUrl;
 
-    public ProductRequestDto(String name, int price, String imageUrl) {
+    public ProductRequestDto(String name, Integer price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -16,7 +24,7 @@ public class ProductRequestDto {
         return name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -25,13 +26,13 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<Void> addProduct(@RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
         productService.add(productRequestDto);
         return ResponseEntity.created(URI.create("/admin/products")).build();
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<Void> modifyProduct(@PathVariable int id, @RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> modifyProduct(@PathVariable int id, @RequestBody @Valid ProductRequestDto productRequestDto) {
         productService.modifyById(id, productRequestDto);
         return ResponseEntity.ok().build();
     }
