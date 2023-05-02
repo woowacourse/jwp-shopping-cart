@@ -84,27 +84,30 @@
       ```
 
 ### 사용자 설정 페이지 연동
-- [ ] `settings.html` 파일을 이용해서 사용자를 선택하는 기능을 구현합니다.
-- [ ] `/settings` url로 접근할 경우 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있습니다.
+- [x] `settings.html` 파일을 이용해서 사용자를 선택하는 기능을 구현합니다.
+- [x] `/settings` url로 접근할 경우 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있습니다.
   - DB에 저장된 사용자 정보 모두 가져오기
-- [ ] 사용자 설정 페이지에서 사용자를 선택하면, 이후 요청에 선택한 사용자의 인증 정보가 포함됩니다.
+- [x] 사용자 설정 페이지에서 사용자를 선택하면, 이후 요청에 선택한 사용자의 인증 정보가 포함됩니다.
   - DB에서 특정 사용자 정보 가져오기
 
 ### 장바구니 기능 구현
 - [ ] 장바구니와 관련된 아래 기능을 구현합니다.
   - [ ] 장바구니에 상품 추가 (CREATE)
+    - `insert into member_product(member_id, product_id) values(?, ?)`
   - [ ] 장바구니에 담긴 상품 제거 (DELETE)
+    - `delete from member_product where id = ?`
   - [ ] 장바구니 목록 조회 (READ)
-  - [ ] DB 테이블 설계
+    - `select * from member_product`
+  - [x] DB 테이블 설계
     - 사용자:상품 = M:N 관계이므로, 중간 테이블 생성 
     - ```sql
-      CREATE TABLE USER_PRODUCT
+      CREATE TABLE CART
       (
         id          INT NOT NULL AUTO_INCREMENT,
-        user_id     INT NOT NULL,
-        product_id  INT NOT NULL
-        PRIMARY KEY(id)
-        FOREIGN KEY(user_id)    REFERENCES USERS(id)    ON DELETE CASCADE
+        member_id     INT NOT NULL,
+        product_id  INT NOT NULL,
+        PRIMARY KEY(id),
+        FOREIGN KEY(member_id)  REFERENCES MEMBERS(id)  ON DELETE CASCADE,
         FOREIGN KEY(product_id) REFERENCES PRODUCTS(id) ON DELETE CASCADE
       )
       ```
