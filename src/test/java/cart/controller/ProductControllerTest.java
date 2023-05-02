@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.product.service.ProductService;
+import cart.auth.AuthSubjectArgumentResolver;
+import cart.product.service.ProductMemoryService;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,16 +32,18 @@ class ProductControllerTest {
     private static final String DEFAULT_PATH = "/products/";
     
     @MockBean
-    private ProductService productService;
+    private ProductMemoryService productMemoryService;
+    @MockBean
+    private AuthSubjectArgumentResolver resolver;
     private HashMap<Object, Object> productRequestMapper;
     
     @BeforeEach
     void setUp() {
-        productRequestMapper  = new HashMap<>();
+        productRequestMapper = new HashMap<>();
         
         RestAssuredMockMvc.standaloneSetup(
-                MockMvcBuilders.standaloneSetup(new ProductController(productService))
-                .setControllerAdvice(new GlobalExceptionHandler())
+                MockMvcBuilders.standaloneSetup(new ProductController(productMemoryService))
+                        .setControllerAdvice(new GlobalExceptionHandler())
         );
     }
     
@@ -58,7 +61,7 @@ class ProductControllerTest {
                 .assertThat()
                 .status(HttpStatus.CREATED);
         
-        then(productService).should(only()).save(any());
+        then(productMemoryService).should(only()).save(any());
     }
     
     @Test
@@ -75,7 +78,7 @@ class ProductControllerTest {
                 .assertThat()
                 .status(HttpStatus.NO_CONTENT);
         
-        then(productService).should(only()).update(anyLong(), any());
+        then(productMemoryService).should(only()).update(anyLong(), any());
     }
     
     private void normalInput() {
@@ -93,7 +96,7 @@ class ProductControllerTest {
                 .assertThat()
                 .status(HttpStatus.NO_CONTENT);
         
-        then(productService).should(only()).delete(anyLong());
+        then(productMemoryService).should(only()).delete(anyLong());
     }
     
     @ParameterizedTest(name = "{displayName} : name = {0}")

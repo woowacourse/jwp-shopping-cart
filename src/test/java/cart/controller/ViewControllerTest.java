@@ -1,7 +1,7 @@
 package cart.controller;
 
+import cart.auth.AuthSubjectArgumentResolver;
 import cart.member.service.MemberService;
-import cart.product.dto.ProductResponse;
 import cart.product.service.ProductService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,12 +16,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
@@ -33,6 +31,8 @@ class ViewControllerTest {
     private ProductService productService;
     @MockBean
     private MemberService memberService;
+    @MockBean
+    private AuthSubjectArgumentResolver resolver;
     
     @BeforeEach
     void setUp() {

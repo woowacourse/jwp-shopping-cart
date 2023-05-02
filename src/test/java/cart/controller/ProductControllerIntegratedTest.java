@@ -1,20 +1,23 @@
 package cart.controller;
 
+import cart.member.dao.MemberDao;
+import cart.product.dao.ProductDao;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.HashMap;
 
+import static cart.constant.TestConstant.MEMBER_ID_INIT_SQL;
+import static cart.constant.TestConstant.PRODUCT_ID_INIT_SQL;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
@@ -26,7 +29,18 @@ class ProductControllerIntegratedTest {
     
     @LocalServerPort
     private int port;
+    
+    private final ProductDao productDao;
+    private final MemberDao memberDao;
+    private final JdbcTemplate jdbcTemplate;
     private HashMap<String, Object> productRequestMapper;
+    
+    @Autowired
+    public ProductControllerIntegratedTest(final ProductDao productDao, final MemberDao memberDao, final JdbcTemplate jdbcTemplate) {
+        this.productDao = productDao;
+        this.memberDao = memberDao;
+        this.jdbcTemplate = jdbcTemplate;
+    }
     
     @BeforeEach
     void setUp() {
@@ -530,5 +544,13 @@ class ProductControllerIntegratedTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(ContentType.JSON)
                 .body("message", is("[ERROR] 가격의 최대 금액은 1000만원입니다."));
+    }
+    
+    @AfterEach
+    void tearDown() {
+        productDao.deleteAll();
+        memberDao.deleteAll();
+        jdbcTemplate.execute(PRODUCT_ID_INIT_SQL);
+        jdbcTemplate.execute(MEMBER_ID_INIT_SQL);
     }
 }

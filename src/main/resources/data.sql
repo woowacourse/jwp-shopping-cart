@@ -14,3 +14,13 @@ CREATE TABLE IF NOT EXISTS MEMBER
     password    VARCHAR(255)        NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS CART
+(
+    id          INT        UNSIGNED NOT NULL AUTO_INCREMENT,
+    member_id   INT        UNSIGNED NOT NULL,
+    product_id  INT        UNSIGNED NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (product_id) REFERENCES product (id)
+    );

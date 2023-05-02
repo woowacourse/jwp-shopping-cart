@@ -1,11 +1,7 @@
 package cart.product.dao;
 
-import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -14,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.List;
 
+import static cart.constant.TestConstant.PRODUCT_ID_INIT_SQL;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -21,16 +18,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @JdbcTest
-class ProductDaoTest {
+class ProductMemoryDaoTest {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private ProductDao productDao;
     
     @BeforeEach
     void setUp() {
-        namedParameterJdbcTemplate.getJdbcTemplate().execute("ALTER TABLE PRODUCT ALTER COLUMN id RESTART WITH 1");
-        productDao = new ProductDao(namedParameterJdbcTemplate);
-        productDao.deleteAll();
+        productDao = new ProductMemoryDao(namedParameterJdbcTemplate);
     }
     
     @Test
@@ -84,7 +79,13 @@ class ProductDaoTest {
         // expect
         assertAll(
                 () -> assertThatNoException().isThrownBy(() -> productDao.delete(id)),
-                () -> assertThatThrownBy(() -> productDao.findById(id)).isInstanceOf(EmptyResultDataAccessException.class)
+                () -> assertThatThrownBy(() -> productDao.findById(id))
+                        .isInstanceOf(EmptyResultDataAccessException.class)
         );
+    }
+    
+    @AfterEach
+    void tearDown() {
+        namedParameterJdbcTemplate.getJdbcTemplate().execute(PRODUCT_ID_INIT_SQL);
     }
 }

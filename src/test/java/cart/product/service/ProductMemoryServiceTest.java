@@ -1,5 +1,6 @@
 package cart.product.service;
 
+import cart.auth.AuthSubjectArgumentResolver;
 import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
 import cart.product.dto.ProductRequest;
@@ -25,12 +26,14 @@ import static org.mockito.Mockito.*;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@WebMvcTest(ProductService.class)
-class ProductServiceTest {
+@WebMvcTest(ProductMemoryService.class)
+class ProductMemoryServiceTest {
     @Autowired
     private ProductService productService;
     @MockBean
     private ProductDao productDao;
+    @MockBean
+    private AuthSubjectArgumentResolver resolver;
     private InOrder inOrder;
     private Product firstProduct;
     private Product secondProduct;

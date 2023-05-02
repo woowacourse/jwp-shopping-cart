@@ -1,14 +1,15 @@
 package cart.controller;
 
+import cart.member.dao.MemberDao;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+import static cart.constant.TestConstant.MEMBER_ID_INIT_SQL;
 import static org.hamcrest.Matchers.containsString;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -17,6 +18,15 @@ import static org.hamcrest.Matchers.containsString;
 class ViewControllerIntegratedTest {
     @LocalServerPort
     private int port;
+    
+    private final MemberDao memberDao;
+    private final JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    public ViewControllerIntegratedTest(final MemberDao memberDao, final JdbcTemplate jdbcTemplate) {
+        this.memberDao = memberDao;
+        this.jdbcTemplate = jdbcTemplate;
+    }
     
     @BeforeEach
     void setUp() {
@@ -57,5 +67,11 @@ class ViewControllerIntegratedTest {
                 .statusCode(HttpStatus.OK.value())
                 .body(containsString("설정"))
                 .header("Content-Type", "text/html;charset=UTF-8");
+    }
+    
+    @AfterEach
+    void tearDown() {
+        memberDao.deleteAll();
+        jdbcTemplate.execute(MEMBER_ID_INIT_SQL);
     }
 }
