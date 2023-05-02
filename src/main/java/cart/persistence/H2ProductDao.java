@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public class H2ProductDao implements ProductDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public H2ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
