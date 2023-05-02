@@ -29,7 +29,7 @@ public class AdminProductController {
     @PostMapping
     public ResponseEntity<Void> postProducts(@Valid @RequestBody ProductCreationRequest request) {
         final long id = managementService.save(ProductCreationRequest.toProductDto(request));
-        return ResponseEntity.created(URI.create("/products/" + id)).build();
+        return ResponseEntity.created(URI.create("/admin/products/" + id)).build();
     }
 
     @PutMapping("/{productId}")
