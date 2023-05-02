@@ -20,7 +20,7 @@ class ProductInMemoryDaoTest {
     void setUp() {
         this.productInMemoryDao = new ProductInMemoryDao();
 
-        final ProductEntity productEntity = new ProductEntity(1, "비버", "A", 1000L);
+        final ProductEntity productEntity = new ProductEntity(1L, "비버", "A", 1000L);
         insertedId = productInMemoryDao.insert(productEntity);
     }
 
@@ -33,11 +33,11 @@ class ProductInMemoryDaoTest {
     @Test
     @DisplayName("수정 테스트")
     void update() {
-        final ProductEntity productEntity = new ProductEntity(1, "비버", "A", 100000L);
+        final ProductEntity productEntity = new ProductEntity(1L, "비버", "A", 100000L);
         productInMemoryDao.update(productEntity);
 
-        final Optional<ProductEntity> byId = productInMemoryDao.findById(insertedId);
-        assertThat(byId.get().getPrice()).isEqualTo(100000L);
+        final Optional<ProductEntity> productEntityById = productInMemoryDao.findById(insertedId);
+        assertThat(productEntityById.get().getPrice()).isEqualTo(100000L);
     }
 
     @Test
@@ -53,7 +53,7 @@ class ProductInMemoryDaoTest {
     @Test
     @DisplayName("조회 테스트")
     void select() {
-        final ProductEntity expectEntity = new ProductEntity(1, "비버", "A", 1000L);
+        final ProductEntity expectEntity = new ProductEntity(1L, "비버", "A", 1000L);
         final Optional<ProductEntity> byId = productInMemoryDao.findById(insertedId);
 
         assertThat(byId.get()).isEqualTo(expectEntity);
@@ -62,7 +62,7 @@ class ProductInMemoryDaoTest {
     @Test
     @DisplayName("전체조회 테스트")
     void findAll() {
-        final ProductEntity expectEntity = new ProductEntity(1, "비버", "A", 1000L);
+        final ProductEntity expectEntity = new ProductEntity(1L, "비버", "A", 1000L);
 
         assertThat(productInMemoryDao.findAll()).containsOnly(expectEntity);
     }

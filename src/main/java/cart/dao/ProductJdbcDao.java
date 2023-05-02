@@ -19,7 +19,7 @@ public class ProductJdbcDao implements ProductDao {
 
     private final RowMapper<ProductEntity> productEntityRowMapper = (rs, rowNum) ->
             new ProductEntity(
-                    rs.getInt("id"),
+                    rs.getLong("id"),
                     rs.getString("name"),
                     rs.getString("image"),
                     rs.getLong("price")
@@ -67,7 +67,6 @@ public class ProductJdbcDao implements ProductDao {
         try {
             ProductEntity productEntity = jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
             return Optional.of(productEntity);
-
         } catch (IncorrectResultSizeDataAccessException e) {
             return Optional.empty();
         }
@@ -81,7 +80,7 @@ public class ProductJdbcDao implements ProductDao {
                 sql,
                 (rs, rowNum) ->
                         new ProductEntity(
-                                rs.getInt("id"),
+                                rs.getLong("id"),
                                 rs.getString("name"),
                                 rs.getString("image"),
                                 rs.getLong("price")

@@ -1,7 +1,8 @@
 package cart.controller;
 
+import cart.controller.dto.ProductCreationRequest;
+import cart.controller.dto.ProductUpdateRequest;
 import cart.dao.ProductJdbcDao;
-import cart.dto.ProductRequest;
 import cart.entity.ProductEntity;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -27,14 +28,13 @@ class ProductControllerTest {
     @LocalServerPort
     private int port;
 
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        RestAssured
-                .given()
-                .body(new ProductRequest("비버", "a", 100L))
-                .post("/products");
+//        RestAssured
+//                .given()
+//                .body(new ProductCreationRequest("비버", "a", 100))
+//                .post("/products");
     }
 
     @Test
@@ -46,7 +46,7 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .body(new ProductRequest("비버", "a", 100L))
+                .body(new ProductCreationRequest("비버", "a", 100))
                 .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -61,15 +61,15 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("PUT(/products/{id})")
+    @DisplayName("PUT(/products)")
     void updateProduct() {
         final Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 100L));
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .body(new ProductRequest("비버", "abc", 1000L))
-                .when().put("/products/" + id)
+                .body(new ProductUpdateRequest(id, "비버", "abc", 1000))
+                .when().put("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 
@@ -83,7 +83,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE(/products/{id})")
+    @DisplayName("DELETE(/products/)")
     void deleteProduct() {
         final Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 100L));
 
@@ -92,7 +92,7 @@ class ProductControllerTest {
                 .contentType(ContentType.JSON)
                 .when().delete("/products/" + id)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
 
         final Optional<ProductEntity> productEntity = productJdbcDao.findById(id);
 

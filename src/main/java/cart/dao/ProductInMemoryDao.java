@@ -11,8 +11,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Repository
 public class ProductInMemoryDao implements ProductDao {
 
-    private final List<ProductEntity> products; // 넣는 순서는 상관없으므로 동시성 문제가 없다.
-    private final AtomicInteger sequence = new AtomicInteger(0); // 동시성 문제 해결
+    private final List<ProductEntity> products;
+    private final AtomicInteger sequence = new AtomicInteger(0);
 
     public ProductInMemoryDao() {
         this.products = new ArrayList<>();
@@ -20,7 +20,7 @@ public class ProductInMemoryDao implements ProductDao {
 
     @Override
     public Integer insert(final ProductEntity productEntity) {
-        final int id = sequence.incrementAndGet();
+        final Long id = (long) sequence.incrementAndGet();
         ProductEntity productEntityWithId = new ProductEntity(
                 id,
                 productEntity.getName(),
@@ -29,7 +29,7 @@ public class ProductInMemoryDao implements ProductDao {
         );
 
         products.add(productEntityWithId);
-        return id;
+        return Math.toIntExact(id);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ProductInMemoryDao implements ProductDao {
     @Override
     public Optional<ProductEntity> findById(final Integer id) {
         return products.stream()
-                .filter(product -> product.getId().equals(id))
+                .filter(product -> product.getId().equals(id.longValue()))
                 .findFirst();
     }
 

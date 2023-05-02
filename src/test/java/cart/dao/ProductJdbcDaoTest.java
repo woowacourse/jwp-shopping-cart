@@ -18,14 +18,14 @@ class ProductJdbcDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private ProductJdbcDao productJdbcDao;
-    private Integer insertedId;
+    private Long insertedId;
 
     @BeforeEach
     void setUp() {
         this.productJdbcDao = new ProductJdbcDao(jdbcTemplate);
 
         final ProductEntity productEntity = new ProductEntity(null, "비버", "A", 1000L);
-        insertedId = productJdbcDao.insert(productEntity);
+        insertedId = Long.valueOf(productJdbcDao.insert(productEntity));
         System.out.println("insertedId = " + insertedId);
     }
 
@@ -41,14 +41,14 @@ class ProductJdbcDaoTest {
         final ProductEntity productEntity = new ProductEntity(insertedId, "비버", "A", 100000L);
         productJdbcDao.update(productEntity);
 
-        final Optional<ProductEntity> ProductEntityById = productJdbcDao.findById(insertedId);
+        final Optional<ProductEntity> ProductEntityById = productJdbcDao.findById(Math.toIntExact(insertedId));
         assertThat(ProductEntityById.get().getPrice()).isEqualTo(100000L);
     }
 
     @Test
     @DisplayName("삭제 테스트")
     void deleteById() {
-        productJdbcDao.deleteById(insertedId);
+        productJdbcDao.deleteById(Math.toIntExact(insertedId));
 
         assertThat(productJdbcDao.findAll().size()).isZero();
     }
@@ -57,7 +57,7 @@ class ProductJdbcDaoTest {
     @DisplayName("조회 테스트")
     void select() {
         final ProductEntity expectEntity = new ProductEntity(insertedId, "비버", "A", 1000L);
-        final Optional<ProductEntity> ProductEntityById = productJdbcDao.findById(insertedId);
+        final Optional<ProductEntity> ProductEntityById = productJdbcDao.findById(Math.toIntExact(insertedId));
 
         assertThat(ProductEntityById.get()).isEqualTo(expectEntity);
     }

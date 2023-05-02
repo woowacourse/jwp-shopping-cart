@@ -6,20 +6,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProductResponse {
-    private final Integer id;
+    private final Long id;
     private final String name;
     private final String image;
 
     private final Long price;
 
-    public ProductResponse(final Integer id, final String name, final String image, final Long price) {
+    public ProductResponse(final Long id, final String name, final String image, final Long price) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
     }
 
-    public static List<ProductResponse> mapProducts(List<Product> products) {
+    public static List<ProductResponse> mapProducts(List<ProductDto> products) {
         return products.stream()
                 .map(product -> new ProductResponse(
                         product.getId(),
@@ -29,7 +29,7 @@ public class ProductResponse {
                 ).collect(Collectors.toList());
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

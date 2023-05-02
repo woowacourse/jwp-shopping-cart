@@ -55,9 +55,7 @@ const createProduct = (product) => {
 };
 
 const updateProduct = (product) => {
-    const {id} = product;
-
-    axios.put(`/products/${id}`, product)
+    axios.put(`/products`, product)
         .then(() => {
             window.location.reload();
         }).catch((error) => {
@@ -68,8 +66,8 @@ const updateProduct = (product) => {
 const deleteProduct = (id) => {
     axios.delete(`/products/${id}`)
         .then(() => {
-        window.location.reload();
-    }).catch((error) => {
+            window.location.reload();
+        }).catch((error) => {
         console.error(error);
     });
 };

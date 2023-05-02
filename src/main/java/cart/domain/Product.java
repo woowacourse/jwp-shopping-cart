@@ -1,31 +1,37 @@
 package cart.domain;
 
+import cart.dto.ProductCreationDto;
+import cart.dto.ProductUpdateDto;
 import cart.entity.ProductEntity;
 
 import java.util.Objects;
 
 public class Product {
-    private final Integer id;
+    private final Long id;
     private final String name;
-    private final String image;
-    private final Long price;
+    private final ProductImage image;
+    private final ProductPrice price;
 
-    public Product(final Integer id, final String name, final String image, final Long price) {
+    public Product(final Long id, final String name, final ProductImage image, final ProductPrice price) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
     }
 
-    public static ProductEntity of(final Integer id, final String name, final String image, final Long price) {
-        return new ProductEntity(id, name, image, price);
+    public static Product from(final ProductCreationDto productCreationDto) {
+        return new Product(null, productCreationDto.getName(), new ProductImage(productCreationDto.getImage()), new ProductPrice(productCreationDto.getPrice()));
     }
 
-    public static ProductEntity of(final String name, final String image, final Long price) {
-        return new ProductEntity(name, image, price);
+    public static Product from(final ProductUpdateDto productUpdateDto) {
+        return new Product(Long.valueOf(productUpdateDto.getId()), productUpdateDto.getName(), new ProductImage(productUpdateDto.getImage()), new ProductPrice(productUpdateDto.getPrice()));
     }
 
-    public Integer getId() {
+    public static ProductEntity from(final Product product) {
+        return new ProductEntity(product.getName(), product.getImage(), product.getPrice());
+    }
+
+    public Long getId() {
         return id;
     }
 
@@ -34,11 +40,11 @@ public class Product {
     }
 
     public String getImage() {
-        return image;
+        return image.getImage();
     }
 
     public Long getPrice() {
-        return price;
+        return price.getPrice();
     }
 
     @Override
