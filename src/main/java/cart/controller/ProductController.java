@@ -11,6 +11,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+
     private final ProductService productService;
 
     public ProductController(final ProductService productService) {
