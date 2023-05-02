@@ -1,0 +1,26 @@
+
+###
+POST http://localhost:8080/product
+Content-Type: application/json
+
+{
+  "name": "이름",
+  "price": 1000,
+  "Image": null
+}
+
+###
+PUT http://localhost:8080/product/1
+Content-Type: application/json
+
+{
+  "name": "이름",
+  "price": 2000,
+  "Image": null
+}
+
+###
+DELETE http://localhost:8080/product/1
+
+###
+GET http://localhost:8080/
