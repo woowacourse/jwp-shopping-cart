@@ -33,4 +33,9 @@ public class CartService {
                 .map(productMapper::toResponse)
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    public void removeProductInCart(UserRequest userRequest, Long productId) {
+        final User user = userMapper.toEntity(userRequest);
+        cartDao.removeProductInCart(user, productId);
+    }
 }
