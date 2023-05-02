@@ -6,9 +6,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
-import cart.domain.Product;
+import cart.dao.ProductDao;
 import cart.dto.ProductDto;
-import cart.repository.ProductRepository;
+import cart.entity.ProductEntity;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -16,7 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.jdbc.Sql;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @Sql("classpath:schema.sql")
@@ -27,16 +28,15 @@ class ProductServiceTest {
     private ProductService productService;
 
     @MockBean
-    private ProductRepository productRepository;
+    private ProductDao productDao;
 
     @Test
     void 모든_상품_목록_조회() {
-        Mockito.when(productRepository.findAll())
-                .thenReturn(Map.of(
-                        1L, new Product("name1", 1000, "image1"),
-                        2L, new Product("name2", 2000, "image2"),
-                        3L, new Product("name3", 3000, "image3")
-                ));
+        Mockito.when(productDao.findAll()).thenReturn(List.of(
+                new ProductEntity(1L, "name1", 1000, "image1"),
+                new ProductEntity(2L, "name2", 2000, "image2"),
+                new ProductEntity(3L, "name3", 3000, "image3"))
+        );
 
         final var products = productService.findAll();
 
@@ -45,7 +45,7 @@ class ProductServiceTest {
 
     @Test
     void 상품_등록() {
-        Mockito.when(productRepository.insert(any(Product.class)))
+        Mockito.when(productDao.insert(any(ProductEntity.class)))
                 .thenReturn(4L);
 
         final var savedId = productService.register(new ProductDto("item1", 1000, "https://"));
@@ -55,18 +55,16 @@ class ProductServiceTest {
 
     @Test
     void 상품_수정_성공() {
-        Mockito.when(productRepository.isExist(anyLong()))
-                .thenReturn(true);
+        Mockito.when(productDao.findById(anyLong()))
+                .thenReturn(Optional.of(new ProductEntity(1L, "name1", 1000, "image1")));
 
-        assertThatNoException().isThrownBy(
-                () -> productService.updateProduct(1L, new ProductDto("new Name", 10, "new Image Url"))
-        );
+        assertThatNoException().isThrownBy(() -> productService.updateProduct(1L, new ProductDto("new Name", 10, "new Image Url")));
     }
 
     @Test
     void 존재하지_않는_ID의_상품을_수정시_예외_발생() {
-        Mockito.when(productRepository.isExist(anyLong()))
-                .thenReturn(false);
+        Mockito.when(productDao.findById(anyLong()))
+                .thenReturn(Optional.empty());
 
         assertThatIllegalArgumentException().isThrownBy(
                 () -> productService.updateProduct(1L, new ProductDto("new Name", 10, "new Image Url"))
@@ -75,21 +73,19 @@ class ProductServiceTest {
 
     @Test
     void 상품_삭제_성공() {
-        Mockito.when(productRepository.isExist(anyLong()))
-                .thenReturn(true);
+        Mockito.when(productDao.findById(anyLong()))
+                .thenReturn(Optional.of(new ProductEntity(1L, "name1", 1000, "image1")));
 
-        assertThatNoException().isThrownBy(
-                () -> productService.deleteProduct(1L)
-        );
+        assertThatNoException().isThrownBy(() -> productService.deleteProduct(1L));
     }
 
     @Test
     void 존재하지_않는_상품_삭제시_예외_발생() {
-        Mockito.when(productRepository.isExist(anyLong()))
-                .thenReturn(false);
+        Mockito.when(productDao.findById(anyLong()))
+                .thenReturn(Optional.empty());
 
         assertThatIllegalArgumentException().isThrownBy(
                 () -> productService.deleteProduct(3L)
-        ).withMessage("존재하지 않는 id 입니다.");
+        );
     }
 }

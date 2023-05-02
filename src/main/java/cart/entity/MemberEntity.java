@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class MemberEntity {
 
-    private final int id;
+    private final Long id;
     private final String email;
     private final String password;
     private final String name;

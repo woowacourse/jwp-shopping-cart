@@ -1,69 +1,54 @@
 package cart.service;
 
-import cart.domain.Product;
+import cart.dao.ProductDao;
 import cart.dto.ProductDto;
-import cart.repository.ProductRepository;
-import cart.response.ProductResponse;
+import cart.entity.ProductEntity;
+import cart.dto.ProductResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class ProductService {
 
-    private final ProductRepository productRepository;
-
-    public ProductService(final ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    private final ProductDao productDao;
 
     public List<ProductResponse> findAll() {
-        final Map<Long, Product> savedProducts = productRepository.findAll();
+        final List<ProductEntity> result = productDao.findAll();
 
-        return toProductResponses(savedProducts);
-    }
-
-    private List<ProductResponse> toProductResponses(final Map<Long, Product> savedProducts) {
-        final List<ProductResponse> result = new ArrayList<>();
-        for (final Map.Entry<Long, Product> entry : savedProducts.entrySet()) {
-            final Long id = entry.getKey();
-            final Product product = entry.getValue();
-
-            result.add(new ProductResponse(id, product.getName(), product.getPrice(), product.getImageUrl()));
-        }
-
-        result.sort((product1, product2) -> (int) (product1.getId() - product2.getId()));
-        return List.copyOf(result);
+        return result.stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
     }
 
     public Long register(final ProductDto productDto) {
-        final Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+        final ProductEntity productEntity = new ProductEntity(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
 
-        return productRepository.insert(product);
+        return productDao.insert(productEntity);
     }
 
     public void updateProduct(final long id, final ProductDto productDto) {
         validateExistData(id);
 
-        final Product newProduct = new Product(
-                productDto.getName(),
-                productDto.getPrice(),
-                productDto.getImageUrl()
-        );
+        final ProductEntity newProductEntity = new ProductEntity(id, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
 
-        productRepository.update(id, newProduct);
+        productDao.update(newProductEntity);
     }
 
     public void deleteProduct(final long id) {
         validateExistData(id);
 
-        productRepository.delete(id);
+        productDao.delete(id);
     }
 
     private void validateExistData(final long id) {
-        if (!productRepository.isExist(id)) {
-            throw new IllegalArgumentException("존재하지 않는 id 입니다.");
+        final Optional<ProductEntity> result = productDao.findById(id);
+
+        if (result.isEmpty()) {
+            throw new IllegalArgumentException("찾는 상품은 없는 상품입니다.");
         }
     }
 }

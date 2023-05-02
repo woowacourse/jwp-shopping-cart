@@ -40,15 +40,24 @@ class ProductDaoTest {
     }
 
     @Test
-    void 상품_데이터_조회() {
+    void ID로_조회하면_Optional로_감싸져서_반환된다() {
         final var id = 2L;
 
-        final var foundProduct = productDao.findById(id);
+        final var result = productDao.findById(id);
+        assertThat(result.isPresent()).isTrue();
 
+        final var foundProduct = result.get();
         assertAll(
                 () -> assertThat(foundProduct.getName()).isEqualTo("salad"),
                 () -> assertThat(foundProduct.getPrice()).isEqualTo(2000)
         );
+    }
+
+    @Test
+    void 존재하지_않는_데이터를_조회하면_비어있는_Optional을_반환한다() {
+        final var result = productDao.findById(3L);
+
+        assertThat(result.isEmpty()).isTrue();
     }
 
     @Test
@@ -64,7 +73,7 @@ class ProductDaoTest {
         final var newProduct = new ProductEntity(id, "new salad", 3000, "url");
 
         productDao.update(newProduct);
-        final ProductEntity foundProduct = productDao.findById(id);
+        final var foundProduct = productDao.findById(id).get();
 
         assertAll(
                 () -> assertThat(foundProduct.getName()).isEqualTo(newProduct.getName()),

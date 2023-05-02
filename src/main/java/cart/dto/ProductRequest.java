@@ -1,4 +1,4 @@
-package cart.request;
+package cart.dto;
 
 import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;

@@ -2,8 +2,9 @@ package cart.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import cart.domain.Member;
-import cart.repository.MemberRepository;
+import cart.dao.MemberDao;
+import cart.dto.MemberResponse;
+import cart.entity.MemberEntity;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -17,22 +18,26 @@ import java.util.List;
 class MemberServiceTest {
 
     @MockBean
-    private MemberRepository memberRepository;
+    private MemberDao memberDao;
 
     @Autowired
     private MemberService memberService;
 
     @Test
     void 모든_회원_조회() {
-        Mockito.when(memberRepository.findAll())
+        Mockito.when(memberDao.findAll())
                 .thenReturn(List.of(
-                        new Member("email", "password", "name", "address", 1),
-                        new Member("email", "password", "name", "address", 2),
-                        new Member("email", "password", "name", "address", 3)
+                        createMember(1L),
+                        createMember(2L),
+                        createMember(3L)
                 ));
 
-        final List<Member> result = memberService.findAll();
+        final List<MemberResponse> result = memberService.findAll();
 
         assertThat(result.size()).isEqualTo(3);
+    }
+
+    private MemberEntity createMember(long id) {
+        return new MemberEntity(id, "email", "password", "name", "address", 10);
     }
 }

@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.Member;
+import cart.dto.MemberResponse;
 import cart.service.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ public class SettingController {
 
     @GetMapping("/settings")
     public String settingPage(final Model model) {
-        final List<Member> members = memberService.findAll();
+        final List<MemberResponse> members = memberService.findAll();
 
         model.addAttribute("members", members);
 

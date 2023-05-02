@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -8,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductDao {
@@ -36,10 +38,15 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
-    public ProductEntity findById(final long id) {
+    public Optional<ProductEntity> findById(final long id) {
         final String sql = "select " + ALL_COLUMNS + " from Product where id = ?";
 
-        return jdbcTemplate.queryForObject(sql, productRowMapper, id);
+        try {
+            final ProductEntity productEntity = jdbcTemplate.queryForObject(sql, productRowMapper, id);
+            return Optional.ofNullable(productEntity);
+        } catch (final DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<ProductEntity> findAll() {
@@ -63,11 +70,5 @@ public class ProductDao {
         final String sql = "DELETE FROM Product WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
-    }
-
-    public boolean isExist(final long id) {
-        final String sql = "select count(*) from Product where id = ?";
-
-        return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
     }
 }

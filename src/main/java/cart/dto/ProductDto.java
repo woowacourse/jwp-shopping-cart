@@ -1,7 +1,5 @@
 package cart.dto;
 
-import cart.request.ProductRequest;
-
 public class ProductDto {
 
     private final String name;

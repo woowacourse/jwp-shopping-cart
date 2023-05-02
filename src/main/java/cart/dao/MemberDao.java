@@ -17,7 +17,7 @@ public class MemberDao {
     private final static String ALL_COLUMNS = "id, email, password, name, address, age";
 
     private static final RowMapper<MemberEntity> memberRowMapper = (resultSet, rowNum) -> new MemberEntity(
-            resultSet.getInt("id"),
+            resultSet.getLong("id"),
             resultSet.getString("email"),
             resultSet.getString("password"),
             resultSet.getString("name"),
