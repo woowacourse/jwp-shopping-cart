@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 public class MemoryProductRepository implements ProductRepository {
 
     private final Map<Integer, Product> store = new ConcurrentHashMap<>();
-    private int sequence = 1;
+    private static int sequence = 1;
 
     @Override
-    public Integer insert(Product product) {
+    public synchronized Integer insert(Product product) {
         store.put(sequence, product);
         return sequence++;
     }
@@ -43,5 +43,10 @@ public class MemoryProductRepository implements ProductRepository {
     @Override
     public Product remove(Integer productId) {
         return store.remove(productId);
+    }
+
+    @Override
+    public Boolean findSameProductExist(Product product) {
+        return store.containsValue(product);
     }
 }

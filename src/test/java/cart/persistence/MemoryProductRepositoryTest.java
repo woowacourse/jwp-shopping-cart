@@ -22,10 +22,10 @@ class MemoryProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("Product 객체를 넣었을 때 ID를 반환할 수 있다")
+    @DisplayName("Product 객체를 넣을 수 있다")
     void test_insert() {
         //given
-        Product salmon = new Product(1,
+        Product salmon = new Product(null,
                 new ProductName("salmon"),
                 new ProductImage("https://www.salmonlover.com"),
                 new ProductPrice(17000));
@@ -34,7 +34,7 @@ class MemoryProductRepositoryTest {
         Integer actualId = memoryProductRepository.insert(salmon);
 
         //then
-        assertThat(actualId).isEqualTo(1);
+        assertThat(memoryProductRepository.findSameProductExist(salmon)).isTrue();
     }
 
     @Test
@@ -69,21 +69,22 @@ class MemoryProductRepositoryTest {
     void update() {
         //given
         Product salmon = new Product(1,
-                new ProductName("salmon"),
+                new ProductName("before"),
                 new ProductImage("https://www.salmonlover.com"),
                 new ProductPrice(17000));
 
-        Product pizza = new Product(1,
-                new ProductName("pizza"),
+        Integer salmonId = memoryProductRepository.insert(salmon);
+
+        Product pizza = new Product(salmonId,
+                new ProductName("after"),
                 new ProductImage("http://www.pizzalover.com"),
                 new ProductPrice(40000));
+
         //when
-        memoryProductRepository.insert(salmon);
         memoryProductRepository.update(pizza);
-        List<Product> products = memoryProductRepository.findAll();
 
         //then
-        assertThat(products.get(0).getName()).isEqualTo("pizza");
+        assertThat(memoryProductRepository.findSameProductExist(pizza)).isTrue();
     }
 
     @Test
@@ -96,8 +97,8 @@ class MemoryProductRepositoryTest {
                 new ProductPrice(17000));
 
         //when
-        memoryProductRepository.insert(salmon);
-        Product actual = memoryProductRepository.remove(1);
+        Integer salmonId = memoryProductRepository.insert(salmon);
+        Product actual = memoryProductRepository.remove(salmonId);
 
         //then
         assertThat(actual).isEqualTo(salmon);

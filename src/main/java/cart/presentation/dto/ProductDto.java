@@ -7,9 +7,6 @@ public class ProductDto {
     private String url;
     private Integer price;
 
-    public ProductDto() {
-    }
-
     public ProductDto(Integer id, String name, String url, Integer price) {
         this.id = id;
         this.name = name;
