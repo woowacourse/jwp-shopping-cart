@@ -32,10 +32,10 @@
 ---
 ## 2단계
 
-- [ ] database 세팅
-  - [ ] user table 생성
-  - [ ] cart table 생성 및 연관 관계 설정
-  - [ ] data.sql 수정
+- [x] database 세팅
+  - [x] user table 생성
+  - [x] cart table 생성 및 연관 관계 설정
+  - [x] data.sql 수정
 
 - [ ] 사용자 설정
   - [ ] basic authorization 구현
