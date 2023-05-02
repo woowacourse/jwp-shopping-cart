@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -40,8 +41,12 @@ class ProductControllerTest {
     @BeforeEach
     void setUp() throws URISyntaxException {
         RestAssured.port = port;
-        jdbcTemplate.execute("TRUNCATE TABLE product");
         productController.addProduct(new ModifyRequest("망고", 1000, "domains.com"));
+    }
+
+    @AfterEach
+    void after() {
+        jdbcTemplate.execute("TRUNCATE TABLE product");
     }
 
     @DisplayName("POST /admin/product 요청 시")
