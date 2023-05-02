@@ -41,14 +41,9 @@ public class CartApiController {
                                                             @RequestBody CartInsertRequestDto insertRequestDto) {
 
         final AuthInfo authInfo = authorizationExtractor.extract(request);
-        if (authInfo == null) {
-            throw new IllegalArgumentException("사용자가 선택되지 않았습니다.");
-        }
-
-        final MemberEntity member = memberService.findMemberByEmail(authInfo.getEmail());
-        if (!member.getPassword().equals(authInfo.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+        checkAuth(authInfo);
+        MemberEntity member = memberService.findMemberByEmail(authInfo.getEmail());
+        validatePassword(member.getPassword(), authInfo.getPassword());
 
         final int productId = insertRequestDto.getProductId();
         final CartInsertResponseDto cartInsertResponseDto = cartService.addCart(member, productId);
@@ -58,17 +53,24 @@ public class CartApiController {
                 .body(cartInsertResponseDto);
     }
 
-    @GetMapping(value = "/cart", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CartSelectResponseDto>> getCart(HttpServletRequest request) {
-        final AuthInfo authInfo = authorizationExtractor.extract(request);
+    private void checkAuth(final AuthInfo authInfo) {
         if (authInfo == null) {
             throw new IllegalArgumentException("사용자가 선택되지 않았습니다.");
         }
+    }
 
-        final MemberEntity member = memberService.findMemberByEmail(authInfo.getEmail());
-        if (!member.getPassword().equals(authInfo.getPassword())) {
+    private void validatePassword(final String memberPassword, final String authPassword) {
+        if (!memberPassword.equals(authPassword)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+    }
+
+    @GetMapping(value = "/cart", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CartSelectResponseDto>> getCart(HttpServletRequest request) {
+        final AuthInfo authInfo = authorizationExtractor.extract(request);
+        checkAuth(authInfo);
+        MemberEntity member = memberService.findMemberByEmail(authInfo.getEmail());
+        validatePassword(member.getPassword(), authInfo.getPassword());
 
         final List<CartSelectResponseDto> cartSelectResponse = cartService.getCartByMemberID(member.getId());
         return ResponseEntity.ok(cartSelectResponse);
@@ -77,14 +79,9 @@ public class CartApiController {
     @DeleteMapping("/cart/{id}")
     public ResponseEntity<CartDeleteResponseDto> removeCart(HttpServletRequest request, @PathVariable int id) {
         final AuthInfo authInfo = authorizationExtractor.extract(request);
-        if (authInfo == null) {
-            throw new IllegalArgumentException("사용자가 선택되지 않았습니다.");
-        }
-
-        final MemberEntity member = memberService.findMemberByEmail(authInfo.getEmail());
-        if (!member.getPassword().equals(authInfo.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+        checkAuth(authInfo);
+        MemberEntity member = memberService.findMemberByEmail(authInfo.getEmail());
+        validatePassword(member.getPassword(), authInfo.getPassword());
 
         final CartDeleteResponseDto deleteResponseDto = cartService.removeCart(id);
         return ResponseEntity.ok(deleteResponseDto);
