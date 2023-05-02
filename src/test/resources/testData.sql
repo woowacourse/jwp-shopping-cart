@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS product;
-DROP TABLE IF EXISTS user_account;
+DROP TABLE IF EXISTS member;
 
 CREATE TABLE product
 (
