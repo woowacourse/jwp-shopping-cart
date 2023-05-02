@@ -15,6 +15,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 
+  private static final String AUTHORIZATION = "Authorization";
+  private static final String BASIC_TYPE = "Basic";
+  private static final String DELIMITER = ":";
+
   private final MemberDao memberDao;
 
   public LoginArgumentResolver(final MemberDao memberDao) {
@@ -29,15 +33,19 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
   @Override
   public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
       NativeWebRequest webRequest, WebDataBinderFactory binderFactory)  {
-    final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-    final String header = request.getHeader("Authorization");
-    final String authorization = header.split(" ")[1];
+    final String authorization = getAuthorization(webRequest);
     final String emailAndPassword = new String(Base64.getDecoder().decode(authorization));
-    final String[] splitEmailAndPassword = emailAndPassword.split(":");
+    final String[] splitEmailAndPassword = emailAndPassword.split(DELIMITER);
     final MemberEntity memberEntity = new MemberEntity(splitEmailAndPassword[0], splitEmailAndPassword[1]);
     final MemberEntity findEntity = memberDao.findByMemberEntity(memberEntity)
         .orElseThrow(() -> new AuthenticationException("올바른 인증정보를 입력해주세요."));
 
     return findEntity.getId();
+  }
+
+  private static String getAuthorization(NativeWebRequest webRequest) {
+    final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+    final String header = request.getHeader(AUTHORIZATION);
+    return header.substring(BASIC_TYPE.length()).trim();
   }
 }
