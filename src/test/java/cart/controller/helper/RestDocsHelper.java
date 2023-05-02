@@ -16,7 +16,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 @ExtendWith(RestDocumentationExtension.class)
-public class RestDocsHelper {
+public class RestDocsHelper extends ControllerTestHelper {
 
     protected final String RANGE = "range";
     protected MockMvc mockMvc;

@@ -2,6 +2,7 @@ package cart.integration;
 
 import static io.restassured.RestAssured.given;
 
+import cart.controller.dto.MemberDto;
 import cart.controller.dto.ProductDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -41,6 +42,7 @@ public class ShoppingIntegrationTest {
     @Sql("classpath:init.sql")
     void getProduct() {
         // given
+        addAdminMember();
         addSampleProduct();
 
         // when, then
@@ -52,14 +54,28 @@ public class ShoppingIntegrationTest {
             .statusCode(HttpStatus.OK.value());
     }
 
+    private void addAdminMember() {
+        final MemberDto journey = new MemberDto(1L, "ADMIN", "journey@gmail.com",
+            "password", "져니", "010-1234-5678");
+
+        given()
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(journey)
+            .post("/member")
+            .then().log().all()
+            .statusCode(HttpStatus.CREATED.value());
+    }
+
     private void addSampleProduct() {
         final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
 
         given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("Authorization", "Basic am91cm5leUBnbWFpbC5jb206cGFzc3dvcmQ=")
             .when()
             .body(productDto)
-            .post("/admin")
+            .post("/admin/register")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value());
     }

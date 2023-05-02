@@ -3,6 +3,7 @@ package cart.integration;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 
+import cart.controller.dto.CartResponse;
 import cart.controller.dto.MemberDto;
 import cart.controller.dto.ProductDto;
 import io.restassured.RestAssured;
@@ -47,7 +48,7 @@ public class CartIntegrationTest {
     @Sql("classpath:init.sql")
     void addCart() {
         // given
-        addSampleMember();
+        addAdminMember();
         addSampleProduct();
 
         // when, then
@@ -63,7 +64,7 @@ public class CartIntegrationTest {
     @DisplayName("사용자의 장바구니 정보를 조회한다.")
     @Sql("classpath:init.sql")
     void getCartByMember() {
-        addSampleMember();
+        addAdminMember();
         addSampleProduct();
         addSampleCart();
 
@@ -82,7 +83,7 @@ public class CartIntegrationTest {
     @Sql("classpath:init.sql")
     void deleteCart() {
         // given
-        addSampleMember();
+        addAdminMember();
         addSampleProduct();
         addSampleCart();
 
@@ -95,9 +96,10 @@ public class CartIntegrationTest {
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private void addSampleMember() {
-        final MemberDto journey = new MemberDto(1L, "journey@gmail.com", "password", "져니",
-            "010-1234-5678");
+    private void addAdminMember() {
+        final MemberDto journey = new MemberDto(1L, "ADMIN",
+            "journey@gmail.com", "password", "져니", "010-1234-5678");
+
         given()
             .when()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -111,9 +113,10 @@ public class CartIntegrationTest {
         final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
         given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("Authorization", authorization)
             .when()
             .body(productDto)
-            .post("/admin")
+            .post("/admin/register")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value());
     }
@@ -121,6 +124,7 @@ public class CartIntegrationTest {
     private void addSampleCart() {
         given()
             .header("Authorization", authorization)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/cart/{productId}", 1L)
             .then().log().all()

@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.controller.dto.ProductDto;
+import cart.controller.helper.ControllerTestHelper;
 import cart.service.ProductService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(ShoppingController.class)
-class ShoppingControllerTest {
+class ShoppingControllerTest extends ControllerTestHelper {
 
     @Autowired
     private MockMvc mockMvc;

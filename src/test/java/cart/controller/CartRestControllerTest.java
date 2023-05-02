@@ -84,7 +84,7 @@ class CartRestControllerTest extends RestDocsHelper {
     }
 
     @Test
-    @DisplayName("사용자의 장바구니 정보를 조회한다.")
+    @DisplayName("사용자의 장바구니 정보를 회한다.")
     void getCartByMember() throws Exception {
         // given
         final CartDto chickenDto = new CartDto(1L, 1L, "치킨",
@@ -100,29 +100,29 @@ class CartRestControllerTest extends RestDocsHelper {
             .andExpectAll(
                 status().isOk(),
                 content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE),
-                jsonPath("$.[0].memberId").value(1L),
-                jsonPath("$.[0].productId").value(1L),
-                jsonPath("$.[0].productName").value("치킨"),
-                jsonPath("$.[0].productImageUrl").value("chicken_image_url"),
-                jsonPath("$.[0].productPrice").value(20000),
-                jsonPath("$.[0].productCategory").value("KOREAN"),
-                jsonPath("$.[1].memberId").value(1L),
-                jsonPath("$.[1].productId").value(2L),
-                jsonPath("$.[1].productName").value("스테이크"),
-                jsonPath("$.[1].productImageUrl").value("steak_image_url"),
-                jsonPath("$.[1].productPrice").value(40000),
-                jsonPath("$.[1].productCategory").value("WESTERN"))
+                jsonPath("$.cartDtos[0].memberId").value(1L),
+                jsonPath("$.cartDtos[0].productId").value(1L),
+                jsonPath("$.cartDtos[0].productName").value("치킨"),
+                jsonPath("$.cartDtos[0].productImageUrl").value("chicken_image_url"),
+                jsonPath("$.cartDtos[0].productPrice").value(20000),
+                jsonPath("$.cartDtos[0].productCategory").value("KOREAN"),
+                jsonPath("$.cartDtos[1].memberId").value(1L),
+                jsonPath("$.cartDtos[1].productId").value(2L),
+                jsonPath("$.cartDtos[1].productName").value("스테이크"),
+                jsonPath("$.cartDtos[1].productImageUrl").value("steak_image_url"),
+                jsonPath("$.cartDtos[1].productPrice").value(40000),
+                jsonPath("$.cartDtos[1].productCategory").value("WESTERN"))
             .andDo(
                 documentationResultHandler.document(
                     requestHeaders(
                         headerWithName("Authorization").description("인증 정보")),
                     responseFields(
-                        fieldWithPath("[0].memberId").description("사용자 아이디"),
-                        fieldWithPath("[0].productId").description("상품 아이디"),
-                        fieldWithPath("[0].productName").description("상품 이름"),
-                        fieldWithPath("[0].productImageUrl").description("상품 이미지 URL"),
-                        fieldWithPath("[0].productPrice").description("상품 가격"),
-                        fieldWithPath("[0].productCategory").description("상품 카테고리"))
+                        fieldWithPath("cartDtos[0].memberId").description("사용자 아이디"),
+                        fieldWithPath("cartDtos[0].productId").description("상품 아이디"),
+                        fieldWithPath("cartDtos[0].productName").description("상품 이름"),
+                        fieldWithPath("cartDtos[0].productImageUrl").description("상품 이미지 URL"),
+                        fieldWithPath("cartDtos[0].productPrice").description("상품 가격"),
+                        fieldWithPath("cartDtos[0].productCategory").description("상품 카테고리"))
                 )
             );
     }

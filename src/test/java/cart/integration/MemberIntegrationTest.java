@@ -38,9 +38,10 @@ public class MemberIntegrationTest {
 
     @Test
     @DisplayName("사용자 정보를 추가한다")
+    @Sql("classpath:init.sql")
     void addMember() {
-        final MemberDto journey = new MemberDto(1L, "journey@gmail.com", "password", "져니",
-            "010-1234-5678");
+        final MemberDto journey = new MemberDto(1L, "USER", "journey@gmail.com",
+            "password", "져니", "010-1234-5678");
 
         given()
             .when()
