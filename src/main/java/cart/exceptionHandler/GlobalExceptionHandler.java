@@ -1,5 +1,6 @@
 package cart.exceptionHandler;
 
+import cart.exception.AuthException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,19 +23,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(final IllegalArgumentException e) {
         final Map<String, Object> body = makeBody(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 
-        logger.error(body + ", " + e.getMessage());
+        logError(body, e.getMessage());
 
         return ResponseEntity.internalServerError().body(body);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
-        final Map<String, Object> body = makeBody(HttpStatus.BAD_REQUEST, ex.getBindingResult()
-                .getFieldError()
-                .getDefaultMessage()
+        final Map<String, Object> body = makeBody(HttpStatus.BAD_REQUEST,
+                ex.getBindingResult()
+                        .getFieldError()
+                        .getDefaultMessage()
         );
 
-        logger.error(body);
+        logError(body, ex.getMessage());
 
         return ResponseEntity.badRequest().body(body);
     }
@@ -43,9 +45,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleUnsuspectedException(final RuntimeException e) {
         final Map<String, Object> body = makeBody(HttpStatus.INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_MESSAGE);
 
-        logger.error(body + ", " + e.getMessage());
+        logError(body, e.getMessage());
 
         return ResponseEntity.internalServerError().body(body);
+    }
+
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<Map<String, Object>> handleAuthException(final AuthException e) {
+        final Map<String, Object> body = makeBody(HttpStatus.UNAUTHORIZED, e.getMessage());
+
+        logError(body, e.getMessage());
+
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("WWW-Authenticate", "Basic realm = \"" + e.getRealm() + "\"");
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).headers(httpHeaders).body(body);
+    }
+
+    private void logError(final Map<String, Object> body, final String message) {
+        logger.error(body + ", " + message);
     }
 
     private Map<String, Object> makeBody(final HttpStatus httpStatus, final String errorMessage) {
