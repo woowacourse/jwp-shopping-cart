@@ -1,11 +1,14 @@
 package cart.dao;
 
 import cart.entity.MemberEntity;
+import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class JdbcMemberDao implements MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -24,5 +27,11 @@ public class JdbcMemberDao implements MemberDao {
     public List<MemberEntity> selectAll() {
         final String sql = "SELECT * FROM member";
         return jdbcTemplate.query(sql, memberEntityRowMapper);
+    }
+
+    @Override
+    public long insert(final MemberEntity memberEntity) {
+        final String sql = "INSERT INTO member(email, password) VALUES (?, ?)";
+        return jdbcTemplate.update(sql, memberEntity.getEmail(), memberEntity.getPassword());
     }
 }
