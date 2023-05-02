@@ -73,13 +73,13 @@ public class ProductRepository {
 			productId);
 
 		if (updateCount != UPDATED_COUNT) {
-			throw new IllegalStateException("상품 갱신 도충 오류가 발생하여 실패하였습니다.");
+			throw new IllegalStateException(String.format("1개 이상의 상품이 수정되었습니다. 수정된 상품 수 : %d", updateCount));
 		}
 
 		return productId;
 	}
 
-	public void clear(){
+	public void clear() {
 		final String clearSql = "DELETE FROM products";
 		final int clear = jdbcTemplate.update(clearSql);
 	}
