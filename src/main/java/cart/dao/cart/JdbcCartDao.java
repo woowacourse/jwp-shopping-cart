@@ -57,7 +57,10 @@ public class JdbcCartDao implements CartDao {
     @Override
     public void removeProductInCart(User user, Long productId) {
         final Long userId = getUserId(user);
-        final String sql = "DELETE FROM cart WHERE user_id = :userId AND product_id = :productId";
+        final String sql = "DELETE FROM cart "
+                + "WHERE user_id = :userId "
+                + "AND product_id = :productId "
+                + "LIMIT 1";
         final Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("userId", userId);
         paramMap.put("productId", productId);
