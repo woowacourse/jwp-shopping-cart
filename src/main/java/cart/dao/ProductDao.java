@@ -2,9 +2,10 @@ package cart.dao;
 
 import cart.entity.ProductEntity;
 import cart.validator.DefaultValidator;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class ProductDao {

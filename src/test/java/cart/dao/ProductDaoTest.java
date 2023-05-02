@@ -1,21 +1,22 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
 import cart.convertor.ProductEntityConvertor;
 import cart.entity.ProductEntity;
-import java.util.List;
-import javax.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.validation.ConstraintViolationException;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @JdbcTest
 class ProductDaoTest {

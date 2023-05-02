@@ -1,7 +1,5 @@
 package cart.controller.dto.response;
 
-import javax.validation.constraints.Email;
-
 public final class UserResponse {
     private final Long id;
     private final String email;

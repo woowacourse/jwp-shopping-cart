@@ -1,10 +1,10 @@
 package cart.validator;
 
-import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import java.util.Set;
 
 public final class DefaultValidator{
 
