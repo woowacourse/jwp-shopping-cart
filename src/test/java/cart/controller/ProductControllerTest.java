@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.auth.AuthenticationArgumentResolver;
+import cart.config.WebMvcConfig;
 import cart.controller.dto.ProductRequest;
 import cart.entity.Product;
 import cart.service.ProductService;
@@ -21,10 +23,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(ProductController.class)
+@WebMvcTest(controllers = ProductController.class,
+        excludeFilters = {
+                @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebMvcConfig.class,
+                        AuthenticationArgumentResolver.class})
+        })
 class ProductControllerTest {
 
     @Autowired
