@@ -1,8 +1,6 @@
 package cart.controller;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -33,20 +31,6 @@ class AdminControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Test
-    @DisplayName("어드민 페이지 반환을 테스트한다.")
-    public void testHome() throws Exception {
-        //given
-        when(productService.findAll())
-            .thenReturn(null);
-
-        //when
-        //then
-        mockMvc.perform(get("/admin"))
-            .andDo(print())
-            .andExpect(status().isOk());
-    }
 
     @Test
     @DisplayName("상품을 추가한다.")

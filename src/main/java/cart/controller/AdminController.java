@@ -2,22 +2,18 @@ package cart.controller;
 
 import cart.domain.product.service.ProductService;
 import cart.dto.ProductCreateRequest;
-import cart.dto.ProductResponse;
 import cart.dto.ProductUpdateRequest;
 import java.net.URI;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/admin")
 public class AdminController {
 
@@ -25,13 +21,6 @@ public class AdminController {
 
     public AdminController(final ProductService productService) {
         this.productService = productService;
-    }
-
-    @GetMapping("")
-    public String home(Model model) {
-        final List<ProductResponse> products = productService.findAll();
-        model.addAttribute("products", products);
-        return "admin";
     }
 
     @PostMapping("/products")
