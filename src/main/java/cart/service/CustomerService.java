@@ -19,4 +19,9 @@ public class CustomerService {
     public List<CustomerEntity> findAll() {
         return customerDao.findAll();
     }
+
+    public Long findIdByEmailAndPassword(final String email, final String password) {
+        return customerDao.findIdByEmailAndPassword(email, password)
+            .orElseThrow(() -> new IllegalArgumentException("해당 인증에 부합하는 고객이 없습니다."));
+    }
 }

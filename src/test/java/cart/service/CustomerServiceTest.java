@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.entity.customer.CustomerEntity;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +38,21 @@ class CustomerServiceTest {
             () -> assertThat(customers.get(1).getEmail()).isEqualTo("dazzle@wooteco.com"),
             () -> assertThat(customers.get(1).getPassword()).isEqualTo("split")
         );
+    }
+
+    @DisplayName("이메일과 비밀번호로 고객의 아이디를 조회한다.")
+    @Test
+    void findByEmailAndPassword() {
+        //given
+        //when
+        final Long firstCustomerId = customerService.findIdByEmailAndPassword("split@wooteco.com", "dazzle");
+        final Long secondCustomerId = customerService.findIdByEmailAndPassword("dazzle@wooteco.com", "split");
+
+        //then
+        final List<CustomerEntity> customerEntities = customerService.findAll();
+        final List<Long> customerIds = customerEntities.stream()
+            .map(CustomerEntity::getId)
+            .collect(Collectors.toList());
+        Assertions.assertThat(customerIds).containsExactly(firstCustomerId, secondCustomerId);
     }
 }

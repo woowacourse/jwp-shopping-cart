@@ -34,7 +34,7 @@
 - [x] 모든 사용자의 정보를 확인한다. ( GET "/settings" )
     - Request Body : 없음
     - Response Body : 모든 사용자들의 정보
-- [ ] 장바구니 목록을 조회한다. ( GET "/cart" )
+- [x] 장바구니 목록을 조회한다. ( GET "/cart" )
     - Request Body : 없음
     - Response Body : 장바구니에 담긴 모든 상품의 정보
 
@@ -52,10 +52,10 @@
 
 #### CartApiController
 
-- [ ] 상품 목록 페이지에서 상품을 장바구니에 추가한다. ( POST "/cart/{productId}" )
+- [x] 상품 목록 페이지에서 상품을 장바구니에 추가한다. ( POST "/cart/{productId}" )
     - Request Body : 상품 Id
     - Response Body : 없음 ( Status Code : 204(CREATED) )
-- [ ] 장바구니에 담긴 상품을 제거한다. ( DELETE "/cart/{productId}" )
+- [x] 장바구니에 담긴 상품을 제거한다. ( DELETE "/cart/{productId}" )
     - Request Body : 없음
     - Response Body : 없음 ( Status Code : 204 (NO_CONTENT) )
 

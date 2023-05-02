@@ -46,7 +46,7 @@ class CartDaoTest {
         assertThat(allProductIds).containsExactly(savedProductId);
     }
 
-    @DisplayName("카드의 ID로 카트 데이터를 삭제한다.")
+    @DisplayName("카트의 ID로 카트 데이터를 삭제한다.")
     @Test
     void delete() {
         //given
@@ -56,6 +56,22 @@ class CartDaoTest {
 
         //when
         cartDao.delete(savedCartId);
+
+        //then
+        final List<Long> allProductIds = cartDao.findAllProductIdsBy(savedCustomerId);
+        assertThat(allProductIds).isEmpty();
+    }
+
+    @DisplayName("고객의 ID와 상품에 ID로 카트 데이터를 삭제한다.")
+    @Test
+    void deleteByCustomerIdAndProductId() {
+        //given
+        final Long savedCustomerId = customerDao.save(new CustomerEntity(null, "email@email.com", "password"));
+        final Long savedProductId = productDao.save(new ProductEntity("name", "imageUrl", 1000, "description"));
+        cartDao.save(new CartEntity(savedCustomerId, savedProductId));
+
+        //when
+        cartDao.deleteByCustomerIdAndProductId(savedCustomerId, savedProductId);
 
         //then
         final List<Long> allProductIds = cartDao.findAllProductIdsBy(savedCustomerId);

@@ -10,6 +10,10 @@ public final class ProductEntity {
     private Price price;
     private Description description;
 
+    ProductEntity() {
+
+    }
+
     public ProductEntity(final String name, final String imageUrl, final Integer price, final String description) {
         this(null, name, imageUrl, price, description);
     }

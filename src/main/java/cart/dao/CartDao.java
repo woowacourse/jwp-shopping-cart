@@ -32,6 +32,11 @@ public class CartDao {
         jdbcTemplate.update(sql, id);
     }
 
+    public void deleteByCustomerIdAndProductId(final Long customerID, final Long productId) {
+        final String sql = "DELETE FROM CART WHERE customer_id = ? AND product_id = ?";
+        jdbcTemplate.update(sql, customerID, productId);
+    }
+
     public List<Long> findAllProductIdsBy(final Long customerId) {
         final String sql = "SELECT product_id FROM CART WHERE customer_id=?";
         return jdbcTemplate.query(

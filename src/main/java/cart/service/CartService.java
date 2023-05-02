@@ -43,4 +43,9 @@ public class CartService {
                 () -> new IllegalArgumentException("장바구니에 담긴 상품의 Id에 해당하는 상품이 존재하지 않습니다."))
             ).collect(Collectors.toList());
     }
+
+    @Transactional
+    public void deleteByCustomerIdAndProductId(final Long customerId, final Long productID) {
+        cartDao.deleteByCustomerIdAndProductId(customerId, productID);
+    }
 }

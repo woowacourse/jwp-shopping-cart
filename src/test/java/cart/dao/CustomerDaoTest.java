@@ -1,8 +1,11 @@
 package cart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import cart.entity.customer.CustomerEntity;
 import java.util.List;
-import org.assertj.core.api.Assertions;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +37,7 @@ class CustomerDaoTest {
 
         //then
         final List<CustomerEntity> customers = customerDao.findAll();
-        Assertions.assertThat(customers.get(customers.size() - 1).getId()).isEqualTo(savedId);
+        assertThat(customers.get(customers.size() - 1).getId()).isEqualTo(savedId);
     }
 
     @DisplayName("모든 고객의 정보를 조회하여 반환한다. (어플리케이션 실행시 더미 유저 2명 존재)")
@@ -45,6 +48,22 @@ class CustomerDaoTest {
         List<CustomerEntity> customers = customerDao.findAll();
 
         //then
-        Assertions.assertThat(customers).hasSize(2);
+        assertThat(customers).hasSize(2);
+    }
+
+    @DisplayName("이메일과 비밀번호이 일치하는 고객의 아이디를 조회하여 반환한다.")
+    @Test
+    void findIdByBasicCredential() {
+        //given
+        final Long savedId = customerDao.save(new CustomerEntity(null, "email@email.com", "password"));
+
+        //when
+        final Optional<Long> findId = customerDao.findIdByEmailAndPassword("email@email.com", "password");
+
+        //then
+        assertAll(
+            () -> assertThat(findId).isPresent(),
+            () -> assertThat(findId.get()).isEqualTo(savedId)
+        );
     }
 }

@@ -79,4 +79,29 @@ class CartServiceTest {
         final List<ProductEntity> products = cartService.findAllById(firstCustomerId);
         assertThat(products).hasSize(0);
     }
+
+    @DisplayName("고객 Id와 상품 Id로 카트 데이터를 삭제한다.")
+    @Test
+    void deleteByCustomerIdAndProductId() {
+        //given
+        final Long registeredProductID = productService.register(
+            new ProductRequestDto(
+                "name",
+                "imageUrl",
+                1000,
+                "description",
+                List.of(1L)
+            )
+        );
+        final List<CustomerEntity> customers = customerService.findAll();
+        final Long firstCustomerId = customers.get(0).getId();
+        cartService.add(new CartEntity(firstCustomerId, registeredProductID));
+
+        //when
+        cartService.deleteByCustomerIdAndProductId(firstCustomerId, registeredProductID);
+
+        //then
+        final List<ProductEntity> products = cartService.findAllById(firstCustomerId);
+        assertThat(products).hasSize(0);
+    }
 }
