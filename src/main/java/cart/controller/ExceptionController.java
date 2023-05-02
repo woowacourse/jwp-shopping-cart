@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.dto.ExceptionResponse;
+import cart.exception.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -29,7 +30,7 @@ public class ExceptionController {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(System.lineSeparator()));
         final ExceptionResponse exceptionResponse = new ExceptionResponse(errorMessage);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
+        return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -48,9 +49,16 @@ public class ExceptionController {
     public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
         log.error(exception.getMessage());
 
-        final String errorMessage = exception.getMessage();
-        final ExceptionResponse exceptionResponse = new ExceptionResponse(errorMessage);
+        final ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
         return ResponseEntity.badRequest().body(exceptionResponse);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ExceptionResponse> handleAuthorizationException(AuthorizationException exception) {
+        log.error(exception.getMessage());
+
+        final ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exceptionResponse);
     }
 
     @ExceptionHandler
