@@ -1,7 +1,10 @@
 package cart.dto.product;
 
+import org.springframework.stereotype.Component;
+
 import cart.dao.entity.Product;
 
+@Component
 public class ProductMapper {
     public ProductResponse toResponse(Product product) {
         return new ProductResponse(
