@@ -16,11 +16,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController
-public final class AdminProductController {
+public final class ProductController {
 
     private final ProductDao productDao;
 
-    public AdminProductController(final ProductDao productDao) {
+    public ProductController(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
