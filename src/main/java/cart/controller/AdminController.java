@@ -39,7 +39,7 @@ public class AdminController {
         productService.create(request);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/product/{id}")
     public String update(
             @PathVariable final Long id,
             @RequestBody @Valid final ProductUpdateRequest request
@@ -48,7 +48,7 @@ public class AdminController {
         return "admin";
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/product/{id}")
     public String delete(@PathVariable final Long id) {
         productService.delete(id);
         return "admin";
