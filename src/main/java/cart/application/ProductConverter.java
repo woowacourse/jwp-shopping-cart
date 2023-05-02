@@ -1,9 +1,9 @@
 package cart.application;
 
-import cart.business.domain.Product;
-import cart.business.domain.ProductImage;
-import cart.business.domain.ProductName;
-import cart.business.domain.ProductPrice;
+import cart.business.domain.product.Product;
+import cart.business.domain.product.ProductImage;
+import cart.business.domain.product.ProductName;
+import cart.business.domain.product.ProductPrice;
 import cart.presentation.dto.ProductDto;
 
 public class ProductConverter {

@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.business.domain.ProductName;
+import cart.business.domain.product.ProductName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

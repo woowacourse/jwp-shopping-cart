@@ -1,10 +1,10 @@
 package cart.persistence;
 
 import cart.business.ProductRepository;
-import cart.business.domain.Product;
-import cart.business.domain.ProductImage;
-import cart.business.domain.ProductName;
-import cart.business.domain.ProductPrice;
+import cart.business.domain.product.Product;
+import cart.business.domain.product.ProductImage;
+import cart.business.domain.product.ProductName;
+import cart.business.domain.product.ProductPrice;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

@@ -1,9 +1,9 @@
 package cart.business;
 
-import cart.business.domain.Product;
-import cart.business.domain.ProductImage;
-import cart.business.domain.ProductName;
-import cart.business.domain.ProductPrice;
+import cart.business.domain.product.Product;
+import cart.business.domain.product.ProductImage;
+import cart.business.domain.product.ProductName;
+import cart.business.domain.product.ProductPrice;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package cart.persistence;
 
 import cart.business.ProductRepository;
-import cart.business.domain.Product;
+import cart.business.domain.product.Product;
 
 import java.util.List;
 import java.util.Map;

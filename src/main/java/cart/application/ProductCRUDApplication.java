@@ -1,7 +1,7 @@
 package cart.application;
 
 import cart.business.ProductCRUDService;
-import cart.business.domain.Product;
+import cart.business.domain.product.Product;
 import cart.config.annonation.Application;
 import cart.presentation.dto.ProductDto;
 import cart.presentation.dto.ProductIdDto;

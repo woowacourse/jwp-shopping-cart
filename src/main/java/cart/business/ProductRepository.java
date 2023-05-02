@@ -1,6 +1,6 @@
 package cart.business;
 
-import cart.business.domain.Product;
+import cart.business.domain.product.Product;
 
 import java.util.List;
 import java.util.Optional;
