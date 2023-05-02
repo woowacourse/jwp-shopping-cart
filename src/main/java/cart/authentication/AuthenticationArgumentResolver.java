@@ -20,7 +20,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
     }
 
     @Override
-    public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public String resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String header = webRequest.getHeader(AUTHORIZATION);
 
         if (header == null) {
@@ -33,10 +33,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
             String decodedString = new String(decodedBytes);
 
             String[] credentials = decodedString.split(DELIMITER);
-            String email = credentials[0];
-            String password = credentials[1];
-
-            return new Member(email, password);
+            return credentials[0];
         }
 
         throw new MemberAuthenticationException("Member로 로그인이 되지 않았습니다.");

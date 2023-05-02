@@ -1,7 +1,6 @@
 package cart.cart.controller;
 
 import cart.authentication.Authentication;
-import cart.authentication.entity.Member;
 import cart.cart.entity.Cart;
 import cart.cart.repository.CartRepository;
 import cart.product.entity.Product;
@@ -35,8 +34,8 @@ public class CartController {
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<Product>> findByEmail(@Authentication Member member) {
-        List<Cart> carts = cartRepository.findAllByMemberEmail(member.getEmail());
+    public ResponseEntity<List<Product>> findByEmail(@Authentication String email) {
+        List<Cart> carts = cartRepository.findAllByMemberEmail(email);
 
         List<Long> productIds = carts.stream()
                 .map(Cart::getProductId)
@@ -50,16 +49,16 @@ public class CartController {
     }
 
     @PostMapping("/carts")
-    public ResponseEntity<Void> saveCart(@Authentication Member member, @RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<Void> saveCart(@Authentication String email, @RequestBody Map<String, Object> requestBody) {
         Long productId = Long.valueOf((Integer) requestBody.get("product_id"));
-        cartRepository.save(new Cart(member.getEmail(), productId));
+        cartRepository.save(new Cart(email, productId));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/carts")
-    public ResponseEntity<Void> deleteCart(@Authentication Member member, @RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<Void> deleteCart(@Authentication String email, @RequestBody Map<String, Object> requestBody) {
         Long productId = Long.valueOf((Integer) requestBody.get("product_id"));
-        cartRepository.deleteByMemberEmailAndProductId(member.getEmail(), productId);
+        cartRepository.deleteByMemberEmailAndProductId(email, productId);
         return ResponseEntity.ok().build();
     }
 }
