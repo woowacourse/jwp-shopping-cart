@@ -1,7 +1,6 @@
 package cart.exception;
 
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +15,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidProductException.class)
     public ResponseEntity<ExceptionResponse> handleInvalidProductException(InvalidProductException exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                HttpStatus.BAD_REQUEST.value(),
                 LocalDateTime.now(),
                 exception.getMessage()
         );
@@ -29,7 +27,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                HttpStatus.BAD_REQUEST.value(),
                 LocalDateTime.now(),
                 Objects.requireNonNull(exception.getBindingResult().getFieldError()).getDefaultMessage()
         );
@@ -42,7 +39,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleCommonException(Exception exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 LocalDateTime.now(),
                 "알 수 없는 서버 에러가 발생헀습니다."
         );
