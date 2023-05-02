@@ -1,5 +1,10 @@
 package cart.controller;
 
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -32,8 +37,8 @@ class AdminControllerTest {
     @Test
     void getAdmin() throws Exception {
         List<Product> products = List.of(
-                new Product("이오", 1000, null),
-                new Product("애쉬", 2000, null));
+                new Product("피자", 1000, "http://pizza"),
+                new Product("햄버거", 2000, "http://hamburger"));
         given(productService.findAll()).willReturn(products);
         ProductsResponse response = ProductsResponse.of(products);
 
@@ -41,6 +46,23 @@ class AdminControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML_VALUE))
                 .andExpect(view().name("admin"))
-                .andExpect(model().attribute("products", response));
+                .andExpect(model().attribute("products", instanceOf(ProductsResponse.class)))
+                .andExpect(model().attribute("products", hasProperty("products",
+                        allOf(
+                                hasItem(
+                                        allOf(
+                                                hasProperty("name", is("피자")),
+                                                hasProperty("price", is(1000)),
+                                                hasProperty("imageUrl", is("http://pizza"))
+                                        )
+                                ),
+                                hasItem(
+                                        allOf(
+                                                hasProperty("name", is("햄버거")),
+                                                hasProperty("price", is(2000)),
+                                                hasProperty("imageUrl", is("http://hamburger"))
+                                        )
+                                )
+                        ))));
     }
 }

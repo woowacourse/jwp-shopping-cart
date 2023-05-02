@@ -1,5 +1,10 @@
 package cart.controller;
 
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -42,6 +47,24 @@ class SettingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML_VALUE))
                 .andExpect(view().name("settings"))
-                .andExpect(model().attribute("members", response));
+                .andExpect(model().attribute("members", instanceOf(MembersResponse.class)))
+                .andExpect(model().attribute("members", hasProperty("members",
+                        allOf(
+                                hasItem(
+                                        allOf(
+                                                hasProperty("email", is("a@a.com")),
+                                                hasProperty("password", is("abc1")),
+                                                hasProperty("name", is("이오"))
+                                        )
+                                ),
+                                hasItem(
+                                        allOf(
+                                                hasProperty("email", is("b@b.com")),
+                                                hasProperty("password", is("abc2")),
+                                                hasProperty("name", is("애쉬"))
+                                        )
+                                )
+                        )
+                )));
     }
 }
