@@ -20,7 +20,7 @@ public class ImageUrl {
         }
     }
 
-    public String getImageUrl() {
+    public String imageUrl() {
         return imageUrl;
     }
 }

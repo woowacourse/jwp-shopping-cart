@@ -16,7 +16,7 @@ public class Price {
         }
     }
 
-    public long getPrice() {
+    public long price() {
         return price;
     }
 }
