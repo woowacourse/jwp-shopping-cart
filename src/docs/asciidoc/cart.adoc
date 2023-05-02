@@ -17,7 +17,7 @@ operation::cart-rest-controller-test/delete-cart_success[snippets='http-request,
 === *2-2 실패 - 인증 정보 없음*
 operation::cart-rest-controller-test/delete-cart_unauthorized[snippets='http-request,http-response']
 
-=== *2-2 실패 - 권한 없음*
+=== *2-3 실패 - 권한 없음*
 operation::cart-rest-controller-test/delete-cart_forbidden[snippets='http-request,http-response']
 
 == *3. 장바구니 조회 API*

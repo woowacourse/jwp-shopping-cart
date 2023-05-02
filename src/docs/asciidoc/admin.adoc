@@ -7,8 +7,17 @@
 === *1-1 성공*
 operation::admin-rest-controller-test/add-product[snippets='http-request,http-response,request-body,request-fields,response-headers']
 
-=== *1-2 실패 - 잘못된 형식의 입력*
-operation::admin-rest-controller-test/add-product_fail[snippets='http-request,http-response,request-body,request-fields']
+=== *1-2 실패 - 빈 값으로 들어온 입력*
+operation::admin-rest-controller-test/add-product_blank_fail[snippets='http-request,http-response,request-body,request-fields']
+
+=== *1-3 실패 - 이름 길이 제한 초과*
+operation::admin-rest-controller-test/add-product_invalid_name_fail[snippets='http-request,http-response,request-body,request-fields']
+
+=== *1-4 실패 - 가격 범위 제한 초과*
+operation::admin-rest-controller-test/add-product_invalid_price_fail[snippets='http-request,http-response,request-body,request-fields']
+
+=== *1-5 실패 - 권한이 없는 사용자*
+operation::admin-rest-controller-test/add-product_forbidden_fail[snippets='http-request,http-response,request-body,request-fields']
 
 == *2. 상품 정보 수정 API*
 === *2-1 성공*

@@ -8,4 +8,8 @@
 operation::member-rest-controller-test/add-member_success[snippets='http-request,http-response,request-body,request-fields,response-headers']
 
 === *1-2 실패 - 잘못된 형식의 입력*
-operation::member-rest-controller-test/add-member_fail[snippets='http-request,http-response,request-body,request-fields']
+operation::member-rest-controller-test/add-member_invalid_fail[snippets='http-request,http-response,request-body,request-fields']
+
+=== *1-3 실패 - 중복된 사용자 이메일*
+operation::member-rest-controller-test/add-member_duplicate_fail[snippets='http-request,http-response,request-body,request-fields']
+
