@@ -15,4 +15,10 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponseDto(exception));
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponseDto> illegalStateException(Exception exception) {
+        return ResponseEntity.internalServerError()
+                .body(new ErrorResponseDto(exception));
+    }
+
 }
