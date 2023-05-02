@@ -1,6 +1,8 @@
 package cart.controller;
 
+import cart.exception.AuthenticationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,5 +23,10 @@ public class ControllerAdvice {
                 .collect(Collectors.joining(System.lineSeparator()));
 
         return ResponseEntity.badRequest().body(errorMessages);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleNotValidInput(final AuthenticationException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 }
