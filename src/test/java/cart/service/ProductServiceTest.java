@@ -48,11 +48,8 @@ class ProductServiceTest {
     @DisplayName("상품이 생성시 검증에 실패한다.")
     @Test
     void createFail() {
-        //given
-        final ProductCreateRequest request = new ProductCreateRequest("베베 상품", -1000, "bebe_img");
-
         // when, then
-        Assertions.assertThrows(CantSellNegativeQuantity.class, () -> productService.create(request));
+        Assertions.assertThrows(CantSellNegativeQuantity.class, () -> new ProductCreateRequest("베베 상품", -1000, "bebe_img"));
     }
 
     @DisplayName("상품을 전체 조회한다.")
@@ -95,12 +92,8 @@ class ProductServiceTest {
     @DisplayName("상품이 수정시 검증에 실패한다.")
     @Test
     void updateFail() {
-        // given
-        final Long id = 1L;
-        final ProductUpdateRequest request = new ProductUpdateRequest("베베 상품 가격 폭등", -6000, "bebe_img");
-
         // when, then
-        Assertions.assertThrows(CantSellNegativeQuantity.class, () -> productService.update(id, request));
+        Assertions.assertThrows(CantSellNegativeQuantity.class, () -> new ProductUpdateRequest("베베 상품 가격 폭락", -6000, "bebe_img"));
     }
 
     @DisplayName("상품을 삭제할 수 있다.")
