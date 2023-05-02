@@ -37,6 +37,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<?> handleException(Exception e) {
+        System.out.println(e.getMessage());
         Map<String, String> errorsResult = Map.of("errors", "서버에서 오류가 발생했습니다");
         return ResponseEntity.internalServerError().body(errorsResult);
     }
