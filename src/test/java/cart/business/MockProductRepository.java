@@ -33,13 +33,15 @@ public class MockProductRepository implements ProductRepository {
     }
 
     @Override
-    public Product update(Product product) {
-        return store.replace(product.getId(), product);
+    public Integer update(Integer id, Product product) {
+        store.replace(id, product);
+        return id;
     }
 
     @Override
-    public Product remove(Integer productId) {
-        return store.remove(productId);
+    public Integer remove(Integer id) {
+        store.remove(id);
+        return id;
     }
 
     @Override

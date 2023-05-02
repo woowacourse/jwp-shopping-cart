@@ -52,16 +52,13 @@ class MemoryProductRepositoryTest {
                 new ProductPrice(40000));
 
         //when
-        memoryProductRepository.insert(salmon);
-        memoryProductRepository.insert(pizza);
+        Integer actualSalmonId = memoryProductRepository.insert(salmon);
+        Integer actualPizzaId = memoryProductRepository.insert(pizza);
 
         List<Product> allProducts = memoryProductRepository.findAll();
-        Product actualSalmon = allProducts.get(0);
-        Product actualPizza = allProducts.get(1);
 
         //then
-        assertThat(actualSalmon.getId()).isEqualTo(salmon.getId());
-        assertThat(actualPizza.getId()).isEqualTo(pizza.getId());
+        assertThat(allProducts.size()).isEqualTo(2);
     }
 
     @Test
@@ -81,7 +78,7 @@ class MemoryProductRepositoryTest {
                 new ProductPrice(40000));
 
         //when
-        memoryProductRepository.update(pizza);
+        memoryProductRepository.update(salmonId, pizza);
 
         //then
         assertThat(memoryProductRepository.findSameProductExist(pizza)).isTrue();
@@ -98,9 +95,9 @@ class MemoryProductRepositoryTest {
 
         //when
         Integer salmonId = memoryProductRepository.insert(salmon);
-        Product actual = memoryProductRepository.remove(salmonId);
+        Integer actualId = memoryProductRepository.remove(salmonId);
 
         //then
-        assertThat(actual).isEqualTo(salmon);
+        assertThat(actualId).isEqualTo(salmonId);
     }
 }

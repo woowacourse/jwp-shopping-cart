@@ -10,9 +10,9 @@ public interface ProductRepository {
 
     List<Product> findAll();
 
-    Product update(Product product);
+    Integer update(Integer id, Product product);
 
-    Product remove(Integer productId);
+    Integer remove(Integer id);
 
     Boolean findSameProductExist(Product product);
 }
