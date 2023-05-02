@@ -13,4 +13,6 @@ public interface ProductRepository {
     Product update(Product product);
 
     Product remove(Integer productId);
+
+    Boolean findSameProductExist(Product product);
 }

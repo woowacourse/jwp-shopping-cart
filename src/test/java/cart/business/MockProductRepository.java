@@ -41,4 +41,9 @@ public class MockProductRepository implements ProductRepository {
     public Product remove(Integer productId) {
         return store.remove(productId);
     }
+
+    @Override
+    public Boolean findSameProductExist(Product product) {
+        return store.containsValue(product);
+    }
 }
