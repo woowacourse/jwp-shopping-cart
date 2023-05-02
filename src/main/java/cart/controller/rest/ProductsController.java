@@ -3,7 +3,7 @@ package cart.controller.rest;
 import cart.dto.request.ProductRequest;
 import cart.dto.request.ProductUpdateRequest;
 import cart.dto.response.ProductResponse;
-import cart.service.CartService;
+import cart.service.ProductsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,15 +23,15 @@ import java.net.URI;
 @RequestMapping("/products")
 public class ProductsController {
 
-    private final CartService cartService;
+    private final ProductsService productsService;
 
-    public ProductsController(CartService cartService) {
-        this.cartService = cartService;
+    public ProductsController(ProductsService productsService) {
+        this.productsService = productsService;
     }
 
     @PostMapping
     public ResponseEntity<ProductResponse> create(@RequestBody @Valid ProductRequest productRequest) {
-        ProductResponse productResponse = cartService.create(productRequest);
+        ProductResponse productResponse = productsService.create(productRequest);
 
         URI createdUri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -44,13 +44,13 @@ public class ProductsController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> update(@RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
-        ProductResponse productResponse = cartService.update(productUpdateRequest);
+        ProductResponse productResponse = productsService.update(productUpdateRequest);
         return ResponseEntity.ok().body(productResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable @NotNull Long id) {
-        cartService.delete(id);
+        productsService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

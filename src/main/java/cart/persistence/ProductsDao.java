@@ -4,7 +4,7 @@ import cart.domain.product.Product;
 
 import java.util.List;
 
-public interface ProductDao {
+public interface ProductsDao {
 
     Long create(Product product);
 

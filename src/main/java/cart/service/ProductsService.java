@@ -4,7 +4,7 @@ import cart.domain.product.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.request.ProductUpdateRequest;
 import cart.dto.response.ProductResponse;
-import cart.persistence.ProductDao;
+import cart.persistence.ProductsDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,12 +13,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class CartService {
+public class ProductsService {
 
-    private final ProductDao productDao;
+    private final ProductsDao productsDao;
 
-    public CartService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductsService(ProductsDao productsDao) {
+        this.productsDao = productsDao;
     }
 
     public ProductResponse create(ProductRequest productRequest) {
@@ -28,8 +28,8 @@ public class CartService {
                 productRequest.getImageUrl()
         );
 
-        Long createdId = productDao.create(product);
-        Product created = productDao.find(createdId);
+        Long createdId = productsDao.create(product);
+        Product created = productsDao.find(createdId);
 
         return new ProductResponse(
                 created.getId(),
@@ -39,7 +39,7 @@ public class CartService {
     }
 
     public List<ProductResponse> readAll() {
-        List<Product> products = productDao.findAll();
+        List<Product> products = productsDao.findAll();
         return products.stream()
                 .map(product -> new ProductResponse(
                         product.getId(),
@@ -58,8 +58,8 @@ public class CartService {
                 productUpdateRequest.getImageUrl()
         );
 
-        Long updatedId = productDao.update(product);
-        Product updated = productDao.find(updatedId);
+        Long updatedId = productsDao.update(product);
+        Product updated = productsDao.find(updatedId);
 
         return new ProductResponse(
                 updated.getId(),
@@ -70,6 +70,6 @@ public class CartService {
     }
 
     public void delete(Long id) {
-        productDao.delete(id);
+        productsDao.delete(id);
     }
 }

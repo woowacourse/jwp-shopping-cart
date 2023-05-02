@@ -1,7 +1,7 @@
 package cart.controller.view;
 
 import cart.dto.response.ProductResponse;
-import cart.service.CartService;
+import cart.service.ProductsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,10 +11,10 @@ import java.util.List;
 @Controller
 public class IndexController {
 
-    private final CartService cartService;
+    private final ProductsService productsService;
 
-    public IndexController(CartService cartService) {
-        this.cartService = cartService;
+    public IndexController(ProductsService productsService) {
+        this.productsService = productsService;
     }
 
     @GetMapping("/")
@@ -24,7 +24,7 @@ public class IndexController {
 
     @GetMapping("/index")
     public String index(Model model) {
-        List<ProductResponse> productsResponse = cartService.readAll();
+        List<ProductResponse> productsResponse = productsService.readAll();
         model.addAttribute("products", productsResponse);
         return "index";
     }

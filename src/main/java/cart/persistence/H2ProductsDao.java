@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class H2ProductDao implements ProductDao {
+public class H2ProductsDao implements ProductsDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    public H2ProductDao(JdbcTemplate jdbcTemplate) {
+    public H2ProductsDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

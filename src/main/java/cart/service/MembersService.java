@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class MemberService {
+public class MembersService {
 
     private final MemberDao memberDao;
 
-    public MemberService(MemberDao memberDao) {
+    public MembersService(MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 

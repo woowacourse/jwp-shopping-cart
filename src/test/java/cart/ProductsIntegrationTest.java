@@ -5,7 +5,7 @@ import static org.hamcrest.core.Is.is;
 import cart.domain.product.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.request.ProductUpdateRequest;
-import cart.persistence.ProductDao;
+import cart.persistence.ProductsDao;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -64,8 +64,8 @@ public class ProductsIntegrationTest {
     @Sql("/data.sql")
     @DisplayName("/product에 정상적인 PUT request를 전송하면 ok 상태코드를 반환한다")
     void updateTest() {
-        ProductDao productDao = applicationContext.getBean("h2ProductDao", ProductDao.class);
-        Long createdId = productDao.create(new Product("테스트", 1000, "http://testtest"));
+        ProductsDao productsDao = applicationContext.getBean("h2ProductsDao", ProductsDao.class);
+        Long createdId = productsDao.create(new Product("테스트", 1000, "http://testtest"));
         ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(
                 createdId,
                 "수정된 테스트",
@@ -101,8 +101,8 @@ public class ProductsIntegrationTest {
     @Sql("/data.sql")
     @DisplayName("/delete에 정상적인 request를 전송하면 no_content 상태코드를 반환한다")
     void deleteTest() {
-        ProductDao productDao = applicationContext.getBean("h2ProductDao", ProductDao.class);
-        Long createdId = productDao.create(new Product("테스트", 1000, "http://testtest"));
+        ProductsDao productsDao = applicationContext.getBean("h2ProductsDao", ProductsDao.class);
+        Long createdId = productsDao.create(new Product("테스트", 1000, "http://testtest"));
 
         RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
