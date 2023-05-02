@@ -2,7 +2,7 @@ package cart.entity;
 
 import cart.exception.EmailFormatNotValidException;
 
-public class User {
+public class Member {
 
     private static final String VALID_EMAIL_FORMAT = "\\w+@\\w+\\.\\w+";
 
@@ -10,7 +10,7 @@ public class User {
     private final String email;
     private final String password;
 
-    public User(final Long id, final String email, final String password) {
+    public Member(final Long id, final String email, final String password) {
         validateEmailFormat(email);
         this.id = id;
         this.email = email;
@@ -21,5 +21,9 @@ public class User {
         if (!email.matches(VALID_EMAIL_FORMAT)) {
             throw new EmailFormatNotValidException();
         }
+    }
+
+    public String getEmail() {
+        return email;
     }
 }
