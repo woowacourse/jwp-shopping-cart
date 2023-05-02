@@ -9,8 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import cart.domain.product.TestFixture;
-import cart.domain.product.service.CartService;
-import cart.domain.product.service.dto.ProductDto;
+import cart.domain.service.ProductService;
+import cart.domain.service.dto.ProductDto;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,12 +27,12 @@ class ViewControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    private CartService cartService;
+    private ProductService productService;
 
     @DisplayName("루트 경로 요청시, index.html을 반환한다.")
     @Test
     void loadIndexPage() throws Exception {
-        Mockito.when(cartService.getAllProducts())
+        Mockito.when(productService.getAllProducts())
                 .thenReturn(List.of(new ProductDto(TestFixture.CHICKEN), new ProductDto(TestFixture.PIZZA)));
 
         mockMvc.perform(get("/"))
@@ -49,7 +49,7 @@ class ViewControllerTest {
                 new ProductDto(TestFixture.PIZZA),
                 new ProductDto(TestFixture.CHICKEN)
         );
-        when(cartService.getAllProducts())
+        when(productService.getAllProducts())
                 .thenReturn(expectedProducts);
 
         mockMvc.perform(get("/admin"))

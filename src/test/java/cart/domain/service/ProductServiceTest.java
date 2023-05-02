@@ -1,13 +1,8 @@
-package cart.domain.product.service;
-
-import static org.assertj.core.api.Assertions.assertThat;
+package cart.domain.service;
 
 import cart.domain.product.Product;
-import cart.domain.product.ProductRepository;
 import cart.domain.product.TestFixture;
-import cart.domain.product.service.dto.ProductDto;
-import java.util.List;
-
+import cart.domain.service.dto.ProductDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +10,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-class CartServiceTest {
+class ProductServiceTest {
 
     @Autowired
-    private CartService cartService;
+    private ProductService productService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -33,7 +32,7 @@ class CartServiceTest {
         productRepository.save(pizza);
         productRepository.save(chicken);
 
-        List<ProductDto> allProducts = cartService.getAllProducts();
+        List<ProductDto> allProducts = productService.getAllProducts();
 
         assertThat(allProducts).hasSize(2);
         assertThat(allProducts).extractingResultOf("getName")

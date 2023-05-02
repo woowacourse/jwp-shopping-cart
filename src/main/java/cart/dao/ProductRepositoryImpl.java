@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.product.*;
+import cart.domain.service.ProductRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

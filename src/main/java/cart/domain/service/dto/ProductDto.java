@@ -1,4 +1,4 @@
-package cart.domain.product.service.dto;
+package cart.domain.service.dto;
 
 import cart.domain.product.Product;
 

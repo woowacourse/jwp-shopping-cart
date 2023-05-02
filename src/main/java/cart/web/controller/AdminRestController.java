@@ -1,8 +1,8 @@
 package cart.web.controller;
 
-import cart.domain.product.service.AdminService;
-import cart.domain.product.service.dto.ProductCreationDto;
-import cart.domain.product.service.dto.ProductModificationDto;
+import cart.domain.service.AdminService;
+import cart.domain.service.dto.ProductCreationDto;
+import cart.domain.service.dto.ProductModificationDto;
 import cart.exception.GlobalException;
 import cart.web.controller.dto.request.ProductModificationRequest;
 import cart.web.controller.dto.response.ProductCreationResponse;

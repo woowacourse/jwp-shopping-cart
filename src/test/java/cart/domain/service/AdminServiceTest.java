@@ -1,21 +1,21 @@
-package cart.domain.product.service;
-
-import static org.assertj.core.api.Assertions.assertThat;
+package cart.domain.service;
 
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductRepository;
 import cart.domain.product.TestFixture;
-import cart.domain.product.service.dto.ProductCreationDto;
-import cart.domain.product.service.dto.ProductModificationDto;
-import java.math.BigDecimal;
-import java.util.List;
+import cart.domain.service.dto.ProductCreationDto;
+import cart.domain.service.dto.ProductModificationDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)

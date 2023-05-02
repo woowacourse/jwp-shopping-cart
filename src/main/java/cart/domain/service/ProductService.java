@@ -1,19 +1,19 @@
-package cart.domain.product.service;
+package cart.domain.service;
 
 import cart.domain.product.Product;
-import cart.domain.product.ProductRepository;
-import cart.domain.product.service.dto.ProductDto;
+import cart.domain.service.dto.ProductDto;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 @Service
-public class CartService {
+public class ProductService {
     private final ProductRepository productRepository;
 
-    public CartService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

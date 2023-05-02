@@ -1,8 +1,8 @@
-package cart.domain.product.service;
+package cart.domain.service;
 
 import cart.domain.product.*;
-import cart.domain.product.service.dto.ProductCreationDto;
-import cart.domain.product.service.dto.ProductModificationDto;
+import cart.domain.service.dto.ProductCreationDto;
+import cart.domain.service.dto.ProductModificationDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

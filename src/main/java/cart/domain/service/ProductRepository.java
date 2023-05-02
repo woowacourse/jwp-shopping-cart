@@ -1,4 +1,6 @@
-package cart.domain.product;
+package cart.domain.service;
+
+import cart.domain.product.Product;
 
 import java.util.List;
 
