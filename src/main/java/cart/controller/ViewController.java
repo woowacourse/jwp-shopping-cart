@@ -1,6 +1,10 @@
 package cart.controller;
 
+import cart.dto.UserEmailPasswordDto;
 import cart.service.ProductService;
+import cart.service.UserService;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,9 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ViewController {
 
     private final ProductService productService;
+    private final UserService userService;
 
-    public ViewController(ProductService productService) {
+    public ViewController(ProductService productService, UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -27,7 +33,10 @@ public class ViewController {
     }
 
     @GetMapping("/settings")
-    public String getSettings() {
+    public String getSettings(final Model model) {
+        List<UserEmailPasswordDto> userEmailPasswordDtos = userService.findAllUser().stream().map(UserEmailPasswordDto::from)
+                .collect(Collectors.toList());
+        model.addAttribute("users", userEmailPasswordDtos);
         return "settings";
     }
 

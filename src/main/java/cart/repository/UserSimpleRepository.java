@@ -13,6 +13,11 @@ public class UserSimpleRepository implements UserRepository {
             new User("poz@wooteco.com", "4321"));
 
     @Override
+    public List<User> findAll() {
+        return new ArrayList<>(users);
+    }
+
+    @Override
     public Optional<User> findByEmail(String email) {
         return users.stream().filter(user -> user.getEmail().equals(email))
                 .findAny();

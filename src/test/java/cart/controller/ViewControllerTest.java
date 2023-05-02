@@ -7,11 +7,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.domain.User;
 import cart.dto.ProductsResponseDto;
 import cart.service.ProductService;
+import cart.service.UserService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,6 +27,9 @@ class ViewControllerTest {
 
     @MockBean
     ProductService productService;
+
+    @MockBean
+    UserService userService;
 
     @Autowired
     MockMvc mockMvc;
@@ -58,6 +65,13 @@ class ViewControllerTest {
     @Test
     @DisplayName("Settings를 반환한다.")
     void returns_settings_view() throws Exception {
+        // given
+        User user = new User("rosie@google.com", "password");
+        User otherUser = new User("poz@wooteco.com", "1234");
+        List<User> users = List.of(user, otherUser);
+        BDDMockito.given(userService.findAllUser())
+                        .willReturn(users);
+
         // when & then
         mockMvc.perform(get("/settings"))
                 .andExpect(status().isOk())
