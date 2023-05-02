@@ -17,7 +17,7 @@ CREATE TABLE product
     PRIMARY KEY (id)
 );
 
-CREATE TABLE user
+CREATE TABLE member
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT,
     email    VARCHAR(100) NOT NULL,
@@ -86,8 +86,8 @@ CREATE TABLE cart
 
 ### 사용자
 
-- [ ] GET /settings
-    - [ ] 유저 전체 조회
+- [x] GET /settings
+    - [x] 유저 전체 조회
 - [ ] Basic Authorization을 통해 인증
 
 ### 장바구니

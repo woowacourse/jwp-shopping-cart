@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.user.User;
+import cart.domain.user.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,20 +12,20 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-class UserDaoTest {
+class MemberDaoTest {
 
-    private final UserDao userDao;
+    private final MemberDao memberDao;
 
     @Autowired
-    public UserDaoTest(final JdbcTemplate jdbcTemplate) {
-        this.userDao = new UserDao(jdbcTemplate);
+    public MemberDaoTest(final JdbcTemplate jdbcTemplate) {
+        this.memberDao = new MemberDao(jdbcTemplate);
     }
 
     @DisplayName("유저를 전부 조회한다.")
     @Test
     void findAllTest() {
-        final List<User> allUsers = userDao.findAll();
+        final List<Member> allMembers = memberDao.findAll();
 
-        assertThat(allUsers).hasSize(2);
+        assertThat(allMembers).hasSize(2);
     }
 }
