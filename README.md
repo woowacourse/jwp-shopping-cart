@@ -82,3 +82,111 @@ Product
 
 - Delete
     - DELETE /product/:productId
+
+---
+
+# 2단계
+
+## 🎯 기능 목록
+
+- [ ]  테이블 생성
+    - [ ]  사용자 테이블
+    - [ ]  장바구니 테이블
+- [ ]  사용자 기능 구현
+    - [ ]  사용자 목록 표시
+    - [ ]  사용자 선택
+- [ ]  사용자 설정 페이지 연동
+    - [ ]  API 연동
+- [ ]  장바구니 기능 구현
+    - [ ]  물건 추가
+    - [ ]  물건 삭제
+    - [ ]  사용자별 장바구니 물건 표시
+- [ ]  장바구니 페이지 연동
+    - [ ]  CRD API 연동
+
+## 🛠️ 설계
+
+### DB
+
+- user
+
+| column   | type        |                    |
+|----------|-------------|--------------------|
+| id       | BIGINT      | PK, AUTO_INCREMENT |
+| email    | VARCHAR(16) |                    |
+| password | VARCHAR(16) |                    |
+
+- cart
+
+| column     | type   |                    |
+|------------|--------|--------------------|
+| id         | BIGINT | PK, AUTO_INCREMENT |
+| user_id    | BIGINT |                    |
+| product_id | BIGINT |                    |
+
+### API
+
+- User
+    - ~~Create~~
+        - POST /user
+        - Request Body
+
+            ```json
+            {
+            	"email":"",
+            	"password":""
+            }
+            ```
+
+    - Read
+        - GET /users
+        - Response Body
+
+            ```json
+            {
+            	"users": [
+            		{
+            			"id":0,
+            			"email":"",
+            			"password":""
+            		},
+            		...
+            	]
+            }
+            ```
+
+    - ~~Update~~
+    - ~~Delete~~
+- Cart
+    - Create
+        - POST /cart/{userId}
+        - Request Body
+
+            ```json
+            {
+            	"user_id":0,
+            	"product_id":0
+            }
+            ```
+
+    - Read
+        - GET /cart/{userId}
+        - Request Body
+
+            ```json
+            {
+            	"products": [
+            		{
+            			"id":0,
+            			"name":"",
+            			"price":0,
+            			"image":""
+            		},
+            		...
+            	]
+            }
+            ```
+
+    - ~~Update~~
+    - Delete
+        - DELETE /cart/{cartId}
