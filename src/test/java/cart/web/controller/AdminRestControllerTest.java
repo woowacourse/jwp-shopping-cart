@@ -1,7 +1,6 @@
 package cart.web.controller;
 
 import cart.domain.product.service.AdminService;
-import cart.web.controller.dto.request.ProductCreationRequest;
 import cart.web.controller.dto.request.ProductModificationRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,18 +40,18 @@ class AdminRestControllerTest {
     void postProduct() throws JsonProcessingException {
         String productName = "ProductA";
         int productPrice = 18_000;
-        ProductCreationRequest request =
-                new ProductCreationRequest(productName, productPrice, "FOOD", "image.com");
+        ProductModificationRequest request =
+                new ProductModificationRequest(productName, productPrice, "FOOD", "image.com");
         when(adminService.save(any()))
                 .thenReturn(1L);
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new ObjectMapper().writeValueAsBytes(request))
-                .when().post("/admin")
+                .when().post("/admin/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", is("/admin/" + 1))
+                .header("Location", is("/products/" + 1))
                 .body("id", is(1))
                 .body("name", is(productName))
                 .body("price", is(productPrice));
@@ -65,7 +64,7 @@ class AdminRestControllerTest {
 
         given().log().all()
                 .when().accept(MediaType.APPLICATION_JSON_VALUE)
-                .delete("/admin/{deletedId}", 1L)
+                .delete("/admin/products/{id}", 1L)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("deletedId", is(1));
@@ -75,13 +74,13 @@ class AdminRestControllerTest {
     @Test
     void updateProduct() {
         ProductModificationRequest request =
-                new ProductModificationRequest(1L, "Chicken", 18_000, "FOOD", "image.com");
+                new ProductModificationRequest("Chicken", 18_000, "FOOD", "image.com");
         when(adminService.update(any())).thenReturn(1);
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put("/admin")
+                .when().patch("/admin/products/{id}", 1L)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("name", is("Chicken"))

@@ -1,6 +1,6 @@
 package cart.web.controller.dto.response;
 
-import cart.web.controller.dto.request.ProductCreationRequest;
+import cart.web.controller.dto.request.ProductModificationRequest;
 
 public class ProductCreationResponse {
     private final Long id;
@@ -9,7 +9,7 @@ public class ProductCreationResponse {
     private final String category;
     private final String imageUrl;
 
-    public ProductCreationResponse(Long id, ProductCreationRequest request) {
+    public ProductCreationResponse(Long id, ProductModificationRequest request) {
         this.id = id;
         this.name = request.getName();
         this.price = request.getPrice();

@@ -34,7 +34,13 @@ public class AdminService {
 
     @Transactional
     public int update(ProductModificationDto productDto) {
-        Product product = productDto.toProduct();
+        Product product = new Product(
+                ProductName.from(productDto.getName()),
+                ProductPrice.from(productDto.getPrice()),
+                ProductCategory.valueOf(productDto.getCategory()),
+                ImageUrl.from(productDto.getImageUrl()),
+                productDto.getId()
+        );
 
         return productRepository.update(product);
     }

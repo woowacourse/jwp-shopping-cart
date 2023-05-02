@@ -1,7 +1,6 @@
 package cart.web.controller.dto.request;
 
 public class ProductModificationRequest {
-    private Long id;
     private String name;
     private Integer price;
     private String category;
@@ -10,16 +9,11 @@ public class ProductModificationRequest {
     public ProductModificationRequest() {
     }
 
-    public ProductModificationRequest(Long id, String name, Integer price, String category, String imageUrl) {
-        this.id = id;
+    public ProductModificationRequest(String name, Integer price, String category, String imageUrl) {
         this.name = name;
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {

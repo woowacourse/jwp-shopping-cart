@@ -9,8 +9,8 @@ public class ProductModificationResponse {
     private final String category;
     private final String imageUrl;
 
-    public ProductModificationResponse(ProductModificationRequest request) {
-        this.id = request.getId();
+    public ProductModificationResponse(Long id, ProductModificationRequest request) {
+        this.id = id;
         this.name = request.getName();
         this.price = request.getPrice();
         this.category = request.getCategory();

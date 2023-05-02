@@ -3,7 +3,7 @@ package cart.web.controller;
 import cart.domain.product.service.AdminService;
 import cart.domain.product.service.dto.ProductCreationDto;
 import cart.domain.product.service.dto.ProductModificationDto;
-import cart.web.controller.dto.request.ProductCreationRequest;
+import cart.exception.GlobalException;
 import cart.web.controller.dto.request.ProductModificationRequest;
 import cart.web.controller.dto.response.ProductCreationResponse;
 import cart.web.controller.dto.response.ProductDeleteResponse;
@@ -23,8 +23,8 @@ public class AdminRestController {
         this.adminService = adminService;
     }
 
-    @PostMapping
-    public ResponseEntity<ProductCreationResponse> createProduct(@RequestBody ProductCreationRequest request) {
+    @PostMapping("/products")
+    public ResponseEntity<ProductCreationResponse> createProduct(@RequestBody ProductModificationRequest request) {
         ProductCreationDto productCreationDto = new ProductCreationDto(
                 request.getName(),
                 request.getPrice(),
@@ -39,22 +39,23 @@ public class AdminRestController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .location(URI.create("/admin/" + savedProductId))
+                .location(URI.create("/products/" + savedProductId))
                 .body(productCreationResponse);
     }
 
-    @DeleteMapping("/{deleteId}")
-    public ResponseEntity<ProductDeleteResponse> deleteProduct(@PathVariable Long deleteId) {
-        adminService.delete(deleteId);
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<ProductDeleteResponse> deleteProduct(@PathVariable Long id) {
+        adminService.delete(id);
 
         return ResponseEntity
-                .ok(new ProductDeleteResponse(deleteId));
+                .ok(new ProductDeleteResponse(id));
     }
 
-    @PutMapping
-    public ResponseEntity<ProductModificationResponse> updateProduct(@RequestBody ProductModificationRequest request) {
+    @PatchMapping("/products/{id}")
+    public ResponseEntity<ProductModificationResponse> updateProduct(@PathVariable Long id,
+                                                                     @RequestBody ProductModificationRequest request) {
         ProductModificationDto productModificationDto = new ProductModificationDto(
-                request.getId(),
+                id,
                 request.getName(),
                 request.getPrice(),
                 request.getCategory(),
@@ -63,17 +64,11 @@ public class AdminRestController {
 
         int countOfUpdate = adminService.update(productModificationDto);
 
-        if (countOfUpdate < 1) {
-            ProductCreationDto productCreationDto = new ProductCreationDto(
-                    request.getName(),
-                    request.getPrice(),
-                    request.getCategory(),
-                    request.getImageUrl()
-            );
-            adminService.save(productCreationDto);
+        if (countOfUpdate == 0) {
+            throw new GlobalException("존재하지 않는 리소스 입니다.");
         }
 
         return ResponseEntity
-                .ok(new ProductModificationResponse(request));
+                .ok(new ProductModificationResponse(id, request));
     }
 }

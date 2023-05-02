@@ -1,11 +1,5 @@
 package cart.domain.product.service.dto;
 
-import cart.domain.product.ImageUrl;
-import cart.domain.product.Product;
-import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductName;
-import cart.domain.product.ProductPrice;
-
 public class ProductModificationDto {
     private final Long id;
     private final String name;
@@ -19,16 +13,6 @@ public class ProductModificationDto {
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
-    }
-
-    public Product toProduct() {
-        return new Product(
-                ProductName.from(name),
-                ProductPrice.from(price),
-                ProductCategory.valueOf(category),
-                ImageUrl.from(imageUrl),
-                id
-        );
     }
 
     public String getName() {
@@ -45,5 +29,9 @@ public class ProductModificationDto {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
