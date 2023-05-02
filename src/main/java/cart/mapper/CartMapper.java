@@ -18,7 +18,7 @@ public class CartMapper {
     }
 
     public Cart requestToCart(CartRequest request) {
-        return new Cart(request.getProductId(), request.getMemberId(), request.getCount());
+        return new Cart(request.getProductId(), request.getCount());
     }
 
     public CartResponse entityToResponse(CartEntity entity) {

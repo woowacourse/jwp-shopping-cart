@@ -23,9 +23,9 @@ public class CartService {
         this.cartMapper = cartMapper;
     }
 
-    public CartResponse create(CartRequest cartRequest) {
+    public CartResponse create(CartRequest cartRequest, long memberId) {
         Cart cart = cartMapper.requestToCart(cartRequest);
-        CartEntity save = cartDao.save(cart, cartRequest.getProductId(), cartRequest.getMemberId())
+        CartEntity save = cartDao.save(cart, cartRequest.getProductId(), memberId)
                 .orElseThrow(() -> new ResourceNotFoundException("데이터가 정상적으로 저장되지 않았습니다."));
         return cartMapper.entityToResponse(save);
     }

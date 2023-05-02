@@ -1,6 +1,5 @@
 package cart.controller;
 
-import cart.dto.CartResponse;
 import cart.dto.MemberResponse;
 import cart.dto.ProductResponse;
 import cart.service.CartService;
@@ -44,12 +43,5 @@ public class AdminController {
         List<MemberResponse> members = memberService.findAll();
         model.addAttribute("members", members);
         return "settings";
-    }
-
-    @GetMapping("/cart")
-    public String cartPage(Model model) {
-        List<CartResponse> carts = cartService.findAll();
-        model.addAttribute("carts", carts);
-        return "cart";
     }
 }

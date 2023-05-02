@@ -75,4 +75,13 @@ public class MemberDaoImpl {
         String sql = "DELETE FROM member WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    public Optional<MemberEntity> findByEmail(String email) {
+        String sql = "SELECT * FROM member WHERE email = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberEntityRowMapper, email));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
 }
