@@ -8,8 +8,10 @@ import cart.dto.ProductUpdateRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductDao productDao;
@@ -18,6 +20,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional
     public ProductResponse create(final ProductCreateRequest productCreateRequest) {
         final Product product = productCreateRequest.makeProduct();
         final Product savedProduct = productDao.save(product);
@@ -31,11 +34,13 @@ public class ProductService {
             .collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional
     public void update(final ProductUpdateRequest productUpdateRequest) {
         final int count = productDao.update(productUpdateRequest.makeProduct());
         checkProductExist(count);
     }
 
+    @Transactional
     public void delete(final Long id) {
         final int count = productDao.delete(id);
         checkProductExist(count);

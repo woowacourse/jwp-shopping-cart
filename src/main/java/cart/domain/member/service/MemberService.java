@@ -8,8 +8,10 @@ import cart.dto.MemberResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberDao memberDao;
@@ -20,6 +22,7 @@ public class MemberService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public MemberCreateResponse create(final MemberCreateRequest request) {
         memberDao.findByEmail(request.getEmail())
             .ifPresent(member -> {
