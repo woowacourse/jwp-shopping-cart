@@ -23,7 +23,7 @@ public class Product {
 		if (price < 0) {
 			throw new IllegalArgumentException("금액은 음수일 수 없습니다.");
 		}
-		if (Objects.isNull(image)) {
+		if (image == null) {
 			throw new IllegalArgumentException("이미지 주소가 올바르지 않습니다.");
 		}
 	}
