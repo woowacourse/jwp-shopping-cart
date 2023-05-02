@@ -41,7 +41,7 @@ public class ExceptionController {
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.joining(System.lineSeparator()));
         final ExceptionResponse exceptionResponse = new ExceptionResponse(errorMessage);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
+        return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -50,7 +50,7 @@ public class ExceptionController {
 
         final String errorMessage = exception.getMessage();
         final ExceptionResponse exceptionResponse = new ExceptionResponse(errorMessage);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
+        return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
     @ExceptionHandler
@@ -58,7 +58,7 @@ public class ExceptionController {
         log.error(exception.getMessage());
 
         final ExceptionResponse exceptionResponse = new ExceptionResponse("서버에서 장애가 발생하였습니다.");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponse);
+        return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
 }
