@@ -55,7 +55,7 @@ public class JdbcProductDao implements ProductDao {
 
         final Map<String, Long> params = Collections.singletonMap("id", id);
         final int deletedRow = jdbcTemplate.update(sql, params);
-        if(deletedRow == 0) {
+        if (deletedRow == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, UNEXISTED_ERROR_MESSAGE);
         }
     }
@@ -71,7 +71,7 @@ public class JdbcProductDao implements ProductDao {
                 .addValue("imgUrl", product.getImgUrl());
 
         final int updatedRow = jdbcTemplate.update(sql, params);
-        if(updatedRow == 0) {
+        if (updatedRow == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, UNEXISTED_ERROR_MESSAGE);
         }
     }

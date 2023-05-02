@@ -16,19 +16,16 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 import cart.dao.entity.Product;
 import cart.dao.product.JdbcProductDao;
 import cart.dao.product.ProductDao;
 
 @JdbcTest
-@Sql({"/dropTable.sql", "/data.sql"})
 class JdbcProductDaoTest {
 
     @Autowired
     NamedParameterJdbcTemplate jdbcTemplate;
-
     ProductDao productDao;
 
     @BeforeEach

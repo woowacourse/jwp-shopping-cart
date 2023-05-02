@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,12 +21,13 @@ class JdbcUserDaoTest {
 
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
     UserDao userDao;
 
     @BeforeEach
     void setUp() {
         userDao = new JdbcUserDao(namedParameterJdbcTemplate);
+        userDao.saveUser(new User("ahdjd5@gmail.com", "qwer1234"));
+        userDao.saveUser(new User("ahdjd5@naver.com", "qwer1234"));
     }
 
     @Test
@@ -33,7 +35,10 @@ class JdbcUserDaoTest {
     void findAll() {
         final List<User> users = userDao.findAll();
 
-        assertThat(users).hasSize(1);
-        assertThat(users.get(0).getEmail()).isEqualTo("ahdjd5@gmail.com");
+        Assertions.assertAll(
+                () -> assertThat(users).hasSize(2),
+                () -> assertThat(users.get(0).getEmail()).isEqualTo("ahdjd5@gmail.com"),
+                () -> assertThat(users.get(1).getEmail()).isEqualTo("ahdjd5@naver.com")
+        );
     }
 }

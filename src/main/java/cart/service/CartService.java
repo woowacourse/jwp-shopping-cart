@@ -21,7 +21,8 @@ public class CartService {
     private final CartProductMapper cartProductMapper;
     private final CartDao cartDao;
 
-    public CartService(UserMapper userMapper, ProductMapper productMapper, CartProductMapper cartProductMapper, CartDao cartDao) {
+    public CartService(UserMapper userMapper, ProductMapper productMapper, CartProductMapper cartProductMapper,
+                       CartDao cartDao) {
         this.userMapper = userMapper;
         this.cartProductMapper = cartProductMapper;
         this.cartDao = cartDao;
