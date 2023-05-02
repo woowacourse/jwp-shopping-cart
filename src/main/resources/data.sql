@@ -9,8 +9,9 @@ CREATE TABLE IF NOT EXISTS product (
 
 CREATE TABLE IF NOT EXISTS member (
     `id` BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
+    `role` VARCHAR(10) NOT NULL,
     `nickname` VARCHAR(30) NOT NULL,
-    `email` VARCHAR(50) NOT NULL,
+    `email` VARCHAR(50) UNIQUE NOT NULL,
     `password` VARCHAR(70) NOT NULL,
     `telephone` VARCHAR(13) NOT NULL,
     PRIMARY KEY(`id`)
