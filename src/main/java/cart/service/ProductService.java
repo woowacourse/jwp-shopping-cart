@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.controller.dto.ProductDto;
 import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductResponse;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import org.springframework.stereotype.Service;
@@ -23,10 +23,10 @@ public class ProductService {
         return productDao.save(product);
     }
 
-    public List<ProductDto> findAll() {
+    public List<ProductResponse> findAll() {
         List<Product> products = productDao.findAll();
         return products.stream()
-                .map(ProductDto::from)
+                .map(ProductResponse::from)
                 .collect(Collectors.toList());
     }
 

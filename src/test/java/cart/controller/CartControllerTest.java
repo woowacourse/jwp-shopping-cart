@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.dto.ProductDto;
+import cart.controller.dto.ProductResponse;
 import cart.domain.Product;
 import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +31,7 @@ class CartControllerTest {
     void findAllProducts() throws Exception {
         // given
         Product product = new Product(1L, "치킨", "image.url", 10000);
-        given(productService.findAll()).willReturn(List.of(ProductDto.from(product)));
+        given(productService.findAll()).willReturn(List.of(ProductResponse.from(product)));
 
         // when, then
         mockMvc.perform(get("/"))
