@@ -1,6 +1,4 @@
-package cart.entity.dao;
-
-import cart.entity.Product;
+package cart.entity.product;
 
 import java.util.List;
 

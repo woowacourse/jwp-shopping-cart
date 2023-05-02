@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.entity.dao.ProductDao;
+import cart.entity.product.ProductDao;
 import org.springframework.stereotype.Service;
 
 @Service

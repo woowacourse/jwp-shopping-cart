@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.entity.Product;
-import cart.entity.dao.ProductDao;
+import cart.entity.product.Product;
+import cart.entity.product.ProductDao;
 import org.springframework.stereotype.Service;
 
 @Service

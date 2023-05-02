@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.dto.ProductRequest;
-import cart.entity.Product;
+import cart.entity.product.Product;
 import cart.service.ProductCreateService;
 import cart.service.ProductDeleteService;
 import cart.service.ProductUpdateService;

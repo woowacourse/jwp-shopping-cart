@@ -1,4 +1,4 @@
-package cart.entity;
+package cart.entity.product;
 
 import cart.domain.Id;
 import cart.domain.ImgUrl;

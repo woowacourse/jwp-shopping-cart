@@ -1,6 +1,5 @@
-package cart.entity.dao;
+package cart.entity.product;
 
-import cart.entity.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
