@@ -18,6 +18,9 @@ class MemberDaoTest {
     private final MemberDao memberDao;
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     public MemberDaoTest(final JdbcTemplate jdbcTemplate) {
         this.memberDao = new MemberDao(jdbcTemplate);
     }
@@ -28,5 +31,15 @@ class MemberDaoTest {
         final List<Member> allMembers = memberDao.findAll();
 
         assertThat(allMembers).hasSize(2);
+    }
+
+    @DisplayName("email로 멤버를 조회한다")
+    @Test
+    void findByEmailTest() {
+        jdbcTemplate.update("INSERT INTO member (email, password) " +
+                "VALUES ('aaa@woowa.com', '1234')");
+        final Member member = memberDao.findByEmail("aaa@woowa.com");
+
+        assertThat(member.getPassword()).isEqualTo("1234");
     }
 }
