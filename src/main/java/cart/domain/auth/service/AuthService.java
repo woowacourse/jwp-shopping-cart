@@ -1,5 +1,6 @@
 package cart.domain.auth.service;
 
+import cart.common.AuthenticationException;
 import cart.domain.member.dao.MemberDao;
 import cart.domain.member.entity.Member;
 import cart.dto.AuthInfo;
@@ -17,10 +18,13 @@ public class AuthService {
         this.memberDao = memberDao;
     }
 
-    public boolean checkAuthenticationHeader(final String header) {
+    public AuthInfo checkAuthenticationHeader(final String header) {
         final AuthInfo authInfo = authorizationExtractor.extract(header);
         final Member member = memberDao.findByEmail(authInfo.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("인증 실패"));
-        return member.getPassword().equals(authInfo.getPassword());
+            .orElseThrow(() -> new AuthenticationException("인증 실패"));
+        if (!member.getPassword().equals(authInfo.getPassword())) {
+            throw new AuthenticationException("인증 실패");
+        }
+        return authInfo;
     }
 }

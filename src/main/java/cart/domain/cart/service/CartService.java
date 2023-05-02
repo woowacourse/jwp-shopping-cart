@@ -8,6 +8,9 @@ import cart.domain.product.dao.ProductDao;
 import cart.domain.product.entity.Product;
 import cart.dto.CartCreateRequest;
 import cart.dto.CartCreateResponse;
+import cart.dto.CartResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,5 +37,14 @@ public class CartService {
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
         final Cart cart = cartDao.save(new Cart(null, product, member, null, null));
         return CartCreateResponse.of(cart);
+    }
+
+    public List<CartResponse> findByEmail(final String email) {
+        final Member member = memberDao.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        final List<Cart> carts = cartDao.findByMember(member);
+        return carts.stream()
+            .map(CartResponse::of)
+            .collect(Collectors.toUnmodifiableList());
     }
 }

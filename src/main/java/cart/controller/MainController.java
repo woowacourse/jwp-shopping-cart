@@ -40,4 +40,9 @@ public class MainController {
         model.addAttribute("members", responses);
         return "settings";
     }
+
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
+    }
 }

@@ -1,9 +1,11 @@
 package cart.domain.auth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
+import cart.common.AuthenticationException;
 import cart.domain.member.dao.MemberDao;
 import cart.domain.member.entity.Member;
 import cart.dto.AuthInfo;
@@ -39,10 +41,11 @@ class AuthServiceTest {
             .willReturn(Optional.of(member));
 
         //when
-        boolean result = authService.checkAuthenticationHeader(anyString());
+        final AuthInfo result = authService.checkAuthenticationHeader(anyString());
 
         //then
-        assertThat(result).isTrue();
+        assertThat(result.getEmail()).isEqualTo(authInfo.getEmail());
+        assertThat(result.getPassword()).isEqualTo(authInfo.getPassword());
     }
 
     @Test
@@ -58,9 +61,8 @@ class AuthServiceTest {
             .willReturn(Optional.of(member));
 
         //when
-        boolean result = authService.checkAuthenticationHeader(anyString());
-
         //then
-        assertThat(result).isFalse();
+        assertThatThrownBy(() -> authService.checkAuthenticationHeader(anyString()))
+            .isInstanceOf(AuthenticationException.class);
     }
 }

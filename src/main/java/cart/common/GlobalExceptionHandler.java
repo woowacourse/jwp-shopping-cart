@@ -24,4 +24,11 @@ public class GlobalExceptionHandler {
             Objects.requireNonNull(exception.getFieldError()).getDefaultMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDto);
     }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ExceptionDto> handleAuthenticationException(
+        final AuthenticationException exception) {
+        final ExceptionDto exceptionDto = new ExceptionDto(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exceptionDto);
+    }
 }
