@@ -32,11 +32,17 @@ form.addEventListener('submit', (event) => {
 
 
 const createUser = (user) => {
-    axios.post('/member', user)
-        .then((response) => {
-            window.location.reload();
-        }).catch((error) => {
-        const {data} = error.response;
-        window.alert(data.errorMessage)
+    axios.request({
+        method: 'post',
+        url: '/member',
+        data: {
+            email: user.email,
+            password: user.password
+        }
+    }).then((response) => {
+        window.location.reload();
+    }).catch((error) => {
+        window.alert(error.response.data)
+        console.error(error);
     });
 };

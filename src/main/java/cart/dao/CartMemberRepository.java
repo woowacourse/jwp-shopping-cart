@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dto.CartRequestDto;
+import cart.dto.MemberRequestDto;
 import cart.dto.entity.CartEntity;
 import cart.dto.entity.MemberCartEntity;
 import cart.dto.entity.MemberEntity;
@@ -18,18 +18,18 @@ public class CartMemberRepository {
         this.memberDao = memberDao;
     }
 
-    public List<MemberCartEntity> findCartByMember(String email) {
-        MemberEntity member = memberDao.findByEmail(email);
+    public List<MemberCartEntity> findCartByMember(MemberRequestDto memberRequestDto) {
+        MemberEntity member = memberDao.findByEmail(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
         return cartDao.findCartByMember(member.getId());
     }
 
-    public void createCartByMember(CartRequestDto cartRequestDto) {
-        MemberEntity member = memberDao.findByEmail(cartRequestDto.getEmail());
-        cartDao.save(cartRequestDto.getProductId(), member.getId());
+    public void createCartByMember(MemberRequestDto memberRequestDto, Long id) {
+        MemberEntity member = memberDao.findByEmail(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
+        cartDao.save(new CartEntity(id, member.getId()));
     }
 
-    public void delete(CartRequestDto cartRequestDto) {
-        MemberEntity member = memberDao.findByEmail(cartRequestDto.getEmail());
-        cartDao.delete(new CartEntity(member.getId(), cartRequestDto.getProductId()));
+    public void delete(MemberRequestDto memberRequestDto, Long id) {
+        MemberEntity member = memberDao.findByEmail(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
+        cartDao.delete(new CartEntity(id, member.getId()));
     }
 }

@@ -5,11 +5,13 @@ import cart.dto.MemberRequestDto;
 import cart.dto.MemberResponseDto;
 import cart.dto.entity.MemberEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberDao memberDao;
@@ -18,6 +20,7 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
+    @Transactional
     public void addMember(MemberRequestDto memberRequestDto) {
         memberDao.save(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
     }

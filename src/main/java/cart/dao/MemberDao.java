@@ -34,12 +34,17 @@ public class MemberDao {
     public List<MemberEntity> findAll() {
         String sql = "SELECT * FROM members";
         return jdbcTemplate.query(sql, (rs, rowNum) ->
-                new MemberEntity(rs.getLong(1), rs.getString("email"), rs.getString("password")));
+                new MemberEntity(rs.getLong(1),
+                        rs.getString("email"),
+                        rs.getString("password")));
     }
 
-    public MemberEntity findByEmail(String memberEmail) {
+    public MemberEntity findByEmail(MemberEntity memberEntity) {
         String sql = "SELECT * FROM members WHERE email LIKE ?";
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                new MemberEntity(rs.getLong("id"), rs.getString("email"), rs.getString("password")), memberEmail);
+                        new MemberEntity(rs.getLong("id"),
+                                rs.getString("email"),
+                                rs.getString("password")),
+                memberEntity.getEmail());
     }
 }

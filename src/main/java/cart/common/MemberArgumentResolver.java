@@ -1,6 +1,6 @@
 package cart.common;
 
-import cart.domain.Member;
+import cart.dto.MemberRequestDto;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -33,7 +33,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             String email = credentials[0];
             String password = credentials[1];
 
-            return new Member(email, password);
+            return new MemberRequestDto(email, password);
         }
 
         return null;

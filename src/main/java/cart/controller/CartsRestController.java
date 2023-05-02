@@ -1,9 +1,8 @@
 package cart.controller;
 
 import cart.common.CustomMember;
-import cart.domain.Member;
-import cart.dto.CartRequestDto;
-import cart.dto.CartResponseDto;
+import cart.dto.MemberRequestDto;
+import cart.dto.ProductResponseDto;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,20 +18,20 @@ public class CartsRestController {
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<CartResponseDto>> getCarts(@CustomMember Member member) {
-        List<CartResponseDto> carts = cartService.findAll(member.getEmail());
+    public ResponseEntity<List<ProductResponseDto>> getCarts(@CustomMember MemberRequestDto member) {
+        List<ProductResponseDto> carts = cartService.findAll(new MemberRequestDto(member.getEmail(), member.getPassword()));
         return ResponseEntity.ok(carts);
     }
 
     @PostMapping("/carts/{id}")
-    public ResponseEntity<Void> createCarts(@CustomMember Member member, @PathVariable Long id) {
-        cartService.save(new CartRequestDto(member.getEmail(), id));
+    public ResponseEntity<Void> createCarts(@CustomMember MemberRequestDto member, @PathVariable Long id) {
+        cartService.save(new MemberRequestDto(member.getEmail(), member.getPassword()), id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/carts/{id}")
-    public ResponseEntity<Void> deleteCart(@CustomMember Member member, @PathVariable Long id) {
-        cartService.delete(new CartRequestDto(member.getEmail(), id));
+    public ResponseEntity<Void> deleteCarts(@CustomMember MemberRequestDto member, @PathVariable Long id) {
+        cartService.delete(new MemberRequestDto(member.getEmail(), member.getPassword()), id);
         return ResponseEntity.noContent().build();
     }
 }

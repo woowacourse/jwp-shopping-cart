@@ -38,10 +38,10 @@
     - [x] create
     - [x] read
 
-- [ ] Cart
+- [x] Cart
     - [x] create
     - [x] read
-    - [ ] delete
+    - [x] delete
 
 ### Service
 
@@ -67,21 +67,33 @@
 - [x] 상품 Create
     - POST "/product"
     - Request: name, price, image
-    - Response: 200 OK
+    - Response: 204 NoContent
 - [x] 상품 Read
     - GET "/products"
     - Response: products{ {id, name, image, price}, {..}}
 - [x] 상품 Update
     - PUT "/product"
     - Request: id, name, price, image
-    - Response: 200 OK
+    - Response: 204 NoContent
 - [x] 상품 Delete
     - DELETE "/product/{id}"
-    - Response: 200 OK
+    - Response: 204 NoContent
 
-### 사용자
+사용자
 
 - [x] 사용자 Create
     - POST "/member"
     - Request: email, password
     - Response: 200 OK
+
+장바구니
+
+- [x] 장바구니 Create
+    - POST "/carts/{id}"
+    - Response: 204 NoContent
+- [x] 장바구니 Read
+    - GET "/carts"
+    - Response: 200 OK
+- [x] 장바구니 Delete
+    - DELETE "/carts/{id}"
+    - Response: 204 NoContent
