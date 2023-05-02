@@ -5,10 +5,15 @@ const addCartItem = (productId) => {
         window.location.href = '/settings';
         return;
     }
-
-    // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
+    // TODO: 장바구니 담을 때 개수 포함하도록 요청 수정하기.
+    let requestData = {
+        'productId': productId,
+        'count': 0
+    }
     axios.request({
-        url: '',
+        url: '/carts',
+        method: 'post',
+        data: JSON.stringify(requestData),
         headers: {
             'Authorization': `Basic ${credentials}`
         }
@@ -26,10 +31,10 @@ const removeCartItem = (id) => {
         window.location.href = '/settings';
         return;
     }
-
-    // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
+    
     axios.request({
-        url: '',
+        url: '/carts/' + id,
+        method: 'delete',
         headers: {
             'Authorization': `Basic ${credentials}`
         }

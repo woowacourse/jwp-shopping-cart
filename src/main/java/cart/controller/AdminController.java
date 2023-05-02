@@ -1,7 +1,9 @@
 package cart.controller;
 
+import cart.dto.CartResponse;
 import cart.dto.MemberResponse;
 import cart.dto.ProductResponse;
+import cart.service.CartService;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -15,10 +17,12 @@ public class AdminController {
 
     private final ProductService productService;
     private final MemberService memberService;
+    private final CartService cartService;
 
-    public AdminController(ProductService productService, MemberService memberService) {
+    public AdminController(ProductService productService, MemberService memberService, CartService cartService) {
         this.productService = productService;
         this.memberService = memberService;
+        this.cartService = cartService;
     }
 
     @GetMapping("/")
@@ -40,5 +44,12 @@ public class AdminController {
         List<MemberResponse> members = memberService.findAll();
         model.addAttribute("members", members);
         return "settings";
+    }
+
+    @GetMapping("/cart")
+    public String cartPage(Model model) {
+        List<CartResponse> carts = cartService.findAll();
+        model.addAttribute("carts", carts);
+        return "cart";
     }
 }
