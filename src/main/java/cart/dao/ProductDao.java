@@ -2,15 +2,15 @@ package cart.dao;
 
 import java.util.List;
 
-import cart.entity.ProductEntity;
+import cart.entity.Product;
 
 public interface ProductDao {
 
-    int insertProduct(ProductEntity productEntity);
+    int insertProduct(Product product);
 
-    List<ProductEntity> selectAllProducts();
+    List<Product> selectAllProducts();
 
-    void updateProduct(ProductEntity productEntity);
+    int updateProduct(Product product);
 
-    void deleteProduct(int productId);
+    int deleteProduct(int productId);
 }

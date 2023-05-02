@@ -13,8 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
+import cart.dto.ProductDto;
 import cart.dto.ProductRequestDto;
-import cart.entity.ProductEntity;
 
 @SpringBootTest
 @Transactional
@@ -48,7 +48,7 @@ class AdminServiceTest {
         adminService.addProduct(productRequestDto);
         adminService.addProduct(productRequestDto2);
 
-        List<ProductEntity> productEntities = adminService.selectAllProducts();
+        List<ProductDto> productEntities = adminService.selectAllProducts();
 
         assertAll(
             () -> assertThat(productEntities).hasSize(2),
@@ -65,7 +65,7 @@ class AdminServiceTest {
             "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
         adminService.updateProduct(updateProductDto, id);
 
-        List<ProductEntity> productEntities = adminService.selectAllProducts();
+        List<ProductDto> productEntities = adminService.selectAllProducts();
 
         assertThat(productEntities).extracting("name", "price", "image")
             .contains(tuple(updateProductDto.getName(), updateProductDto.getPrice(), updateProductDto.getImage()));
@@ -76,7 +76,7 @@ class AdminServiceTest {
         int id = adminService.addProduct(productRequestDto);
         adminService.deleteProduct(id);
 
-        List<ProductEntity> productEntities = adminService.selectAllProducts();
+        List<ProductDto> productEntities = adminService.selectAllProducts();
 
         assertThat(productEntities).hasSize(0);
     }
