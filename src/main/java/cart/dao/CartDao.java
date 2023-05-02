@@ -40,7 +40,7 @@ public class CartDao {
     }
 
     public Long insert(Long memberId, Long itemId) {
-        String sql = "INSERT INTO CART VALUES (?, ?)";
+        String sql = "INSERT INTO CART(member_id, item_id) VALUES (?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -51,12 +51,11 @@ public class CartDao {
             return ps;
         }, keyHolder);
 
-        jdbcTemplate.update(sql, memberId, itemId);
         return keyHolder.getKey().longValue();
     }
 
     public Optional<CartDto> findByMemberIdAndItemId(Long memberId, Long itemId) {
-        String sql = "SELECT member_id, item_id FROM CART WHERE member_id = ? and item_id = ?";
+        String sql = "SELECT cart_id, member_id, item_id FROM CART WHERE member_id = ? and item_id = ?";
 
         return jdbcTemplate.query(sql, cartRowMapper, memberId, itemId)
                 .stream()
@@ -64,7 +63,7 @@ public class CartDao {
     }
 
     public List<ItemDto> findAllByMemberId(Long memberId) {
-        String sql = "SELECT item_id, name, image_url, price "
+        String sql = "SELECT ITEM.item_id, name, image_url, price "
                 + "FROM CART JOIN ITEM "
                 + "ON CART.item_id = ITEM.item_id "
                 + "and CART.member_id = ?";
