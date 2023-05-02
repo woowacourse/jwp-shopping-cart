@@ -26,6 +26,11 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
+    public Long addProduct(UserRequest userRequest, Long productId) {
+        final User user = userMapper.toEntity(userRequest);
+        return cartDao.addProduct(user, productId);
+    }
+
     public List<ProductResponse> findAllProductsInCart(UserRequest userRequest) {
         final User user = userMapper.toEntity(userRequest);
         final List<Product> products = cartDao.findAllProductInCart(user);

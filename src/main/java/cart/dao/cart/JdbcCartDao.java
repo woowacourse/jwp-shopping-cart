@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -29,7 +31,15 @@ public class JdbcCartDao implements CartDao {
 
     @Override
     public Long addProduct(User user, Long productId) {
-        return null;
+        final Long userId = getUserId(user);
+        final String sql = "INSERT INTO cart (user_id, product_id) VALUES (:userId, :productId)";
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        final Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("userId", userId);
+        paramMap.put("productId", productId);
+        final SqlParameterSource params = new MapSqlParameterSource(paramMap);
+        namedParameterJdbc.update(sql, params, keyHolder);
+        return (long) keyHolder.getKeys().get("id");
     }
 
     @Override
@@ -44,16 +54,6 @@ public class JdbcCartDao implements CartDao {
         return namedParameterJdbc.query(sql, params, rowMapper);
     }
 
-    private Long getUserId(User user) {
-        try {
-            final String sql = "SELECT id FROM users WHERE email = :email AND password = :password";
-            final SqlParameterSource params = new BeanPropertySqlParameterSource(user);
-            return namedParameterJdbc.queryForObject(sql, params, Long.class);
-        } catch (EmptyResultDataAccessException exception) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "회원정보를 다시 확인해주세요.");
-        }
-    }
-
     @Override
     public void removeProductInCart(User user, Long productId) {
         final Long userId = getUserId(user);
@@ -63,5 +63,15 @@ public class JdbcCartDao implements CartDao {
         paramMap.put("productId", productId);
         final SqlParameterSource params = new MapSqlParameterSource(paramMap);
         namedParameterJdbc.update(sql, params);
+    }
+
+    private Long getUserId(User user) {
+        try {
+            final String sql = "SELECT id FROM users WHERE email = :email AND password = :password";
+            final SqlParameterSource params = new BeanPropertySqlParameterSource(user);
+            return namedParameterJdbc.queryForObject(sql, params, Long.class);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "회원정보를 다시 확인해주세요.");
+        }
     }
 }
