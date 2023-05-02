@@ -30,4 +30,13 @@ class HomeControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("사용자 전체 목록을 조회하면 상태코드 200을 반환하는지 확인한다")
+    @Test
+    void getSettingTest() {
+        RestAssured.given().log().all()
+                .when().get("/settings")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
 }
