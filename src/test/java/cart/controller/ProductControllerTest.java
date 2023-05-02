@@ -1,7 +1,5 @@
 package cart.controller;
 
-import static org.hamcrest.Matchers.containsString;
-
 import cart.dto.ProductRequestDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
@@ -15,10 +13,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:sql/initProducts.sql"})
 class ProductControllerTest {
 
     @LocalServerPort
@@ -55,7 +51,7 @@ class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequestDto)
                 .accept(MediaType.TEXT_HTML_VALUE)
-                .when().put("/admin/products/2")
+                .when().put("/admin/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -65,7 +61,7 @@ class ProductControllerTest {
     void removeProduct() {
         RestAssured.given().log().all()
                 .accept(MediaType.TEXT_HTML_VALUE)
-                .when().delete("/admin/products/2")
+                .when().delete("/admin/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

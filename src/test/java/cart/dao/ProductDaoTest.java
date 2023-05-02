@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.entity.Product;
 import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,8 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
-@Sql(scripts = {"classpath:sql/initProducts.sql"})
-public class ProductDaoTest {
+class ProductDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -31,7 +32,7 @@ public class ProductDaoTest {
     void selectAll() {
         List<Product> products = productDao.selectAll();
 
-        assertThat(products.size()).isEqualTo(3);
+        assertThat(products.size()).isEqualTo(2);
     }
 
     @Test
@@ -60,12 +61,17 @@ public class ProductDaoTest {
     @DisplayName("상품 수정")
     void updateById() {
         assertDoesNotThrow(
-                () -> productDao.updateById(2, new Product.Builder()
+                () -> productDao.updateById(1, new Product.Builder()
                         .name("치킨")
                         .price(10000)
                         .imageUrl("밋엉")
                         .build())
         );
     }
+
+//    @AfterEach
+//    void afterEach() {
+//        jdbcTemplate.update("TRUNCATE TABLE product");
+//    }
 
 }
