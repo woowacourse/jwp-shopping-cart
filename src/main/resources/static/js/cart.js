@@ -7,11 +7,17 @@ const addCartItem = (productId) => {
     }
 
     // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
+
+    const data = {
+        "productId": productId
+    };
     axios.request({
-        url: '',
+        url: '/cart/cartItems',
+        method: 'post',
         headers: {
             'Authorization': `Basic ${credentials}`
-        }
+        },
+        data: data
     }).then((response) => {
         alert('장바구니에 담았습니다.');
     }).catch((error) => {
