@@ -1,5 +1,6 @@
 package cart.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.HttpHeaders;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -37,6 +39,16 @@ public class CartController {
     public ResponseEntity<List<ProductResponse>> products(@RequestHeader HttpHeaders header) {
         final UserRequest userRequest = extractor.extractUser(header);
         return ResponseEntity.ok(cartService.findAllProductsInCart(userRequest));
+    }
+
+    @PostMapping("/product/{productId}")
+    public ResponseEntity<Void> addProductToCart(
+            @RequestHeader HttpHeaders header,
+            @PathVariable Long productId
+    ) {
+        final UserRequest userRequest = extractor.extractUser(header);
+        final Long cartId = cartService.addProduct(userRequest, productId);
+        return ResponseEntity.created(URI.create("/cart/product/" + cartId)).build();
     }
 
     @DeleteMapping("/product/{productId}")
