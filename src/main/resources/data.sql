@@ -5,3 +5,10 @@ CREATE TABLE product
     image text NOT NULL,
     price int NOT NULL
 );
+
+CREATE TABLE user_account
+(
+    id bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    email varchar(255) NOT NULL,
+    password varchar(255) NOT NULL
+);
