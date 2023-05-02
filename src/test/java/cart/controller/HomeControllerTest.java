@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.dto.ProductResponse;
+import cart.service.MemberManagementService;
 import cart.service.ProductManagementService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,10 @@ class HomeControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    ProductManagementService managementService;
+    ProductManagementService productManagementService;
+
+    @MockBean
+    MemberManagementService memberManagementService;
 
     @DisplayName("상품 전체 목록을 조회하면 상태코드 200을 반환하는지 확인한다")
     @Test
@@ -36,7 +40,7 @@ class HomeControllerTest {
         final ProductResponse response = ProductResponse.of(dummyId, dummyName, dummyImage, dummyPrice);
         final List<ProductResponse> responses = List.of(response);
 
-        when(managementService.findAll())
+        when(productManagementService.findAll())
                 .thenReturn(responses);
 
         mockMvc.perform(get(path))
