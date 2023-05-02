@@ -30,7 +30,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Product add(final Product product) {
+    public Product save(final Product product) {
         final String sql = "INSERT INTO product(name, price, image_url, created_at, updated_at) VALUES(?,?,?,?,?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         final LocalDateTime now = LocalDateTime.now();

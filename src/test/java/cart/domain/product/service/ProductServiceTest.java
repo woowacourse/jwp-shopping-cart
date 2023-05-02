@@ -7,11 +7,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
+import cart.domain.product.dao.ProductDao;
 import cart.domain.product.dto.ProductCreateRequest;
 import cart.domain.product.dto.ProductResponse;
 import cart.domain.product.dto.ProductUpdateRequest;
 import cart.domain.product.entity.Product;
-import cart.domain.product.repository.ProductRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class ProductServiceTest {
 
     @Mock
-    private ProductRepository productRepository;
+    private ProductDao productDao;
 
     @InjectMocks
     private ProductService productService;
@@ -36,7 +36,7 @@ class ProductServiceTest {
         //given
         final LocalDateTime now = LocalDateTime.now();
         final Product savedProduct = new Product(1L, "name", 1000, "imgUrl", now, now);
-        given(productRepository.save(any()))
+        given(productDao.save(any()))
             .willReturn(savedProduct);
 
         //when
@@ -60,7 +60,7 @@ class ProductServiceTest {
         final List<Product> products = List.of(
             new Product(1L, "name1", 1000, "imgUrl1", now, now),
             new Product(2L, "name2", 2000, "imgUrl2", now, now));
-        given(productRepository.findAll()).willReturn(products);
+        given(productDao.findAll()).willReturn(products);
 
         //when
         final List<ProductResponse> result = productService.findAll();
@@ -73,7 +73,7 @@ class ProductServiceTest {
     @DisplayName("존재하지 않는 상품을 수정한다.")
     public void testUpdateNotExistProduct() {
         //given
-        given(productRepository.update(any())).willReturn(0);
+        given(productDao.update(any())).willReturn(0);
 
         //when + then
         assertThatThrownBy(
@@ -85,7 +85,7 @@ class ProductServiceTest {
     @DisplayName("상품을 수정한다.")
     public void testUpdate() {
         //given
-        given(productRepository.update(any())).willReturn(1);
+        given(productDao.update(any())).willReturn(1);
 
         //when + then
         assertDoesNotThrow(
@@ -96,7 +96,7 @@ class ProductServiceTest {
     @DisplayName("존재하지 않는 상품을 삭제한다.")
     public void testDeleteNotExistProduct() {
         //given
-        given(productRepository.delete(anyLong())).willReturn(0);
+        given(productDao.delete(anyLong())).willReturn(0);
 
         //when + then
         assertThatThrownBy(
@@ -108,7 +108,7 @@ class ProductServiceTest {
     @DisplayName("상품을 삭제한다.")
     public void testDelete() {
         //given
-        given(productRepository.delete(anyLong())).willReturn(1);
+        given(productDao.delete(anyLong())).willReturn(1);
 
         //when + then
         assertDoesNotThrow(

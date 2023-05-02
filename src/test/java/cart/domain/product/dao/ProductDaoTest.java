@@ -29,7 +29,7 @@ class ProductDaoTest {
         final Product givenProduct = new Product(null, "연필", 1000, "imageUrl", null, null);
 
         //when
-        final Product savedProduct = productDao.add(givenProduct);
+        final Product savedProduct = productDao.save(givenProduct);
 
         //then
         assertThat(savedProduct.getId()).isEqualTo(1);
@@ -47,8 +47,8 @@ class ProductDaoTest {
         final ProductDao productDao = new ProductDao(jdbcTemplate);
         final Product givenProduct1 = new Product(null, "연필", 1000, "imageUrl1", null, null);
         final Product givenProduct2 = new Product(null, "지우개", 2000, "imageUrl2", null, null);
-        final Product savedProduct1 = productDao.add(givenProduct1);
-        final Product savedProduct2 = productDao.add(givenProduct2);
+        final Product savedProduct1 = productDao.save(givenProduct1);
+        final Product savedProduct2 = productDao.save(givenProduct2);
 
         //when
         final List<Product> result = productDao.findAll();
@@ -65,7 +65,7 @@ class ProductDaoTest {
         //given
         final ProductDao productDao = new ProductDao(jdbcTemplate);
         final Product givenProduct = new Product(null, "연필", 1000, "imageUrl1", null, null);
-        final Product savedProduct = productDao.add(givenProduct);
+        final Product savedProduct = productDao.save(givenProduct);
         final Product updateProduct = new Product(savedProduct.getId(), "지우개", 2000, "imageUrl2",
             null, null);
 
@@ -82,7 +82,7 @@ class ProductDaoTest {
         //given
         final ProductDao productDao = new ProductDao(jdbcTemplate);
         final Product givenProduct = new Product(null, "연필", 1000, "imageUrl1", null, null);
-        final Product savedProduct = productDao.add(givenProduct);
+        final Product savedProduct = productDao.save(givenProduct);
 
         //when
         int result = productDao.delete(savedProduct.getId());
