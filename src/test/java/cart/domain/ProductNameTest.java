@@ -1,14 +1,14 @@
 package cart.domain;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import cart.domain.product.ProductName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 
 class ProductNameTest {
@@ -25,7 +25,7 @@ class ProductNameTest {
     void nameEmpty() {
         assertThatThrownBy(() -> new ProductName(""))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ProductName.NAME_LENGTH_ERROR_MESSAGE);
+                .hasMessage(ProductName.PRODUCT_NAME_LENGTH_ERROR_MESSAGE);
     }
 
     @ParameterizedTest
@@ -34,7 +34,7 @@ class ProductNameTest {
     void nameBlank(String name) {
         assertThatThrownBy(() -> new ProductName(name))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ProductName.NAME_LENGTH_ERROR_MESSAGE);
+                .hasMessage(ProductName.PRODUCT_NAME_LENGTH_ERROR_MESSAGE);
     }
 
     @Test
@@ -43,7 +43,7 @@ class ProductNameTest {
         String name = "a".repeat(65);
         assertThatThrownBy(() -> new ProductName(name))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ProductName.NAME_LENGTH_ERROR_MESSAGE);
+                .hasMessage(ProductName.PRODUCT_NAME_LENGTH_ERROR_MESSAGE);
     }
 
     @Test

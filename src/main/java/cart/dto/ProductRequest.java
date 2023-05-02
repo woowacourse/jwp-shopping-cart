@@ -11,9 +11,9 @@ public class ProductRequest {
 
     @NotBlank
     @Size(
-            min = ProductName.MIN_NAME_LENGTH,
-            max = ProductName.MAX_NAME_LENGTH,
-            message = ProductName.NAME_LENGTH_ERROR_MESSAGE)
+            min = ProductName.MIN_PRODUCT_NAME_LENGTH,
+            max = ProductName.MAX_PRODUCT_NAME_LENGTH,
+            message = ProductName.PRODUCT_NAME_LENGTH_ERROR_MESSAGE)
     private final String name;
 
     @Range(
