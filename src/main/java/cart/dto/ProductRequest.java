@@ -1,6 +1,7 @@
 package cart.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
@@ -14,10 +15,11 @@ public class ProductRequest {
     @NotBlank(message = "이미지 url은 필수 입력값입니다.")
     private final String image;
 
+    @NotNull(message = "상품 가격은 필수 입력값입니다.")
     @PositiveOrZero(message = "상품 가격은 0원 이상이어야 합니다. 입력값 : ${validatedValue}")
     private final Integer price;
 
-    public ProductRequest(final String name, final String image, final int price) {
+    public ProductRequest(final String name, final String image, final Integer price) {
         this.name = name;
         this.image = image;
         this.price = price;
