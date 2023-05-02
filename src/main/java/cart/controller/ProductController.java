@@ -30,7 +30,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> postProducts(@Valid @RequestBody ProductCreationRequest request) {
-        long id = managementService.save(ProductDtoMapper.from(request));
+        final long id = managementService.save(ProductDtoMapper.from(request));
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
