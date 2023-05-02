@@ -1,5 +1,5 @@
 INSERT INTO MEMBER
-VALUES (1, 'userA@woowahan.com', 'passwordB', 'userA', 'address1', 1);
+VALUES (1, 'userA@woowahan.com', 'passwordA', 'userA', 'address1', 1);
 INSERT INTO MEMBER
 VALUES (2, 'userB@woowahan.com', 'passwordB', 'userB', 'address2', 2);
 
