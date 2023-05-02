@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import cart.TestFixture;
 import cart.dao.ProductDao;
+import cart.domain.Product;
 import cart.repository.exception.NoSuchIdException;
 
 @JdbcTest
@@ -29,9 +30,9 @@ class ProductRepositoryTest {
     void setUp() {
         this.productRepository = new ProductRepository(new ProductDao(jdbcTemplate));
 
-        productRepository.save("땡칠", TestFixture.IMAGE_0CHIL, 1000L);
-        productRepository.save("비버", TestFixture.IMAGE_BEAVER, 1000L);
-        productRepository.save("코다", TestFixture.IMAGE_KODA, 1000000L);
+        productRepository.save(new Product("땡칠", TestFixture.IMAGE_0CHIL, 1000L));
+        productRepository.save(new Product("비버", TestFixture.IMAGE_BEAVER, 1000L));
+        productRepository.save(new Product("코다", TestFixture.IMAGE_KODA, 1000000L));
     }
 
     @Test
@@ -57,7 +58,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("상품 수정")
     void update() {
-        productRepository.update(getGreatestId(), "코다", "VERY_BIG_IMAGE", 100L);
+        productRepository.update(new Product(getGreatestId(), "코다", "VERY_BIG_IMAGE", 100L));
 
         assertThat(productRepository.getAll())
                 .extracting("name", "image", "price")
@@ -79,7 +80,7 @@ class ProductRepositoryTest {
     @DisplayName("수정된 대상이 없으면 예외를 던진다")
     @Test
     void noUpdateCountThrows() {
-        assertThatThrownBy(() -> productRepository.update(INVALID_ID, "땡칠", TestFixture.IMAGE_KODA, 1000L))
+        assertThatThrownBy(() -> productRepository.update(new Product(INVALID_ID, "땡칠", TestFixture.IMAGE_KODA, 1000L)))
                 .isInstanceOf(NoSuchIdException.class);
     }
 

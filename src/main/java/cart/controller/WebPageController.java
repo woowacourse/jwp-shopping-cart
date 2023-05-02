@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import cart.controller.dto.ProductResponse;
 import cart.dao.ProductEntity;
+import cart.domain.Product;
 import cart.repository.ProductRepository;
 
 @Controller
@@ -32,7 +33,7 @@ public class WebPageController {
         return "admin";
     }
 
-    private List<ProductResponse> mapProducts(List<ProductEntity> products) {
+    private List<ProductResponse> mapProducts(List<Product> products) {
         return products.stream()
                 .map(product -> new ProductResponse(
                         product.getId(),

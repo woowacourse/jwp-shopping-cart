@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cart.controller.dto.ProductRequest;
+import cart.domain.Product;
 import cart.repository.ProductRepository;
 
 @RestController
@@ -26,7 +27,12 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<String> createProduct(@RequestBody @Valid ProductRequest productRequest) {
-        productRepository.save(productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
+        Product product = new Product(
+                productRequest.getName(),
+                productRequest.getImage(),
+                productRequest.getPrice()
+        );
+        productRepository.save(product);
         return ResponseEntity.ok().build();
     }
 
@@ -34,7 +40,14 @@ public class ProductController {
     public ResponseEntity<String> updateProduct(
             @PathVariable("id") Integer id,
             @RequestBody @Valid ProductRequest productRequest) {
-        productRepository.update(id, productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
+        final Product product = new Product(
+                id,
+                productRequest.getName(),
+                productRequest.getImage(),
+                productRequest.getPrice()
+        );
+
+        productRepository.update(product);
         return ResponseEntity.ok().build();
     }
 
