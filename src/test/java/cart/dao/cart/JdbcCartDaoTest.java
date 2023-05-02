@@ -18,6 +18,7 @@ import cart.dao.entity.User;
 @JdbcTest
 class JdbcCartDaoTest {
 
+    public static final User USER = new User("ahdjd5@gmail.com", "qwer1234");
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     CartDao cartDao;
@@ -30,14 +31,25 @@ class JdbcCartDaoTest {
     @Test
     @DisplayName("회원이 장바구니에 담은 아이템 목록을 반환한다.")
     void findAllProductInCart() {
-        final User user = new User("ahdjd5@gmail.com", "qwer1234");
-
-        final List<Product> result = cartDao.findAllProductInCart(user);
+        final List<Product> result = cartDao.findAllProductInCart(USER);
 
         Assertions.assertAll(
                 () -> assertThat(result).hasSize(1),
                 () -> assertThat(result.get(0).getName()).isEqualTo("치킨"),
                 () -> assertThat(result.get(0).getPrice()).isEqualTo(10000)
         );
+    }
+
+    @Test
+    @DisplayName("회원이 장바구니에 담아놓은 아이템을 삭제한다.")
+    void removeProductInCart() {
+        final long productId = 1L;
+        cartDao.removeProductInCart(USER, productId);
+
+        final List<Product> results = cartDao.findAllProductInCart(USER);
+
+        assertThat(results.stream()
+                .anyMatch(product -> product.getId() == productId))
+                .isFalse();
     }
 }

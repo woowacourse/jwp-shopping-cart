@@ -1,6 +1,8 @@
 package cart.dao.cart;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -54,6 +56,12 @@ public class JdbcCartDao implements CartDao {
 
     @Override
     public void removeProductInCart(User user, Long productId) {
-
+        final Long userId = getUserId(user);
+        final String sql = "DELETE FROM cart WHERE user_id = :userId AND product_id = :productId";
+        final Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("userId", userId);
+        paramMap.put("productId", productId);
+        final SqlParameterSource params = new MapSqlParameterSource(paramMap);
+        namedParameterJdbc.update(sql, params);
     }
 }
