@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
-public class ProductControllerAdvice {
+public class ControllerAdvice {
 
     @ExceptionHandler
     public ResponseEntity<String> handleNotValidInput(final MethodArgumentNotValidException exception) {
