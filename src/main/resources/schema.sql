@@ -13,3 +13,13 @@ create table users
     password VARCHAR(10) NOT NULL,
     PRIMARY KEY (email)
 );
+
+create table carts
+(
+    id         BIGINT      NOT NULL AUTO_INCREMENT,
+    user_email VARCHAR(20) NOT NULL,
+    product_id BIGINT      NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_email) REFERENCES users (email),
+    FOREIGN KEY (product_id) REFERENCES products (id)
+);
