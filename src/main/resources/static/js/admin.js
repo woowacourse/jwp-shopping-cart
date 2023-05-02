@@ -51,6 +51,7 @@ const createProduct = (product) => {
         method: 'post',
         data: product
     }).then((response) => {
+        alert('해당 물품을 생성했습니다.');
         window.location.reload();
     }).catch((error) => {
         alert(error.response.data.message);
@@ -67,6 +68,7 @@ const updateProduct = (product) => {
         method: 'put',
         data: product
     }).then((response) => {
+        alert('해당 물품을 수정했습니다.');
         window.location.reload();
     }).catch((error) => {
         alert(error.response.data.message);
@@ -80,6 +82,7 @@ const deleteProduct = (id) => {
         url: '/products/' + id,
         method: 'delete'
     }).then((response) => {
+        alert('해당 물품을 삭제했습니다.');
         window.location.reload();
     }).catch((error) => {
         console.error(error);

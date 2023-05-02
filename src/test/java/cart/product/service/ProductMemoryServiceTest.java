@@ -1,6 +1,7 @@
 package cart.product.service;
 
 import cart.auth.AuthSubjectArgumentResolver;
+import cart.cart.service.CartService;
 import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
 import cart.product.dto.ProductRequest;
@@ -31,6 +32,8 @@ class ProductMemoryServiceTest {
     @MockBean
     private ProductDao productDao;
     @MockBean
+    private CartService cartService;
+    @MockBean
     private AuthSubjectArgumentResolver resolver;
     
     private InOrder inOrder;
@@ -40,6 +43,7 @@ class ProductMemoryServiceTest {
     @BeforeEach
     void setUp() {
         inOrder = inOrder(productDao);
+        
         // given
         firstProduct = new Product(1L, "홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 10_000_000);
         secondProduct = new Product(2L, "아벨", "https://ca.slack-edge.com/TFELTJB7V-U04LMNLQ78X-a7ef923d5391-512", 10_000_000);

@@ -12,4 +12,6 @@ public interface CartDao {
     List<Cart> findByMemberId(final Long memberId);
     
     void deleteByCartIdAndMemberId(final Long cartId, final Long memberId);
+    
+    void deleteByProductId(final Long productId);
 }

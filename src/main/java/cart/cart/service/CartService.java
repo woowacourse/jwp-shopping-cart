@@ -11,4 +11,6 @@ public interface CartService {
     List<CartResponse> findByMemberRequest(final MemberRequest memberRequest);
     
     void deleteByCartIdAndMemberId(final Long cartId, final Long memberId);
+    
+    void deleteByProductId(final Long productId);
 }

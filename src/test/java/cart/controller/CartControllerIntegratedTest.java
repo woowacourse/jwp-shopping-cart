@@ -10,6 +10,7 @@ import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
 import cart.product.dto.ProductResponse;
 import io.restassured.RestAssured;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -23,6 +24,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -70,6 +72,21 @@ class CartControllerIntegratedTest {
         
         // then
         assertThat(cart).isEqualTo(new CartResponse(1L, 1L, 1L));
+    }
+    
+    @Test
+    void 이미_장바구니에_존재하는_물품을_저장할_시_예외처리() {
+        // given
+        cartDao.save(1L, 2L);
+        
+        // expect
+        RestAssured.given().log().all()
+                .auth().preemptive().basic("b@b.com", "password2")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post(DEFAULT_PATH + 1)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("[ERROR] 해당 계정엔 해당 물품이 이미 장바구니에 존재합니다."));
     }
     
     @Test

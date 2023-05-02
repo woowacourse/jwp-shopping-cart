@@ -1,5 +1,6 @@
 package cart.product.service;
 
+import cart.cart.service.CartService;
 import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
 import cart.product.dto.ProductRequest;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProductMemoryService implements ProductService {
     private final ProductDao productDao;
+    private final CartService cartService;
     
     @Override
     @Transactional(readOnly = true)
@@ -51,6 +53,7 @@ public class ProductMemoryService implements ProductService {
     @Override
     public void delete(final Long id) {
         validateNotExistProductId(id);
+        cartService.deleteByProductId(id);
         productDao.delete(id);
     }
     

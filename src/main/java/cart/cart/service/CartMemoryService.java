@@ -21,7 +21,16 @@ public class CartMemoryService implements CartService {
     @Override
     @Transactional
     public Long addCart(final Long productId, final MemberRequest memberRequest) {
+        if (isExistCartProduct(productId, memberRequest)) {
+            throw new IllegalArgumentException("[ERROR] 해당 계정엔 해당 물품이 이미 장바구니에 존재합니다.");
+        }
+        
         return cartDao.save(productId, memberRequest.getId());
+    }
+    
+    private boolean isExistCartProduct(final Long productId, final MemberRequest memberRequest) {
+        return cartDao.findByMemberId(memberRequest.getId()).stream()
+                .anyMatch(cart -> cart.isSame(productId, memberRequest.getId()));
     }
     
     @Override
@@ -39,5 +48,10 @@ public class CartMemoryService implements CartService {
     @Override
     public void deleteByCartIdAndMemberId(final Long cartId, final Long memberId) {
         cartDao.deleteByCartIdAndMemberId(cartId, memberId);
+    }
+    
+    @Override
+    public void deleteByProductId(final Long productId) {
+        cartDao.deleteByProductId(productId);
     }
 }

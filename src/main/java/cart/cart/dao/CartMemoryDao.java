@@ -54,6 +54,14 @@ public class CartMemoryDao implements CartDao {
     }
     
     @Override
+    public void deleteByProductId(final Long productId) {
+        final String sql = "DELETE FROM CART WHERE product_id=:product_id";
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("product_id", productId);
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+    
+    @Override
     public Long save(final Long productId, final Long memberId) {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("member_id", memberId)

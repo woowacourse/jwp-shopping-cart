@@ -56,7 +56,8 @@ class CartMemoryServiceTest {
         
         assertAll(
                 () -> assertThat(cartId).isOne(),
-                () -> then(cartDao).should(only()).save(anyLong(), anyLong())
+                () -> then(cartDao).should(inOrder).findByMemberId(anyLong()),
+                () -> then(cartDao).should(inOrder).save(anyLong(), anyLong())
         );
     }
     
@@ -96,5 +97,14 @@ class CartMemoryServiceTest {
         
         // then
         then(cartDao).should(only()).deleteByCartIdAndMemberId(1L, 1L);
+    }
+    
+    @Test
+    void productId를_전달하면_해당_카트_품목을_삭제한다() {
+        // when
+        cartService.deleteByProductId(1L);
+        
+        // then
+        then(cartDao).should(only()).deleteByProductId(1L);
     }
 }

@@ -37,6 +37,7 @@ const removeCartItem = (id) => {
             'Authorization': `Basic ${credentials}`
         }
     }).then((response) => {
+        alert('해당 물품을 장바구니에서 삭제했습니다.');
         window.location.reload();
     }).catch((error) => {
         alert(id);

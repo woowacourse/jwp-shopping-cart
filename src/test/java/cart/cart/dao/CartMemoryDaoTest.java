@@ -97,4 +97,21 @@ class CartMemoryDaoTest {
         final Cart expectSecondCart = new Cart(3L, 1L, 4L);
         assertThat(carts).containsExactly(expectFirstCart, expectSecondCart);
     }
+    
+    @Test
+    void productId를_전달하면_해당_카트_품목을_삭제한다() {
+        //given
+        cartDao.save(1L, 1L);
+        cartDao.save(2L, 1L);
+        cartDao.save(4L, 1L);
+        
+        // when
+        cartDao.deleteByProductId(2L);
+        
+        // then
+        final List<Cart> carts = cartDao.findByMemberId(1L);
+        final Cart expectFirstCart = new Cart(1L, 1L, 1L);
+        final Cart expectSecondCart = new Cart(3L, 1L, 4L);
+        assertThat(carts).containsExactly(expectFirstCart, expectSecondCart);
+    }
 }
