@@ -31,35 +31,35 @@
             <th>Actions</th>
         </tr>
         <tbody id="product-list">
-            <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
-            <tr th:each="product : ${products}">
-                <td th:text="${product.id}"></td>
-                <td></td> <!-- 상품 이름 -->
-                <td></td> <!-- 상품 가격 -->
-                <td>
-                    <img style="max-width: 100px;"> <!-- 상품 이미지 -->
-                </td>
-                <td>
-                    <button th:onclick="showEditModal([[${product}]])">수정</button>
-                    <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
-                </td>
-            </tr>
+        <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td> <!-- 상품 이름 -->
+            <td th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + '원'"></td> <!-- 상품 가격 -->
+            <td>
+                <img style="max-width: 100px;" th:src="${product.image}"> <!-- 상품 이미지 -->
+            </td>
+            <td>
+                <button th:onclick="showEditModal([[${product}]])">수정</button>
+                <button th:onclick="deleteProduct([[${product.id}]])">삭제</button>
+            </td>
+        </tr>
         </tbody>
     </table>
 
-    <div id="modal" class="modal" data-form-type="add">
+    <div class="modal" data-form-type="add" id="modal">
         <div class="modal-content">
             <span class="close" onclick="hideAddModal()">&times;</span>
             <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
             <form id="form">
                 <label for="name">상품명</label><br>
-                <input type="text" id="name" name="" required><br>
+                <input id="name" name="name" required type="text"><br>
 
                 <label for="price">가격</label><br>
-                <input type="number" id="price" name="" required><br>
+                <input id="price" name="price" required type="number"><br>
 
                 <label for="image-url">이미지 URL</label><br>
-                <input type="text" id="image-url" name="" required><br>
+                <input id="image-url" name="image" required type="text"><br>
 
                 <button type="submit">제출</button>
             </form>
@@ -67,7 +67,7 @@
     </div>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script th:src="@{/js/admin.js}"> </script>
+<script th:src="@{/js/admin.js}"></script>
 </body>
 </html>
 
