@@ -37,11 +37,8 @@ class UserDaoTest {
             "anonymous@wooteco.com, 12345678"})
     @DisplayName("유저 조회 성공")
     void findIdByEmailAndPassword_success(String email, String password) {
-        // given
-        UserAuthenticationDto userAuthenticationDto = new UserAuthenticationDto(email, password);
-
-        //when
-        Integer id = userDao.findIdByEmailAndPassword(userAuthenticationDto);
+        // given, when
+        Integer id = userDao.findIdByEmailAndPassword(email, password);
 
         // then
         assertThat(id).isNotNull();
@@ -50,11 +47,7 @@ class UserDaoTest {
     @Test
     @DisplayName("잘못된 인증 정보이면 예외가 발생한다.")
     void findIdByEmailAndPassword_fail() {
-        // given
-        UserAuthenticationDto userAuthenticationDto = new UserAuthenticationDto("pobi", "pobipobi");
-
-        // when, then
-        assertThatThrownBy(() -> userDao.findIdByEmailAndPassword(userAuthenticationDto))
+        assertThatThrownBy(() -> userDao.findIdByEmailAndPassword("pobi", "pobipobi"))
                 .isInstanceOf(AuthorizationException.class);
     }
 }
