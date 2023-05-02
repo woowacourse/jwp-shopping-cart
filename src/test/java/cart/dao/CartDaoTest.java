@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -51,6 +52,31 @@ class CartDaoTest {
             softly.assertThat(carEntity.getUserId()).isEqualTo(userId);
             softly.assertThat(carEntity.getProductId()).isEqualTo(productId);
         });
+    }
+
+    private Long insertUser(final UserEntity userEntity) {
+        final String sql = "INSERT INTO users (email, password) VALUES (?, ?)";
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            final PreparedStatement preparedStatement = con.prepareStatement(sql, GENERATED_ID_COLUMN);
+            preparedStatement.setString(1, userEntity.getEmail());
+            preparedStatement.setString(2, userEntity.getPassword());
+            return preparedStatement;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    private Long insertProduct(final ProductEntity productEntity) {
+        final String sql = "INSERT INTO product (name, price, image) VALUES (?, ?, ?)";
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            final PreparedStatement preparedStatement = con.prepareStatement(sql, GENERATED_ID_COLUMN);
+            preparedStatement.setString(1, productEntity.getName());
+            preparedStatement.setInt(2, productEntity.getPrice());
+            preparedStatement.setString(3, productEntity.getImage());
+            return preparedStatement;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     @Test
@@ -90,28 +116,17 @@ class CartDaoTest {
         });
     }
 
-    private Long insertUser(final UserEntity userEntity) {
-        final String sql = "INSERT INTO users (email, password) VALUES (?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-            final PreparedStatement preparedStatement = con.prepareStatement(sql, GENERATED_ID_COLUMN);
-            preparedStatement.setString(1, userEntity.getEmail());
-            preparedStatement.setString(2, userEntity.getPassword());
-            return preparedStatement;
-        }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
-    }
+    @Test
+    void 사용자_id와_상품_id로_데이터를_삭제한다() {
+        //given
+        final Long userId = insertUser(new UserEntity("huchu@woowahan.com", "1234567a!"));
+        final Long productId = insertProduct(new ProductEntity("치킨", 10_000, "치킨 사진"));
+        final Long id = cartDao.insert(new CartEntity(userId, productId));
 
-    private Long insertProduct(final ProductEntity productEntity) {
-        final String sql = "INSERT INTO product (name, price, image) VALUES (?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-            final PreparedStatement preparedStatement = con.prepareStatement(sql, GENERATED_ID_COLUMN);
-            preparedStatement.setString(1, productEntity.getName());
-            preparedStatement.setInt(2, productEntity.getPrice());
-            preparedStatement.setString(3, productEntity.getImage());
-            return preparedStatement;
-        }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        //when
+        final int affectedRows = cartDao.delete(userId, productId);
+
+        //then
+        assertThat(affectedRows).isEqualTo(1);
     }
 }

@@ -50,4 +50,9 @@ public class CartDao {
         final String sql = "SELECT * FROM cart WHERE user_id = ?";
         return jdbcTemplate.query(sql, CART_ENTITY_ROW_MAPPER, userId);
     }
+
+    public int delete(final Long userId, final Long productId) {
+        final String sql = "DELETE FROM cart WHERE user_id = ? AND product_id = ?";
+        return jdbcTemplate.update(sql, userId, productId);
+    }
 }
