@@ -2,12 +2,12 @@ package cart.service;
 
 import cart.controller.dto.MemberDto;
 import cart.domain.Member;
+import cart.domain.MemberPassword;
+import cart.domain.MemberRole;
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.persistence.dao.MemberDao;
 import cart.persistence.entity.MemberEntity;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -24,12 +24,21 @@ public class MemberService {
     }
 
     public long save(final MemberDto memberDto) {
+        if (memberDao.findByEmail(memberDto.getEmail()).isPresent()) {
+            throw new GlobalException(ErrorCode.MEMBER_DUPLICATE_EMAIL);
+        }
         final MemberEntity memberEntity = convertToEntity(memberDto);
         return memberDao.insert(memberEntity);
     }
 
     public MemberDto getById(final Long id) {
         return memberDao.findById(id)
+            .map(this::convertToDto)
+            .orElseThrow(() -> new GlobalException(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    public MemberDto getByEmail(final String email) {
+        return memberDao.findByEmail(email)
             .map(this::convertToDto)
             .orElseThrow(() -> new GlobalException(ErrorCode.MEMBER_NOT_FOUND));
     }
@@ -43,24 +52,16 @@ public class MemberService {
 
     private MemberEntity convertToEntity(final MemberDto memberDto) {
         final Member member = Member.create(memberDto.getEmail(), memberDto.getPassword(),
-            memberDto.getNickname(), memberDto.getTelephone());
-        final String encodedPassword = encodePassword(member.getPassword());
-        return new MemberEntity(member.getEmail(), encodedPassword, member.getNickname(),
-            member.getTelephone());
+            memberDto.getNickname(), memberDto.getTelephone(),
+            MemberRole.from(memberDto.getRole()));
+        return new MemberEntity(member.getEmail(), member.getRole().name(),
+            member.getPassword(), member.getNickname(), member.getTelephone());
     }
 
     private MemberDto convertToDto(final MemberEntity memberEntity) {
-        final String decodedPassword = decodePassword(memberEntity.getPassword());
-        return new MemberDto(memberEntity.getId(), memberEntity.getEmail(), decodedPassword,
-            memberEntity.getNickname(), memberEntity.getTelephone());
-    }
-
-    private String encodePassword(final String password) {
-        return Base64.getEncoder().encodeToString(password.getBytes());
-    }
-
-    private String decodePassword(final String encodedPassword) {
-        return new String(Base64.getDecoder().decode(encodedPassword.getBytes()),
-            StandardCharsets.UTF_8);
+        final MemberPassword password = MemberPassword.create(memberEntity.getPassword());
+        final String decodedPassword = password.decodePassword();
+        return new MemberDto(memberEntity.getId(), memberEntity.getRole(), memberEntity.getEmail(),
+            decodedPassword, memberEntity.getNickname(), memberEntity.getTelephone());
     }
 }
