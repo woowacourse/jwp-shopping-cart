@@ -1,5 +1,6 @@
 package cart.fixture;
 
+import cart.dto.MemberAuthRequest;
 import cart.dto.MemberRegisterRequest;
 import cart.entity.MemberEntity;
 
@@ -29,4 +30,10 @@ public class MemberFixtures {
      */
     public static final MemberRegisterRequest MEMBER_REGISTER_REQUEST =
             new MemberRegisterRequest(DUMMY_NICKNAME, DUMMY_EMAIL, DUMMY_PASSWORD);
+
+    /**
+     * DUMMY_MEMBER_AUTH_REQUEST
+     */
+    public static final MemberAuthRequest MEMBER_AUTH_REQUEST =
+            new MemberAuthRequest(DUMMY_EMAIL, DUMMY_PASSWORD);
 }

@@ -2,10 +2,10 @@ package cart.entity;
 
 public class ProductEntity {
 
-    private Long productId;
-    private String name;
-    private String imgUrl;
-    private int price;
+    private final Long productId;
+    private final String name;
+    private final String imgUrl;
+    private final int price;
 
     private ProductEntity(Long productId, String name, String imgUrl, int price) {
         this.productId = productId;
