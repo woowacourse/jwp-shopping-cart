@@ -18,7 +18,7 @@ public class ProductRequest {
     private final String imageUrl;
 
     @NotNull(message = "상품 가격은 필수 값입니다.")
-    @Range(min = 10, max = 100_000_000, message = "상품 금액은 0원 이상 100,000,000원 이하만 가능합니다.")
+    @Range(min = 1, max = 100_000_000, message = "상품 금액은 1원 이상 100,000,000원 이하만 가능합니다.")
     private final Integer price;
 
     public ProductRequest(final String name, final String imageUrl, final Integer price) {

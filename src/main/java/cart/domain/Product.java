@@ -9,7 +9,7 @@ public class Product {
 
     private static final int MIN_NAME_LENGTH = 1;
     private static final int MAX_NAME_LENGTH = 10;
-    private static final int MIN_PRICE = 10;
+    private static final int MIN_PRICE = 1;
     private static final int MAX_PRICE = 100_000_000;
     private static final String URL_REGEX = "^((https?|ftp|file):\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$";
 
