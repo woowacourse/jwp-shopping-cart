@@ -40,4 +40,14 @@ class H2MemberDaoTest {
 
         assertThat(memberDao.findAll()).hasSize(2);
     }
+
+    @DisplayName("email로 회원을 조회한다")
+    @Test
+    void findByEmail() {
+        Member member = new Member("boxster@email.com", "boxster");
+
+        Member savedMember = memberDao.save(member);
+
+        assertThat(memberDao.findByEmail("boxster@email.com")).isNotEmpty();
+    }
 }

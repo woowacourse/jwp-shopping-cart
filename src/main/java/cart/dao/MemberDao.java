@@ -11,4 +11,6 @@ public interface MemberDao {
     Optional<Member> findById(Long id);
 
     List<Member> findAll();
+
+    Optional<Member> findByEmail(String email);
 }

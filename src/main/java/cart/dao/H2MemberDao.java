@@ -53,17 +53,24 @@ public class H2MemberDao implements MemberDao {
         return findMember(sql, parameter);
     }
 
-    private Optional<Member> findMember(String sql, Map<String, Long> parameter) {
+    @Override
+    public List<Member> findAll() {
+        String sql = "SELECT * FROM member";
+        return jdbcTemplate.query(sql, memberRowMapper);
+    }
+
+    @Override
+    public Optional<Member> findByEmail(String email) {
+        String sql = "SELECT * FROM member WHERE email = :email";
+        Map<String, String> parameter = Collections.singletonMap("email", email);
+        return findMember(sql, parameter);
+    }
+
+    private Optional<Member> findMember(String sql, Map parameter) {
         try {
             return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, parameter, memberRowMapper));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-    }
-
-    @Override
-    public List<Member> findAll() {
-        String sql = "SELECT * FROM member";
-        return jdbcTemplate.query(sql, memberRowMapper);
     }
 }

@@ -4,9 +4,12 @@ import java.util.Objects;
 
 public class Member {
 
-    private final Long id;
-    private final String email;
-    private final String password;
+    private Long id;
+    private String email;
+    private String password;
+
+    public Member() {
+    }
 
     public Member(String email, String password) {
         this(null, email, password);
@@ -30,6 +33,10 @@ public class Member {
         return password;
     }
 
+    public boolean matchingPassword(String password) {
+        return password.equals(this.password);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -45,5 +52,14 @@ public class Member {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
