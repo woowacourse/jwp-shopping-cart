@@ -9,7 +9,7 @@ public class ProductDto {
     private final String imageUrl;
     private final int price;
 
-    public ProductDto(final Long id, final String name, final String imageUrl, final int price) {
+    private ProductDto(final Long id, final String name, final String imageUrl, final int price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
