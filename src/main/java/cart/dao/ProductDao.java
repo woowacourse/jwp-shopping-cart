@@ -1,8 +1,8 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
-
 import java.util.List;
+
+import cart.entity.ProductEntity;
 
 public interface ProductDao {
 
@@ -13,6 +13,4 @@ public interface ProductDao {
     void updateProduct(ProductEntity productEntity);
 
     void deleteProduct(int productId);
-
-    void deleteAllProduct();
 }

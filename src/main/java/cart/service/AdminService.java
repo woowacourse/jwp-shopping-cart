@@ -1,13 +1,14 @@
 package cart.service;
 
-import cart.dao.ProductDao;
-import cart.dto.ProductRequestDto;
-import cart.entity.ProductEntity;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import cart.dao.ProductDao;
+import cart.dto.ProductRequestDto;
+import cart.entity.ProductEntity;
 
 @Service
 @Transactional
@@ -19,9 +20,9 @@ public class AdminService {
         this.productDao = productDao;
     }
 
-
     public int addProduct(ProductRequestDto productRequestDto) {
-        ProductEntity productEntity = new ProductEntity(productRequestDto.getName(), productRequestDto.getPrice(), productRequestDto.getImage());
+        ProductEntity productEntity = new ProductEntity(productRequestDto.getName(), productRequestDto.getPrice(),
+            productRequestDto.getImage());
         return productDao.insertProduct(productEntity);
     }
 
@@ -31,7 +32,8 @@ public class AdminService {
     }
 
     public void updateProduct(ProductRequestDto productRequestDto, int productId) {
-        ProductEntity productEntity = new ProductEntity(productId, productRequestDto.getName(), productRequestDto.getPrice(), productRequestDto.getImage());
+        ProductEntity productEntity = new ProductEntity(productId, productRequestDto.getName(),
+            productRequestDto.getPrice(), productRequestDto.getImage());
         productDao.updateProduct(productEntity);
     }
 
@@ -39,7 +41,4 @@ public class AdminService {
         productDao.deleteProduct(productId);
     }
 
-    public void deleteAll() {
-        productDao.deleteAllProduct();
-    }
 }

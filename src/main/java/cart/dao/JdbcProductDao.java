@@ -1,6 +1,9 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
+import java.util.List;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,8 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.util.List;
+import cart.entity.ProductEntity;
 
 @Repository
 public class JdbcProductDao implements ProductDao {
@@ -19,18 +21,18 @@ public class JdbcProductDao implements ProductDao {
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<ProductEntity> productMapper
-            = (resultSet, rowNum) -> new ProductEntity(
-            resultSet.getInt("id"),
-            resultSet.getString("name"),
-            resultSet.getInt("price"),
-            resultSet.getString("image")
+        = (resultSet, rowNum) -> new ProductEntity(
+        resultSet.getInt("id"),
+        resultSet.getString("name"),
+        resultSet.getInt("price"),
+        resultSet.getString("image")
     );
 
     @Autowired
     public JdbcProductDao(DataSource dataSource, JdbcTemplate jdbcTemplate) {
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("product")
-                .usingGeneratedKeyColumns("id");
+            .withTableName("product")
+            .usingGeneratedKeyColumns("id");
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -50,7 +52,8 @@ public class JdbcProductDao implements ProductDao {
     @Override
     public void updateProduct(ProductEntity productEntity) {
         String sql = "update product set name = ?, price =? , image = ?  where id = ?";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImage(), productEntity.getId());
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImage(),
+            productEntity.getId());
     }
 
     @Override
@@ -59,9 +62,4 @@ public class JdbcProductDao implements ProductDao {
         jdbcTemplate.update(sql, productId);
     }
 
-    @Override
-    public void deleteAllProduct() {
-        String sql = "delete from product";
-        jdbcTemplate.update(sql);
-    }
 }
