@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS users
+(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS products
+(
+    id      BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name    VARCHAR(45) NOT NULL,
+    price   INT         NOT NULL,
+    img_url CLOB(10K) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS cart_products
+(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);

@@ -44,8 +44,8 @@ public class ProductIntegrationTest {
     }
 
     @AfterEach
-    void after() {
-        jdbcTemplate.execute("delete FROM product");
+    void tearDown() {
+        jdbcTemplate.execute("delete FROM products");
     }
 
     @Test

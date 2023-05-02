@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,10 +16,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 @JdbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ProductDbRepositoryTest {
 
     private ProductDbRepository productDbRepository;
@@ -31,7 +32,8 @@ class ProductDbRepositoryTest {
     @BeforeEach
     void setUp() {
         productDbRepository = new ProductDbRepository(jdbcTemplate);
-        simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("product");
+        simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("products")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Test
