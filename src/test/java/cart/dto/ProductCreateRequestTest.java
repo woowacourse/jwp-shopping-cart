@@ -2,7 +2,6 @@ package cart.dto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dto.ProductCreateRequest;
 import java.util.Optional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

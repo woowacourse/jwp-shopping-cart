@@ -12,7 +12,8 @@ public class Product {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public Product(@Nullable final Long id, final String name, final int price, final String imageUrl,
+    public Product(@Nullable final Long id, final String name, final int price,
+        final String imageUrl,
         @Nullable final LocalDateTime createdAt, @Nullable final LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;

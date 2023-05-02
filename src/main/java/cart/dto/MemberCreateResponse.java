@@ -5,10 +5,13 @@ import java.time.LocalDateTime;
 
 public class MemberCreateResponse {
 
-    private final Long id;
-    private final String email;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private Long id;
+    private String email;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    public MemberCreateResponse() {
+    }
 
     public MemberCreateResponse(final Long id, final String email, final LocalDateTime createdAt,
         final LocalDateTime updatedAt) {

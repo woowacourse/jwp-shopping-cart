@@ -2,7 +2,6 @@ package cart.domain.member.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.member.dao.MemberDao;
 import cart.domain.member.entity.Member;
 import java.time.LocalDateTime;
 import java.util.Optional;

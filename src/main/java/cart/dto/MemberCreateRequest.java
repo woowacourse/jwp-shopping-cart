@@ -6,8 +6,11 @@ import javax.validation.constraints.Email;
 public class MemberCreateRequest {
 
     @Email
-    private final String email;
-    private final String password;
+    private String email;
+    private String password;
+
+    public MemberCreateRequest() {
+    }
 
     public MemberCreateRequest(final String email, final String password) {
         this.email = email;

@@ -4,7 +4,9 @@ import cart.domain.member.dao.MemberDao;
 import cart.domain.member.entity.Member;
 import cart.dto.MemberCreateRequest;
 import cart.dto.MemberCreateResponse;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MemberService {
 
     private final MemberDao memberDao;
