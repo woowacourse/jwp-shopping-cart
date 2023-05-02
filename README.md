@@ -92,7 +92,7 @@
 
 ### 장바구니 기능 구현
 - [ ] 장바구니와 관련된 아래 기능을 구현합니다.
-  - [ ] 장바구니에 상품 추가 (CREATE)
+  - [x] 장바구니에 상품 추가 (CREATE)
     - `insert into member_product(member_id, product_id) values(?, ?)`
   - [ ] 장바구니에 담긴 상품 제거 (DELETE)
     - `delete from member_product where id = ?`
