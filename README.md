@@ -4,6 +4,7 @@
 
 - [x] 상품 목록 페이지 연동
 - [x] 사용자 설정 페이지 연동
+- [x] 장바구니 페이지 연동
 
 ### 도메인
 
@@ -22,13 +23,24 @@
 
 ### DAO
 
-- [x] Product CRUD
+- [x] Product
+    - [x] create
+    - [x] read
+    - [x] update
+    - [x] delete
 
-- [x] Member CR
+- [x] Member
+    - [x] create
+    - [x] read
+
+- [ ] Cart
+    - [ ] create
+    - [ ] read
+    - [ ] delete
 
 ### Service
 
-- [x] 장바구니 서비스
+- [x] 상품 서비스
     - [x] 상품 추가
     - [x] 상품 전체 조회
     - [x] 상품 수정
@@ -37,6 +49,11 @@
 - [x] 사용자 서비스
     - [x] 사용자 추가
     - [x] 사용자 조회
+
+- [ ] 장바구니 서비스
+    - [ ] 장바구니 상품 추가
+    - [ ] 장바구니 상품 조회
+    - [ ] 장바구니 상품 삭제
 
 ### API 명세
 
@@ -63,4 +80,3 @@
     - POST "/member"
     - Request: email, password
     - Response: 200 OK
-

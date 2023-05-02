@@ -15,7 +15,7 @@ public class MemberRestController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/member")
+    @PostMapping("/members")
     public ResponseEntity<Void> createMember(@RequestBody MemberRequestDto memberRequestDto) {
         memberService.addMember(memberRequestDto);
         return ResponseEntity.noContent().build();
