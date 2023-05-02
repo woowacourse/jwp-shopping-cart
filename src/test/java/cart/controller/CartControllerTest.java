@@ -23,6 +23,7 @@ public class CartControllerTest {
     @MockBean
     private CartService cartService;
 
+    @DisplayName("index View 테스트")
     @Test
     void indexTest() throws Exception {
         when(cartService.getProducts()).thenReturn(List.of(
@@ -36,6 +37,7 @@ public class CartControllerTest {
                 .andExpect(view().name("index"));
     }
 
+    @DisplayName("admin View 테스트")
     @Test
     void adminTest() throws Exception {
         when(cartService.getProducts()).thenReturn(List.of(

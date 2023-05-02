@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.dto.ProductResponseDto;
 import cart.service.CartService;
 import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,6 +25,7 @@ public class CartApiControllerTest {
     @MockBean
     private CartService cartService;
 
+    @DisplayName("POST /product 성공 테스트")
     @Test
     void insertTest() throws Exception {
         this.mockMvc.perform(post("/product")
@@ -31,6 +34,7 @@ public class CartApiControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("POST /product 실패 테스트")
     @Test
     void insertTest_fail() throws Exception {
         this.mockMvc.perform(post("/product")
@@ -39,6 +43,7 @@ public class CartApiControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @DisplayName("GET /product 성공 테스트")
     @Test
     void getTest() throws Exception {
         when(cartService.getProducts()).thenReturn(List.of(
@@ -57,6 +62,7 @@ public class CartApiControllerTest {
                 .andExpect(jsonPath("$[1].image").value("image2"));
     }
 
+    @DisplayName("PATCH /product 성공 테스트")
     @Test
     void updateTest() throws Exception {
         this.mockMvc.perform(patch("/product")
@@ -65,20 +71,23 @@ public class CartApiControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("PATCH /product 실패 테스트")
     @Test
     void updateTest_fail() throws Exception {
-        this.mockMvc.perform(put("/product")
+        this.mockMvc.perform(patch("/product")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"id\": \"1\", \"name\": \"name\", \"image\": \"image\", \"price\": \"abc\"}"))
                 .andExpect(status().isBadRequest());
     }
 
+    @DisplayName("DELETE /product 성공 테스트")
     @Test
     void deleteTest() throws Exception {
         this.mockMvc.perform(delete("/product/1"))
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("DELETE /product 실패 테스트")
     @Test
     void deleteTest_fail() throws Exception {
         this.mockMvc.perform(delete("/product/a"))

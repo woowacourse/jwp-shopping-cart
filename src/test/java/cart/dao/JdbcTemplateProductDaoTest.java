@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -28,6 +29,7 @@ class JdbcTemplateProductDaoTest {
         productDao = new JdbcTemplateProductDao(jdbcTemplate);
     }
 
+    @DisplayName("ProductDao insert 테스트")
     @Test
     void insertTest() {
         int id = productDao.insert(new ProductEntity(null, "name", 1000, "image"));
@@ -56,6 +58,7 @@ class JdbcTemplateProductDaoTest {
         return product;
     }
 
+    @DisplayName("ProductDao 조회 테스트")
     @Test
     void selectAllTest() {
         productDao.insert(new ProductEntity(null, "name1", 1000, "image1"));
@@ -65,6 +68,7 @@ class JdbcTemplateProductDaoTest {
         assertThat(products).hasSize(2);
     }
 
+    @DisplayName("ProductDao 수정 테스트")
     @Test
     void updateTest() {
         final ProductEntity product = new ProductEntity(null, "name1", 1000, "image1");
@@ -81,6 +85,7 @@ class JdbcTemplateProductDaoTest {
         });
     }
 
+    @DisplayName("ProductDao 삭제 테스트")
     @Test
     void deleteTest() {
         final ProductEntity product = new ProductEntity(null, "name1", 1000, "image1");
