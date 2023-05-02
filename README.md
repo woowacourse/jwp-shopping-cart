@@ -6,13 +6,13 @@
 - [x] `/admin` : 관리자 도구 페이지 조회
     - [x] 상품 관리 CRUD API
         - [x] 상품 생성 POST `/admin/products`
-        - [x] 상품 수정 PUT `/admin/products/{id}`
-        - [x] 상품 삭제 DELETE `/admin/products/{id}`
+        - [x] 상품 수정 PUT `/admin/products/{productId}`
+        - [x] 상품 삭제 DELETE `/admin/products/{productId}`
 - [x] `/settings` : 사용자 설정 페이지 조회
 - [ ] `/cart` : 장바구니 페이지 조회
     - [ ] 장바구니 CRUD API
-        - [ ] 장바구니에 상품 추가 POST `/cart/products`
-        - [ ] 장바구니에 담긴 상품 제거 DELETE `/cart/products/{id}`
+        - [ ] 장바구니에 상품 추가 POST `/cart/cartItems`
+        - [ ] 장바구니에 담긴 상품 제거 DELETE `/cart/cartItems/{cartItemId}`
 
 ## 기능 목록
 
@@ -73,16 +73,16 @@ CREATE TABLE member
     password varchar(255)       NOT NULL
 );
 
-CREATE TABLE cart
+CREATE TABLE cart_item
 (
     id         bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
     member_id  bigint             NOT NULL,
     product_id bigint             NOT NULL
 );
 
-ALTER TABLE cart
+ALTER TABLE cart_item
     ADD CONSTRAINT fk_member_id FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE;
-ALTER TABLE cart
+ALTER TABLE cart_item
     ADD CONSTRAINT fk_product_id FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE;
 ```
 
