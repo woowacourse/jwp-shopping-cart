@@ -13,7 +13,8 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleException() {
+    public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
+        exception.printStackTrace();
         return ResponseEntity.internalServerError().body(new ExceptionResponse("서버가 응답할 수 없습니다."));
     }
     

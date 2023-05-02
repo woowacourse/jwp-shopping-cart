@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.cart.dao.CartDao;
+import cart.cart.dto.CartProductResponse;
 import cart.cart.dto.CartResponse;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
@@ -74,22 +75,26 @@ class CartControllerIntegratedTest {
     @Test
     void MemberRequest를_전달하면_장바구니_상품들을_가져온다() {
         productDao.save(new Product("product3", "c.com", 3000));
+        cartDao.save(2L, 1L);
         cartDao.save(2L, 2L);
+        cartDao.save(3L, 1L);
         cartDao.save(3L, 2L);
         
         // when
-        final List<ProductResponse> products = RestAssured.given().log().all()
+        final List<CartProductResponse> products = RestAssured.given().log().all()
                 .auth().preemptive().basic("b@b.com", "password2")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get(DEFAULT_PATH)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .extract().jsonPath().getList("", ProductResponse.class);
+                .extract().jsonPath().getList("", CartProductResponse.class);
         
         // then
-        final ProductResponse expectFirstProduct = new ProductResponse(2L, "product2", "b.com", 2000);
-        final ProductResponse expectSecondProduct = new ProductResponse(3L, "product3", "c.com", 3000);
-        assertThat(products).containsExactly(expectFirstProduct, expectSecondProduct);
+        final ProductResponse firstProduct = new ProductResponse(2L, "product2", "b.com", 2000);
+        final ProductResponse secondProduct = new ProductResponse(3L, "product3", "c.com", 3000);
+        final CartProductResponse expectFirstCartProduct = CartProductResponse.from(2L, firstProduct);
+        final CartProductResponse expectSecondCartProduct = CartProductResponse.from(4L, secondProduct);
+        assertThat(products).containsExactly(expectFirstCartProduct, expectSecondCartProduct);
     }
     
     @AfterEach
