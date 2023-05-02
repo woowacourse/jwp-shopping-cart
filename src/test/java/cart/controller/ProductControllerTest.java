@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dao.ProductDao;
+import cart.dao.product.ProductDao;
 import cart.dto.ProductCreationRequest;
 import cart.dto.ProductModificationRequest;
 import cart.domain.product.ProductEntity;

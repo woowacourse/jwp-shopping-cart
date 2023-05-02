@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.ProductDao;
+import cart.dao.product.ProductDao;
 import cart.dto.ProductResponse;
 import cart.domain.product.ProductEntity;
 import cart.mapper.ProductResponseMapper;

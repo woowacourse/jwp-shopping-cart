@@ -1,5 +1,6 @@
-package cart.dao;
+package cart.dao.product;
 
+import cart.dao.product.JdbcProductDao;
 import cart.domain.product.ProductEntity;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;

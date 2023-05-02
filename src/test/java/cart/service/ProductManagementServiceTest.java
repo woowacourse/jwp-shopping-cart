@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.JdbcProductDao;
+import cart.dao.product.JdbcProductDao;
 import cart.dto.ProductResponse;
 import cart.domain.product.ProductEntity;
 import org.junit.jupiter.api.DisplayName;
