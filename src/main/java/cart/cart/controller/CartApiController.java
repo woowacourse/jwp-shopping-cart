@@ -2,6 +2,7 @@ package cart.cart.controller;
 
 import cart.auth.AuthInfo;
 import cart.auth.BasicAuthorizationExtractor;
+import cart.cart.dto.CartInsertRequestDto;
 import cart.cart.dto.CartInsertResponseDto;
 import cart.cart.service.CartService;
 import cart.member.entity.MemberEntity;
@@ -10,6 +11,7 @@ import java.net.URI;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,7 +30,7 @@ public class CartApiController {
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<CartInsertResponseDto> addProduct(HttpServletRequest request, int productId) {
+    public ResponseEntity<CartInsertResponseDto> addProduct(HttpServletRequest request, @RequestBody CartInsertRequestDto cartInsertRequestDto) {
         final AuthInfo authInfo = authorizationExtractor.extract(request);
         if (authInfo == null) {
             throw new IllegalArgumentException("사용자가 선택되지 않았습니다.");
@@ -39,7 +41,7 @@ public class CartApiController {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        final CartInsertResponseDto cartInsertResponseDto = cartService.addCart(member, productId);
+        final CartInsertResponseDto cartInsertResponseDto = cartService.addCart(member, cartInsertRequestDto.getProductId());
         final int savedId = cartInsertResponseDto.getId();
 
         return ResponseEntity.created(URI.create("/cart/" + savedId))
