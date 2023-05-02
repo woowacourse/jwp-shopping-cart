@@ -27,8 +27,8 @@ public class JdbcTemplateCartDao implements CartDao{
     @Override
     public CartEntity insert(final int memberId, final int productId) {
         Map<String, Object> parameters = new HashMap<>(2);
-        parameters.put("memberId", memberId);
-        parameters.put("productId", productId);
+        parameters.put("member_id", memberId);
+        parameters.put("product_id", productId);
         int id = insertCart.executeAndReturnKey(parameters).intValue();
 
         return findById(id);
