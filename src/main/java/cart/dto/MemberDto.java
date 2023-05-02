@@ -19,7 +19,7 @@ public class MemberDto {
 
     public static List<MemberDto> from(List<MemberEntity> memberEntities){
         return memberEntities.stream()
-                .map(memberEntity-> new MemberDto(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getEmail()))
+                .map(memberEntity-> new MemberDto(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
