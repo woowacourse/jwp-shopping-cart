@@ -1,9 +1,10 @@
-package cart.dao;
+package cart.persistance.dao;
 
-import cart.dao.exception.ProductNotFoundException;
-import cart.domain.product.Product;
+import cart.persistance.dao.exception.ProductNotFoundException;
+import cart.persistance.entity.CartProductEntity;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,37 +19,38 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Product> findByUserId(final long userId) {
-        final String sql = "SELECT product.name, product.price, product.image_url " +
+    public List<CartProductEntity> findByUserId(final long userId) {
+        final String sql = "SELECT cart.id, product.name, product.price, product.image_url " +
                 "FROM cart " +
                 "JOIN product " +
                 "ON cart.product_id = product.id " +
                 "WHERE cart.user_id = :user_id";
         final var sqlParameterSource = new MapSqlParameterSource("user_id", userId);
-        return jdbcTemplate.query(sql, sqlParameterSource, (rs, rowNum) -> Product.createWithoutId(
+        return jdbcTemplate.query(sql, sqlParameterSource, (rs, rowNum) -> new CartProductEntity(
+                rs.getLong("cart.id"),
                 rs.getString("product.name"),
                 rs.getLong("product.price"),
-                rs.getString("image_url")
+                rs.getString("product.image_url")
         ));
     }
 
-    public void addProduct(final long userId, final long productId) {
+    public long addProduct(final long userId, final long productId) {
         final String sql = "INSERT INTO cart (user_id, product_id) VALUES (:user_id, :product_id)";
         final var sqlParameterSource =
                 new MapSqlParameterSource(Map.of("user_id", userId, "product_id", productId));
-        jdbcTemplate.update(sql, sqlParameterSource);
+        final var keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(sql, sqlParameterSource, keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
-    public void deleteProduct(final long userId, final long productId) {
+    public void deleteProduct(final long id) {
         final String sql = "DELETE FROM cart " +
-                "WHERE user_id = :user_id " +
-                "AND product_id = :product_id " +
-                "LIMIT 1";
+                "WHERE id = :id";
         final var sqlParameterSource =
-                new MapSqlParameterSource(Map.of("user_id", userId, "product_id", productId));
-        final int affecedRow = jdbcTemplate.update(sql, sqlParameterSource);
+                new MapSqlParameterSource("id", id);
+        final int affected = jdbcTemplate.update(sql, sqlParameterSource);
 
-        if (affecedRow == 0) {
+        if (affected == 0) {
             throw new ProductNotFoundException();
         }
     }

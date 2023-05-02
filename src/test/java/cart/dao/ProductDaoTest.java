@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.product.Product;
+import cart.persistance.dao.ProductDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

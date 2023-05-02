@@ -1,4 +1,4 @@
-package cart.dao.exception;
+package cart.persistance.dao.exception;
 
 public final class ProductNotFoundException extends RuntimeException {
 

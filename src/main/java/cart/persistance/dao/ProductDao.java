@@ -1,7 +1,7 @@
-package cart.dao;
+package cart.persistance.dao;
 
-import cart.dao.exception.ProductNotFoundException;
 import cart.domain.product.Product;
+import cart.persistance.dao.exception.ProductNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;

@@ -1,8 +1,8 @@
 package cart.controller;
 
 import cart.controller.dto.ModifyRequest;
-import cart.dao.ProductDao;
 import cart.domain.product.Product;
+import cart.persistance.dao.ProductDao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
