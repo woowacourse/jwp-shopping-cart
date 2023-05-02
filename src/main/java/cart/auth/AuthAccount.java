@@ -1,4 +1,4 @@
-package cart.domain.account;
+package cart.auth;
 
 public class AuthAccount {
 

@@ -1,8 +1,8 @@
 package cart.service;
 
+import cart.auth.AuthAccount;
 import cart.dao.AccountDao;
 import cart.dao.AccountEntity;
-import cart.domain.account.AuthAccount;
 import cart.service.dto.AccountSearchResponse;
 import org.springframework.stereotype.Service;
 

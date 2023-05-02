@@ -1,10 +1,10 @@
 package cart.service;
 
+import cart.auth.AuthAccount;
 import cart.dao.AccountEntity;
 import cart.dao.CartEntity;
 import cart.dao.CartInProductDao;
 import cart.dao.CartInProductEntity;
-import cart.domain.account.AuthAccount;
 import cart.service.dto.ProductSearchResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

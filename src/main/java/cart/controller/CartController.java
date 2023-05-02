@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.global.BasicAuthorizationDecoder;
+import cart.auth.AuthAccount;
+import cart.global.annotation.LogIn;
 import cart.service.CartService;
 import cart.service.dto.ProductSearchResponse;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -26,21 +26,18 @@ public class CartController {
 
     @PostMapping("/carts/products/{product-id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerProductInCart(final HttpServletRequest httpServletRequest,
+    public String registerProductInCart(@LogIn AuthAccount account,
                                         @PathVariable("product-id") final Long productId) {
 
-        cartService.registerProductInCart(
-                BasicAuthorizationDecoder.decode(httpServletRequest),
-                productId
-        );
+        cartService.registerProductInCart(account, productId);
 
         return "redirect:/";
     }
 
     @GetMapping("/carts")
     @ResponseBody
-    public List<ProductSearchResponse> showAllProductsInCart(final HttpServletRequest httpServletRequest) {
-        return cartService.findAllProductsInCart(BasicAuthorizationDecoder.decode(httpServletRequest));
+    public List<ProductSearchResponse> showAllProductsInCart(@LogIn AuthAccount account) {
+        return cartService.findAllProductsInCart(account);
     }
 
     @GetMapping("/cart")
@@ -49,13 +46,10 @@ public class CartController {
     }
 
     @DeleteMapping("/carts/products/{product-id}")
-    public String deleteProductInCart(final HttpServletRequest httpServletRequest,
+    public String deleteProductInCart(@LogIn AuthAccount account,
                                       @PathVariable("product-id") final Long productId) {
 
-        cartService.deleteProductInCart(
-                BasicAuthorizationDecoder.decode(httpServletRequest),
-                productId
-        );
+        cartService.deleteProductInCart(account, productId);
 
         return "cart";
     }
