@@ -15,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
-class CartServiceTest {
+class ProductServiceTest {
 
     @Autowired
-    private CartService cartService;
+    private ProductService productService;
 
     private final ProductRequest cuteSeonghaDoll =
             new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
@@ -32,11 +32,11 @@ class CartServiceTest {
     @DisplayName("상품을 저장하고, 모든 상품을 조회할 수 있다.")
     void findAll() {
         // given
-        long savedId1 = cartService.save(cuteSeonghaDoll);
-        long savedId2 = cartService.save(cuteBaronDoll);
+        long savedId1 = productService.save(cuteSeonghaDoll);
+        long savedId2 = productService.save(cuteBaronDoll);
 
         // when
-        List<ProductResponse> products = cartService.findAllProducts();
+        List<ProductResponse> products = productService.findAllProducts();
         List<Long> foundIds = products.stream()
                 .map(ProductResponse::getId)
                 .collect(Collectors.toList());
@@ -49,14 +49,14 @@ class CartServiceTest {
     @DisplayName("상품을 저장하고 수정할 수 있다.")
     void modifyById() {
         // given
-        long savedId = cartService.save(cuteSeonghaDoll);
+        long savedId = productService.save(cuteSeonghaDoll);
         ProductRequest productToModify = cuteBaronDoll;
 
         // when
-        cartService.modifyById(productToModify, savedId);
+        productService.modifyById(productToModify, savedId);
 
         // then
-        ProductResponse foundProduct = cartService.findAllProducts().get(0);
+        ProductResponse foundProduct = productService.findAllProducts().get(0);
 
         assertAll(
                 () -> assertThat(foundProduct.getId()).isEqualTo(savedId),
@@ -70,12 +70,12 @@ class CartServiceTest {
     @DisplayName("상품을 저장하고 삭제할 수 있다.")
     void deleteById() {
         // given
-        long savedId = cartService.save(cuteSeonghaDoll);
+        long savedId = productService.save(cuteSeonghaDoll);
 
         // when
-        cartService.removeById(savedId);
+        productService.removeById(savedId);
 
         // then
-        assertThat(cartService.findAllProducts()).isEmpty();
+        assertThat(productService.findAllProducts()).isEmpty();
     }
 }

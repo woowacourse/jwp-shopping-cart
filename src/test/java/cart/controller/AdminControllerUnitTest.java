@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import cart.service.CartService;
+import cart.service.ProductService;
 import cart.service.dto.ProductRequest;
 import cart.service.dto.ProductResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +50,7 @@ public class AdminControllerUnitTest {
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private CartService cartService;
+    private ProductService productService;
 
     @BeforeEach
     void setUp() {
@@ -62,7 +62,7 @@ public class AdminControllerUnitTest {
     @DisplayName("전체 상품 조회 API 호출 시 전체 상품이 반환된다.")
     @Test
     void showAllProducts() throws Exception {
-        given(cartService.findAllProducts()).willReturn(List.of(cuteSeonghaDoll, cuteBaronDoll));
+        given(productService.findAllProducts()).willReturn(List.of(cuteSeonghaDoll, cuteBaronDoll));
         mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin"));
@@ -73,7 +73,7 @@ public class AdminControllerUnitTest {
     void registerProduct() throws Exception {
         // given
         String requestString = objectMapper.writeValueAsString(cuteSeonghaDoll);
-        given(cartService.save(any(ProductRequest.class))).willReturn(1L);
+        given(productService.save(any(ProductRequest.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/admin/product")
@@ -114,7 +114,7 @@ public class AdminControllerUnitTest {
         ProductResponse wrongCuteSeonghaDoll =
                 new ProductResponse(1, imgUrl, "cuteSeonghaDoll", 24000);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(cartService.save(any(ProductRequest.class))).willReturn(1L);
+        given(productService.save(any(ProductRequest.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/admin/product")
@@ -135,7 +135,7 @@ public class AdminControllerUnitTest {
         ProductResponse wrongCuteSeonghaDoll =
                 new ProductResponse(1, "tmpImg", name, 24000);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(cartService.save(any(ProductRequest.class))).willReturn(1L);
+        given(productService.save(any(ProductRequest.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/admin/product")

@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CartService {
+public class ProductService {
 
     private final ProductDao productDao;
 
-    public CartService(final ProductDao productDao) {
+    public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
