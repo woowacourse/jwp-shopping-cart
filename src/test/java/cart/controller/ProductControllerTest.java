@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 class ProductControllerTest {
 
+    private static final String A = "a";
     @Autowired
     private MockMvc mockMvc;
 
@@ -55,7 +56,7 @@ class ProductControllerTest {
                 .andReturn();
 
         // then
-        final Product result = productDao.findAll().get(0);
+        final Product result = productDao.findById(1L).get();
         final String location = mvcResult.getResponse().getHeader("Location");
         assertAll(
                 () -> assertThat(result.getName()).isEqualTo("허브티"),
