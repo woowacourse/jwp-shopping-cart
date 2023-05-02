@@ -1,4 +1,4 @@
-package cart.authorization;
+package cart.argumentresolver.basicauthorization;
 
 import java.util.Base64;
 

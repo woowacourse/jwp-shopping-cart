@@ -1,7 +1,7 @@
 package cart.controller.api;
 
-import cart.authorization.BasicAuthInfo;
-import cart.authorization.BasicAuthorization;
+import cart.annotation.BasicAuthorization;
+import cart.argumentresolver.basicauthorization.BasicAuthInfo;
 import cart.entity.CartEntity;
 import cart.entity.product.ProductEntity;
 import cart.service.CartService;

@@ -1,4 +1,4 @@
-package cart.authorization;
+package cart.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -1,6 +1,6 @@
 package cart.configuration;
 
-import cart.authorization.BasicAuthorizationArgumentResolver;
+import cart.argumentresolver.basicauthorization.BasicAuthorizationArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

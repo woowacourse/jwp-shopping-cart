@@ -1,5 +1,6 @@
-package cart.authorization;
+package cart.argumentresolver.basicauthorization;
 
+import cart.annotation.BasicAuthorization;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

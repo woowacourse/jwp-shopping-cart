@@ -1,4 +1,4 @@
-package cart.authorization;
+package cart.argumentresolver.basicauthorization;
 
 public final class BasicAuthInfo {
 
