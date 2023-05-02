@@ -6,7 +6,6 @@ import cart.entity.CartEntity;
 import cart.entity.product.ProductEntity;
 import cart.service.CartService;
 import cart.service.CustomerService;
-import java.util.Comparator;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,7 +34,6 @@ public final class CartApiController {
             basicAuthInfo.getPassword()
         );
         final List<ProductEntity> cartItems = cartService.findAllById(customerId);
-        cartItems.sort(Comparator.comparing(ProductEntity::getName).reversed());
         return ResponseEntity.ok().body(cartItems);
     }
 
