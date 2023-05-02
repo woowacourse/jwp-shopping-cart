@@ -19,11 +19,15 @@ public class CartService {
 
     public List<CartResponseDto> findAll(String email) {
         return cartMemberRepository.findCartByMember(email).stream().map(entity ->
-                        new CartResponseDto(entity.getMemberId(), entity.getProductName(), entity.getProductImage(), entity.getProductPrice()))
+                        new CartResponseDto(entity.getProductId(), entity.getProductName(), entity.getProductImage(), entity.getProductPrice()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public void save(CartRequestDto cartRequestDto) {
         cartMemberRepository.createCartByMember(cartRequestDto);
+    }
+
+    public void delete(CartRequestDto cartRequestDto) {
+        cartMemberRepository.delete(cartRequestDto);
     }
 }

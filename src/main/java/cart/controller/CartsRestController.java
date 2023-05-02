@@ -6,10 +6,7 @@ import cart.dto.CartRequestDto;
 import cart.dto.CartResponseDto;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,5 +30,9 @@ public class CartsRestController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @DeleteMapping("/carts/{id}")
+    public ResponseEntity<Void> deleteCart(@CustomMember Member member, @PathVariable Long id) {
+        cartService.delete(new CartRequestDto(member.getEmail(), id));
+        return ResponseEntity.noContent().build();
+    }
 }

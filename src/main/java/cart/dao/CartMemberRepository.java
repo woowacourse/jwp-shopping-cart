@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dto.CartRequestDto;
+import cart.dto.entity.CartEntity;
 import cart.dto.entity.MemberCartEntity;
 import cart.dto.entity.MemberEntity;
 import org.springframework.stereotype.Repository;
@@ -25,5 +26,10 @@ public class CartMemberRepository {
     public void createCartByMember(CartRequestDto cartRequestDto) {
         MemberEntity member = memberDao.findByEmail(cartRequestDto.getEmail());
         cartDao.save(cartRequestDto.getProductId(), member.getId());
+    }
+
+    public void delete(CartRequestDto cartRequestDto) {
+        MemberEntity member = memberDao.findByEmail(cartRequestDto.getEmail());
+        cartDao.delete(new CartEntity(member.getId(), cartRequestDto.getProductId()));
     }
 }
