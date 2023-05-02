@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Component
 public class DbProductDao implements ProductDao {
-    private static final RowMapper<Product> productRowMapper = (resultSet, rowMapper) -> new Product(
+    private static final RowMapper<Product> productRowMapper = (resultSet, rowNum) -> new Product(
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("img_url"),

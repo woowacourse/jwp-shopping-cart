@@ -36,7 +36,7 @@ public class Product {
         return imgUrl.getImgUrl();
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price.getPrice();
     }
 
