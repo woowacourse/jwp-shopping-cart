@@ -2,8 +2,6 @@ package cart.error.exception;
 
 public class ErrorCode {
 
-//    INTERNAL_SERVER_ERROR(500, "SERVER-500-1", "Internal Server Error");
-
     private final int status;
     private final String code;
     private final String message;
