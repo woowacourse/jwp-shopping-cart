@@ -1,7 +1,10 @@
 package cart.presentation;
 
 import cart.application.ProductCRUDApplication;
+import cart.business.MemberReadService;
 import cart.business.ProductCRUDService;
+import cart.business.domain.member.Member;
+import cart.business.domain.product.Product;
 import cart.presentation.dto.ProductDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +17,11 @@ import java.util.stream.Collectors;
 public class TemplateController {
 
     private final ProductCRUDApplication productCRUDApplication;
+    private final MemberReadService memberReadService;
 
-    public TemplateController(ProductCRUDApplication productCRUDApplication) {
+    public TemplateController(ProductCRUDApplication productCRUDApplication, MemberReadService memberReadService) {
         this.productCRUDApplication = productCRUDApplication;
+        this.memberReadService = memberReadService;
     }
 
     @GetMapping("/")
@@ -31,5 +36,12 @@ public class TemplateController {
         List<ProductDto> products = productCRUDApplication.readAll();
         model.addAttribute("products", products);
         return "admin";
+    }
+
+    @GetMapping("/settings")
+    public String settings(Model model) {
+        List<Member> members = memberReadService.readAll();
+        model.addAttribute("members", members);
+        return "settings";
     }
 }
