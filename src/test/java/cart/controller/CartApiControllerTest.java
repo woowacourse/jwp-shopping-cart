@@ -103,7 +103,8 @@ class CartApiControllerTest {
                 List.of(1L)
             )
         );
-
+        cartService.add(new CartEntity(1L, savedProductId));
+        
         //when
         //then
         RestAssured.given()
