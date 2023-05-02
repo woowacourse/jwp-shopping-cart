@@ -10,6 +10,9 @@ CREATE TABLE IF NOT EXISTS PRODUCT (
 CREATE TABLE IF NOT EXISTS `USER` (
     id bigint NOT NULL AUTO_INCREMENT,
     email VARCHAR NOT NULL,
-    password int NOT NULL,
+    password VARCHAR NOT NULL,
     PRIMARY KEY (id)
 );
+
+INSERT INTO `USER` (email, password) VALUES ('aaa1234@google.com', 'aaaa');
+INSERT INTO `USER` (email, password) VALUES ('bbb1234@google.com', 'bbbbb');
