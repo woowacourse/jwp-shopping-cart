@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.common.annotation.MemberEmail;
+import cart.common.auth.MemberEmail;
 import cart.controller.dto.CartDto;
 import cart.service.CartService;
 import java.net.URI;
