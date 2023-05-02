@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public final class Name {
 
-    public static final int MAX_LENGTH_INCLUSIVE = 10;
+    private static final int MAX_LENGTH_INCLUSIVE = 10;
     private final String name;
 
     private Name(String name) {
