@@ -1,11 +1,12 @@
 package cart.dao;
 
+import cart.global.exception.account.CanNotFoundAccountException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class AccountDao {
@@ -30,9 +31,13 @@ public class AccountDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Optional<AccountEntity> findByEmailAndPassword(final String email, final String password) {
+    public AccountEntity findByEmailAndPassword(final String email, final String password) {
         final String sql = "SELECT * FROM ACCOUNT A WHERE A.email = ? and A.password = ?";
 
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, email, password));
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, email, password);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new CanNotFoundAccountException();
+        }
     }
 }

@@ -3,6 +3,7 @@ package cart.service;
 import cart.auth.AuthAccount;
 import cart.dao.AccountDao;
 import cart.dao.AccountEntity;
+import cart.global.exception.account.CanNotFoundAccountException;
 import cart.service.dto.AccountSearchResponse;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +35,6 @@ public class AccountService {
         return accountDao.findByEmailAndPassword(
                 authAccount.getEmail(),
                 authAccount.getPassword()
-        ).orElseThrow(() -> {
-            throw new IllegalStateException("존재하지 않는 사용자입니다.");
-        });
+        );
     }
 }
