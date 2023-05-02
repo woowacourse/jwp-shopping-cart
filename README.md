@@ -17,9 +17,14 @@
         - [x] 0원 이상 1억원 이하이다.
         - [x] 10원 단위여야 한다.
 
+- [x] 사용자
+    - [x] email, password
+
 ### DAO
 
 - [x] Product CRUD
+
+- [x] Member CR
 
 ### Service
 
@@ -29,7 +34,13 @@
     - [x] 상품 수정
     - [x] 상품 삭제
 
+- [x] 사용자 서비스
+    - [x] 사용자 추가
+    - [x] 사용자 조회
+
 ### API 명세
+
+상품
 
 - [x] 상품 Create
     - POST "/product"
@@ -46,7 +57,10 @@
     - DELETE "/product/{id}"
     - Response: 200 OK
 
-### 사용자 기능 구현
+사용자
 
-- [x] 사용자
-    - [x] email, password
+- [x] 사용자 Create
+    - POST "/member"
+    - Request: email, password
+    - Response: 200 OK
+

@@ -19,6 +19,10 @@
     </nav>
 </header>
 <div class="container">
+    <div class="btn-group">
+        <button class="add-btn" onclick="showAddModal()">회원 추가</button>
+    </div>
+
     <h1>사용자 선택</h1>
     <div class="cart-items">
         <div class="cart-item" th:each="member : ${members}">
@@ -31,7 +35,24 @@
             </div>
         </div>
     </div>
+
+    <div id="modal" class="modal" data-form-type="add">
+        <div class="modal-content">
+            <span class="close" onclick="hideAddModal()">&times;</span>
+            <form id="form">
+                <label for="email">이메일</label><br>
+                <input type="text" id="email" name="email" required><br>
+
+                <label for="password">비밀번호</label><br>
+                <input type="password" id="password" name="password" required><br>
+
+                <button type="submit">제출</button>
+            </form>
+        </div>
+    </div>
+
 </div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/settings.js}"></script>
 </body>
 </html>

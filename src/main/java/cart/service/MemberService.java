@@ -1,7 +1,9 @@
 package cart.service;
 
 import cart.dao.MemberDao;
+import cart.dto.MemberRequestDto;
 import cart.dto.MemberResponseDto;
+import cart.dto.entity.MemberEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,10 @@ public class MemberService {
 
     public MemberService(MemberDao memberDao) {
         this.memberDao = memberDao;
+    }
+
+    public void addMember(MemberRequestDto memberRequestDto) {
+        memberDao.save(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
     }
 
     public List<MemberResponseDto> findMembers() {
