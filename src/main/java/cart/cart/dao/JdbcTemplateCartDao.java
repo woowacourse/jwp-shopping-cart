@@ -1,7 +1,9 @@
 package cart.cart.dao;
 
 import cart.cart.entity.CartEntity;
+import cart.cart.entity.CartProductEntity;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,5 +49,23 @@ public class JdbcTemplateCartDao implements CartDao{
                 resultSet.getInt("member_id"),
                 resultSet.getInt("product_id"));
         return cartEntity;
+    };
+
+    @Override
+    public List<CartProductEntity> selectAllCartProductByMemberId(final int memberId) {
+        String sql = "select c.id, p.name, p.price, p.image from cart c join products p\n"
+                + "on c.product_id = p.id\n"
+                + "where c.member_id = ?";
+
+        return jdbcTemplate.query(sql, cartProductEntityRowMapper, memberId);
+    }
+
+    private final RowMapper<CartProductEntity> cartProductEntityRowMapper = (resultSet, rowNumber) -> {
+        CartProductEntity cartProductEntity = new CartProductEntity(
+                resultSet.getInt("id"),
+                resultSet.getString("name"),
+                resultSet.getInt("price"),
+                resultSet.getString("image"));
+        return cartProductEntity;
     };
 }
