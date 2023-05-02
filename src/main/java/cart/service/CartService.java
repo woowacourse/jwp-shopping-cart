@@ -23,7 +23,7 @@ public class CartService {
     }
 
     @Transactional
-    public Long add(final CartEntity cartEntity) {
+    public Long save(final CartEntity cartEntity) {
         return cartDao.save(cartEntity);
     }
 
@@ -32,7 +32,7 @@ public class CartService {
         cartDao.delete(id);
     }
 
-    public List<ProductEntity> findAllById(final Long customerId) {
+    public List<ProductEntity> findAllProductsByCustomerId(final Long customerId) {
         final List<Long> productIds = cartDao.findAllProductIdsBy(customerId);
         if (productIds.size() == 0) {
             return Collections.emptyList();
@@ -47,7 +47,7 @@ public class CartService {
         cartDao.deleteByCustomerIdAndProductId(customerId, productID);
     }
 
-    public Long findFirstIdBy(final Long customerId, final Long productId) {
+    public Long findFirstCartIdBy(final Long customerId, final Long productId) {
         final List<Long> cartIds = cartDao.findIdsBy(customerId, productId);
         if (cartIds.size() == 0) {
             throw new IllegalArgumentException("해당 고객과 상품을 가진 장바구니가 존재하지 않습니다.");

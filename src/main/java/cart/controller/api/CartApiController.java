@@ -6,6 +6,7 @@ import cart.entity.CartEntity;
 import cart.entity.product.ProductEntity;
 import cart.service.CartService;
 import cart.service.CustomerService;
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,9 +30,9 @@ public final class CartApiController {
 
     @GetMapping("/items")
     public ResponseEntity<List<ProductEntity>> showCart(@BasicAuthorization BasicAuthInfo basicAuthInfo) {
-        final Long customerId = customerService.findIdByBasicAuthInfo(basicAuthInfo);
-        final List<ProductEntity> cartItems = cartService.findAllById(customerId);
-        return ResponseEntity.ok().body(cartItems);
+        final Long customerId = customerService.findCustomerIdByBasicAuthInfo(basicAuthInfo);
+        final List<ProductEntity> products = cartService.findAllProductsByCustomerId(customerId);
+        return ResponseEntity.ok().body(products);
     }
 
     @PostMapping("/{productId}")
@@ -39,9 +40,9 @@ public final class CartApiController {
         @PathVariable(name = "productId") Long productId,
         @BasicAuthorization BasicAuthInfo basicAuthInfo
     ) {
-        final Long customerId = customerService.findIdByBasicAuthInfo(basicAuthInfo);
-        cartService.add(new CartEntity(customerId, productId));
-        return ResponseEntity.ok().build();
+        final Long customerId = customerService.findCustomerIdByBasicAuthInfo(basicAuthInfo);
+        final Long savedCartId = cartService.save(new CartEntity(customerId, productId));
+        return ResponseEntity.created(URI.create("/cart/" + savedCartId)).build();
     }
 
     @DeleteMapping("/{productId}")
@@ -49,8 +50,8 @@ public final class CartApiController {
         @PathVariable(name = "productId") Long productId,
         @BasicAuthorization BasicAuthInfo basicAuthInfo
     ) {
-        final Long customerId = customerService.findIdByBasicAuthInfo(basicAuthInfo);
-        final Long cartId = cartService.findFirstIdBy(customerId, productId);
+        final Long customerId = customerService.findCustomerIdByBasicAuthInfo(basicAuthInfo);
+        final Long cartId = cartService.findFirstCartIdBy(customerId, productId);
         cartService.delete(cartId);
         return ResponseEntity.noContent().build();
     }

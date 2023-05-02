@@ -50,7 +50,7 @@ class CartApiControllerTest {
                 List.of(1L)
             )
         );
-        cartService.add(new CartEntity(1L, savedProductId));
+        cartService.save(new CartEntity(1L, savedProductId));
 
         //when
         //then
@@ -103,7 +103,7 @@ class CartApiControllerTest {
                 List.of(1L)
             )
         );
-        cartService.add(new CartEntity(1L, savedProductId));
+        cartService.save(new CartEntity(1L, savedProductId));
 
         //when
         //then

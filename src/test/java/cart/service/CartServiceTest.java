@@ -45,10 +45,10 @@ class CartServiceTest {
         final Long firstCustomerId = customers.get(0).getId();
 
         //when
-        cartService.add(new CartEntity(firstCustomerId, registeredProductID));
+        cartService.save(new CartEntity(firstCustomerId, registeredProductID));
 
         //then
-        final List<ProductEntity> products = cartService.findAllById(firstCustomerId);
+        final List<ProductEntity> products = cartService.findAllProductsByCustomerId(firstCustomerId);
         assertAll(
             () -> assertThat(products).hasSize(1),
             () -> assertThat(Objects.requireNonNull(products).get(0).getId()).isEqualTo(registeredProductID)
@@ -70,13 +70,13 @@ class CartServiceTest {
         );
         final List<CustomerEntity> customers = customerService.findAll();
         final Long firstCustomerId = customers.get(0).getId();
-        final Long cartId = cartService.add(new CartEntity(firstCustomerId, registeredProductID));
+        final Long cartId = cartService.save(new CartEntity(firstCustomerId, registeredProductID));
 
         //when
         cartService.delete(cartId);
 
         //then
-        final List<ProductEntity> products = cartService.findAllById(firstCustomerId);
+        final List<ProductEntity> products = cartService.findAllProductsByCustomerId(firstCustomerId);
         assertThat(products).hasSize(0);
     }
 
@@ -95,13 +95,13 @@ class CartServiceTest {
         );
         final List<CustomerEntity> customers = customerService.findAll();
         final Long firstCustomerId = customers.get(0).getId();
-        cartService.add(new CartEntity(firstCustomerId, registeredProductID));
+        cartService.save(new CartEntity(firstCustomerId, registeredProductID));
 
         //when
         cartService.deleteByCustomerIdAndProductId(firstCustomerId, registeredProductID);
 
         //then
-        final List<ProductEntity> products = cartService.findAllById(firstCustomerId);
+        final List<ProductEntity> products = cartService.findAllProductsByCustomerId(firstCustomerId);
         assertThat(products).hasSize(0);
     }
 }

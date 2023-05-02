@@ -46,10 +46,10 @@ class CustomerServiceTest {
     void findByEmailAndPassword() {
         //given
         //when
-        final Long firstCustomerId = customerService.findIdByBasicAuthInfo(
+        final Long firstCustomerId = customerService.findCustomerIdByBasicAuthInfo(
             new BasicAuthInfo("split@wooteco.com", "dazzle")
         );
-        final Long secondCustomerId = customerService.findIdByBasicAuthInfo(
+        final Long secondCustomerId = customerService.findCustomerIdByBasicAuthInfo(
             new BasicAuthInfo("dazzle@wooteco.com", "split")
         );
 
