@@ -44,37 +44,60 @@ form.addEventListener('submit', (event) => {
     createProduct(product);
 });
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
-    axios.request({
-        url: '',
-    }).then((response) => {
-        window.location.reload();
-    }).catch((error) => {
-        console.error(error);
-    });
+    try {
+        validImage(product.image)
+        axios.request({
+            url: '/products',
+            method: "POST",
+            data: product
+        }).then((response) => {
+            window.location.reload();
+        }).catch((error) => {
+            let errorMessages = '';
+            for (let message of error.response.data.messages) {
+                errorMessages += (message + '\n');
+            }
+            alert(errorMessages)
+        });
+    } catch (error) {
+        alert(error.message)
+    }
 };
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
+    try {
+        validImage(product.image)
+        const {id} = product;
 
-    axios.request({
-        url: '',
-    }).then((response) => {
-        window.location.reload();
-    }).catch((error) => {
-        console.error(error);
-    });
+        axios.request({
+            url: '/products/' + id,
+            method: "PUT",
+            data: product
+        }).then((response) => {
+            window.location.reload();
+        }).catch((error) => {
+            alert(error.response.data.messages)
+        });
+    } catch (error) {
+        alert(error.message)
+    }
 };
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
+const validImage = (imageUrl) => {
+    const regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(:[0-9]+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
+    if (!imageUrl.match(regex)) {
+        throw new Error("유효하지 않은 Url 입니다.");
+    }
+};
+
 const deleteProduct = (id) => {
     axios.request({
-        url: '',
+        url: '/products/' + id,
+        method: "DELETE"
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
-        console.error(error);
+        alert(error.response.data.messages)
     });
 };
