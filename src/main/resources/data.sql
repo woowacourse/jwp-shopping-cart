@@ -8,7 +8,6 @@ CREATE TABLE product
     updated_at TIMESTAMP   NULL
 );
 
-
 CREATE TABLE cart
 (
     id         BIGINT    NOT NULL AUTO_INCREMENT PRIMARY KEY,

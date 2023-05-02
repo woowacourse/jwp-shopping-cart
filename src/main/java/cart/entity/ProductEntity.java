@@ -6,7 +6,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class ProductEntity {
-
     private final Long id;
     private String name;
     private String image;

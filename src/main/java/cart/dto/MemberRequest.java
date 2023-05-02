@@ -3,7 +3,6 @@ package cart.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 public class MemberRequest {
 
@@ -15,7 +14,6 @@ public class MemberRequest {
     private String password;
 
     @NotNull(message = "이름은 비어있을 수 없습니다.")
-    @Size(min = 1, max = 20, message = "이름은 {min}자 이상 {max}자 이하여야합니다.")
     private String name;
 
     @Pattern(regexp = PHONE_REGEX)

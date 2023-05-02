@@ -7,15 +7,18 @@ import javax.validation.constraints.NotNull;
 public class ProductRequest {
 
     @NotNull(message = "이미지 url은 비어있을 수 없습니다.")
-    private final String image;
+    private String image;
 
     @NotNull(message = "이름은 비어있을 수 없습니다.")
-    private final String name;
+    private String name;
 
     @NotNull(message = "가격은 비어있을 수 없습니다.")
     @Min(value = 0, message = "가격은 {min} 이상이여야 합니다.")
     @Max(value = 1_000_000_000, message = "가격은 {max} 이하여야 합니다.")
-    private final long price;
+    private long price;
+
+    ProductRequest() {
+    }
 
     public ProductRequest(String image, String name, long price) {
         this.image = image;
