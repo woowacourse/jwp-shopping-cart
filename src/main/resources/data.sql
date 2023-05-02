@@ -1,8 +1,5 @@
-CREATE TABLE IF NOT EXISTS PRODUCT
-(
-    ID  INT UNSIGNED  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    NAME VARCHAR(100) NOT NULL,
-    PRICE INT NOT NULL,
-    IMAGE TEXT NOT NULL
-    );
+insert into member (email, password)
+values ('dino96@naver.com', 'jjongwa96');
 
+insert into member (email, password)
+values ('jeomxon@gmail.com', 'jeomxon00');

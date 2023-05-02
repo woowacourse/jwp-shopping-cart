@@ -43,6 +43,8 @@ public class PageController {
 
     @GetMapping("/settings")
     String allUsers(Model model) {
+        List<MemberEntity> memberEntities = memberService.selectAllMembers();
+        model.addAttribute("members", memberEntities);
         return "settings";
     }
 }
