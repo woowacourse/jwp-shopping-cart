@@ -24,7 +24,6 @@ class CartDaoImplTest {
     @Autowired
     private CartDaoImpl cartDao;
 
-
     @BeforeEach
     void setUp() {
         cartDao.insert(user, 1L);
