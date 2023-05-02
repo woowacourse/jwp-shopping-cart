@@ -1,0 +1,18 @@
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS member;
+
+CREATE TABLE PRODUCT
+(
+    id      BIGINT      NOT NULL AUTO_INCREMENT,
+    name    VARCHAR(20) NOT NULL,
+    img_url VARCHAR(255),
+    price   INT         NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE MEMBER
+(
+    id       BIGINT       NOT NULL AUTO_INCREMENT,
+    email    VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL
+)
