@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class InMemoryProductDao implements ProductDao {
 
     private final List<ProductEntity> productEntities = new LinkedList<>();
