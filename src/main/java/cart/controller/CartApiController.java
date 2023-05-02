@@ -4,9 +4,8 @@ import cart.dto.ResponseProductDto;
 import cart.service.CartService;
 import cart.service.ProductService;
 import cart.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -27,7 +26,7 @@ public class CartApiController {
     }
 
     @GetMapping("/carts")
-    public List<ResponseProductDto> readCarts(@RequestHeader("authorization") final String authorization) {
+    public List<ResponseProductDto> readCartItem(@RequestHeader("authorization") final String authorization) {
         final Credentials credentials = getCredentials(authorization);
 
         final Long userId = userService.findIdByEmail(credentials.getEmail());
@@ -48,5 +47,13 @@ public class CartApiController {
         final String password = values.get(1);
 
         return new Credentials(email, password);
+    }
+
+    @PostMapping("/carts/{productId}")
+    public ResponseEntity<Void> createCartItem(@RequestHeader("authorization") final String authorization, @PathVariable("productId") Long productId) {
+        final Credentials credentials = getCredentials(authorization);
+        final Long userId = userService.findIdByEmail(credentials.getEmail());
+        cartService.insert(userId, productId);
+        return ResponseEntity.ok().build();
     }
 }
