@@ -12,22 +12,22 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductIntegrationTest {
+class ProductIntegrationTest {
 
     @LocalServerPort
     private int port;
 
     @BeforeEach
-    void setUp() {
+    void beforeEach() {
         RestAssured.port = port;
     }
 
     @Test
-    public void getProducts() {
+    void getProducts() {
         var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/products")
+                .get("/")
                 .then()
                 .extract();
 
