@@ -67,7 +67,7 @@ const updateProduct = (product) => {
         price: product.price,
         image: product.image
     }).then((response) => {
-        //window.location.reload();
+        window.location.reload();
     }).catch((error) => {
         console.error(error);
     });
