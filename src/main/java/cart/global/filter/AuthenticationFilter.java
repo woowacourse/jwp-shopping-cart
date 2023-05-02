@@ -28,7 +28,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
             if (header == null) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                filterChain.doFilter(request, response);
                 return;
             }
         }
