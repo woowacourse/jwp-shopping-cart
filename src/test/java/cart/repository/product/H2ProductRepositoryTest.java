@@ -1,10 +1,10 @@
-package cart.repository;
+package cart.repository.product;
 
-import static cart.domain.ProductFixture.ODO_PRODUCT;
+import static cart.domain.product.ProductFixture.ODO_PRODUCT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ class H2ProductRepositoryTest {
     void save() {
         final Product result = h2ProductRepository.save(ODO_PRODUCT);
 
-        assertThat(result.getProductId()).isPositive();
+        assertThat(result.getProductId().getValue()).isPositive();
     }
 
     @Nested
@@ -39,7 +39,7 @@ class H2ProductRepositoryTest {
 
         @BeforeEach
         void setUp() {
-            productId = h2ProductRepository.save(ODO_PRODUCT).getProductId();
+            productId = h2ProductRepository.save(ODO_PRODUCT).getProductId().getValue();
         }
 
         @Test
@@ -49,7 +49,7 @@ class H2ProductRepositoryTest {
             final Product expect = new Product(productId, product);
 
             assertAll(
-                    () -> assertThat(result.getProductId()).isEqualTo(productId),
+                    () -> assertThat(result.getProductId().getValue()).isEqualTo(productId),
                     () -> assertThat(result).usingRecursiveComparison().isEqualTo(expect)
             );
         }

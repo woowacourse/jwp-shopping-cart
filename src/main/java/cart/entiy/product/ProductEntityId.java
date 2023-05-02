@@ -1,4 +1,4 @@
-package cart.entiy;
+package cart.entiy.product;
 
 public class ProductEntityId {
 

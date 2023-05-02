@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import java.util.Objects;
 
 public class ProductResponse {
@@ -19,7 +19,7 @@ public class ProductResponse {
 
     public static ProductResponse from(final Product product) {
         return new ProductResponse(
-                product.getProductId(),
+                product.getProductId().getValue(),
                 product.getProductName(),
                 product.getProductImage().getValue(),
                 product.getProductPrice().getValue()

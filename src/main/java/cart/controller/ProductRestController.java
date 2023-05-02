@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.service.ProductCommandService;

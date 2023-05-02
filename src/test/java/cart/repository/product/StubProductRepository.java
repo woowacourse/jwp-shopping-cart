@@ -1,6 +1,6 @@
-package cart.repository;
+package cart.repository.product;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +24,7 @@ public class StubProductRepository implements ProductRepository {
 
     @Override
     public Product update(final Product product) {
-        final Long id = product.getProductId();
+        final Long id = product.getProductId().getValue();
         if (id == null || productMap.get(id) == null) {
             return product;
         }

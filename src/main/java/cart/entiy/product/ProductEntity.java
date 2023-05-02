@@ -1,6 +1,6 @@
-package cart.entiy;
+package cart.entiy.product;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 public class ProductEntity {
 
@@ -26,7 +26,7 @@ public class ProductEntity {
 
     public static ProductEntity from(final Product product) {
         return new ProductEntity(
-                product.getProductId(),
+                product.getProductId().getValue(),
                 product.getProductName(),
                 product.getProductImage().getValue(),
                 product.getProductPrice().getValue());

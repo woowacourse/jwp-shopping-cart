@@ -1,7 +1,7 @@
 package cart.controller;
 
-import static cart.domain.ProductFixture.NUNU_ID_PRODUCT;
-import static cart.domain.ProductFixture.ODO_ID_PRODUCT;
+import static cart.domain.product.ProductFixture.NUNU_ID_PRODUCT;
+import static cart.domain.product.ProductFixture.ODO_ID_PRODUCT;
 import static cart.dto.ResponseFixture.NUNU_RESPONSE;
 import static cart.dto.ResponseFixture.ODO_RESPONSE;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.dto.RequestFixture;

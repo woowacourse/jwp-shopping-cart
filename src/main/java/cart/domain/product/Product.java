@@ -1,33 +1,33 @@
-package cart.domain;
+package cart.domain.product;
 
 public class Product {
 
     private static final int MAX_NAME_LENGTH = 255;
 
-    private final Long productId;
+    private final ProductId productId;
     private final String productName;
-    private final ProductImage productImage;
-    private final ProductPrice productPrice;
+    private final Image image;
+    private final Price price;
 
     public Product(final String productName, final String productImage, final int productPrice) {
         this(null, productName, productImage, productPrice);
     }
 
     public Product(final Long productId, final Product product) {
-        this(productId, product.productName, product.productImage, product.productPrice);
+        this(productId, product.productName, product.image, product.price);
     }
 
     public Product(final Long productId, final String productName, final String productImage, final int productPrice) {
-        this(productId, productName, new ProductImage(productImage), new ProductPrice(productPrice));
+        this(productId, productName, new Image(productImage), new Price(productPrice));
     }
 
-    public Product(final Long productId, final String productName, final ProductImage productImage,
-            final ProductPrice productPrice) {
+    public Product(final Long productId, final String productName, final Image image,
+            final Price price) {
         validateName(productName);
-        this.productId = productId;
+        this.productId = new ProductId(productId);
         this.productName = productName;
-        this.productImage = productImage;
-        this.productPrice = productPrice;
+        this.image = image;
+        this.price = price;
     }
 
     private void validateName(final String productName) {
@@ -42,7 +42,7 @@ public class Product {
         }
     }
 
-    public Long getProductId() {
+    public ProductId getProductId() {
         return productId;
     }
 
@@ -50,11 +50,11 @@ public class Product {
         return productName;
     }
 
-    public ProductImage getProductImage() {
-        return productImage;
+    public Image getProductImage() {
+        return image;
     }
 
-    public ProductPrice getProductPrice() {
-        return productPrice;
+    public Price getProductPrice() {
+        return price;
     }
 }

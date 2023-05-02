@@ -1,12 +1,12 @@
-package cart.entity;
+package cart.entity.product;
 
-import cart.entiy.ProductEntity;
+import cart.entiy.product.ProductEntity;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class EntityFixture {
+public class ProductEntityFixture {
 
     public static final ProductEntity ODO_ENTITY = new ProductEntity("오도", "naver.com", 1);
 
-    private EntityFixture() {
+    private ProductEntityFixture() {
     }
 }

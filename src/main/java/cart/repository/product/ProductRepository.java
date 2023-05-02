@@ -1,9 +1,8 @@
-package cart.repository;
+package cart.repository.product;
 
+import cart.domain.product.Product;
 import java.util.List;
 import java.util.Optional;
-
-import cart.domain.Product;
 
 public interface ProductRepository {
 

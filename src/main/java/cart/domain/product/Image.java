@@ -1,14 +1,14 @@
-package cart.domain;
+package cart.domain.product;
 
 import java.util.Objects;
 
-public class ProductImage {
+public class Image {
 
     private static final int MAX_IMAGE_LENGTH = 2048;
 
     private final String value;
 
-    public ProductImage(final String value) {
+    public Image(final String value) {
         validate(value);
         this.value = value;
     }
@@ -37,7 +37,7 @@ public class ProductImage {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ProductImage that = (ProductImage) o;
+        final Image that = (Image) o;
         return Objects.equals(value, that.value);
     }
 

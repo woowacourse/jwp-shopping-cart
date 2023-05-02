@@ -1,11 +1,11 @@
 package cart.service;
 
-import static cart.domain.ProductFixture.ODO_PRODUCT;
+import static cart.domain.product.ProductFixture.ODO_PRODUCT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Product;
-import cart.repository.StubProductRepository;
+import cart.domain.product.Product;
+import cart.repository.product.StubProductRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class ProductCommandServiceTest {
 
         final Optional<Product> product = stubProductRepository.findById(1L);
         assertAll(
-                () -> assertThat(result.getProductId()).isPositive(),
+                () -> assertThat(result.getProductId().getValue()).isPositive(),
                 () -> assertThat(product).isPresent()
         );
     }
@@ -37,7 +37,7 @@ class ProductCommandServiceTest {
     void 제거_테스트() {
         //given
         final Product product = stubProductRepository.save(ODO_PRODUCT);
-        final long productId = product.getProductId();
+        final long productId = product.getProductId().getValue();
 
         //when
         productCommandService.delete(productId);
@@ -54,14 +54,14 @@ class ProductCommandServiceTest {
 
         //when
         final Product result = productCommandService.update(
-                product.getProductId(),
+                product.getProductId().getValue(),
                 ODO_PRODUCT.getProductName(),
                 ODO_PRODUCT.getProductImage().getValue(),
                 ODO_PRODUCT.getProductPrice().getValue());
 
         //then
-        final Product expect = new Product(product.getProductId(), product);
-        final Optional<Product> updatedProduct = stubProductRepository.findById(product.getProductId());
+        final Product expect = new Product(product.getProductId().getValue(), product);
+        final Optional<Product> updatedProduct = stubProductRepository.findById(product.getProductId().getValue());
         assertAll(
                 () -> assertThat(result).usingRecursiveComparison().isEqualTo(expect),
                 () -> assertThat(updatedProduct).isPresent(),

@@ -1,5 +1,7 @@
-package cart.domain;
+package cart.domain.product;
 
+
+import cart.domain.product.Product;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class ProductFixture {

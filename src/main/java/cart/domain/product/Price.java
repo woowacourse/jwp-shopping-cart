@@ -1,14 +1,14 @@
-package cart.domain;
+package cart.domain.product;
 
 import java.util.Objects;
 
-public class ProductPrice {
+public class Price {
 
     private static final int MIN_PRICE = 0;
 
     private final int value;
 
-    public ProductPrice(final int value) {
+    public Price(final int value) {
         validate(value);
         this.value = value;
     }
@@ -31,7 +31,7 @@ public class ProductPrice {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ProductPrice that = (ProductPrice) o;
+        final Price that = (Price) o;
         return value == that.value;
     }
 

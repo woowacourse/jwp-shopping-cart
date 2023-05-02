@@ -1,7 +1,7 @@
-package cart.repository;
+package cart.repository.product;
 
-import cart.domain.Product;
-import cart.entiy.ProductEntity;
+import cart.domain.product.Product;
+import cart.entiy.product.ProductEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
