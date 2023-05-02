@@ -5,7 +5,6 @@ import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
 import cart.domain.product.ProductService;
 import cart.web.controller.product.dto.ProductRequest;
-import cart.web.controller.product.dto.ProductResponse;
 import cart.web.exception.GlobalException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,10 +53,10 @@ class ProductServiceTest {
         productService.save(productRequest);
 
         // then
-        final List<ProductResponse> resultProducts = productService.getProducts();
+        final List<Product> products = productService.getProducts();
         assertAll(
-                () -> assertThat(resultProducts).hasSize(1),
-                () -> assertThat(resultProducts.get(0).getName()).isEqualTo("스테이크")
+                () -> assertThat(products).hasSize(1),
+                () -> assertThat(products.get(0).getProductNameValue()).isEqualTo("스테이크")
         );
     }
 
@@ -69,14 +68,14 @@ class ProductServiceTest {
         when(productDao.findById(any())).thenReturn(Optional.of(productEntity));
 
         // when
-        final ProductResponse productResponse = productService.getById(1L);
+        final Product product = productService.getById(1L);
 
         // then
         assertAll(
-                () -> assertThat(productResponse.getName()).isEqualTo("스테이크"),
-                () -> assertThat(productResponse.getImageUrl()).isEqualTo("steakUrl"),
-                () -> assertThat(productResponse.getPrice()).isEqualTo(40000),
-                () -> assertThat(productResponse.getCategory()).isEqualTo(ProductCategory.WESTERN)
+                () -> assertThat(product.getProductNameValue()).isEqualTo("스테이크"),
+                () -> assertThat(product.getImageUrlValue()).isEqualTo("steakUrl"),
+                () -> assertThat(product.getPriceValue()).isEqualTo(40000),
+                () -> assertThat(product.getCategory()).isEqualTo(ProductCategory.WESTERN)
         );
     }
 
@@ -103,14 +102,14 @@ class ProductServiceTest {
         when(productDao.findAll()).thenReturn(productEntities);
 
         // when
-        final List<ProductResponse> resultProducts = productService.getProducts();
+        final List<Product> products = productService.getProducts();
 
         // then
         assertAll(
-                () -> assertThat(resultProducts).hasSize(3),
-                () -> assertThat(resultProducts.get(0).getName()).isEqualTo("치킨"),
-                () -> assertThat(resultProducts.get(1).getName()).isEqualTo("초밥"),
-                () -> assertThat(resultProducts.get(2).getName()).isEqualTo("스테이크")
+                () -> assertThat(products).hasSize(3),
+                () -> assertThat(products.get(0).getProductNameValue()).isEqualTo("치킨"),
+                () -> assertThat(products.get(1).getProductNameValue()).isEqualTo("초밥"),
+                () -> assertThat(products.get(2).getProductNameValue()).isEqualTo("스테이크")
         );
     }
 
