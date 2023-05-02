@@ -2,6 +2,7 @@ package cart.global.annotation;
 
 import cart.auth.AuthAccount;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -16,7 +17,6 @@ public class LogInArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIM = ":";
-    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
@@ -30,7 +30,7 @@ public class LogInArgumentResolver implements HandlerMethodArgumentResolver {
                                   final NativeWebRequest webRequest,
                                   final WebDataBinderFactory binderFactory) throws Exception {
 
-        final String header = webRequest.getHeader(AUTHORIZATION_HEADER);
+        final String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (hasNotHeader(header)) {
             throw new IllegalStateException("인증 정보 존재하지 않습니다.");
