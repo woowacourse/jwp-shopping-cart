@@ -38,4 +38,10 @@ public class H2CartDao implements CartDao{
             resultSet.getInt("cart_count")
         ), memberId);
   }
+
+  @Override
+  public void deleteByMemberIdAndProductId(long memberId, long productId) {
+    final String sql = "delete from cart where member_id=? and product_id=?";
+    namedParameterjdbcTemplate.getJdbcOperations().update(sql, memberId, productId);
+  }
 }

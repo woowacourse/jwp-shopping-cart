@@ -28,4 +28,7 @@ public class CartService {
         .collect(Collectors.toList());
   }
 
+  public void deleteByMemberIdAndProductId(long memberId, long productId) {
+    cartDao.deleteByMemberIdAndProductId(memberId, productId);
+  }
 }
