@@ -1,6 +1,4 @@
-package cart.dto;
-
-import cart.entity.ProductEntity;
+package cart.domain.dto;
 
 public class ProductDto {
     private final Long id;
@@ -13,15 +11,6 @@ public class ProductDto {
         this.name = name;
         this.image = image;
         this.price = price;
-    }
-
-    public static ProductDto from(ProductEntity productEntity) {
-        return new ProductDto(
-                Long.valueOf(productEntity.getId()),
-                productEntity.getName(),
-                productEntity.getImage(),
-                productEntity.getPrice()
-        );
     }
 
     public Long getId() {

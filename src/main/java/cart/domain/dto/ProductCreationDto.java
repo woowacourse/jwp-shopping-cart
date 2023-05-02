@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.domain.dto;
 
 public class ProductCreationDto {
     private final String name;

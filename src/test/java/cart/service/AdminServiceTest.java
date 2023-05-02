@@ -1,8 +1,8 @@
 package cart.service;
 
-import cart.dto.ProductCreationDto;
-import cart.dto.ProductDto;
-import cart.dto.ProductUpdateDto;
+import cart.domain.dto.ProductCreationDto;
+import cart.domain.dto.ProductDto;
+import cart.domain.dto.ProductUpdateDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package cart.domain;
 
-import cart.dto.ProductCreationDto;
-import cart.dto.ProductUpdateDto;
+import cart.domain.dto.ProductCreationDto;
+import cart.domain.dto.ProductUpdateDto;
 import cart.entity.ProductEntity;
 
 import java.util.Objects;

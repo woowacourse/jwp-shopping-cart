@@ -4,7 +4,7 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.domain.ProductImage;
 import cart.domain.ProductPrice;
-import cart.dto.ProductDto;
+import cart.domain.dto.ProductDto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

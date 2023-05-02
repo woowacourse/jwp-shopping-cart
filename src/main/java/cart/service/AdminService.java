@@ -2,8 +2,8 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.ProductCreationDto;
-import cart.dto.ProductUpdateDto;
+import cart.domain.dto.ProductCreationDto;
+import cart.domain.dto.ProductUpdateDto;
 import cart.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

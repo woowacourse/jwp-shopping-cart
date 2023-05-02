@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.controller.dto.ProductCreationRequest;
 import cart.controller.dto.ProductUpdateRequest;
-import cart.dto.ProductCreationDto;
-import cart.dto.ProductUpdateDto;
+import cart.domain.dto.ProductCreationDto;
+import cart.domain.dto.ProductUpdateDto;
 import cart.service.AdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

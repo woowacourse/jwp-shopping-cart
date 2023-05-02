@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.domain.dto;
 
 public class ProductUpdateDto {
     private final Integer id;
