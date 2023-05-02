@@ -1,4 +1,4 @@
-package cart.domain.account;
+package cart.domain.member;
 
 import java.util.Objects;
 

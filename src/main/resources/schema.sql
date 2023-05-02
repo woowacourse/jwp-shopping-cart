@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS CART;
-DROP TABLE IF EXISTS ACCOUNT;
+DROP TABLE IF EXISTS MEMBER;
 DROP TABLE IF EXISTS PRODUCT;
 
 CREATE TABLE PRODUCT
@@ -11,7 +11,7 @@ CREATE TABLE PRODUCT
     PRIMARY KEY (id)
 );
 
-CREATE TABLE ACCOUNT
+CREATE TABLE MEMBER
 (
     id       INT          NOT NULL AUTO_INCREMENT,
     username VARCHAR(100) NOT NULL,
@@ -26,11 +26,11 @@ CREATE TABLE CART
     user_id    INT NOT NULL,
     product_id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES ACCOUNT (id),
+    FOREIGN KEY (user_id) REFERENCES MEMBER (id),
     FOREIGN KEY (product_id) REFERENCES PRODUCT (id)
 );
 
-INSERT INTO ACCOUNT (username, password)
+INSERT INTO MEMBER (username, password)
 VALUES ('user1@email.com', 'password1');
-INSERT INTO ACCOUNT (username, password)
+INSERT INTO MEMBER (username, password)
 VALUES ('user2@email.com', 'password2');

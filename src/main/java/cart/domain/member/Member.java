@@ -1,20 +1,20 @@
-package cart.domain.account;
+package cart.domain.member;
 
 import java.util.Objects;
 
-public class Account {
+public class Member {
 
     private final Id id;
     private final Username username;
     private final Password password;
 
-    public Account(final long id, final String username, final String password) {
+    public Member(final long id, final String username, final String password) {
         this.id = new Id(id);
         this.username = new Username(username);
         this.password = new Password(password);
     }
 
-    public Account(final String username, final String password) {
+    public Member(final String username, final String password) {
         this.id = null;
         this.username = new Username(username);
         this.password = new Password(password);
@@ -40,8 +40,8 @@ public class Account {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Account account = (Account) o;
-        return Objects.equals(id, account.id);
+        final Member member = (Member) o;
+        return Objects.equals(id, member.id);
     }
 
     @Override
