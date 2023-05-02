@@ -3,6 +3,7 @@ package cart.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
+import org.hibernate.validator.constraints.URL;
 
 public class ProductSaveRequestDto {
 
@@ -11,6 +12,7 @@ public class ProductSaveRequestDto {
     private final String name;
 
     @NotBlank(message = "이미지는 공백일 수 없습니다.")
+    @URL
     private final String image;
 
     @Range(message = "가격은 최소 {min}원 이상, {max}원 이하여야 합니다.")
