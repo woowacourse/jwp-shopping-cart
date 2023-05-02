@@ -23,13 +23,13 @@ public class Product {
         validateImageUrl(image);
     }
 
-    private static void validatePrice(int price) {
+    private void validatePrice(int price) {
         if (price < 100 || price > 10_000_000) {
             throw new IllegalArgumentException("가격은 최소 100, 최대 10000000원 입니다.");
         }
     }
 
-    private static void validateImageUrl(String image) {
+    private void validateImageUrl(String image) {
         String urlRegex = "^((((https?|ftps?|gopher|telnet|nntp)://)|(mailto:|news:))" +
                 "(%[0-9A-Fa-f]{2}|[-()_.!~*';/?:@&=+$,A-Za-z0-9])+)" +
                 "([).!';/?:,][[:blank:]])?$";
