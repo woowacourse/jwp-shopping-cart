@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dao.ProductDao;
+import cart.dao.ProductJdbcDao;
 import cart.domain.Product;
 import cart.fixture.ProductFixture.BLACKCAT;
 import cart.fixture.ProductFixture.HERB;
@@ -35,7 +35,7 @@ class PageControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private ProductDao productDao;
+    private ProductJdbcDao productDao;
 
     private Matcher<Object> generatePropertiesMatcher(
             final Long id,

@@ -2,7 +2,7 @@ package cart.service;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 
-import cart.dao.ProductDao;
+import cart.dao.ProductJdbcDao;
 import cart.domain.ImageUrl;
 import cart.domain.Name;
 import cart.domain.Price;
@@ -19,9 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductJdbcDao productDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(final ProductJdbcDao productDao) {
         this.productDao = productDao;
     }
 

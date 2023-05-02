@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dao.ProductDao;
+import cart.dao.ProductJdbcDao;
 import cart.domain.Product;
 import cart.dto.ProductSaveRequestDto;
 import cart.dto.ProductUpdateRequestDto;
@@ -41,7 +41,7 @@ class ProductControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private ProductDao productDao;
+    private ProductJdbcDao productDao;
 
     @Test
     void 상품을_저장한다() throws Exception {

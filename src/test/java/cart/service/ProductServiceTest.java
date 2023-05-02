@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.ProductDao;
+import cart.dao.ProductJdbcDao;
 import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequestDto;
@@ -30,7 +30,7 @@ class ProductServiceTest {
     private ProductService productService;
 
     @Autowired
-    private ProductDao productDao;
+    private ProductJdbcDao productDao;
 
     @Test
     void 상품을_저장한다() {

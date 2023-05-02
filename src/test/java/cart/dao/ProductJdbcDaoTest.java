@@ -20,17 +20,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @JdbcTest
-class ProductDaoTest {
+class ProductJdbcDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private ProductDao productDao;
+    private ProductJdbcDao productDao;
 
 
     @BeforeEach
     void setUp() {
-        productDao = new ProductDao(jdbcTemplate);
+        productDao = new ProductJdbcDao(jdbcTemplate);
     }
 
     @Test
