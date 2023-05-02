@@ -34,7 +34,7 @@ class UserViewControllerTest {
 
     @DisplayName("메인 페이지를 조회한다")
     @Test
-    void index() throws Exception {
+    void renderIndex() throws Exception {
         // given
         final List<Product> products = List.of(
                 new Product(1L, "치킨", "chickenUrl", 20000, ProductCategory.KOREAN),

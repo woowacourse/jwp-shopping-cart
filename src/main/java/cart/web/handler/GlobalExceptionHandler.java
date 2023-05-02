@@ -28,8 +28,8 @@ public class GlobalExceptionHandler {
         errorEntry.put(ErrorCode.PRODUCT_NOT_FOUND, "삭제할 수 없습니다. 관리자에게 문의하세요.");
         errorEntry.put(ErrorCode.INVALID_DELETE, "유효하지 않은 카테고리입니다.");
         errorEntry.put(ErrorCode.USER_NOT_FOUND, "해당 유저가 존재하지 않습니다.");
-        errorEntry.put(ErrorCode.INVALID_REQUEST, "");
-        errorEntry.put(ErrorCode.UNEXPECTED_EXCEPTION, "예상치 못한 예외가 발생했습니다. 잠시만 기다려주세요.");
+        errorEntry.put(ErrorCode.INVALID_REQUEST, "올바른 요청 형식이 아닙니다.");
+        errorEntry.put(ErrorCode.UNEXPECTED_EXCEPTION, "예상치 못한 예외가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
 
     @ExceptionHandler(GlobalException.class)
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> unExpectedException(final Exception e) {
-        log.error("error", e);
+        log.error("error = ", e);
         final ErrorResponse errorResponse = new ErrorResponse(ErrorCode.UNEXPECTED_EXCEPTION, null);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

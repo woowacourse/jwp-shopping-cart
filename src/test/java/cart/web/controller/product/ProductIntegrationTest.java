@@ -3,7 +3,6 @@ package cart.web.controller.product;
 import cart.domain.product.ProductCategory;
 import cart.web.controller.product.dto.ProductRequest;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,17 +24,6 @@ public class ProductIntegrationTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-    }
-
-    @DisplayName("메인 페이지 - 상품 리스트를 조회한다")
-    @Test
-    void shoppingController_getProducts() {
-        given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/")
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .contentType(ContentType.HTML);
     }
 
     @DisplayName("상품 상세 페이지 - 단일 상품을 조회한다")
