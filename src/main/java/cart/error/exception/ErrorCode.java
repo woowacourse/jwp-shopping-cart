@@ -1,6 +1,11 @@
 package cart.error.exception;
 
 public class ErrorCode {
+<<<<<<< HEAD
+=======
+
+//    INTERNAL_SERVER_ERROR(500, "SERVER-500-1", "Internal Server Error");
+>>>>>>> 39f685c2 (refactor: Exception 클래스에서 에러 반환 값 선언)
 
     private final int status;
     private final String code;

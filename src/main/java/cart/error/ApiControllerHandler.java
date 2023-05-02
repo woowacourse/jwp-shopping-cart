@@ -24,7 +24,10 @@ public class ApiControllerHandler {
         final ErrorCode errorCode = e.getErrorCode();
         log.error("STATUS : {}", errorCode.getStatus());
         log.error("CODE : {}", errorCode.getCode());
+<<<<<<< HEAD
         log.error("MESSAGE : {}", errorCode.getMessage());
+=======
+>>>>>>> 39f685c2 (refactor: Exception 클래스에서 에러 반환 값 선언)
         return new ResponseEntity<>(
                 new ErrorResponse(
                         errorCode.getStatus(),

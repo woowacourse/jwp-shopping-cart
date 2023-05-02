@@ -27,7 +27,11 @@ public class ExceptionFilter extends OncePerRequestFilter {
         } catch (CartException e) {
             writerErrorCode(response, e.getErrorCode());
         } catch (Exception e) {
+<<<<<<< HEAD
             writerErrorCode(response, new ErrorCode(500, "SERVER-500-1", "Internal Server Error"));
+=======
+            writerErrorCode(response, new ErrorCode(400, "PRODUCT-400-1", "Internal Server Error"));
+>>>>>>> 39f685c2 (refactor: Exception 클래스에서 에러 반환 값 선언)
         }
     }
 
