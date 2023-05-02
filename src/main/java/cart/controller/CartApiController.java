@@ -28,7 +28,6 @@ public class CartApiController {
     @GetMapping("/carts")
     public List<ResponseProductDto> readCartItem(@RequestHeader("authorization") final String authorization) {
         final Credentials credentials = getCredentials(authorization);
-
         final Long userId = userService.findIdByEmail(credentials.getEmail());
         final List<Long> productIds = cartService.findProductIdsByUserId(userId);
         return productService.findByIds(productIds);
@@ -50,10 +49,18 @@ public class CartApiController {
     }
 
     @PostMapping("/carts/{productId}")
-    public ResponseEntity<Void> createCartItem(@RequestHeader("authorization") final String authorization, @PathVariable("productId") Long productId) {
+    public ResponseEntity<Void> createCartItem(@RequestHeader("authorization") final String authorization, @PathVariable("productId") final Long productId) {
         final Credentials credentials = getCredentials(authorization);
         final Long userId = userService.findIdByEmail(credentials.getEmail());
         cartService.insert(userId, productId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/carts/{productId}")
+    public ResponseEntity<Void> deleteCartItem(@RequestHeader("authorization") final String authorization, @PathVariable final Long productId) {
+        final Credentials credentials = getCredentials(authorization);
+        final Long userId = userService.findIdByEmail(credentials.getEmail());
+        cartService.delete(userId, productId);
         return ResponseEntity.ok().build();
     }
 }
