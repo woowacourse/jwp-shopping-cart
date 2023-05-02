@@ -1,7 +1,8 @@
-package cart.domain.product.dto;
+package cart.dto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.dto.ProductCreateRequest;
 import java.util.Optional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -26,7 +27,8 @@ class ProductCreateRequestTest {
         final ProductCreateRequest request = new ProductCreateRequest(null, 10, "imageUrl");
 
         //when
-        final Optional<ConstraintViolation<ProductCreateRequest>> result = validator.validate(request)
+        final Optional<ConstraintViolation<ProductCreateRequest>> result = validator.validate(
+                request)
             .stream()
             .findFirst();
 

@@ -1,4 +1,4 @@
-package cart.domain.product.dao;
+package cart.domain.member.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
