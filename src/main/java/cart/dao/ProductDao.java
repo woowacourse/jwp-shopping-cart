@@ -5,7 +5,7 @@ import cart.entity.ProductEntity;
 import java.util.List;
 
 public interface ProductDao {
-    void save(ProductEntity productEntity);
+    Long save(ProductEntity productEntity);
 
     List<ProductEntity> findAll();
 
