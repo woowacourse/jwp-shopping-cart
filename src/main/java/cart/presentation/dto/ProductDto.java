@@ -1,7 +1,11 @@
 package cart.presentation.dto;
 
-public class ProductDto {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+public class ProductDto {
+    
     private Integer id;
     private String name;
     private String url;
@@ -12,6 +16,12 @@ public class ProductDto {
         this.name = name;
         this.url = url;
         this.price = price;
+    }
+
+    @JsonCreator
+    public static ProductDto create(String jsonString) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(jsonString, ProductDto.class);
     }
 
     public Integer getId() {
