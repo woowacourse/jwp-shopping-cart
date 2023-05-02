@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -72,5 +74,22 @@ public class ProductDao {
     public int delete(final Long id) {
         final String sql = "DELETE FROM product WHERE id=?";
         return jdbcTemplate.update(sql, id);
+    }
+
+    public Optional<Product> findById(final Long id) {
+        final String sql = "SELECT product.id,"
+            + "       product.name,"
+            + "       product.image_url,"
+            + "       product.price,"
+            + "       product.created_at,"
+            + "       product.updated_at "
+            + "FROM product "
+            + "WHERE id = ?";
+        try {
+            final Product product = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            return Optional.ofNullable(product);
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import cart.domain.product.entity.Product;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,5 +90,22 @@ class ProductDaoTest {
 
         //then
         assertThat(result).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("상품을 id로 조회한다.")
+    public void testFindById() {
+        //given
+        final ProductDao productDao = new ProductDao(jdbcTemplate);
+        final Product givenProduct = new Product(null, "연필", 1000, "imageUrl1", null, null);
+        final Product saved = productDao.save(givenProduct);
+
+        //when
+        final Optional<Product> result = productDao.findById(saved.getId());
+
+        //then
+        assertThat(result.isPresent()).isTrue();
+        final Product product = result.get();
+        assertThat(product.getId()).isEqualTo(saved.getId());
     }
 }
