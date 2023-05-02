@@ -4,23 +4,31 @@ import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/java/cart/controller/api/AdminApiController.java
 import org.springframework.http.ResponseEntity;
 =======
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 >>>>>>> 640c9e43 (refactor: 상품을 생성한다는 의미를 url에 포함):src/main/java/cart/controller/AdminController.java
+=======
+>>>>>>> 0606d2cf (refactor: View Controller와 ApiController 분리)
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/java/cart/controller/api/AdminApiController.java
 import org.springframework.web.bind.annotation.RestController;
 =======
 import org.springframework.web.bind.annotation.ResponseStatus;
 >>>>>>> 640c9e43 (refactor: 상품을 생성한다는 의미를 url에 포함):src/main/java/cart/controller/AdminController.java
+=======
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+>>>>>>> 0606d2cf (refactor: View Controller와 ApiController 분리)
 
 import javax.validation.Valid;
 
@@ -34,6 +42,7 @@ public class AdminApiController {
         this.productService = productService;
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/java/cart/controller/api/AdminApiController.java
     @PostMapping("/product")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductCreateRequest request) {
@@ -59,10 +68,21 @@ public class AdminApiController {
     @PutMapping("/{id}")
     public String update(
 >>>>>>> 640c9e43 (refactor: 상품을 생성한다는 의미를 url에 포함):src/main/java/cart/controller/AdminController.java
+=======
+    @PostMapping("/product")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createProduct(@RequestBody @Valid final ProductCreateRequest request) {
+        productService.create(request);
+    }
+
+    @PutMapping("/product/{id}")
+    public void update(
+>>>>>>> 0606d2cf (refactor: View Controller와 ApiController 분리)
             @PathVariable final Long id,
             @RequestBody @Valid final ProductUpdateRequest request
     ) {
         productService.update(id, request);
+<<<<<<< HEAD
         return ResponseEntity.ok().build();
     }
 
@@ -72,6 +92,13 @@ public class AdminApiController {
     ) {
         productService.delete(id);
         return ResponseEntity.ok().build();
+=======
+    }
+
+    @DeleteMapping("/product/{id}")
+    public void delete(@PathVariable final Long id) {
+        productService.delete(id);
+>>>>>>> 0606d2cf (refactor: View Controller와 ApiController 분리)
     }
 
 }
