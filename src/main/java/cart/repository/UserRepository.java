@@ -1,9 +1,11 @@
 package cart.repository;
 
+import java.util.Optional;
+
 import cart.domain.user.Email;
 import cart.domain.user.User;
 
 public interface UserRepository {
 
-    User findByEmail(final Email email);
+    Optional<User> findByEmail(final Email email);
 }

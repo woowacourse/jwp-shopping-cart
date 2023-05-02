@@ -1,5 +1,7 @@
 package cart.service;
 
+import java.util.Optional;
+
 import cart.domain.user.Email;
 import cart.domain.user.User;
 import cart.repository.UserRepository;
@@ -17,7 +19,7 @@ public class AuthService {
     public boolean isValidLogin(final String email, final String password) {
         final Email id = new Email(email);
         final User input = new User(id, password);
-        final User user = userRepository.findByEmail(id);
-        return input.equals(user);
+        final Optional<User> user = userRepository.findByEmail(id);
+        return user.filter(input::equals).isPresent();
     }
 }
