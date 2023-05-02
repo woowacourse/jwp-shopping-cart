@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.product.Product;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,11 +39,29 @@ class CartDaoTest {
                 "VALUES (2, 1)");
     }
 
+    @AfterEach
+    void after() {
+        jdbcTemplate.update("TRUNCATE TABLE cart");
+        jdbcTemplate.update("TRUNCATE TABLE product");
+    }
+
     @DisplayName("1번 유저의 장바구니를 모두 조회한다.")
     @Test
-    void findAllOfMember1() {
+    void findAllOfProductForMember1Test() {
         final List<Product> products = cartDao.findByUserId(1);
 
         assertThat(products).hasSize(2);
+    }
+
+    @DisplayName("1번 유저의 장바구니에 1번 상품을 넣는다.")
+    @Test
+    void addProductToCartTest() {
+        cartDao.addProduct(1, 1);
+        cartDao.addProduct(1, 1);
+        cartDao.addProduct(1, 1);
+
+        final List<Product> products = cartDao.findByUserId(1);
+
+        assertThat(products).hasSize(5);
     }
 }
