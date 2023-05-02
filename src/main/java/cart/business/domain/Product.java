@@ -1,5 +1,7 @@
 package cart.business.domain;
 
+import org.springframework.lang.NonNull;
+
 import java.util.Objects;
 
 public class Product {
@@ -9,7 +11,8 @@ public class Product {
     private final ProductImage url;
     private final ProductPrice price;
 
-    public Product(Integer id, ProductName name, ProductImage url, ProductPrice price) {
+    public Product(@NonNull Integer id, @NonNull ProductName name,
+                   @NonNull ProductImage url, @NonNull ProductPrice price) {
         this.id = id;
         this.name = name;
         this.url = url;

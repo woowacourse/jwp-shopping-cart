@@ -3,15 +3,16 @@ package cart.presentation.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.lang.NonNull;
 
 public class ProductDto {
-    
+
     private Integer id;
     private String name;
     private String url;
     private Integer price;
 
-    public ProductDto(Integer id, String name, String url, Integer price) {
+    public ProductDto(@NonNull Integer id, @NonNull String name, @NonNull String url, @NonNull Integer price) {
         this.id = id;
         this.name = name;
         this.url = url;
@@ -19,6 +20,7 @@ public class ProductDto {
     }
 
     @JsonCreator
+    @NonNull
     public static ProductDto create(String jsonString) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(jsonString, ProductDto.class);

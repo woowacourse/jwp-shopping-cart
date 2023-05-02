@@ -1,12 +1,14 @@
 package cart.business.domain;
 
+import org.springframework.lang.NonNull;
+
 public class ProductPrice {
 
     private static final int MIN_PRICE = 0;
     private static final int MAX_PRICE = 1_000_000;
     private final int price;
 
-    public ProductPrice(int price) {
+    public ProductPrice(@NonNull int price) {
         validate(price);
         this.price = price;
     }

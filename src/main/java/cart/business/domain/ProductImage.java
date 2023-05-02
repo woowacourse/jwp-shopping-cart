@@ -1,5 +1,7 @@
 package cart.business.domain;
 
+import org.springframework.lang.NonNull;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -7,7 +9,7 @@ public class ProductImage {
 
     private final URL url;
 
-    public ProductImage(String url) {
+    public ProductImage(@NonNull String url) {
         try {
             this.url = new URL(url);
         } catch (MalformedURLException e) {
