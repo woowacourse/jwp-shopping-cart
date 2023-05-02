@@ -38,7 +38,7 @@ public class ProductService {
         Product product = productUpdateRequest.toProduct();
         Product updatedProduct = product.update(productUpdateRequest);
 
-        productDaoImpl.update(id, updatedProduct.toEntity());
+        productDaoImpl.update(updatedProduct.toEntity(id));
     }
 
     private ProductEntity findProductById(final int id) {

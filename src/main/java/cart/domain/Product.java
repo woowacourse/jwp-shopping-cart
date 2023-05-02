@@ -57,6 +57,10 @@ public class Product {
         return new ProductEntity(name, image, price);
     }
 
+    public ProductEntity toEntity(int id) {
+        return new ProductEntity(id, name, image, price);
+    }
+
     public Product update(ProductUpdateRequest productUpdateRequest) {
         this.name = productUpdateRequest.getName();
         this.image = productUpdateRequest.getImage();
