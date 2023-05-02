@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CartService {
+public class ProductService {
 
     private final ProductDao productDao;
 
-    public CartService(@Qualifier("productJdbcDao") final ProductDao productDao) {
+    public ProductService(@Qualifier("productJdbcDao") final ProductDao productDao) {
         this.productDao = productDao;
     }
 

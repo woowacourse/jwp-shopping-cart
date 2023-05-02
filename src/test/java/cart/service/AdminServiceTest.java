@@ -20,7 +20,7 @@ class AdminServiceTest {
     @Autowired
     private AdminService adminService;
     @Autowired
-    private CartService cartService;
+    private ProductService productService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -35,7 +35,7 @@ class AdminServiceTest {
         final ProductCreationDto productCreationDto = new ProductCreationDto("땡칠", "asdf", 100);
         adminService.add(productCreationDto);
 
-        final List<ProductDto> productDtos = cartService.getAll();
+        final List<ProductDto> productDtos = productService.getAll();
         assertAll(
                 () -> assertThat(productDtos.get(0).getName()).isEqualTo("땡칠"),
                 () -> assertThat(productDtos.get(0).getImage()).isEqualTo("asdf"),
@@ -51,7 +51,7 @@ class AdminServiceTest {
 
         adminService.delete(1);
 
-        final List<ProductDto> productDtos = cartService.getAll();
+        final List<ProductDto> productDtos = productService.getAll();
 
         assertThat(productDtos.size()).isEqualTo(0);
     }
@@ -64,7 +64,7 @@ class AdminServiceTest {
         final ProductUpdateDto productUpdateDto = new ProductUpdateDto(1, "비버", "VERY_BIG_IMAGE", 10000);
         adminService.update(productUpdateDto);
 
-        final List<ProductDto> productDtos = cartService.getAll();
+        final List<ProductDto> productDtos = productService.getAll();
 
         assertAll(
                 () -> assertThat(productDtos.get(0).getName()).isEqualTo("비버"),
@@ -81,7 +81,7 @@ class AdminServiceTest {
         adminService.add(productCreationDto1);
         adminService.add(productCreationDto2);
 
-        final List<ProductDto> productDtos = cartService.getAll();
+        final List<ProductDto> productDtos = productService.getAll();
 
         assertAll(
                 () -> assertThat(productDtos.get(0).getName()).isEqualTo("비버"),
