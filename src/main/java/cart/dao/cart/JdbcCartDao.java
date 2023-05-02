@@ -17,7 +17,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
-import cart.dao.entity.Product;
+import cart.dao.entity.CartProduct;
 import cart.dao.entity.User;
 
 @Repository
@@ -43,27 +43,28 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
-    public List<Product> findAllProductInCart(User user) {
+    public List<CartProduct> findAllProductInCart(User user) {
         final Long userId = getUserId(user);
-        final String sql = "SELECT p.id, p.name, p.price, p.img_url FROM cart AS c "
+        final String sql = "SELECT c.id, p.name, p.price, p.img_url "
+                + "FROM cart AS c "
                 + "JOIN product AS p "
                 + "ON p.id = c.product_id "
                 + "WHERE c.user_id = :userId";
         final SqlParameterSource params = new MapSqlParameterSource("userId", userId);
-        final RowMapper<Product> rowMapper = BeanPropertyRowMapper.newInstance(Product.class);
+        final RowMapper<CartProduct> rowMapper = BeanPropertyRowMapper.newInstance(
+                CartProduct.class);
         return namedParameterJdbc.query(sql, params, rowMapper);
     }
 
     @Override
-    public void removeProductInCart(User user, Long productId) {
+    public void removeProductInCart(User user, Long cartId) {
         final Long userId = getUserId(user);
         final String sql = "DELETE FROM cart "
                 + "WHERE user_id = :userId "
-                + "AND product_id = :productId "
-                + "LIMIT 1";
+                + "AND id = :cartId";
         final Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("userId", userId);
-        paramMap.put("productId", productId);
+        paramMap.put("cartId", cartId);
         final SqlParameterSource params = new MapSqlParameterSource(paramMap);
         namedParameterJdbc.update(sql, params);
     }

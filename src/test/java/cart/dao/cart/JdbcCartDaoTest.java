@@ -13,7 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import cart.dao.entity.Product;
+import cart.dao.entity.CartProduct;
 import cart.dao.entity.User;
 
 @JdbcTest
@@ -35,7 +35,7 @@ class JdbcCartDaoTest {
     void findAllProductInCart() {
         cartDao.addProduct(USER, 1L);
 
-        final List<Product> result = cartDao.findAllProductInCart(USER);
+        final List<CartProduct> result = cartDao.findAllProductInCart(USER);
 
         Assertions.assertAll(
                 () -> assertThat(result).hasSize(1),
@@ -48,10 +48,10 @@ class JdbcCartDaoTest {
     @DisplayName("회원이 장바구니에 담아놓은 아이템을 삭제한다.")
     void removeProductInCart() {
         final long productId = 1L;
-        cartDao.addProduct(USER, productId);
-        cartDao.removeProductInCart(USER, productId);
+        final Long cartId = cartDao.addProduct(USER, productId);
+        cartDao.removeProductInCart(USER, cartId);
 
-        final List<Product> results = cartDao.findAllProductInCart(USER);
+        final List<CartProduct> results = cartDao.findAllProductInCart(USER);
 
         assertThat(results.stream()
                 .anyMatch(product -> product.getId() == productId))

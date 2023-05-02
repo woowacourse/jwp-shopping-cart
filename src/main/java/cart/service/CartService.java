@@ -6,10 +6,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import cart.dao.cart.CartDao;
-import cart.dao.entity.Product;
+import cart.dao.entity.CartProduct;
 import cart.dao.entity.User;
+import cart.dto.cart.CartProductMapper;
+import cart.dto.cart.CartProductResponse;
 import cart.dto.product.ProductMapper;
-import cart.dto.product.ProductResponse;
 import cart.dto.user.UserMapper;
 import cart.dto.user.UserRequest;
 
@@ -17,12 +18,12 @@ import cart.dto.user.UserRequest;
 public class CartService {
 
     private final UserMapper userMapper;
-    private final ProductMapper productMapper;
+    private final CartProductMapper cartProductMapper;
     private final CartDao cartDao;
 
-    public CartService(UserMapper userMapper, ProductMapper productMapper, CartDao cartDao) {
+    public CartService(UserMapper userMapper, ProductMapper productMapper, CartProductMapper cartProductMapper, CartDao cartDao) {
         this.userMapper = userMapper;
-        this.productMapper = productMapper;
+        this.cartProductMapper = cartProductMapper;
         this.cartDao = cartDao;
     }
 
@@ -31,16 +32,16 @@ public class CartService {
         return cartDao.addProduct(user, productId);
     }
 
-    public List<ProductResponse> findAllProductsInCart(UserRequest userRequest) {
+    public List<CartProductResponse> findAllProductsInCart(UserRequest userRequest) {
         final User user = userMapper.toEntity(userRequest);
-        final List<Product> products = cartDao.findAllProductInCart(user);
+        final List<CartProduct> products = cartDao.findAllProductInCart(user);
         return products.stream()
-                .map(productMapper::toResponse)
+                .map(cartProductMapper::toResponse)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public void removeProductInCart(UserRequest userRequest, Long productId) {
+    public void removeProductInCart(UserRequest userRequest, Long cartId) {
         final User user = userMapper.toEntity(userRequest);
-        cartDao.removeProductInCart(user, productId);
+        cartDao.removeProductInCart(user, cartId);
     }
 }

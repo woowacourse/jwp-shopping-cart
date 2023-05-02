@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import cart.dto.product.ProductResponse;
+import cart.dto.cart.CartProductResponse;
 import cart.dto.user.UserRequest;
 
 @SpringBootTest
@@ -23,7 +23,7 @@ class CartServiceTest {
     @Test
     @DisplayName("회원이 장바구니에 담아둔 모든 상품 정보를 반환한다.")
     void findAllProductsInCart() {
-        final List<ProductResponse> result = cartService.findAllProductsInCart(USER);
+        final List<CartProductResponse> result = cartService.findAllProductsInCart(USER);
 
         Assertions.assertAll(
                 () -> assertThat(result).hasSize(1),
@@ -37,7 +37,7 @@ class CartServiceTest {
     void removeProductInCart() {
         cartService.removeProductInCart(USER, 1L);
 
-        final List<ProductResponse> result = cartService.findAllProductsInCart(USER);
+        final List<CartProductResponse> result = cartService.findAllProductsInCart(USER);
 
         assertThat(result.stream()
                 .anyMatch(product -> product.getId() == 1L)

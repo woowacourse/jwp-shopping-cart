@@ -2,13 +2,13 @@ package cart.dao.cart;
 
 import java.util.List;
 
-import cart.dao.entity.Product;
+import cart.dao.entity.CartProduct;
 import cart.dao.entity.User;
 
 public interface CartDao {
     Long addProduct(User user, Long productId);
 
-    List<Product> findAllProductInCart(User user);
+    List<CartProduct> findAllProductInCart(User user);
 
-    void removeProductInCart(User user, Long productId);
+    void removeProductInCart(User user, Long cartId);
 }
