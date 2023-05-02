@@ -26,4 +26,8 @@ public class CartService {
     public Long insert(final Long userId, final Long productId) {
         return cartDao.insert(new CartEntity(userId, productId));
     }
+
+    public int delete(final Long userId, final Long productId) {
+        return cartDao.delete(userId, productId);
+    }
 }

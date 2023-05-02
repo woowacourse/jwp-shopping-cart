@@ -56,4 +56,17 @@ class CartServiceTest {
         //then
         assertThat(id).isEqualTo(1L);
     }
+
+    @Test
+    void 장바구니_상품을_삭제한다() {
+        //given
+        when(cartDao.delete(any(Long.class), any(Long.class)))
+                .thenReturn(1);
+
+        //when
+        final int affectedRows = cartService.delete(1L, 1L);
+
+        //then
+        assertThat(affectedRows).isEqualTo(1);
+    }
 }
