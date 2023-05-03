@@ -42,7 +42,9 @@ public class CartController {
     }
 
     @DeleteMapping("/cart/{productId}")
-    public void delete(@AuthPrincipal MemberAuthRequest memberAuthRequest) {
-
+    public ResponseEntity<Void> delete(@AuthPrincipal MemberAuthRequest memberAuthRequest,
+                       @PathVariable long productId) {
+        cartService.removeProductByMemberInfoAndProductId(memberAuthRequest, productId);
+        return ResponseEntity.noContent().build();
     }
 }

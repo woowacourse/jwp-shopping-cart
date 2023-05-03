@@ -104,7 +104,7 @@
 <br>
 
 ### ✅장바구니 상품 삭제 API 
-- [ ] DELETE `cart/{productId}` uri 맵핑
+- [x] DELETE `cart/{productId}` uri 맵핑
 
 ---
 
