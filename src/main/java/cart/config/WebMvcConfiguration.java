@@ -12,6 +12,18 @@ import java.util.List;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
+
+    private final AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver;
+    private final BasicAuthInterceptor basicAuthInterceptor;
+
+    public WebMvcConfiguration(
+            AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver,
+            BasicAuthInterceptor basicAuthInterceptor
+    ) {
+        this.authenticationPrincipalArgumentResolver = authenticationPrincipalArgumentResolver;
+        this.basicAuthInterceptor = basicAuthInterceptor;
+    }
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/cart");
@@ -19,12 +31,12 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthenticationPrincipalArgumentResolver());
+        resolvers.add(authenticationPrincipalArgumentResolver);
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new BasicAuthInterceptor())
+        registry.addInterceptor(basicAuthInterceptor)
                 .addPathPatterns("/cart-items");
     }
 }

@@ -58,4 +58,11 @@ public class MemberRepositoryImpl implements MemberRepository {
 
         return jdbcTemplate.query(sql, memberRowMapper);
     }
+
+    @Override
+    public Member findByEmail(String email) {
+        String sql = "SELECT member_id, email, password FROM member WHERE email = ?";
+
+        return jdbcTemplate.queryForObject(sql, memberRowMapper, email);
+    }
 }

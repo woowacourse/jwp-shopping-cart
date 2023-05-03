@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.domain.Member;
 import cart.domain.MemberRepository;
+import cart.dto.LoginDto;
 import cart.dto.response.MemberResponse;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,12 @@ public class MemberService {
         return members.stream()
                 .map(MemberResponse::new)
                 .collect(Collectors.toList());
+    }
+
+
+    public LoginDto login(LoginDto loginDto) {
+        Member loginMember = loginDto.toEntity();
+        Member member = memberRepository.findByEmail(loginMember.getEmail());
+        return new LoginDto(member);
     }
 }

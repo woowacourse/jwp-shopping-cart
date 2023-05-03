@@ -1,7 +1,6 @@
 package cart.controller.exceptionHandler;
 
 import cart.auth.AuthorizationException;
-import cart.auth.BasicAuthInterceptor;
 import cart.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

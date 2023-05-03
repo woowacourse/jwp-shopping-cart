@@ -1,0 +1,28 @@
+### Request
+
+GET localhost:8080/cart-items
+Authorization: Basic dGVzdDE6cGFzczE=
+
+### Response
+
+HTTP/1.1 200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 02 May 2023 14:35:03 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+[
+  {
+    "id": 1,
+    "name": "dummy1",
+    "price": 5000.00,
+    "image-url": "test-url-dummy1"
+  },
+  {
+    "id": 2,
+    "name": "dummy1",
+    "price": 5000.00,
+    "image-url": "test-url-dummy1"
+  }
+]

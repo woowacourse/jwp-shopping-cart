@@ -1,7 +1,7 @@
 package cart.controller.rest;
 
 import cart.auth.AuthenticationPrincipal;
-import cart.domain.Member;
+import cart.dto.LoginDto;
 import cart.dto.response.CartItemResponse;
 import cart.service.CartService;
 import org.springframework.ui.Model;
@@ -20,7 +20,7 @@ public class CartItemsController {
     }
 
     @GetMapping("/cart-items")
-    public List<CartItemResponse> getCartItemsView(@AuthenticationPrincipal Member member, Model model) {
-        return cartService.findAllCartItems(member.getMemberId());
+    public List<CartItemResponse> getCartItemsView(@AuthenticationPrincipal LoginDto loginDto, Model model) {
+        return cartService.findAllCartItems(loginDto.getMemberId());
     }
 }

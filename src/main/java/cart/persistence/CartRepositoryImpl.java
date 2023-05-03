@@ -43,14 +43,10 @@ public class CartRepositoryImpl implements CartRepository {
         try {
             cartId = jdbcTemplate.queryForObject(sql, Long.class, memberId);
         } catch (EmptyResultDataAccessException e) {
-            cartId = null;
-        }
-
-        if (cartId == null) {
             String insert = "INSERT INTO cart(member_id) VALUES(?)";
 
             GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-            int update = jdbcTemplate.update(con -> {
+            jdbcTemplate.update(con -> {
                 var psmt = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
                 psmt.setLong(1, memberId);
                 return psmt;
