@@ -12,8 +12,14 @@ public class UserService {
 
     private final UserDao userDao;
 
-    public UserService(UserDao userDao) {
+    public UserService(final UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    @Transactional
+    public Long save(final String email, final String password) {
+        final User user = new User(email, password);
+        return userDao.insert(user);
     }
 
     @Transactional(readOnly = true)
