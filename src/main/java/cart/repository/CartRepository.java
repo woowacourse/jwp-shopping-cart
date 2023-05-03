@@ -4,11 +4,10 @@ import java.util.List;
 
 import cart.domain.product.Product;
 import cart.domain.user.Email;
-import cart.domain.user.User;
 
 public interface CartRepository {
 
-    void save(User user, Product product);
+    void save(String email, Long productId);
 
     List<Product> findByEmail(Email email);
 

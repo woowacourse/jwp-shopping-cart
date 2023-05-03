@@ -9,7 +9,6 @@ import cart.dao.ProductDao;
 import cart.dao.UserDao;
 import cart.domain.product.Product;
 import cart.domain.user.Email;
-import cart.domain.user.User;
 import cart.entiy.ProductEntity;
 import cart.entiy.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,12 +51,12 @@ class RdsCartRepositoryTest {
         @Nested
         @DisplayName("cart를 저장하면")
         class ContextSave {
-            
+
             @BeforeEach
             void setUp() {
                 rdsCartRepository.save(
-                        new User("a@a.com", "password1"),
-                        new Product(productId, "odo", "url", 1)
+                        "a@a.com",
+                        productId
                 );
             }
 
