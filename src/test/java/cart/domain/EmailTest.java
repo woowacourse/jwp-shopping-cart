@@ -24,7 +24,7 @@ class EmailTest {
     void 이메일_형식이_올바르지_않다면_오류(final String wrongEmail) {
         // when & then
         assertThatThrownBy(() ->
-                Email.email(wrongEmail)
+                Email.from(wrongEmail)
         ).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -32,7 +32,7 @@ class EmailTest {
     void 이메일_형식이_올바르면_생성된다() {
         // when & then
         assertDoesNotThrow(
-                () -> Email.email("mallang@woowa.com")
+                () -> Email.from("mallang@woowa.com")
         );
     }
 }

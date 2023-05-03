@@ -9,7 +9,7 @@ public class Price {
         this.price = price;
     }
 
-    public static Price price(final int price) {
+    public static Price from(final int price) {
         return new Price(price);
     }
 

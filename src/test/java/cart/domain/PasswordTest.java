@@ -15,9 +15,9 @@ class PasswordTest {
     @Test
     void 일치_여부를_확인한다() {
         // given
-        final Password password1 = Password.password("1234");
-        final Password password2 = Password.password("1234");
-        final Password password3 = Password.password("12345");
+        final Password password1 = Password.from("1234");
+        final Password password2 = Password.from("1234");
+        final Password password3 = Password.from("12345");
 
         // when & then
         assertThat(password1.match(password2)).isTrue();

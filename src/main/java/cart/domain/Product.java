@@ -14,8 +14,8 @@ public class Product {
     public Product(final Long id, final String name, final String imageUrl, final int price) {
         this.id = id;
         this.name = name;
-        this.imageUrl = ImageUrl.imageUrl(imageUrl);
-        this.price = Price.price(price);
+        this.imageUrl = ImageUrl.from(imageUrl);
+        this.price = Price.from(price);
     }
 
     public Long getId() {

@@ -17,7 +17,7 @@ class PriceTest {
     void 가격이_0원보다_작으면_오류() {
         // when & then
         assertThatThrownBy(
-                () -> Price.price(-1)
+                () -> Price.from(-1)
         ).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -25,7 +25,7 @@ class PriceTest {
     void 가격이_0원_이상이면_생성된다() {
         // when & then
         assertDoesNotThrow(
-                () -> Price.price(1000)
+                () -> Price.from(1000)
         );
     }
 }

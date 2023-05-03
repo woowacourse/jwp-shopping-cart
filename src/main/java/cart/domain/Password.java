@@ -10,7 +10,7 @@ public class Password {
         this.password = password;
     }
 
-    public static Password password(final String password) {
+    public static Password from(final String password) {
         return new Password(password);
     }
 

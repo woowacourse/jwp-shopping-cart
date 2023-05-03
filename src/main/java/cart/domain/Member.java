@@ -12,8 +12,8 @@ public class Member {
 
     public Member(final Long id, final String email, final String password) {
         this.id = id;
-        this.email = Email.email(email);
-        this.password = Password.password(password);
+        this.email = Email.from(email);
+        this.password = Password.from(password);
     }
 
     public Long getId() {
@@ -29,7 +29,7 @@ public class Member {
     }
 
     public void login(final String password) {
-        if (!this.password.match(Password.password(password))) {
+        if (!this.password.match(Password.from(password))) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }

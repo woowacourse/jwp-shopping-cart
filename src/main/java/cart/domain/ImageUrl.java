@@ -14,7 +14,7 @@ public class ImageUrl {
         this.imageUrl = imageUrl;
     }
 
-    public static ImageUrl imageUrl(final String imageUrl) {
+    public static ImageUrl from(final String imageUrl) {
         return new ImageUrl(imageUrl);
     }
 
