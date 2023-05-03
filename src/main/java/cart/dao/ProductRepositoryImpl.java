@@ -17,15 +17,19 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Long save(Product product) {
-        ProductEntity productEntity = new ProductEntity(
+        ProductEntity productEntity = toEntity(product);
+
+        return productDao.insert(productEntity);
+    }
+
+    private ProductEntity toEntity(Product product) {
+        return new ProductEntity(
                 product.getProductId(),
                 product.getName(),
                 product.getPrice().intValue(),
                 product.getCategory().name(),
                 product.getImageUrl()
         );
-
-        return productDao.insert(productEntity);
     }
 
     @Override
@@ -49,13 +53,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public int update(Product product) {
-        ProductEntity productEntity = new ProductEntity(
-                product.getProductId(),
-                product.getName(),
-                product.getPrice().intValue(),
-                product.getCategory().name(),
-                product.getImageUrl()
-        );
+        ProductEntity productEntity = toEntity(product);
 
         return productDao.update(productEntity);
     }

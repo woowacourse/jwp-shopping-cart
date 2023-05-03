@@ -3,12 +3,12 @@ package cart.domain.user;
 public class User {
     private final Email email;
     private final Password password;
-    private final Long userId;
+    private final Long id;
 
-    public User(Email email, Password password, Long userId) {
+    public User(Email email, Password password, Long id) {
         this.email = email;
         this.password = password;
-        this.userId = userId;
+        this.id = id;
     }
 
     public User(Email email, Password password) {
@@ -21,5 +21,9 @@ public class User {
 
     public String getPassword() {
         return password.getPassword();
+    }
+
+    public Long getId() {
+        return id;
     }
 }
