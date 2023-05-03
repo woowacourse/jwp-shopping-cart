@@ -29,8 +29,9 @@ public class MemberService {
     }
 
     public long register(MemberAddRequest memberAddRequest) {
+        final Member member = DtoMapper.toMember(memberAddRequest);
         try {
-            final Member saved = memberDao.save(DtoMapper.toMember(memberAddRequest));
+            final Member saved = memberDao.save(member);
             return saved.getId();
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다");
