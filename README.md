@@ -33,15 +33,15 @@
 ### 장바구니 API
 - 장바구니에 상품 추가
   - POST
-  - `/cart/{id}`
+  - `/carts/products/{id}`
   - 해당 id를 가진 Product를 장바구니에 추가
 - 장바구니에 담긴 상품 제거
   - DELETE
-  - `/cart/{id}`
+  - `/carts/{id}`
   - 해당 id를 가진 Product를 장바구니에서 제거
 - 장바구니 목록 조회
   - GET
-  - `/cart`
+  - `/carts/products`
   - 해당 사용자의 장바구니 목록을 조회
 
 ## DDL

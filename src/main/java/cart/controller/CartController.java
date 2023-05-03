@@ -22,12 +22,12 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping("")
+    @GetMapping("/products")
     public List<CartItemResponseDto> cartItemList(@AuthenticatedMember AuthInfo authInfo) {
         return cartService.findAll(authInfo.getEmail());
     }
 
-    @PostMapping("/{productId}")
+    @PostMapping("/products/{productId}")
     public void addCartItem(@PathVariable int productId, @AuthenticatedMember AuthInfo authInfo) {
         cartService.add(productId, authInfo.getEmail());
     }
