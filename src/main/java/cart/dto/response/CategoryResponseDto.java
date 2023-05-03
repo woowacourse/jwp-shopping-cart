@@ -1,13 +1,16 @@
 package cart.dto.response;
 
 import cart.entity.CategoryEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class CategoryResponseDto {
 
+    @Schema(description = "카테고리 ID")
     private final Long id;
+    @Schema(description = "카테고리명")
     private final String name;
 
     private CategoryResponseDto(final Long id, final String name) {

@@ -1,14 +1,21 @@
 package cart.dto.response;
 
 import cart.entity.product.ProductEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public final class CartProductResponseDto {
 
+    @Schema(description = "장바구니 ID")
     private Long id;
+    @Schema(description = "상품 ID")
     private Long productId;
+    @Schema(description = "상품명")
     private String name;
+    @Schema(description = "상품 이미지 URL")
     private String imageUrl;
+    @Schema(description = "상품 가격")
     private Integer price;
+    @Schema(description = "상품 설명")
     private String description;
 
     public CartProductResponseDto(
