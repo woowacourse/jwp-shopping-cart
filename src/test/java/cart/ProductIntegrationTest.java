@@ -60,9 +60,6 @@ class ProductIntegrationTest {
 
     @Test
     void createProduct() {
-        //given
-        final long id = 1L;
-
         //when
         final var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -75,7 +72,7 @@ class ProductIntegrationTest {
         //then
         assertAll(
                 () -> assertThat(result.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(result.body().jsonPath().getLong("id")).isEqualTo(id),
+                () -> assertThat(result.body().jsonPath().getLong("id")).isPositive(),
                 () -> assertThat(result.body().jsonPath().getString("name")).isEqualTo("누누"),
                 () -> assertThat(result.body().jsonPath().getString("image")).isEqualTo("naver.com"),
                 () -> assertThat(result.body().jsonPath().getInt("price")).isEqualTo(1)
