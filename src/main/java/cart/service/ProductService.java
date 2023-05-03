@@ -34,7 +34,7 @@ public class ProductService {
     }
 
     private ProductEntity makeEntity(final Product product) {
-        return new ProductEntity(product.getName(), product.getImage(), product.getPrice());
+        return new ProductEntity(product.getName(), product.getImageUrl(), product.getPrice());
     }
 
     public void update(final int id, final ProductUpdateRequest productUpdateRequest) {
@@ -46,7 +46,7 @@ public class ProductService {
     }
 
     private ProductEntity makeEntity(final int id, final Product product) {
-        return new ProductEntity(id, product.getName(), product.getImage(), product.getPrice());
+        return new ProductEntity(id, product.getName(), product.getImageUrl(), product.getPrice());
     }
 
     private ProductEntity findProductById(final int id) {

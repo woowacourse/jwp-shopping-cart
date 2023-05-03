@@ -13,16 +13,16 @@ public class ProductInsertRequest {
     private final String name;
 
     @URL(message = "이미지 주소를 다시 입력해주세요.")
-    private final String image;
+    private final String imageUrl;
 
     @NotNull(message = "가격은 최소 100원, 최대 10,000,000원입니다.")
     @Min(100)
     @Max(10_000_000)
     private final Integer price;
 
-    public ProductInsertRequest(final String name, final String image, final Integer price) {
+    public ProductInsertRequest(final String name, final String imageUrl, final Integer price) {
         this.name = name;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.price = price;
     }
 
@@ -30,8 +30,8 @@ public class ProductInsertRequest {
         return name;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public Integer getPrice() {
@@ -39,7 +39,7 @@ public class ProductInsertRequest {
     }
 
     public Product toProduct() {
-        return new Product(name, image, price);
+        return new Product(name, imageUrl, price);
     }
 
 }
