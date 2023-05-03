@@ -1,6 +1,6 @@
 package cart.catalog.service;
 
-import cart.product.dao.ProductDao;
+import cart.catalog.dao.CatalogDao;
 import cart.product.domain.Product;
 import cart.product.dto.RequestProductDto;
 import cart.product.dto.ResponseProductDto;
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductCatalogService {
     
-    private final ProductDao productDao;
+    private final CatalogDao catalogDao;
     
-    public ProductCatalogService(final ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductCatalogService(final CatalogDao catalogDao) {
+        this.catalogDao = catalogDao;
     }
     
     public List<ResponseProductDto> display() {
-        final List<Product> products = this.productDao.findAll();
+        final List<Product> products = this.catalogDao.findAll();
         return products.stream()
                 .map(ResponseProductDto::create)
                 .collect(Collectors.toList());
@@ -26,17 +26,17 @@ public class ProductCatalogService {
     
     public void create(final RequestProductDto requestProductDto) {
         final Product product = Product.create(requestProductDto);
-        this.productDao.insert(product);
+        this.catalogDao.insert(product);
     }
     
     public ResponseProductDto update(final long id, final RequestProductDto requestProductDto) {
-        final Product originalProduct = this.productDao.findByID(id);
+        final Product originalProduct = this.catalogDao.findByID(id);
         final Product updatedProduct = originalProduct.update(requestProductDto);
-        this.productDao.update(updatedProduct);
+        this.catalogDao.update(updatedProduct);
         return ResponseProductDto.create(updatedProduct);
     }
     
     public void delete(final long id) {
-        this.productDao.deleteByID(id);
+        this.catalogDao.deleteByID(id);
     }
 }

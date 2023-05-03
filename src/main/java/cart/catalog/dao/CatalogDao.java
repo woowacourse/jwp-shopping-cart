@@ -1,9 +1,9 @@
-package cart.product.dao;
+package cart.catalog.dao;
 
 import cart.product.domain.Product;
 import java.util.List;
 
-public interface ProductDao {
+public interface CatalogDao {
     
     long insert(Product product);
     

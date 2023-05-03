@@ -2,8 +2,8 @@ package cart.product.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import cart.catalog.dao.CatalogDao;
 import cart.catalog.service.ProductCatalogService;
-import cart.product.dao.ProductDao;
 import cart.product.domain.Name;
 import cart.product.domain.Price;
 import cart.product.domain.Product;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 class ProductCatalogServiceTest {
     
-    static class FakeProductDao implements ProductDao {
+    static class FakeCatalogDao implements CatalogDao {
         
         @Override
         public long insert(final Product product) {
@@ -52,7 +52,7 @@ class ProductCatalogServiceTest {
     @Test
     @DisplayName("display 테스트")
     void display() {
-        final FakeProductDao fakeProductDao = new FakeProductDao();
+        final FakeCatalogDao fakeProductDao = new FakeCatalogDao();
         final ProductCatalogService productCatalogService = new ProductCatalogService(fakeProductDao);
         
         final List<ResponseProductDto> responseDtos = productCatalogService.display();
