@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class H2CartDao implements CartDao{
+public class H2CartDao implements CartDao {
 
   private final SimpleJdbcInsert simpleJdbcInsert;
   private final NamedParameterJdbcTemplate namedParameterjdbcTemplate;
@@ -33,13 +33,17 @@ public class H2CartDao implements CartDao{
   @Override
   public List<CartEntity> findCartByMemberId(final long memberId) {
     final String sql = "select * from cart where member_id=?";
-    return namedParameterjdbcTemplate.getJdbcTemplate().query(sql, (resultSet, count) ->
+    return namedParameterjdbcTemplate.getJdbcTemplate().query(sql, getRowMapper(), memberId);
+  }
+
+  private RowMapper<CartEntity> getRowMapper() {
+    return (resultSet, count) ->
         new CartEntity(
             resultSet.getLong("id"),
             resultSet.getLong("product_id"),
             resultSet.getLong("member_id"),
             resultSet.getInt("cart_count")
-        ), memberId);
+        );
   }
 
   @Override
@@ -49,13 +53,11 @@ public class H2CartDao implements CartDao{
   }
 
   @Override
-  public Optional<CartEntity> findCartByMemberIdAndProductId(long memberId, long productId) {
-    try {
-      final String sql = "select * from cart where member_id=? and product_id=?";
-      final CartEntity cartEntity = namedParameterjdbcTemplate.getJdbcTemplate().queryForObject(sql, getRowMapper(), memberId, productId);
-      return Optional.of(cartEntity);
-    } catch (EmptyResultDataAccessException exception) {
-      return Optional.empty();
-    }
+  public Optional<CartEntity> findCartByMemberIdAndProductId(final long memberId, final long productId) {
+    final String sql = "select * from cart where member_id=? and product_id=?";
+    return namedParameterjdbcTemplate.getJdbcTemplate()
+        .query(sql, getRowMapper(), memberId, productId)
+        .stream()
+        .findAny();
   }
 }
