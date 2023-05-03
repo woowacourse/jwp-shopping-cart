@@ -6,19 +6,19 @@ import cart.vo.Url;
 
 public class Product {
 
-    private final Integer id;
+    private final Long id;
     private final Name name;
     private final Price price;
     private final Url imageUrl;
 
-    public Product(int id, Name name, Price price, Url imageUrl) {
+    public Product(Long id, Name name, Price price, Url imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -36,12 +36,12 @@ public class Product {
 
     public static class Builder {
 
-        private int id;
+        private Long id;
         private Name name;
         private Price price;
         private Url imageUrl;
 
-        public Builder id(Integer id) {
+        public Builder id(Long id) {
             this.id = id;
             return this;
         }
