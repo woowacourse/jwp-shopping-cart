@@ -2,7 +2,7 @@ package cart.domain;
 
 public class Member {
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
-    private static final String PASSWORD_REGEX = "/^[a-zA-Z0-9]+$/";
+    private static final int PASSWORD_MIN_LENGTH = 4;
 
     private final String email;
     private final String password;
@@ -17,8 +17,8 @@ public class Member {
         if (!email.matches(EMAIL_REGEX)) {
             throw new IllegalArgumentException("이메일 형식과 일치하지 않습니다.");
         }
-        if (!password.matches(PASSWORD_REGEX)) {
-            throw new IllegalArgumentException("비밀번호는 영어와 숫자를 포함해야 합니다.");
+        if (password.length() < PASSWORD_MIN_LENGTH) {
+            throw new IllegalArgumentException("비밀번호의 길이는 4 이상이어야 합니다.");
         }
     }
 
