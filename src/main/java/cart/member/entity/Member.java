@@ -1,11 +1,11 @@
-package cart.user.entity;
+package cart.member.entity;
 
-public class User {
+public class Member {
     private final Long id;
     private final String email;
     private final String password;
 
-    public User(Long id, String email, String password) {
+    public Member(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
