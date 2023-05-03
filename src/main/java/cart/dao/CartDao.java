@@ -46,4 +46,15 @@ public class CartDao {
                         .price(rs.getInt("price"))
                         .build();
     }
+
+    public Boolean isNotExistByMemberIdAndProductId(Long memberId, Long productId) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM (SELECT CART.* FROM CART " +
+                "INNER JOIN PRODUCT ON CART.product_id = PRODUCT.product_id) AS CP WHERE CP.member_id = ? AND CP.product_id = ?)";
+        return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, memberId, productId));
+    }
+
+    public void deleteByMemberIdAndProductId(Long memberId, Long productId) {
+        String sql = "DELETE FROM CART WHERE member_id = ? AND product_id = ?";
+        jdbcTemplate.update(sql, memberId, productId);
+    }
 }

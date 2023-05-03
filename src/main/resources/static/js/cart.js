@@ -1,6 +1,5 @@
 const addCartItem = (productId) => {
     const credentials = localStorage.getItem('credentials');
-    alert("productId = " + productId);
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
         window.location.href = '/member/settings';

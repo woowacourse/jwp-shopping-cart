@@ -1,6 +1,8 @@
 package cart.dao;
 
+import static cart.fixture.MemberFixtures.DUMMY_MEMBER_ID;
 import static cart.fixture.MemberFixtures.INSERT_MEMBER_ENTITY;
+import static cart.fixture.ProductFixtures.DUMMY_SEONGHA_ID;
 import static cart.fixture.ProductFixtures.INSERT_PRODUCT_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -69,5 +71,45 @@ class CartDaoTest {
                 () -> assertThat(productEntities).hasSize(1),
                 () -> assertThat(productEntities.get(0).getProductId()).isEqualTo(insertedProductId)
         );
+    }
+
+    @Test
+    @DisplayName("멤버 ID와 상품 ID에 해당하는 행이 없으면 TRUE를 반환한다.")
+    void isNotExistByMemberIdAndProductId_True() {
+        // when, then
+        assertThat(cartDao.isNotExistByMemberIdAndProductId(DUMMY_MEMBER_ID, DUMMY_SEONGHA_ID)).isTrue();
+    }
+
+    @Test
+    @DisplayName("멤버 ID와 상품 ID에 해당하는 행이 있으면 FALSE를 반환한다.")
+    void isNotExistByMemberIdAndProductId_False() {
+        // given
+        long insertedMemberId = memberDao.insert(INSERT_MEMBER_ENTITY);
+        long insertedProductId = productDao.insert(INSERT_PRODUCT_ENTITY);
+        cartDao.insert(new CartEntity.Builder()
+                .memberId(insertedMemberId)
+                .productId(insertedProductId)
+                .build());
+
+        // when, then
+        assertThat(cartDao.isNotExistByMemberIdAndProductId(insertedMemberId, insertedProductId)).isFalse();
+    }
+
+    @Test
+    @DisplayName("멤버 ID와 상품 ID를 받아서 JOIN하여 멤버 ID, 상품 ID가 같은 행을 삭제한다.")
+    void deleteByMemberIdAndProductId() {
+        // given
+        long insertedMemberId = memberDao.insert(INSERT_MEMBER_ENTITY);
+        long insertedProductId = productDao.insert(INSERT_PRODUCT_ENTITY);
+        cartDao.insert(new CartEntity.Builder()
+                .memberId(insertedMemberId)
+                .productId(insertedProductId)
+                .build());
+
+        // when
+        cartDao.deleteByMemberIdAndProductId(insertedMemberId, insertedProductId);
+
+        // then
+        assertThat(cartDao.isNotExistByMemberIdAndProductId(insertedMemberId, insertedProductId)).isTrue();
     }
 }

@@ -1,8 +1,7 @@
 package cart.service;
 
 
-import static cart.fixture.MemberFixtures.INSERT_MEMBER_ENTITY;
-import static cart.fixture.MemberFixtures.MEMBER_AUTH_REQUEST;
+import static cart.fixture.MemberFixtures.*;
 import static cart.fixture.ProductFixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -14,6 +13,7 @@ import java.util.List;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.dto.CartResponse;
+import cart.exception.CartProductNotFoundException;
 import cart.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -70,5 +70,32 @@ public class CartServiceTest {
                 () -> assertThat(allProductByMemberInfo).hasSize(1),
                 () -> assertThat(allProductByMemberInfo.get(0).getName()).isEqualTo(DUMMY_SEONGHA_NAME)
         );
+    }
+
+    @Test
+    @DisplayName("카트의 상품 삭제 시 멤버 ID와 상품 ID에 해당하는 상품이 없으면 예외가 발생한다.")
+    void removeProductByMemberInfoAndProductId_throw_not_found() {
+        // given
+        memberDao.insert(INSERT_MEMBER_ENTITY);
+
+        // when, then
+        assertThatThrownBy(() -> cartService.removeProductByMemberInfoAndProductId(MEMBER_AUTH_REQUEST, 100L))
+                .isInstanceOf(CartProductNotFoundException.class)
+                .hasMessage("해당 멤버와 상품 ID에 해당하는 상품이 카트에 존재하지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("사용자 정보와 상품 ID로 카트의 상품을 삭제한다.")
+    void removeProductByMemberInfoAndProductId() {
+        // given
+        long insertedProductId = productDao.insert(INSERT_PRODUCT_ENTITY);
+        long insertedMemberId = memberDao.insert(INSERT_MEMBER_ENTITY);
+        cartService.saveProduct(MEMBER_AUTH_REQUEST, insertedProductId);
+
+        // when
+        cartService.removeProductByMemberInfoAndProductId(MEMBER_AUTH_REQUEST, insertedProductId);
+
+        // then
+        assertThat(cartService.findAllProductByMemberInfo(MEMBER_AUTH_REQUEST)).hasSize(0);
     }
 }
