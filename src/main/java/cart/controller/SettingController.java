@@ -20,7 +20,7 @@ public class SettingController {
     }
 
     @GetMapping
-    public String showMembers(Model model) {
+    public String renderSettingPage(Model model) {
         List<Member> members = memberService.findAll();
         model.addAttribute("members", MembersResponse.of(members));
         return "settings";

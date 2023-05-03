@@ -18,7 +18,7 @@ public class HomeController {
     }
 
     @GetMapping
-    public String showProductList(Model model) {
+    public String renderHomePage(Model model) {
         List<Product> products = productService.findAll();
         model.addAttribute("products", ProductsResponse.of(products));
         return "index";
