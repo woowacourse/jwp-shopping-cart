@@ -2,9 +2,12 @@ package cart.service;
 
 import cart.authorization.AuthInformation;
 import cart.dao.MemberDao;
+import cart.entity.AuthMember;
 import cart.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MemberService {
@@ -17,13 +20,17 @@ public class MemberService {
     }
 
     public boolean isValidMember(AuthInformation authInformation) {
-        Member member = convertAuthinformationToMember(authInformation);
+        AuthMember authMember = convertAuthInformationToMember(authInformation);
 
-        return memberDao.isMemberExists(member);
+        return memberDao.isMemberExists(authMember);
     }
 
-    private static Member convertAuthinformationToMember(AuthInformation authInformation) {
-        Member member = new Member(authInformation.getEmail(), authInformation.getPassword());
-        return member;
+    public List<Member> findAll() {
+        return memberDao.findAll();
+    }
+
+    private static AuthMember convertAuthInformationToMember(AuthInformation authInformation) {
+        AuthMember authMember = new AuthMember(authInformation.getEmail(), authInformation.getPassword());
+        return authMember;
     }
 }

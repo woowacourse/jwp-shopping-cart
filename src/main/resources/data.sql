@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS item
     price    int                NOT NULL
     );
 
-CREATE TABLE IF NOT EXISTS member
+CREATE TABLE IF NOT EXISTS Member
 (
     id       BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     email    VARCHAR(320)       NOT NULL,
@@ -19,5 +19,6 @@ CREATE TABLE IF NOT EXISTS basket
     user_id BIGINT NOT NULL,
     item_id BIGINT NOT NULL
 );
---
--- INSERT INTO MEMBER values (1, 'gksqlsl11@khu.ac.kr', 'qlalfqjsgh');
+
+INSERT INTO MEMBER values (1, 'gksqlsl11@khu.ac.kr', 'qlalfqjsgh');
+INSERT INTO MEMBER values (2, 'kong@khu.ac.kr', 'qlalf!!');
