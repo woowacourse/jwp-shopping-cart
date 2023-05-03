@@ -42,7 +42,7 @@
 - [x] Product CRUD
 - [ ] User
     - [x] 유저 전체 조회
-    - [ ] 유저 장바구니 상품 추가 (Authentication)
+    - [x] 유저 장바구니 상품 추가 (Authentication)
     - [ ] 유저 장바구니 상품 제거 (Authentication)
     - [ ] 유저의 장바구니 전체 조회 (Authentication)
 
