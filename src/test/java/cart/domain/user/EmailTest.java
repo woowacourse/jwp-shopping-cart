@@ -1,12 +1,11 @@
 package cart.domain.user;
 
-import cart.domain.product.ProductName;
 import cart.exception.GlobalException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class EmailTest {
     @ParameterizedTest(name = "이메일 생성 테스트")
