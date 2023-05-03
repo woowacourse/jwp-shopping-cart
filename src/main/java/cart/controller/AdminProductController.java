@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/admin/product")
+@RequestMapping("/admin/products")
 public class AdminProductController {
 
     private final ProductService productService;
@@ -22,7 +22,7 @@ public class AdminProductController {
     @PostMapping
     public ResponseEntity<Void> saveProduct(@Valid @RequestBody final ProductSaveRequest productSaveRequest) {
         final Long id = productService.save(productSaveRequest);
-        return ResponseEntity.created(URI.create("/admin/product/" + id)).build();
+        return ResponseEntity.created(URI.create("/admin/products/" + id)).build();
     }
 
     @PutMapping("/{id}")

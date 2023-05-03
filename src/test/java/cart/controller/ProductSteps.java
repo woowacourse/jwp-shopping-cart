@@ -32,7 +32,7 @@ abstract class ProductSteps {
         return given()
                 .body(request)
                 .when()
-                .post("/admin/product")
+                .post("/admin/products")
                 .then().log().all()
                 .extract();
     }
@@ -41,7 +41,7 @@ abstract class ProductSteps {
         return given()
                 .body(request)
                 .when()
-                .put("/admin/product/{id}", id)
+                .put("/admin/products/{id}", id)
                 .then().log().all()
                 .extract();
     }
@@ -49,7 +49,7 @@ abstract class ProductSteps {
     ExtractableResponse<Response> 상품을_삭제한다(final Long id) {
         return given()
                 .when()
-                .delete("/admin/product/{id}", id)
+                .delete("/admin/products/{id}", id)
                 .then().log().all()
                 .extract();
     }

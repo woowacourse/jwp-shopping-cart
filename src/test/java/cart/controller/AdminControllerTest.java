@@ -25,7 +25,7 @@ class AdminControllerTest extends ProductSteps {
             // then
             assertAll(
                     () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                    () -> assertThat(response.header("Location")).contains("/admin/product/")
+                    () -> assertThat(response.header("Location")).contains("/admin/products/")
             );
         }
 

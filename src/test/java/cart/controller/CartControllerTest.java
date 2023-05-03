@@ -32,7 +32,7 @@ class CartControllerTest {
         final ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .auth().preemptive().basic("test@test.com", "test")
                 .when()
-                .get("/cart/users")
+                .get("/carts/users")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
