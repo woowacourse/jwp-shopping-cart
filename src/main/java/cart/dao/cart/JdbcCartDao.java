@@ -25,4 +25,10 @@ public class JdbcCartDao implements CartDao {
         final String sql = "SELECT product_id FROM cart_product WHERE member_id = ?";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> resultSet.getLong(1), memberId);
     }
+
+    @Override
+    public void delete(final Long memberId, final Long productId) {
+        final String sql = "DELETE FROM cart_product WHERE member_id = ? AND product_id = ?";
+        jdbcTemplate.update(sql, memberId, productId);
+    }
 }

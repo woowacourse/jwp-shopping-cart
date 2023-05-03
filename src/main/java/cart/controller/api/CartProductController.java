@@ -54,4 +54,16 @@ public class CartProductController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteCart(@PathVariable final Long productId,
+                                           final HttpServletRequest request) {
+        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+
+        final String email = authInfo.getEmail();
+        final String password = authInfo.getPassword();
+        cartManagementService.delete(productId, email, password);
+
+        return ResponseEntity.noContent().build();
+    }
 }

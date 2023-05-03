@@ -27,4 +27,9 @@ public class CartManagementService {
         final Member member = memberManagementService.find(email, password);
         return cartDao.findAllByMemberId(member.getId());
     }
+
+    public void delete(final Long productId, final String email, final String password) {
+        final Member member = memberManagementService.find(email, password);
+        cartDao.delete(member.getId(), productId);
+    }
 }
