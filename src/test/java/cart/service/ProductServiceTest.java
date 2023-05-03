@@ -33,9 +33,9 @@ class ProductServiceTest {
     @Test
     void 모든_상품_목록_조회() {
         Mockito.when(productDao.findAll()).thenReturn(List.of(
-                new ProductEntity(1L, "name1", 1000, "image1"),
-                new ProductEntity(2L, "name2", 2000, "image2"),
-                new ProductEntity(3L, "name3", 3000, "image3"))
+                createProductEntity(1L),
+                createProductEntity(2L),
+                createProductEntity(3L))
         );
 
         final var products = productService.findAll();
@@ -48,7 +48,7 @@ class ProductServiceTest {
         Mockito.when(productDao.insert(any(ProductEntity.class)))
                 .thenReturn(4L);
 
-        final var savedId = productService.register(new ProductDto("item1", 1000, "https://"));
+        final var savedId = productService.register(createProductDto(1000));
 
         assertThat(savedId).isEqualTo(4L);
     }
@@ -56,7 +56,7 @@ class ProductServiceTest {
     @Test
     void 상품_수정_성공() {
         Mockito.when(productDao.findById(anyLong()))
-                .thenReturn(Optional.of(new ProductEntity(1L, "name1", 1000, "image1")));
+                .thenReturn(Optional.of(createProductEntity(1L)));
 
         assertThatNoException().isThrownBy(() -> productService.updateProduct(1L, new ProductDto("new Name", 10, "new Image Url")));
     }
@@ -67,14 +67,14 @@ class ProductServiceTest {
                 .thenReturn(Optional.empty());
 
         assertThatIllegalArgumentException().isThrownBy(
-                () -> productService.updateProduct(1L, new ProductDto("new Name", 10, "new Image Url"))
+                () -> productService.updateProduct(1L, createProductDto(10))
         );
     }
 
     @Test
     void 상품_삭제_성공() {
         Mockito.when(productDao.findById(anyLong()))
-                .thenReturn(Optional.of(new ProductEntity(1L, "name1", 1000, "image1")));
+                .thenReturn(Optional.of(createProductEntity(1L)));
 
         assertThatNoException().isThrownBy(() -> productService.deleteProduct(1L));
     }
@@ -87,5 +87,13 @@ class ProductServiceTest {
         assertThatIllegalArgumentException().isThrownBy(
                 () -> productService.deleteProduct(3L)
         );
+    }
+
+    private ProductEntity createProductEntity(final long id) {
+        return new ProductEntity(id, "name", 1000, "imageUrl");
+    }
+
+    private ProductDto createProductDto(final int price) {
+        return new ProductDto("name", price, "imageUrl");
     }
 }
