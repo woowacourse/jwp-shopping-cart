@@ -1,4 +1,4 @@
-package cart.application;
+package cart.presentation;
 
 import cart.business.domain.product.Product;
 import cart.business.domain.product.ProductImage;
@@ -10,7 +10,7 @@ public class ProductConverter {
 
     public static Product toProductWithoutId(ProductDto productDto) {
         return new Product(
-                IdSequencer.get(),
+                null,
                 new ProductName(productDto.getName()),
                 new ProductImage(productDto.getUrl()),
                 new ProductPrice(productDto.getPrice())
