@@ -15,7 +15,7 @@ CREATE TABLE if not exists MEMBER
     PRIMARY KEY (id)
 );
 
-CREATE TABLE if not exists CART
+CREATE TABLE if not exists CART_PRODUCT
 (
     id         BIGINT UNSIGNED AUTO_INCREMENT NOT NULL,
     member_id  BIGINT UNSIGNED                NOT NULL,

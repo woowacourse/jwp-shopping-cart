@@ -3,7 +3,6 @@ package cart.dao;
 import cart.domain.Product;
 import cart.exception.custom.ResourceNotFoundException;
 import java.util.List;
-import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,11 +23,11 @@ public class ProductDao {
             resultSet.getInt("price"),
             resultSet.getString("image_url"));
 
-    public ProductDao(DataSource dataSource) {
-        this.insertActor = new SimpleJdbcInsert(dataSource)
+    public ProductDao(JdbcTemplate jdbcTemplate) {
+        this.insertActor = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Long save(Product product) {

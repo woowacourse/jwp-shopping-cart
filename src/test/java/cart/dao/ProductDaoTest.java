@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.domain.Product;
 import cart.exception.custom.ResourceNotFoundException;
 import java.util.List;
-import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,14 +22,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 class ProductDaoTest {
 
     @Autowired
-    private DataSource dataSource;
-    @Autowired
     private JdbcTemplate jdbcTemplate;
+
     private ProductDao productDao;
 
     @BeforeEach
     void setUp() {
-        productDao = new ProductDao(dataSource);
+        productDao = new ProductDao(jdbcTemplate);
     }
 
     @Test
