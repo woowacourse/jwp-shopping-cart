@@ -59,7 +59,7 @@ const createProduct = (product) => {
     });
 };
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
+// 상품 업데이
 const updateProduct = (product) => {
     const { productId } = product; //왜???
 
@@ -76,7 +76,7 @@ const updateProduct = (product) => {
     });
 };
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
+// 상품 삭제
 const deleteProduct = (id) => {
     axios.request({
         method: 'delete',

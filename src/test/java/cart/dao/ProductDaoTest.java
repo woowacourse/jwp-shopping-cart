@@ -49,7 +49,6 @@ class ProductDaoTest {
 
     @Test
     void updateProduct는_상품_정보를_수정한다() {
-        //todo : 테스트를 위한 사전 상황을 어떻게 할지.
         Product before = new Product("chicken", "imagelink", 100);
         long productId = productDao.save(before);
 
@@ -62,7 +61,6 @@ class ProductDaoTest {
 
     @Test
     void deleteProduct는_상품을_삭제한다() {
-        //todo : 테스트를 위한 사전 상황을 어떻게 할지.
         Product product = new Product("chicken", "imagelink", 100);
         long productId = productDao.save(product);
         assertThat(productDao.findAllProducts()).hasSize(1);

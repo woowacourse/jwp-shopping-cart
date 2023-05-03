@@ -33,7 +33,6 @@ public class ProductApiController {
         return ResponseEntity.ok(allProducts);
     }
 
-    //todo (질문3) : responseEntity의 status를 넘겨줄 때, uri 넘겨줘야하는 이유? 넘겨준 uri 정보로 리다이렉트 가능하다.
     @PostMapping
     public ResponseEntity<ProductDto> saveProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
         ProductDto savedProduct = productService.saveProduct(productRequestDto);

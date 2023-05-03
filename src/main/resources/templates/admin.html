@@ -31,7 +31,7 @@
             <th>Actions</th>
         </tr>
         <tbody id="product-list">
-            <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
+            <!--  [1단계] 상품 정보에 맞게 변경 -->
             <tr th:each="product : ${products}">
                 <td th:text="${product.productId}"></td>
                 <td th:text="${product.name}"></td> <!-- 상품 이름 -->
@@ -50,7 +50,7 @@
     <div id="modal" class="modal" data-form-type="add">
         <div class="modal-content">
             <span class="close" onclick="hideAddModal()">&times;</span>
-            <!-- TODO: [1단계] 상품 정보에 맞게 변경 -->
+            <!-- [1단계] 상품 정보에 맞게 변경 -->
             <form id="form">
                 <label for="name">상품명</label><br>
                 <input type="text" id="name" name="name" required><br>
