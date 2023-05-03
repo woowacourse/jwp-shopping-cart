@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTable;
 
 @JdbcTest
@@ -72,5 +73,23 @@ class UserDaoTest {
             assertThatThrownBy(() -> userDao.addProductToCart(1L, 0L))
                     .isInstanceOf(DataIntegrityViolationException.class);
         }
+    }
+
+    @DisplayName("장바구니의 상품을 제거할 수 있다")
+    @Test
+    void deleteProductInCart() {
+        //given
+        final Product product = productDao.save(new Product("상품", "이미지", 1000));
+        final Long userProductId = userDao.addProductToCart(1L, product.getId());
+
+        final int beforeDelete = countRowsInTable(jdbcTemplate, "user_product");
+
+        //when
+        userDao.deleteProductInCart(1L, userProductId);
+
+        //then
+        assertAll(
+                () -> assertThat(beforeDelete).isOne(),
+                () -> assertThat(countRowsInTable(jdbcTemplate, "user_product")).isZero());
     }
 }

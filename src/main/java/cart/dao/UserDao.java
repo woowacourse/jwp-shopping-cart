@@ -32,4 +32,10 @@ public class UserDao {
 
         return (Long) simpleJdbcInsert.executeAndReturnKey(param);
     }
+
+    public void deleteProductInCart(Long userId, Long userProductId) {
+        final String sql = "DELETE FROM user_product WHERE id = ? AND user_id = ?";
+
+        jdbcTemplate.update(sql, userProductId, userId);
+    }
 }

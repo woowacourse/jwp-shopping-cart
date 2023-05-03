@@ -43,7 +43,7 @@
 - [ ] User
     - [x] 유저 전체 조회
     - [x] 유저 장바구니 상품 추가 (Authentication)
-    - [ ] 유저 장바구니 상품 제거 (Authentication)
+    - [x] 유저 장바구니 상품 제거 (Authentication)
     - [ ] 유저의 장바구니 전체 조회 (Authentication)
 
 ### Service
@@ -56,6 +56,7 @@
 - [ ] User
     - [x] 유저 전체 조회
     - [ ] 유저 장바구니 상품 추가
+    - [ ] 유저 장바구니 상품 제거
     - [ ] 유저의 장바구니 전체 조회
 
 ### API 명세
