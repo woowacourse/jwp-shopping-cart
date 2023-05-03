@@ -98,4 +98,24 @@ class CartControllerIntegrationTest {
                 .log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
+
+    @DisplayName("이미 추가된 상품을 또 추가하면 예외가 발생한다.")
+    @Test
+    void exceptionWhenDuplicateCartProduct() {
+        given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CartRequest(productId))
+                .auth().preemptive().basic(email, pwd)
+                .when()
+                .post("/cart");
+
+        given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CartRequest(productId))
+                .auth().preemptive().basic(email, pwd)
+                .when()
+                .post("/cart")
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.CONFLICT.value());
+    }
 }

@@ -20,6 +20,10 @@ public class CartService {
     }
 
     public long save(final CartRequest cartRequest, final long customerId) {
+        boolean isProductAlreadyInCart = cartDao.isProductIdInCustomerCart(customerId, cartRequest.getProductId());
+        if (isProductAlreadyInCart) {
+            throw new DuplicateCartException();
+        }
         return cartDao.insert(customerId, cartRequest.getProductId());
     }
 

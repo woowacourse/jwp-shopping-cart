@@ -3,6 +3,7 @@ package cart.dao;
 import cart.dao.dto.CartProductDto;
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -36,6 +37,15 @@ public class CartDao {
                 .productName(rs.getString("name"))
                 .imgUrl(rs.getString("img_url"))
                 .build(), customerId);
+    }
+
+    public boolean isProductIdInCustomerCart(final long customerId, final long productId) {
+        String sql = "SELECT EXISTS(SELECT id FROM cart WHERE customer_id = ? AND product_id = ?) AS cart_id_exist";
+        try {
+            return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, new Object[]{customerId, productId}, Boolean.class));
+        } catch (EmptyResultDataAccessException exception) {
+            return false;
+        }
     }
 
     public void deleteById(final long cartId) {

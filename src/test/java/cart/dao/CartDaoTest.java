@@ -86,4 +86,31 @@ class CartDaoTest {
         List<CartProductDto> cartProducts = cartDao.findAllCartProductByCustomerId(customerId);
         assertThat(cartProducts).isEmpty();
     }
+
+    @DisplayName("상품이 장바구니에 저장되어 있으면 true가 반환된다.")
+    @Test
+    @Sql("/cart_initialize.sql")
+    void trueIfProductIdInCustomerCart() {
+        // given
+        cartDao.insert(customerId, productId);
+
+        // when
+        boolean isProductInCart = cartDao.isProductIdInCustomerCart(customerId, productId);
+
+        // then
+        assertThat(isProductInCart).isTrue();
+    }
+
+    @DisplayName("상품이 장바구니에 저장되어 있으면 false가 반환된다.")
+    @Test
+    @Sql("/cart_initialize.sql")
+    void falseIfProductIdNotInCustomerCart() {
+        // given
+
+        // when
+        boolean isProductInCart = cartDao.isProductIdInCustomerCart(customerId, productId);
+
+        // then
+        assertThat(isProductInCart).isFalse();
+    }
 }

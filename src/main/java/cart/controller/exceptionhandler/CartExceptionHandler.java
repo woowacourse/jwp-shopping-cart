@@ -1,6 +1,7 @@
 package cart.controller.exceptionhandler;
 
 import cart.auth.UnauthorizedException;
+import cart.service.DuplicateCartException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,6 @@ public class CartExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodValidException(MethodArgumentNotValidException exception) {
         String errorMessage = exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        log.error(errorMessage);
         return ResponseEntity.badRequest().body(errorMessage);
     }
 
@@ -29,13 +29,16 @@ public class CartExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException exception) {
-        log.error(exception.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateCartException.class)
+    public ResponseEntity<String> handleDuplicateCartException(DuplicateCartException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleUnexpectedException(RuntimeException exception) {
-        log.error(exception.getMessage());
         return ResponseEntity.internalServerError().body(UNEXPECTED_EXCEPTION_MESSAGE);
     }
 }

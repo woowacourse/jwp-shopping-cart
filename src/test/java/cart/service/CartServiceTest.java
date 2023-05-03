@@ -1,6 +1,7 @@
 package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.service.dto.CartRequest;
 import cart.service.dto.CartResponse;
@@ -36,6 +37,18 @@ class CartServiceTest {
         List<CartResponse> expectedItems = List.of(new CartResponse(cartId, "baron", "tempUrl", 2000));
         assertThat(cartItems).usingRecursiveComparison()
                 .isEqualTo(expectedItems);
+    }
+
+    @DisplayName("장바구니에 있는 상품을 추가하면 중복 예외가 발생한다.")
+    @Test
+    @Sql("/cart_initialize.sql")
+    void exceptionWhenDuplicateProductInCart() {
+        // given
+        long cartId = cartService.save(new CartRequest(productId), customerId);
+
+        // when, then
+        assertThatThrownBy(() -> cartService.save(new CartRequest(productId), customerId))
+                .isInstanceOf(DuplicateCartException.class);
     }
 
     @DisplayName("장바구니 상품을 삭제할 수 있다.")
