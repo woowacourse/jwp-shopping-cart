@@ -14,6 +14,10 @@ public class UserEntityId {
         this(userId.getValue());
     }
 
+    public static UserEntityId from(final UserId userId) {
+        return new UserEntityId(userId);
+    }
+
     public Long getValue() {
         return id;
     }

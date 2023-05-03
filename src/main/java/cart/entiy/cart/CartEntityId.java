@@ -1,26 +1,26 @@
-package cart.entiy.product;
+package cart.entiy.cart;
 
-import cart.domain.product.ProductId;
+import cart.domain.cart.CartId;
 import java.util.Objects;
 
-public class ProductEntityId {
+public class CartEntityId {
 
     private final Long value;
 
-    public ProductEntityId(final Long value) {
+    public CartEntityId(final Long value) {
         this.value = value;
     }
 
-    public static ProductEntityId from(final ProductId productId) {
-        return new ProductEntityId(productId.getValue());
-    }
-
-    public ProductId toDomain() {
-        return new ProductId(value);
+    public static CartEntityId from(final CartId cartId) {
+        return new CartEntityId(cartId.getValue());
     }
 
     public Long getValue() {
         return value;
+    }
+
+    public CartId toDomain() {
+        return new CartId(value);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ProductEntityId {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ProductEntityId that = (ProductEntityId) o;
+        final CartEntityId that = (CartEntityId) o;
         return Objects.equals(value, that.value);
     }
 
