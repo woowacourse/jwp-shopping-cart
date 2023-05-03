@@ -29,6 +29,11 @@ public class CartController {
         return "admin";
     }
 
+    @GetMapping("/cart")
+    public String showCart(final Model model) {
+        return "cart";
+    }
+
     @GetMapping("/settings")
     public String showUsers(final Model model) {
         model.addAttribute("members", userService.findAllUsers());

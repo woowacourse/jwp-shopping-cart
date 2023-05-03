@@ -1,18 +1,21 @@
 package cart.service;
 
+import cart.auth.UserInfo;
 import cart.dao.UserDao;
+import cart.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -27,21 +30,34 @@ class UserServiceTest {
     @Test
     void notExistEmail() {
         //given
-        final String email = "존재하지 않는 이메일";
+        final UserInfo userInfo = new UserInfo("존재하지 않는 이메일", "password");
 
         //when
-        when(userDao.findByEmail(email)).thenReturn(Optional.empty());
+        when(userDao.findByEmail(anyString())).thenReturn(Optional.empty());
 
         //then
         assertAll(
-                () -> assertThatThrownBy(() -> userService.addProductToCart(email, 1L))
+                () -> assertThatThrownBy(() -> userService.addProductToCart(userInfo, 1L))
                         .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessage("존재하지 않는 유저입니다."),
-                () -> assertThatThrownBy(() -> userService.removeProductInCart(email, 1L))
+                        .hasMessage("잘못된 유저 정보입니다."),
+                () -> assertThatThrownBy(() -> userService.removeProductInCart(userInfo, 1L))
                         .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessage("존재하지 않는 유저입니다."),
-                () -> assertThatThrownBy(() -> userService.getAllProductsInCart(email))
+                        .hasMessage("잘못된 유저 정보입니다."),
+                () -> assertThatThrownBy(() -> userService.getAllProductsInCart(userInfo))
                         .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessage("존재하지 않는 유저입니다."));
+                        .hasMessage("잘못된 유저 정보입니다."));
+    }
+
+    @DisplayName("존재하지 않는 상품을 장바구니에 추가하면 예외가 발생한다")
+    @Test
+    void notExistProduct() {
+        //given
+        when(userDao.findByEmail(anyString())).thenReturn(Optional.of(new User(1L, "email@email", "password")));
+        when(userDao.addProductToCart(anyLong(), anyLong())).thenThrow(DataIntegrityViolationException.class);
+
+        //then
+        assertThatThrownBy(() -> userService.addProductToCart(new UserInfo("email@email", "password"), 1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 상품입니다.");
     }
 }
