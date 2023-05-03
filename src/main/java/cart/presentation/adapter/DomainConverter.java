@@ -8,6 +8,7 @@ import cart.business.domain.product.Product;
 import cart.business.domain.product.ProductImage;
 import cart.business.domain.product.ProductName;
 import cart.business.domain.product.ProductPrice;
+import cart.presentation.dto.AuthInfo;
 import cart.presentation.dto.CartItemDto;
 import cart.presentation.dto.ProductDto;
 
@@ -37,8 +38,10 @@ public class DomainConverter {
         return new CartItem(NULL_ID, productId, memberId);
     }
 
-    public static Member toMemberWithoutId(String email, String password) {
-        return new Member(NULL_ID, new MemberEmail(email), new MemberPassword(password));
+    public static Member toMemberWithoutId(AuthInfo authInfo) {
+        return new Member(NULL_ID, new MemberEmail(authInfo.getEmail()),
+                new MemberPassword(authInfo.getPassword())
+        );
     }
 
     public static ProductDto toProductDto(Product product) {
