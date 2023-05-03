@@ -1,6 +1,8 @@
 package cart.repository;
 
 import cart.domain.member.Member;
+import cart.domain.member.MemberId;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -40,5 +42,14 @@ public class MemberRepository {
     public List<Member> findAll(){
         final String sql = "SELECT * FROM members";
         return jdbcTemplate.query(sql, memberRowMapper);
+    }
+
+    public Member findByMemberId(final MemberId memberId) {
+        final String sql = "SELECT * FROM members WHERE id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, memberRowMapper, memberId.getId());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 }

@@ -1,6 +1,7 @@
 package cart.repository;
 
 import cart.domain.member.Member;
+import cart.domain.member.MemberId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,5 +50,21 @@ public class MemberRepositoryTest {
 
         // then
         Assertions.assertThat(1).isEqualTo(allMembers.size());
+    }
+
+    @DisplayName("ID로 회원 조회 테스트")
+    @Test
+    void findByMemberId(){
+        // given
+        MemberId memberId = memberRepository.insert(new Member("kiara", "email@email", "pw"));
+
+        // when
+        Member memberById = memberRepository.findByMemberId(memberId);
+
+        // then
+        Assertions.assertThat(memberById)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(new Member("kiara", "email@email", "pw"));
     }
 }
