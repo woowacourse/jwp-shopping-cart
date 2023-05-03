@@ -16,3 +16,5 @@
   - [x] 장바구니 목록 조회
 - [x] 장바구니 페이지 연동
  
+## API 기능 목록
+- [API 기능 목록](https://documenter.getpostman.com/view/17539086/2s93eVVYYN#97aae49f-17ff-4ad8-ae73-b510cc6ee746)
