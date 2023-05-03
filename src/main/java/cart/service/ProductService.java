@@ -20,17 +20,17 @@ public class ProductService {
 
     public List<ProductResponse> findAll() {
         return productRepository.findAll().stream()
-                .map(ProductService::toResponse)
+                .map(ProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public long createProduct(final ProductRequest httpRequest) {
-        final Product savedProduct = productRepository.save(toProduct(httpRequest));
+    public long createProduct(final ProductRequest request) {
+        final Product savedProduct = productRepository.save(request.toProduct());
         return savedProduct.getId();
     }
 
     public void updateProduct(final ProductRequest productRequest) {
-        final int updatedCount = productRepository.update(toProduct(productRequest));
+        final int updatedCount = productRepository.update(productRequest.toProduct());
         validateProductNotFound(updatedCount);
     }
 
@@ -42,15 +42,5 @@ public class ProductService {
 
     public void deleteById(final long id) {
         productRepository.deleteById(id);
-    }
-
-    private static ProductResponse toResponse(final Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getImageUrl(),
-                product.getPrice());
-    }
-
-    private static Product toProduct(final ProductRequest productRequest) {
-        return new Product(productRequest.getId(), productRequest.getName(), productRequest.getImageUrl(),
-                productRequest.getPrice());
     }
 }

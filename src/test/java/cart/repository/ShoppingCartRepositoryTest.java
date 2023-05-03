@@ -24,7 +24,7 @@ class ShoppingCartRepositoryTest {
     @Test
     @DisplayName("memberId와 productId로 장바구니에 product를 추가하는 기능 테스트")
     void addProduct() {
-        final ProductResponse productResponse = new ProductResponse(PRODUCT_ENTITY2);
+        final ProductResponse productResponse = ProductResponse.from(PRODUCT_ENTITY2);
         shoppingCartRepository.addProduct(TEST_MEMBER.getId(), PRODUCT_ENTITY2.getId());
 
         final List<CartResponse> responses = shoppingCartRepository.findAllProduct(TEST_MEMBER.getId());

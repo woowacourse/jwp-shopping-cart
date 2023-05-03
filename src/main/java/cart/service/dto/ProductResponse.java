@@ -17,8 +17,8 @@ public class ProductResponse {
         this.price = price;
     }
 
-    public ProductResponse(final Product product) {
-        this(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());
+    public static ProductResponse from(final Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());
     }
 
     public Long getId() {

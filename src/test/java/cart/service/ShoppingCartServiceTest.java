@@ -31,7 +31,7 @@ class ShoppingCartServiceTest {
     @Test
     @DisplayName("memberInfo로 장바구니에 담은 product들 조회")
     public void findAllTest() {
-        final ProductResponse productResponse = new ProductResponse(ProductFixture.PRODUCT_ENTITY1);
+        final ProductResponse productResponse = ProductResponse.from(ProductFixture.PRODUCT_ENTITY1);
 
         final List<CartResponse> allProduct = shoppingCartService.findAllProduct(MEMBER_INFO);
 
@@ -44,7 +44,7 @@ class ShoppingCartServiceTest {
     @Transactional
     @DisplayName("memberInfo와 productid로 장바구니에 값을 추가하는 기능 테스트")
     public void addCartTest() {
-        final ProductResponse productResponse = new ProductResponse(PRODUCT_ENTITY3);
+        final ProductResponse productResponse = ProductResponse.from(PRODUCT_ENTITY3);
 
         shoppingCartService.addCartProduct(MEMBER_INFO, PRODUCT_ENTITY3.getId());
 
