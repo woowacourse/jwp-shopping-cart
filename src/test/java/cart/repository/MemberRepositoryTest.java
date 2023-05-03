@@ -3,6 +3,7 @@ package cart.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.entity.Member;
+import cart.service.dto.MemberInfo;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,5 +24,15 @@ class MemberRepositoryTest {
         final List<Member> all = memberRepository.findAll();
 
         assertThat(all).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("이메일과 패스워드로 id를 찾는 기능 테스트")
+    void findId() {
+        final MemberInfo memberInfo = new MemberInfo("hongSile@wooteco.com", "hongSile");
+        final Long memberId = memberRepository.findId(memberInfo)
+                .orElseThrow(IllegalArgumentException::new);
+
+        assertThat(memberId).isEqualTo(1L);
     }
 }
