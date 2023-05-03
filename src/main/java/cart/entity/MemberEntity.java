@@ -1,7 +1,5 @@
 package cart.entity;
 
-import java.lang.reflect.Member;
-
 public class MemberEntity {
 
     private final Long id;

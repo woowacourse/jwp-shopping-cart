@@ -5,7 +5,7 @@ import cart.controller.dto.request.ProductUpdateRequest;
 import cart.controller.dto.response.ProductResponse;
 import cart.dao.ProductDao;
 import cart.entity.ProductEntity;
-import cart.exception.CantSellNegativeQuantity;
+import cart.exception.NegativeQuantityCantSellException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ class ProductServiceTest {
     @Test
     void createFail() {
         // when, then
-        Assertions.assertThrows(CantSellNegativeQuantity.class, () -> new ProductCreateRequest("베베 상품", -1000, "bebe_img"));
+        Assertions.assertThrows(NegativeQuantityCantSellException.class, () -> new ProductCreateRequest("베베 상품", -1000, "bebe_img"));
     }
 
     @DisplayName("상품을 전체 조회한다.")
@@ -93,7 +93,7 @@ class ProductServiceTest {
     @Test
     void updateFail() {
         // when, then
-        Assertions.assertThrows(CantSellNegativeQuantity.class, () -> new ProductUpdateRequest("베베 상품 가격 폭락", -6000, "bebe_img"));
+        Assertions.assertThrows(NegativeQuantityCantSellException.class, () -> new ProductUpdateRequest("베베 상품 가격 폭락", -6000, "bebe_img"));
     }
 
     @DisplayName("상품을 삭제할 수 있다.")
