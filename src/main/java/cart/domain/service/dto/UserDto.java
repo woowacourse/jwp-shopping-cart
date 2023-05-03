@@ -1,14 +1,16 @@
 package cart.domain.service.dto;
 
+import cart.domain.user.User;
+
 public class UserDto {
     private final Long id;
     private final String email;
     private final String password;
 
-    public UserDto(Long id, String email, String password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
+    public UserDto(User user) {
+        this.id = user.getId();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
     }
 
     public Long getId() {
