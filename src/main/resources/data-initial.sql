@@ -6,3 +6,12 @@ values ('치킨', 20000, 'FOOD',
      , ('고퍼우드 g110', 170000, 'INSTRUMENT',
         'https://m.gopherwood.co.kr/web/product/big/201910/48430668d3e313d9446d19a9b32afb83.jpg');
 
+INSERT INTO cart_user (email, cart_password)
+values ('a@a.com', 'password1'),
+       ('b@b.com', 'password2');
+
+INSERT INTO cart_user_product (cart_user_id, product_id)
+values (1, 1),
+       (1, 2),
+       (1, 3),
+       (2, 3);
