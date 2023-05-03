@@ -35,4 +35,12 @@ public class JdbcMemberDao implements MemberDao {
         return jdbcTemplate.query(sql, customerMapper);
     }
 
+    @Override
+    public int findMemberId(String email, String password) {
+        String sql = "select id " +
+                "from member " +
+                "where member.email = ? and member.password = ?";
+        return jdbcTemplate.queryForObject(sql, int.class, email, password);
+    }
+
 }

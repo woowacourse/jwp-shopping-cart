@@ -8,4 +8,5 @@ public interface MemberDao {
 
     List<MemberEntity> selectAllMembers();
 
+    int findMemberId(String email, String password);
 }

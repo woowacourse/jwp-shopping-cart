@@ -21,4 +21,8 @@ public class MemberService {
     public List<MemberEntity> selectAllMembers() {
         return memberDao.selectAllMembers();
     }
+
+    public int findMemberId(String email, String password) {
+        return memberDao.findMemberId(email, password);
+    }
 }
