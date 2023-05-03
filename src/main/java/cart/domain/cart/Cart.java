@@ -39,4 +39,8 @@ public class Cart {
     public CartProducts getCartProducts() {
         return cartProducts;
     }
+
+    public void deleteProduct(final Long cartProductId) {
+        cartProducts.delete(cartProductId);
+    }
 }

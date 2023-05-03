@@ -26,4 +26,8 @@ public class CartProducts {
         }
         cartProducts.add(new CartProduct(product));
     }
+
+    public void delete(final Long cartProductId) {
+        cartProducts.removeIf(cartProduct -> cartProduct.getCartProductId().getValue().equals(cartProductId));
+    }
 }

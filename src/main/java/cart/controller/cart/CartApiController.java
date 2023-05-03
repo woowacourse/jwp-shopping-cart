@@ -9,7 +9,9 @@ import cart.dto.cart.FindCartResponse;
 import cart.service.cart.CartCommandService;
 import cart.service.cart.CartQueryService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,5 +40,13 @@ public class CartApiController {
     public ResponseEntity<FindCartResponse> findCart(@Authentication final AuthInfo authInfo) {
         final Cart cart = cartQueryService.findByEmail(authInfo.getEmail());
         return ResponseEntity.ok(FindCartResponse.from(cart));
+    }
+
+    @DeleteMapping("/carts/{cartProductId}")
+    public ResponseEntity<Void> deleteProduct(@Authentication final AuthInfo authInfo,
+            @PathVariable final Long cartProductId) {
+        final String email = authInfo.getEmail();
+        cartCommandService.deleteProduct(cartProductId, email);
+        return ResponseEntity.noContent().build();
     }
 }

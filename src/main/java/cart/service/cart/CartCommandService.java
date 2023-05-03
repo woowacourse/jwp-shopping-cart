@@ -46,4 +46,12 @@ public class CartCommandService {
         return cartRepository.update(cart);
     }
 
+    public void deleteProduct(final Long cartProductId, final String email) {
+        final Cart cart = userQueryService.findByEmail(email)
+                .flatMap(cartRepository::findByUser)
+                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+
+        cart.deleteProduct(cartProductId);
+        cartRepository.update(cart);
+    }
 }
