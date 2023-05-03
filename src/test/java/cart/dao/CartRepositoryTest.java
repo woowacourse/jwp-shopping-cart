@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 import cart.controller.dto.ProductResponse;
+import cart.dao.entity.ProductEntity;
 import cart.domain.Member;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -46,7 +47,7 @@ class CartRepositoryTest {
     @DisplayName("getProducts() 메서드에 회원 정보를 인자로 넣어주면 처음 들어가있는 장바구니 제품 목록이 반환된다.")
     void getProducts() {
         //given, when
-        List<ProductResponse> products = cartRepository.getProducts(member);
+        List<ProductEntity> products = cartRepository.getProducts(member);
         int actual = products.size();
 
         //then

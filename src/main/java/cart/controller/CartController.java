@@ -25,7 +25,7 @@ public class CartController {
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getProducts(Member member) {
-        List<ProductResponse> cart = cartRepository.getProducts(member);
+        List<ProductResponse> cart = ProductResponse.from(cartRepository.getProducts(member));
 
         return ResponseEntity.ok().body(cart);
     }

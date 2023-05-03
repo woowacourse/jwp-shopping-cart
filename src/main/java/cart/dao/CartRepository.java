@@ -26,11 +26,8 @@ public class CartRepository {
         this.mySQLProductDao = mySQLProductDao;
     }
 
-    public List<ProductResponse> getProducts(Member member) {
-        final List<ProductEntity> productEntities = mySQLCartDao.findByMember(
-            member);
-
-        return ProductResponse.from(productEntities);
+    public List<ProductEntity> getProducts(Member member) {
+        return mySQLCartDao.findByMember(member);
     }
 
     public long add(Long productId, Member member) {
