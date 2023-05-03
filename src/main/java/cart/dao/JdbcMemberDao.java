@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.MemberEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -37,6 +38,10 @@ public class JdbcMemberDao implements MemberDao {
     @Override
     public MemberEntity selectByEmailAndPassword(final MemberEntity memberEntity) {
         final String sql = "SELECT * FROM member WHERE email = ? AND password = ?";
-        return jdbcTemplate.queryForObject(sql, memberEntityRowMapper, memberEntity.getEmail(), memberEntity.getPassword());
+        try {
+            return jdbcTemplate.queryForObject(sql, memberEntityRowMapper, memberEntity.getEmail(), memberEntity.getPassword());
+        } catch (EmptyResultDataAccessException exception) {
+            return null;
+        }
     }
 }
