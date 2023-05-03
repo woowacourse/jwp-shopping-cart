@@ -24,8 +24,8 @@
   - [x] 사용자가 가지고 있는 정보 : email, password
   
 - [ ] 사용자 설정 페이지 연동
-  - [ ] settings.html, settings.js 파일 내 TODO 주석을 참고하여 설계한 사용자 정보에 맞게 코드를 변경
-  - [ ] settings.html 파일을 이용해서 사용자를 선택하는 기능을 구현
+  - [x] settings.html, settings.js 파일 내 TODO 주석을 참고하여 설계한 사용자 정보에 맞게 코드를 변경
+  - [x] settings.html 파일을 이용해서 사용자를 선택하는 기능을 구현
   - [x] /settings url로 접근할 경우 모든 사용자의 정보를 확인하고 사용자를 선택 가능
   - [ ] 사용자 설정 페이지에서 사용자를 선택하면, 이후 요청에 선택한 사용자의 인증 정보가 포함
   
