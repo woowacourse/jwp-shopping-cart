@@ -3,6 +3,8 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.List;
+
 import cart.entiy.CartEntity;
 import cart.entiy.ProductEntity;
 import cart.entiy.UserEntity;
@@ -50,6 +52,8 @@ class CartDaoTest {
                     () -> assertThat(result.getEmail()).isEqualTo("a@a.com"),
                     () -> assertThat(result.getProductId()).isEqualTo(productId)
             );
+            final List<CartEntity> cartEntities = cartDao.findByEmail("a@a.com");
+            assertThat(cartEntities).hasSize(1);
         }
     }
 }
