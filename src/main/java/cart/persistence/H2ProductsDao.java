@@ -36,7 +36,7 @@ public class H2ProductsDao implements ProductsDao {
     }
 
     @Override
-    public Product find(Long id) {
+    public Product findById(Long id) {
         String sql = "SELECT id, name, image_url, price FROM PRODUCT WHERE id=?";
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new Product(
                 resultSet.getLong("id"),

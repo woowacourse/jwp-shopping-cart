@@ -8,7 +8,7 @@ public interface ProductsDao {
 
     Long create(Product product);
 
-    Product find(Long id);
+    Product findById(Long id);
 
     List<Product> findAll();
 

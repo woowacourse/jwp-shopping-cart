@@ -29,7 +29,7 @@ public class ProductsService {
         );
 
         Long createdId = productsDao.create(product);
-        Product created = productsDao.find(createdId);
+        Product created = productsDao.findById(createdId);
 
         return new ProductResponse(
                 created.getId(),
@@ -59,7 +59,7 @@ public class ProductsService {
         );
 
         Long updatedId = productsDao.update(product);
-        Product updated = productsDao.find(updatedId);
+        Product updated = productsDao.findById(updatedId);
 
         return new ProductResponse(
                 updated.getId(),
