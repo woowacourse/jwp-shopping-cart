@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -31,15 +32,19 @@ public class JdbcCartDao implements CartDao {
 
     @Override
     public Long addProduct(User user, Long productId) {
-        final Long userId = getUserId(user);
-        final String sql = "INSERT INTO cart (user_id, product_id) VALUES (:userId, :productId)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-        final Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("userId", userId);
-        paramMap.put("productId", productId);
-        final SqlParameterSource params = new MapSqlParameterSource(paramMap);
-        namedParameterJdbc.update(sql, params, keyHolder);
-        return (long) keyHolder.getKeys().get("id");
+        try {
+            final Long userId = getUserId(user);
+            final String sql = "INSERT INTO cart (user_id, product_id) VALUES (:userId, :productId)";
+            final KeyHolder keyHolder = new GeneratedKeyHolder();
+            final Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("userId", userId);
+            paramMap.put("productId", productId);
+            final SqlParameterSource params = new MapSqlParameterSource(paramMap);
+            namedParameterJdbc.update(sql, params, keyHolder);
+            return (long) keyHolder.getKeys().get("id");
+        } catch (DataIntegrityViolationException exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 아이템입니다.");
+        }
     }
 
     @Override
