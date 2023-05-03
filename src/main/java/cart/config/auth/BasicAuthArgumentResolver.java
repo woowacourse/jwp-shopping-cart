@@ -28,17 +28,20 @@ public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver 
         return parameter.hasParameterAnnotation(BasicAuth.class);
     }
 
-    @Override
-    public Object resolveArgument(
-            final MethodParameter parameter,
-            final ModelAndViewContainer mavContainer,
-            final NativeWebRequest webRequest,
-            final WebDataBinderFactory binderFactory
-    ) throws Exception {
-        final String basicToken = webRequest.getHeader(HEADER_AUTHORIZATION);
-        validate(basicToken);
+        @Override
+        public Object resolveArgument(
+                final MethodParameter parameter,
+                final ModelAndViewContainer mavContainer,
+                final NativeWebRequest webRequest,
+                final WebDataBinderFactory binderFactory
+        ) throws Exception {
+            final String basicToken = webRequest.getHeader(HEADER_AUTHORIZATION);
+            validate(basicToken);
 
-        return parseToken(basicToken);
+        final String token = parseBasic(basicToken);
+        final String memberInformation = decode(token);
+
+        return findAuthMember(memberInformation);
     }
 
     private void validate(final String basicToken) {
@@ -50,10 +53,15 @@ public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver 
         }
     }
 
-    private AuthMember parseToken(final String basicToken) {
-        final String token = basicToken.replaceFirst(AUTHORIZATION_BASIC, "");
-        final String memberInformation = new String(Base64Utils.decodeFromString(token));
+    private static String parseBasic(final String basicToken) {
+        return basicToken.replaceFirst(AUTHORIZATION_BASIC, "");
+    }
 
+    private static String decode(final String token) {
+        return new String(Base64Utils.decodeFromString(token));
+    }
+
+    private AuthMember findAuthMember(final String memberInformation) {
         final String[] memberInformations = memberInformation.split(":");
         final String email = memberInformations[EMAIL];
         final String password = memberInformations[PASSWORD];
