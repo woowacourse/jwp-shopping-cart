@@ -17,9 +17,9 @@ CREATE TABLE IF NOT EXISTS MEMBER (
 
 CREATE TABLE IF NOT EXISTS CART (
     id           BIGINT                           NOT NULL AUTO_INCREMENT,
-    email        VARCHAR(50)                      NOT NULL,
+    member_id    BIGINT                           NOT NULL,
     product_id   BIGINT                           NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (product_id) REFERENCES PRODUCT (id)      ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (email) REFERENCES MEMBER (email)         ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (member_id)  REFERENCES MEMBER  (id)      ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES PRODUCT (id)      ON DELETE CASCADE ON UPDATE CASCADE
 );
