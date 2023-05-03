@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.repository.CartRepository;
-import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -9,7 +8,7 @@ public class CartCreateService {
 
     private final CartRepository cartRepository;
 
-    public CartCreateService(final CartRepository cartRepository, final ProductRepository productRepository) {
+    public CartCreateService(final CartRepository cartRepository) {
         this.cartRepository = cartRepository;
     }
 
