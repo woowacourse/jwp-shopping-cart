@@ -21,7 +21,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql("/testData.sql")
 @AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AdminProductControllerTest {
+class ProductControllerTest {
 
     @LocalServerPort
     int port;

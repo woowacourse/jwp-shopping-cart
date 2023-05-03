@@ -18,11 +18,11 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/admin/products")
-public class AdminProductController {
+public class ProductController {
 
     private final ProductManagementService managementService;
 
-    public AdminProductController(final ProductManagementService managementService) {
+    public ProductController(final ProductManagementService managementService) {
         this.managementService = managementService;
     }
 
