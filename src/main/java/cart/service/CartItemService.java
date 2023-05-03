@@ -23,7 +23,7 @@ public class CartItemService {
     }
 
     public void addCartItem(CartItemEntity cartItemEntity) {
-
+        cartItemDao.addCartItem(cartItemEntity);
     }
 
     public void deleteCartItem(int cartItemId) {
