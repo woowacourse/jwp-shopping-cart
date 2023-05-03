@@ -34,9 +34,9 @@ public class ProductService {
         return productDao.insert(product);
     }
 
-    public int update(final RequestUpdateProductDto requestUpdateProductDto) {
+    public int update(final Long id, final RequestUpdateProductDto requestUpdateProductDto) {
         final Product product = requestUpdateProductDto.toProduct();
-        final int updatedRows = productDao.update(product, requestUpdateProductDto.getId());
+        final int updatedRows = productDao.update(id, product);
         validateAffectedRowsCount(updatedRows);
         return updatedRows;
     }

@@ -61,7 +61,7 @@ class ProductApiControllerUnitTest {
     @Test
     void 상품을_수정한다() throws Exception {
         // given
-        given(productService.update(any(RequestUpdateProductDto.class)))
+        given(productService.update(any(Long.class), any(RequestUpdateProductDto.class)))
                 .willReturn(1);
 
         valueByFields.put("id", "1");

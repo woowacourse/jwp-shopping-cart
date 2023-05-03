@@ -25,9 +25,9 @@ public class ProductApiController {
         return ResponseEntity.created(URI.create("/product")).build();
     }
 
-    @PutMapping("/product")
-    public ResponseEntity<Void> updateProduct(@RequestBody @Valid final RequestUpdateProductDto requestUpdateProductDto) {
-        productService.update(requestUpdateProductDto);
+    @PutMapping("/product/{id}")
+    public ResponseEntity<Void> updateProduct(@PathVariable("id") Long id, @RequestBody @Valid final RequestUpdateProductDto requestUpdateProductDto) {
+        productService.update(id, requestUpdateProductDto);
         return ResponseEntity.ok().build();
     }
 

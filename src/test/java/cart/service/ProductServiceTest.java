@@ -70,12 +70,12 @@ class ProductServiceTest {
     @Test
     void 상품을_수정한다() {
         // given
-        when(productDao.update(any(Product.class), any(Long.class)))
+        when(productDao.update(any(Long.class), any(Product.class)))
                 .thenReturn(1);
         final RequestUpdateProductDto requestUpdateProductDto = new RequestUpdateProductDto(1L, "치킨", 1000, "치킨 사진");
 
         // when
-        final int affectedRows = productService.update(requestUpdateProductDto);
+        final int affectedRows = productService.update(1L, requestUpdateProductDto);
 
         // then
         assertThat(affectedRows).isEqualTo(1);
@@ -84,12 +84,12 @@ class ProductServiceTest {
     @Test
     void 존재하지_않은_상품을_수정하면_예외가_발생한다() {
         // given
-        when(productDao.update(any(Product.class), any(Long.class)))
+        when(productDao.update(any(Long.class), any(Product.class)))
                 .thenReturn(0);
         final RequestUpdateProductDto requestUpdateProductDto = new RequestUpdateProductDto(1L, "치킨", 1000, "치킨 사진");
 
         // expect
-        assertThatThrownBy(() -> productService.update(requestUpdateProductDto))
+        assertThatThrownBy(() -> productService.update(1L, requestUpdateProductDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("접근하려는 데이터가 존재하지 않습니다.");
     }

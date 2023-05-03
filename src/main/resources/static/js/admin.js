@@ -49,7 +49,7 @@ const createProduct = (product) => {
     axios.request({
         method: 'post',
         url: '/admin/product',
-        data : product
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -59,12 +59,12 @@ const createProduct = (product) => {
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
+    const {id} = product;
 
     axios.request({
         method: 'put',
-        url: '/admin/product',
-        data : product
+        url: `/admin/product/${id}`,
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
