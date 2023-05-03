@@ -15,7 +15,7 @@ import cart.controller.interceptor.LoginInterceptor;
 public class WebMvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor(new BasicAuthDecoder(), "Basic"))
+        registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/cart/products")
                 .addPathPatterns("/cart/product/**");
     }
