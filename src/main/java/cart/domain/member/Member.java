@@ -1,17 +1,17 @@
 package cart.domain.member;
 
 public class Member {
-	private MemberId id;
+	private Long id;
 	private final String name;
 	private final String email;
 	private final String password;
 
-	public Member(final MemberId id, final String name, final String email, final String password) {
+	public Member(Long id, String name, String email, String password) {
 		this(name, email, password);
 		this.id = id;
 	}
 
-	public Member(final String name, final String email, final String password) {
+	public Member(String name, String email, String password) {
 		validate(name, email, password);
 		this.name = name;
 		this.email = email;
@@ -30,7 +30,7 @@ public class Member {
 		}
 	}
 
-	public MemberId getId() {
+	public Long getId() {
 		return id;
 	}
 
