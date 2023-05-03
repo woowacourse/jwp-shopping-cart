@@ -44,6 +44,7 @@ public class UserService {
         final User user = userDao.findByEmail(userInfo.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException(INVALID_USER_INFO));
 
+
         if (userInfo.isCorrect(user)) {
             return user;
         }

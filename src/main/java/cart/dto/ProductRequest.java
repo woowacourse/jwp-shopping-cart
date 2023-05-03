@@ -4,7 +4,7 @@ import cart.entity.Product;
 
 import javax.validation.constraints.NotNull;
 
-public class ProductRequest {
+public final class ProductRequest {
     private Long id;
 
     @NotNull(message = "상품 이름은 비어있으면 안됩니다.")
