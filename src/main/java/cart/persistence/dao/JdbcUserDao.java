@@ -1,6 +1,5 @@
 package cart.persistence.dao;
 
-import cart.persistence.entity.ProductEntity;
 import cart.persistence.entity.UserEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,7 +18,8 @@ public class JdbcUserDao implements Dao<UserEntity> {
     public JdbcUserDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("USER_INFO");
+                .withTableName("USER_INFO")
+                .usingGeneratedKeyColumns("user_id");
     }
 
     private final RowMapper<UserEntity> actorRowMapper = (resultSet, rowNum) -> new UserEntity(
@@ -51,5 +51,15 @@ public class JdbcUserDao implements Dao<UserEntity> {
     @Override
     public int deleteById(long id) {
         return 0;
+    }
+
+    @Override
+    public List<UserEntity> findProductsByUser(String email) {
+        return null;
+    }
+
+    public Long findUserIdByEmail(final String email) {
+        final String sql = "SELECT user_id FROM user_info WHERE email = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, email);
     }
 }

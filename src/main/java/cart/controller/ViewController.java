@@ -38,4 +38,9 @@ public class ViewController {
         model.addAttribute("members", users);
         return "settings";
     }
+
+    @GetMapping("/cart")
+    public String getCartView() {
+        return "cart";
+    }
 }

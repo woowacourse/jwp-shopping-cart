@@ -1,5 +1,7 @@
 package cart.persistence.dao;
 
+import cart.persistence.entity.ProductEntity;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +16,6 @@ public interface Dao<T> {
     int update(T t);
 
     int deleteById(long id);
+
+    List<T> findProductsByUser(String email);
 }
