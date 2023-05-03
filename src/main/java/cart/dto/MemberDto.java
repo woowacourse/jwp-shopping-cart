@@ -17,9 +17,13 @@ public class MemberDto {
         this.password = password;
     }
 
+    public static MemberDto from(final MemberEntity memberEntity) {
+        return new MemberDto(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
+    }
+
     public static List<MemberDto> from(final List<MemberEntity> memberEntities) {
         return memberEntities.stream()
-                .map(memberEntity -> new MemberDto(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword()))
+                .map(MemberDto::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
