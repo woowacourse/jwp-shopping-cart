@@ -1,6 +1,7 @@
 package cart.entity.member;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberDao {
 
@@ -8,7 +9,7 @@ public interface MemberDao {
 
     List<Member> findAll();
 
-    Member findById(long id);
+    Optional<Member> findByEmail(String email);
 
-    Member update(Member member);
+    Optional<Member> findByEmailAndPassword(String email, String password);
 }

@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS member;
+DROP TABLE IF EXISTS cart;
 
 CREATE TABLE PRODUCT
 (
@@ -14,5 +15,16 @@ CREATE TABLE MEMBER
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT,
     email    VARCHAR(100) NOT NULL,
-    password VARCHAR(255) NOT NULL
-)
+    password VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE CART
+(
+    id         BIGINT NOT NULL AUTO_INCREMENT,
+    member_id  BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES MEMBER (id),
+    FOREIGN KEY (product_id) REFERENCES PRODUCT (id),
+    PRIMARY KEY (id)
+);
