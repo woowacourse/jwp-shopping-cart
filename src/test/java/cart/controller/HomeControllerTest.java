@@ -1,51 +1,42 @@
 package cart.controller;
 
-import cart.dao.ProductDao;
 import cart.domain.product.Product;
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.stringContainsInOrder;
+import java.util.List;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class HomeControllerTest {
+import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(HomeController.class)
+public class HomeControllerTest {
 
     @Autowired
-    private ProductDao productDao;
+    private MockMvc mockMvc;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void setUp(@LocalServerPort final int port) {
-        RestAssured.port = port;
-    }
-
-    @AfterEach
-    void clear() {
-        jdbcTemplate.execute("TRUNCATE TABLE product");
-    }
+    @MockBean
+    private ProductService productService;
 
     @DisplayName("GET /")
     @Test
-    void getAdmin() {
-        productDao.insert(new Product("이오", 1000, null));
-        productDao.insert(new Product("애쉬", 2000, null));
+    void getAdmin() throws Exception {
+        final Product product1 = new Product("이오", 1000, null);
+        final Product product2 = new Product("애쉬", 2000, null);
+        final List<Product> products = List.of(product1, product2);
+        given(productService.findAll()).willReturn(products);
 
-        RestAssured.given().log().all()
-                .accept(MediaType.TEXT_HTML_VALUE)
-                .when().get("/")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body(stringContainsInOrder("이오", "1000", "애쉬", "2000"));
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(model().attribute("products", equalTo(products)));
     }
 }
