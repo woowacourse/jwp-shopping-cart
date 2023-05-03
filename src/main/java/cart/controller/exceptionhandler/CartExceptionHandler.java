@@ -2,8 +2,6 @@ package cart.controller.exceptionhandler;
 
 import cart.auth.UnauthorizedException;
 import cart.service.DuplicateCartException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CartExceptionHandler {
 
     private static final String UNEXPECTED_EXCEPTION_MESSAGE = "관리자에게 문의하세요.";
-    private Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodValidException(MethodArgumentNotValidException exception) {

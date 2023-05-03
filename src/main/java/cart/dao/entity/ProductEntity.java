@@ -2,12 +2,12 @@ package cart.dao.entity;
 
 public class ProductEntity {
 
-    private Long id;
-    private String name;
-    private String imgUrl;
-    private int price;
+    private final Long id;
+    private final String name;
+    private final String imgUrl;
+    private final int price;
 
-    private ProductEntity(Long id, String name, String imgUrl, int price) {
+    private ProductEntity(final Long id, final String name, final String imgUrl, final int price) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;

@@ -19,7 +19,7 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(final CustomerService customerService) {
         this.customerService = customerService;
     }
 

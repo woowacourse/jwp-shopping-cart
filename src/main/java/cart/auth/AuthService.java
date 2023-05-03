@@ -11,7 +11,7 @@ public class AuthService {
     private static final int EMAIL_INDEX = 0;
     private static final int PASSWORD_INDEX = 1;
 
-    public AuthInfo resolveAuthInfo(String authHeader) {
+    public AuthInfo resolveAuthInfo(final String authHeader) {
         if (authHeader == null) {
             throw new UnauthorizedException();
         }

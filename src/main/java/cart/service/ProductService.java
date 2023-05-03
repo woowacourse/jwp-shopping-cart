@@ -56,7 +56,7 @@ public class ProductService {
                 .build();
     }
 
-    public void removeById(long id) {
+    public void removeById(final long id) {
         productDao.delete(id);
     }
 }

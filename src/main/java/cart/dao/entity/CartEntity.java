@@ -2,11 +2,11 @@ package cart.dao.entity;
 
 public class CartEntity {
 
-    private Long id;
-    private long productId;
-    private long customerId;
+    private final Long id;
+    private final long productId;
+    private final long customerId;
 
-    public CartEntity(Long id, long productId, long customerId) {
+    public CartEntity(final Long id, final long productId, final long customerId) {
         this.id = id;
         this.productId = productId;
         this.customerId = customerId;

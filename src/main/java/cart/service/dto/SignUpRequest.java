@@ -9,7 +9,7 @@ public class SignUpRequest {
     @NotBlank
     private String password;
 
-    public SignUpRequest(String email, String password) {
+    public SignUpRequest(final String email, final String password) {
         this.email = email;
         this.password = password;
     }

@@ -12,7 +12,7 @@ public class HomeController {
 
     private final ProductService productService;
 
-    public HomeController(ProductService productService) {
+    public HomeController(final ProductService productService) {
         this.productService = productService;
     }
 

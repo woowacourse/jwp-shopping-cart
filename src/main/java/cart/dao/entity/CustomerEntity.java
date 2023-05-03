@@ -2,11 +2,11 @@ package cart.dao.entity;
 
 public class CustomerEntity {
 
-    private Long id;
-    private String email;
-    private String password;
+    private final Long id;
+    private final String email;
+    private final String password;
 
-    public CustomerEntity(Long id, String email, String password) {
+    public CustomerEntity(final Long id, final String email, final String password) {
         this.id = id;
         this.email = email;
         this.password = password;

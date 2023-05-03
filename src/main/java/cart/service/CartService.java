@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.dao.CartDao;
-import cart.dao.ProductDao;
 import cart.service.dto.CartRequest;
 import cart.service.dto.CartResponse;
 import java.util.List;
@@ -12,11 +11,9 @@ import org.springframework.stereotype.Service;
 public class CartService {
 
     private final CartDao cartDao;
-    private final ProductDao productDao;
 
-    public CartService(final CartDao cartDao, final ProductDao productDao) {
+    public CartService(final CartDao cartDao) {
         this.cartDao = cartDao;
-        this.productDao = productDao;
     }
 
     public long save(final CartRequest cartRequest, final long customerId) {

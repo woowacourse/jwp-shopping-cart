@@ -31,7 +31,7 @@ public class ProductDao {
         );
     }
 
-    public long insert(ProductEntity productEntity) {
+    public long insert(final ProductEntity productEntity) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", productEntity.getName())
                 .addValue("price", productEntity.getPrice())
@@ -40,7 +40,7 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public void update(ProductEntity productEntity) {
+    public void update(final ProductEntity productEntity) {
         String sql = "UPDATE product SET name = ?, img_url = ?, price = ? WHERE id = ?";
         jdbcTemplate.update(sql,
                 productEntity.getName(),
@@ -49,7 +49,7 @@ public class ProductDao {
                 productEntity.getId());
     }
 
-    public void delete(long id) {
+    public void delete(final long id) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

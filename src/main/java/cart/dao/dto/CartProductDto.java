@@ -43,7 +43,6 @@ public class CartProductDto {
         public CartProductDto build() {
             return new CartProductDto(cartId, productName, price, imgUrl);
         }
-
     }
 
     public long getCartId() {
