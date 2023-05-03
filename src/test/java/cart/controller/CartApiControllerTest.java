@@ -32,7 +32,7 @@ import org.springframework.jdbc.support.KeyHolder;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+class CartApiControllerTest {
 
     @LocalServerPort
     int port;
