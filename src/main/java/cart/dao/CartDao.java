@@ -6,5 +6,5 @@ public interface CartDao {
 
     Long save(final Cart cart);
 
-    int delete(final Long id);
+    int delete(Long userId, Long productId);
 }

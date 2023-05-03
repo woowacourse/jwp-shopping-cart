@@ -49,20 +49,19 @@ class CartServiceTest {
         @Test
         void 장바구니_id가_주어지면_장바구니를_삭제_한다() {
             // given
-            final long userId = 2L;
-            final Long saveId = 장바구니를_저장한다(userId, 3L, 4);
+            장바구니를_저장한다(2L, 3L, 4);
 
             // when
-            cartService.delete(saveId);
+            cartService.delete(2L, 3L);
 
             // then
-            assertThat(cartService.findAllByUserId(userId).getCartResponses()).isEmpty();
+            assertThat(cartService.findAllByUserId(2L).getCartResponses()).isEmpty();
         }
 
         @Test
         void 장바구니_id가_없는_id면_장바구니를_삭제에_실패한다() {
             // when, then
-            assertThatThrownBy(() -> cartService.delete(1000L))
+            assertThatThrownBy(() -> cartService.delete(1000L, 1000L))
                     .isInstanceOf(NoSuchElementException.class);
         }
     }

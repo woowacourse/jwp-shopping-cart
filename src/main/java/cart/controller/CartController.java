@@ -7,10 +7,7 @@ import cart.dto.CartSaveRequest;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -45,5 +42,11 @@ public class CartController {
 
         final String createdUri = format("/carts/users/%s/products/%s", user.getId(), productId);
         return ResponseEntity.created(URI.create(createdUri)).build();
+    }
+
+    @DeleteMapping("/users/products/{productId}")
+    public ResponseEntity<Void> removeProduct(@AuthenticateUser AuthUser user, @PathVariable Long productId) {
+        cartService.delete(user.getId(), productId);
+        return ResponseEntity.noContent().build();
     }
 }

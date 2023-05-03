@@ -39,11 +39,11 @@ public class CartService {
         return new CartResponses(cartResponses);
     }
 
-    public void delete(final Long saveId) {
-        final int affectedRows = cartDao.delete(saveId);
+    public void delete(Long userId, Long productId) {
+        final int affectedRows = cartDao.delete(userId, productId);
 
         if (affectedRows == 0) {
-            throw new NoSuchElementException("해당 장바구니 정보를 찾을 수 없습니다.");
+            throw new NoSuchElementException("장바구니 정보를 찾을 수 없습니다.");
         }
     }
 }

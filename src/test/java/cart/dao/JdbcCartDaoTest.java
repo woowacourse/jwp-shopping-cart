@@ -40,11 +40,10 @@ class JdbcCartDaoTest {
     @Test
     void 장바구니를_삭제한다() {
         // given
-        final long userId = 1L;
-        final Long savedId = 장바구니를_저장한다(userId, 2L, 3);
+        final Long savedId = 장바구니를_저장한다(1L, 2L, 3);
 
         // when
-        cartDao.delete(savedId);
+        cartDao.delete(1L, 2L);
 
         // then
         assertThat(장바구니_단건_조회_한다(savedId)).isNotPresent();
