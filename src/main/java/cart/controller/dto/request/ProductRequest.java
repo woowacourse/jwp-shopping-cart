@@ -1,7 +1,7 @@
 package cart.controller.dto.request;
 
 import cart.entity.ProductEntity;
-import cart.exception.CantSellNegativeQuantity;
+import cart.exception.NegativeQuantityCantSellException;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -31,7 +31,7 @@ public class ProductRequest {
 
     public void validatePrice(final int price) {
         if (price < 0) {
-            throw CantSellNegativeQuantity.EXCEPTION;
+            throw NegativeQuantityCantSellException.EXCEPTION;
         }
     }
 
