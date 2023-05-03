@@ -1,6 +1,7 @@
 package cart.domain.persistence.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import cart.domain.persistence.entity.MemberEntity;
 
@@ -8,7 +9,7 @@ public interface MemberDao {
 
     Long save(MemberEntity memberEntity);
 
-    MemberEntity findByEmail(String email);
+    Optional<MemberEntity> findByEmail(String email);
 
     List<MemberEntity> findAll();
 }

@@ -1,7 +1,9 @@
 package cart.domain.persistence.dao;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -36,9 +38,14 @@ public class JdbcMemberDao implements MemberDao {
     }
 
     @Override
-    public MemberEntity findByEmail(final String email) {
+    public Optional<MemberEntity> findByEmail(final String email) {
         final String sql = "SELECT member_id, email, password FROM member WHERE email = ?";
-        return jdbcTemplate.queryForObject(sql, actorRowMapper, email);
+        try {
+            final MemberEntity memberEntity = jdbcTemplate.queryForObject(sql, actorRowMapper, email);
+            return Optional.of(memberEntity);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

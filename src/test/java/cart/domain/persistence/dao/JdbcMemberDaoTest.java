@@ -1,8 +1,10 @@
 package cart.domain.persistence.dao;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -32,14 +34,45 @@ class JdbcMemberDaoTest {
     }
 
     @Test
+    void save_메서드로_사용자_정보를_저장한다() {
+        final MemberEntity modi = new MemberEntity("a@a.com", "password1");
+
+        assertDoesNotThrow(() -> memberDao.save(modi));
+    }
+
+    @Test
+    void findByEmail_메서드로_존재하는_사용자_정보를_조회한다() {
+        final MemberEntity memberEntity = new MemberEntity("a@a.com", "password1");
+        memberDao.save(memberEntity);
+
+        final Optional<MemberEntity> validMemberEntity = memberDao.findByEmail("a@a.com");
+
+        assertThat(validMemberEntity).isPresent();
+    }
+
+    @Test
+    void findByEmail_메서드로_존재하지_않는_사용자_조회_시_Optional_empty를_반환한다() {
+        final Optional<MemberEntity> invalidMemberEntity = memberDao.findByEmail("a@a.com");
+
+        assertThat(invalidMemberEntity).isEmpty();
+    }
+
+    @Test
     void findAll_메서드로_저장된_Member의_목록을_불러온다() {
         final MemberEntity modi = new MemberEntity("a@a.com", "password1");
         final MemberEntity jena = new MemberEntity("b@b.com", "password2");
         memberDao.save(modi);
         memberDao.save(jena);
 
-        final List<MemberEntity> members = memberDao.findAll();
+        final List<MemberEntity> memberEntities = memberDao.findAll();
 
-        assertThat(members.size()).isEqualTo(2);
+        assertThat(memberEntities.size()).isEqualTo(2);
+    }
+
+    @Test
+    void 사용자가_없을_때_findAll로_조회하면_빈_리스트를_반환한다() {
+        List<MemberEntity> empty = memberDao.findAll();
+
+        assertThat(empty.size()).isZero();
     }
 }

@@ -1,6 +1,7 @@
 package cart.domain.cart;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -8,12 +9,13 @@ import cart.domain.exception.DbNotAffectedException;
 import cart.domain.exception.MemberNotFoundException;
 import cart.domain.persistence.ProductDto;
 import cart.domain.persistence.dao.CartDao;
-import cart.domain.persistence.entity.CartEntity;
 import cart.domain.persistence.dao.MemberDao;
+import cart.domain.persistence.entity.CartEntity;
 import cart.domain.persistence.entity.MemberEntity;
 
 @Service
 public class CartService {
+
     private final CartDao cartDao;
     private final MemberDao memberDao;
 
@@ -33,11 +35,11 @@ public class CartService {
     }
 
     private long getMemberIdIfRegistered(final String email, final String password) {
-        final MemberEntity memberEntity = memberDao.findByEmail(email);
-        if (!memberEntity.getPassword().equals(password)) {
-            throw new MemberNotFoundException("아이디 또는 비밀번호가 잘못 되었습니다.");
+        Optional<MemberEntity> memberEntity = memberDao.findByEmail(email);
+        if (memberEntity.isEmpty() || !memberEntity.get().getPassword().equals(password)) {
+            throw new MemberNotFoundException("아이디 또는 비밀번호가 잘못되었습니다.");
         }
-        return memberEntity.getMemberId();
+        return memberEntity.get().getMemberId();
     }
 
     public void deleteByCartId(final long cartId) {
