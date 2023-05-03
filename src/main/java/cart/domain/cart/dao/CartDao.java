@@ -83,4 +83,11 @@ public class CartDao {
         final String sql = "DELETE FROM cart WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    public boolean exists(final Cart cart) {
+        final String sql = "SELECT count(*) FROM cart WHERE cart.member_id = ? AND cart.product_id = ?";
+        final Integer count = jdbcTemplate.queryForObject(sql, Integer.class, cart.getMember().getId(),
+            cart.getProduct().getId());
+        return count != 0;
+    }
 }

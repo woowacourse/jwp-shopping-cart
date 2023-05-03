@@ -102,4 +102,49 @@ class CartDaoTest {
         final List<Cart> carts = cartDao.findByMember(savedMember);
         assertThat(carts.size()).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("해당 장바구니가 존재하는지 확인한다.")
+    public void testExists() {
+        //given
+        final CartDao cartDao = new CartDao(jdbcTemplate);
+        final MemberDao memberDao = new MemberDao(jdbcTemplate);
+        final ProductDao productDao = new ProductDao(jdbcTemplate);
+        final Member member = new Member(1L, "test@test.com", "password", LocalDateTime.now(),
+            LocalDateTime.now());
+        final Product product = new Product(1L, "product", 1000, "imageUrl", LocalDateTime.now(),
+            LocalDateTime.now());
+        final Member savedMember = memberDao.save(member);
+        final Product savedProduct = productDao.save(product);
+        final Cart cart = new Cart(null, savedProduct, savedMember, null, null);
+        final Cart savedCart = cartDao.save(cart);
+
+        //when
+        final boolean result = cartDao.exists(cart);
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("해당 장바구니가 존재하지 않는지 확인한다.")
+    public void testExistsFail() {
+        //given
+        final CartDao cartDao = new CartDao(jdbcTemplate);
+        final MemberDao memberDao = new MemberDao(jdbcTemplate);
+        final ProductDao productDao = new ProductDao(jdbcTemplate);
+        final Member member = new Member(1L, "test@test.com", "password", LocalDateTime.now(),
+            LocalDateTime.now());
+        final Product product = new Product(1L, "product", 1000, "imageUrl", LocalDateTime.now(),
+            LocalDateTime.now());
+        final Member savedMember = memberDao.save(member);
+        final Product savedProduct = productDao.save(product);
+        final Cart cart = new Cart(null, savedProduct, savedMember, null, null);
+
+        //when
+        final boolean result = cartDao.exists(cart);
+
+        //then
+        assertThat(result).isFalse();
+    }
 }
