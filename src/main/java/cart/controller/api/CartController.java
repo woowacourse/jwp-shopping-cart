@@ -33,22 +33,22 @@ public class CartController {
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<CartResponse>> getCarts(final HttpServletRequest requestHeader) {
-        final AuthDto authDto = basicAuthorizationExtractor.extract(requestHeader);
+    public ResponseEntity<List<CartResponse>> getCarts(final HttpServletRequest request) {
+        final AuthDto authDto = basicAuthorizationExtractor.extract(request);
         final List<CartResponse> productResponses = cartService.selectCart(authDto);
         return ResponseEntity.ok(productResponses);
     }
 
     @PostMapping("/carts/{productId}")
-    public ResponseEntity<Void> addCart(@PathVariable("productId") final Long productId, final HttpServletRequest requestHeader) {
-        final AuthDto authDto = basicAuthorizationExtractor.extract(requestHeader);
+    public ResponseEntity<Void> addCart(@PathVariable("productId") final Long productId, final HttpServletRequest request) {
+        final AuthDto authDto = basicAuthorizationExtractor.extract(request);
         cartService.insert(productId, authDto);
         return ResponseEntity.created(URI.create("/carts")).build();
     }
 
     @DeleteMapping("/carts/{productId}")
-    public ResponseEntity<Void> removeCart(@PathVariable("productId") final Long productId, final HttpServletRequest requestHeader) {
-        final AuthDto authDto = basicAuthorizationExtractor.extract(requestHeader);
+    public ResponseEntity<Void> removeCart(@PathVariable("productId") final Long productId, final HttpServletRequest request) {
+        final AuthDto authDto = basicAuthorizationExtractor.extract(request);
         cartService.delete(productId, authDto);
         return ResponseEntity.accepted().build();
     }
