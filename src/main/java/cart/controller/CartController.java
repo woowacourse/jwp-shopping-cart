@@ -6,6 +6,7 @@ import cart.dto.CartResponseDto;
 import cart.service.CartService;
 import cart.vo.Email;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,13 @@ public class CartController {
         CartDto cartDto = new CartDto(Email.from(auth.getEmail()), productId);
         cartService.save(cartDto);
         return ResponseEntity.created(URI.create("carts"))
+                .build();
+    }
+
+    @DeleteMapping("/carts/{id}")
+    public ResponseEntity<Void> removeProductInCart(@PathVariable Long id, Auth auth) {
+        cartService.removeById(id, Email.from(auth.getEmail()));
+        return ResponseEntity.noContent()
                 .build();
     }
     
