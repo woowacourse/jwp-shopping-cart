@@ -79,7 +79,7 @@ class ProductManagementServiceTest {
         @Test
         void successTest() {
             final ProductDto productDto = ProductDto.of(1L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
-            when(productDao.update(any())).thenReturn(1);
+            when(productDao.updateById(any())).thenReturn(1);
 
             assertDoesNotThrow(() -> managementService.update(productDto));
         }
@@ -88,7 +88,7 @@ class ProductManagementServiceTest {
         @Test
         void failTest() {
             final ProductDto productDto = ProductDto.of(3L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
-            when(productDao.update(any())).thenReturn(0);
+            when(productDao.updateById(any())).thenReturn(0);
 
             assertThatThrownBy(() -> managementService.update(productDto))
                     .isInstanceOf(IllegalArgumentException.class);
@@ -103,7 +103,7 @@ class ProductManagementServiceTest {
         @Test
         void successTest() {
             final ProductDto productDto = ProductDto.of(1L, null, null, null);
-            when(productDao.delete(any())).thenReturn(1);
+            when(productDao.deleteById(any())).thenReturn(1);
 
             assertDoesNotThrow(() -> managementService.delete(productDto));
         }
@@ -112,7 +112,7 @@ class ProductManagementServiceTest {
         @Test
         void failTest() {
             final ProductDto productDto = ProductDto.of(3L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
-            when(productDao.update(any())).thenReturn(0);
+            when(productDao.updateById(any())).thenReturn(0);
 
             assertThatThrownBy(() -> managementService.update(productDto))
                     .isInstanceOf(IllegalArgumentException.class);
