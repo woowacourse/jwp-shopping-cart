@@ -5,9 +5,11 @@ import cart.domain.product.service.ProductService;
 import cart.dto.MemberResponse;
 import cart.dto.ProductResponse;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MainController {
@@ -44,5 +46,12 @@ public class MainController {
     @GetMapping("/cart")
     public String cart() {
         return "cart";
+    }
+
+    @GetMapping("/products")
+    @ResponseBody
+    public ResponseEntity<List<ProductResponse>> findAll() {
+        final List<ProductResponse> productResponses = productService.findAll();
+        return ResponseEntity.ok(productResponses);
     }
 }

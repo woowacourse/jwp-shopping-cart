@@ -13,10 +13,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@Sql("/test-data.sql")
 class ProductDaoTest {
 
     @Autowired
@@ -33,7 +35,6 @@ class ProductDaoTest {
         final Product savedProduct = productDao.save(givenProduct);
 
         //then
-        assertThat(savedProduct.getId()).isEqualTo(1);
         assertThat(savedProduct.getName()).isEqualTo(givenProduct.getName());
         assertThat(savedProduct.getPrice()).isEqualTo(givenProduct.getPrice());
         assertThat(savedProduct.getImageUrl()).isEqualTo(givenProduct.getImageUrl());

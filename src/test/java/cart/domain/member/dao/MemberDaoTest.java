@@ -14,10 +14,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@Sql("/test-data.sql")
 class MemberDaoTest {
 
     @Autowired
@@ -31,7 +33,7 @@ class MemberDaoTest {
         final String email = "email@email.com";
         final Member member = new Member(1L, email, "password", LocalDateTime.now(),
             LocalDateTime.now());
-        memberDao.save(member);
+        final Member savedMember = memberDao.save(member);
 
         //when
         final Optional<Member> memberOptional = memberDao.findByEmail(email);
@@ -39,7 +41,7 @@ class MemberDaoTest {
         //then
         assertThat(memberOptional.isPresent()).isTrue();
         final Member findMember = memberOptional.get();
-        assertThat(findMember).isEqualTo(member);
+        assertThat(findMember.getId()).isEqualTo(savedMember.getId());
     }
 
     @Test

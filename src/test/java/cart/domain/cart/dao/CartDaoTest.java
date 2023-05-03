@@ -17,10 +17,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@Sql("/test-data.sql")
 class CartDaoTest {
 
     @Autowired
@@ -37,15 +39,15 @@ class CartDaoTest {
             LocalDateTime.now());
         final Product product = new Product(1L, "product", 1000, "imageUrl", LocalDateTime.now(),
             LocalDateTime.now());
-        memberDao.save(member);
-        productDao.save(product);
-        final Cart cart = new Cart(null, product, member, null, null);
+        final Member savedMember = memberDao.save(member);
+        final Product savedProduct = productDao.save(product);
+        final Cart cart = new Cart(null, savedProduct, savedMember, null, null);
 
         //when
         final Cart result = cartDao.save(cart);
 
         //then
-        final List<Cart> products = cartDao.findByMember(member);
+        final List<Cart> products = cartDao.findByMember(savedMember);
         assertThat(products.size()).isEqualTo(1);
         assertThat(products.get(0).getMember().getId()).isEqualTo(result.getMember().getId());
         assertThat(products.get(0).getMember().getId()).isEqualTo(result.getProduct().getId());
@@ -88,16 +90,16 @@ class CartDaoTest {
             LocalDateTime.now());
         final Product product = new Product(1L, "product", 1000, "imageUrl", LocalDateTime.now(),
             LocalDateTime.now());
-        memberDao.save(member);
-        productDao.save(product);
-        final Cart cart = new Cart(null, product, member, null, null);
+        final Member savedMember = memberDao.save(member);
+        final Product savedProduct = productDao.save(product);
+        final Cart cart = new Cart(null, savedProduct, savedMember, null, null);
         final Cart savedCart = cartDao.save(cart);
 
         //when
         cartDao.deleteById(savedCart.getId());
 
         //then
-        final List<Cart> carts = cartDao.findByMember(member);
+        final List<Cart> carts = cartDao.findByMember(savedMember);
         assertThat(carts.size()).isEqualTo(0);
     }
 }
