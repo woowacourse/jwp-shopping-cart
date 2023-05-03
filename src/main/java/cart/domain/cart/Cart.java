@@ -2,36 +2,57 @@ package cart.domain.cart;
 
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.exception.CartItemDuplicatedException;
 
 public class Cart {
 
     private final Long id;
-    private final Long memberId;
-    private final Long productId;
+    private final Member member;
+    private final CartItems cartItems;
 
-    public Cart(final Long id, final Long memberId, final Long productId) {
+    public Cart(final Long id, final Member member, final CartItems cartItems) {
         this.id = id;
-        this.memberId = memberId;
-        this.productId = productId;
+        this.member = member;
+        this.cartItems = cartItems;
     }
 
-    public static Cart from(final Long id, final Member member, final Product product) {
-        return new Cart(id, member.getId(), product.getId());
+    public static Cart from(final Member member, final CartItems cartItems) {
+        return new Cart(null, member, cartItems);
     }
 
-    public static Cart from(final Member member, final Product product) {
-        return new Cart(null, member.getId(), product.getId());
+    public static Cart createEmptyCart(final Member member) {
+        return new Cart(null, member, null);
+    }
+
+    public void addCartItem(final Product product) {
+        if (containsCartItem(product)) {
+            throw new CartItemDuplicatedException();
+        }
+
+        this.cartItems.add(product);
+    }
+
+    public Product removeCartItem(final Product product) {
+        return this.cartItems.remove(product);
+    }
+
+    public boolean containsCartItem(final Product product) {
+        return this.cartItems.contains(product);
     }
 
     public Long getId() {
-        return this.id;
+        return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public Long getProductId() {
-        return this.productId;
+    public CartItems getCartItems() {
+        return cartItems;
+    }
+
+    public Product getLastCartItem() {
+        return this.cartItems.getLastCartItem();
     }
 }
