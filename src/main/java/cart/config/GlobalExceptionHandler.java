@@ -1,7 +1,10 @@
 package cart.config;
 
 import cart.exception.ApiException;
+import cart.exception.AuthenticationException;
+import cart.exception.AuthorizationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,20 +25,32 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toList());
 
         Map<String, List<String>> errorsResult = Map.of("errors", errors);
-        
+
         return ResponseEntity.badRequest().body(errorsResult);
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> handleDBException(ApiException e) {
+    public ResponseEntity<?> handleAuthenticationException(AuthenticationException e) {
         System.out.println(e.getMessage());
-        return ResponseEntity.internalServerError().body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleAuthenticationException(AuthorizationException e) {
+        System.out.println(e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
     @ExceptionHandler
     public ResponseEntity<?> handleIllegalArgumentsException(IllegalArgumentException e) {
         System.out.println(e.getMessage());
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleApiException(ApiException e) {
+        System.out.println(e.getMessage());
+        return ResponseEntity.internalServerError().body(e.getMessage());
     }
 
     @ExceptionHandler

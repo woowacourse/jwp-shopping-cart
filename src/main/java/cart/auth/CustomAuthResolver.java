@@ -2,6 +2,8 @@ package cart.auth;
 
 import cart.dao.MemberDaoImpl;
 import cart.entity.MemberEntity;
+import cart.exception.AuthenticationException;
+import cart.exception.InvalidTokenException;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -35,23 +37,29 @@ public class CustomAuthResolver implements HandlerMethodArgumentResolver {
         }
         String[] token = extractBasicToken(nativeRequest);
 
-        if (token.length != 2) {
-            // TODO : 인증 오류에 대한 CustomException 추가하기.
-            throw new IllegalArgumentException("인증 오류입니다");
-        }
-        // TODO : API Exception 추가하기
-        MemberEntity member = memberDao.findByEmail(token[0])
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        validateToken(token);
 
-        if (!Objects.equals(token[1], member.getPassword())) {
-            // TODO : API Exception 추가하기
-            throw new IllegalArgumentException("비밀번호가 틀렸습니다!!");
-        }
+        MemberEntity member = memberDao.findByEmail(token[0])
+                .orElseThrow(() -> new AuthenticationException("잘못된 인증정보입니다."));
+
+        validatePassword(token, member);
 
         return member;
     }
 
-    private static String[] extractBasicToken(HttpServletRequest nativeRequest) {
+    private void validateToken(String[] token) {
+        if (token.length != 2) {
+            throw new InvalidTokenException("유효하지 않은 토큰입니다.");
+        }
+    }
+
+    private void validatePassword(String[] token, MemberEntity member) {
+        if (!Objects.equals(token[1], member.getPassword())) {
+            throw new AuthenticationException("잘못된 인증정보입니다.");
+        }
+    }
+
+    private String[] extractBasicToken(HttpServletRequest nativeRequest) {
         String requestHeader = nativeRequest.getHeader("Authorization");
         String credential = StringUtils.delete(requestHeader, "Basic").strip();
 

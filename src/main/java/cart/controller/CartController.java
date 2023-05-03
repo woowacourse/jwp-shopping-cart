@@ -6,7 +6,8 @@ import cart.dto.request.CartRequest;
 import cart.dto.response.CartResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
-import cart.exception.ApiException;
+import cart.exception.AuthorizationException;
+import cart.exception.ResourceNotFoundException;
 import cart.service.CartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,9 +62,9 @@ public class CartController {
 
     private void validateMember(Long cartId, MemberEntity member) {
         CartEntity cart = cartDao.findById(cartId)
-                .orElseThrow(() -> new ApiException(""));
+                .orElseThrow(() -> new ResourceNotFoundException("해당 상품을 찾을 수 없습니다.", cartId));
         if (!Objects.equals(member.getId(), cart.getMember().getId())) {
-            throw new ApiException("해당 작업에 대한 권힌이 존재하지 않습니다.");
+            throw new AuthorizationException();
         }
     }
 }
