@@ -1,5 +1,6 @@
 package cart.dao;
 
+<<<<<<< HEAD
 import cart.entity.CartEntity;
 import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,6 +8,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+=======
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+
+>>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
 @Component
 public class CartDao {
 
@@ -16,11 +22,16 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+<<<<<<< HEAD
     public void save(final Long memberId, final Long productId) {
+=======
+    public void create(final Long memberId, final Long productId) {
+>>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
         String sql = "INSERT INTO CART (member_id, product_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, memberId, productId);
     }
 
+<<<<<<< HEAD
     public List<CartEntity> findAll() {
         String sql = "SELECT * FROM CART";
         return jdbcTemplate.query(sql, (rs, rowNum)
@@ -52,4 +63,6 @@ public class CartDao {
         jdbcTemplate.update(sql, id);
     }
 
+=======
+>>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
 }

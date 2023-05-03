@@ -3,21 +3,31 @@ package cart.dao;
 import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Member;
 import java.util.List;
 import java.util.Optional;
+<<<<<<< HEAD
 =======
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 >>>>>>> 1eb8f466 (feat: 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있다.)
+=======
+>>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
 
 @Component
 public class MemberDao {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
     private static final RowMapper<MemberEntity> rowMapper =
             (rs, rowNum) -> new MemberEntity(
                     rs.getLong(1),
@@ -25,8 +35,11 @@ public class MemberDao {
                     rs.getString(3)
             );
 
+<<<<<<< HEAD
 =======
 >>>>>>> 1eb8f466 (feat: 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있다.)
+=======
+>>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
     private final JdbcTemplate jdbcTemplate;
 
     public MemberDao(final JdbcTemplate jdbcTemplate) {
@@ -54,11 +67,17 @@ public class MemberDao {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
     public Optional<MemberEntity> findByEmail(String email) {
         String sql = "SELECT * FROM MEMBER WHERE email = ?";
         return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, email));
     }
+<<<<<<< HEAD
 
 =======
 >>>>>>> 1eb8f466 (feat: 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있다.)
+=======
+>>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
 }
