@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ProductRestController {
+public class ProductApiController {
 
     private final ProductCommandService productCommandService;
     private final ProductQueryService productQueryService;
 
-    public ProductRestController(final ProductCommandService productCommandService,
+    public ProductApiController(final ProductCommandService productCommandService,
             final ProductQueryService productQueryService) {
         this.productCommandService = productCommandService;
         this.productQueryService = productQueryService;
