@@ -1,7 +1,7 @@
 package cart.presentation;
 
 
-import cart.business.ProductService;
+import cart.business.CartService;
 import cart.entity.Product;
 import cart.presentation.dto.ProductRequest;
 import cart.presentation.dto.ProductResponse;
@@ -21,20 +21,20 @@ import java.util.stream.Collectors;
 @RestController
 public class ProductController {
 
-    private final ProductService productService;
+    private final CartService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(CartService productService) {
         this.productService = productService;
     }
 
     @PostMapping(path = "/products")
     public ResponseEntity<Integer> create(@RequestBody ProductRequest request) {
-        return ResponseEntity.created(URI.create("/products")).body(productService.create(request));
+        return ResponseEntity.created(URI.create("/products")).body(productService.createProduct(request));
     }
 
     @GetMapping(path = "/products")
     public ResponseEntity<List<ProductResponse>> read() {
-        List<Product> products = productService.read();
+        List<Product> products = productService.readProduct();
 
         List<ProductResponse> response = products.stream()
                 .map(product -> new ProductResponse(product.getId(),
@@ -48,11 +48,11 @@ public class ProductController {
 
     @PutMapping(path = "/products/{id}")
     public ResponseEntity<Integer> update(@PathVariable Integer id, @RequestBody ProductRequest request) {
-        return ResponseEntity.ok().body(productService.update(id, request));
+        return ResponseEntity.ok().body(productService.updateProduct(id, request));
     }
 
     @DeleteMapping(path = "/products/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Integer id) {
-        return ResponseEntity.ok().body(productService.delete(id));
+        return ResponseEntity.ok().body(productService.deleteProduct(id));
     }
 }

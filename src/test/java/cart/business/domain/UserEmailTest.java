@@ -10,13 +10,13 @@ class UserEmailTest {
     @DisplayName("올바른 이메일 형식이 아니라면 예외를 던진다")
     void test_userEmail_exception() {
         //when, then
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new UserEmail("@naver.com"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new MemberEmail("@naver.com"));
     }
 
     @Test
     @DisplayName("올바른 이메일 형식이 아니라면 잘 생성된다")
     void test_userEmail() {
         //when, then
-        Assertions.assertDoesNotThrow(() -> new UserEmail("judith@naver.com"));
+        Assertions.assertDoesNotThrow(() -> new MemberEmail("judith@naver.com"));
     }
 }

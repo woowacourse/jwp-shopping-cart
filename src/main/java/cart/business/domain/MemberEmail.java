@@ -3,11 +3,11 @@ package cart.business.domain;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class UserEmail {
+public class MemberEmail {
 
     private String email;
 
-    public UserEmail(String email) {
+    public MemberEmail(String email) {
         validateEmail(email);
         this.email = email;
     }

@@ -14,21 +14,21 @@ import java.util.Optional;
 
 @Repository
 @Primary
-public class JdbcTemplateRepository implements ProductRepository {
+public class ProductDao implements ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcTemplateRepository(DataSource dataSource) {
+    public ProductDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
     public Integer insert(Product product) {
-        java.lang.String sql = "INSERT into PRODUCT (name, url, price) values(?, ?, ?)";
+        String sql = "INSERT into PRODUCT (name, url, price) values(?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new java.lang.String[]{"id"});
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, product.getName());
             ps.setString(2, product.getUrl());
             ps.setInt(3, product.getPrice());
@@ -40,13 +40,13 @@ public class JdbcTemplateRepository implements ProductRepository {
 
     @Override
     public List<Product> findAll() {
-        java.lang.String sql = "SELECT * FROM PRODUCT";
+        String sql = "SELECT * FROM PRODUCT";
 
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> {
                     int id = resultSet.getInt("id");
-                    java.lang.String name = resultSet.getString("name");
-                    java.lang.String url = resultSet.getString("url");
+                    String name = resultSet.getString("name");
+                    String url = resultSet.getString("url");
                     int price = resultSet.getInt("price");
 
                     return new Product(id, name, url, price);
@@ -55,7 +55,7 @@ public class JdbcTemplateRepository implements ProductRepository {
 
     @Override
     public Integer update(Integer id, Product product) {
-        java.lang.String sql = "UPDATE PRODUCT SET name = ?, url = ?, price = ? WHERE id = ?";
+        String sql = "UPDATE PRODUCT SET name = ?, url = ?, price = ? WHERE id = ?";
         return jdbcTemplate.update(sql, product.getName(), product.getUrl(), product.getPrice(), id);
     }
 
@@ -69,8 +69,7 @@ public class JdbcTemplateRepository implements ProductRepository {
     public void findSameProductExist(Product product) {
         final var query = "SELECT COUNT(*) FROM PRODUCT WHERE name = ? AND url = ? AND price = ?";
         int count = jdbcTemplate.queryForObject(query, Integer.class, product.getName(), product.getUrl(), product.getPrice());
-
-        System.out.println(count);
+        
         if (count > 0) {
             throw new IllegalArgumentException("같은 상품이 존재합니다.");
         }

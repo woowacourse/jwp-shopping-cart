@@ -1,6 +1,6 @@
 package cart.presentation;
 
-import cart.business.ProductService;
+import cart.business.CartService;
 import cart.presentation.dto.ProductRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,7 @@ class ProductControllerTest {
     @LocalServerPort
     private int port;
     @Autowired
-    private ProductService productService;
+    private CartService productService;
 
     @BeforeEach
     void setup() {
@@ -46,7 +46,7 @@ class ProductControllerTest {
         // given
         //when, then
         ProductRequest teo = new ProductRequest("테오", "https://", 1);
-        Integer teoId = productService.create(teo);
+        Integer teoId = productService.createProduct(teo);
 
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
