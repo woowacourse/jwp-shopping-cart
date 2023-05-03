@@ -42,4 +42,15 @@ class ViewControllerTest {
                 .contentType(ContentType.HTML);
     }
 
+    @Test
+    @DisplayName(" /settings 로 요청을 보내면 settings html 화면을 보내준다")
+    void settings() {
+        //expect
+        RestAssured.given().log().headers()
+                .when().get("/settings")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .contentType(ContentType.HTML);
+    }
+
 }
