@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private static final String DELIMITER = ", ";
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
@@ -23,7 +23,6 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.internalServerError().body(new ExceptionResponse("처리 중 예외가 발생했습니다"));
     }
-
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(final IllegalArgumentException exception) {

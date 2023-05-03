@@ -15,12 +15,12 @@ public class ProductCreationRequest {
             max = 100000000,
             message = "상품의 가격은 0~100000000 사이의 값이여야 합니다."
     )
-    private Integer price;
+    private Long price;
 
     public ProductCreationRequest() {
     }
 
-    public ProductCreationRequest(final String name, final String image, final Integer price) {
+    public ProductCreationRequest(final String name, final String image, final Long price) {
         this.name = name;
         this.image = image;
         this.price = price;
@@ -34,7 +34,7 @@ public class ProductCreationRequest {
         return image;
     }
 
-    public Integer getPrice() {
+    public Long getPrice() {
         return price;
     }
 }

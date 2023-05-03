@@ -39,7 +39,7 @@ public class ProductInMemoryDao implements ProductDao {
     }
 
     @Override
-    public void deleteById(final Integer id) {
+    public void deleteById(final Long id) {
         Optional<ProductEntity> byId = findById(id);
         if (byId.isEmpty()) {
             throw new IllegalArgumentException("아이디를 찾을 수 없습니다.");
@@ -48,9 +48,9 @@ public class ProductInMemoryDao implements ProductDao {
     }
 
     @Override
-    public Optional<ProductEntity> findById(final Integer id) {
+    public Optional<ProductEntity> findById(final Long id) {
         return products.stream()
-                .filter(product -> product.getId().equals(id.longValue()))
+                .filter(product -> product.getId().equals(id))
                 .findFirst();
     }
 

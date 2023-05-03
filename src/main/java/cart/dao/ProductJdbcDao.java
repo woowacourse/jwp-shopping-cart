@@ -51,7 +51,7 @@ public class ProductJdbcDao implements ProductDao {
     }
 
     @Override
-    public void deleteById(final Integer id) {
+    public void deleteById(final Long id) {
         String sql = "delete from product where id = ?";
         try {
             jdbcTemplate.update(sql, id);
@@ -61,7 +61,7 @@ public class ProductJdbcDao implements ProductDao {
     }
 
     @Override
-    public Optional<ProductEntity> findById(final Integer id) {
+    public Optional<ProductEntity> findById(final Long id) {
         String sql = "select * from product where id = ?";
 
         try {

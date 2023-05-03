@@ -20,6 +20,7 @@ public class ProductEntity {
         this.image = image;
         this.price = price;
     }
+
     public ProductEntity(final Product product) {
         this(product.getId(), product.getName(), product.getImage(), product.getPrice());
     }

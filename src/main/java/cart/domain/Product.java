@@ -1,7 +1,5 @@
 package cart.domain;
 
-import cart.domain.dto.ProductCreationDto;
-import cart.domain.dto.ProductUpdateDto;
 import cart.entity.ProductEntity;
 
 import java.util.Objects;
@@ -12,23 +10,22 @@ public class Product {
     private final ProductImage image;
     private final ProductPrice price;
 
-    public Product(final Long id, final String name, final ProductImage image, final ProductPrice price) {
-        this.id = id;
+    public Product(final String name, final String image, final Long price) {
+        this.id = null;
         this.name = name;
-        this.image = image;
-        this.price = price;
+        this.image = new ProductImage(image);
+        this.price = new ProductPrice(price);
     }
 
-    public static Product from(final ProductCreationDto productCreationDto) {
-        return new Product(null, productCreationDto.getName(), new ProductImage(productCreationDto.getImage()), new ProductPrice(productCreationDto.getPrice()));
+    public Product(final Long id, final String name, final String image, final Long price) {
+        this.id = Long.valueOf(id);
+        this.name = name;
+        this.image = new ProductImage(image);
+        this.price = new ProductPrice(price);
     }
 
-    public static Product from(final ProductUpdateDto productUpdateDto) {
-        return new Product(Long.valueOf(productUpdateDto.getId()), productUpdateDto.getName(), new ProductImage(productUpdateDto.getImage()), new ProductPrice(productUpdateDto.getPrice()));
-    }
-
-    public static ProductEntity from(final Product product) {
-        return new ProductEntity(product.getName(), product.getImage(), product.getPrice());
+    public static Product from(final ProductEntity productEntity) {
+        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
     }
 
     public Long getId() {

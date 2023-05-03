@@ -10,9 +10,9 @@ public interface ProductDao {
 
     void update(ProductEntity productEntity);
 
-    void deleteById(Integer id);
+    void deleteById(Long id);
 
-    Optional<ProductEntity> findById(Integer id);
+    Optional<ProductEntity> findById(Long id);
 
     List<ProductEntity> findAll();
 }

@@ -1,9 +1,9 @@
 package cart.service;
 
+import cart.controller.dto.ProductCreationRequest;
+import cart.controller.dto.ProductUpdateRequest;
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.domain.dto.ProductCreationDto;
-import cart.domain.dto.ProductUpdateDto;
 import cart.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -18,20 +18,29 @@ public class AdminService {
         this.productDao = productDao;
     }
 
-    public void save(final ProductCreationDto productCreationDto) {
-        final Product product = Product.from(productCreationDto);
+    public void save(final ProductCreationRequest productCreationRequest) {
+        final Product product = new Product(
+                productCreationRequest.getName(),
+                productCreationRequest.getImage(),
+                productCreationRequest.getPrice()
+        );
 
         final ProductEntity productEntity = new ProductEntity(product);
 
         productDao.insert(productEntity);
     }
 
-    public void delete(final Integer id) {
+    public void delete(final Long id) {
         productDao.deleteById(id);
     }
 
-    public void update(final ProductUpdateDto productUpdateDto) {
-        final Product product = Product.from(productUpdateDto);
+    public void update(final ProductUpdateRequest productUpdateRequest) {
+        final Product product = new Product(
+                productUpdateRequest.getId(),
+                productUpdateRequest.getName(),
+                productUpdateRequest.getImage(),
+                productUpdateRequest.getPrice()
+        );
 
         final ProductEntity productEntity = new ProductEntity(product);
 
