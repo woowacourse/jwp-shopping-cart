@@ -3,8 +3,8 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.cart.Item;
-import cart.domain.product.Product;
+import cart.domain.cart.ItemEntity;
+import cart.domain.product.ProductEntity;
 import cart.dto.application.ItemDto;
 import io.restassured.RestAssured;
 import java.util.List;
@@ -33,7 +33,7 @@ class CartServiceTest {
     @Test
     void 상품_조회() {
         final int userId = 1;
-        final List<Product> products = cartService.findAll(userId);
+        final List<ProductEntity> products = cartService.findAll(userId);
 
         assertThat(products.size()).isEqualTo(3);
     }
@@ -45,7 +45,7 @@ class CartServiceTest {
         final int productId = 1;
 
         final ItemDto itemDto = new ItemDto(userId, productId);
-        final Item item = cartService.insert(itemDto);
+        final ItemEntity item = cartService.insert(itemDto);
 
         assertAll(
                 () -> assertThat(item.getId()).isEqualTo(expectedId),
@@ -62,7 +62,7 @@ class CartServiceTest {
 
         cartService.delete(itemId);
 
-        final List<Product> remainProducts = cartService.findAll(userId);
+        final List<ProductEntity> remainProducts = cartService.findAll(userId);
         assertThat(remainProducts.size()).isEqualTo(expectedSize);
     }
 }

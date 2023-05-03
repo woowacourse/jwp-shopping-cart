@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.member.Member;
+import cart.domain.member.MemberEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ class MemberDaoTest {
 
     @Test
     void 사용자_목록_반환() {
-        final List<Member> members = memberDao.findAll();
+        final List<MemberEntity> members = memberDao.findAll();
 
         assertThat(members.size()).isEqualTo(2);
     }

@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.product.Product;
+import cart.domain.product.ProductEntity;
 import cart.dto.application.ProductDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -16,23 +17,23 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public List<Product> findAll() {
+    public List<ProductEntity> findAll() {
         return productDao.findAll();
     }
 
     @Transactional
-    public Product register(final ProductDto productDto) {
+    public ProductEntity register(final ProductDto productDto) {
         final Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
         final long id = productDao.insert(product);
 
-        return new Product(id, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+        return new ProductEntity(id, product);
     }
 
     @Transactional
-    public Product updateProduct(final long id, final ProductDto productDto) {
+    public ProductEntity updateProduct(final long id, final ProductDto productDto) {
         validateExistData(id);
 
-        final Product newProduct = new Product(
+        final ProductEntity newProduct = new ProductEntity(
                 id,
                 productDto.getName(),
                 productDto.getPrice(),
@@ -41,7 +42,7 @@ public class ProductService {
 
         productDao.update(newProduct);
 
-        return new Product(id, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+        return newProduct;
     }
 
     @Transactional

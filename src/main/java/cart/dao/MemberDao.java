@@ -2,6 +2,7 @@ package cart.dao;
 
 
 import cart.domain.member.Member;
+import cart.domain.member.MemberEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,9 +17,10 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Member> findAll() {
+    public List<MemberEntity> findAll() {
         final String sql = "SELECT id, username, password FROM Member";
-        return jdbcTemplate.query(sql, getMemberRowMapper());
+
+        return jdbcTemplate.query(sql, memberEntityRowMapper());
     }
 
     public boolean isMember(final Member member) {
@@ -27,8 +29,11 @@ public class MemberDao {
         return jdbcTemplate.queryForObject(sql, Integer.class, member.getUsername(), member.getPassword()) > 0;
     }
 
-    private RowMapper<Member> getMemberRowMapper() {
-        return (resultSet, rowNum) -> new Member(resultSet.getLong("id"),
-                resultSet.getString("username"), resultSet.getString("password"));
+    private RowMapper<MemberEntity> memberEntityRowMapper() {
+        return (resultSet, rowNum) -> new MemberEntity(
+                resultSet.getLong("id"),
+                resultSet.getString("username"),
+                resultSet.getString("password")
+        );
     }
 }

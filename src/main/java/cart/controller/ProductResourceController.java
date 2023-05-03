@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.product.Product;
+import cart.domain.product.ProductEntity;
 import cart.dto.application.ProductDto;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
@@ -32,7 +32,7 @@ public class ProductResourceController {
                 productRequest.getPrice(),
                 productRequest.getImageUrl()
         );
-        final Product product = productService.register(productDto);
+        final ProductEntity product = productService.register(productDto);
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
@@ -40,7 +40,7 @@ public class ProductResourceController {
     @ResponseStatus(value = HttpStatus.OK)
     public ProductResponse updateProduct(@PathVariable final long id,
                                          @RequestBody @Valid final ProductRequest productRequest) {
-        final Product product = productService.updateProduct(id, new ProductDto(productRequest));
+        final ProductEntity product = productService.updateProduct(id, new ProductDto(productRequest));
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 

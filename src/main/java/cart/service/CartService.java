@@ -3,7 +3,8 @@ package cart.service;
 import cart.dao.CartDao;
 import cart.dao.ProductDao;
 import cart.domain.cart.Item;
-import cart.domain.product.Product;
+import cart.domain.cart.ItemEntity;
+import cart.domain.product.ProductEntity;
 import cart.dto.application.ItemDto;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,8 +22,8 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    public List<Product> findAll(final long userId) {
-        final List<Item> items = cartDao.findAll(userId);
+    public List<ProductEntity> findAll(final long userId) {
+        final List<ItemEntity> items = cartDao.findAll(userId);
 
         return items.stream()
                 .map(item -> productDao.find(item.getProductId()))
@@ -30,12 +31,12 @@ public class CartService {
     }
 
     @Transactional
-    public Item insert(final ItemDto itemDto) {
+    public ItemEntity insert(final ItemDto itemDto) {
         final Item item = new Item(itemDto.getUserId(), itemDto.getProductId());
 
         final long id = cartDao.insert(item);
 
-        return new Item(id, item);
+        return new ItemEntity(id, item);
     }
 
     @Transactional

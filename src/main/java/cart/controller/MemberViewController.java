@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.member.Member;
+import cart.domain.member.MemberEntity;
 import cart.service.MemberService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,7 @@ public class MemberViewController {
 
     @GetMapping("/settings")
     public String settingsPage(final Model model) {
-        final List<Member> members = memberService.fetchAll();
+        final List<MemberEntity> members = memberService.findAll();
 
         model.addAttribute("members", members);
 

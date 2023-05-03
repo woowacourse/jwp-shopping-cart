@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.cart.Item;
+import cart.domain.cart.ItemEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ class CartDaoTest {
 
     @Test
     void 전체_상품_조회() {
-        final List<Item> items = cartDao.findAll(1);
+        final List<ItemEntity> items = cartDao.findAll(1);
 
         assertThat(items.size()).isEqualTo(3);
     }
@@ -43,7 +44,7 @@ class CartDaoTest {
     @Test
     void 상품_삭제() {
         cartDao.delete(1);
-        final List<Item> userOneRemainItems = cartDao.findAll(1);
+        final List<ItemEntity> userOneRemainItems = cartDao.findAll(1);
 
         assertThat(userOneRemainItems.size()).isEqualTo(2);
     }

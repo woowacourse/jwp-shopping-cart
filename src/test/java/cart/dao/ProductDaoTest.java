@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.product.Product;
+import cart.domain.product.ProductEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ class ProductDaoTest {
     void 상품_데이터_조회() {
         final long id = 2L;
 
-        final Product foundProduct = productDao.find(id);
+        final ProductEntity foundProduct = productDao.find(id);
 
         assertAll(
                 () -> assertThat(foundProduct.getName()).isEqualTo("name2"),
@@ -48,7 +49,7 @@ class ProductDaoTest {
 
     @Test
     void 모든_상품_데이터_조회() {
-        final List<Product> results = productDao.findAll();
+        final List<ProductEntity> results = productDao.findAll();
 
         assertThat(results.size()).isEqualTo(3);
     }
@@ -56,10 +57,10 @@ class ProductDaoTest {
     @Test
     void 상품_데이터_수정() {
         final long id = 2L;
-        final Product newProduct = new Product(id, "new salad", 3000, "https://salad.com");
+        final ProductEntity newProduct = new ProductEntity(id, "new salad", 3000, "https://salad.com");
 
         productDao.update(newProduct);
-        final Product foundProduct = productDao.find(id);
+        final ProductEntity foundProduct = productDao.find(id);
 
         assertAll(
                 () -> assertThat(foundProduct.getName()).isEqualTo(newProduct.getName()),
@@ -69,7 +70,7 @@ class ProductDaoTest {
 
     @Test
     void 존재하지_않는_상품_수정시_예외_발생() {
-        final Product notExistProduct = new Product(3L, "커피", 2800, "https://coffee.com");
+        final ProductEntity notExistProduct = new ProductEntity(3L, "커피", 2800, "https://coffee.com");
 
         productDao.update(notExistProduct);
     }

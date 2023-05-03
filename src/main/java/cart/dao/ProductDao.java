@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.product.Product;
+import cart.domain.product.ProductEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -28,19 +29,19 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
-    public Product find(final long id) {
+    public ProductEntity find(final long id) {
         final String sql = "select id, name, price, image_url from Product where id = ?";
 
-        return jdbcTemplate.queryForObject(sql, productRowMapper(), id);
+        return jdbcTemplate.queryForObject(sql, productEntityRowMapper(), id);
     }
 
-    public List<Product> findAll() {
+    public List<ProductEntity> findAll() {
         final String sql = "select id, name, price, image_url from Product";
 
-        return jdbcTemplate.query(sql, productRowMapper());
+        return jdbcTemplate.query(sql, productEntityRowMapper());
     }
 
-    public void update(final Product newProduct) {
+    public void update(final ProductEntity newProduct) {
         final String sql = "update Product set name = ?, price = ?, image_url = ? where id = ?";
 
         jdbcTemplate.update(sql,
@@ -63,8 +64,8 @@ public class ProductDao {
         return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
     }
 
-    private RowMapper<Product> productRowMapper() {
-        return (resultSet, rowNum) -> new Product(
+    private RowMapper<ProductEntity> productEntityRowMapper() {
+        return (resultSet, rowNum) -> new ProductEntity(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getInt("price"),

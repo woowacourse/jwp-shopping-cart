@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.cart.Item;
+import cart.domain.cart.ItemEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,10 +23,10 @@ public class CartDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Item> findAll(final long userId) {
+    public List<ItemEntity> findAll(final long userId) {
         final String sql = "SELECT * FROM cart WHERE user_id = ?";
 
-        return jdbcTemplate.query(sql, itemRowMapper(), userId);
+        return jdbcTemplate.query(sql, itemEntityRowMapper(), userId);
     }
 
     public long insert(final Item item) {
@@ -40,11 +41,11 @@ public class CartDao {
         jdbcTemplate.update(sql, id);
     }
 
-    private RowMapper<Item> itemRowMapper() {
-        return (resultSet, rowNum) -> new Item(
+    private RowMapper<ItemEntity> itemEntityRowMapper() {
+        return (resultSet, rowNum) -> new ItemEntity(
                 resultSet.getLong("id"),
-                resultSet.getLong("user_id")
-                , resultSet.getLong("product_id")
+                resultSet.getLong("user_id"),
+                resultSet.getLong("product_id")
         );
     }
 }

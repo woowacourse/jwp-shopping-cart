@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
+import cart.domain.member.MemberEntity;
 import cart.dto.application.MemberDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public List<Member> findAll() {
+    public List<MemberEntity> findAll() {
         return memberDao.findAll();
     }
 

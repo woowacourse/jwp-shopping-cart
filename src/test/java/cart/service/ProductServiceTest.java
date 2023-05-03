@@ -5,7 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.ProductDao;
-import cart.domain.product.Product;
+import cart.domain.product.ProductEntity;
 import cart.dto.application.ProductDto;
 import io.restassured.RestAssured;
 import java.util.List;
@@ -37,7 +37,7 @@ class ProductServiceTest {
 
     @Test
     void 모든_상품_목록_조회() {
-        final List<Product> products = productService.findAll();
+        final List<ProductEntity> products = productService.findAll();
 
         assertThat(products.size()).isEqualTo(3);
     }
@@ -48,7 +48,7 @@ class ProductServiceTest {
         final String name = "name4";
         final int price = 4000;
         final String imageUrl = "https://image4.com";
-        final Product savedProduct = productService.register(new ProductDto(name, price, imageUrl));
+        final ProductEntity savedProduct = productService.register(new ProductDto(name, price, imageUrl));
 
         assertThat(savedProduct.getId()).isEqualTo(expectedId);
     }
@@ -59,7 +59,7 @@ class ProductServiceTest {
     void 상품_수정(final long id, final String newName, final int newPrice, final String newImageUrl) {
         productService.updateProduct(id, new ProductDto(newName, newPrice, newImageUrl));
 
-        final Product updatedProduct = productDao.find(id);
+        final ProductEntity updatedProduct = productDao.find(id);
         assertAll(
                 () -> assertThat(updatedProduct.getName()).isEqualTo(newName),
                 () -> assertThat(updatedProduct.getPrice()).isEqualTo(newPrice),
