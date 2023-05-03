@@ -1,7 +1,25 @@
-CREATE TABLE IF NOT EXISTS PRODUCT (
-  product_id LONG NOT NULL AUTO_INCREMENT,
-  name VARCHAR(50)NOT NULL,
-  image VARCHAR(255) NOT NULL,
-  price LONG NOT NULL,
-  PRIMARY KEY (product_id)
+
+
+CREATE TABLE IF NOT EXISTS MEMBER (
+    member_id LONG NOT NULL AUTO_INCREMENT,
+    email VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    PRIMARY KEY (member_id)
 );
+
+CREATE TABLE IF NOT EXISTS PRODUCT (
+    product_id LONG NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50)NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    price LONG NOT NULL,
+    PRIMARY KEY (product_id)
+);
+
+CREATE TABLE IF NOT EXISTS CART (
+    member_id LONG NOT NULL,
+    product_id LONG NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (member_id),
+    FOREIGN KEY (product_id) REFERENCES product (product_id)
+);
+
+
