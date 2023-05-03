@@ -1,8 +1,10 @@
 package cart.entity.vo;
 
+import java.util.Objects;
+
 public class Email {
 
-    private final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+    private static final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
 
     private final String value;
 
@@ -19,5 +21,18 @@ public class Email {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Email email = (Email) o;
+        return Objects.equals(value, email.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

@@ -5,6 +5,7 @@ import cart.dao.cartAddedProductDao;
 import cart.entity.CartAddedProduct;
 import cart.entity.Product;
 import cart.entity.vo.Email;
+import cart.exception.UserForbiddenException;
 import cart.service.dto.ProductInCart;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +39,15 @@ public class CartService {
                         cartAddedProduct.getProduct().getImageUrl()
                 ))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public void deleteCartItem(final Email userEmail, final Long id) {
+        final CartAddedProduct cartAddedProduct = cartAddedProductDao.findById(id);
+
+        if (!cartAddedProduct.getUserEmail().equals(userEmail)) {
+            throw new UserForbiddenException("해당 장바구니의 사용자가 아닙니다.");
+        }
+
+        cartAddedProductDao.delete(cartAddedProduct.getId());
     }
 }

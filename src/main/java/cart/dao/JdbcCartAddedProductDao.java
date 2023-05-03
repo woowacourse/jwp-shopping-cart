@@ -49,6 +49,16 @@ public class JdbcCartAddedProductDao implements cartAddedProductDao {
     }
 
     @Override
+    public CartAddedProduct findById(final long id) {
+        final String sql = "SELECT * FROM cart_added_product " +
+                "JOIN products " +
+                "ON cart_added_product.product_id = products.id " +
+                "WHERE cart_added_product.id = ?;";
+
+        return jdbcTemplate.queryForObject(sql, cartAddedProductRowMapper, id);
+    }
+
+    @Override
     public List<CartAddedProduct> findProductsByUserEmail(final Email userEmail) {
         final String sql = "SELECT * FROM cart_added_product " +
                 "JOIN products " +
@@ -58,7 +68,8 @@ public class JdbcCartAddedProductDao implements cartAddedProductDao {
     }
 
     @Override
-    public void deleteByProductId(final Email userEmail, final long productId) {
-
+    public void delete(final long id) {
+        final String sql = "DELETE FROM cart_added_product WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

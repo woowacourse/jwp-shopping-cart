@@ -10,7 +10,9 @@ public interface cartAddedProductDao {
 
     long insert(final Email email, final Product product);
 
+    CartAddedProduct findById(final long id);
+
     List<CartAddedProduct> findProductsByUserEmail(final Email userEmail);
 
-    void deleteByProductId(final Email userEmail, final long productId);
+    void delete(final long id);
 }
