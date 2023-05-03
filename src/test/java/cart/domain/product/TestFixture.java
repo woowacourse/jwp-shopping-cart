@@ -6,7 +6,7 @@ public class TestFixture {
             ProductPrice.from(18_000),
             ProductCategory.FOOD,
             ImageUrl.from("www.domino-pizza.com"),
-            1L
+            ProductId.from(1L)
     );
 
     public static final Product CHICKEN = new Product(
@@ -14,6 +14,6 @@ public class TestFixture {
             ProductPrice.from(23_000),
             ProductCategory.FOOD,
             ImageUrl.from("www.kyochon.com"),
-            2L
+            ProductId.from(2L)
     );
 }

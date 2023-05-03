@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cart.domain.product.ImageUrl;
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
+import cart.domain.product.ProductId;
 import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
 import cart.domain.product.TestFixture;
@@ -79,7 +80,7 @@ class ProductRepositoryImplTest {
                 ProductPrice.from(20_000),
                 ProductCategory.FOOD,
                 ImageUrl.from("chicken.com"),
-                savedId
+                ProductId.from(savedId)
         );
 
         productRepository.update(updatedProduct);

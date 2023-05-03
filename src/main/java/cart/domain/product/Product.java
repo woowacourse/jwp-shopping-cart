@@ -7,16 +7,18 @@ public class Product {
     private final ProductPrice price;
     private final ProductCategory category;
     private final ImageUrl imageUrl;
-    private Long productId;
+    private final ProductId productId;
 
     public Product(ProductName name, ProductPrice price, ProductCategory category, ImageUrl imageUrl) {
         this.name = name;
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
+        this.productId = ProductId.getEmptyId();
     }
 
-    public Product(ProductName name, ProductPrice price, ProductCategory category, ImageUrl imageUrl, Long productId) {
+    public Product(ProductName name, ProductPrice price, ProductCategory category, ImageUrl imageUrl,
+                   ProductId productId) {
         this.name = name;
         this.price = price;
         this.category = category;
@@ -41,6 +43,6 @@ public class Product {
     }
 
     public Long getProductId() {
-        return productId;
+        return productId.getId();
     }
 }

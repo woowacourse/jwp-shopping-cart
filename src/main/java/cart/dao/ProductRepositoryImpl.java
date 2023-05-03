@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.product.ImageUrl;
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
+import cart.domain.product.ProductId;
 import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
 import cart.domain.product.ProductRepository;
@@ -34,7 +35,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                 ProductPrice.from(entity.getPrice()),
                 ProductCategory.valueOf(entity.getCategory()),
                 ImageUrl.from(entity.getImageUrl()),
-                entity.getId()
+                ProductId.from(entity.getId())
         );
     }
 

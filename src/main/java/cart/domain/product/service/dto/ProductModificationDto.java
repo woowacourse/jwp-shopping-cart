@@ -3,6 +3,7 @@ package cart.domain.product.service.dto;
 import cart.domain.product.ImageUrl;
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
+import cart.domain.product.ProductId;
 import cart.domain.product.ProductName;
 import cart.domain.product.ProductPrice;
 
@@ -27,7 +28,7 @@ public class ProductModificationDto {
                 ProductPrice.from(price),
                 ProductCategory.valueOf(category),
                 ImageUrl.from(imageUrl),
-                id
+                ProductId.from(id)
         );
     }
 
