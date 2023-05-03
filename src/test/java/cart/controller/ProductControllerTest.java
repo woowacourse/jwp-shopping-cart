@@ -34,7 +34,9 @@ class ProductControllerTest {
 
     @AfterEach
     void clear() {
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
         jdbcTemplate.execute("TRUNCATE TABLE product");
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
     }
 
 
