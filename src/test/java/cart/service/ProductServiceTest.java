@@ -1,12 +1,14 @@
 package cart.service;
 
+import cart.dao.JdbcProductDao;
 import cart.domain.product.Product;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
@@ -15,19 +17,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@SpringBootTest
+@JdbcTest
+@Sql(scripts = {"classpath:data.sql"})
 class ProductServiceTest {
 
-    @Autowired
-    private ProductService productService;
+    private final JdbcTemplate jdbcTemplate;
+    private final ProductService productService;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Test
-    @DisplayName("상품을 저장한다")
-    void save() {
-        assertDoesNotThrow(() -> productService.save("이오", 1000, null));
+    public ProductServiceTest(@Autowired final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.productService = new ProductService(new JdbcProductDao(jdbcTemplate));
     }
 
     @AfterEach
@@ -36,12 +35,18 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("상품을 저장한다")
+    void save() {
+        assertDoesNotThrow(() -> productService.save("이오", 1000, null));
+    }
+
+    @Test
     @DisplayName("상품 리스트를 조회한다")
     void findAll() {
         productService.save("이오", 1000, null);
         productService.save("애쉬", 1000, null);
 
-        List<Product> actual = productService.findAll();
+        final List<Product> actual = productService.findAll();
 
         assertThat(actual).extracting("name")
                 .containsExactly("이오", "애쉬");
@@ -58,12 +63,11 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품을 갱신한다")
     void update() {
-        long id = 1;
-        productService.save("이오", 1000, null);
+        final long id = productService.save("이오", 1000, null);
 
         productService.update(id, "애쉬", 2000, "image");
 
-        Product product = productService.findAll().stream()
+        final Product product = productService.findAll().stream()
                 .filter(p -> p.getId() == id)
                 .findFirst()
                 .orElse(null);
@@ -79,12 +83,11 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품을 삭제한다")
     void delete() {
-        long id = 1;
-        productService.save("이오", 1000, null);
+        final long id = productService.save("이오", 1000, null);
 
         productService.delete(id);
 
-        Product product = productService.findAll().stream()
+        final Product product = productService.findAll().stream()
                 .filter(p -> p.getId() == id)
                 .findFirst()
                 .orElse(null);

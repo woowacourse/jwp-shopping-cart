@@ -12,14 +12,14 @@ public class ProductService {
 
     private final ProductDao productDao;
 
-    public ProductService(ProductDao productDao) {
+    public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
     @Transactional
-    public void save(final String name, final int price, final String image) {
-        Product product = new Product(name, price, image);
-        productDao.insert(product);
+    public Long save(final String name, final int price, final String image) {
+        final Product product = new Product(name, price, image);
+        return productDao.insert(product);
     }
 
     @Transactional(readOnly = true)
@@ -30,11 +30,11 @@ public class ProductService {
     @Transactional
     public void update(final Long id, final String name, final int price, final String image) {
         checkExistProductId(id);
-        Product product = new Product(id, name, price, image);
+        final Product product = new Product(id, name, price, image);
         productDao.update(product);
     }
 
-    private void checkExistProductId(Long id) {
+    private void checkExistProductId(final Long id) {
         if (productDao.findById(id) == null) {
             throw new IllegalArgumentException("존재하지 않는 상품 id 입니다.");
         }
