@@ -18,6 +18,15 @@ public class CartController {
         this.cartService = cartService;
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Product>> findItems(@RequestHeader("Authorization") String authorization) {
+        if (authorization.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+        final List<Product> products = cartService.findCartItems(authorization);
+        return ResponseEntity.ok().body(products);
+    }
+
     @PostMapping("/{productId}")
     public ResponseEntity<CartItem> addItem(@PathVariable("productId") long productId, @RequestHeader("Authorization") String authorization) {
         if (authorization.isBlank()) {
@@ -27,18 +36,8 @@ public class CartController {
         return ResponseEntity.ok().body(addedItem);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Product>> cart(@RequestHeader("Authorization") String authorization) {
-        if (authorization.isBlank()) {
-            return ResponseEntity.badRequest().build();
-        }
-        final List<Product> products = cartService.findCartItems(authorization);
-        System.out.println(products);
-        return ResponseEntity.ok().body(products);
-    }
-
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> delete(@PathVariable("productId") long productId, @RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<Void> deleteItem(@PathVariable("productId") long productId, @RequestHeader("Authorization") String authorization) {
         if (authorization.isBlank()) {
             return ResponseEntity.badRequest().build();
         }
