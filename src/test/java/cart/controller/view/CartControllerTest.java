@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.auth.AuthContext;
 import cart.dao.MemberDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -19,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @DisplayName("CartController 은(는)")
 @WebMvcTest(CartController.class)
-@MockBean(MemberDao.class)
+@MockBean({MemberDao.class, AuthContext.class})
 class CartControllerTest {
 
     @Autowired

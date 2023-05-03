@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.auth.AuthContext;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.Product;
@@ -23,7 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @DisplayName("HomeController 는")
 @WebMvcTest(HomeController.class)
-@MockBean(MemberDao.class)
+@MockBean({MemberDao.class, AuthContext.class})
 class HomeControllerTest {
 
     @Autowired

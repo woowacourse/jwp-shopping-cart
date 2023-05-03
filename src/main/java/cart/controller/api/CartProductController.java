@@ -50,8 +50,7 @@ public class CartProductController {
 
     @DeleteMapping("/cart-products/{id}")
     ResponseEntity<Void> deleteCartProduct(
-            @PathVariable("id") final Long id,
-            @Auth final Member member
+            @PathVariable("id") final Long id
     ) {
         cartProductDao.deleteById(id);
         return ResponseEntity.ok().build();
