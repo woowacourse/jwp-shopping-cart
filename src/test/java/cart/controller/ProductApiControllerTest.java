@@ -10,6 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.auth.BasicAuthorizationExtractor;
+import cart.cart.service.CartService;
+import cart.member.service.MemberService;
 import cart.product.dto.ProductResponseDto;
 import cart.product.entity.ProductEntity;
 import cart.product.service.ProductService;
@@ -28,6 +31,12 @@ public class ProductApiControllerTest {
 
     @MockBean
     private ProductService productService;
+    @MockBean
+    private CartService cartService;
+    @MockBean
+    private MemberService memberService;
+    @MockBean
+    private BasicAuthorizationExtractor basicAuthorizationExtractor;
 
     @Test
     void insertTest() throws Exception {

@@ -1,4 +1,4 @@
-package cart.controller;
+package cart;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -6,6 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.auth.BasicAuthorizationExtractor;
+import cart.cart.service.CartService;
+import cart.member.service.MemberService;
 import cart.product.dto.ProductResponseDto;
 import cart.product.service.ProductService;
 import java.util.List;
@@ -22,6 +25,12 @@ public class ViewControllerTest {
 
     @MockBean
     private ProductService productService;
+    @MockBean
+    private CartService cartService;
+    @MockBean
+    private MemberService memberService;
+    @MockBean
+    private BasicAuthorizationExtractor basicAuthorizationExtractor;
 
     @Test
     void indexTest() throws Exception {

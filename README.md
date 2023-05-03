@@ -122,7 +122,7 @@
   - [x] 장바구니 목록을 확인하고 상품을 제거하는 기능을 동작하게 만듭니다.
 
 ### 리팩토링
-- [ ] 깨진 테스트 복구
+- [x] 깨진 테스트 복구
 - [ ] 테스트 작성
 - [ ] 코드 일관성
 - [ ] AOP?..
@@ -136,3 +136,6 @@
 - [ ] 상품에 대한 RequestDto에 입력값 검증을 추가하였다. 이때, image는 요구사항에 맞게 URL로만 입력 가능하게 @Pattern을 사용했다. update,insert 요청 시에 공통적으로 검증할 필요가 있기 때문에 Validator 클래스를 따로 빼주었다. 처음엔 ProductRequestDto와 같은 부모 클래스를 만들까 고민했는데, 괜찮은 선택이었을까?
 - [ ] @WebMvcTest에서 JdbcTemplate, Dao를 통해 DB 변경사항을 검증하려 했더니 의존성 주입이 안 되는 것을 확인함. 이럴 때는 @SpringBootTest로 전환을 해야 될지? 다른 방법은 무엇?
 - [ ] 왜 필드가 하나인 DTO는 빈 생성자 없이 데이터 바인딩이 안 될까? (Reqeust의 Body로 넘어온 값)
+- [ ] data.sql 파일을 전체 주석 처리했더니, Bean 생성 과정에서 오류가 발생
+- [ ] @WebMvcTest에서 @Controller, @RestController의 의존성을 모두 추가해줘야 하는가?
+- 
