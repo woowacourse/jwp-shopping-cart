@@ -29,7 +29,7 @@ public class CartExceptionHandler {
                 .body(exception.getMessage());
     }
 
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleRuntimeException() {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
