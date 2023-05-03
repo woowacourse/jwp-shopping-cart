@@ -44,12 +44,12 @@ public class MySQLMemberDao implements MemberDao {
     }
 
     @Override
-    public Optional<Long> findIdByMember(Member member) {
+    public Optional<Long> findIdByMember(MemberRequest request) {
         String query = "SELECT id FROM member WHERE email = ? AND password = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query,
                 (resultSet, rowNum) -> resultSet.getLong("id"),
-                member.getEmail(), member.getPassword()));
+                request.getEmail(), request.getPassword()));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }

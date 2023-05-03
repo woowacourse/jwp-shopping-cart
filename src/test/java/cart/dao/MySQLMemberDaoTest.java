@@ -65,8 +65,8 @@ class MySQLMemberDaoTest {
     @DisplayName("findIdByMember() 메서드를 호출하면 회원의 아이디를 반환한다")
     void findIdByMember() {
         // given, when
-        final Member member = new Member(EMAIL, PASSWORD);
-        final Optional<Long> actual = mySQLMemberDao.findIdByMember(member);
+        final MemberRequest request = new MemberRequest(EMAIL, PASSWORD);
+        final Optional<Long> actual = mySQLMemberDao.findIdByMember(request);
 
         // then
         assertAll(
@@ -80,8 +80,8 @@ class MySQLMemberDaoTest {
     @DisplayName("존재하지 않는 회원에 대해 findIdByMember() 메서드를 호출하면 Null이 반환한다")
     void findIdByMember_fail() {
         // given, when
-        final Member member = new Member(EMAIL, "1234");
-        final Optional<Long> actual = mySQLMemberDao.findIdByMember(member);
+        final MemberRequest request = new MemberRequest(EMAIL, "1234");
+        final Optional<Long> actual = mySQLMemberDao.findIdByMember(request);
 
         // then
         assertThat(actual.isEmpty()).isTrue();

@@ -14,5 +14,5 @@ public interface MemberDao {
 
     List<MemberEntity> findAll();
 
-    Optional<Long> findIdByMember(Member member);
+    Optional<Long> findIdByMember(MemberRequest request);
 }

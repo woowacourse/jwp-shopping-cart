@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.controller.dto.MemberRequest;
 import cart.controller.dto.ProductResponse;
 import cart.dao.entity.ProductEntity;
 import cart.domain.Member;
@@ -26,12 +27,12 @@ public class CartRepository {
         this.mySQLProductDao = mySQLProductDao;
     }
 
-    public List<ProductEntity> getProducts(Member member) {
-        return mySQLCartDao.findByMember(member);
+    public List<ProductEntity> getProducts(MemberRequest request) {
+        return mySQLCartDao.findByMember(request);
     }
 
-    public long add(Long productId, Member member) {
-        Long memberId = mySQLMemberDao.findIdByMember(member)
+    public long add(Long productId, MemberRequest request) {
+        Long memberId = mySQLMemberDao.findIdByMember(request)
             .orElseThrow(() -> new NoSuchElementException(MEMBER_NOT_FOUND_MESSAGE));
         validateIfCartAleadyExist(productId, memberId);
         validateIfProductExist(productId);
@@ -50,8 +51,8 @@ public class CartRepository {
         }
     }
 
-    public int remove(Long productId, Member member) {
-        Long memberId = mySQLMemberDao.findIdByMember(member).orElseThrow(() -> new
+    public int remove(Long productId, MemberRequest request) {
+        Long memberId = mySQLMemberDao.findIdByMember(request).orElseThrow(() -> new
             NoSuchElementException(MEMBER_NOT_FOUND_MESSAGE));
         validateIfProductExist(productId);
         return mySQLCartDao.deleteById(memberId, productId);
