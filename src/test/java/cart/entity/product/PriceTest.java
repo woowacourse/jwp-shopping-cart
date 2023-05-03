@@ -2,8 +2,7 @@ package cart.entity.product;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import cart.exception.common.NullOrBlankException;
-import cart.exception.product.PriceNotUnderZeroException;
+import cart.exception.common.UnderZeroException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -16,7 +15,7 @@ class PriceTest {
     void validate_name_null_or_blank(int price) {
         // when + then
         assertThatThrownBy(() -> new Price(price))
-            .isInstanceOf(PriceNotUnderZeroException.class);
+            .isInstanceOf(UnderZeroException.class);
 
     }
 }

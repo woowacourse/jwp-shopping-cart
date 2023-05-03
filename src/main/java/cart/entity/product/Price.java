@@ -1,6 +1,6 @@
 package cart.entity.product;
 
-import cart.exception.product.PriceNotUnderZeroException;
+import cart.exception.common.UnderZeroException;
 
 public class Price {
 
@@ -17,7 +17,7 @@ public class Price {
 
     private void validatePriceValue(int price) {
         if (price < 0) {
-            throw new PriceNotUnderZeroException();
+            throw new UnderZeroException();
         }
     }
 }

@@ -2,7 +2,6 @@ package cart.exception;
 
 import cart.exception.common.CommonException;
 import cart.exception.notfound.NotFoundException;
-import cart.exception.product.ProductException;
 import java.util.stream.Collectors;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
 
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleInvalidValueException(MethodArgumentNotValidException exception) {
         String errorMessage = exception.getFieldErrors().stream()
@@ -23,8 +21,8 @@ public class ExceptionHandlerAdvice {
         return ResponseEntity.badRequest().body(errorMessage);
     }
 
-    @ExceptionHandler({ProductException.class, CommonException.class})
-    public ResponseEntity<String> handleProductException(ProductException exception) {
+    @ExceptionHandler({CommonException.class})
+    public ResponseEntity<String> handleInvalidValueException(CommonException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 

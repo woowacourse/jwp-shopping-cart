@@ -1,8 +1,5 @@
 package cart.entity.product;
 
-import cart.exception.common.NullOrBlankException;
-import cart.exception.product.PriceNotUnderZeroException;
-
 public class Product {
 
     private final Long id;

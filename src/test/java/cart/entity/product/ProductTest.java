@@ -2,9 +2,8 @@ package cart.entity.product;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.entity.product.Product;
 import cart.exception.common.NullOrBlankException;
-import cart.exception.product.PriceNotUnderZeroException;
+import cart.exception.common.UnderZeroException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,7 +25,7 @@ class ProductTest {
     void validate_price_value_is_positive() {
         // when + then
         assertThatThrownBy(() -> new Product("연필", "이미지", -1))
-            .isInstanceOf(PriceNotUnderZeroException.class);
+            .isInstanceOf(UnderZeroException.class);
     }
 
 }
