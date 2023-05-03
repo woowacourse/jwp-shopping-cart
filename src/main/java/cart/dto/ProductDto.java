@@ -10,7 +10,7 @@ public class ProductDto {
     private final long price;
 
     public ProductDto(Product product) {
-        this.productId = product.getProductId();
+        this.productId = product.getId();
         this.name = product.getName().getName();
         this.image = product.getImage();
         this.price = product.getPrice().getPrice();

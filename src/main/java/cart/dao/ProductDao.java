@@ -55,7 +55,7 @@ public class ProductDao {
     public void updateProduct(Product product) {
         String sql = "update PRODUCT set name = :name, image = :image, price = :price where product_id = :product_id";
         SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("product_id", product.getProductId())
+                .addValue("product_id", product.getId())
                 .addValue("name", product.getName().getName())
                 .addValue("image", product.getImage())
                 .addValue("price", product.getPrice().getPrice());
