@@ -7,7 +7,7 @@ public class ProductIdRequest {
         this.productId = productId;
     }
 
-    public Long getProductId() {
+    public long getProductId() {
         return productId;
     }
 }

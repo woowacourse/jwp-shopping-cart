@@ -61,8 +61,11 @@ public class CartService {
         String email = credentials[0];
         String password = credentials[1];
 
-        System.out.println(email + password);
-
         return memberDao.findByEmailAndPassword(email, password).get();
+    }
+
+    public void deleteItem(final String authorization, final long productId) {
+        final Member member = validateAuth(authorization);
+        cartItemDao.delete(member.getId(), productId);
     }
 }

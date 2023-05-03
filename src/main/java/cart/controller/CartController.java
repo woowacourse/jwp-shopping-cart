@@ -1,6 +1,5 @@
 package cart.controller;
 
-import cart.dto.ProductIdRequest;
 import cart.entity.item.CartItem;
 import cart.entity.product.Product;
 import cart.service.CartService;
@@ -19,12 +18,12 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping
-    public ResponseEntity<CartItem> addItem(@RequestHeader("Authorization") String authorization, @RequestBody ProductIdRequest productId) {
+    @PostMapping("/{productId}")
+    public ResponseEntity<CartItem> addItem(@PathVariable("productId") long productId, @RequestHeader("Authorization") String authorization) {
         if (authorization.isBlank()) {
             return ResponseEntity.badRequest().build();
         }
-        final CartItem addedItem = cartService.addItem(authorization, productId.getProductId());
+        final CartItem addedItem = cartService.addItem(authorization, productId);
         return ResponseEntity.ok().body(addedItem);
     }
 
@@ -34,11 +33,16 @@ public class CartController {
             return ResponseEntity.badRequest().build();
         }
         final List<Product> products = cartService.findCartItems(authorization);
+        System.out.println(products);
         return ResponseEntity.ok().body(products);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestHeader("Authorization") String authorization, @RequestParam("memberId") Long memberId) {
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> delete(@PathVariable("productId") long productId, @RequestHeader("Authorization") String authorization) {
+        if (authorization.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+        cartService.deleteItem(authorization, productId);
         return ResponseEntity.noContent().build();
     }
 }

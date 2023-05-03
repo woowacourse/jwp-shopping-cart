@@ -6,7 +6,7 @@ public interface CartItemDao {
 
     CartItem save(CartItem cartItem);
 
-    List<CartItem> findAll();
-
     List<CartItem> findByMemberId(long id);
+
+    void delete(long memberId, long productId);
 }
