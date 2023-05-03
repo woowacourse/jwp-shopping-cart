@@ -41,6 +41,7 @@ public class CartService {
     @Transactional
     public void save(final Long memberId, final ProductIdRequest request) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         cartDao.save(memberId, request.getProductId());
     }
 
@@ -56,6 +57,9 @@ public class CartService {
 =======
         cartDao.create(memberId, request.getProductId());
 >>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
+=======
+        cartDao.save(memberId, request.getProductId());
+>>>>>>> db0c1803 (feat: CartDao save 테스트)
     }
 
 }

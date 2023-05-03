@@ -9,10 +9,13 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import static org.junit.jupiter.api.Assertions.*;
 
 >>>>>>> 5eb5e7b9 (feat: View 테스트)
+=======
+>>>>>>> db0c1803 (feat: CartDao save 테스트)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SettingsControllerTest {
 

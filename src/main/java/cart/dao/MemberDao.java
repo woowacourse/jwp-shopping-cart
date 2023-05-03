@@ -47,10 +47,14 @@ public class MemberDao {
 
     public void create(final MemberEntity entity) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         String sql = "INSERT INTO MEMBER (email, password) VALUES (?, ?)";
 =======
         String sql = "INSERT INTO MEMEBER (email, password) VALUES (?, ?)";
 >>>>>>> 1eb8f466 (feat: 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있다.)
+=======
+        String sql = "INSERT INTO MEMBER (email, password) VALUES (?, ?)";
+>>>>>>> db0c1803 (feat: CartDao save 테스트)
         jdbcTemplate.update(sql, entity.getEmail(), entity.getPassword());
     }
 

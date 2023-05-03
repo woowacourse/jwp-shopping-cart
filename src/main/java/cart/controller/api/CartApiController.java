@@ -58,6 +58,7 @@ public class CartApiController {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     @GetMapping("/products")
     public ResponseEntity<List<CartItemResponse>> findAll(@Authenticate final Long memberId) {
         List<CartItemResponse> responses = cartService.findAll(memberId);
@@ -74,4 +75,6 @@ public class CartApiController {
 
 >>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
 
+=======
+>>>>>>> db0c1803 (feat: CartDao save 테스트)
 }
