@@ -16,13 +16,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JdbcProductRepository implements ProductRepository {
 
-    private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (rs, rowNum) -> {
+    static final RowMapper<Product> PRODUCT_ROW_MAPPER = (rs, rowNum) -> {
         final long id = rs.getLong("id");
         final String name = rs.getString("name");
         final String imageUrl = rs.getString("image_url");
         final int price = rs.getInt("price");
         return new Product(id, name, imageUrl, price);
     };
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public JdbcProductRepository(final DataSource dataSource) {

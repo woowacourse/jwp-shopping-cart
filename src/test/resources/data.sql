@@ -22,3 +22,7 @@ values ('hongSile@wooteco.com', 'B588FF3E4D6320D9F9C2FBE99EEFB25DFB6262F844C896D
 
 insert into member (email, password)
 values ('seovalue@wooteco.com', 'F4940D34D0942445F133B5075169A1150D671F5402060BBAAB1061707F371EE3');
+
+-- cart 테스트 데이터
+insert into cart (member_id, product_id)
+values (1L, 1L);
