@@ -21,7 +21,10 @@ public class CartDao {
                 .price(resultSet.getInt("price"))
                 .imageUrl(resultSet.getString("image_url"))
                 .build();
-        return new CartItem(resultSet.getInt("id"), product);
+        return new CartItem.Builder()
+                .id(resultSet.getInt("id"))
+                .product(product)
+                .build();
     };
 
     private final JdbcTemplate jdbcTemplate;

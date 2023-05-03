@@ -18,4 +18,25 @@ public class CartItem {
         return product;
     }
 
+    public static class Builder {
+
+        private int id;
+        private Product product;
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder product(Product product) {
+            this.product = product;
+            return this;
+        }
+
+        public CartItem build() {
+            return new CartItem(id, product);
+        }
+
+    }
+
 }
