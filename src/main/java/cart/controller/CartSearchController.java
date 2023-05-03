@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cart.domain.product.Product;
+import cart.domain.cart.Cart;
 import cart.dto.ProductResponse;
 import cart.dto.UserResponse;
 import cart.infrastructure.BasicAuthorizationExtractor;
@@ -32,7 +32,7 @@ public class CartSearchController {
         final String email = userResponse.getEmail();
         final String password = userResponse.getPassword();
         if (authService.isValidLogin(email, password)) {
-            final List<Product> products = cartSearchService.findByEmail(email);
+            final List<Cart> products = cartSearchService.findByEmail(email);
             final List<ProductResponse> productResponses = products.stream()
                     .map(ProductResponse::from)
                     .collect(Collectors.toList());

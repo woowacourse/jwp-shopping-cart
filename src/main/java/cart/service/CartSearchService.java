@@ -2,7 +2,7 @@ package cart.service;
 
 import java.util.List;
 
-import cart.domain.product.Product;
+import cart.domain.cart.Cart;
 import cart.domain.user.Email;
 import cart.repository.CartRepository;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class CartSearchService {
         this.cartRepository = cartRepository;
     }
 
-    public List<Product> findByEmail(final String email) {
+    public List<Cart> findByEmail(final String email) {
         return cartRepository.findByEmail(new Email(email));
     }
 }

@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.service.AuthService;
 import cart.service.CartCreateService;
+import cart.service.CartDeleteService;
 import cart.service.CartSearchService;
 import cart.service.ProductCreateService;
 import cart.service.ProductDeleteService;
@@ -19,6 +20,8 @@ public class AbstractProductControllerTest {
 
     @MockBean
     protected AuthService authService;
+    @MockBean
+    protected CartDeleteService cartDeleteService;
     @MockBean
     protected CartCreateService cartCreateService;
     @MockBean

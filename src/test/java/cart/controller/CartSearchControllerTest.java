@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import cart.domain.cart.Cart;
 import cart.domain.product.Product;
 import cart.dto.ProductResponse;
 import org.junit.jupiter.api.Test;
@@ -17,9 +18,9 @@ class CartSearchControllerTest extends AbstractProductControllerTest {
     @Test
     void 장바구니_조회_테스트() throws Exception {
         given(authService.isValidLogin(anyString(), anyString())).willReturn(true);
-        final List<Product> products = List.of(
-                new Product(1L, "odo", "url", 1),
-                new Product(2L, "nunu", "url", 1)
+        final List<Cart> products = List.of(
+                new Cart(1L, new Product(1L, "odo", "url", 1)),
+                new Cart(2L, new Product(2L, "nunu", "url", 1))
         );
         given(cartSearchService.findByEmail(anyString())).willReturn(products);
         final List<ProductResponse> productResponses = List.of(

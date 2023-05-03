@@ -7,7 +7,7 @@ import java.util.List;
 import cart.dao.CartDao;
 import cart.dao.ProductDao;
 import cart.dao.UserDao;
-import cart.domain.product.Product;
+import cart.domain.cart.Cart;
 import cart.domain.user.Email;
 import cart.entiy.ProductEntity;
 import cart.entiy.UserEntity;
@@ -63,8 +63,8 @@ class RdsCartRepositoryTest {
             @Test
             @DisplayName("조회할 수 있다")
             void save() {
-                final List<Product> products = rdsCartRepository.findByEmail(new Email("a@a.com"));
-                assertThat(products).hasSize(1);
+                final List<Cart> carts = rdsCartRepository.findByEmail(new Email("a@a.com"));
+                assertThat(carts).hasSize(1);
             }
         }
     }

@@ -1,11 +1,12 @@
 package cart.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import cart.dao.CartDao;
 import cart.dao.ProductDao;
+import cart.domain.cart.Cart;
 import cart.domain.product.Product;
 import cart.domain.user.Email;
 import cart.entiy.CartEntity;
@@ -30,15 +31,18 @@ public class RdsCartRepository implements CartRepository {
     }
 
     @Override
-    public List<Product> findByEmail(final Email email) {
+    public List<Cart> findByEmail(final Email email) {
         final List<CartEntity> cartEntities = cartDao.findByEmail(email.getValue());
-        return cartEntities.stream()
-                .map(CartEntity::getProductId)
-                .map(productDao::findById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(ProductEntity::toDomain)
-                .collect(Collectors.toList());
+        final List<Cart> carts = new ArrayList<>();
+        for (final CartEntity cartEntity : cartEntities) {
+            final Long productId = cartEntity.getProductId();
+            final Optional<Product> product = productDao.findById(productId).map(ProductEntity::toDomain);
+            if (product.isEmpty()) {
+                throw new IllegalStateException("productId에 해당하는 product가 존재하지 않습니다.");
+            }
+            carts.add(new Cart(cartEntity.getCartId(), product.get()));
+        }
+        return carts;
     }
 
     @Override
