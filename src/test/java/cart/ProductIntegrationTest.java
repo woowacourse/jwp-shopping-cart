@@ -51,7 +51,7 @@ class ProductIntegrationTest {
         //then
         assertAll(
                 () -> assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(result.body().jsonPath().getLong("id")).isEqualTo(1),
+                () -> assertThat(result.body().jsonPath().getLong("productId")).isEqualTo(1),
                 () -> assertThat(result.body().jsonPath().getString("name")).isEqualTo("누누"),
                 () -> assertThat(result.body().jsonPath().getString("image")).isEqualTo("naver.com"),
                 () -> assertThat(result.body().jsonPath().getInt("price")).isEqualTo(1)
@@ -72,7 +72,7 @@ class ProductIntegrationTest {
         //then
         assertAll(
                 () -> assertThat(result.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(result.body().jsonPath().getLong("id")).isPositive(),
+                () -> assertThat(result.body().jsonPath().getLong("productId")).isPositive(),
                 () -> assertThat(result.body().jsonPath().getString("name")).isEqualTo("누누"),
                 () -> assertThat(result.body().jsonPath().getString("image")).isEqualTo("naver.com"),
                 () -> assertThat(result.body().jsonPath().getInt("price")).isEqualTo(1)
