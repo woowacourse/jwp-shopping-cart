@@ -31,10 +31,10 @@
 - [x] `SELECT` 클릭 시 이후 요청에 선택한 사용자의 인증 정보 포함
 - [x] 사용자 정보는 요청 Header의 `Authorization` 필드를 사용해 인증 처리
 
-- [x] `/cart`로 접근할 경우 장바구니 페이지 조회 => `GET /cart`
+- [x] `/cart`로 접근할 경우 장바구니 단순 페이지 렌더링 => `GET /cart`
 
 - [x] 장바구니 기능 구현
-    - [x] 상품 추가 => `POST /cart`
-    - [x] 장바구니에 담긴 상품 제거 => `DELETE /cart`
-    - [x] 목록 조회 => `GET /cart`
-    - [x] 목록 불러오기 => `GET /cart/all`
+    - [x] 상품 추가 => `POST /carts`
+    - [x] 장바구니에 담긴 상품 제거 => `DELETE /carts`
+    - [x] 목록 조회 => `GET /carts`
+    - [x] 목록 불러오기 => `GET /cart/alls`
