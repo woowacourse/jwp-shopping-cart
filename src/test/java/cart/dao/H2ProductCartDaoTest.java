@@ -65,10 +65,21 @@ class H2ProductCartDaoTest {
     @Test
     void deleteByMemberAndProduct() {
         ProductCart productCart = new ProductCart(product.getId(), member.getId());
-        productCartDao.save(productCart);
+        ProductCart savedCart = productCartDao.save(productCart);
 
-        productCartDao.deleteByMemberAndProduct(member, product);
+        productCartDao.deleteById(savedCart.getId());
 
         assertThat(productCartDao.findAllByMember(member)).isEmpty();
+    }
+
+    @DisplayName("cart id 와 member를 가지고 cart를 찾아 있으면 true를 반환한다")
+    @Test
+    void existByCartIdAndMemberTest() {
+        ProductCart productCart = new ProductCart(product.getId(), member.getId());
+        ProductCart savedCart = productCartDao.save(productCart);
+
+        boolean result = productCartDao.existByCartIdAndMember(savedCart.getId(), member);
+
+        assertThat(result).isTrue();
     }
 }

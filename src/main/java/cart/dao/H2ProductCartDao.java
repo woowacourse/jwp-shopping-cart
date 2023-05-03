@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.entity.Member;
-import cart.entity.Product;
 import cart.entity.ProductCart;
 import java.util.Collections;
 import java.util.List;
@@ -71,14 +70,19 @@ public class H2ProductCartDao implements ProductCartDao {
     }
 
     @Override
-    public void deleteByMemberAndProduct(Member member, Product product) {
-        String sql = "DELETE FROM product_cart WHERE member_id = :member_id AND product_id = :product_id";
-        Map<String, Long> parameter = Map.of(
-                "member_id", member.getId(),
-                "product_id", product.getId()
-        );
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM product_cart WHERE id = :id";
+        Map<String, Long> parameter = Collections.singletonMap("id", id);
         namedParameterJdbcTemplate.update(sql, parameter);
     }
 
-
+    @Override
+    public boolean existByCartIdAndMember(Long cartId, Member member) {
+        String sql = "SELECT EXISTS(SELECT * FROM product_cart WHERE id = :id AND member_id = :member_id)";
+        Map<String, Long> parameter = Map.of(
+                "id", cartId,
+                "member_id", member.getId()
+        );
+        return namedParameterJdbcTemplate.queryForObject(sql, parameter, Boolean.class);
+    }
 }

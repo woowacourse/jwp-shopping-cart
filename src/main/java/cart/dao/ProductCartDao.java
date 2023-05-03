@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.entity.Member;
-import cart.entity.Product;
 import cart.entity.ProductCart;
 import java.util.List;
 import java.util.Optional;
@@ -14,5 +13,7 @@ public interface ProductCartDao {
 
     List<ProductCart> findAllByMember(Member member);
 
-    void deleteByMemberAndProduct(Member member, Product product);
+    void deleteById(Long cartId);
+
+    boolean existByCartIdAndMember(Long cartId, Member member);
 }
