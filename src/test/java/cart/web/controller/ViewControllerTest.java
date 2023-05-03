@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import cart.domain.product.TestFixture;
+import cart.domain.TestFixture;
 import cart.domain.service.ProductService;
 import cart.domain.service.dto.ProductDto;
 import java.util.List;

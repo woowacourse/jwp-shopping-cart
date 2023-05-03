@@ -1,7 +1,7 @@
 package cart.domain.service;
 
 import cart.domain.product.Product;
-import cart.domain.product.TestFixture;
+import cart.domain.TestFixture;
 import cart.domain.service.dto.ProductDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
