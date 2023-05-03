@@ -37,4 +37,9 @@ public class ViewController {
         return "settings";
     }
 
+    @GetMapping("/cart")
+    public String cartPage() {
+        return "cart";
+    }
+
 }
