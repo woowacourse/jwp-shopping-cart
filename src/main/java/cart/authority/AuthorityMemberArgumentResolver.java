@@ -32,7 +32,11 @@ public class AuthorityMemberArgumentResolver implements HandlerMethodArgumentRes
     }
 
     @Override
-    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(final MethodParameter parameter,
+                                  final ModelAndViewContainer mavContainer,
+                                  final NativeWebRequest webRequest,
+                                  final WebDataBinderFactory binderFactory
+    ) {
         final String token = getBasicToken(webRequest);
         final String[] authInformation = getAuthInformation(token);
         final String email = authInformation[0];
