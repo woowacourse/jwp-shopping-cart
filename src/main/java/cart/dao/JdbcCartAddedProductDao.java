@@ -1,8 +1,10 @@
 package cart.dao;
 
+import cart.entity.CartAddedProduct;
 import cart.entity.Product;
 import cart.entity.vo.Email;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -11,6 +13,21 @@ import java.util.List;
 
 @Repository
 public class JdbcCartAddedProductDao implements cartAddedProductDao {
+
+    private static final String CART_TABLE = "cart_added_product";
+    private static final String PRODUCT_TABLE = "products";
+
+    private static final RowMapper<CartAddedProduct> cartAddedProductRowMapper = (rs, rowNum) ->
+            new CartAddedProduct(
+                    rs.getLong(CART_TABLE + ".id"),
+                    new Email(rs.getString(CART_TABLE + ".user_email")),
+                    new Product(
+                            rs.getLong(PRODUCT_TABLE + ".id"),
+                            rs.getString(PRODUCT_TABLE + ".product_name"),
+                            rs.getInt(PRODUCT_TABLE + ".product_price"),
+                            rs.getString(PRODUCT_TABLE + ".product_image")
+                    )
+            );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -32,8 +49,12 @@ public class JdbcCartAddedProductDao implements cartAddedProductDao {
     }
 
     @Override
-    public List<Product> findProductsByUserEmail(final Email userEmail) {
-        return null;
+    public List<CartAddedProduct> findProductsByUserEmail(final Email userEmail) {
+        final String sql = "SELECT * FROM cart_added_product " +
+                "JOIN products " +
+                "ON cart_added_product.product_id = products.id  " +
+                "WHERE user_email = ?;";
+        return jdbcTemplate.query(sql, cartAddedProductRowMapper, userEmail.getValue());
     }
 
     @Override

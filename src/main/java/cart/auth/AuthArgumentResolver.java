@@ -33,7 +33,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         final String authHeaderValue = webRequest.getHeader(AUTH_HEADER_KEY);
 
         if (authHeaderValue == null || !authHeaderValue.matches(BASIC_AUTH_HEADER_REGEX)) {
-            System.out.println(authHeaderValue);
             throw new UserAuthorizationException("Basic 인증 형식에 맞지 않습니다.");
         }
 
