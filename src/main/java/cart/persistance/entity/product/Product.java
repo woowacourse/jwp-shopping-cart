@@ -1,4 +1,4 @@
-package cart.domain.product;
+package cart.persistance.entity.product;
 
 public class Product {
 

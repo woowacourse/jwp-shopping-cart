@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.domain.user.Member;
 import cart.persistance.dao.MemberDao;
+import cart.persistance.entity.user.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

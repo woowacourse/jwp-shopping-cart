@@ -1,6 +1,6 @@
 package cart.persistance.dao;
 
-import cart.domain.user.Member;
+import cart.persistance.entity.user.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

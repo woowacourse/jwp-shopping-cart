@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,12 +16,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.net.URISyntaxException;
 
 import static io.restassured.RestAssured.given;
 
+@Sql("/test.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductControllerTest {
 
@@ -32,21 +32,9 @@ class ProductControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private ProductController productController;
-
     @BeforeEach
     void setUp() throws URISyntaxException {
         RestAssured.port = port;
-        productController.addProduct(new ModifyRequest("망고", 1000, "domains.com"));
-    }
-
-    @AfterEach
-    void after() {
-        jdbcTemplate.execute("TRUNCATE TABLE product");
     }
 
     @DisplayName("POST /admin/product 요청 시")

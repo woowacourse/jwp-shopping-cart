@@ -2,9 +2,9 @@ package cart.controller;
 
 import cart.controller.auth.BasicAuthentication;
 import cart.controller.dto.AddCartRequest;
-import cart.domain.user.Member;
 import cart.persistance.dao.CartDao;
 import cart.persistance.entity.CartProductEntity;
+import cart.persistance.entity.user.Member;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

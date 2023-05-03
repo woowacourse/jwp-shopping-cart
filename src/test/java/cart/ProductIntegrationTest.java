@@ -7,7 +7,6 @@ import io.restassured.RestAssured;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,29 +14,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@Sql("/test.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProductIntegrationTest {
 
     @LocalServerPort
     private int port;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-    }
-
-    @AfterEach
-    void after() {
-        jdbcTemplate.execute("TRUNCATE TABLE product");
     }
 
     @Autowired
@@ -46,24 +38,6 @@ public class ProductIntegrationTest {
     @DisplayName("2개의 상품 추가 후 1개 수정, 1개 삭제하는 시나리오 검증")
     @Test
     public void getProducts() throws JsonProcessingException {
-        // 2개의 상품 추가
-        ModifyRequest request1 = new ModifyRequest("사과", 100, "super.com");
-        ModifyRequest request2 = new ModifyRequest("당근", 1000, "super.com");
-        String jsonRequest1 = objectMapper.writeValueAsString(request1);
-        String jsonRequest2 = objectMapper.writeValueAsString(request2);
-
-        given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(jsonRequest1)
-                .when()
-                .post("/product");
-
-        given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(jsonRequest2)
-                .when()
-                .post("/product");
-
         // 1개의 상품 수정
         ModifyRequest request3 = new ModifyRequest("애플", 1000, "super.com");
         String jsonRequest3 = objectMapper.writeValueAsString(request3);

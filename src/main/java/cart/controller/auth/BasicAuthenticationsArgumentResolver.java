@@ -1,7 +1,7 @@
 package cart.controller.auth;
 
-import cart.domain.user.Member;
 import cart.persistance.dao.MemberDao;
+import cart.persistance.entity.user.Member;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

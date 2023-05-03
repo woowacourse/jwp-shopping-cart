@@ -1,4 +1,4 @@
-package cart.domain.user;
+package cart.persistance.entity.user;
 
 public final class Member {
 
