@@ -38,4 +38,10 @@ public class CartDao {
 
         jdbcTemplate.update(sql, productId);
     }
+
+    public void delete(final long memberId, final long productId) {
+        String sql = "DELETE FROM Cart WHERE member_id = ? and product_id = ?;";
+
+        jdbcTemplate.update(sql, memberId, productId);
+    }
 }

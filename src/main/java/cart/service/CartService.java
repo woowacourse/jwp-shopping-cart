@@ -41,6 +41,12 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
+    public void deleteProductBy(final AuthInfo authInfo, final long productId) {
+        final MemberEntity member = findBy(authInfo);
+
+        cartDao.delete(member.getId(), productId);
+    }
+
     private MemberEntity findBy(final AuthInfo authInfo) {
         final Optional<MemberEntity> result = memberDao.findByAuthInfo(authInfo);
 

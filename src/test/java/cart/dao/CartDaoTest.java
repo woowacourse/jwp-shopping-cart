@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.entity.CartEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+import java.util.List;
 
 @JdbcTest
 @Sql(value = {"/schema.sql", "/data.sql"})
@@ -63,5 +65,17 @@ class CartDaoTest {
                 () -> assertThat(cartDao.findByMemberId(1L).size()).isEqualTo(1),
                 () -> assertThat(cartDao.findByMemberId(2L).size()).isEqualTo(0)
         );
+    }
+
+    @Test
+    void 멤버ID와_상품ID로_데이터를_삭제한다() {
+        final long memberId = 2L;
+        final long productId = 2L;
+
+        cartDao.delete(memberId, productId);
+
+        final List<CartEntity> result = cartDao.findByMemberId(2L);
+
+        assertThat(result.size()).isEqualTo(0);
     }
 }
