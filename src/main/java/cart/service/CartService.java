@@ -38,7 +38,6 @@ public class CartService {
         Product product = productService.findById(productId);
 
         cart.addCartItem(product);
-
         return cartRepository.saveCartItem(cart);
     }
 
@@ -47,7 +46,7 @@ public class CartService {
         Cart cart = cartRepository.findCartByMember(member);
         Product product = productService.findById(productId);
 
-        validateCartHasRequestProduct(product, cart);
+        CheckCartHasRequestProduct(product, cart);
         Product deletedProduct = cart.removeCartItem(product);
 
         cartRepository.deleteCartItem(cart, deletedProduct);
@@ -57,7 +56,7 @@ public class CartService {
         return ProductsResponseDto.from(cartItems.getCartItems());
     }
 
-    private void validateCartHasRequestProduct(final Product product, final Cart cart) {
+    private void CheckCartHasRequestProduct(final Product product, final Cart cart) {
         if (!cart.containsCartItem(product)) {
             throw new ProductNotFoundException();
         }

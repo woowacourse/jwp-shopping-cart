@@ -7,7 +7,6 @@ import cart.domain.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
@@ -19,15 +18,20 @@ import java.util.Map;
 public class CartDbRepository implements CartRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     @Autowired
     public CartDbRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("cart")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    @Override
+    public boolean existCart(Member member) {
+        String sql = "SELECT COUNT(*) FROM cart WHERE member_id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, member.getId());
+        return count > 0;
     }
 
     @Override
@@ -44,13 +48,6 @@ public class CartDbRepository implements CartRepository {
     private List<Product> findAllProductsByCartId(Long cartId) {
         String sql = "SELECT p.* FROM product p JOIN cart_item ci ON p.id = ci.product_id WHERE ci.cart_id = ?";
         return jdbcTemplate.query(sql, getProductRowMapper(), cartId);
-    }
-
-    @Override
-    public boolean existCart(Member member) {
-        String sql = "SELECT COUNT(*) FROM cart WHERE member_id = ?";
-        int count = jdbcTemplate.queryForObject(sql, Integer.class, member.getId());
-        return count > 0;
     }
 
     @Override

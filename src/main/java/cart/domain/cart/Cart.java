@@ -25,11 +25,14 @@ public class Cart {
     }
 
     public void addCartItem(final Product product) {
+        checkIsDuplicatedCartItem(product);
+        this.cartItems.add(product);
+    }
+
+    private void checkIsDuplicatedCartItem(final Product product) {
         if (containsCartItem(product)) {
             throw new CartItemDuplicatedException();
         }
-
-        this.cartItems.add(product);
     }
 
     public Product removeCartItem(final Product product) {
