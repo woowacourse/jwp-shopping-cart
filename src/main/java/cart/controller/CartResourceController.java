@@ -10,8 +10,12 @@ import cart.service.MemberService;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,7 +31,7 @@ public class CartResourceController {
         this.memberService = memberService;
     }
 
-    @GetMapping()
+    @GetMapping
     public List<ProductResponse> findAllProducts(final HttpServletRequest request) {
         final Member member = extractor.extract(request);
 
@@ -44,5 +48,11 @@ public class CartResourceController {
                         productEntity.getImageUrl())
                 )
                 .collect(Collectors.toList());
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteItem(@PathVariable final long id) {
+        cartService.delete(id);
     }
 }
