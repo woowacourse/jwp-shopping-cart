@@ -26,8 +26,8 @@ CREATE TABLE CART
     user_id    INT NOT NULL,
     product_id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES MEMBER (id),
-    FOREIGN KEY (product_id) REFERENCES PRODUCT (id)
+    FOREIGN KEY (user_id) REFERENCES MEMBER (id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES PRODUCT (id) ON DELETE CASCADE
 );
 
 INSERT INTO MEMBER (username, password)

@@ -26,8 +26,8 @@ CREATE TABLE CART
     user_id    INT NOT NULL,
     product_id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES MEMBER (id),
-    FOREIGN KEY (product_id) REFERENCES PRODUCT (id)
+    FOREIGN KEY (user_id) REFERENCES MEMBER (id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES PRODUCT (id) ON DELETE CASCADE
 );
 
 INSERT INTO MEMBER (username, password)
@@ -41,3 +41,10 @@ INSERT INTO PRODUCT(name, price, image_url)
 VALUES ('name2', 2000, 'https://image2.com');
 INSERT INTO PRODUCT(name, price, image_url)
 VALUES ('name3', 3000, 'https://image3.com');
+
+INSERT INTO CART(user_id, product_id)
+VALUES (1, 1);
+INSERT INTO CART(user_id, product_id)
+VALUES (1, 2);
+INSERT INTO CART(user_id, product_id)
+VALUES (1, 3);
