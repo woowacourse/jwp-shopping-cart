@@ -1,9 +1,14 @@
 package cart.dao;
 
 import cart.entity.CartItemEntity;
+import cart.entity.MemberEntity;
+import cart.entity.ProductEntity;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class JdbcCartItemDao implements CartItemDao {
@@ -12,6 +17,18 @@ public class JdbcCartItemDao implements CartItemDao {
 
     public JdbcCartItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private final RowMapper<CartItemEntity> cartItemEntityRowMapper = (resultSet, rowNum) -> CartItemEntity.of(
+            resultSet.getLong("id"),
+            resultSet.getLong("member_id"),
+            resultSet.getLong("product_id")
+    );
+
+    @Override
+    public List<CartItemEntity> selectAllByMemberId(final Long memberId) {
+        final String sql = "SELECT * FROM cart_item WHERE member_id = ?";
+        return jdbcTemplate.query(sql, cartItemEntityRowMapper, memberId);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package cart.auth;
 
 
+import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ public class BasicAuthenticationExtractor implements AuthenticationExtractor<Mem
         String header = request.getHeader(AUTHORIZATION);
 
         if (header == null) {
-            return null;
+            throw new AuthenticationException("사용자 인증이 필요합니다.");
         }
 
         if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
@@ -31,7 +32,7 @@ public class BasicAuthenticationExtractor implements AuthenticationExtractor<Mem
             return MemberAuthentication.of(email, password);
         }
 
-        return null;
+        throw new AuthenticationException("사용자 인증이 필요합니다.");
     }
 
 }

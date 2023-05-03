@@ -10,6 +10,7 @@ import java.util.List;
 public interface ProductDao {
 
     List<ProductEntity> selectAll();
+    ProductEntity selectById(final long id);
 
     long insert(@Valid final ProductEntity productEntity);
 

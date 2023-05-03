@@ -32,6 +32,12 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
+    public ProductEntity selectById(final long id) {
+        final String sql = "SELECT * FROM product WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
+    }
+
+    @Override
     public long insert(final ProductEntity productEntity) {
         final String sql = "INSERT INTO product(name, image, price) VALUES (?, ?, ?)";
         return jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());

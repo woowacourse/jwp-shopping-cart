@@ -1,40 +1,38 @@
 package cart.dto;
 
-import cart.entity.CartItemEntity;
+import cart.entity.ProductEntity;
 
 public class CartItemDto {
 
     private final Long id;
-    private final Long memberId;
-    private final Long productId;
+    private final String name;
+    private final String image;
+    private final Integer price;
 
-    private CartItemDto(final Long id, final Long memberId, final Long productId) {
+    private CartItemDto(final Long id, final String name, final String image, final Integer price) {
         this.id = id;
-        this.memberId = memberId;
-        this.productId = productId;
+        this.name = name;
+        this.image = image;
+        this.price = price;
     }
 
-    public static CartItemDto of(final Long memberId, final Long productId){
-        return new CartItemDto(null, memberId, productId);
-    }
-
-    public static CartItemDto of(final Long id, final Long memberId, final Long productId){
-        return new CartItemDto(id, memberId, productId);
-    }
-
-    public static CartItemEntity toEntity(final CartItemDto cartItemDto){
-        return CartItemEntity.of(cartItemDto.memberId, cartItemDto.productId);
+    public static CartItemDto from(final Long id, final ProductEntity productEntity){
+        return new CartItemDto(id, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public String getName() {
+        return name;
     }
 
-    public Long getProductId() {
-        return productId;
+    public String getImage() {
+        return image;
+    }
+
+    public Integer getPrice() {
+        return price;
     }
 }
