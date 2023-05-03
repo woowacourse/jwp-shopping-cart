@@ -47,4 +47,9 @@ public class CartService {
             .map(CartResponse::of)
             .collect(Collectors.toUnmodifiableList());
     }
+
+    @Transactional
+    public void delete(final Long id) {
+        cartDao.deleteById(id);
+    }
 }

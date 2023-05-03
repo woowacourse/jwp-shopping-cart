@@ -3,6 +3,7 @@ package cart.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -88,5 +89,19 @@ class CartControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("장바구니 삭제 api")
+    public void testDeleteCart() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(delete("/cart?id=1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authentication", "Basic sdfksajdfklsdf")
+                .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isNoContent());
     }
 }

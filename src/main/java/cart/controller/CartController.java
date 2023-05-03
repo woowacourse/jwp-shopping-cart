@@ -9,6 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,5 +46,13 @@ public class CartController {
         final CartCreateRequest request = new CartCreateRequest(productId, authInfo.getEmail());
         cartService.create(request);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<Void> deleteCart(@RequestParam final Long id,
+        final HttpServletRequest httpServletRequest) {
+        authService.checkAuthenticationHeader(httpServletRequest.getHeader(AUTHORIZATION));
+        cartService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
