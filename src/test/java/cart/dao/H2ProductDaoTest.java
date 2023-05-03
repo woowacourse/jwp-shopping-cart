@@ -12,12 +12,14 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import java.util.List;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @JdbcTest
+@Sql("/data.sql")
 class H2ProductDaoTest {
 
     private H2ProductDao h2ProductDao;

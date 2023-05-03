@@ -15,5 +15,5 @@ CREATE TABLE IF NOT EXISTS MEMBER
     PRIMARY KEY(id)
 );
 
-INSERT INTO member (email, password) VALUES ('email1@email2','password1');
-INSERT INTO member (email, password) VALUES ('email2@email3','password2');
+INSERT INTO member (email, password) values ('email@email', 'password');
+INSERT INTO member (email, password) values ('email2@email', 'password2');
