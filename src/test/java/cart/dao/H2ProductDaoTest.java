@@ -114,4 +114,16 @@ class H2ProductDaoTest {
         final List<ProductEntity> productEntities = getProducts();
         assertThat(productEntities).isEmpty();
     }
+
+    @Test
+    void findById() {
+        //given
+        final Long id = saveProduct();
+
+        ///when
+        final ProductEntity productEntity = h2ProductDao.findById(id).get();
+
+        //then
+        assertThat(productEntity).isNotNull();
+    }
 }
