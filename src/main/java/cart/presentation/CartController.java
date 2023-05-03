@@ -3,6 +3,7 @@ package cart.presentation;
 import cart.business.CartService;
 import cart.business.MemberReadService;
 import cart.business.ProductCRUDService;
+import cart.business.domain.cart.CartItem;
 import cart.business.domain.member.Member;
 import cart.business.domain.member.MemberEmail;
 import cart.business.domain.member.MemberPassword;
@@ -41,7 +42,7 @@ public class CartController {
     @PostMapping
     public void cartCreate(HttpServletRequest request, @RequestBody ProductIdDto productIdDto) {
         Integer memberId = getMemberId(request);
-        cartService.addCartItem(productIdDto.getId(), memberId);
+        cartService.addCartItem(new CartItem(null, productIdDto.getId(), memberId));
         // TODO: URI CREATED 반환
     }
 
@@ -76,6 +77,6 @@ public class CartController {
     @DeleteMapping
     public void cartDelete(HttpServletRequest request, @RequestBody CartItemIdDto cartItemIdDto) {
         Integer memberId = getMemberId(request);
-        cartService.removeCartItem(memberId, cartItemIdDto.getId());
+        cartService.removeCartItem(cartItemIdDto.getId());
     }
 }

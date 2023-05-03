@@ -16,13 +16,12 @@ public class CartService {
     }
 
     @Transactional
-    public void addCartItem(Integer productId, Integer memberId) {
-        CartItem cartItem = new CartItem(null, productId, memberId);
+    public void addCartItem(CartItem cartItem) {
         cartItemRepository.save(cartItem);
     }
 
     @Transactional
-    public void removeCartItem(Integer memberId, Integer cartItemId) {
+    public void removeCartItem(Integer cartItemId) {
         cartItemRepository.remove(cartItemId);
     }
 
