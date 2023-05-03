@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.product;
 
 import cart.domain.product.Price;
 import cart.exception.PriceCreateFailException;
