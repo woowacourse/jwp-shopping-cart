@@ -28,5 +28,6 @@ CREATE TABLE cart
     quantity   INT    NOT NULL DEFAULT 1,
     PRIMARY KEY (id),
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE,
-    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    UNIQUE (member_id, product_id)
 )
