@@ -3,7 +3,6 @@ package cart.controller;
 import cart.controller.dto.MemberRequest;
 import cart.controller.dto.ProductResponse;
 import cart.dao.CartRepository;
-import cart.domain.Member;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

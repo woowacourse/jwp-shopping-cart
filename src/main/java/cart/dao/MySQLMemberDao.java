@@ -2,7 +2,6 @@ package cart.dao;
 
 import cart.controller.dto.MemberRequest;
 import cart.dao.entity.MemberEntity;
-import cart.domain.Member;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;

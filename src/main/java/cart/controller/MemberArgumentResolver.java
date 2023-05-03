@@ -1,7 +1,6 @@
 package cart.controller;
 
 import cart.controller.dto.MemberRequest;
-import cart.domain.Member;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.util.Base64Utils;

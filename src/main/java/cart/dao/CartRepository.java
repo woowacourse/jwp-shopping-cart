@@ -1,9 +1,7 @@
 package cart.dao;
 
 import cart.controller.dto.MemberRequest;
-import cart.controller.dto.ProductResponse;
 import cart.dao.entity.ProductEntity;
-import cart.domain.Member;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.dao.DataIntegrityViolationException;
