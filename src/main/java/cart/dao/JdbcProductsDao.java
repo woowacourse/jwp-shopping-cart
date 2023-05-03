@@ -18,7 +18,7 @@ public class JdbcProductsDao implements ProductsDao {
     public JdbcProductsDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("products")
+                .withTableName("products_table")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -47,7 +47,7 @@ public class JdbcProductsDao implements ProductsDao {
 
     @Override
     public void update(final Product product) {
-        final String sql = "UPDATE products SET product_name = ?, product_price = ? , product_image = ? where id = ?";
+        final String sql = "UPDATE products_table SET product_name = ?, product_price = ? , product_image = ? where id = ?";
         final int updatedCount = jdbcTemplate.update(sql,
                 product.getName(),
                 product.getPrice(),
@@ -61,7 +61,7 @@ public class JdbcProductsDao implements ProductsDao {
 
     @Override
     public void delete(final long id) {
-        final String sql = "DELETE FROM products WHERE id = ?";
+        final String sql = "DELETE FROM products_table WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }
