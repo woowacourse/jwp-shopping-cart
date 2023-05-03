@@ -85,10 +85,4 @@ public class ProductDao {
             return Optional.empty();
         }
     }
-
-    public void validateAffectedRowsCount(final int affectedRows) {
-        if (affectedRows < MINIMUM_AFFECTED_ROWS) {
-            throw new IllegalArgumentException("접근하려는 데이터가 존재하지 않습니다.");
-        }
-    }
 }

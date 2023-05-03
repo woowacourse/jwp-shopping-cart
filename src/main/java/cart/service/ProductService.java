@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductService {
 
-    private static final int MINIMUM_AFFECTED_ROWS = 1;
-
     private final ProductDao productDao;
 
     @Autowired
@@ -39,7 +37,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductEntity findById(final Long id) {
-        Optional<ProductEntity> productEntity = productDao.findById(id);
+        final Optional<ProductEntity> productEntity = productDao.findById(id);
         if (productEntity.isEmpty()) {
             throw new IllegalArgumentException("해당 id를 가진 상품이 존재하지 않습니다.");
         }
@@ -58,18 +56,24 @@ public class ProductService {
 
     @Transactional
     public void update(final Long id, final UpdateProductRequest updateProductRequest) {
+        final Optional<ProductEntity> productEntityOptional = productDao.findById(id);
+        if (productEntityOptional.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 데이터입니다.");
+        }
         final Product product = new Product(
                 updateProductRequest.getName(),
                 updateProductRequest.getPrice(),
                 updateProductRequest.getImage()
         );
-        final int updatedRows = productDao.update(id, product);
-        productDao.validateAffectedRowsCount(updatedRows);
+        productDao.update(id, product);
     }
 
     @Transactional
     public void delete(final Long id) {
-        final int affectedRows = productDao.delete(id);
-        productDao.validateAffectedRowsCount(affectedRows);
+        final Optional<ProductEntity> productEntityOptional = productDao.findById(id);
+        if (productEntityOptional.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 데이터입니다.");
+        }
+        productDao.delete(id);
     }
 }

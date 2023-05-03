@@ -19,6 +19,11 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public int insert(final Long productId, final Long memberId) {
+        final String sql = "INSERT INTO CART (product_id, member_id) VALUES (?,?)";
+        return jdbcTemplate.update(sql, productId, memberId);
+    }
+
     public int delete(final CartEntity cartEntity) {
         final String sql = "DELETE FROM CART WHERE id = ?";
         return jdbcTemplate.update(sql, cartEntity.getId());
@@ -40,16 +45,6 @@ public class CartDao {
                 resultSet.getLong("member_id")
         );
         return cartEntityRowMapper;
-    }
-
-    public int insert(final Long productId, final Long memberId) {
-        final String sql = "INSERT INTO CART (product_id, member_id) VALUES (?,?)";
-        return jdbcTemplate.update(sql, productId, memberId);
-    }
-
-    public List<CartEntity> findByMemberId(final Long memberId) {
-        final String sql = "SELECT * FROM CART WHERE member_id = ?";
-        return jdbcTemplate.query(sql, carEntityMapper(), memberId);
     }
 
     public Optional<List<CartEntity>> findAllByMemberId(final Long memberId) {

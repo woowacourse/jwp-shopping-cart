@@ -49,7 +49,7 @@ public class MemberService {
     @Transactional
     public void create(final CreateMemberRequest createMemberRequest) {
         final Member member = new Member(createMemberRequest.getEmail(), createMemberRequest.getPassword());
-        final Optional<MemberEntity> memberResult = memberDao.findMemberByEmail(member);
+        final Optional<MemberEntity> memberResult = memberDao.findMemberByEmail(member.getEmail());
         if (memberResult.isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }

@@ -43,17 +43,17 @@ public class MemberDao {
         }
     }
 
-    public Optional<MemberEntity> findMemberByEmail(final Member member) {
+    public Optional<MemberEntity> findMemberByEmail(final String email) {
         final String sql = "SELECT * FROM MEMBER WHERE email = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper(), member.getEmail()));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper(), email));
         } catch (EmptyResultDataAccessException error) {
             return Optional.empty();
         }
     }
 
-    public void insert(final Member member) {
+    public int insert(final Member member) {
         final String sql = "INSERT INTO MEMBER (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+        return jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
     }
 }

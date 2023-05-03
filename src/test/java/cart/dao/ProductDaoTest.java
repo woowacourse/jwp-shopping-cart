@@ -7,6 +7,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import cart.dao.entity.ProductEntity;
 import cart.domain.Product;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -76,10 +77,11 @@ class ProductDaoTest {
         final Long id = productDao.insert(new Product("돈까스", 10_000, "돈까스 이미지 주소"));
 
         // when
-        final ProductEntity productEntity = productDao.findById(id).get();
+        Optional<ProductEntity> entity = productDao.findById(id);
 
         // then
         assertSoftly(softly -> {
+            ProductEntity productEntity = entity.get();
             softly.assertThat(productEntity.getId()).isEqualTo(id);
             softly.assertThat(productEntity.getName()).isEqualTo("돈까스");
             softly.assertThat(productEntity.getPrice()).isEqualTo(10_000);
@@ -96,8 +98,7 @@ class ProductDaoTest {
         productDao.delete(id);
 
         // then
-        assertThatThrownBy(() -> productDao.findById(id))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+        assertThat(productDao.findById(id)).isEmpty();
     }
 
     @Test
