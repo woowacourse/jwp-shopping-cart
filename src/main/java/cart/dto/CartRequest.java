@@ -5,7 +5,10 @@ import javax.validation.constraints.NotNull;
 public class CartRequest {
 
   @NotNull
-  private final long productId;
+  private long productId;
+
+  public CartRequest() {
+  }
 
   public CartRequest(long productId) {
     this.productId = productId;
