@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 import cart.dao.ProductDao;
 import cart.dto.ProductDto;
-import cart.dto.ProductRequest;
+import cart.dto.request.ProductRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

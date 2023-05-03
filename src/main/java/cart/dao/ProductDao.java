@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.dto.ProductDto;
-import cart.dto.ProductRequest;
+import cart.dto.request.ProductRequest;
 import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,12 +19,12 @@ public class ProductDao {
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     public int save(ProductRequest productRequest) {
         GeneratedKeyHolder keyholder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO product (name, imgUrl, price) VALUES (:name, :imgUrl, :price)";
+        final String sql = "INSERT INTO product (name, imgUrl, price) VALUES (:name, :imgUrl, :price)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(productRequest);
         namedParameterJdbcTemplate.update(sql, namedParameters, keyholder, new String[]{"id"});
 
@@ -32,13 +32,13 @@ public class ProductDao {
     }
 
     public List<ProductDto> findAll() {
-        String sql = "SELECT * FROM product";
+        final String sql = "SELECT * FROM product";
         BeanPropertyRowMapper<ProductDto> mapper = BeanPropertyRowMapper.newInstance(ProductDto.class);
         return jdbcTemplate.query(sql, mapper);
     }
 
     public int update(ProductRequest productRequest, int id) {
-        String sql = "UPDATE product SET name=:name, imgUrl=:imgUrl, price=:price WHERE id=:id";
+        final String sql = "UPDATE product SET name=:name, imgUrl=:imgUrl, price=:price WHERE id=:id";
         MapSqlParameterSource mapSqlParameters = new MapSqlParameterSource()
                 .addValue("name", productRequest.getName())
                 .addValue("imgUrl", productRequest.getImgUrl())
@@ -48,7 +48,7 @@ public class ProductDao {
     }
 
     public int delete(int id) {
-        String sql = "DELETE FROM product WHERE id=:id";
+        final String sql = "DELETE FROM product WHERE id=:id";
         MapSqlParameterSource mapSqlParameters = new MapSqlParameterSource()
                 .addValue("id", id);
         return namedParameterJdbcTemplate.update(sql, mapSqlParameters);

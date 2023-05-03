@@ -1,8 +1,8 @@
 package cart.controller;
 
 import cart.dto.ProductDto;
-import cart.dto.ProductRequest;
-import cart.response.ApiResponse;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ApiResponse;
 import cart.service.ProductService;
 import java.util.HashMap;
 import java.util.List;
