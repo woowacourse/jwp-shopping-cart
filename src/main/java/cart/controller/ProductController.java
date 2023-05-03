@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import cart.entity.Product;
 import cart.service.ProductService;
 import java.net.URI;
@@ -25,8 +26,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequest productRequest) {
-        Product createdProduct = productService.createProduct(productRequest.toEntity());
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest productRequest) {
+        ProductResponse createdProduct = productService.createProduct(productRequest.toEntity());
         return ResponseEntity.created(URI.create("/products/" + createdProduct.getId())).body(createdProduct);
     }
 

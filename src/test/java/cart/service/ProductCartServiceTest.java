@@ -8,6 +8,9 @@ import static org.mockito.BDDMockito.given;
 
 import cart.dao.ProductCartDao;
 import cart.dao.ProductDao;
+import cart.dto.CartsResponse;
+import cart.dto.CartsResponse.CartResponse;
+import cart.dto.ProductCartResponse;
 import cart.entity.Member;
 import cart.entity.Product;
 import cart.entity.ProductCart;
@@ -49,12 +52,25 @@ class ProductCartServiceTest {
                         Optional.of(new Product(4L, "boxster4", "https://boxster4.com", 40000))
                 );
 
-        List<Product> carts = productCartService.findAllMyProductCart(new Member(1L, "boxster@email.com", "boxster"));
-
+        CartsResponse cartsResponse = productCartService.findAllMyProductCart(
+                new Member(1L, "boxster@email.com", "boxster"));
         assertAll(
-                () -> assertThat(carts).map(Product::getId)
+                () -> assertThat(cartsResponse.getCartResponses()).map(CartResponse::getId)
                         .contains(1L, 2L, 3L, 4L),
-                () -> assertThat(carts).hasSize(4)
+                () -> assertThat(cartsResponse.getCartResponses()).hasSize(4)
         );
+    }
+
+    @DisplayName("내 장바구니에 저장한다")
+    @Test
+    void addMyCartTest() {
+        given(productDao.findById(anyLong()))
+                .willReturn(Optional.of(new Product(1L, "boxster", "https://boxster.com", 10000)));
+        given(productCartDao.save(any()))
+                .willReturn(new ProductCart(1L, 1L, 1L));
+
+        ProductCartResponse response = productCartService.addCart(1L, new Member(1L, "email@email.com", "password"));
+
+        assertThat(response.getId()).isEqualTo(1L);
     }
 }

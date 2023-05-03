@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.MemberDao;
+import cart.dto.MemberResponse;
 import cart.entity.Member;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ class MemberServiceTest {
                         new Member("gitchan@email.com", "gitchan"))
         );
 
-        List<Member> members = memberService.findMembers();
+        List<MemberResponse> members = memberService.findMembers();
 
         assertThat(members).hasSize(2);
     }

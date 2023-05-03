@@ -8,8 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.auth.AuthenticationArgumentResolver;
 import cart.config.WebMvcConfig;
-import cart.entity.Member;
-import cart.entity.Product;
+import cart.dto.MemberResponse;
+import cart.dto.ProductResponse;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import java.util.List;
@@ -40,9 +40,9 @@ class PageControllerTest {
     @DisplayName("인덱스 페이지를 상품 리스트와 함께 조회한다")
     @Test
     void indexPageTest() throws Exception {
-        List<Product> products = List.of(
-                new Product(1L, "boxster", "https://boxster.com", 10000),
-                new Product(2L, "gitchan", "https://gitchan.com", 20000)
+        List<ProductResponse> products = List.of(
+                new ProductResponse(1L, "boxster", "https://boxster.com", 10000),
+                new ProductResponse(2L, "gitchan", "https://gitchan.com", 20000)
         );
 
         when(productService.findProducts()).thenReturn(products);
@@ -55,9 +55,9 @@ class PageControllerTest {
     @DisplayName("관리자 페이지를 상품 리스트와 함께 조회한다")
     @Test
     void adminPageTest() throws Exception {
-        List<Product> products = List.of(
-                new Product(1L, "boxster", "https://boxster.com", 10000),
-                new Product(2L, "gitchan", "https://gitchan.com", 20000)
+        List<ProductResponse> products = List.of(
+                new ProductResponse(1L, "boxster", "https://boxster.com", 10000),
+                new ProductResponse(2L, "gitchan", "https://gitchan.com", 20000)
         );
 
         when(productService.findProducts()).thenReturn(products);
@@ -70,9 +70,9 @@ class PageControllerTest {
     @DisplayName("회원 페이지를 전체 회원과 함께 조회한다")
     @Test
     void settingPageTest() throws Exception {
-        List<Member> members = List.of(
-                new Member("boxster@email.com", "boxster"),
-                new Member("gitchan@email.com", "gitchan"));
+        List<MemberResponse> members = List.of(
+                new MemberResponse("boxster@email.com", "boxster"),
+                new MemberResponse("gitchan@email.com", "gitchan"));
 
         when(memberService.findMembers()).thenReturn(members);
 

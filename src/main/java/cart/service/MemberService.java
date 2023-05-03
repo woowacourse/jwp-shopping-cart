@@ -1,8 +1,9 @@
 package cart.service;
 
 import cart.dao.MemberDao;
-import cart.entity.Member;
+import cart.dto.MemberResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +15,9 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public List<Member> findMembers() {
-        return memberDao.findAll();
+    public List<MemberResponse> findMembers() {
+        return memberDao.findAll().stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
     }
 }

@@ -2,6 +2,8 @@ package cart.service;
 
 import cart.dao.ProductCartDao;
 import cart.dao.ProductDao;
+import cart.dto.CartsResponse;
+import cart.dto.ProductCartResponse;
 import cart.entity.Member;
 import cart.entity.Product;
 import cart.entity.ProductCart;
@@ -23,8 +25,18 @@ public class ProductCartService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> findAllMyProductCart(Member member) {
+    public CartsResponse findAllMyProductCart(Member member) {
         List<ProductCart> carts = productCartDao.findAllByMember(member);
+        List<Long> cartIds = carts.stream()
+                .map(ProductCart::getId)
+                .collect(Collectors.toList());
+
+        List<Product> products = getProducts(carts);
+
+        return CartsResponse.of(products, cartIds);
+    }
+
+    private List<Product> getProducts(List<ProductCart> carts) {
         return carts.stream()
                 .map(ProductCart::getProductId)
                 .map(productDao::findById)
@@ -34,11 +46,11 @@ public class ProductCartService {
     }
 
     @Transactional
-    public ProductCart addCart(Long productId, Member member) {
+    public ProductCartResponse addCart(Long productId, Member member) {
         Product product = productDao.findById(productId)
                 .orElseThrow();
-        ProductCart productCart = productCartDao.save(new ProductCart(product.getId(), member.getId()));
-        return productCart;
+        ProductCart savedProductCart = productCartDao.save(new ProductCart(product.getId(), member.getId()));
+        return ProductCartResponse.from(savedProductCart);
     }
 
     @Transactional

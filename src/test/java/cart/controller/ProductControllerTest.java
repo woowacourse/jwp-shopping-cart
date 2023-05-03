@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.auth.AuthenticationArgumentResolver;
 import cart.config.WebMvcConfig;
 import cart.dto.ProductRequest;
-import cart.entity.Product;
+import cart.dto.ProductResponse;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +48,7 @@ class ProductControllerTest {
         ProductRequest request = new ProductRequest("박스터", "https://boxster.com", 10000);
         String requestString = objectMapper.writeValueAsString(request);
 
-        Product product = new Product(1L, "박스터", "https://boxster.com", 10000);
+        ProductResponse product = new ProductResponse(1L, "박스터", "https://boxster.com", 10000);
         when(productService.createProduct(any())).thenReturn(product);
 
         mockMvc.perform(post("/products")

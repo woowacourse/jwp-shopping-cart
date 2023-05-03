@@ -1,10 +1,11 @@
 package cart.service;
 
 import cart.dao.ProductDao;
+import cart.dto.ProductResponse;
 import cart.entity.Product;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -17,8 +18,10 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> findProducts() {
-        return productDao.findAll();
+    public List<ProductResponse> findProducts() {
+        return productDao.findAll().stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -27,8 +30,9 @@ public class ProductService {
     }
 
     @Transactional
-    public Product createProduct(Product product) {
-        return productDao.save(product);
+    public ProductResponse createProduct(Product product) {
+        Product savedProduct = productDao.save(product);
+        return ProductResponse.from(savedProduct);
     }
 
     @Transactional

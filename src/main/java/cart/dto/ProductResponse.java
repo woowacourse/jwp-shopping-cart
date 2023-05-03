@@ -8,7 +8,7 @@ public class ProductResponse {
     private final String imgUrl;
     private final Integer price;
 
-    private ProductResponse(long id, String name, String imgUrl, int price) {
+    public ProductResponse(long id, String name, String imgUrl, int price) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
