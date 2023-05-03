@@ -45,11 +45,8 @@ public class ProductDao {
     }
 
     public boolean existById(Long productId) {
-        String sql = "SELECT COUNT(*) FROM PRODUCT";
-        Long count = Long.valueOf(jdbcTemplate.queryForObject(sql, Integer.class));
-        if (count == 1) {
-            return true;
-        }
-        return false;
+        String sql = "SELECT COUNT(*) FROM PRODUCT WHERE ID=?";
+        Long count = Long.valueOf(jdbcTemplate.queryForObject(sql, Integer.class, productId));
+        return count == 1;
     }
 }
