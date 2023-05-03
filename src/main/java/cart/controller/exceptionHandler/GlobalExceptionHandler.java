@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException exception) {
+    public ResponseEntity<ErrorResponse> handleRuntimeException(Exception exception) {
         exception.printStackTrace();
         return ResponseEntity.internalServerError().body(new ErrorResponse("예상치 못한 문제가 발생했습니다", LocalDateTime.now()));
     }

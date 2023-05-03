@@ -1,6 +1,8 @@
 package cart.persistence;
 
 import cart.domain.Product;
+import cart.persistence.dao.H2ProductDao;
+import cart.persistence.dao.ProductDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,7 @@ import java.math.BigDecimal;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @JdbcTest
-@Sql({"/data.sql", "/dummy-product.sql"})
+@Sql({"/data.sql"})
 class H2ProductDaoTest {
 
     @Autowired

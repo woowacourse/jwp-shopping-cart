@@ -1,4 +1,4 @@
-package cart.persistence;
+package cart.persistence.dao;
 
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -29,4 +29,8 @@ public class Cart {
     public void addItem(CartItem cartItem) {
         cartItems.add(cartItem);
     }
+
+    public CartItem removeItem(int cartItemId) {
+        return cartItems.remove(cartItemId-1);
+    }
 }

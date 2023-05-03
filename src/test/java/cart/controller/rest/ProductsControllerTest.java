@@ -1,9 +1,13 @@
 package cart.controller.rest;
 
+import cart.auth.AuthenticationPrincipalArgumentResolver;
+import cart.auth.BasicAuthInterceptor;
+import cart.dto.LoginDto;
 import cart.dto.request.ProductRequest;
 import cart.dto.request.ProductUpdateRequest;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,13 +22,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 
 import static org.mockito.ArgumentMatchers.refEq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest
+@WebMvcTest(ProductsController.class)
 class ProductsControllerTest {
 
     @Autowired
@@ -33,6 +36,19 @@ class ProductsControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private ProductService productService;
+    @MockBean
+    AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver;
+    @MockBean
+    BasicAuthInterceptor basicAuthInterceptor;
+
+    @BeforeEach
+    void setUp() throws Exception{
+        when(authenticationPrincipalArgumentResolver.resolveArgument(any(), any(), any(), any()))
+                .thenReturn(new LoginDto("1", "2"));
+        when(basicAuthInterceptor.preHandle(any(), any(), any()))
+                .thenReturn(true);
+    }
+
 
     @Test
     @DisplayName("get 요청시 ok 상태 코드를 반환하고 id에 해당하는 Product를 조회한다")
