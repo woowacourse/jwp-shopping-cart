@@ -1,6 +1,7 @@
 package cart.domain.persistence.dao;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
@@ -72,5 +73,13 @@ class JdbcProductDaoTest {
         productDao.deleteById(id);
 
         assertThatThrownBy(() -> productDao.findByName("modi")).isInstanceOf(EmptyResultDataAccessException.class);
+    }
+
+    @Test
+    void existsById_메서드로_주어진_product_id에_해당하는_상품이_있는지_확인한다() {
+        final ProductEntity productEntity = new ProductEntity("modi", 10000, "");
+        final long id = productDao.save(productEntity);
+
+        assertTrue(productDao.existsById(id));
     }
 }

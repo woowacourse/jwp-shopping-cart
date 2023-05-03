@@ -60,4 +60,10 @@ public class JdbcProductDao implements ProductDao {
         final String sql = "DELETE FROM product WHERE product_id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public boolean existsById(final long id) {
+        final String sql = "SELECT EXISTS (SELECT * FROM product WHERE product_id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
+    }
 }

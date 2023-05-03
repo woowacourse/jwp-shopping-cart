@@ -1,4 +1,4 @@
-package cart.web.admin.controller;
+package cart.web;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import cart.domain.exception.DbNotAffectedException;
 import cart.domain.exception.EntityMappingException;
+import cart.domain.exception.EntityNotFoundException;
 
 @ControllerAdvice
-public class AdminApiExceptionAdvice {
+public class ExceptionAdvice {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
@@ -37,6 +38,11 @@ public class AdminApiExceptionAdvice {
     @ExceptionHandler
     public ResponseEntity<String> handleDbNotAffectedException(final DbNotAffectedException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleEntityNotFoundException(final EntityNotFoundException exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
     @ExceptionHandler
