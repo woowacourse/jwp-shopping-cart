@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.dto.ProductRequestDto;
-import cart.dto.ProductResponseDto;
+import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +26,19 @@ class ProductServiceTest {
     @Test
     void updateProduct() {
         //given
-        productService.addProduct(new ProductRequestDto("오션", "이미지", 10000));
+        productService.addProduct(new ProductRequest("오션", "이미지", 10000));
 
-        ProductResponseDto productResponseDto = productService.findProducts().get(0);
-        Long id = productResponseDto.getId();
+        ProductResponse productResponse = productService.findProducts().get(0);
+        Long id = productResponse.getId();
 
         //then
-        assertThatNoException().isThrownBy(() -> productService.updateProduct(new ProductRequestDto(id, "연어", "이미지", 100)));
+        assertThatNoException().isThrownBy(() -> productService.updateProduct(new ProductRequest(id, "연어", "이미지", 100)));
     }
 
     @DisplayName("상품이 없을 때 update 시 예외가 발생한다.")
     @Test
     void updateProduct_Exception() {
-        assertThatThrownBy(() -> productService.updateProduct(new ProductRequestDto()))
+        assertThatThrownBy(() -> productService.updateProduct(new ProductRequest()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 상품이 존재하지 않습니다.");
     }
@@ -47,10 +47,10 @@ class ProductServiceTest {
     @Test
     void deleteProduct() {
         //given
-        productService.addProduct(new ProductRequestDto("오션", "이미지", 10000));
+        productService.addProduct(new ProductRequest("오션", "이미지", 10000));
 
-        ProductResponseDto productResponseDto = productService.findProducts().get(0);
-        Long id = productResponseDto.getId();
+        ProductResponse productResponse = productService.findProducts().get(0);
+        Long id = productResponse.getId();
 
         //then
         assertThatNoException().isThrownBy(() -> productService.deleteProduct(id));

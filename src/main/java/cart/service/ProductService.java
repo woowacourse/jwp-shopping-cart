@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.dto.ProductRequestDto;
-import cart.dto.ProductResponseDto;
+import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import cart.entity.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class ProductService {
-
     private static final String NOT_EXIST_PRODUCT = "해당 상품이 존재하지 않습니다.";
+
     private final ProductDao productDao;
 
     public ProductService(ProductDao productDao) {
@@ -22,22 +22,22 @@ public class ProductService {
     }
 
     @Transactional
-    public void addProduct(ProductRequestDto productRequestDto) {
-        productDao.save(productRequestDto.toEntity());
+    public void addProduct(ProductRequest productRequest) {
+        productDao.save(productRequest.toEntity());
     }
 
-    public List<ProductResponseDto> findProducts() {
+    public List<ProductResponse> findProducts() {
         List<Product> products = productDao.findAll();
         return products.stream()
-                .map(ProductResponseDto::from)
+                .map(ProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional
-    public void updateProduct(ProductRequestDto productRequestDto) {
-        validateExistence(productRequestDto.getId());
+    public void updateProduct(ProductRequest productRequest) {
+        validateExistence(productRequest.getId());
 
-        productDao.update(productRequestDto.toEntity());
+        productDao.update(productRequest.toEntity());
     }
 
     private void validateExistence(Long id) {

@@ -2,19 +2,19 @@ package cart.dto;
 
 import cart.entity.User;
 
-public final class UserDto {
+public final class UserResponse {
     private final Long id;
     private final String email;
     private final String password;
 
-    public UserDto(final Long id, final String email, final String password) {
+    public UserResponse(final Long id, final String email, final String password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public static UserDto from(User user) {
-        return new UserDto(user.getId(), user.getEmail(), user.getPassword());
+    public static UserResponse from(User user) {
+        return new UserResponse(user.getId(), user.getEmail(), user.getPassword());
     }
 
     public Long getId() {

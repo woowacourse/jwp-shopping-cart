@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.UserDao;
-import cart.dto.UserDto;
+import cart.dto.UserResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +18,9 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public List<UserDto> findAllUsers() {
+    public List<UserResponse> findAllUsers() {
         return userDao.findAll().stream()
-                .map(UserDto::from)
+                .map(UserResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 }

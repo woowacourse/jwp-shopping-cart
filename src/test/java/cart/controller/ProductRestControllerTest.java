@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,14 +17,14 @@ import static org.hamcrest.core.Is.is;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductRestControllerTest {
 
-    private ProductRequestDto productRequestDto;
+    private ProductRequest productRequest;
     @LocalServerPort
     int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        productRequestDto = new ProductRequestDto("연어", "https://techblog.woowahan.com/wp-content/uploads/img/2020-04-10/pobi.png", 10000);
+        productRequest = new ProductRequest("연어", "https://techblog.woowahan.com/wp-content/uploads/img/2020-04-10/pobi.png", 10000);
     }
 
     @Nested
@@ -35,7 +35,7 @@ class ProductRestControllerTest {
         void createProduct() {
             given().log().uri()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequestDto)
+                    .body(productRequest)
                     .when().post("/product")
                     .then()
                     .statusCode(HttpStatus.OK.value());
@@ -44,11 +44,11 @@ class ProductRestControllerTest {
         @DisplayName("상품 이름이 null일 경우 예외 발생")
         @Test
         void createProduct_Exception1() {
-            productRequestDto = new ProductRequestDto(null, "이미지주소", 1000);
+            productRequest = new ProductRequest(null, "이미지주소", 1000);
 
             given().log().uri()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequestDto)
+                    .body(productRequest)
                     .when().post("/product")
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -57,11 +57,11 @@ class ProductRestControllerTest {
         @DisplayName("상품 이미지가 null일 경우 예외 발생")
         @Test
         void createProduct_Exception2() {
-            productRequestDto = new ProductRequestDto("연어", null, 1000);
+            productRequest = new ProductRequest("연어", null, 1000);
 
             given().log().uri()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequestDto)
+                    .body(productRequest)
                     .when().post("/product")
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -70,11 +70,11 @@ class ProductRestControllerTest {
         @DisplayName("상품 가격이 null일 경우 예외 발생")
         @Test
         void createProduct_Exception3() {
-            productRequestDto = new ProductRequestDto("연어", "이미지주소", null);
+            productRequest = new ProductRequest("연어", "이미지주소", null);
 
             given().log().uri()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(productRequestDto)
+                    .body(productRequest)
                     .when().post("/product")
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -86,7 +86,7 @@ class ProductRestControllerTest {
     void getProducts() {
         //given
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
+                .body(productRequest)
                 .when().post("/product");
 
         //then
@@ -103,10 +103,10 @@ class ProductRestControllerTest {
     void updateProduct() {
         //given
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
+                .body(productRequest)
                 .when().post("/product");
 
-        ProductRequestDto updateDto = new ProductRequestDto(1L, "오션", "hi", 50);
+        ProductRequest updateDto = new ProductRequest(1L, "오션", "hi", 50);
 
         //then
         given().log().uri()
@@ -122,7 +122,7 @@ class ProductRestControllerTest {
     void deleteProduct() {
         //given
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
+                .body(productRequest)
                 .when().post("/product");
 
         //then

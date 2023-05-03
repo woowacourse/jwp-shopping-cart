@@ -4,7 +4,7 @@ import cart.entity.Product;
 
 import javax.validation.constraints.NotNull;
 
-public class ProductRequestDto {
+public class ProductRequest {
     private Long id;
 
     @NotNull(message = "상품 이름은 비어있으면 안됩니다.")
@@ -14,14 +14,14 @@ public class ProductRequestDto {
     @NotNull(message = "상품비어있으면 안됩니다.")
     private Integer price;
 
-    public ProductRequestDto() {
+    public ProductRequest() {
     }
 
-    public ProductRequestDto(String name, String image, Integer price) {
+    public ProductRequest(String name, String image, Integer price) {
         this(null, name, image, price);
     }
 
-    public ProductRequestDto(Long id, String name, String image, Integer price) {
+    public ProductRequest(Long id, String name, String image, Integer price) {
         this.id = id;
         this.name = name;
         this.image = image;
