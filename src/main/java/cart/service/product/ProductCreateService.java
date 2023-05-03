@@ -1,4 +1,4 @@
-package cart.service;
+package cart.service.product;
 
 import cart.entity.product.Product;
 import cart.entity.product.ProductDao;

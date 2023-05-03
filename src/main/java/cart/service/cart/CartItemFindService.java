@@ -1,4 +1,4 @@
-package cart.service;
+package cart.service.cart;
 
 import cart.entity.item.CartItem;
 import cart.entity.item.CartItemDao;
@@ -10,18 +10,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CartService {
+public class CartItemFindService {
     private final CartItemDao cartItemDao;
     private final ProductDao productDao;
 
-    public CartService(final CartItemDao cartItemDao, final ProductDao productDao) {
+    public CartItemFindService(final CartItemDao cartItemDao, final ProductDao productDao) {
         this.cartItemDao = cartItemDao;
         this.productDao = productDao;
-    }
-
-    public CartItem addItem(final long memberId, final long productId) {
-        final CartItem cartItem = new CartItem(memberId, productId);
-        return cartItemDao.save(cartItem);
     }
 
     public List<Product> findCartItems(final long memberId) {
@@ -30,9 +25,5 @@ public class CartService {
                 .map(CartItem::getProductId)
                 .map(productDao::findById)
                 .collect(Collectors.toList());
-    }
-
-    public void deleteItem(final long memberId, final long productId) {
-        cartItemDao.delete(memberId, productId);
     }
 }

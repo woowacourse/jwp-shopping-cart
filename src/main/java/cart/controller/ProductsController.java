@@ -2,9 +2,9 @@ package cart.controller;
 
 import cart.dto.ProductRequest;
 import cart.entity.product.Product;
-import cart.service.ProductCreateService;
-import cart.service.ProductDeleteService;
-import cart.service.ProductUpdateService;
+import cart.service.product.ProductCreateService;
+import cart.service.product.ProductDeleteService;
+import cart.service.product.ProductUpdateService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
