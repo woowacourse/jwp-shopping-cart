@@ -1,4 +1,4 @@
-package cart.infrastructure;
+package cart.authorization;
 
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;

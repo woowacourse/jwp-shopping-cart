@@ -1,7 +1,8 @@
-package cart.mvcconfig;
+package cart;
 
-import cart.infrastructure.AuthInfoArgumentResolver;
-import cart.infrastructure.BasicAuthorizationExtractor;
+import cart.authorization.AuthInfoArgumentResolver;
+import cart.authorization.BasicAuthorizationExtractor;
+import cart.authorization.LoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;

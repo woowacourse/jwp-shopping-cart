@@ -1,4 +1,4 @@
-package cart.infrastructure;
+package cart.authorization;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;

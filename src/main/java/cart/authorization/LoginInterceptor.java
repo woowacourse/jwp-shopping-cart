@@ -1,8 +1,5 @@
-package cart.mvcconfig;
+package cart.authorization;
 
-import cart.infrastructure.AuthInfo;
-import cart.infrastructure.AuthorizationExtractor;
-import cart.infrastructure.UnauthorizedMemberException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 

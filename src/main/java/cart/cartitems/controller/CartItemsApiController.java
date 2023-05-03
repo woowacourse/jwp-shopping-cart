@@ -1,9 +1,9 @@
 package cart.cartitems.controller;
 
+import cart.authorization.AuthInfo;
 import cart.cartitems.dto.CartItemDto;
 import cart.cartitems.dto.request.CartItemAddRequest;
 import cart.cartitems.service.CartItemsService;
-import cart.infrastructure.AuthInfo;
 import cart.product.dto.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

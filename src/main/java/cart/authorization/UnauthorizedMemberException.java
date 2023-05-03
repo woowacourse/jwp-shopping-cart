@@ -1,4 +1,4 @@
-package cart.infrastructure;
+package cart.authorization;
 
 public class UnauthorizedMemberException extends RuntimeException {
 
