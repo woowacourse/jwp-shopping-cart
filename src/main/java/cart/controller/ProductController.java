@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.dto.ProductResponse;
-import cart.service.ProductService;
+import cart.dto.product.ProductResponse;
+import cart.service.product.ProductService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
