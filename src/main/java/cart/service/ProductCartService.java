@@ -8,6 +8,7 @@ import cart.entity.Member;
 import cart.entity.Product;
 import cart.entity.ProductCart;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,9 @@ public class ProductCartService {
     @Transactional
     public ProductCartResponse addCart(Long productId, Member member) {
         Product product = productDao.findById(productId)
-                .orElseThrow();
+                .orElseThrow(() -> {
+                    throw new NoSuchElementException("해당 상품이 없습니다");
+                });
         ProductCart savedProductCart = productCartDao.save(new ProductCart(product.getId(), member.getId()));
         return ProductCartResponse.from(savedProductCart);
     }
@@ -56,7 +59,7 @@ public class ProductCartService {
     @Transactional
     public void deleteProductInMyCart(Long cartId, Member member) {
         if (!productCartDao.existByCartIdAndMember(cartId, member)) {
-            throw new IllegalArgumentException();
+            throw new NoSuchElementException("장바구니에 물품이 없습니다");
         }
         productCartDao.deleteById(cartId);
     }
