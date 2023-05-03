@@ -12,9 +12,9 @@ class UserTest {
     @DisplayName("")
     void equals() {
         //given
-        User user = new User("rosie@wooteco.com", "1234");
+        User user = new User(1L, "rosie@wooteco.com", "1234");
         //when
-        User otherUser = new User("rosie@wooteco.com", "4321");
+        User otherUser = new User(1L, "rosie@wooteco.com", "4321");
         //then
         Assertions.assertThat(otherUser).isEqualTo(user);
     }

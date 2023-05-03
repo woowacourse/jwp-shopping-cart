@@ -12,6 +12,10 @@ public class Cart {
         this.cartItems = cartItems;
     }
 
+    public static Cart of(User user, List<CartItem> cartItems) {
+        return new Cart(user, new CartItems(cartItems));
+    }
+
     public void addCartItem(CartItem cartItem) {
         cartItems.add(cartItem);
     }

@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user/cartItems")
 public class CartController {
 
-    private UserService userService;
-    private CartService cartService;
+    private final UserService userService;
+    private final CartService cartService;
 
     public CartController(UserService userService, CartService cartService) {
         this.userService = userService;
@@ -60,7 +60,7 @@ public class CartController {
     public ApiResponse deleteCartItem(@PathVariable(value = "cartItemId") Long cartItemId) {
         userService.authorizeUser(email, password);
 
-        cartService.deleteCartItem(email, cartItemId);
+        cartService.deleteCartItem(cartItemId);
         return ApiResponse.from(HttpStatus.OK);
     }
 

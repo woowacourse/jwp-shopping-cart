@@ -47,9 +47,7 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCartItem(String userEmail, Long cartItemId) {
-        User user = getUser(userEmail);
-        Cart cart = cartRepository.findByUser(user);
-        cartRepository.removeCartItem(cart, cartItemId);
+    public void deleteCartItem(Long cartItemId) {
+        cartRepository.removeCartItem(cartItemId);
     }
 }
