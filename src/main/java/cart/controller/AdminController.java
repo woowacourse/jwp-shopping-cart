@@ -4,6 +4,7 @@ import cart.dto.ProductDto;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.service.ProductService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,14 +22,11 @@ import java.net.URI;
 import java.util.List;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
 
     private final ProductService productService;
-
-    public AdminController(final ProductService productService) {
-        this.productService = productService;
-    }
 
     @GetMapping
     public String adminPage(final Model model) {
