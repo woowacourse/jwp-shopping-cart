@@ -1,5 +1,7 @@
 package cart.vo;
 
+import java.util.Objects;
+
 public class Price {
 
     private static final int PRICE_LOWER_BOUND_EXCLUSIVE = 1;
@@ -25,9 +27,21 @@ public class Price {
         return value < PRICE_LOWER_BOUND_EXCLUSIVE || PRICE_UPPER_BOUND_EXCLUSIVE < value;
     }
 
-
     public int getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Price price = (Price) o;
+        return value == price.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
 }

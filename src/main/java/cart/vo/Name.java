@@ -1,5 +1,7 @@
 package cart.vo;
 
+import java.util.Objects;
+
 import static cart.vo.util.VoUtil.isInvalidLength;
 
 public class Name {
@@ -26,6 +28,19 @@ public class Name {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Name name = (Name) o;
+        return Objects.equals(value, name.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
 }
