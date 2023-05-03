@@ -8,6 +8,7 @@ import cart.domain.product.ProductId;
 import cart.repository.cart.CartRepository;
 import cart.repository.member.MemberRepository;
 import cart.repository.product.ProductRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,18 @@ class CartIntegrationTest extends IntegrationTestConfig {
     @Autowired
     ProductRepository productRepository;
 
+    MemberId memberId;
+    ProductId productId;
+
+    @BeforeEach
+    void setUp() {
+        memberId = memberRepository.save(MEMBER);
+        productId = productRepository.save(CHICKEN);
+    }
+
     @DisplayName("Authorization Basic 토큰값이 유효할 때 회원의 장바구니 상품 목록을 조회할 수 있다.")
     @Test
     void getCartProducts() {
-        final MemberId memberId = memberRepository.save(MEMBER);
-        final ProductId productId = productRepository.save(CHICKEN);
         cartRepository.saveByMemberId(memberId, productId);
 
         given(this.spec)
@@ -62,9 +70,6 @@ class CartIntegrationTest extends IntegrationTestConfig {
     @DisplayName("Authorization Basic 토큰값이 유효할 때 회원의 장바구니에 상품을 추가할 수 있다.")
     @Test
     void addProductInCart() {
-        final MemberId memberId = memberRepository.save(MEMBER);
-        final ProductId productId = productRepository.save(CHICKEN);
-
         given(this.spec)
                 .log().all()
                 .header("Authorization", BASIC_MEMBER)
@@ -78,6 +83,7 @@ class CartIntegrationTest extends IntegrationTestConfig {
                 .statusCode(CREATED.value());
     }
 
+    @DisplayName("Authorization Basic 토큰값이 유효할 때 회원의 장바구니에 존재하는 상품을 제거할 수 있다.")
     @Test
     void removeProductInCart() {
         final MemberId memberId = memberRepository.save(MEMBER);
