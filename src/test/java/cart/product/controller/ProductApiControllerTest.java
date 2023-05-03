@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.product.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
