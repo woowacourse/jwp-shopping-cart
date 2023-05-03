@@ -26,14 +26,13 @@
 ### 2단계
 - [x] 사용자 기능 구현
   - [x] 사용자는 이메일과 비밀번호를 가진다.
-- [ ] 사용자 설정 페이지 연동
+- [x] 사용자 설정 페이지 연동
   - [x] 모든 사용자의 정보를 확인하고, 사용자를 선택할 수 있는 페이지를 만든다.
-  - [ ] 사용자를 선택하면, 요청에 선택한 사용자의 인증 정보가 포함되도록 한다.
 - [ ] 장바구니 기능 구현
   - [ ] API 추가
-    - [ ] 장바구니 상품 추가`POST /users/{userId}/cart/products/{productId}` → `201 CREATED`
-    - [ ] 장바구니에 담긴 상품 제거 `DELETE /users/{userId}/cart/products/{productId}` → `204 NO CONTENT`
-    - [ ] 장바구니 목록 조회 `GET /users/{userId}/cart/products` → `200 OK`
+    - [ ] 장바구니 상품 추가`POST /cart/products/{productId}` → `201 CREATED`
+    - [ ] 장바구니에 담긴 상품 제거 `DELETE /cart/products/{productId}` → `204 NO CONTENT`
+    - [ ] 장바구니 목록 조회 `GET /cart/products` → `200 OK`
   - [ ] 사용자 정보는 Authorization 필드를 사용해 인증 처리를 한다.
   - [ ] 인증 방식은 Basic 인증을 사용한다.
 - [ ] 장바구니 페이지 연동
