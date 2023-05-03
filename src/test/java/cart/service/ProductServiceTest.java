@@ -10,14 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import cart.domain.Product;
 import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductEditRequestDto;
-import cart.dto.ProductsResponseDto;
+import cart.dto.ProductsReadResponse;
 import cart.repository.ProductRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -40,7 +38,7 @@ public class ProductServiceTest {
         productRepository.add(otherProduct);
 
         // when
-        ProductsResponseDto result = productService.findAll();
+        ProductsReadResponse result = productService.findAll();
 
         // then
         assertAll(
@@ -60,7 +58,7 @@ public class ProductServiceTest {
         productService.createProduct(req);
 
         // then
-        ProductsResponseDto result = productService.findAll();
+        ProductsReadResponse result = productService.findAll();
         assertAll(
                 () -> assertThat(result.getProducts().get(0).getName()).isEqualTo(req.getName()),
                 () -> assertThat(result.getProducts().get(0).getPrice()).isEqualTo(req.getPrice()),
@@ -99,7 +97,7 @@ public class ProductServiceTest {
         productService.deleteById(id);
 
         // then
-        ProductsResponseDto result = productService.findAll();
+        ProductsReadResponse result = productService.findAll();
         assertThat(result.getProducts().size()).isEqualTo(0);
     }
 }

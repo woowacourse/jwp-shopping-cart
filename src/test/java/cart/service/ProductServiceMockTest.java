@@ -14,8 +14,8 @@ import static org.mockito.Mockito.verify;
 import cart.domain.Product;
 import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductEditRequestDto;
-import cart.dto.ProductResponseDto;
-import cart.dto.ProductsResponseDto;
+import cart.dto.ProductDto;
+import cart.dto.ProductsReadResponse;
 import cart.exception.ProductNotFoundException;
 import cart.repository.ProductRepository;
 import java.util.List;
@@ -49,7 +49,7 @@ class ProductServiceMockTest {
         given(productRepository.findAll()).willReturn(givenProducts);
 
         // when
-        ProductsResponseDto result = productService.findAll();
+        ProductsReadResponse result = productService.findAll();
 
         // then
         List<Long> givenProductIds = givenProducts.stream()
@@ -57,7 +57,7 @@ class ProductServiceMockTest {
                 .collect(Collectors.toList());
 
         List<Long> resultIds = result.getProducts().stream()
-                .map(ProductResponseDto::getId)
+                .map(ProductDto::getId)
                 .collect(Collectors.toList());
 
         assertAll(

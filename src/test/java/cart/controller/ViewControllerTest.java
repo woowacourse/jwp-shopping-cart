@@ -8,14 +8,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.User;
-import cart.dto.ProductsResponseDto;
+import cart.dto.ProductsReadResponse;
 import cart.service.ProductService;
 import cart.service.UserService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,7 +37,7 @@ class ViewControllerTest {
     @DisplayName("Home을 반환한다.")
     void returns_home_view() throws Exception {
         // given
-        ProductsResponseDto expected = ProductsResponseDto.from(List.of(createProduct()));
+        ProductsReadResponse expected = ProductsReadResponse.from(List.of(createProduct()));
         given(productService.findAll()).willReturn(expected);
 
         // when & then
@@ -52,7 +51,7 @@ class ViewControllerTest {
     @DisplayName("Admin을 반환한다.")
     void returns_admin_view() throws Exception {
         // given
-        ProductsResponseDto expected = ProductsResponseDto.from(List.of(createProduct()));
+        ProductsReadResponse expected = ProductsReadResponse.from(List.of(createProduct()));
         given(productService.findAll()).willReturn(expected);
 
         // when & then

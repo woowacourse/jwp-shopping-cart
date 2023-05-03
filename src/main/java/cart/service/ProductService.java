@@ -3,7 +3,7 @@ package cart.service;
 import cart.domain.Product;
 import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductEditRequestDto;
-import cart.dto.ProductsResponseDto;
+import cart.dto.ProductsReadResponse;
 import cart.exception.ProductNotFoundException;
 import cart.repository.ProductRepository;
 import java.util.List;
@@ -20,9 +20,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductsResponseDto findAll() {
+    public ProductsReadResponse findAll() {
         List<Product> products = productRepository.findAll();
-        return ProductsResponseDto.from(products);
+        return ProductsReadResponse.from(products);
     }
 
     @Transactional

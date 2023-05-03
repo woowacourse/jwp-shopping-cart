@@ -4,11 +4,10 @@ import cart.dto.ApiDataResponse;
 import cart.dto.ApiResponse;
 import cart.dto.ProductCreateRequestDto;
 import cart.dto.ProductEditRequestDto;
-import cart.dto.ProductsResponseDto;
+import cart.dto.ProductsReadResponse;
 import cart.service.ProductService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +30,7 @@ public class ProductController {
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
-    public ApiDataResponse<ProductsResponseDto> findProducts() {
+    public ApiDataResponse<ProductsReadResponse> findProducts() {
         return ApiDataResponse.of(HttpStatus.OK, productService.findAll());
     }
 
