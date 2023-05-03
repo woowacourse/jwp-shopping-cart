@@ -1,6 +1,5 @@
-package cart.domain;
+package cart.domain.product;
 
-import cart.domain.product.Product;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,8 +17,8 @@ class ProductTest {
 
         //when & then
         Assertions.assertThatThrownBy(() -> Product.of(name, price, imageUrl))
-                  .isInstanceOf(IllegalArgumentException.class)
-                  .hasMessage("이름은 빈칸이 될 수 없습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이름은 빈칸이 될 수 없습니다.");
     }
 
     @ParameterizedTest
@@ -32,8 +31,8 @@ class ProductTest {
 
         //when & then
         Assertions.assertThatThrownBy(() -> Product.of(name, price, imageUrl))
-                  .isInstanceOf(IllegalArgumentException.class)
-                  .hasMessage("가격은 양수만 가능합니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("가격은 양수만 가능합니다.");
     }
 
     @ParameterizedTest
@@ -46,7 +45,7 @@ class ProductTest {
 
         //when & then
         Assertions.assertThatThrownBy(() -> Product.of(name, price, imageUrl))
-                  .isInstanceOf(IllegalArgumentException.class)
-                  .hasMessage("url은 공백이 될 수 없습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("url은 공백이 될 수 없습니다.");
     }
 }

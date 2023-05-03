@@ -74,10 +74,10 @@ class ProductDaoTest {
         productDao.update(modifiedProductEntity);
 
         final ProductEntity savedProductEntity = productDao.findAll()
-                                                           .stream()
-                                                           .filter(it -> it.getId().equals(id))
-                                                           .findFirst()
-                                                           .orElseThrow();
+                .stream()
+                .filter(it -> it.getId().equals(id))
+                .findFirst()
+                .orElseThrow();
 
         //then
         assertAll(

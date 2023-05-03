@@ -13,7 +13,7 @@ CREATE TABLE member
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT primary key,
     email    varchar(255) NOT NULL,
-    password varchar(255) NOT NULL,
+    password varchar(255) NOT NULL
 );
 
 INSERT INTO member(email, password) VALUES ('email@email.com', 'asdf1234');

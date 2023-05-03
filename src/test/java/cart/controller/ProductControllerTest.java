@@ -2,6 +2,7 @@ package cart.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -44,9 +45,8 @@ class ProductControllerTest {
         final ProductRegisterRequest productRegisterRequest = new ProductRegisterRequest(name, price, imageUrl);
 
         //when
-        doNothing()
-                .when(productService)
-                .registerProduct(any());
+        given(productService.registerProduct(any()))
+                .willReturn(1L);
 
         final String requestBody = objectMapper.writeValueAsString(productRegisterRequest);
 
