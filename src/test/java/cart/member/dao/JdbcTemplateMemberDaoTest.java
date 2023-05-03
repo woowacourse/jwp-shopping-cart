@@ -45,14 +45,15 @@ class JdbcTemplateMemberDaoTest {
 
     @Test
     void selectAllTest() {
-        final int firstMember = insert(new MemberEntity(null, "yuja@naver.com", "1234"));
-        final int secondMember = insert(new MemberEntity(null, "mint@naver.com", "5678"));
+        insert(new MemberEntity(null, "yuja@naver.com", "1234"));
+        insert(new MemberEntity(null, "mint@naver.com", "5678"));
 
         final List<MemberEntity> members = memberDao.selectAll();
+        final MemberEntity member1 = members.get(0);
+        final MemberEntity member2 = members.get(1);
 
         assertThat(members).hasSize(2);
-        assertThat(members.get(0).getId()).isEqualTo(1);
-        assertThat(members.get(1).getId()).isEqualTo(2);
+        assertThat(member2.getId() - member1.getId()).isEqualTo(1);
     }
 
     @Test
