@@ -7,7 +7,10 @@ import cart.dto.ProductResponse;
 import cart.service.CartManagementService;
 import cart.service.ProductManagementService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,5 +41,17 @@ public class CartProductController {
         final List<Long> productIds = cartManagementService.findAll(email, password);
 
         return ResponseEntity.ok(productManagementService.findByIds(productIds));
+    }
+
+    @PostMapping("/{productId}")
+    public ResponseEntity<Void> postCart(@PathVariable final Long productId,
+                                         final HttpServletRequest request) {
+        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+
+        final String email = authInfo.getEmail();
+        final String password = authInfo.getPassword();
+        cartManagementService.enroll(productId, email, password);
+
+        return ResponseEntity.noContent().build();
     }
 }

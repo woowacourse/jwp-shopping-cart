@@ -30,7 +30,7 @@
   - [x] 모든 사용자의 정보를 확인하고, 사용자를 선택할 수 있는 페이지를 만든다.
 - [ ] 장바구니 기능 구현
   - [ ] API 추가
-    - [ ] 장바구니 상품 추가`POST /cart/products/{productId}` → `201 CREATED`
+    - [x] 장바구니 상품 추가`POST /cart/products/{productId}` → `201 CREATED`
     - [ ] 장바구니에 담긴 상품 제거 `DELETE /cart/products/{productId}` → `204 NO CONTENT`
     - [x] 장바구니 목록 조회 `GET /cart/products` → `200 OK`
   - [x] 사용자 정보는 Authorization 필드를 사용해 인증 처리를 한다.

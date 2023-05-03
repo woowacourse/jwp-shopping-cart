@@ -9,4 +9,6 @@ public interface MemberDao {
     List<Member> selectAll();
 
     void insert(final Member member);
+
+    Member findByEmailAndPassword(final String email, final String password);
 }

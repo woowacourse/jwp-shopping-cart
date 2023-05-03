@@ -18,6 +18,11 @@ public class CartManagementService {
         this.cartDao = cartDao;
     }
 
+    public void enroll(final Long productId, final String email, final String password) {
+        final Member member = memberManagementService.find(email, password);
+        cartDao.save(member.getId(), productId);
+    }
+
     public List<Long> findAll(final String email, final String password) {
         final Member member = memberManagementService.find(email, password);
         return cartDao.findAllByMemberId(member.getId());

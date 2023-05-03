@@ -3,13 +3,14 @@ package cart.dao.product;
 import cart.domain.product.ProductEntity;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Validated
 public interface ProductDao {
 
     List<ProductEntity> selectAll();
+
+    ProductEntity select(final Long id);
 
     void insert(final ProductEntity productEntity);
 
