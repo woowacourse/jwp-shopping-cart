@@ -1,6 +1,8 @@
 package cart.controller;
 
 import cart.repository.user.UserRepository;
+import cart.service.cart.CartCommandService;
+import cart.service.cart.CartQueryService;
 import cart.service.product.ProductCommandService;
 import cart.service.product.ProductQueryService;
 import cart.service.user.UserQueryService;
@@ -19,6 +21,10 @@ public abstract class AbstractControllerTest {
     protected ProductCommandService productCommandService;
     @MockBean
     protected UserQueryService userQueryService;
+    @MockBean
+    protected CartCommandService cartCommandService;
+    @MockBean
+    protected CartQueryService cartQueryService;
     @Autowired
     protected ObjectMapper objectMapper;
     @Autowired
