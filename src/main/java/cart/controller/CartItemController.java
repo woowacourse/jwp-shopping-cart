@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.auth.AuthenticationPrincipal;
 import cart.auth.AuthenticationExtractor;
 import cart.auth.AuthenticationService;
 import cart.auth.MemberAuthentication;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
 
@@ -40,29 +40,20 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> postCartItems(HttpServletRequest request, @RequestBody CartItemCreationRequest cartItemCreationRequest) {
-        MemberAuthentication memberAuthentication = authenticationExtractor.extract(request);
-        MemberDto memberDto = authenticationService.login(memberAuthentication);
-
+    public ResponseEntity<Void> postCartItems(@AuthenticationPrincipal MemberDto memberDto, @RequestBody CartItemCreationRequest cartItemCreationRequest) {
         final Long productId = cartItemCreationRequest.getProductId();
         final long id = cartItemManagementService.save(CartAdditionDto.of(memberDto.getId(), productId));
         return ResponseEntity.created(URI.create("/cart/cart-items/" + id)).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> getCartItems(HttpServletRequest request) {
-        MemberAuthentication memberAuthentication = authenticationExtractor.extract(request);
-        MemberDto memberDto = authenticationService.login(memberAuthentication);
-
+    public ResponseEntity<List<CartItemResponse>> getCartItems(@AuthenticationPrincipal MemberDto memberDto) {
         List<CartItemResponse> response = CartItemResponse.from(cartItemManagementService.findAllByMemberId(memberDto.getId()));
         return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/{cartItemId}")
-    public ResponseEntity<Void> deleteCartItems(HttpServletRequest request, @PathVariable Long cartItemId) {
-        MemberAuthentication memberAuthentication = authenticationExtractor.extract(request);
-        MemberDto memberDto = authenticationService.login(memberAuthentication);
-
+    public ResponseEntity<Void> deleteCartItems(@AuthenticationPrincipal MemberDto memberDto, @PathVariable Long cartItemId) {
         cartItemManagementService.deleteById(cartItemId);
         return ResponseEntity.noContent().build();
     }

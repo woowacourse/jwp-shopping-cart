@@ -4,6 +4,7 @@ package cart.auth;
 import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,7 +14,7 @@ public class BasicAuthenticationExtractor implements AuthenticationExtractor<Mem
     private static final String DELIMITER = ":";
 
     @Override
-    public MemberAuthentication extract(HttpServletRequest request) {
+    public MemberAuthentication extract(NativeWebRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
         if (header == null) {
