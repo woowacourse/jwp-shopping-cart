@@ -34,7 +34,9 @@ public class ProductController {
     public void update(
             @PathVariable("id") final Long id,
             @Valid @RequestBody final ProductRequest request) {
-        productDao.update(new Product(id, request.getName(), request.getImageUrl(), request.getPrice()));
+        final Product product = productDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("찾으시는 상품이 없습니다."));
+        productDao.update(product.update(request.getName(), request.getImageUrl(), request.getPrice()));
     }
 
     @DeleteMapping("/products/{id}")
