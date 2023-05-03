@@ -1,12 +1,14 @@
 package cart.dao;
 
 import cart.entity.CartEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
+@AllArgsConstructor
 public class CartDao {
 
     private static final RowMapper<CartEntity> cartRowMapper = (resultSet, rowNum) -> new CartEntity(
@@ -16,10 +18,6 @@ public class CartDao {
     private static final String ALL_COLUMNS = "member_id, product_id";
 
     private final JdbcTemplate jdbcTemplate;
-
-    public CartDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public void insert(final long memberId, final long productId) {
         String sql = "INSERT INTO CART(member_id, product_id) VALUES (?, ?);";

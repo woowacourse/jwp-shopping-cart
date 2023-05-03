@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,6 +36,14 @@ public class CartController {
         final List<ProductResponse> products = cartService.showProductsBy(authInfo);
 
         return ResponseEntity.ok(products);
+    }
+
+    @PostMapping("/{productId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void addToCart(@RequestHeader(value = "Authorization") String credentials, @PathVariable long productId) {
+        final AuthInfo authInfo = BasicAuthorizationExtractor.extract(credentials, "/cart");
+
+        cartService.addToCart(authInfo, productId);
     }
 
     @DeleteMapping("/{productId}")
