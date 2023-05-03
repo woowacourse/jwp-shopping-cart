@@ -1,6 +1,7 @@
 package cart.authentication;
 
 import cart.dto.AuthInfo;
+import cart.exception.AuthorizationException;
 import cart.infrastructure.AuthorizationExtractor;
 import cart.infrastructure.BasicAuthorizationExtractor;
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +17,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         AuthInfo authInfo = authorizationExtractor.extract(request);
 
         if (authInfo == null) {
-            // TODO: exception 만들기
-            throw new RuntimeException();
+            throw new AuthorizationException("권한이 없는 사용자입니다.");
         }
 
         return super.preHandle(request, response, handler);
