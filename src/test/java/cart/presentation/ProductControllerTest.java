@@ -1,8 +1,8 @@
 package cart.presentation;
 
-import cart.application.ProductCRUDApplication;
+import cart.business.ProductCRUDService;
+import cart.business.domain.product.Product;
 import cart.presentation.dto.ProductDto;
-import cart.presentation.dto.ProductIdDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,10 +12,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
@@ -26,20 +30,19 @@ class ProductControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private ProductCRUDApplication productCRUDApplication;
-
+    private ProductCRUDService productCRUDService;
 
     @Test
     @DisplayName("/product 로 POST 요청을 보낼 수 있다")
     void test_create_request() throws Exception {
         // given
-        willDoNothing().given(productCRUDApplication).create(any(ProductDto.class));
+        willDoNothing().given(productCRUDService).create(any(Product.class));
 
         String content = objectMapper.writeValueAsString(
                 new ProductDto(1, "teo", "https://", 1));
 
         // when
-        mockMvc.perform(post("/product/create")
+        mockMvc.perform(post("/product")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
                 // then
@@ -50,10 +53,10 @@ class ProductControllerTest {
     @DisplayName("/product 로 GET 요청을 보낼 수 있다")
     void test_read_request() throws Exception {
         // given
-        given(productCRUDApplication.readAll()).willReturn(null);
+        given(productCRUDService.readAll()).willReturn(Collections.emptyList());
 
         // when
-        mockMvc.perform(get("/product/read"))
+        mockMvc.perform(get("/product"))
 
                 // then
                 .andExpect(status().isOk());
@@ -63,14 +66,14 @@ class ProductControllerTest {
     @DisplayName("/product 로 POST 요청을 보낼 수 있다")
     void test_update_request() throws Exception {
         // given
-        willDoNothing().given(productCRUDApplication).update(any(ProductDto.class));
+        willDoNothing().given(productCRUDService).update(any(Product.class));
 
         String content = objectMapper.writeValueAsString(
                 new ProductDto(1, "teo", "https://", 1)
         );
 
         // when
-        mockMvc.perform(post("/product/update")
+        mockMvc.perform(post("/product")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content))
 
@@ -81,14 +84,14 @@ class ProductControllerTest {
     @DisplayName("/product 로 DELETE 요청을 보낼 수 있다")
     void test_delete_request() throws Exception {
         // given
-        willDoNothing().given(productCRUDApplication).delete(any(ProductIdDto.class));
+        willDoNothing().given(productCRUDService).delete(any(Integer.class));
 
         String content = objectMapper.writeValueAsString(
                 new ProductDto(1, "teo", "https://", 1)
         );
 
         // when
-        mockMvc.perform(delete("/product/delete")
+        mockMvc.perform(delete("/product")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content))
 

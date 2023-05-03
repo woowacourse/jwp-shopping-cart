@@ -1,7 +1,7 @@
 package cart.presentation;
 
-import cart.application.ProductCRUDApplication;
 import cart.business.MemberReadService;
+import cart.business.ProductCRUDService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ class TemplateControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private ProductCRUDApplication productCRUDApplication;
+    private ProductCRUDService productCRUDApplication;
     @MockBean
     private MemberReadService memberReadService;
 
@@ -29,7 +29,7 @@ class TemplateControllerTest {
     @DisplayName("/ 로 GET 요청을 보낼 수 있다")
     void test_home() throws Exception {
         // given
-        given(productCRUDApplication.readAll()).willReturn(null);
+        given(productCRUDApplication.readAll()).willReturn(Collections.emptyList());
 
         // when
         mockMvc.perform(get("/"))
@@ -42,7 +42,7 @@ class TemplateControllerTest {
     @DisplayName("/admin 으로 GET 요청을 보낼 수 있다")
     void test_admin() throws Exception {
         // given
-        given(productCRUDApplication.readAll()).willReturn(null);
+        given(productCRUDApplication.readAll()).willReturn(Collections.emptyList());
 
         // when
         mockMvc.perform(get("/admin"))
@@ -55,7 +55,7 @@ class TemplateControllerTest {
     @DisplayName("/settings 으로 GET 요청을 보낼 수 있다")
     void test_settings() throws Exception {
         // given
-        given(memberReadService.readAll()).willReturn(null);
+        given(memberReadService.readAll()).willReturn(Collections.emptyList());
 
         // when
         mockMvc.perform(get("/settings"))
