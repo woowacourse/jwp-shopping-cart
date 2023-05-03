@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/admin/products")
 public class ProductsController {
 
     private final ProductCreateService createService;
