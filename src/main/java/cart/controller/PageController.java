@@ -37,4 +37,11 @@ public class PageController {
         model.addAttribute("products", productEntities);
         return "admin";
     }
+
+    @GetMapping("/settings")
+    String adminAllUsers(Model model) {
+        List<MemberDto> members = memberService.selectAllMember();
+        model.addAttribute("members", members);
+        return "settings";
+    }
 }
