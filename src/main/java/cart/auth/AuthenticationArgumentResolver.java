@@ -49,7 +49,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
     private void validateBasicAuth(String authorization) {
         String regex = "^Basic [A-Za-z0-9+/]+=*$";
 
-        if (!authorization.matches(regex) || !authorization.contains(":")) {
+        if (!authorization.matches(regex)) {
             throw new AuthenticationException();
         }
     }

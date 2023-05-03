@@ -6,10 +6,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class CartsResponse {
-    private final List<CartResponse> cartResponses;
+    private List<CartResponse> cartResponses;
 
     public CartsResponse(List<CartResponse> cartResponses) {
         this.cartResponses = cartResponses;
+    }
+
+    public CartsResponse() {
     }
 
     public static CartsResponse of(List<Product> products, List<Long> cartIds) {

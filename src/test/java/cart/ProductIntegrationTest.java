@@ -5,9 +5,17 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.dao.MemberDao;
+import cart.dao.ProductCartDao;
 import cart.dao.ProductDao;
+import cart.dto.CartRequest;
+import cart.dto.CartsResponse;
+import cart.dto.CartsResponse.CartResponse;
+import cart.dto.ProductCartResponse;
 import cart.dto.ProductRequest;
+import cart.entity.Member;
 import cart.entity.Product;
+import cart.entity.ProductCart;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +37,10 @@ public class ProductIntegrationTest {
 
     @Autowired
     private ProductDao productDao;
+    @Autowired
+    private MemberDao memberDao;
+    @Autowired
+    private ProductCartDao productCartDao;
 
     @BeforeEach
     void setUp() {
@@ -121,5 +133,70 @@ public class ProductIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
         assertThat(productDao.findById(boxster.getId())).isEmpty();
+    }
+
+    @DisplayName("로그인 된 회원으로 장바구니의 상품을 조회한다")
+    @Test
+    void findMyProductCartsTest() {
+        Member member = memberDao.save(new Member("boxster@email.com", "boxster"));
+        Product pizza = productDao.save(new Product("pizza", "https://pizza.com", 10000));
+        Product burger = productDao.save(new Product("burger", "https://burger.com", 20000));
+        productCartDao.save(new ProductCart(pizza.getId(), member.getId()));
+        productCartDao.save(new ProductCart(burger.getId(), member.getId()));
+
+        CartsResponse response = RestAssured.given()
+                .auth().preemptive().basic("boxster@email.com", "boxster")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/carts")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(CartsResponse.class);
+
+        assertAll(
+                () -> assertThat(response.getCartResponses()).hasSize(2),
+                () -> assertThat(response.getCartResponses()).map(CartResponse::getProductName)
+                        .containsExactly("pizza", "burger"),
+                () -> assertThat(response.getCartResponses()).map(CartResponse::getProductPrice)
+                        .containsExactly(10000, 20000)
+        );
+    }
+
+    @DisplayName("로그인 된 회원의 장바구니에 상품을 추가한다")
+    @Test
+    void addCartTest() {
+        Member member = memberDao.save(new Member("boxster@email.com", "boxster"));
+        Product pizza = productDao.save(new Product("pizza", "https://pizza.com", 10000));
+        CartRequest cartRequest = new CartRequest(pizza.getId());
+
+        ProductCartResponse response = RestAssured.given()
+                .auth().preemptive().basic("boxster@email.com", "boxster")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(cartRequest)
+                .when()
+                .post("/carts")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract().as(ProductCartResponse.class);
+
+        assertThat(productCartDao.findAllByMember(member))
+                .map(ProductCart::getId).containsExactly(response.getId());
+    }
+
+    @DisplayName("로그인 된 회원의 장바구니에서 상품을 삭제한다")
+    @Test
+    void deleteMyCart() {
+        Member member = memberDao.save(new Member("boxster@email.com", "boxster"));
+        Product pizza = productDao.save(new Product("pizza", "https://pizza.com", 10000));
+        ProductCart cart = productCartDao.save(new ProductCart(pizza.getId(), member.getId()));
+
+        RestAssured.given()
+                .auth().preemptive().basic("boxster@email.com", "boxster")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/carts/{id}", cart.getId())
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        assertThat(productCartDao.findAllByMember(member)).isEmpty();
     }
 }
