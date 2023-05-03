@@ -2,6 +2,8 @@ package cart.dto;
 
 import java.util.Objects;
 
+import cart.domain.user.User;
+
 public class UserResponse {
 
     private final String email;
@@ -10,6 +12,10 @@ public class UserResponse {
     public UserResponse(final String email, final String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public static UserResponse from(final User user) {
+        return new UserResponse(user.getEmail().getValue(), user.getPassword());
     }
 
     public String getEmail() {

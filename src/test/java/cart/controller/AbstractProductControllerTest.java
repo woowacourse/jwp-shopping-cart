@@ -1,11 +1,13 @@
 package cart.controller;
 
 import cart.service.AuthService;
+import cart.service.CartCreateService;
 import cart.service.CartSearchService;
 import cart.service.ProductCreateService;
 import cart.service.ProductDeleteService;
 import cart.service.ProductSearchService;
 import cart.service.ProductUpdateService;
+import cart.service.UserSearchService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,6 +19,10 @@ public class AbstractProductControllerTest {
 
     @MockBean
     protected AuthService authService;
+    @MockBean
+    protected CartCreateService cartCreateService;
+    @MockBean
+    protected UserSearchService userSearchService;
     @MockBean
     protected CartSearchService cartSearchService;
     @MockBean
