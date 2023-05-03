@@ -37,8 +37,8 @@ class SettingControllerTest {
     @Test
     void getSettings() throws Exception {
         List<Member> members = List.of(
-                new Member("a@a.com", "abc1", "이오"),
-                new Member("b@b.com", "abc2", "애쉬")
+                new Member((long) 1, "a@a.com", "abc1", "이오"),
+                new Member((long) 2, "b@b.com", "abc2", "애쉬")
         );
         given(memberService.findAll()).willReturn(members);
         MembersResponse response = MembersResponse.of(members);

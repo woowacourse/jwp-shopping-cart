@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.auth.LoginArgumentResolver;
 import cart.domain.product.Product;
 import cart.dto.ProductsResponse;
 import cart.service.ProductService;
@@ -29,6 +30,9 @@ class HomeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private LoginArgumentResolver loginArgumentResolver;
 
     @MockBean
     private ProductService productService;
