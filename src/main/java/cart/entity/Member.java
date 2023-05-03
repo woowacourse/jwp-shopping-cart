@@ -1,34 +1,37 @@
 package cart.entity;
 
+import cart.vo.Email;
+import cart.vo.Password;
+
 public class Member {
 
-    private final String email;
-    private final String password;
+    private final Email email;
+    private final Password password;
 
-    public Member(String email, String password) {
+    public Member(Email email, Password password) {
         this.email = email;
         this.password = password;
     }
 
     public String getEmail() {
-        return email;
+        return email.getValue();
     }
 
     public String getPassword() {
-        return password;
+        return password.getValue();
     }
 
     public static class Builder {
 
-        private String email;
-        private String password;
+        private Email email;
+        private Password password;
 
-        public Builder email(String email) {
+        public Builder email(Email email) {
             this.email = email;
             return this;
         }
 
-        public Builder password(String password) {
+        public Builder password(Password password) {
             this.password = password;
             return this;
         }

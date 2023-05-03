@@ -1,8 +1,9 @@
 package cart.dao;
 
 import cart.entity.Member;
+import cart.vo.Email;
+import cart.vo.Password;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,8 +23,8 @@ public class MemberDao {
         return jdbcTemplate.query(
                 sqlForSelectAll,
                 (resultSet, rowNum) -> new Member.Builder()
-                        .email(resultSet.getString("email"))
-                        .password(resultSet.getString("password"))
+                        .email(Email.from(resultSet.getString("email")))
+                        .password(Password.from(resultSet.getString("password")))
                         .build());
     }
 
