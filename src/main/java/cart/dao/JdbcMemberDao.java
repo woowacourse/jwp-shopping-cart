@@ -36,7 +36,7 @@ public class JdbcMemberDao implements MemberDao {
 
     @Override
     public MemberEntity selectByEmailAndPassword(final MemberEntity memberEntity) {
-        final String sql = "SELECT FROM member WHERE email = ? AND password = ?";
-        return jdbcTemplate.queryForObject(sql, memberEntityRowMapper);
+        final String sql = "SELECT * FROM member WHERE email = ? AND password = ?";
+        return jdbcTemplate.queryForObject(sql, memberEntityRowMapper, memberEntity.getEmail(), memberEntity.getPassword());
     }
 }
