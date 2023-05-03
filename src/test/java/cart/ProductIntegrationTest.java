@@ -3,11 +3,11 @@ package cart;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.product.dao.ProductDao;
-import cart.product.domain.Name;
-import cart.product.domain.Price;
-import cart.product.domain.Product;
-import cart.product.dto.RequestProductDto;
+import cart.dao.product.ProductDao;
+import cart.domain.product.Name;
+import cart.domain.product.Price;
+import cart.domain.product.Product;
+import cart.dto.product.RequestProductDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
