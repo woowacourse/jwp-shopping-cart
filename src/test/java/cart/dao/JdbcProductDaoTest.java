@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcMySqlDialectTest
-class JdbcaProductDaoTest {
+class JdbcProductDaoTest {
 
     @Autowired
     NamedParameterJdbcTemplate jdbcTemplate;

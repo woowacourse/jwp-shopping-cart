@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @SuppressWarnings("NonAsciiCharacters")
 class JdbcUserDaoTest extends JdbcSaveUser {
 
-    private UserDao userDao;
+    private JdbcUserDao userDao;
 
     @BeforeEach
     void init() {
@@ -26,7 +26,7 @@ class JdbcUserDaoTest extends JdbcSaveUser {
         final long saveId = 사용자를_저장한다("test@test.com", "test");
 
         // when
-        final Users user = userDao.findById(saveId).get();
+        final Users user = userDao.findByEmail("test@test.com").get();
 
         // then
         사용자_정보를_비교한다(user, saveId, "test@test.com", "test");

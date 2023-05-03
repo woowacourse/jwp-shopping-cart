@@ -6,3 +6,9 @@ INSERT INTO users (email, password) VALUES ('user@user.com', 'user');
 INSERT INTO product (name, price, img_url) VALUES ('치킨', 22000, 'https://img.freepik.com/free-photo/crispy-fried-chicken-on-a-plate-with-salad-and-carrot_1150-20212.jpg');
 INSERT INTO product (name, price, img_url) VALUES ('샐러드', 8000, 'https://m.subway.co.kr/upload/menu/%EC%89%AC%EB%A6%BC%ED%94%84_20220413025617416.png');
 INSERT INTO product (name, price, img_url) VALUES ('짜장면', 7000, 'https://t3.ftcdn.net/jpg/04/70/03/22/360_F_470032254_ljRRvV1YclnG9WqB4AptM7ACWyyLliMw.jpg');
+
+-- 기본 카트
+INSERT INTO cart (user_id, product_id, count) VALUES (1L, 1L, 3);
+INSERT INTO cart (user_id, product_id, count) VALUES (1L, 2L, 2);
+INSERT INTO cart (user_id, product_id, count) VALUES (2L, 3L, 1);
+

@@ -41,4 +41,16 @@ public class CartProductResultMap {
     public int getCount() {
         return count;
     }
+
+    @Override
+    public String toString() {
+        return "CartProductResultMap{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", count=" + count +
+                '}';
+    }
 }

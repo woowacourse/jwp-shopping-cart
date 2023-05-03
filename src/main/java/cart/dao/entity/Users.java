@@ -16,6 +16,14 @@ public class Users {
         this.createdAt = createdAt;
     }
 
+    public void validatePassword(final String password) {
+        if (this.password.equals(password)) {
+            return;
+        }
+
+        throw new IllegalArgumentException("비밀번호가 잘못 되었습니다.");
+    }
+
     public Long getId() {
         return id;
     }

@@ -31,7 +31,7 @@ class JdbcCartProductDaoTest {
     }
 
     @Test
-    @Sql(value = { "jdbcCartProductInitializer.sql"})
+    @Sql(value = {"classpath:dataTruncator.sql", "classpath:jdbcTestInitializer.sql"})
     void 장바구니_전체_조회를_한다() {
         // given
         final long firstUserId = 1L;

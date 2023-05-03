@@ -2,12 +2,16 @@ package cart.service;
 
 import cart.JdbcSaveUser;
 import cart.dao.JdbcUserDao;
-import cart.dao.UserDao;
 import cart.dao.UserResponses;
+import cart.dao.entity.Users;
 import cart.dto.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,7 +22,7 @@ class UserServiceTest extends JdbcSaveUser {
 
     private UserService userService;
 
-    private UserDao userDao;
+    private JdbcUserDao userDao;
 
     @BeforeEach
     void init() {
@@ -32,12 +36,34 @@ class UserServiceTest extends JdbcSaveUser {
         final long savedId = 사용자를_저장한다("test@test.com", "test");
 
         // when
-        final UserResponse result = userService.findById(savedId);
+        final UserResponse result = findById(savedId);
 
         // then
         assertAll(
                 () -> assertThat(result.getEmail()).isEqualTo("test@test.com"),
                 () -> assertThat(result.getPassword()).isEqualTo("test")
+        );
+    }
+
+    private UserResponse findById(final Long id) {
+        final String sql = "SELECT id, email, password, created_at FROM users WHERE id = :id";
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        final Users users = jdbcTemplate.queryForObject(
+                sql,
+                Collections.singletonMap("id", id),
+                createUsersRowMapper()
+        );
+
+        return new UserResponse(users);
+    }
+
+    private static RowMapper<Users> createUsersRowMapper() {
+        return (rs, rowNum) -> new Users(
+                rs.getLong("id"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getTimestamp("created_at").toLocalDateTime()
         );
     }
 
