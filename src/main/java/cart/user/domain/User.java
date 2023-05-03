@@ -1,11 +1,11 @@
 package cart.user.domain;
 
-public final class UserCredentials {
+public final class User {
     
     private final Email email;
     private final Password password;
     
-    public UserCredentials(final Email email, final Password password) {
+    public User(final Email email, final Password password) {
         this.email = email;
         this.password = password;
     }
