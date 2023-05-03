@@ -45,9 +45,9 @@ public class ProductRequestDto {
 
     public Product toEntity() {
         return new Product.Builder()
-                .name(Name.of(name))
-                .price(Price.of(price))
-                .imageUrl(Url.of(imageUrl))
+                .name(Name.from(name))
+                .price(Price.from(price))
+                .imageUrl(Url.from(imageUrl))
                 .build();
     }
 

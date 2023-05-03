@@ -92,7 +92,7 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequestDto)
-                .accept(MediaType.TEXT_HTML_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().put("products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());

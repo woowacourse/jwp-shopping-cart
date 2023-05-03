@@ -8,7 +8,7 @@ public class Url {
         this.value = value;
     }
 
-    public static Url of(String value) {
+    public static Url from(String value) {
         validateUrl(value);
         return new Url(value);
     }

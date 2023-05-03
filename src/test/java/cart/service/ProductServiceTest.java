@@ -33,8 +33,8 @@ class ProductServiceTest {
     void findAll() {
         given(productDao.selectAll())
                 .willReturn(List.of(
-                        buildProduct(1, "재연", 10000, "재연씨"),
-                        buildProduct(2, "미성", 10001, "미성씨")
+                        buildProduct(1L, "재연", 10000, "재연씨"),
+                        buildProduct(2L, "미성", 10001, "미성씨")
                 ));
 
         List<ProductResponseDto> products = productService.findAll();
@@ -46,12 +46,12 @@ class ProductServiceTest {
         );
     }
 
-    private Product buildProduct(Integer id, String name, Integer price, String imageUrl) {
+    private Product buildProduct(Long id, String name, Integer price, String imageUrl) {
         return new Product.Builder()
                 .id(id)
-                .name(Name.of(name))
-                .price(Price.of(price))
-                .imageUrl(Url.of(imageUrl))
+                .name(Name.from(name))
+                .price(Price.from(price))
+                .imageUrl(Url.from(imageUrl))
                 .build();
     }
 

@@ -10,7 +10,7 @@ public class Price {
         this.value = value;
     }
 
-    public static Price of(int value) {
+    public static Price from(int value) {
         validateRange(value);
         return new Price(value);
     }

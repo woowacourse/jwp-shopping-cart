@@ -25,9 +25,9 @@ public class ProductDao {
                 (resultSet, rowNum) ->
                         new Product.Builder()
                                 .id(resultSet.getLong("id"))
-                                .price(Price.of(resultSet.getInt("price")))
-                                .name(Name.of(resultSet.getString("name")))
-                                .imageUrl(Url.of(resultSet.getString("image_url")))
+                                .price(Price.from(resultSet.getInt("price")))
+                                .name(Name.from(resultSet.getString("name")))
+                                .imageUrl(Url.from(resultSet.getString("image_url")))
                                 .build()
         );
     }
