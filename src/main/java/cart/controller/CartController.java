@@ -9,6 +9,7 @@ import cart.service.CartService;
 import cart.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +46,7 @@ public class CartController {
     }
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ApiResponse createCartItem(@RequestBody CartItemCreateRequest request) {
+    public ApiResponse createCartItem(@RequestBody @Valid CartItemCreateRequest request) {
         userService.authorizeUser(email, password);
 
         cartService.addCartItem(email, request.getProductId());

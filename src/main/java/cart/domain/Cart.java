@@ -12,6 +12,14 @@ public class Cart {
         this.cartItems = cartItems;
     }
 
+    public void addCartItem(CartItem cartItem) {
+        cartItems.add(cartItem);
+    }
+
+    public void removeCartItem(CartItem cartItem) {
+        cartItems.remove(cartItem.getId());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
