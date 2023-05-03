@@ -22,11 +22,11 @@
     - [x]  사용자 설정 페이지 연동
         - [x]  `/settings` ****url로 접근
         - [x]  사용자 선택 시, 이후 요청에 선택한 사용자의 인증 정보 포함
-    - [ ]  사용자 인증 처리
-        - [ ]  사용자 정보 : 요청 Header의`Authorization`필드 디코딩
-        - [ ]  인증 방식 :[Basic 인증](https://en.wikipedia.org/wiki/Basic_access_authentication)
-        - [ ]  type: Basic
-        - [ ]  credentials :`email:password`를 base64로 인코딩한 문자열
+    - [x]  사용자 인증 처리
+        - [x]  사용자 정보 : 요청 Header의`Authorization`필드 디코딩
+        - [x]  인증 방식 :[Basic 인증](https://en.wikipedia.org/wiki/Basic_access_authentication)
+        - [x]  type: Basic
+        - [x]  credentials :`email:password`를 base64로 인코딩한 문자열
 
 - [ ]  장바구니 기능 구현
     - [ ]  장바구니 기본 정보
@@ -43,8 +43,8 @@
 
 ### 기능 요구 사항 분석 후 추가 구현 사항
 
-- [ ]  사용자
-    - [ ]  `@LoginUser` 어노테이션 구현
+- [x]  사용자
+    - [x]  `@LoginUser` 어노테이션 구현
 - [ ]  장바구니
     - [ ]  quantity 칼럼을 만들어서 Update 수량 변경 기능 추가 (PATCH)
 - [ ]  그 외
