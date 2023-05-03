@@ -33,7 +33,7 @@ class JdbcMemberDaoTest {
     @CsvSource(value = {"gksqlsl11@khu.ac.kr:qlalfqjsgh", "kong@google.com:pw"}, delimiter = ':')
     void isMemberExists_true(String email, String password) {
         Member member = new Member(email, password);
-        assertThat(memberDao.isValidMember(member)).isTrue();
+        assertThat(memberDao.isMemberExists(member)).isTrue();
     }
 
     @DisplayName("사용자가 저장되어있지 않다면 false를 반환한다.")
@@ -41,7 +41,7 @@ class JdbcMemberDaoTest {
     @CsvSource(value = {"gksqlsl11@khu.ac.kr:qlalfqjsgh123", ":qlalfqjsgh", "gksqlsl11:qlalf", ":"}, delimiter = ':')
     void isMemberExists_false(String email, String password) {
         Member member = new Member(email, password);
-        assertThat(memberDao.isValidMember(member)).isFalse();
+        assertThat(memberDao.isMemberExists(member)).isFalse();
     }
 
     @DisplayName("이메일이 저장되어있다면 true를 반환한다.")
@@ -65,7 +65,7 @@ class JdbcMemberDaoTest {
 
         memberDao.save(member);
         
-        assertThat(memberDao.isValidMember(member)).isTrue();
+        assertThat(memberDao.isMemberExists(member)).isTrue();
     }
 
     @DisplayName("중복된 사용자는 저장할 수 없다.")

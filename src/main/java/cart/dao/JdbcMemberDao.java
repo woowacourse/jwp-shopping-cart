@@ -32,7 +32,7 @@ public class JdbcMemberDao implements MemberDao{
     }
 
     @Override
-    public boolean isValidMember(Member member) {
+    public boolean isMemberExists(Member member) {
         String sql = "select exists(select id from member where email = ? and password = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, member.getEmail(), member.getPassword());

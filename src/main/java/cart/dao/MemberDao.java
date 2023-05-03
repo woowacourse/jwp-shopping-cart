@@ -6,7 +6,7 @@ public interface MemberDao {
 
     void save(Member member);
 
-    boolean isValidMember(Member member);
+    boolean isMemberExists(Member member);
 
     boolean isEmailExists(String email);
 }
