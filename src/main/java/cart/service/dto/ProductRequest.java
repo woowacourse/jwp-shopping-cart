@@ -1,6 +1,8 @@
 package cart.service.dto;
 
-import cart.dao.entity.ProductEntity;
+import cart.domain.Price;
+import cart.domain.Product;
+import cart.domain.ProductName;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -24,15 +26,9 @@ public class ProductRequest {
     public ProductRequest() {
     }
 
-    public ProductEntity toEntityBy(long id) {
-        return new ProductEntity.Builder()
-                .name(name)
-                .imgUrl(imgUrl)
-                .price(price)
-                .id(id)
-                .build();
+    public Product toProduct() {
+        return new Product(new ProductName(name), imgUrl, new Price(price));
     }
-
     public String getName() {
         return name;
     }

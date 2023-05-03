@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.auth.AuthService;
 import cart.service.CustomerService;
 import cart.service.dto.CustomerResponse;
 import cart.service.dto.SignUpRequest;
@@ -26,6 +27,8 @@ class CustomerControllerUnitTest {
 
     @MockBean
     private CustomerService customerService;
+    @MockBean
+    private AuthService authService;
     @Autowired
     private MockMvc mockMvc;
     @Autowired

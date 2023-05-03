@@ -45,7 +45,6 @@ public class AdminController {
                                               @PathVariable long id) {
         productService.modifyById(productRequest, id);
         return ResponseEntity.ok().build();
-
     }
 
     @DeleteMapping("/product/{id}")

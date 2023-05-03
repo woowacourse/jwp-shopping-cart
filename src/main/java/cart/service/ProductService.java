@@ -43,9 +43,7 @@ public class ProductService {
     }
 
     public void modifyById(final ProductRequest productRequest, final long id) {
-        Product product = new Product(new ProductName(productRequest.getName()), productRequest.getImgUrl(), new Price(
-                productRequest.getPrice()));
-        // TODO: 2023-05-02 도메인으로의 변환을 DTO에서 수행하는 것에 대해 생각해보기
+        Product product = productRequest.toProduct();
         productDao.update(productToEntityWithId(product, id));
     }
 

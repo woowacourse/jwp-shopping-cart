@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.auth.AuthInfo;
+import cart.auth.AuthService;
 import cart.service.CartService;
 import cart.service.CustomerService;
 import cart.service.dto.CartRequest;
@@ -34,6 +36,8 @@ class CartControllerUnitTest {
     @MockBean
     private CartService cartService;
     @MockBean
+    private AuthService authService;
+    @MockBean
     private CustomerService customerService;
     @Autowired
     private MockMvc mockMvc;
@@ -51,6 +55,7 @@ class CartControllerUnitTest {
     void setUp() {
         given(customerService.findIdByEmail(anyString())).willReturn(1L);
         given(customerService.isAbleToLogin(anyString(), anyString())).willReturn(true);
+        given(authService.resolveAuthInfo(anyString())).willReturn(new AuthInfo("email", "password"));
     }
 
     @DisplayName("장바구니에 상품을 추가할 수 있다.")

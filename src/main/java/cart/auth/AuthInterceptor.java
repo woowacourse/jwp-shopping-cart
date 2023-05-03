@@ -12,35 +12,20 @@ import org.springframework.web.servlet.ModelAndView;
 public class AuthInterceptor implements HandlerInterceptor {
 
     private static final String AUTHORIZATION = "Authorization";
-    private static final String BASIC_TYPE = "Basic";
-    private static final String DELIMITER = ":";
-    private static final int EMAIL_INDEX = 0;
-    private static final int PASSWORD_INDEX = 1;
-
     private final CustomerService customerService;
+    private final AuthService authService;
 
-    public AuthInterceptor(CustomerService customerService) {
+    public AuthInterceptor(final CustomerService customerService, final AuthService authService) {
         this.customerService = customerService;
+        this.authService = authService;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String authHeader = request.getHeader(AUTHORIZATION);
-
-        if (authHeader == null) {
-            throw new UnauthorizedException();
-        }
-
-        if ((authHeader.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
-            String authValue = authHeader.substring(BASIC_TYPE.length()).trim();
-            byte[] decodedBytes = Base64.decodeBase64(authValue);
-            String decodedString = new String(decodedBytes);
-            String[] credentials = decodedString.split(DELIMITER);
-            String email = credentials[EMAIL_INDEX];
-            String password = credentials[PASSWORD_INDEX];
-            if (customerService.isAbleToLogin(email, password)) {
-                return true;
-            }
+        AuthInfo authInfo = authService.resolveAuthInfo(authHeader);
+        if (customerService.isAbleToLogin(authInfo.getEmail(), authInfo.getPassword())) {
+            return true;
         }
         throw new UnauthorizedException();
     }

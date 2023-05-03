@@ -13,14 +13,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String AUTHORIZATION = "Authorization";
-    private static final String BASIC_TYPE = "Basic";
-    private static final String DELIMITER = ":";
-    private static final int EMAIL_INDEX = 0;
-
     private final CustomerService customerService;
+    private final AuthService authService;
 
-    public AuthenticationArgumentResolver(final CustomerService customerService) {
+    public AuthenticationArgumentResolver(final CustomerService customerService, final AuthService authService) {
         this.customerService = customerService;
+        this.authService = authService;
     }
 
     @Override
@@ -33,18 +31,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory)
             throws UnauthorizedException {
         String authHeader = webRequest.getHeader(AUTHORIZATION);
-
-        if (authHeader == null) {
-            throw new UnauthorizedException();
-        }
-
-        if ((authHeader.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
-            String authValue = authHeader.substring(BASIC_TYPE.length()).trim();
-            byte[] decodedBytes = Base64.decodeBase64(authValue);
-            String decodedString = new String(decodedBytes);
-            String[] credentials = decodedString.split(DELIMITER);
-            return customerService.findIdByEmail(credentials[EMAIL_INDEX]);
-        }
-        throw new UnauthorizedException();
+        String email = authService.resolveAuthInfo(authHeader).getEmail();
+        return customerService.findIdByEmail(email);
     }
 }

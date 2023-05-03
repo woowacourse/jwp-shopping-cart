@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.auth.AuthInfo;
+import cart.auth.AuthService;
 import cart.service.CustomerService;
 import cart.service.ProductService;
 import cart.service.dto.ProductRequest;
@@ -38,9 +40,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @WebMvcTest(AdminController.class)
 public class AdminControllerUnitTest {
 
-    @MockBean
-    private CustomerService customerService;
-
     private final ProductResponse cuteSeonghaDoll =
             new ProductResponse(1, "https://avatars.githubusercontent.com/u/95729738?v=4",
                     "CuteSeonghaDoll", 25000);
@@ -57,6 +56,11 @@ public class AdminControllerUnitTest {
     private ObjectMapper objectMapper;
     @MockBean
     private ProductService productService;
+    @MockBean
+    private CustomerService customerService;
+    @MockBean
+    private AuthService authService;
+
     private static String encodedString;
 
     static {
@@ -71,6 +75,7 @@ public class AdminControllerUnitTest {
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
         given(customerService.isAbleToLogin(anyString(), anyString())).willReturn(true);
+        given(authService.resolveAuthInfo(anyString())).willReturn(new AuthInfo("email", "password"));
     }
 
     @DisplayName("전체 상품 조회 API 호출 시 전체 상품이 반환된다.")

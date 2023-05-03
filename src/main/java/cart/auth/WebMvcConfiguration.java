@@ -11,19 +11,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     private final CustomerService customerService;
+    private final AuthService authService;
 
-    public WebMvcConfiguration(final CustomerService customerService) {
+    public WebMvcConfiguration(final CustomerService customerService, final AuthService authService) {
         this.customerService = customerService;
+        this.authService = authService;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthenticationArgumentResolver(customerService));
+        resolvers.add(new AuthenticationArgumentResolver(customerService, authService));
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthInterceptor(customerService))
+        registry.addInterceptor(new AuthInterceptor(customerService, authService))
                 .excludePathPatterns("/", "/settings/**");
     }
 }
