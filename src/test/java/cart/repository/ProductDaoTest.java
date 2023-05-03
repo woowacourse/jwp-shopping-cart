@@ -67,7 +67,7 @@ class ProductDaoTest {
 
     @Test
     @DisplayName("상품 전체 조회 성공")
-    @Sql(scripts = "/dummy_data.sql")
+    @Sql(scripts = "/product_dummy_data.sql")
     void findALl_success() {
         // given, when
         final List<ProductEntity> allProducts = productDao.findAll();
@@ -84,7 +84,7 @@ class ProductDaoTest {
 
     @Test
     @DisplayName("상품 수정 성공")
-    @Sql(scripts = "/dummy_data.sql")
+    @Sql(scripts = "/product_dummy_data.sql")
     void update_success() {
         // given
         final ProductRequestDto requestDto = new ProductRequestDto("푸우", "pooh.png", 1_000_001);
@@ -111,7 +111,7 @@ class ProductDaoTest {
 
     @Test
     @DisplayName("상품 수정 실패 - 존재하지 않는 상품 id")
-    @Sql(scripts = "/dummy_data.sql")
+    @Sql(scripts = "/product_dummy_data.sql")
     void update_fail_invalid_product_id() {
         // given
         final ProductRequestDto requestDto = new ProductRequestDto("푸우", "pooh.png", 1_000_001);
@@ -124,7 +124,7 @@ class ProductDaoTest {
 
     @Test
     @DisplayName("상품 삭제 성공")
-    @Sql(scripts = "/dummy_data.sql")
+    @Sql(scripts = "/product_dummy_data.sql")
     void delete_success() {
         // given
         final Integer poohId = findPoohId();
@@ -140,7 +140,7 @@ class ProductDaoTest {
 
     @Test
     @DisplayName("상품 삭제 실패 - 존재하지 않는 상품 id")
-    @Sql(scripts = "/dummy_data.sql")
+    @Sql(scripts = "/product_dummy_data.sql")
     void delete_fail() {
         // given
         final int invalidId = 0;

@@ -85,7 +85,7 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 수정 성공")
-    @Sql("/dummy_data.sql")
+    @Sql("/product_dummy_data.sql")
     public void updateProduct_success() {
         final ProductRequestDto requestDto = new ProductRequestDto("name", "name.jpg", 1000);
 
@@ -100,7 +100,7 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 수정 실패 - null이 존재하는 경우")
-    @Sql("/dummy_data.sql")
+    @Sql("/product_dummy_data.sql")
     public void updateProduct_fail_include_null() {
         final ProductRequestDto requestDto = new ProductRequestDto("name", null, 1000);
 
@@ -115,7 +115,7 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 수정 실패 - 가격이 음수인 경우")
-    @Sql("/dummy_data.sql")
+    @Sql("/product_dummy_data.sql")
     public void updateProduct_fail_negative_price_value() {
         final ProductRequestDto requestDto = new ProductRequestDto("name", "image.png", -1000);
 
@@ -130,7 +130,7 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 수정 실패 - 존재하지 않는 상품인 경우")
-    @Sql("/dummy_data.sql")
+    @Sql("/product_dummy_data.sql")
     public void updateProduct_fail_product_not_found() {
         final ProductRequestDto requestDto = new ProductRequestDto("name", "image.png", 1000);
 
@@ -145,7 +145,7 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 삭제 성공")
-    @Sql("/dummy_data.sql")
+    @Sql("/product_dummy_data.sql")
     public void deleteProduct_success() {
         RestAssured
                 .given()
@@ -157,7 +157,7 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 삭제 실패 - 존재하지 않는 상품인 경우")
-    @Sql("/dummy_data.sql")
+    @Sql("/product_dummy_data.sql")
     public void deleteProduct_fail_product_not_found() {
         RestAssured
                 .given()
