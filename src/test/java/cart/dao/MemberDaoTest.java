@@ -60,7 +60,7 @@ class MemberDaoTest {
         Member member = new Member("aaa@gmail.com", "password", "그레이");
         Long savedId = memberDao.insert(member);
 
-        MemberEntity findMember = memberDao.findByEmailAndPassword(member.getEmail(), member.getPassword())
+        MemberEntity findMember = memberDao.findByEmail(member.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
 
         assertAll(

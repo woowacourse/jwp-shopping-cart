@@ -54,10 +54,10 @@ public class MemberDao {
                 .findAny();
     }
 
-    public Optional<MemberEntity> findByEmailAndPassword(String email, String password) {
-        String sql = "SELECT member_id, email, password, name FROM MEMBER WHERE email = ? and password = ?";
+    public Optional<MemberEntity> findByEmail(String email) {
+        String sql = "SELECT member_id, email, password, name FROM MEMBER WHERE email = ?";
 
-        return jdbcTemplate.query(sql, memberRowMapper, email, password)
+        return jdbcTemplate.query(sql, memberRowMapper, email)
                 .stream()
                 .findAny();
     }
