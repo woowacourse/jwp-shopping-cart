@@ -18,12 +18,16 @@ public class JdbcShoppingCartRepository implements ShoppingCartRepository {
     }
 
     @Override
-    public void addProduct(final long userId, final long productId) {
-
+    public void addProduct(final long memberId, final long productId) {
+        final String sql = "insert into cart (member_id, product_id) values (:memberId, :productId)";
+        final SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("memberId", memberId)
+                .addValue("productId", productId);
+        namedParameterJdbcTemplate.update(sql, parameterSource);
     }
 
     @Override
-    public void removeProduct(final long userId, final long productId) {
+    public void removeProduct(final long memberId, final long productId) {
 
     }
 
