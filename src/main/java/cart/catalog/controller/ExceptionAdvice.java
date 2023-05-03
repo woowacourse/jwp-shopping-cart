@@ -1,4 +1,4 @@
-package cart.product.controller;
+package cart.catalog.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ExceptionAdvice {
-    
+
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<String> handle(final Exception exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
