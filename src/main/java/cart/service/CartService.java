@@ -27,7 +27,7 @@ public class CartService {
         cartDao.insert(member.getId(), productId);
     }
 
-    public List<ProductResponse> showProductsFrom(final AuthInfo authInfo) {
+    public List<ProductResponse> showProductsBy(final AuthInfo authInfo) {
         final MemberEntity member = findBy(authInfo);
 
         final List<CartEntity> cartOfUser = cartDao.findByMemberId(member.getId());

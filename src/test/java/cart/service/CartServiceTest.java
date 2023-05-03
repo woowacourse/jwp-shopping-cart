@@ -77,7 +77,7 @@ class CartServiceTest {
                         new ProductEntity(2L, "item2", 2000, "image2")
                 ));
 
-        final List<ProductResponse> productResponses = cartService.showProductsFrom(authInfo);
+        final List<ProductResponse> productResponses = cartService.showProductsBy(authInfo);
         assertThat(productResponses.size()).isEqualTo(2);
     }
 }

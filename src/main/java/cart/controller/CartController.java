@@ -28,7 +28,7 @@ public class CartController {
     public ResponseEntity<List<ProductResponse>> getProductsOfCart(@RequestHeader(value = "Authorization") String credentials) {
         final AuthInfo authInfo = BasicAuthorizationExtractor.extract(credentials, "/cart");
 
-        final List<ProductResponse> products = cartService.showProductsFrom(authInfo);
+        final List<ProductResponse> products = cartService.showProductsBy(authInfo);
 
         return ResponseEntity.ok(products);
     }
