@@ -6,9 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Map;
@@ -16,30 +18,16 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@AutoConfigureTestDatabase
+@JdbcTest
+@Sql({"classpath:truncateTable.sql","classpath:productsTestData.sql"})
 class JdbcProductsDaoTest {
+    private final ProductsDao productsDao;
 
+    private final JdbcTemplate jdbcTemplate;
     @Autowired
-    private ProductsDao productsDao;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void setup() {
-        jdbcTemplate.execute("truncate table products");
-        jdbcTemplate.execute("alter table products alter id restart with 1");
-
-        final String name1 = "test1";
-        final int price1 = 1000;
-        final String image1 = "https://pbs.twimg.com/profile_images/1374979417915547648/vKspl9Et_400x400.jpg";
-        final String name2 = "test2";
-        final int price2 = 2000;
-        final String image2 = "https://pbs.twimg.com/profile_images/1374979417915547648/vKspl9Et_400x400.jpg";
-        final String sql = "insert into products(product_name, product_price, product_image) values (?, ?, ?)";
-        jdbcTemplate.update(sql, name1, price1, image1);
-        jdbcTemplate.update(sql, name2, price2, image2);
+    public JdbcProductsDaoTest(JdbcTemplate jdbcTemplate) {
+        this.productsDao = new JdbcProductsDao(jdbcTemplate);
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Test
@@ -53,7 +41,7 @@ class JdbcProductsDaoTest {
         productsDao.create(name, price, image);
 
         // then
-        final Map<String, Object> actual = jdbcTemplate.queryForMap("SELECT * FROM products ORDER BY id DESC LIMIT 1");
+        final Map<String, Object> actual = jdbcTemplate.queryForMap("SELECT * FROM products_table ORDER BY id DESC LIMIT 1");
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(actual.get("product_name")).isEqualTo(name);
             softly.assertThat(actual.get("product_price")).isEqualTo(price);
@@ -75,14 +63,14 @@ class JdbcProductsDaoTest {
         final String newImage = "https://pbs.twimg.com/profile_images/1374979417915547648/vKspl9Et_400x400.jpg";
         final Product updateProduct = new Product(id, newName, newPrice, newImage);
 
-        final List<Long> selectIdFromProducts = jdbcTemplate.queryForList("SELECT id FROM products", Long.class);
-        System.out.println(selectIdFromProducts);
+        final List<Long> selectIdFromProducts = jdbcTemplate.queryForList("SELECT id FROM products_table", Long.class);
+        System.out.println(selectIdFromProducts.size());
 
         //when
         productsDao.update(updateProduct);
 
         //then
-        final Map<String, Object> actual = jdbcTemplate.queryForMap("SELECT * FROM products where id = ?", id);
+        final Map<String, Object> actual = jdbcTemplate.queryForMap("SELECT * FROM products_table where id = ?", id);
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(actual.get("product_name")).isEqualTo(newName);
             softly.assertThat(actual.get("product_price")).isEqualTo(newPrice);
@@ -95,7 +83,7 @@ class JdbcProductsDaoTest {
         final long id = 1L;
         productsDao.delete(id);
 
-        assertThatThrownBy(() -> jdbcTemplate.queryForObject("SELECT product_name FROM products where id = ?", String.class, id))
+        assertThatThrownBy(() -> jdbcTemplate.queryForObject("SELECT product_name FROM products_table where id = ?", String.class, id))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.stream.Stream;
 
@@ -22,6 +23,7 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
+@Sql({"classpath:truncateTable.sql"})
 class ProductsApiControllerTest {
 
     private static final String NAME = "name";
@@ -37,9 +39,6 @@ class ProductsApiControllerTest {
     @BeforeEach
     void setPort() {
         RestAssured.port = port;
-
-        jdbcTemplate.execute("truncate table products");
-        jdbcTemplate.execute("alter table products alter id restart with 1");
     }
 
     @Test
@@ -89,7 +88,7 @@ class ProductsApiControllerTest {
     }
 
     private void insertTestData() {
-        final String sql = "insert into products(product_name, product_price, product_image) values (?, ?, ?)";
+        final String sql = "insert into products_table(product_name, product_price, product_image) values (?, ?, ?)";
         jdbcTemplate.update(sql, NAME, PRICE, IMAGE);
     }
 

@@ -34,7 +34,7 @@ public class JdbcProductsDao implements ProductsDao {
 
     @Override
     public List<Product> readAll() {
-        final String sql = "SELECT * FROM products";
+        final String sql = "SELECT * FROM products_table";
         return jdbcTemplate.query(sql,
                 (rs, rowNum) ->
                         new Product(rs.getLong("id"),
@@ -61,7 +61,8 @@ public class JdbcProductsDao implements ProductsDao {
 
     @Override
     public void delete(final long id) {
-        final String sql = "DELETE FROM products_table WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        final String sql = "DELETE FROM cart_table WHERE product_id = ?;"+
+                "DELETE FROM products_table WHERE id = ?;";
+        jdbcTemplate.update(sql, id,id);
     }
 }

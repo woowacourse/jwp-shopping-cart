@@ -11,10 +11,11 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.Map;
 
 @JdbcTest
-@Sql(scripts = {"classpath:testDB.sql"})
+@Sql(scripts = {"classpath:truncateTable.sql","classpath:productsTestData.sql","classpath:userTestData.sql","classpath:cartTestData.sql"})
 class JdbcCartDaoTest {
     private final JdbcTemplate jdbcTemplate;
     private final JdbcCartDao jdbcCartDao;
+
     @Autowired
     public JdbcCartDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

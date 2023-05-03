@@ -12,24 +12,17 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 
 @JdbcTest
+@Sql({"classpath:truncateTable.sql","classpath:productsTestData.sql","classpath:userTestData.sql"})
 class JdbcUserTableDaoTest {
 
-
-    private final JdbcTemplate jdbcTemplate;
     private final JdbcUserTableDao jdbcUserTableDao;
     @Autowired
     public JdbcUserTableDaoTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
         this.jdbcUserTableDao = new JdbcUserTableDao(jdbcTemplate);
-    }
-
-    @BeforeEach
-    void setUp(){
-        jdbcTemplate.execute("insert into user_table(email,password) values('test1@test1.com','password1')");
-        jdbcTemplate.execute("insert into user_table(email,password) values('test2@test2.com','password2')");
     }
     @Test
     @DisplayName("사용자 전부를 조회")
