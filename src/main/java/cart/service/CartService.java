@@ -27,4 +27,8 @@ public class CartService {
                 .map(it -> new ProductDto(it.getId(), it.getName(), it.getImgUrl(), it.getPrice()))
                 .collect(Collectors.toList());
     }
+
+    public void deleteProduct(int memberId, int productId) {
+        cartDao.delete(memberId, productId);
+    }
 }

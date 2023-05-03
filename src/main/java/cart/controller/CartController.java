@@ -5,7 +5,6 @@ import cart.dto.ProductDto;
 import cart.infrastructure.BasicAuthorizationExtractor;
 import cart.service.CartService;
 import cart.service.MemberService;
-import java.net.URI;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -33,11 +32,7 @@ public class CartController {
 
     @GetMapping("/all")
     public ResponseEntity<Object> findAllProductInCart(HttpServletRequest request) {
-        AuthInfo authInfo = authorizationExtractor.extract(request);
-        String email = authInfo.getEmail();
-        String password = authInfo.getPassword();
-
-        int memberId = memberService.findMemberId(email, password);
+        int memberId = validateMember(request);
 
         List<ProductDto> allProduct = cartService.findAllProduct(memberId);
         return ResponseEntity.ok().body(allProduct);
@@ -45,19 +40,25 @@ public class CartController {
 
     @PostMapping("/{productId}")
     public ResponseEntity<Object> addProductToCart(HttpServletRequest request, @PathVariable int productId) {
-        AuthInfo authInfo = authorizationExtractor.extract(request);
-        String email = authInfo.getEmail();
-        String password = authInfo.getPassword();
-
-        int memberId = memberService.findMemberId(email, password);
+        int memberId = validateMember(request);
 
         cartService.addProduct(memberId, productId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping()
-    public ResponseEntity<Object> removeProductFromCart() {
-        // TODO : 멤버 id 확인
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Object> removeProductFromCart(HttpServletRequest request, @PathVariable int productId) {
+        int memberId = validateMember(request);
+
+        cartService.deleteProduct(memberId, productId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    private int validateMember(HttpServletRequest request) {
+        AuthInfo authInfo = authorizationExtractor.extract(request);
+        String email = authInfo.getEmail();
+        String password = authInfo.getPassword();
+
+        return memberService.findMemberId(email, password);
     }
 }
