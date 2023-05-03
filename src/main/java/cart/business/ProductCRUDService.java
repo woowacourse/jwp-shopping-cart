@@ -28,6 +28,12 @@ public class ProductCRUDService {
         return productRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public Product readById(Integer productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 ID에 맞는 상품이 존재하지 않습니다."));
+    }
+
     @Transactional
     public void update(Product product) {
         productRepository.findById(product.getId())
