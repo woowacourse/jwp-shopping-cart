@@ -27,9 +27,14 @@ public class JdbcMemberDao implements MemberDao {
     }
 
     @Override
-    public List<MemberEntity> findAll() {
+    public Optional<List<MemberEntity>> findAll() {
         String sql = "select * from member";
-        return jdbcTemplate.query(sql, mapRow());
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.query(sql, mapRow()));
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

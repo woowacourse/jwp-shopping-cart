@@ -36,8 +36,9 @@ class JdbcMemberDaoTest {
     @Test
     @DisplayName("모든 멤버 조회 테스")
     void findAll() {
-        List<MemberEntity> members = memberDao.findAll();
-        Assertions.assertThat(members).hasSize(2);
+        Optional<List<MemberEntity>> members = memberDao.findAll();
+        List<MemberEntity> retrievedMembers = members.get();
+        Assertions.assertThat(retrievedMembers).hasSize(2);
     }
 
     @Test
@@ -58,8 +59,9 @@ class JdbcMemberDaoTest {
     @Test
     @DisplayName("멤버 삭제 테스트")
     void delete() {
-        System.out.println(memberDao.findAll());
         memberDao.delete("test@gmail.com");
-        Assertions.assertThat(memberDao.findAll()).hasSize(1);
+        Optional<List<MemberEntity>> members = memberDao.findAll();
+        List<MemberEntity> retrievedMembers = members.get();
+        Assertions.assertThat(retrievedMembers).hasSize(1);
     }
 }

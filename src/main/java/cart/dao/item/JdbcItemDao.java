@@ -2,6 +2,7 @@ package cart.dao.item;
 
 
 import cart.entity.ItemEntity;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcItemDao implements ItemDao {
@@ -43,10 +45,14 @@ public class JdbcItemDao implements ItemDao {
     }
 
     @Override
-    public List<ItemEntity> findAll() {
+    public Optional<List<ItemEntity>> findAll() {
         String sql = "select * from item";
 
-        return jdbcTemplate.query(sql, mapRow());
+        try {
+            return Optional.ofNullable(jdbcTemplate.query(sql, mapRow()));
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     private RowMapper<ItemEntity> mapRow() {

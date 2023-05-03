@@ -1,11 +1,13 @@
 package cart.dao.cart;
 
 import cart.entity.ItemEntity;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcCartDao implements CartDao {
@@ -24,9 +26,14 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
-    public List<ItemEntity> findAll(final String memberEmail) {
+    public Optional<List<ItemEntity>> findAll(final String memberEmail) {
         String sql = "SELECT item.* FROM item LEFT JOIN cart ON cart.item_id=item.id WHERE cart.member_email = ?";
-        return jdbcTemplate.query(sql, mapRow(), memberEmail);
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.query(sql, mapRow(), memberEmail));
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     private RowMapper<ItemEntity> mapRow() {

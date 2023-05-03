@@ -6,6 +6,7 @@ import cart.entity.MemberEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,8 +28,9 @@ public class MemberService {
     }
 
     public List<MemberResponse> findAll() {
-        List<MemberEntity> members = memberDao.findAll();
-        return convertMembersToMemberResponses(members);
+        Optional<List<MemberEntity>> members = memberDao.findAll();
+        List<MemberEntity> retrievedMembers = members.get();
+        return convertMembersToMemberResponses(retrievedMembers);
     }
 
     private List<MemberResponse> convertMembersToMemberResponses(final List<MemberEntity> members) {

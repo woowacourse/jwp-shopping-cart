@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @Sql({"classpath:schema.sql"})
@@ -47,14 +48,17 @@ class JdbcCartDaoTest {
     @Test
     @DisplayName("모든 장바구니 조회 테스트")
     void findAll() {
-        List<ItemEntity> carts = cartDao.findAll("test@naver.com");
-        Assertions.assertThat(carts).hasSize(2);
+        Optional<List<ItemEntity>> carts = cartDao.findAll("test@naver.com");
+        List<ItemEntity> retrievedCarts = carts.get();
+        Assertions.assertThat(retrievedCarts).hasSize(2);
     }
 
     @Test
     @DisplayName("장바구니 삭제 테스트")
     void delete() {
         cartDao.delete("test@naver.com", 1L);
-        Assertions.assertThat(cartDao.findAll("test@naver.com")).hasSize(1);
+        Optional<List<ItemEntity>> carts = cartDao.findAll("test@naver.com");
+        List<ItemEntity> retrievedCarts = carts.get();
+        Assertions.assertThat(retrievedCarts).hasSize(1);
     }
 }

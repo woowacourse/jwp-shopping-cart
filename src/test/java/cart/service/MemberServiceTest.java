@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 
@@ -26,10 +27,10 @@ class MemberServiceTest {
     @Test
     @DisplayName("모든 멤버 조회 테스트")
     void findAll() {
-        given(memberDao.findAll()).willReturn(List.of(
+        given(memberDao.findAll()).willReturn(Optional.of(List.of(
                 new MemberEntity("test@naver.com", "test", "01012345678", "qwer1234"),
                 new MemberEntity("test@gmail.com", "test", "01098765432", "qwer1234")
-        ));
+        )));
 
         Assertions.assertThat(memberService.findAll()).hasSize(2);
     }

@@ -6,6 +6,7 @@ import cart.entity.ItemEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,8 +23,9 @@ public class CartService {
     }
 
     public List<ItemResponse> findAll(String memberEmail) {
-        List<ItemEntity> items = cartDao.findAll(memberEmail);
-        return convertItemsToItemResponses(items);
+        Optional<List<ItemEntity>> items = cartDao.findAll(memberEmail);
+        List<ItemEntity> retrievedItems = items.get();
+        return convertItemsToItemResponses(retrievedItems);
     }
 
     private List<ItemResponse> convertItemsToItemResponses(final List<ItemEntity> itemEntities) {

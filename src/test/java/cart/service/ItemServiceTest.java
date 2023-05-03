@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 
@@ -26,10 +27,10 @@ class ItemServiceTest {
     @Test
     @DisplayName("모든 아이템 조회 테스트")
     void findAll() {
-        given(itemDao.findAll()).willReturn(List.of(
+        given(itemDao.findAll()).willReturn(Optional.of(List.of(
                 new ItemEntity(1L, "치킨", "url", 10000),
                 new ItemEntity(2L, "치킨", "url", 10000)
-        ));
+        )));
 
         Assertions.assertThat(itemService.findAll()).hasSize(2);
     }

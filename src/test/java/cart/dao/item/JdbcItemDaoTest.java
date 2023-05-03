@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -33,22 +34,24 @@ class JdbcItemDaoTest {
 
         itemDao.save(item);
 
-        List<ItemEntity> itemEntities = itemDao.findAll();
+        Optional<List<ItemEntity>> items = itemDao.findAll();
+        List<ItemEntity> retrievedItems = items.get();
 
         assertAll(
-                () -> assertThat(itemEntities.size()).isEqualTo(3),
-                () -> assertThat(itemEntities.get(2).getId()).isEqualTo(3)
+                () -> assertThat(retrievedItems.size()).isEqualTo(3),
+                () -> assertThat(retrievedItems.get(2).getId()).isEqualTo(3)
         );
     }
 
     @Test
     @DisplayName("상품 목록 조회 테스트")
     void findAll() {
-        List<ItemEntity> itemEntities = itemDao.findAll();
+        Optional<List<ItemEntity>> items = itemDao.findAll();
+        List<ItemEntity> retrievedItems = items.get();
 
         assertAll(
-                () -> assertThat(itemEntities.size()).isEqualTo(2),
-                () -> assertThat(itemEntities.get(1).getId()).isEqualTo(2)
+                () -> assertThat(retrievedItems.size()).isEqualTo(2),
+                () -> assertThat(retrievedItems.get(1).getId()).isEqualTo(2)
         );
     }
 
@@ -59,14 +62,15 @@ class JdbcItemDaoTest {
 
         itemDao.update(2L, item);
 
-        List<ItemEntity> itemEntities = itemDao.findAll();
+        Optional<List<ItemEntity>> items = itemDao.findAll();
+        List<ItemEntity> retrievedItems = items.get();
 
         assertAll(
-                () -> assertThat(itemEntities.size()).isEqualTo(2),
-                () -> assertThat(itemEntities.get(1).getId()).isEqualTo(2),
-                () -> assertThat(itemEntities.get(1).getName()).isEqualTo("햄버거"),
-                () -> assertThat(itemEntities.get(1).getImageUrl()).isEqualTo("c"),
-                () -> assertThat(itemEntities.get(1).getPrice()).isEqualTo(2000)
+                () -> assertThat(retrievedItems.size()).isEqualTo(2),
+                () -> assertThat(retrievedItems.get(1).getId()).isEqualTo(2),
+                () -> assertThat(retrievedItems.get(1).getName()).isEqualTo("햄버거"),
+                () -> assertThat(retrievedItems.get(1).getImageUrl()).isEqualTo("c"),
+                () -> assertThat(retrievedItems.get(1).getPrice()).isEqualTo(2000)
         );
     }
 
@@ -75,7 +79,8 @@ class JdbcItemDaoTest {
     void delete() {
         itemDao.delete(2L);
 
-        List<ItemEntity> itemEntities = itemDao.findAll();
-        assertThat(itemEntities.size()).isEqualTo(1);
+        Optional<List<ItemEntity>> items = itemDao.findAll();
+        List<ItemEntity> retrievedItems = items.get();
+        assertThat(retrievedItems.size()).isEqualTo(1);
     }
 }

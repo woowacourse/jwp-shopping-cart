@@ -9,7 +9,7 @@ public interface MemberDao {
 
     MemberEntity save(MemberEntity item);
 
-    List<MemberEntity> findAll();
+    Optional<List<MemberEntity>> findAll();
 
     Optional<MemberEntity> findByEmail(String email);
 
