@@ -16,9 +16,16 @@ public class Member {
     }
 
     public Member(Long id, String email, String password) {
+        validateEmail(email);
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    private void validateEmail(String email) {
+        if (!email.matches("^(\\S+)@(\\S+).(\\S+)$")) {
+            throw new IllegalArgumentException("email 형식에 맞지 않습니다");
+        }
     }
 
     public Long getId() {
@@ -52,14 +59,5 @@ public class Member {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
     }
 }

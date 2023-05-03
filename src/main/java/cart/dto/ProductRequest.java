@@ -7,8 +7,10 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.URL;
 
 public class ProductRequest {
+    @NotNull(message = "이름을 입력해주세요")
     @Size(max = 20, message = "상품 이름은 20자 이내로 입력해야 합니다.")
     private final String name;
+    @NotNull(message = "이미지를 입력해주세요")
     @URL(message = "이미지는 url 형식으로 입력해주세요")
     private final String imgUrl;
     @NotNull(message = "가격을 입력해주세요")
