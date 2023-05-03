@@ -68,7 +68,7 @@ class CartControllerTest {
 
     @DisplayName("POST /cart-products 요청 시 성공하면 status Created 반환")
     @Test
-    void deleteCartProductTest() {
+    void addCartProductTest() {
         given().log().all()
                 .contentType(ContentType.JSON)
                 .body(key)
@@ -77,6 +77,25 @@ class CartControllerTest {
                 .post("/cart-products")
                 .then().log().all()
                 .statusCode(HttpStatus.SC_CREATED);
+    }
+
+    @DisplayName("DELETE /cart-products/{id} 요청 시 성공하면 status no content 반환")
+    @Test
+    void deleteCartProductTest() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(key)
+                .auth().preemptive().basic("user1@woowa.com", "123456")
+                .when()
+                .post("/cart-products")
+                .then();
+
+        given().log().all()
+                .auth().preemptive().basic("user1@woowa.com", "123456")
+                .when()
+                .delete("/cart-products/1")
+                .then().log().all()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
 }

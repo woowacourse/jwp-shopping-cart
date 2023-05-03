@@ -7,7 +7,9 @@ import cart.persistance.dao.CartDao;
 import cart.persistance.entity.CartProductEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +33,7 @@ public class CartController {
         return ResponseEntity.ok().body(cartProducts);
     }
 
-    @PostMapping(value = "/cart-products")
+    @PostMapping("/cart-products")
     public ResponseEntity<Void> addProductToCart(
             @BasicAuthentication final Member member,
             @RequestBody final AddCartRequest addCartRequest
@@ -39,4 +41,14 @@ public class CartController {
         cartDao.addProduct(member.getId(), addCartRequest.getId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @DeleteMapping("/cart-products/{id}")
+    public ResponseEntity<Void> removeProductFromCart(
+            @PathVariable final Long id,
+            @BasicAuthentication final Member member
+    ) {
+        cartDao.removeFromCartById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }

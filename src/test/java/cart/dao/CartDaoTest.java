@@ -75,7 +75,7 @@ class CartDaoTest {
     void deleteProductFromCart() {
         cartDao.addProduct(1, key);
         final long cartKey = cartDao.addProduct(1, this.key);
-        cartDao.deleteProduct(cartKey);
+        cartDao.removeFromCartById(cartKey);
 
         final List<CartProductEntity> products = cartDao.findByUserId(1);
 
@@ -85,7 +85,7 @@ class CartDaoTest {
     @DisplayName("삭제할 product가 없을 시 예외가 발생한다")
     @Test
     void deleteProductException() {
-        assertThatThrownBy(() -> cartDao.deleteProduct(1))
+        assertThatThrownBy(() -> cartDao.removeFromCartById(1))
                 .isInstanceOf(ProductNotFoundException.class);
     }
 }

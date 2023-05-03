@@ -92,14 +92,14 @@ CREATE TABLE cart
 
 ### 장바구니
 
-- [ ] GET /cart
-    - [ ] 장바구니의 상품 조회
+- [x] GET /cart
+    - [x] 장바구니의 상품 조회
 
-- [ ] POST /cart
-    - [ ] 장바구니에 상품 추가
-    - [ ] body : id, name, price, imageUrl
+- [x] POST /cart
+    - [x] 장바구니에 상품 추가
+    - [x] body : id, name, price, imageUrl
 
-- [ ] DELETE /cart/id
-    - [ ] 장바구니의 상품 삭제
-        - [ ] 성공 시 status ok
-        - [ ] 상품 없을 시 status not found
+- [x] DELETE /cart/id
+    - [x] 장바구니의 상품 삭제
+        - [x] 성공 시 status ok
+        - [x] 상품 없을 시 status not found

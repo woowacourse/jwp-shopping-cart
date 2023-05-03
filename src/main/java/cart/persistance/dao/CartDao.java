@@ -43,7 +43,7 @@ public class CartDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void deleteProduct(final long id) {
+    public void removeFromCartById(final long id) {
         final String sql = "DELETE FROM cart " +
                 "WHERE id = :id";
         final var sqlParameterSource =
