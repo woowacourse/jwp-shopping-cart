@@ -33,7 +33,7 @@ class CartMockServiceTest {
     void 사용자의_id가_주어지면_해당_사용자의_장바구니_목록을_전체_조회한다() {
         // given
         final Long userId = 1L;
-        final CartProductResultMap result = new CartProductResultMap(1L, 1L, "치킨", 10000, "imgUrl", 3);
+        final CartProductResultMap result = new CartProductResultMap(1L, 1L, "치킨", 10000, "imgUrl");
         when(jdbcCartProductDao.findAllByUserId(userId)).thenReturn(List.of(result));
 
         // when
@@ -43,8 +43,7 @@ class CartMockServiceTest {
         final List<CartResponse> results = cartResponses.getCartResponses();
         assertAll(
                 () -> assertThat(results).hasSize(1),
-                () -> assertThat(results.get(0).getProductId()).isEqualTo(1L),
-                () -> assertThat(results.get(0).getCount()).isEqualTo(3)
+                () -> assertThat(results.get(0).getProductId()).isEqualTo(1L)
         );
     }
 }

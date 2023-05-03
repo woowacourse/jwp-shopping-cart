@@ -11,6 +11,6 @@ public class CartMapper {
     }
 
     public Cart mapFrom(final CartSaveRequest saveRequest) {
-        return new Cart(saveRequest.getUserId(), saveRequest.getProductId(), saveRequest.getCount());
+        return new Cart(saveRequest.getUserId(), saveRequest.getProductId());
     }
 }

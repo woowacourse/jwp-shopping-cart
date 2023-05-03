@@ -8,8 +8,8 @@ INSERT INTO product (name, price, img_url) VALUES ('샐러드', 8000, 'https://m
 INSERT INTO product (name, price, img_url) VALUES ('짜장면', 7000, 'https://t3.ftcdn.net/jpg/04/70/03/22/360_F_470032254_ljRRvV1YclnG9WqB4AptM7ACWyyLliMw.jpg');
 
 -- 기본 카트
-INSERT INTO cart (user_id, product_id, count) VALUES (1L, 1L, 3);
-INSERT INTO cart (user_id, product_id, count) VALUES (1L, 2L, 5);
-INSERT INTO cart (user_id, product_id, count) VALUES (2L, 1L, 2);
-INSERT INTO cart (user_id, product_id, count) VALUES (2L, 2L, 2);
-INSERT INTO cart (user_id, product_id, count) VALUES (2L, 3L, 1);
+INSERT INTO cart (user_id, product_id) VALUES (1L, 1L);
+INSERT INTO cart (user_id, product_id) VALUES (1L, 2L);
+INSERT INTO cart (user_id, product_id) VALUES (2L, 1L);
+INSERT INTO cart (user_id, product_id) VALUES (2L, 2L);
+INSERT INTO cart (user_id, product_id) VALUES (2L, 3L);

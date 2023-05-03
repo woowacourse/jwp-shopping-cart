@@ -36,7 +36,7 @@ public class CartController {
 
     @PostMapping("/users/products/{productId}")
     public ResponseEntity<URI> addProduct(@AuthenticateUser AuthUser user, @PathVariable Long productId) {
-        final CartSaveRequest saveRequest = new CartSaveRequest(user.getId(), productId, 0);
+        final CartSaveRequest saveRequest = new CartSaveRequest(user.getId(), productId);
 
         final Long id = cartService.save(saveRequest);
 

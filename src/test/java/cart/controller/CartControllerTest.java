@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @SuppressWarnings("NonAsciiCharacters")
@@ -39,10 +38,7 @@ class CartControllerTest {
 
         // then
         final JsonPath result = response.jsonPath();
-        assertAll(
-                () -> assertThat(result.getList("cartResponses.name")).containsExactly("치킨", "샐러드"),
-                () -> assertThat(result.getList("cartResponses.count")).containsExactly(3, 5)
-        );
+        assertThat(result.getList("cartResponses.name")).containsExactly("치킨", "샐러드");
     }
 
     @Test

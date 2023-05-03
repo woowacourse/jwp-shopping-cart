@@ -31,7 +31,7 @@ class JdbcCartDaoTest {
     @Test
     void 장바구니를_저장한다() {
         // when
-        final Long savedId = 장바구니를_저장한다(1L, 1L, 3);
+        final Long savedId = 장바구니를_저장한다(1L, 1L);
 
         // then
         assertThat(savedId).isEqualTo(1L);
@@ -40,7 +40,7 @@ class JdbcCartDaoTest {
     @Test
     void 장바구니를_삭제한다() {
         // given
-        final Long savedId = 장바구니를_저장한다(1L, 2L, 3);
+        final Long savedId = 장바구니를_저장한다(1L, 2L);
 
         // when
         cartDao.delete(1L, 2L);
@@ -49,8 +49,8 @@ class JdbcCartDaoTest {
         assertThat(장바구니_단건_조회_한다(savedId)).isNotPresent();
     }
 
-    private Long 장바구니를_저장한다(final long userId, final long productId, final int count) {
-        final Cart cart = new Cart(userId, productId, count);
+    private Long 장바구니를_저장한다(final long userId, final long productId) {
+        final Cart cart = new Cart(userId, productId);
         return cartDao.save(cart);
     }
 
@@ -61,7 +61,6 @@ class JdbcCartDaoTest {
                 rs.getLong("id"),
                 rs.getLong("user_id"),
                 rs.getLong("product_id"),
-                rs.getInt("count"),
                 rs.getTimestamp("created_at").toLocalDateTime()
         );
 

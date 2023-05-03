@@ -19,13 +19,11 @@ public class JdbcCartDao implements CartDao {
 
     @Override
     public Long save(final Cart cart) {
-        final String sql = "INSERT INTO cart (user_id, product_id, count) VALUES (:userId, :productId, :count)";
+        final String sql = "INSERT INTO cart (user_id, product_id) VALUES (:userId, :productId)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("userId", cart.getUserId())
-                .addValue("productId", cart.getProductId())
-                .addValue("count", cart.getCount());
-
+                .addValue("productId", cart.getProductId());
         jdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
 
         return keyHolder.getKey().longValue();

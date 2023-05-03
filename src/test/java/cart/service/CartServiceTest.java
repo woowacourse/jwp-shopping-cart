@@ -37,7 +37,7 @@ class CartServiceTest {
     @Test
     void 장바구니를_저장한다() {
         // when
-        final Long savedId = 장바구니를_저장한다(2L, 3L, 3);
+        final Long savedId = 장바구니를_저장한다(2L, 3L);
 
         // then
         assertThat(savedId).isEqualTo(1L);
@@ -49,7 +49,7 @@ class CartServiceTest {
         @Test
         void 장바구니_id가_주어지면_장바구니를_삭제_한다() {
             // given
-            장바구니를_저장한다(2L, 3L, 4);
+            장바구니를_저장한다(2L, 3L);
 
             // when
             cartService.delete(2L, 3L);
@@ -66,8 +66,8 @@ class CartServiceTest {
         }
     }
 
-    private Long 장바구니를_저장한다(final long userId, final long productId, final int count) {
-        final CartSaveRequest cartSaveRequest = new CartSaveRequest(userId, productId, count);
+    private Long 장바구니를_저장한다(final long userId, final long productId) {
+        final CartSaveRequest cartSaveRequest = new CartSaveRequest(userId, productId);
         return cartService.save(cartSaveRequest);
     }
 }

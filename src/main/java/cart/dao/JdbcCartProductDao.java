@@ -19,7 +19,7 @@ public class JdbcCartProductDao {
     }
 
     public List<CartProductResultMap> findAllByUserId(final Long userId) {
-        final String sql = "SELECT c.id, c.product_id, p.name, p.price, p.img_url, c.count " +
+        final String sql = "SELECT c.id, c.product_id, p.name, p.price, p.img_url, " +
                 "FROM cart c " +
                 "JOIN product p on p.id = c.product_id " +
                 "WHERE c.user_id = :userId";
@@ -33,8 +33,7 @@ public class JdbcCartProductDao {
                 rs.getLong("product_id"),
                 rs.getString("name"),
                 rs.getInt("price"),
-                rs.getString("img_url"),
-                rs.getInt("count")
+                rs.getString("img_url")
         );
     }
 }

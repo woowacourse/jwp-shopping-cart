@@ -20,6 +20,5 @@ CREATE TABLE IF NOT EXISTS `cart`
     `id`         BIGINT   NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `user_id`    BIGINT   NOT NULL,
     `product_id` BIGINT   NOT NULL,
-    `count`      INTEGER  NOT NULL DEFAULT 1,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 )
