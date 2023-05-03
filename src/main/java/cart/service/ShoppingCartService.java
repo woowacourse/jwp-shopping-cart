@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.entity.Product;
+import cart.exception.MemberNotFoundException;
 import cart.repository.MemberRepository;
 import cart.repository.ShoppingCartRepository;
 import cart.service.dto.MemberInfo;
@@ -20,8 +21,14 @@ public class ShoppingCartService {
     }
 
     public List<Product> findAllProduct(final MemberInfo memberInfo) {
-        long memberId = memberRepository.findId(memberInfo)
-                .orElseThrow();
+        final long memberId = memberRepository.findId(memberInfo)
+                .orElseThrow(MemberNotFoundException::new);
         return shoppingCartRepository.findAllProduct(memberId);
+    }
+
+    public void addCartProduct(final MemberInfo memberInfo, final Long productId) {
+        final Long memberId = memberRepository.findId(memberInfo)
+                .orElseThrow(MemberNotFoundException::new);
+        shoppingCartRepository.addProduct(memberId, productId);
     }
 }
