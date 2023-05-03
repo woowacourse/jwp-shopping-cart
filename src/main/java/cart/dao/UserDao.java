@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.entity.Product;
 import cart.entity.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -37,5 +38,16 @@ public class UserDao {
         final String sql = "DELETE FROM user_product WHERE id = ? AND user_id = ?";
 
         jdbcTemplate.update(sql, userProductId, userId);
+    }
+
+    public List<Product> findAllProductsInCart(Long userId) {
+        final String sql = "SELECT p.id, name, image, price " +
+                "FROM user_product " +
+                "LEFT JOIN products p ON product_id=p.id " +
+                "WHERE user_id = ?";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                        new Product(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getInt(4)),
+                userId);
     }
 }

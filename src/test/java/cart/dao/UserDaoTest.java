@@ -92,4 +92,18 @@ class UserDaoTest {
                 () -> assertThat(beforeDelete).isOne(),
                 () -> assertThat(countRowsInTable(jdbcTemplate, "user_product")).isZero());
     }
+
+    @DisplayName("유저의 장바구니 상품 전체를 가져올 수 있다")
+    @Test
+    void findAllProductsInCart() {
+        //given
+        final Product product = productDao.save(new Product("상품", "이미지", 1000));
+
+        //when
+        userDao.addProductToCart(1L, product.getId());
+        userDao.addProductToCart(1L, product.getId());
+
+        //then
+        assertThat(userDao.findAllProductsInCart(1L)).hasSize(2);
+    }
 }
