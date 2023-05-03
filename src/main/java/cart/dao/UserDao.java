@@ -1,5 +1,6 @@
 package cart.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import cart.entiy.UserEntity;
@@ -23,6 +24,11 @@ public class UserDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public List<UserEntity> findAll() {
+        final String sql = "SELECT email, password from MEMBER";
+        return jdbcTemplate.query(sql, userEntityRowMapper);
+    }
+    
     public Optional<UserEntity> findByEmail(final String email) {
         final String sql = "SELECT email, password from MEMBER where email=?";
         try {
