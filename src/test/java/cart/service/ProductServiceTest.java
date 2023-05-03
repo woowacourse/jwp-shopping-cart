@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import cart.service.dto.ProductModifyRequest;
-import cart.service.dto.ProductRegisterRequest;
-import cart.service.dto.ProductSearchResponse;
+import cart.service.dto.product.ProductModifyRequest;
+import cart.service.dto.product.ProductRegisterRequest;
+import cart.service.dto.product.ProductSearchResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

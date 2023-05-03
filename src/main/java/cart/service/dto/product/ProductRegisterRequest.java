@@ -1,9 +1,9 @@
-package cart.service.dto;
+package cart.service.dto.product;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
-public class ProductModifyRequest {
+public class ProductRegisterRequest {
 
     @NotBlank(message = "상품의 이름은 공백일 수 없습니다.")
     private String name;
@@ -14,10 +14,10 @@ public class ProductModifyRequest {
     @NotBlank(message = "이미지 url은 공백일 수 없습니다.")
     private String imageUrl;
 
-    private ProductModifyRequest() {
+    private ProductRegisterRequest() {
     }
 
-    public ProductModifyRequest(final String name, final int price, final String imageUrl) {
+    public ProductRegisterRequest(final String name, final int price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

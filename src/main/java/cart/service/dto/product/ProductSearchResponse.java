@@ -1,4 +1,4 @@
-package cart.service.dto;
+package cart.service.dto.product;
 
 public class ProductSearchResponse {
 
