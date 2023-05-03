@@ -1,7 +1,7 @@
 package cart.domain;
 
-
 public class Member {
+
     private final String email;
     private final String password;
 
