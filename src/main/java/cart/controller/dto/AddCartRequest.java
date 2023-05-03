@@ -1,14 +1,15 @@
 package cart.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AddCartRequest {
 
-    private Long id;
+    private final Long id;
 
-    public AddCartRequest(final Long id) {
+    @JsonCreator
+    public AddCartRequest(@JsonProperty("id") final Long id) {
         this.id = id;
-    }
-
-    public AddCartRequest() {
     }
 
     public Long getId() {
