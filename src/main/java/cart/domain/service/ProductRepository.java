@@ -5,11 +5,11 @@ import cart.domain.product.Product;
 import java.util.List;
 
 public interface ProductRepository {
-    List<Product> findAll();
-
     Long save(Product product);
 
-    void deleteById(Long id);
+    List<Product> findAll();
 
     int update(Product product);
+
+    void deleteById(Long id);
 }

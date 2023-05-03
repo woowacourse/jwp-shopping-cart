@@ -16,6 +16,19 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public Long save(Product product) {
+        ProductEntity productEntity = new ProductEntity(
+                product.getProductId(),
+                product.getName(),
+                product.getPrice().intValue(),
+                product.getCategory().name(),
+                product.getImageUrl()
+        );
+
+        return productDao.insert(productEntity);
+    }
+
+    @Override
     public List<Product> findAll() {
         List<ProductEntity> allProductEntities = productDao.findAll();
 
@@ -35,24 +48,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Long save(Product product) {
-        ProductEntity productEntity = new ProductEntity(
-                product.getProductId(),
-                product.getName(),
-                product.getPrice().intValue(),
-                product.getCategory().name(),
-                product.getImageUrl()
-        );
-
-        return productDao.insert(productEntity);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        productDao.deleteById(id);
-    }
-
-    @Override
     public int update(Product product) {
         ProductEntity productEntity = new ProductEntity(
                 product.getProductId(),
@@ -63,5 +58,10 @@ public class ProductRepositoryImpl implements ProductRepository {
         );
 
         return productDao.update(productEntity);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        productDao.deleteById(id);
     }
 }
