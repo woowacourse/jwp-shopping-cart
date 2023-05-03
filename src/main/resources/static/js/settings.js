@@ -7,9 +7,6 @@ const showAddModal = () => {
 
 const showEditModal = (member) => {
     const elements = modal.getElementsByTagName('input');
-    // for (const element of elements) {
-    //     element.value =element.getAttribute('password');
-    // }
     modal.dataset.formType = 'edit';
     modal.dataset.email = member.email;
     modal.dataset.name = member.name;
