@@ -22,14 +22,15 @@ class JdbcProductDaoTest {
     @DisplayName("상품 목록 insert 테스트")
     void insert() {
         //given
-        final Product product = new Product(new Name("스파게티"), "https://hello", new Price(1000));
+        final String foodName = "스파게티";
+        final Product product = new Product(new Name(foodName), "https://hello", new Price(1000));
         
         //when
         final long id = this.jdbcProductDao.insert(product);
         final Product insertedProduct = this.jdbcProductDao.findByID(id);
         
         //then
-        assertEquals(product.getName().getValue(), insertedProduct.getName().getValue());
+        assertEquals(foodName, insertedProduct.getName().getValue());
     }
     
     @Test
@@ -54,7 +55,10 @@ class JdbcProductDaoTest {
     @DisplayName("상품 findByName 테스트")
     void findByName() {
         //given
-        final Product product1 = new Product(new Name("망고"), "https://mango", new Price(1000));
+        final Name name = new Name("망고");
+        final String url = "https://mango";
+        final Price price = new Price(1000);
+        final Product product1 = new Product(name, url, price);
         final Product product2 = new Product(new Name("에코"), "https://echo", new Price(2000));
         final Product product3 = new Product(new Name("포비"), "https://pobi", new Price(3000));
         
@@ -66,9 +70,9 @@ class JdbcProductDaoTest {
         final Product result = this.jdbcProductDao.findByName("망고");
         
         //then
-        assertEquals(product1.getName().getValue(), result.getName().getValue());
-        assertEquals(product1.getImage(), result.getImage());
-        assertEquals(product1.getPrice().getValue(), result.getPrice().getValue());
+        assertEquals(name.getValue(), result.getName().getValue());
+        assertEquals(url, result.getImage());
+        assertEquals(price.getValue(), result.getPrice().getValue());
     }
     
     @Test
