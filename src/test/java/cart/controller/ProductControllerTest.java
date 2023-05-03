@@ -12,16 +12,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestExecutionListeners;
 
 import cart.dto.ProductRequestDto;
-import cart.service.AdminService;
+import cart.service.ProductService;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestExecutionListeners(value = {
     AcceptanceTestExecutionListener.class,}, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
-public class AdminControllerTest {
+public class ProductControllerTest {
 
     @Autowired
-    AdminService service;
+    ProductService service;
 
     @LocalServerPort
     int port;

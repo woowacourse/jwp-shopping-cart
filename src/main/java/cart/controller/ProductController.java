@@ -13,33 +13,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import cart.dto.ProductRequestDto;
-import cart.service.AdminService;
+import cart.service.ProductService;
 
 @RestController
-public class AdminController {
+public class ProductController {
 
-    private final AdminService adminService;
+    private final ProductService productService;
 
-    public AdminController(AdminService adminService) {
-        this.adminService = adminService;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @PostMapping("/products")
     public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
-        int id = adminService.addProduct(productRequestDto);
+        int id = productService.addProduct(productRequestDto);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/products/{id}")
     public ResponseEntity<Void> updateProduct(@Valid @RequestBody ProductRequestDto productRequestDto,
         @PathVariable int id) {
-        adminService.updateProduct(productRequestDto, id);
+        productService.updateProduct(productRequestDto, id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
-        adminService.deleteProduct(id);
+        productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 }

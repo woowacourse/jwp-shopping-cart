@@ -14,11 +14,11 @@ import cart.entity.Product;
 
 @Service
 @Transactional
-public class AdminService {
+public class ProductService {
     private final ProductDao productDao;
 
     @Autowired
-    public AdminService(ProductDao productDao) {
+    public ProductService(ProductDao productDao) {
         this.productDao = productDao;
     }
 

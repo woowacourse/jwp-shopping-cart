@@ -18,18 +18,18 @@ import cart.dto.ProductRequestDto;
 
 @SpringBootTest
 @Transactional
-class AdminServiceTest {
+class ProductServiceTest {
 
     private final ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000,
         "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
 
     @Autowired
-    private AdminService adminService;
+    private ProductService productService;
 
     @DisplayName("addProduct 성공 테스트")
     @Test
     void successAddProduct() {
-        assertDoesNotThrow(() -> adminService.addProduct(productRequestDto));
+        assertDoesNotThrow(() -> productService.addProduct(productRequestDto));
     }
 
     @DisplayName("addProduct 실패 테스트 - 이름 길이 검증")
@@ -37,7 +37,7 @@ class AdminServiceTest {
     void addProduct_fail() {
         ProductRequestDto productRequestDto = new ProductRequestDto("케로케로케로케로케로케로케로케로케로케로케로케로케로", 1000,
             "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
-        assertThatThrownBy(() -> adminService.addProduct(productRequestDto))
+        assertThatThrownBy(() -> productService.addProduct(productRequestDto))
             .isExactlyInstanceOf(DataIntegrityViolationException.class);
     }
 
@@ -45,10 +45,10 @@ class AdminServiceTest {
     void selectAllProducts() {
         ProductRequestDto productRequestDto2 = new ProductRequestDto("쿠루루", 2000,
             "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
-        adminService.addProduct(productRequestDto);
-        adminService.addProduct(productRequestDto2);
+        productService.addProduct(productRequestDto);
+        productService.addProduct(productRequestDto2);
 
-        List<ProductDto> productEntities = adminService.selectAllProducts();
+        List<ProductDto> productEntities = productService.selectAllProducts();
 
         assertAll(
             () -> assertThat(productEntities).hasSize(2),
@@ -60,12 +60,12 @@ class AdminServiceTest {
 
     @Test
     void updateProduct() {
-        int id = adminService.addProduct(productRequestDto);
+        int id = productService.addProduct(productRequestDto);
         ProductRequestDto updateProductDto = new ProductRequestDto("타마마", 100,
             "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
-        adminService.updateProduct(updateProductDto, id);
+        productService.updateProduct(updateProductDto, id);
 
-        List<ProductDto> productEntities = adminService.selectAllProducts();
+        List<ProductDto> productEntities = productService.selectAllProducts();
 
         assertThat(productEntities).extracting("name", "price", "image")
             .contains(tuple(updateProductDto.getName(), updateProductDto.getPrice(), updateProductDto.getImage()));
@@ -73,10 +73,10 @@ class AdminServiceTest {
 
     @Test
     void deleteProduct() {
-        int id = adminService.addProduct(productRequestDto);
-        adminService.deleteProduct(id);
+        int id = productService.addProduct(productRequestDto);
+        productService.deleteProduct(id);
 
-        List<ProductDto> productEntities = adminService.selectAllProducts();
+        List<ProductDto> productEntities = productService.selectAllProducts();
 
         assertThat(productEntities).hasSize(0);
     }

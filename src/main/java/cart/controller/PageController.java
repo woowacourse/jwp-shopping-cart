@@ -7,27 +7,27 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import cart.dto.ProductDto;
-import cart.service.AdminService;
+import cart.service.ProductService;
 
 @Controller
 public class PageController {
 
-    private final AdminService adminService;
+    private final ProductService productService;
 
-    public PageController(AdminService adminService) {
-        this.adminService = adminService;
+    public PageController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/")
     String allProducts(Model model) {
-        List<ProductDto> productEntities = adminService.selectAllProducts();
+        List<ProductDto> productEntities = productService.selectAllProducts();
         model.addAttribute("products", productEntities);
         return "index";
     }
 
     @GetMapping("/admin")
     String adminAllProducts(Model model) {
-        List<ProductDto> productEntities = adminService.selectAllProducts();
+        List<ProductDto> productEntities = productService.selectAllProducts();
         model.addAttribute("products", productEntities);
         return "admin";
     }
