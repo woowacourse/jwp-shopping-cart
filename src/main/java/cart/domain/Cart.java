@@ -31,6 +31,6 @@ public class Cart {
     }
 
     public CartItem removeItem(int cartItemId) {
-        return cartItems.remove(cartItemId-1);
+        return cartItems.remove(cartItemId - 1);
     }
 }

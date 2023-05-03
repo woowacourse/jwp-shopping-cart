@@ -32,7 +32,7 @@ public class CartDao {
 
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameterSource, Long.class));
-        } catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
