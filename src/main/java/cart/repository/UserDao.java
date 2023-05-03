@@ -26,15 +26,6 @@ public class UserDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public Integer findIdByEmailAndPassword(final String email, final String password) {
-        final String sql = "select id from users where email = ? and password = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql, Integer.class, email, password);
-        } catch (DataAccessException e) {
-            throw new AuthorizationException("잘못된 인증 정보입니다.");
-        }
-    }
-
     public List<UserEntity> findAll() {
         final String sql = "select * from users";
         return jdbcTemplate.query(sql, userEntityRowMapper);
