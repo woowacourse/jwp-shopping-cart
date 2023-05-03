@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@Sql("/cart_initialize.sql")
 class CartDaoTest {
 
     private CartDao cartDao;
@@ -29,7 +30,6 @@ class CartDaoTest {
         this.cartDao = new CartDao(jdbcTemplate);
     }
 
-    @Sql("/cart_initialize.sql")
     @DisplayName("사용자 id와 상품 id로 장바구니를 담는다.")
     @Test
     void insert() {
@@ -55,7 +55,6 @@ class CartDaoTest {
 
     @DisplayName("사용자의 장바구니를 모두 조회할 수 있다.")
     @Test
-    @Sql("/cart_initialize.sql")
     void findAllCartProductByCustomerId() {
         // given
         long cartId = cartDao.insert(customerId, productId);
@@ -74,7 +73,6 @@ class CartDaoTest {
 
     @DisplayName("사용자 장바구니 상품을 삭제할 수 있다.")
     @Test
-    @Sql("/cart_initialize.sql")
     void deleteById() {
         // given
         long cartId = cartDao.insert(customerId, productId);
@@ -89,7 +87,6 @@ class CartDaoTest {
 
     @DisplayName("상품이 장바구니에 저장되어 있으면 true가 반환된다.")
     @Test
-    @Sql("/cart_initialize.sql")
     void trueIfProductIdInCustomerCart() {
         // given
         cartDao.insert(customerId, productId);
@@ -103,7 +100,6 @@ class CartDaoTest {
 
     @DisplayName("상품이 장바구니에 저장되어 있으면 false가 반환된다.")
     @Test
-    @Sql("/cart_initialize.sql")
     void falseIfProductIdNotInCustomerCart() {
         // given
 
