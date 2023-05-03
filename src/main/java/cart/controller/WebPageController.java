@@ -36,4 +36,9 @@ public class WebPageController {
         model.addAttribute("members", MemberResponse.mapMembers(memberService.getMembers()));
         return "settings";
     }
+
+    @GetMapping("/cart")
+    public String renderCartPage() {
+        return "cart";
+    }
 }
