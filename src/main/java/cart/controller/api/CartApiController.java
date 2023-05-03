@@ -1,7 +1,6 @@
 package cart.controller.api;
 
 import cart.annotation.Authenticate;
-import cart.controller.dto.request.MemberRequest;
 import cart.controller.dto.request.ProductIdRequest;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,7 @@ public class CartApiController {
 
     @PostMapping("/product")
     public ResponseEntity<Void> save(
-            final Long memberId,
+            @Authenticate final Long memberId,
             @RequestBody @Valid final ProductIdRequest productIdRequest
     ) {
         cartService.save(memberId, productIdRequest);
