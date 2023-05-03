@@ -1,8 +1,10 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
 import java.util.List;
+
+import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -21,14 +23,18 @@ public class ProductDao {
 
     public List<ProductEntity> findAll() {
         String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
+        return jdbcTemplate.query(sql, productEntityRowMapper()
+        );
+    }
+
+    private RowMapper<ProductEntity> productEntityRowMapper() {
+        return (rs, rowNum) ->
                 new ProductEntity.Builder()
                         .productId(rs.getLong("product_id"))
                         .name(rs.getString("name"))
                         .imgUrl(rs.getString("img_url"))
                         .price(rs.getInt("price"))
-                        .build()
-        );
+                        .build();
     }
 
     public long insert(ProductEntity productEntity) {

@@ -3,9 +3,10 @@ package cart.dao;
 import static cart.fixture.ProductFixtures.INSERT_PRODUCT_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import cart.entity.ProductEntity;
 import cart.entity.ProductEntity.Builder;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -81,6 +82,7 @@ class ProductDaoTest {
         assertThat(productDao.findAll()).hasSize(0);
     }
 
+    @Test
     @DisplayName("삭제 상품 ID에 해당하는 상품 행이 존재하지 않으면 TRUE를 반환한다.")
     void isNotExistBy_True() {
         // given
@@ -90,6 +92,7 @@ class ProductDaoTest {
         assertThat(productDao.isNotExistBy(deleteId)).isTrue();
     }
 
+    @Test
     @DisplayName("삭제 상품 ID에 해당하는 상품 행이 존재하면 FALSE를 반환한다.")
     void isNotExistBy_False() {
         // given

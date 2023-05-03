@@ -1,10 +1,15 @@
 package cart.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dto.MemberAuthRequest;
+import cart.dto.ProductResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
+import cart.entity.ProductEntity;
 import cart.exception.MemberNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +40,16 @@ public class CartService {
         if (memberDao.isNotExistByEmailAndPassword(email, password)) {
             throw new MemberNotFoundException("사용자 인증 정보에 해당하는 사용자가 존재하지 않습니다.");
         }
+    }
+
+    public List<ProductResponse> findAllProductByMemberInfo(MemberAuthRequest memberAuthRequest) {
+        String email = memberAuthRequest.getEmail();
+        String password = memberAuthRequest.getPassword();
+        checkMemberExistByMemberInfo(email, password);
+        MemberEntity findMemberEntity = memberDao.selectByEmailAndPassword(email, password);
+        List<ProductEntity> productEntities = cartDao.selectAllProductByMemberId(findMemberEntity.getMemberId());
+        return productEntities.stream()
+                .map(ProductResponse::fromEntity)
+                .collect(Collectors.toUnmodifiableList());
     }
 }
