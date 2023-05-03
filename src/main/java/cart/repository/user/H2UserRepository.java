@@ -4,8 +4,10 @@ import cart.domain.user.User;
 import cart.entiy.user.UserEntity;
 import cart.entiy.user.UserEntityId;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -55,5 +57,13 @@ public class H2UserRepository implements UserRepository {
         } catch (final Exception e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<User> findAll() {
+        final String sql = "SELECT member_id, email, password FROM MEMBER";
+        return jdbcTemplate.query(sql, userEntityRowMapper).stream()
+                .map(UserEntity::toDomain)
+                .collect(Collectors.toList());
     }
 }
