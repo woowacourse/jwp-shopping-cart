@@ -1,9 +1,9 @@
 package cart.controller;
 
-import cart.dto.response.ProductResponse;
 import cart.dto.response.MemberResponse;
-import cart.service.ProductService;
+import cart.dto.response.ProductResponse;
 import cart.service.MemberService;
+import cart.service.ProductService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PageController {
 
-    @Autowired
     private final ProductService productService;
-    @Autowired
     private final MemberService memberService;
 
     @Autowired
@@ -43,5 +41,10 @@ public class PageController {
         final List<MemberResponse> memberResponse = memberService.findAll();
         model.addAttribute("members", memberResponse);
         return "settings";
+    }
+
+    @GetMapping("/cart")
+    public String readCartPage() {
+        return "cart";
     }
 }
