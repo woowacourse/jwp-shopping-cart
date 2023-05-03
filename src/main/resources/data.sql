@@ -14,3 +14,9 @@ CREATE TABLE users
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );
+
+INSERT INTO users (email, password)
+VALUES ('a@a.com', 'password1');
+INSERT INTO users (email, password)
+VALUES ('b@b.com', 'password2');
+

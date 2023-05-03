@@ -1,11 +1,11 @@
 package cart.controller.dto;
 
-public class MemberRequest {
+public class MemberResponse {
 
     private final String email;
     private final String password;
 
-    public MemberRequest(final String email, final String password) {
+    public MemberResponse(final String email, final String password) {
         this.email = email;
         this.password = password;
     }
