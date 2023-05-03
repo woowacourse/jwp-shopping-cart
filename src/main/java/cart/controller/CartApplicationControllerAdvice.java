@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class CartControllerAdvice {
+public class CartApplicationControllerAdvice {
 
     private static final String UNEXPECTED_ERROR_LOG_FORMAT = "예상치 못한 에러 발생 : " + System.lineSeparator() + "{}";
-    private static final Logger LOGGER = LoggerFactory.getLogger(CartControllerAdvice.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CartApplicationControllerAdvice.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> sendErrorMessage(final MethodArgumentNotValidException exception) {

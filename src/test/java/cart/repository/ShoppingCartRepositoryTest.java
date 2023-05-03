@@ -10,11 +10,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 
 @JdbcTest
-@Import(JdbcCartRepository.class)
-class CartRepositoryTest {
+@Import(JdbcShoppingShoppingCartRepository.class)
+class ShoppingCartRepositoryTest {
 
     @Autowired
-    private CartRepository cartRepository;
+    private ShoppingCartRepository shoppingCartRepository;
 
     @Test
     void addProduct() {
@@ -27,7 +27,7 @@ class CartRepositoryTest {
 
     @Test
     void findAllProduct() {
-        final List<Product> allProduct = cartRepository.findAllProduct(1L);
+        final List<Product> allProduct = shoppingCartRepository.findAllProduct(1L);
 
         assertThat(allProduct).hasSize(1);
     }

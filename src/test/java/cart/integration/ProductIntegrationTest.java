@@ -1,4 +1,4 @@
-package cart;
+package cart.integration;
 
 import static io.restassured.RestAssured.given;
 
@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class IntegrationTest {
+class ProductIntegrationTest {
 
     @LocalServerPort
     private int port;

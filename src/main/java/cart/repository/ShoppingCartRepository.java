@@ -3,7 +3,7 @@ package cart.repository;
 import cart.entity.Product;
 import java.util.List;
 
-public interface CartRepository {
+public interface ShoppingCartRepository {
 
     void addProduct(long userId, long productId);
 

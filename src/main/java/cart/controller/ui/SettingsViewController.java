@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.ui;
 
 import cart.entity.Member;
 import cart.service.MemberService;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/settings")
 @Controller
-public class SettingsController {
+public class SettingsViewController {
 
     private final MemberService memberService;
 
-    public SettingsController(final MemberService memberService) {
+    public SettingsViewController(final MemberService memberService) {
         this.memberService = memberService;
     }
 
