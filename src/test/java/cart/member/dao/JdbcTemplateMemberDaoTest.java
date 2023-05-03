@@ -1,7 +1,6 @@
 package cart.member.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.member.entity.MemberEntity;
 import java.util.HashMap;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
@@ -81,7 +79,8 @@ class JdbcTemplateMemberDaoTest {
     void findByEmailTest_nonExistEmail_fail() {
         String email = "nonExist@mail.com";
 
-        assertThatThrownBy(() -> memberDao.findByEmail(email))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+        final Optional<MemberEntity> findMember = memberDao.findByEmail(email);
+
+        assertThat(findMember).isNotPresent();
     }
 }

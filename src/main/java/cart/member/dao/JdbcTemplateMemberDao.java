@@ -37,7 +37,7 @@ public class JdbcTemplateMemberDao implements MemberDao {
     public Optional<MemberEntity> findByEmail(final String memberEmail) {
         String sql = "select * from members where email = ?";
 
-        final MemberEntity member = jdbcTemplate.queryForObject(sql, memberEntityRowMapper, memberEmail);
-        return Optional.ofNullable(member);
+        return jdbcTemplate.query(sql, memberEntityRowMapper, memberEmail).stream()
+                .findAny();
     }
 }
