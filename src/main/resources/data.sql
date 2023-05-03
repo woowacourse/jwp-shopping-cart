@@ -26,5 +26,5 @@ CREATE TABLE IF NOT EXISTS CART
     FOREIGN KEY(member_id) REFERENCES MEMBER (id)
 );
 
-insert into MEMBER values(1L, 'test', 'test');
-insert into MEMBER values(2L, 'test1', 'test1');
+-- insert into MEMBER values(1L, 'test', 'test');
+-- insert into MEMBER values(2L, 'test1', 'test1');
