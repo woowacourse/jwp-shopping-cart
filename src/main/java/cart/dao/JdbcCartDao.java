@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.cart.Cart;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -45,6 +46,12 @@ public class JdbcCartDao implements CartDao {
         } catch (IncorrectResultSizeDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Cart> findAllByMemberId(final long memberId) {
+        final String sql = "SELECT * FROM cart WHERE member_id = ?";
+        return jdbcTemplate.query(sql, cartRowMapper, memberId);
     }
 
     @Override

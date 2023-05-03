@@ -2,25 +2,25 @@ package cart.dto;
 
 import cart.domain.product.Product;
 
-public class ProductResponse {
+public class CartProductResponse {
 
     private final long id;
     private final String name;
     private final int price;
     private final String imageUrl;
 
-    public ProductResponse(long id, String name, int price, String imageUrl) {
+    public CartProductResponse(final long id, final String name, final int price, final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public static ProductResponse of(final Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    public static CartProductResponse of(final Product product) {
+        return new CartProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

@@ -6,6 +6,8 @@ import cart.domain.cart.Cart;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.exception.notfound.ProductNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,5 +35,16 @@ public class CartService {
                         },
                         () -> cartDao.insert(Cart.of(member, product))
                 );
+    }
+
+    @Transactional(readOnly = true)
+    public List<Product> findCartProducts(final Member member) {
+        List<Cart> carts = cartDao.findAllByMemberId(member.getId());
+
+        List<Long> productIds = carts.stream()
+                .map(Cart::getProductId)
+                .collect(Collectors.toList());
+
+        return productDao.findAllByIds(productIds);
     }
 }
