@@ -35,7 +35,7 @@ class AuthDaoTest {
     @DisplayName("유저 조회 성공")
     void findIdByEmailAndPassword_success(String email, String password) {
         // given, when
-        Integer id = authDao.findIdByEmailAndPassword(email, password);
+        final Integer id = authDao.findIdByEmailAndPassword(email, password);
 
         // then
         assertThat(id).isNotNull();
