@@ -3,17 +3,21 @@ package cart.controller;
 import cart.auth.AuthorizationExtractor;
 import cart.auth.BasicAuthorizationExtractor;
 import cart.auth.exception.AuthorizationException;
+import cart.domain.cart.Item;
 import cart.domain.member.Member;
 import cart.dto.response.ProductResponse;
 import cart.service.CartService;
 import cart.service.MemberService;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,6 +52,19 @@ public class CartResourceController {
                         productEntity.getImageUrl())
                 )
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public void createItem(@RequestBody final Map<String, Long> requestMap, final HttpServletRequest request) {
+        final Member member = extractor.extract(request);
+        if (!memberService.isMember(member)) {
+            throw new AuthorizationException("사용자 정보가 없습니다.");
+        }
+        final long memberId = memberService.findMemberId(member);
+        final long productId = requestMap.get("productId");
+        final Item item = new Item(memberId, productId);
+        cartService.insert(item);
     }
 
     @DeleteMapping("/{id}")
