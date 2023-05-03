@@ -5,7 +5,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.controller.AbstractProductControllerTest;
+import cart.controller.AbstractControllerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.util.Base64Utils;
 import org.springframework.web.context.WebApplicationContext;
 
 @SuppressWarnings("NonAsciiCharacters")
-class AuthenticationFilterTest extends AbstractProductControllerTest {
+class AuthenticationFilterTest extends AbstractControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;

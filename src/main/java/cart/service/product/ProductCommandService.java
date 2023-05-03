@@ -1,4 +1,4 @@
-package cart.service;
+package cart.service.product;
 
 import cart.domain.product.Product;
 import cart.repository.product.ProductRepository;

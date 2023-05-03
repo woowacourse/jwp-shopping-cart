@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.product;
 
 import static cart.domain.product.ProductFixture.NUNU_ID_PRODUCT;
 import static cart.domain.product.ProductFixture.ODO_ID_PRODUCT;
@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.controller.AbstractControllerTest;
 import cart.domain.product.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
@@ -24,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings({"NonAsciiCharacters", "SpellCheckingInspection"})
-class ProductRestControllerTest extends AbstractProductControllerTest {
+class RestControllerTest extends AbstractControllerTest {
 
     @Test
     void 상품_생성_테스트() throws Exception {

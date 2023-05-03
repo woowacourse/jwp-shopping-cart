@@ -1,4 +1,4 @@
-package cart.service;
+package cart.service.product;
 
 import static cart.domain.product.ProductFixture.ODO_PRODUCT;
 import static org.assertj.core.api.Assertions.assertThat;
