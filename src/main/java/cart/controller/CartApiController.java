@@ -45,12 +45,7 @@ public class CartApiController {
     public ResponseEntity<List<ProductInCartResponse>> getProductsByUser(@Auth final AuthUserInfo authUserInfo) {
         final Email userEmail = new Email(authUserInfo.getEmail());
         final List<ProductInCartResponse> responseBody = cartService.findAllProductsInCartByUser(userEmail).stream()
-                .map(productInCart -> new ProductInCartResponse(
-                        productInCart.getId(),
-                        productInCart.getProductName(),
-                        productInCart.getProductPrice(),
-                        productInCart.getProductImageUrl()
-                ))
+                .map(ProductInCartResponse::new)
                 .collect(Collectors.toUnmodifiableList());
 
         return ResponseEntity.ok().body(responseBody);

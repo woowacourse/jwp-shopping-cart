@@ -47,12 +47,7 @@ public class ProductsApiController {
     public ResponseEntity<List<ProductResponse>> readAllProducts() {
         final List<ProductResponse> response = productService.findAll()
                 .stream()
-                .map(productDto -> new ProductResponse(
-                        productDto.getId(),
-                        productDto.getName(),
-                        productDto.getPrice(),
-                        productDto.getImageUrl()
-                ))
+                .map(ProductResponse::new)
                 .collect(Collectors.toUnmodifiableList());
         return ResponseEntity.ok().body(response);
     }
