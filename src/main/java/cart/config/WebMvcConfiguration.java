@@ -16,8 +16,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns("/cart/products")
-                .addPathPatterns("/cart/product/**");
+                .addPathPatterns("/cart/products/**");
     }
 
     @Override

@@ -90,7 +90,7 @@ class CartControllerTest {
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().log().all()
-                .post("/cart/product/" + productId)
+                .post("/cart/products/" + productId)
                 .then().log().all()
                 .extract();
 
@@ -110,7 +110,7 @@ class CartControllerTest {
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().log().all()
-                .delete("/cart/product/" + cartId)
+                .delete("/cart/products/" + cartId)
                 .then().log().all()
                 .extract();
         final List<CartProductResponse> results = cartService.findAllProductsInCart(

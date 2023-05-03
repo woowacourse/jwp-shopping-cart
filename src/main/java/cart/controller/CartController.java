@@ -36,7 +36,7 @@ public class CartController {
         return ResponseEntity.ok(cartService.findAllProductsInCart(userRequest));
     }
 
-    @PostMapping("/product/{productId}")
+    @PostMapping("/products/{productId}")
     public ResponseEntity<Void> addProductToCart(
             @AuthenticationPrincipal UserRequest userRequest,
             @PathVariable Long productId
@@ -45,7 +45,7 @@ public class CartController {
         return ResponseEntity.created(URI.create("/cart/product/" + cartId)).build();
     }
 
-    @DeleteMapping("/product/{cartId}")
+    @DeleteMapping("/products/{cartId}")
     public ResponseEntity<Void> removeProductInCart(
             @AuthenticationPrincipal UserRequest userRequest,
             @PathVariable Long cartId
