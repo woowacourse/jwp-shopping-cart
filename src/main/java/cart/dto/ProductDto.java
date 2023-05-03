@@ -18,4 +18,20 @@ public class ProductDto {
     public static ProductDto from(Product product) {
         return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImage());
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getImage() {
+        return image;
+    }
 }
