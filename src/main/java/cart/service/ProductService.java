@@ -2,8 +2,7 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.domain.ProductImage;
-import cart.domain.ProductPrice;
+import cart.domain.dto.CartDto;
 import cart.domain.dto.ProductDto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -27,8 +26,8 @@ public class ProductService {
                 .map(productEntity -> new Product(
                         productEntity.getId(),
                         productEntity.getName(),
-                        new ProductImage(productEntity.getImage()),
-                        new ProductPrice(productEntity.getPrice()))
+                        productEntity.getImage(),
+                        productEntity.getPrice())
                 )
                 .collect(Collectors.toList());
 
@@ -43,5 +42,17 @@ public class ProductService {
                 product.getImage(),
                 product.getPrice()
         );
+    }
+
+    public List<ProductDto> findById(final List<CartDto> cartDtos) {
+        List<Product> products = cartDtos.stream()
+                .map(cartDto -> productDao.findById(cartDto.getProductId())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 상품이 없습니다.")))
+                .map(Product::from)
+                .collect(Collectors.toList());
+
+        return products.stream()
+                .map(this::fromProduct)
+                .collect(Collectors.toList());
     }
 }

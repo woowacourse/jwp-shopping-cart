@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberJdbcDao implements MemberDao {
@@ -21,6 +22,16 @@ public class MemberJdbcDao implements MemberDao {
 
     public MemberJdbcDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public Optional<Long> selectMemberId(final MemberEntity memberEntity) {
+        String sql = "select * from member where email = ? and password = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+                memberEntityRowMapper,
+                memberEntity.getEmail(),
+                memberEntity.getPassword()
+        ).getId());
     }
 
     @Override

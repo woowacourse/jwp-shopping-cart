@@ -6,6 +6,10 @@ public class MemberEntity {
     private final String email;
     private final String password;
 
+    public MemberEntity(final String email, final String password) {
+        this(null, email, password);
+    }
+
     public MemberEntity(final Long id, final String email, final String password) {
         this.id = id;
         this.email = email;
