@@ -61,3 +61,52 @@
 - [x] Product 테스트 추가
 - [x] findById() 테스트 추가
 - [ ] 엔드포인트간 DTO 분리?
+
+---
+
+## 2단계 기능 요구사항
+
+### 사용자 기능 구현
+
+- [ ] 사용자는 아래와 같은 필드를 가지고 있다.
+    ```mermaid
+        erDiagram
+          MEMBER {
+          BIGINT id PK
+          VARCHAR email
+          VARCHAR password
+          }
+    ```
+
+### 사용자 설정 페이지 연동
+
+- [ ] 컨트롤러는 아래와 같은 요청을 처리한다.
+    - [ ] '/settings' 경로로 get 요청이 들어올 경우, settings.html 페이지를 반환한다.
+
+- [ ] 사용자 서비스는 아래와 같은 기능을 한다.
+    - [ ] 전체 사용자 목록을 DB에서 가져온다.
+    - [ ] 전체 사용자 목록을 컨트롤러에 보낸다.
+
+### 장바구니 기능 구현
+
+- [ ] 장바구니는 아래와 같은 필드를 가지고 있다.
+    ```mermaid
+        erDiagram
+          CART {
+          BIGINT product_id PK,FK
+          BIGINT member_id PK,FK
+          INT quantity
+          }
+    ```
+
+- [ ] 장바구니 CRUD
+
+    | Method | Path               |
+    |--------|--------------------|
+    | GET    | /cart              |
+    | POST   | /cart              |
+    | PUT    | /cart/{product_id} |
+    | DELETE | /cart/{product_id} |
+
+
+### 장바구니 페이지 연동
