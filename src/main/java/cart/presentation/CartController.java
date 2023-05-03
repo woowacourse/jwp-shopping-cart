@@ -1,8 +1,13 @@
 package cart.presentation;
 
 import cart.business.CartService;
+import cart.business.MemberReadService;
 import cart.business.ProductCRUDService;
+import cart.business.domain.member.Member;
+import cart.business.domain.member.MemberEmail;
+import cart.business.domain.member.MemberPassword;
 import cart.business.domain.product.Product;
+import cart.presentation.dto.AuthInfo;
 import cart.presentation.dto.CartItemDto;
 import cart.presentation.dto.CartItemIdDto;
 import cart.presentation.dto.ProductIdDto;
@@ -14,30 +19,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(path = "/cart")
+@RequestMapping(path = "/carts")
 public class CartController {
 
     private final CartService cartService;
     private final ProductCRUDService productCRUDService;
+    private final MemberReadService memberReadService;
 
-    public CartController(CartService cartService, ProductCRUDService productCRUDService) {
+    public CartController(CartService cartService, ProductCRUDService productCRUDService,
+                          MemberReadService memberReadService) {
         this.cartService = cartService;
         this.productCRUDService = productCRUDService;
+        this.memberReadService = memberReadService;
     }
 
     @PostMapping
-    public void cartCreate(@RequestBody ProductIdDto productIdDto) {
-        cartService.addCartItem(productIdDto.getId(), 0);
+    public void cartCreate(HttpServletRequest request, @RequestBody ProductIdDto productIdDto) {
+        Integer memberId = getMemberId(request);
+        cartService.addCartItem(productIdDto.getId(), memberId);
         // TODO: URI CREATED 반환
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemDto>> cartRead() {
-        List<CartItemDto> response = cartService.readAllCartItem(0).stream()
+    public ResponseEntity<List<CartItemDto>> cartRead(HttpServletRequest request) {
+        Integer memberId = getMemberId(request);
+
+        List<CartItemDto> response = cartService.readAllCartItem(memberId).stream()
                 .map(cartItem -> toCartItemDto(
                         productCRUDService.readById(cartItem.getProductId()),
                         cartItem.getId())
@@ -51,8 +63,19 @@ public class CartController {
                 product.getUrl(), product.getPrice());
     }
 
+    private Integer getMemberId(HttpServletRequest request) {
+        AuthInfo authInfo = BasicAuthorizationExtractor.extract(request);
+        String email = authInfo.getEmail();
+        String password = authInfo.getPassword();
+        Member member = new Member(null, new MemberEmail(email), new MemberPassword(password));
+
+        Integer memberId = memberReadService.findAndReturnId(member);
+        return memberId;
+    }
+
     @DeleteMapping
-    public void cartDelete(@RequestBody CartItemIdDto cartItemIdDto) {
-        cartService.removeCartItem(0, cartItemIdDto.getId());
+    public void cartDelete(HttpServletRequest request, @RequestBody CartItemIdDto cartItemIdDto) {
+        Integer memberId = getMemberId(request);
+        cartService.removeCartItem(memberId, cartItemIdDto.getId());
     }
 }
