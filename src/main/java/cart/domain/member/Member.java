@@ -4,20 +4,20 @@ import java.util.Objects;
 
 public class Member {
 
-    private final Id id;
-    private final Username username;
-    private final Password password;
+    private final MemberId id;
+    private final MemberUsername username;
+    private final MemberPassword password;
 
     public Member(final long id, final String username, final String password) {
-        this.id = new Id(id);
-        this.username = new Username(username);
-        this.password = new Password(password);
+        this.id = new MemberId(id);
+        this.username = new MemberUsername(username);
+        this.password = new MemberPassword(password);
     }
 
     public Member(final String username, final String password) {
         this.id = null;
-        this.username = new Username(username);
-        this.password = new Password(password);
+        this.username = new MemberUsername(username);
+        this.password = new MemberPassword(password);
     }
 
     public long getId() {

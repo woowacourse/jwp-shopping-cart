@@ -2,12 +2,12 @@ package cart.domain.product;
 
 import java.util.Objects;
 
-public class ImageUrl {
+public class ProductImageUrl {
     private static final int MAX_URL_LENGTH = 2083;
 
     private final String value;
 
-    public ImageUrl(final String imageUrl) {
+    public ProductImageUrl(final String imageUrl) {
         validateUrl(imageUrl);
         this.value = imageUrl;
     }
@@ -30,8 +30,8 @@ public class ImageUrl {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ImageUrl imageUrl = (ImageUrl) o;
-        return Objects.equals(value, imageUrl.value);
+        final ProductImageUrl productImageUrl = (ProductImageUrl) o;
+        return Objects.equals(value, productImageUrl.value);
     }
 
     @Override

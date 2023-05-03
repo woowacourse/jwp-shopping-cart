@@ -4,23 +4,23 @@ import java.util.Objects;
 
 public class Product {
 
-    private final Id id;
-    private final Name name;
-    private final Price price;
-    private final ImageUrl imageUrl;
+    private final ProductId id;
+    private final ProductName name;
+    private final ProductPrice price;
+    private final ProductImageUrl imageUrl;
 
     public Product(final long id, final String name, final int price, final String imageUrl) {
-        this.id = new Id(id);
-        this.name = new Name(name);
-        this.price = new Price(price);
-        this.imageUrl = new ImageUrl(imageUrl);
+        this.id = new ProductId(id);
+        this.name = new ProductName(name);
+        this.price = new ProductPrice(price);
+        this.imageUrl = new ProductImageUrl(imageUrl);
     }
 
     public Product(final String name, final int price, final String imageUrl) {
         this.id = null;
-        this.name = new Name(name);
-        this.price = new Price(price);
-        this.imageUrl = new ImageUrl(imageUrl);
+        this.name = new ProductName(name);
+        this.price = new ProductPrice(price);
+        this.imageUrl = new ProductImageUrl(imageUrl);
     }
 
     public Long getId() {

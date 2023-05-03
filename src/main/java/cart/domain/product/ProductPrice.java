@@ -2,12 +2,12 @@ package cart.domain.product;
 
 import java.util.Objects;
 
-public class Price {
+public class ProductPrice {
     private static final int MIN_PRICE_RANGE = 0;
     private static final int MAX_PRICE_RANGE = 100_000_000;
     private final int value;
 
-    public Price(final int price) {
+    public ProductPrice(final int price) {
         validatePrice(price);
         this.value = price;
     }
@@ -30,8 +30,8 @@ public class Price {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Price price = (Price) o;
-        return value == price.value;
+        final ProductPrice productPrice = (ProductPrice) o;
+        return value == productPrice.value;
     }
 
     @Override

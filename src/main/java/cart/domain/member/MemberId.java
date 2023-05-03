@@ -2,11 +2,11 @@ package cart.domain.member;
 
 import java.util.Objects;
 
-public class Id {
+public class MemberId {
 
     private final long value;
 
-    public Id(final long value) {
+    public MemberId(final long value) {
         this.value = value;
     }
 
@@ -22,8 +22,8 @@ public class Id {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Id id = (Id) o;
-        return value == id.value;
+        final MemberId memberId = (MemberId) o;
+        return value == memberId.value;
     }
 
     @Override

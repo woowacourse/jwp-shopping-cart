@@ -2,12 +2,12 @@ package cart.domain.product;
 
 import java.util.Objects;
 
-public class Name {
+public class ProductName {
     private static final int MAX_NAME_LENGTH = 20;
 
     private final String value;
 
-    public Name(final String name) {
+    public ProductName(final String name) {
         validateName(name);
         this.value = name;
     }
@@ -30,8 +30,8 @@ public class Name {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Name name = (Name) o;
-        return Objects.equals(value, name.value);
+        final ProductName productName = (ProductName) o;
+        return Objects.equals(value, productName.value);
     }
 
     @Override

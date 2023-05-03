@@ -2,13 +2,13 @@ package cart.domain.member;
 
 import java.util.Objects;
 
-public class Password {
+public class MemberPassword {
 
     private static final int PASSWORD_MAX_LENGTH = 50;
     private static final int PASSWORD_MIN_LENGTH = 6;
     private final String value;
 
-    public Password(final String password) {
+    public MemberPassword(final String password) {
         validatePassword(password);
         this.value = password;
     }
@@ -32,8 +32,8 @@ public class Password {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Password password = (Password) o;
-        return Objects.equals(value, password.value);
+        final MemberPassword memberPassword = (MemberPassword) o;
+        return Objects.equals(value, memberPassword.value);
     }
 
     @Override

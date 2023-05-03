@@ -2,12 +2,12 @@ package cart.domain.member;
 
 import java.util.Objects;
 
-public class Username {
+public class MemberUsername {
 
     private static final int USERNAME_MAX_LENGTH = 100;
     private final String value;
 
-    public Username(final String username) {
+    public MemberUsername(final String username) {
         validateUsername(username);
         this.value = username;
     }
@@ -30,8 +30,8 @@ public class Username {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Username username = (Username) o;
-        return Objects.equals(value, username.value);
+        final MemberUsername memberUsername = (MemberUsername) o;
+        return Objects.equals(value, memberUsername.value);
     }
 
     @Override
