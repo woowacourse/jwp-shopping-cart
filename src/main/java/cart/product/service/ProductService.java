@@ -46,12 +46,12 @@ public class ProductService {
     }
 
     public long register(ProductAddRequest productAddRequest) {
-        final Product inserted = productDao.save(DtoMapper.toProduct(productAddRequest));
+        final Product inserted = productDao.save(DtoMapper.toValidProduct(productAddRequest));
         return inserted.getId();
     }
 
     public long update(ProductUpdateRequest productUpdateRequest) {
-        final Product product = DtoMapper.toProduct(productUpdateRequest);
+        final Product product = DtoMapper.toValidProduct(productUpdateRequest);
         final int affectedRowsCount = productDao.update(product);
         validateAffectedRowSingle(affectedRowsCount, "존재하지 않는 상품 id입니다");
         return product.getId();

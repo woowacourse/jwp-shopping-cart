@@ -3,7 +3,6 @@ package cart.product.controller;
 import cart.product.dto.request.ProductAddRequest;
 import cart.product.dto.request.ProductUpdateRequest;
 import cart.product.service.ProductService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 
-@Slf4j
 @RestController
 @RequestMapping("/products")
 public class ProductApiController {
@@ -37,7 +35,6 @@ public class ProductApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        log.info("id={}", id);
         productService.delete(id);
         return ResponseEntity.noContent().build();
     }

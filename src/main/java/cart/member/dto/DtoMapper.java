@@ -11,7 +11,7 @@ public class DtoMapper {
         return new MemberDto(member.getEmail(), member.getPassword(), member.getPhoneNumber());
     }
 
-    public static Member toMember(MemberAddRequest memberAddRequest) {
+    public static Member toValidMember(MemberAddRequest memberAddRequest) {
         return new Member(memberAddRequest.getEmail(), memberAddRequest.getPassword(), memberAddRequest.getPhoneNumber());
     }
 }

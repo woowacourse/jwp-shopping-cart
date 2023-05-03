@@ -29,7 +29,7 @@ public class MemberService {
     }
 
     public long register(MemberAddRequest memberAddRequest) {
-        final Member member = DtoMapper.toMember(memberAddRequest);
+        final Member member = DtoMapper.toValidMember(memberAddRequest);
         try {
             final Member saved = memberDao.save(member);
             return saved.getId();

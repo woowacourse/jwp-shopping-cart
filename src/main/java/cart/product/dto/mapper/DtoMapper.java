@@ -14,11 +14,11 @@ public class DtoMapper {
         return new ProductDto(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());
     }
 
-    public static Product toProduct(ProductAddRequest productAddRequest) {
+    public static Product toValidProduct(ProductAddRequest productAddRequest) {
         return new Product(productAddRequest.getName(), productAddRequest.getImageUrl(), productAddRequest.getPrice());
     }
 
-    public static Product toProduct(ProductUpdateRequest productUpdateRequest) {
+    public static Product toValidProduct(ProductUpdateRequest productUpdateRequest) {
         return new Product(productUpdateRequest.getId(), productUpdateRequest.getName(), productUpdateRequest.getImageUrl(), productUpdateRequest.getPrice());
     }
 }
