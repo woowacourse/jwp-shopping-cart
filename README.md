@@ -44,9 +44,7 @@
 
 ## 요구 사항 완료 후 추가 구현 사항
 
-- [x]  Controller 분리
-    - [x]  @RestController와 @Controller
-    - [x]  @RestController의 응답코드 선정
+- [x]  @Controller의 응답코드 선정
 
 - [x]  Validate 관련
     - [x]  @Valid
