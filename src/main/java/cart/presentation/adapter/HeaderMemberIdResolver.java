@@ -9,6 +9,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 public class HeaderMemberIdResolver implements HandlerMethodArgumentResolver {
 
@@ -26,6 +27,7 @@ public class HeaderMemberIdResolver implements HandlerMethodArgumentResolver {
     ) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         AuthInfo authInfo = BasicAuthorizationExtractor.extract(request);
+        Objects.requireNonNull(authInfo);
         return DomainConverter.toMemberWithoutId(authInfo);
     }
 }
