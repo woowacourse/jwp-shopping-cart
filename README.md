@@ -21,12 +21,12 @@
 
 ## CRUD API 설계
 
-### 상품 삭제 : DELETE
+### 상품 조회 : GET
 
 **Request**
 
 ```http request
-DELETE /products/1 HTTP/1.1
+GET /products HTTP/1.1
 Host: localhost:8080
 ```
 
@@ -34,13 +34,22 @@ Host: localhost:8080
 
 ```http request
 HTTP/1.1 200
-Content-Type: text/plain;charset=UTF-8
+Content-Type: application/json
 
-{
-    "status": "OK",
-    "data": [],
-    "message": "success"
-}
+[
+    {
+        "id": 1,
+        "name": "치킨",
+        "imgUrl": "https://barunchicken.com/wp-content/uploads/2022/07/%EA%B3%A8%EB%93%9C%EC%B9%98%ED%82%A8-2.jpg",
+        "price": 20000
+    },
+    {
+        "id": 2,
+        "name": "치킨",
+        "imgUrl": "https://barunchicken.com/wp-content/uploads/2022/07/%EA%B3%A8%EB%93%9C%EC%B9%98%ED%82%A8-2.jpg",
+        "price": 11000
+    }
+]
 ```
 
 ### 상품 추가 : POST
@@ -65,11 +74,7 @@ HTTP/1.1 200
 Content-Type: application/json
 
 {
-    "status": "OK",
-    "data": {
-        "id": 1
-    },
-    "message": "success"
+    "id": 1
 }
 ```
 
@@ -92,13 +97,31 @@ Host: localhost:8080
 
 ```http request
 HTTP/1.1 200
-Content-Type: text/plain;charset=UTF-8
+Content-Type: application/json
 
 
 {
-    "status": "OK",
-    "data": [],
-    "message": "success"
+    "status": "success"
+}
+```
+
+### 상품 삭제 : DELETE
+
+**Request**
+
+```http request
+DELETE /products/1 HTTP/1.1
+Host: localhost:8080
+```
+
+**Response**
+
+```http request
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "status": "success"
 }
 ```
 

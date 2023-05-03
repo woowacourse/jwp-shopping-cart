@@ -1,8 +1,7 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
 import cart.dto.request.ProductRequest;
-import cart.dto.response.ApiResponse;
+import cart.dto.response.ProductResponse;
 import cart.service.ProductService;
 import java.util.HashMap;
 import java.util.List;
@@ -29,39 +28,49 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<ApiResponse<?>> productList() {
-        List<ProductDto> products = productService.findAll();
+    public ResponseEntity<List<ProductResponse>> productList() {
+        List<ProductResponse> response = productService.findAll();
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ApiResponse.createSuccess(products));
+                .body(response);
     }
 
     @PostMapping()
-    public ResponseEntity<ApiResponse<?>> productAdd(@Validated @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Map<String, Integer>> productAdd(
+            @Validated @RequestBody ProductRequest productRequest) {
         int productId = productService.save(productRequest);
 
-        Map<String, Integer> result = new HashMap<>();
-        result.put("id", productId);
+        Map<String, Integer> response = new HashMap<>();
+        response.put("id", productId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ApiResponse.createSuccess(result));
+                .body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<?>> productModify(@Validated @RequestBody ProductRequest productRequest,
-                                                        @PathVariable int id) {
+    public ResponseEntity<Map<String, String>> productModify(@Validated @RequestBody ProductRequest productRequest,
+                                                             @PathVariable int id) {
         productService.update(productRequest, id);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "success");
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ApiResponse.createSuccess(List.of()));
+                .body(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<?>> productRemove(@PathVariable int id) {
+    public ResponseEntity<Map<String, String>> productRemove(@PathVariable int id) {
         productService.delete(id);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "success");
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ApiResponse.createSuccess(List.of()));
+                .body(response);
     }
 }

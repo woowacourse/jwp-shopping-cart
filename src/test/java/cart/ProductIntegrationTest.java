@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import cart.dao.ProductDao;
-import cart.dto.ProductDto;
 import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -70,8 +70,7 @@ class ProductIntegrationTest {
                     .then()
                     .log().all()
                     .assertThat()
-                    .body("status", equalTo(HttpStatus.OK.name()))
-                    .body("data.id", equalTo(1));
+                    .body("id", equalTo(1));
         }
 
         @DisplayName("상품 가격이 음수일 경우 예외가 발생한다.")
@@ -93,8 +92,9 @@ class ProductIntegrationTest {
                     .then()
                     .log().all()
                     .assertThat()
-                    .body("status", equalTo(HttpStatus.BAD_REQUEST.name()))
-                    .body("data.error", equalTo("상품가격은 0 이상이어야 합니다."));
+                    .body("code", equalTo("P004"))
+                    .body("message", equalTo("최소 값 기준치 미달"))
+                    .body("detail", equalTo("상품가격은 0 이상이어야 합니다."));
         }
 
         @DisplayName("상품명이 비어있을 경우 예외가 발생한다.")
@@ -116,8 +116,9 @@ class ProductIntegrationTest {
                     .then()
                     .log().all()
                     .assertThat()
-                    .body("status", equalTo(HttpStatus.BAD_REQUEST.name()))
-                    .body("data.error", equalTo("상품명은 필수 입력 값입니다."));
+                    .body("code", equalTo("P001"))
+                    .body("message", equalTo("상품명 데이터 누락"))
+                    .body("detail", equalTo("상품명은 필수 입력 값입니다."));
         }
     }
 
@@ -154,7 +155,7 @@ class ProductIntegrationTest {
                     .log().all()
                     .statusCode(HttpStatus.OK.value());
 
-            ProductDto product = productDao.findAll().get(0);
+            ProductResponse product = productDao.findAll().get(0);
 
             assertThat(product.getId()).isEqualTo(1);
             assertThat(product.getName()).isEqualTo("토리");
@@ -180,8 +181,9 @@ class ProductIntegrationTest {
                     .then()
                     .log().all()
                     .assertThat()
-                    .body("status", equalTo(HttpStatus.BAD_REQUEST.name()))
-                    .body("data.error", equalTo("해당하는 ID가 없습니다."));
+                    .body("code", equalTo("D001"))
+                    .body("message", equalTo("데이터 조회 실패"))
+                    .body("detail", equalTo("일치하는 ID가 없습니다."));
         }
 
         @DisplayName("상품 가격이 음수일 경우 예외가 발생한다.")
@@ -204,8 +206,9 @@ class ProductIntegrationTest {
                     .then()
                     .log().all()
                     .assertThat()
-                    .body("status", equalTo(HttpStatus.BAD_REQUEST.name()))
-                    .body("data.error", equalTo("상품가격은 0 이상이어야 합니다."));
+                    .body("code", equalTo("P004"))
+                    .body("message", equalTo("최소 값 기준치 미달"))
+                    .body("detail", equalTo("상품가격은 0 이상이어야 합니다."));
         }
 
         @DisplayName("상품명이 비어있을 경우 예외가 발생한다.")
@@ -227,8 +230,9 @@ class ProductIntegrationTest {
                     .then()
                     .log().all()
                     .assertThat()
-                    .body("status", equalTo(HttpStatus.BAD_REQUEST.name()))
-                    .body("data.error", equalTo("상품명은 필수 입력 값입니다."));
+                    .body("code", equalTo("P001"))
+                    .body("message", equalTo("상품명 데이터 누락"))
+                    .body("detail", equalTo("상품명은 필수 입력 값입니다."));
         }
     }
 
@@ -271,8 +275,9 @@ class ProductIntegrationTest {
                     .then()
                     .log().all()
                     .assertThat()
-                    .body("status", equalTo(HttpStatus.BAD_REQUEST.name()))
-                    .body("data.error", equalTo("해당하는 ID가 없습니다."));
+                    .body("code", equalTo("D001"))
+                    .body("message", equalTo("데이터 조회 실패"))
+                    .body("detail", equalTo("일치하는 ID가 없습니다."));
         }
     }
 }

@@ -1,8 +1,10 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.dto.ProductDto;
 import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
+import cart.exception.CustomException;
+import cart.exception.ErrorCode;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -20,21 +22,21 @@ public class ProductService {
         return productDao.save(productRequest);
     }
 
-    public List<ProductDto> findAll() {
+    public List<ProductResponse> findAll() {
         return productDao.findAll();
     }
 
     public void update(ProductRequest productRequest, int id) {
         int updateRowNumber = productDao.update(productRequest, id);
         if (updateRowNumber == UPDATE_QUERY_NUMBER) {
-            throw new IllegalArgumentException("해당하는 ID가 없습니다.");
+            throw new CustomException(ErrorCode.ID_NOT_FOUND);
         }
     }
 
     public void delete(int id) {
         int deleteRowNumber = productDao.delete(id);
         if (deleteRowNumber == UPDATE_QUERY_NUMBER) {
-            throw new IllegalArgumentException("해당하는 ID가 없습니다.");
+            throw new CustomException(ErrorCode.ID_NOT_FOUND);
         }
     }
 }

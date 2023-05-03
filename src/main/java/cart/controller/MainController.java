@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
+import cart.dto.response.ProductResponse;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -19,14 +19,14 @@ public class MainController {
 
     @GetMapping()
     public String home(Model model) {
-        List<ProductDto> products = productService.findAll();
+        List<ProductResponse> products = productService.findAll();
         model.addAttribute("products", products);
         return "index";
     }
 
     @GetMapping("admin")
     public String productList(Model model) {
-        List<ProductDto> products = productService.findAll();
+        List<ProductResponse> products = productService.findAll();
         model.addAttribute("products", products);
         return "admin";
     }

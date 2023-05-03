@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.dto.ProductDto;
 import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,9 +31,9 @@ public class ProductDao {
         return keyholder.getKey().intValue();
     }
 
-    public List<ProductDto> findAll() {
+    public List<ProductResponse> findAll() {
         final String sql = "SELECT * FROM product";
-        BeanPropertyRowMapper<ProductDto> mapper = BeanPropertyRowMapper.newInstance(ProductDto.class);
+        BeanPropertyRowMapper<ProductResponse> mapper = BeanPropertyRowMapper.newInstance(ProductResponse.class);
         return jdbcTemplate.query(sql, mapper);
     }
 

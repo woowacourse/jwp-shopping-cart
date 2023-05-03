@@ -3,8 +3,8 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dto.ProductDto;
 import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +35,7 @@ class ProductDaoTest {
     @Test
     void Should_Success_When_Save() {
         productDao.save(productRequest);
-        ProductDto product = productDao.findAll().get(0);
+        ProductResponse product = productDao.findAll().get(0);
 
         assertAll(
                 () -> assertThat(product.getName()).isEqualTo("치킨"),
@@ -56,7 +56,7 @@ class ProductDaoTest {
 
         int id = productDao.save(productRequest);
         productDao.update(productRequest2, id);
-        ProductDto product = productDao.findAll().get(0);
+        ProductResponse product = productDao.findAll().get(0);
 
         assertAll(
                 () -> assertThat(product.getName()).isEqualTo("토리"),
@@ -71,8 +71,8 @@ class ProductDaoTest {
     void Should_Success_When_Delete() {
         int id = productDao.save(productRequest);
         productDao.delete(id);
-        List<ProductDto> productDtoList = productDao.findAll();
+        List<ProductResponse> productResponseList = productDao.findAll();
 
-        assertThat(productDtoList).hasSize(0);
+        assertThat(productResponseList).hasSize(0);
     }
 }
