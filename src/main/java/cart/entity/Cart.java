@@ -4,12 +4,18 @@ import cart.vo.Email;
 
 public class Cart {
 
+    private final Long id;
     private final Email email;
     private final Long productId;
 
-    public Cart(Email email, Long productId) {
+    public Cart(Long id, Email email, Long productId) {
+        this.id = id;
         this.email = email;
         this.productId = productId;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -22,8 +28,14 @@ public class Cart {
 
     public static class Builder {
 
+        private Long id;
         private Email email;
         private Long productId;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder email(Email email) {
             this.email = email;
@@ -36,7 +48,7 @@ public class Cart {
         }
 
         public Cart build() {
-            return new Cart(email, productId);
+            return new Cart(id, email, productId);
         }
 
     }
