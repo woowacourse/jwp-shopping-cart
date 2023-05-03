@@ -7,7 +7,7 @@ import cart.domain.persistence.entity.MemberEntity;
 
 public interface MemberDao {
 
-    Long save(MemberEntity memberEntity);
+    long save(MemberEntity memberEntity);
 
     Optional<MemberEntity> findByEmail(String email);
 

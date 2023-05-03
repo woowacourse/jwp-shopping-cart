@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
+import cart.domain.exception.AuthorizationNotIncludedException;
 import cart.web.cart.dto.AuthInfo;
 
 @Component
@@ -18,7 +19,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
         final String header = request.getHeader(AUTHORIZATION);
 
         if (header == null) {
-            return null;
+            throw new AuthorizationNotIncludedException("인증 정보가 필요합니다.");
         }
 
         if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
@@ -33,6 +34,6 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
             return new AuthInfo(email, password);
         }
 
-        return null;
+        throw new AuthorizationNotIncludedException("인증 정보가 필요합니다.");
     }
 }

@@ -1,4 +1,6 @@
-package cart.web.admin.controller;
+package cart.web.cart.controller;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -16,8 +18,7 @@ import io.restassured.RestAssured;
 @Sql(scripts = "classpath:schema-truncate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class AdminViewControllerTest {
-
+class CartViewControllerTest {
     @LocalServerPort
     private int port;
 
@@ -27,10 +28,10 @@ class AdminViewControllerTest {
     }
 
     @Test
-    void admin_페이지에_접속한다() {
+    void cart_페이지에_접속한다() {
         RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/admin")
+            .when().get("/cart")
             .then()
             .statusCode(HttpStatus.OK.value());
     }

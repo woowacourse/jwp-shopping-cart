@@ -5,8 +5,8 @@ import javax.validation.constraints.Positive;
 
 public class PostCartRequest {
 
-    @NotNull(message = "유효한 ID를 입력해주세요")
-    @Positive
+    @NotNull(message = "유효한 product id를 입력해주세요")
+    @Positive(message = "유효한 product id를 입력해주세요")
     private Long productId;
 
     private PostCartRequest() {

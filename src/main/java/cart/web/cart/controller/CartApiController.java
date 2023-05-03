@@ -43,7 +43,7 @@ public class CartApiController {
     }
 
     @PostMapping("/cart")
-    public void addToCart(@RequestBody @Valid PostCartRequest body, final HttpServletRequest request) {
+    public void addToCart(@RequestBody @Valid final PostCartRequest body, final HttpServletRequest request) {
         final AuthInfo authInfo = authorizationExtractor.extract(request);
         final String email = authInfo.getEmail();
         final String password = authInfo.getPassword();
@@ -52,7 +52,10 @@ public class CartApiController {
     }
 
     @DeleteMapping("/cart/{cartId}")
-    public void deleteFromCart(@PathVariable Integer cartId) {
-        cartService.deleteByCartId(cartId);
+    public void deleteFromCart(@PathVariable final Integer cartId, final HttpServletRequest request) {
+        final AuthInfo authInfo = authorizationExtractor.extract(request);
+        final String email = authInfo.getEmail();
+        final String password = authInfo.getPassword();
+        cartService.deleteCartIdFromMember(cartId, email, password);
     }
 }

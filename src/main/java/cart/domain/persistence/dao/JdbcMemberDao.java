@@ -32,7 +32,7 @@ public class JdbcMemberDao implements MemberDao {
     }
 
     @Override
-    public Long save(final MemberEntity memberEntity) {
+    public long save(final MemberEntity memberEntity) {
         final SqlParameterSource parameters = new BeanPropertySqlParameterSource(memberEntity);
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }

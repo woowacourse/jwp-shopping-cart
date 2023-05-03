@@ -100,13 +100,19 @@ class CartServiceTest {
 
     @Test
     void deleteByCartId_메서드로_카트의_특정_상품을_삭제한다() {
+        final String email = "a@a.com";
+        final String password = "password1";
+        memberDao.save(new MemberEntity(email, password));
         final long savedId = cartDao.save(new CartEntity(1, 1));
 
-        assertDoesNotThrow(() -> cartService.deleteByCartId(savedId));
+        assertDoesNotThrow(() -> cartService.deleteCartIdFromMember(savedId, email, password));
     }
 
     @Test
     void deleteByCartId_메서드로_삭제된_상품이_없다면_예외가_발생한다() {
-        assertThrows(DbNotAffectedException.class, () -> cartService.deleteByCartId(1));
+        final String email = "a@a.com";
+        final String password = "password1";
+        memberDao.save(new MemberEntity(email, password));
+        assertThrows(DbNotAffectedException.class, () -> cartService.deleteCartIdFromMember(1L, email, password));
     }
 }

@@ -15,4 +15,6 @@ public interface ProductDao {
     int update(ProductEntity productEntity);
 
     int deleteById(long id);
+
+    boolean existsById(long id);
 }

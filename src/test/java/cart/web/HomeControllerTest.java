@@ -1,4 +1,4 @@
-package cart.web.admin.controller;
+package cart.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
