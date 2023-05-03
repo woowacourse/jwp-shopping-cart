@@ -4,6 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,8 +29,7 @@ class CartControllerTest {
     @Sql(value = {"classpath:dataTruncator.sql", "classpath:jdbcTestInitializer.sql"})
     void 유저별로_장바구니를_조회한다() {
         // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .auth().preemptive().basic("test@test.com", "test")
+        final ExtractableResponse<Response> response = givenWithAuth()
                 .when()
                 .get("/carts/users")
                 .then().log().all()
@@ -45,8 +45,7 @@ class CartControllerTest {
     @Sql(value = {"classpath:dataTruncator.sql", "classpath:jdbcTestInitializer.sql"})
     void 장바구니를_추가한다() {
         // when
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .auth().preemptive().basic("test@test.com", "test")
+        final ExtractableResponse<Response> response = givenWithAuth()
                 .when()
                 .post("/carts/users/products/{productId}", 3L)
                 .then().log().all()
@@ -61,12 +60,17 @@ class CartControllerTest {
     @Sql(value = {"classpath:dataTruncator.sql", "classpath:jdbcTestInitializer.sql"})
     void 장바구니를_삭제한다() {
         // when, then
-        final ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .auth().preemptive().basic("test@test.com", "test")
+        final ExtractableResponse<Response> response = givenWithAuth()
                 .when()
                 .delete("/carts/users/products/{productId}", 1L)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value())
                 .extract();
+
+    }
+
+    private RequestSpecification givenWithAuth() {
+        return RestAssured.given().log().all()
+                .auth().preemptive().basic("test@test.com", "test");
     }
 }
