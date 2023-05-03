@@ -1,6 +1,6 @@
 package cart.presentation;
 
-import cart.business.MemberReadService;
+import cart.business.MemberService;
 import cart.business.ProductCRUDService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ class TemplateControllerTest {
     @MockBean
     private ProductCRUDService productCRUDApplication;
     @MockBean
-    private MemberReadService memberReadService;
+    private MemberService memberService;
 
     @Test
     @DisplayName("/ 로 GET 요청을 보낼 수 있다")
@@ -55,7 +55,7 @@ class TemplateControllerTest {
     @DisplayName("/settings 으로 GET 요청을 보낼 수 있다")
     void test_settings() throws Exception {
         // given
-        given(memberReadService.readAll()).willReturn(Collections.emptyList());
+        given(memberService.readAll()).willReturn(Collections.emptyList());
 
         // when
         mockMvc.perform(get("/settings"))

@@ -42,4 +42,12 @@ public class H2MemberRepository implements MemberRepository {
                 .map(Member::getId)
                 .findAny();
     }
+
+    @Override
+    public Optional<Member> findById(Integer memberId) {
+        final String sql = "SELECT * FROM MEMBER WHERE id = (?)";
+        return jdbcTemplate.query(sql, memberRowMapper, memberId)
+                .stream()
+                .findAny();
+    }
 }

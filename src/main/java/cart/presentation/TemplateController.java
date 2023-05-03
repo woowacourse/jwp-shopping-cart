@@ -1,6 +1,6 @@
 package cart.presentation;
 
-import cart.business.MemberReadService;
+import cart.business.MemberService;
 import cart.business.ProductCRUDService;
 import cart.business.domain.member.Member;
 import cart.presentation.dto.ProductDto;
@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 public class TemplateController {
 
     private final ProductCRUDService productCRUDService;
-    private final MemberReadService memberReadService;
+    private final MemberService memberService;
 
-    public TemplateController(ProductCRUDService productCRUDService, MemberReadService memberReadService) {
+    public TemplateController(ProductCRUDService productCRUDService, MemberService memberService) {
         this.productCRUDService = productCRUDService;
-        this.memberReadService = memberReadService;
+        this.memberService = memberService;
     }
 
     @GetMapping("/")
@@ -46,7 +46,7 @@ public class TemplateController {
 
     @GetMapping("/settings")
     public String settings(Model model) {
-        List<Member> members = memberReadService.readAll();
+        List<Member> members = memberService.readAll();
         model.addAttribute("members", members);
         return "settings";
     }

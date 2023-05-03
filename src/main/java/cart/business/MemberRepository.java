@@ -12,4 +12,6 @@ public interface MemberRepository {
     List<Member> findAll();
 
     Optional<Integer> findAndReturnId(Member member);
+
+    Optional<Member> findById(Integer memberId);
 }

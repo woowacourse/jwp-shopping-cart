@@ -1,7 +1,7 @@
 package cart.presentation;
 
 import cart.business.CartService;
-import cart.business.MemberReadService;
+import cart.business.MemberService;
 import cart.business.ProductCRUDService;
 import cart.business.domain.cart.CartItem;
 import cart.business.domain.member.Member;
@@ -30,13 +30,13 @@ public class CartController {
 
     private final CartService cartService;
     private final ProductCRUDService productCRUDService;
-    private final MemberReadService memberReadService;
+    private final MemberService memberService;
 
     public CartController(CartService cartService, ProductCRUDService productCRUDService,
-                          MemberReadService memberReadService) {
+                          MemberService memberService) {
         this.cartService = cartService;
         this.productCRUDService = productCRUDService;
-        this.memberReadService = memberReadService;
+        this.memberService = memberService;
     }
 
     @PostMapping
@@ -70,13 +70,13 @@ public class CartController {
         String password = authInfo.getPassword();
         Member member = new Member(null, new MemberEmail(email), new MemberPassword(password));
 
-        Integer memberId = memberReadService.findAndReturnId(member);
-        return memberId;
+        return memberService.findAndReturnId(member);
     }
 
     @DeleteMapping
     public void cartDelete(HttpServletRequest request, @RequestBody CartItemIdDto cartItemIdDto) {
         Integer memberId = getMemberId(request);
+        memberService.validateExists(memberId);
         cartService.removeCartItem(cartItemIdDto.getId());
     }
 }
