@@ -25,18 +25,12 @@ public class MemberDao {
     public List<Member> selectAll() {
         String sqlForSelectAll = "SELECT * FROM Member";
 
-        return jdbcTemplate.query(
-                sqlForSelectAll,
-                (resultSet, rowNum) -> new Member.Builder()
-                        .email(Email.from(resultSet.getString("email")))
-                        .password(Password.from(resultSet.getString("password")))
-                        .build());
+        return jdbcTemplate.query(sqlForSelectAll, rowMapper);
     }
 
-    public boolean existsByEmail(String email) {
-        String sqlForExistsByEmail = "SELECT * FROM Member WHERE = ?";
-        Member member = jdbcTemplate.queryForObject(sqlForExistsByEmail, rowMapper, email);
-        return member == null;
+    public Member findByEmail(String email) {
+        String sqlForFindByEmail = "SELECT * FROM Member WHERE email = ?";
+        return jdbcTemplate.queryForObject(sqlForFindByEmail, rowMapper, email);
     }
 
 }

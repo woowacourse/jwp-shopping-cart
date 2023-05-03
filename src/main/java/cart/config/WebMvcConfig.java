@@ -23,7 +23,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new BasicLoginInterceptor(memberDao))
                 .addPathPatterns("/admin/**")
-                .addPathPatterns("/cart/**");
+                .addPathPatterns("/carts/**");
     }
 
     @Override
