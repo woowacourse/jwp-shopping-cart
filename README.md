@@ -20,11 +20,10 @@
         - [x] repository 구현
         - [x] service 구현
         - [x] controller 구현
-
-
 - [x] 상품 목록 페이지 연동
     - [x] "/" : index.html 를 보낸다
-
 - [x] 관리자 도구 페이지 연동
     - [x] "/admin" : admin.html 를 보낸다
+- [ ] 사용자 기능 구현
+- [ ] 사용자 설정 페이지 연동
 
