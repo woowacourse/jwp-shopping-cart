@@ -1,6 +1,8 @@
 package cart.repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import cart.dao.UserDao;
 import cart.domain.user.Email;
@@ -15,6 +17,14 @@ public class RdsUserRepository implements UserRepository {
 
     public RdsUserRepository(final UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userDao.findAll()
+                .stream()
+                .map(UserEntity::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
