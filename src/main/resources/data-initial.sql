@@ -8,4 +8,4 @@ values ('치킨', 20000, 'FOOD',
 
 INSERT INTO user (email, password)
 values ('test1@naver.com', 'test1'),
-       ('test2@google.com','test2')
+       ('test2@google.com','test2');

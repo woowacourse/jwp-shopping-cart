@@ -1,7 +1,7 @@
 package cart.web.handler;
 
 import cart.exception.GlobalException;
-import cart.web.controller.dto.response.BadResponse;
+import cart.web.controller.admin.dto.response.BadResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
