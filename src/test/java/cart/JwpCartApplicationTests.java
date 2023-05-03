@@ -44,7 +44,7 @@ class JwpCartApplicationTests {
     }
 
     @Test
-    @Sql(value = {"/truncate.sql", "/insert.sql"})
+    @Sql(value = {"/item_truncate.sql", "/item_insert.sql"})
     @DisplayName("상품 전체를 조회한다.")
     void findAllItemRequestSuccess() {
         when()
@@ -56,7 +56,7 @@ class JwpCartApplicationTests {
     }
 
     @Test
-    @Sql(value = {"/truncate.sql", "/insert.sql"})
+    @Sql(value = {"/item_truncate.sql", "/item_insert.sql"})
     @DisplayName("상품을 변경한다.")
     void updateItemRequestSuccess() {
         ItemRequest itemRequest = createItemRequest("맥북프로", "http://image.com", 35_000);
@@ -76,7 +76,7 @@ class JwpCartApplicationTests {
     }
 
     @Test
-    @Sql("/truncate.sql")
+    @Sql("/item_truncate.sql")
     @DisplayName("존재하지 않는 상품을 변경하면 예외가 발생한다.")
     void updateItemRequestFailWithNotExistsID() {
         ItemRequest itemRequest = createItemRequest("맥북", "http://image.com", 15_000);
@@ -93,7 +93,7 @@ class JwpCartApplicationTests {
     }
 
     @Test
-    @Sql("/truncate.sql")
+    @Sql("/item_truncate.sql")
     @DisplayName("존재하지 않는 상품을 삭제하면 예외가 발생한다.")
     void deleteItemRequestFailWithNotExistsID() {
         ItemRequest itemRequest = createItemRequest("맥북", "http://image.com", 15_000);

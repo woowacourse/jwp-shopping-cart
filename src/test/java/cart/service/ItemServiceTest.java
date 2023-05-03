@@ -49,7 +49,7 @@ class ItemServiceTest {
 
     @Test
     @DisplayName("모든 상품을 찾는다.")
-    @Sql("/truncate.sql")
+    @Sql("/item_truncate.sql")
     void findAllItemSuccess() {
         ItemRequest itemRequest1 = createItemRequest();
         ItemRequest itemRequest2 = createItemRequest();
@@ -87,7 +87,7 @@ class ItemServiceTest {
 
     @Test
     @DisplayName("존재하지 않는 상품 ID를 조회하면 예외가 발생한다.")
-    @Sql("/truncate.sql")
+    @Sql("/item_truncate.sql")
     void updateItemRequestFailWithNotExistID() {
         ItemRequest itemRequest = createItemRequest();
 
@@ -98,7 +98,7 @@ class ItemServiceTest {
 
     @Test
     @DisplayName("존재하지 않는 상품 ID를 삭제하면 예외가 발생한다.")
-    @Sql("/truncate.sql")
+    @Sql("/item_truncate.sql")
     void deleteItemRequestFailWithNotExistID() {
         assertThatThrownBy(() -> itemService.delete(1L))
                 .isInstanceOf(ItemException.class)
