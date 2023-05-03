@@ -1,6 +1,7 @@
 package cart.domain.cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -16,6 +17,7 @@ import cart.dto.CartCreateRequest;
 import cart.dto.CartCreateResponse;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,6 +51,8 @@ class CartServiceTest {
         given(productDao.findById(anyLong()))
             .willReturn(Optional.of(product));
         final Cart cart = new Cart(1L, product, member, LocalDateTime.now(), LocalDateTime.now());
+        given(cartDao.exists(any(Cart.class)))
+            .willReturn(false);
         given(cartDao.save(any()))
             .willReturn(cart);
 
@@ -61,5 +65,24 @@ class CartServiceTest {
         assertThat(cartCreateResponse.getProduct()).isEqualTo(cart.getProduct());
     }
 
+    @Test
+    @DisplayName("이미 존재하는 상품을 장바구니에 담는다.")
+    public void testCreateAlreadyExistsFail() {
+        //given
+        final Member member = new Member(1L, "test@test.com", "password", LocalDateTime.now(),
+            LocalDateTime.now());
+        final Product product = new Product(1L, "test", 1000, "imageUrl", LocalDateTime.now(),
+            LocalDateTime.now());
+        final CartCreateRequest request = new CartCreateRequest(1L, member.getEmail());
+        given(memberDao.findByEmail(anyString()))
+            .willReturn(Optional.of(member));
+        given(productDao.findById(anyLong()))
+            .willReturn(Optional.of(product));
+        given(cartDao.exists(any(Cart.class)))
+            .willReturn(true);
 
+        //then
+        assertThatThrownBy(() -> cartService.create(request))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
 }

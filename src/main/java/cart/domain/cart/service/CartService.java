@@ -31,12 +31,24 @@ public class CartService {
 
     @Transactional
     public CartCreateResponse create(final CartCreateRequest request) {
-        final Member member = memberDao.findByEmail(request.getMemberEmail())
+        final Member member = findMember(request);
+        final Product product = findProduct(request);
+        final Cart cart = new Cart(null, product, member, null, null);
+        if (cartDao.exists(cart)) {
+            throw new IllegalArgumentException("이미 담겨진 상품입니다.");
+        }
+        final Cart savedCar = cartDao.save(cart);
+        return CartCreateResponse.of(savedCar);
+    }
+
+    private Member findMember(final CartCreateRequest request) {
+        return memberDao.findByEmail(request.getMemberEmail())
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-        final Product product = productDao.findById(request.getProductId())
+    }
+
+    private Product findProduct(final CartCreateRequest request) {
+        return productDao.findById(request.getProductId())
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
-        final Cart cart = cartDao.save(new Cart(null, product, member, null, null));
-        return CartCreateResponse.of(cart);
     }
 
     public List<CartResponse> findByEmail(final String email) {
