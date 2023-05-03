@@ -6,7 +6,6 @@ import cart.entity.ProductEntity;
 import cart.entity.UserEntity;
 import cart.service.ProductService;
 import cart.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,6 @@ public class MainController {
     private final ProductService productService;
     private final UserService userService;
 
-    @Autowired
     public MainController(final ProductService productService, final UserService userService) {
         this.productService = productService;
         this.userService = userService;
