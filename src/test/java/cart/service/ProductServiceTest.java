@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.ProductDaoImpl;
+import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
 import cart.domain.product.ProductService;
@@ -32,7 +32,7 @@ class ProductServiceTest {
     private ProductRequest productRequest;
 
     @Mock
-    private ProductDaoImpl productDao;
+    private ProductDao productDao;
 
     @InjectMocks
     private ProductService productService;

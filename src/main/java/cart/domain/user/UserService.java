@@ -9,14 +9,14 @@ import java.util.List;
 @Transactional
 public class UserService {
 
-    private final UserDao userDao;
+    private final UserRepository userRepository;
 
-    public UserService(final UserDao userDao) {
-        this.userDao = userDao;
+    public UserService(final UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
     public List<User> getUsers() {
-        return userDao.findAll();
+        return userRepository.findAll();
     }
 }

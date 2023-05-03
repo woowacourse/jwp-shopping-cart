@@ -17,39 +17,31 @@ public class ProductService {
 
     public final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(final ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<Product> getProducts() {
-        return productDao.findAll();
+        return productRepository.findAll();
     }
 
     public Long save(final ProductRequest productRequest) {
-        final Product product = mapToProduct(productRequest);
-        return productDao.insert(product);
+        final Product product = productRequest.toEntity();
+        return productRepository.insert(product);
     }
 
     public void update(final Long id, final ProductRequest productRequest) {
-        final Product product = mapToProduct(productRequest);
-        int updatedCount = productDao.update(id, product);
+        final Product product = productRequest.toEntity();
+        int updatedCount = productRepository.update(id, product);
         if (updatedCount != 1) {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
         }
     }
 
-    private Product mapToProduct(final ProductRequest productRequest) {
-        return new Product(
-                productRequest.getName(),
-                productRequest.getImageUrl(),
-                productRequest.getPrice(),
-                productRequest.getCategory());
-    }
-
     public void delete(final Long id) {
-        int deletedCount = productDao.deleteById(id);
+        int deletedCount = productRepository.deleteById(id);
         if (deletedCount == 0) {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
         }
@@ -61,7 +53,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Product getById(final Long id) {
-        final Optional<Product> productOptional = productDao.findById(id);
+        final Optional<Product> productOptional = productRepository.findById(id);
         return productOptional.orElseThrow(() -> new GlobalException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 }

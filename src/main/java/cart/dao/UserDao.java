@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.domain.user.User;
-import cart.domain.user.UserDao;
+import cart.domain.user.UserRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class UserDaoImpl implements UserDao {
+public class UserDao implements UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public UserDaoImpl(final JdbcTemplate jdbcTemplate) {
+    public UserDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

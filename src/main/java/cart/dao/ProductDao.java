@@ -2,7 +2,7 @@ package cart.dao;
 
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductDao;
+import cart.domain.product.ProductRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,11 +15,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Component
-public class ProductDaoImpl implements ProductDao {
+public class ProductDao implements ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDaoImpl(final JdbcTemplate jdbcTemplate) {
+    public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

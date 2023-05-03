@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductDao {
+public interface ProductRepository {
 
     Long insert(final Product product);
 

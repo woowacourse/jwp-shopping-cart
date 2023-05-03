@@ -2,7 +2,7 @@ package cart.domain.cart;
 
 import cart.domain.product.Product;
 import cart.domain.user.User;
-import cart.domain.user.UserDao;
+import cart.domain.user.UserRepository;
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.web.controller.user.dto.UserRequest;
@@ -16,39 +16,33 @@ import java.util.Optional;
 @Transactional
 public class CartService {
 
-    private final UserDao userDao;
-    private final CartDao cartDao;
+    private final UserRepository userRepository;
+    private final CartRepository cartRepository;
 
-    public CartService(final UserDao userDao, final CartDao cartDao) {
-        this.userDao = userDao;
-        this.cartDao = cartDao;
+    public CartService(final UserRepository userRepository, final CartRepository cartRepository) {
+        this.userRepository = userRepository;
+        this.cartRepository = cartRepository;
     }
 
     public Long add(final UserRequest userRequest, final Long productId) {
-        final Optional<User> userOptional = userDao.findUserByEmail(userRequest.getEmail());
-        if (userOptional.isEmpty()) {
-            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
-        }
-        return cartDao.insert(userOptional.get(), productId);
+        final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getEmail());
+        final User user = userOptional.orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+
+        return cartRepository.insert(user, productId);
     }
 
     @Transactional(readOnly = true)
     public List<Product> getProducts(final UserRequest userRequest) {
-        final Optional<User> userOptional = userDao.findUserByEmail(userRequest.getEmail());
-        if (userOptional.isEmpty()) {
-            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
-        }
-        final User user = userOptional.get();
+        final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getEmail());
+        final User user = userOptional.orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
 
-        return cartDao.findAllByUser(user);
+        return cartRepository.findAllByUser(user);
     }
 
     public void delete(final UserRequest userRequest, final Long productId) {
-        final Optional<User> userOptional = userDao.findUserByEmail(userRequest.getEmail());
-        if (userOptional.isEmpty()) {
-            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
-        }
-        final User user = userOptional.get();
-        cartDao.delete(user, productId);
+        final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getEmail());
+        final User user = userOptional.orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+
+        cartRepository.delete(user, productId);
     }
 }

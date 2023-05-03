@@ -14,13 +14,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
-@Import(ProductDaoImpl.class)
-class ProductDaoImplTest {
+@Import(ProductDao.class)
+class ProductDaoTest {
 
     private static final String IMAGE_URL = "https://barunchicken.com/wp-content/uploads/2022/07/%EA%B3%A8%EB%93%9C%EC%B9%98%ED%82%A8-2-1076x807.jpg";
 
     @Autowired
-    private ProductDaoImpl productDao;
+    private ProductDao productDao;
 
     private final Product product = new Product("치킨", IMAGE_URL, 20000, ProductCategory.KOREAN);
 

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserDao {
+public interface UserRepository {
 
     List<User> findAll();
 

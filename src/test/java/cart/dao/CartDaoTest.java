@@ -16,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JdbcTest
-@Import(CartDaoImpl.class)
-class CartDaoImplTest {
+@Import(CartDao.class)
+class CartDaoTest {
 
     private final User user = new User(1L, "hello@naver.com", "myPassword");
 
     @Autowired
-    private CartDaoImpl cartDao;
+    private CartDao cartDao;
 
     @BeforeEach
     void setUp() {

@@ -46,4 +46,12 @@ public class ProductRequest {
     public Product toEntity() {
         return new Product(name, imageUrl, price, category);
     }
+
+    public Product toEntity(final ProductRequest productRequest) {
+        return new Product(
+                productRequest.getName(),
+                productRequest.getImageUrl(),
+                productRequest.getPrice(),
+                productRequest.getCategory());
+    }
 }

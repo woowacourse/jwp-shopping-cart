@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.cart.CartDao;
+import cart.domain.cart.CartRepository;
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
 import cart.domain.user.User;
@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class CartDaoImpl implements CartDao {
+public class CartDao implements CartRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public CartDaoImpl(final JdbcTemplate jdbcTemplate) {
+    public CartDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

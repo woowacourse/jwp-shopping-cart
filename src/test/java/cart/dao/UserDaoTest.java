@@ -13,11 +13,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JdbcTest
-@Import(UserDaoImpl.class)
-class UserDaoImplTest {
+@Import(UserDao.class)
+class UserDaoTest {
 
     @Autowired
-    private UserDaoImpl userDao;
+    private UserDao userDao;
 
     @DisplayName("기존에 존재하는 사용자의 정보를 이메일을 통해 가져올 수 있다.")
     @Test

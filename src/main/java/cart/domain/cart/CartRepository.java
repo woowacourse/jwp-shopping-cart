@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CartDao {
+public interface CartRepository {
 
     Long insert(User user, Long productId);
 
