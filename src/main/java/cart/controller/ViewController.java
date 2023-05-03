@@ -30,4 +30,14 @@ public class ViewController {
         model.addAttribute("products", products);
         return "admin";
     }
+
+    @GetMapping(path = "/settings")
+    public String settings(Model model){
+        return "settings";
+    }
+
+    @GetMapping(path = "/cart")
+    public String cart(Model model){
+        return "cart";
+    }
 }
