@@ -53,8 +53,7 @@ class CartControllerTest {
     @DisplayName("장바구니 추가 테스트")
     void addCart() {
         ItemEntity item = itemDao.save(new ItemEntity("피자", "b", 20000));
-        CartSaveRequest request = new CartSaveRequest();
-        request.setId(item.getId());
+        CartSaveRequest request = new CartSaveRequest(item.getId());
 
         RestAssured.given().log().all()
                 .header("Authorization", "Basic " + authorization)
@@ -70,8 +69,7 @@ class CartControllerTest {
     @DisplayName("사용자 패스워드가 일치하지 않은경우 테스트")
     void memberPasswordMismatch() {
         ItemEntity item = itemDao.save(new ItemEntity("피자", "b", 20000));
-        CartSaveRequest request = new CartSaveRequest();
-        request.setId(item.getId());
+        CartSaveRequest request = new CartSaveRequest(item.getId());
 
         RestAssured.given().log().all()
                 .header("Authorization", "Basic " + invalidAuthorization)
@@ -88,8 +86,7 @@ class CartControllerTest {
     @DisplayName("유효하지 않은 Authorization 테스트")
     void invalidAuthorization() {
         ItemEntity item = itemDao.save(new ItemEntity("피자", "b", 20000));
-        CartSaveRequest request = new CartSaveRequest();
-        request.setId(item.getId());
+        CartSaveRequest request = new CartSaveRequest(item.getId());
 
         RestAssured.given().log().all()
                 .header("Authorization", "Basic " + invalidAuthorization + "error")
