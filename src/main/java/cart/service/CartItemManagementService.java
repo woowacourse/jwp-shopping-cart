@@ -22,15 +22,16 @@ public class CartItemManagementService {
         this.productDao = productDao;
     }
 
-    public List<CartItemDto> findAllByMemberId(final Long memberId){
+    public List<CartItemDto> findAllByMemberId(final Long memberId) {
         List<CartItemEntity> cartItemEntities = cartItemDao.selectAllByMemberId(memberId);
         List<CartItemDto> cartItemDtos = new ArrayList<>();
-        for(CartItemEntity cartItemEntity : cartItemEntities){
+        for (CartItemEntity cartItemEntity : cartItemEntities) {
             ProductEntity productEntity = productDao.selectById(cartItemEntity.getProductId());
             cartItemDtos.add(CartItemDto.from(cartItemEntity.getId(), productEntity));
         }
         return cartItemDtos;
     }
+
     public long save(final CartAdditionDto cartAdditionDto) {
         return cartItemDao.insert(CartAdditionDto.toEntity(cartAdditionDto));
     }

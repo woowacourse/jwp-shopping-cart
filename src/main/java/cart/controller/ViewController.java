@@ -1,18 +1,12 @@
 package cart.controller;
 
-import cart.auth.MemberAuthentication;
-import cart.dto.MemberDto;
 import cart.dto.response.MemberResponse;
 import cart.dto.response.ProductResponse;
-import cart.exception.AuthenticationException;
-import cart.service.CartItemManagementService;
 import cart.service.MemberManagementService;
 import cart.service.ProductManagementService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class ViewController {

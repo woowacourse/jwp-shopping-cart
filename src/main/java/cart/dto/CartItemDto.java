@@ -16,7 +16,7 @@ public class CartItemDto {
         this.price = price;
     }
 
-    public static CartItemDto from(final Long id, final ProductEntity productEntity){
+    public static CartItemDto from(final Long id, final ProductEntity productEntity) {
         return new CartItemDto(id, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
     }
 

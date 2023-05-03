@@ -12,11 +12,11 @@ public class CartItemEntity {
         this.productId = productId;
     }
 
-    public static CartItemEntity of(final Long memberId, final Long productId){
+    public static CartItemEntity of(final Long memberId, final Long productId) {
         return new CartItemEntity(null, memberId, productId);
     }
 
-    public static CartItemEntity of(final Long id, final Long memberId, final Long productId){
+    public static CartItemEntity of(final Long id, final Long memberId, final Long productId) {
         return new CartItemEntity(id, memberId, productId);
     }
 

@@ -12,11 +12,11 @@ public class MemberAuthentication {
         this.password = password;
     }
 
-    public static MemberAuthentication of(final String email, final String password){
+    public static MemberAuthentication of(final String email, final String password) {
         return new MemberAuthentication(email, password);
     }
 
-    public static MemberEntity toEntity(final MemberAuthentication memberAuthentication){
+    public static MemberEntity toEntity(final MemberAuthentication memberAuthentication) {
         return MemberEntity.of(memberAuthentication.email, memberAuthentication.password);
     }
 
