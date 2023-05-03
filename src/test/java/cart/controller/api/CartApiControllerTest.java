@@ -1,5 +1,7 @@
-package cart.controller.view;
+package cart.controller.api;
 
+import cart.controller.dto.request.ProductCreateRequest;
+import cart.controller.dto.request.ProductIdRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,14 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
-<<<<<<< HEAD
-=======
 import static org.junit.jupiter.api.Assertions.*;
 
->>>>>>> 5eb5e7b9 (feat: View 테스트)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SettingsControllerTest {
+class CartApiControllerTest {
 
     @LocalServerPort
     int port;
@@ -24,11 +24,16 @@ class SettingsControllerTest {
         RestAssured.port = port;
     }
 
-    @DisplayName("어드민 메인 페이지 접속")
+    @DisplayName("상품 추가")
     @Test
-    void adminPage() {
+    void createProduct() {
+        ProductIdRequest productIdRequest = new ProductIdRequest(1L);
+
         RestAssured.given().log().all()
-                .when().get("/admin/products")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(1L)
+                .body(productIdRequest)
+                .when().post("/cart/product")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
