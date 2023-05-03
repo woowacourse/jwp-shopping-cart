@@ -34,7 +34,7 @@
       return;
     }
     axios.request({
-      url: 'api/cart/items',
+      url: 'api/cart',
       method: 'get',
       headers: {
         'Authorization': `Basic ${credentials}`
@@ -43,6 +43,11 @@
       const cartItems = response.data.products;
 
       let productElement = '';
+      if (cartItems.length === 0) {
+        productElement += `
+                <img src='/img/cart_empty.png' alt="장바구니가 텅 비어있어요"/>
+        `
+      }
       cartItems.forEach(cartItem => {
         productElement += `
                         <div class="cart-item">
