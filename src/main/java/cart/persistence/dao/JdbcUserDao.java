@@ -14,6 +14,10 @@ public class JdbcUserDao implements Dao<UserEntity> {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final RowMapper<UserEntity> actorRowMapper = (resultSet, rowNum) -> new UserEntity(
+            resultSet.getString("email"),
+            resultSet.getString("password")
+    );
 
     public JdbcUserDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -21,11 +25,6 @@ public class JdbcUserDao implements Dao<UserEntity> {
                 .withTableName("USER_INFO")
                 .usingGeneratedKeyColumns("user_id");
     }
-
-    private final RowMapper<UserEntity> actorRowMapper = (resultSet, rowNum) -> new UserEntity(
-            resultSet.getString("email"),
-            resultSet.getString("password")
-    );
 
     @Override
     public Long save(UserEntity userEntity) {
