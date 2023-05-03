@@ -4,6 +4,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -79,5 +81,15 @@ class CartControllerUnitTest {
                 .header("Authorization", "Basic " + encodedString))
                 .andExpect(status().isOk())
                 .andExpect(content().string(responseString));
+    }
+
+    @DisplayName("장바구니 상품을 삭제할 수 있다.")
+    @Test
+    void deleteCustomerCartProduct() throws Exception {
+        // when, then
+        willDoNothing().given(cartService).deleteById(anyLong());
+        mockMvc.perform(delete("/cart/1")
+                        .header("Authorization", "Basic "+ encodedString))
+                .andExpect(status().isNoContent());
     }
 }
