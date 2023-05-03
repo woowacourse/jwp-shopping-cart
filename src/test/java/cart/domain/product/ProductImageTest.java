@@ -1,6 +1,5 @@
-package cart.domain;
+package cart.domain.product;
 
-import cart.domain.product.ProductImage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +12,7 @@ class ProductImageTest {
     @Test
     @DisplayName("이미지 주소의 길이가 2048 초과일 경우 예외 발생")
     void imageLengthMoreThanMax() {
-        String image = "a".repeat(2049);
+        final String image = "a".repeat(2049);
         assertThatThrownBy(() -> new ProductImage(image))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ProductImage.IMAGE_URL_LENGTH_ERROR_MESSAGE);

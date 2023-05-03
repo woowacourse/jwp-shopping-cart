@@ -1,6 +1,5 @@
-package cart.domain;
+package cart.domain.product;
 
-import cart.domain.product.ProductName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,7 +30,7 @@ class ProductNameTest {
     @ParameterizedTest
     @DisplayName("이름의 길이가 0일 경우 예외 발생")
     @ValueSource(strings = {"", " "})
-    void nameBlank(String name) {
+    void nameBlank(final String name) {
         assertThatThrownBy(() -> new ProductName(name))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ProductName.NAME_LENGTH_ERROR_MESSAGE);
@@ -40,7 +39,7 @@ class ProductNameTest {
     @Test
     @DisplayName("이름의 길이가 64 초과일 경우 예외 발생")
     void nameLengthMoreThanMax() {
-        String name = "a".repeat(65);
+        final String name = "a".repeat(65);
         assertThatThrownBy(() -> new ProductName(name))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ProductName.NAME_LENGTH_ERROR_MESSAGE);

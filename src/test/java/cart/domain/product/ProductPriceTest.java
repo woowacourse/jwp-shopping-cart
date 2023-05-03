@@ -1,6 +1,5 @@
-package cart.domain;
+package cart.domain.product;
 
-import cart.domain.product.ProductPrice;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,7 +29,7 @@ class ProductPriceTest {
     @ParameterizedTest
     @DisplayName("가격이 정상일 경우")
     @ValueSource(ints = {0, 10_000_000})
-    void priceSuccess(int price) {
+    void priceSuccess(final int price) {
         assertDoesNotThrow(() -> new ProductPrice(price));
     }
 }
