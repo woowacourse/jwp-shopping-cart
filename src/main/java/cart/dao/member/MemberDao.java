@@ -4,7 +4,9 @@ import cart.dao.Dao;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class MemberDao implements Dao<MemberEntity> {
 
     final RowMapper<MemberEntity> rowMapper = (rs, rowNum) ->
