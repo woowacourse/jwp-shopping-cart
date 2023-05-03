@@ -8,6 +8,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
+
 @Repository
 public class JdbcCartDao implements CartDao {
 
@@ -38,5 +40,11 @@ public class JdbcCartDao implements CartDao {
                 .addValue("userId", userId)
                 .addValue("productId", productId);
         return jdbcTemplate.update(sql, params);
+    }
+
+    @Override
+    public int deleteByProductId(final Long productId) {
+        final String sql = "DELETE FROM cart WHERE product_id = :productId";
+        return jdbcTemplate.update(sql, Collections.singletonMap("productId", productId));
     }
 }

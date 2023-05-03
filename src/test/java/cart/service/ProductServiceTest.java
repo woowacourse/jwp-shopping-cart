@@ -1,11 +1,14 @@
 package cart.service;
 
 import cart.JdbcMySqlDialectTest;
+import cart.dao.CartDao;
+import cart.dao.JdbcCartDao;
 import cart.dao.JdbcProductDao;
 import cart.dao.ProductDao;
 import cart.dto.ProductResponse;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
+import cart.respository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,15 +28,20 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class ProductServiceTest {
 
     private ProductService productService;
+    private ProductRepository productRepository;
     private ProductDao productDao;
+    private CartDao cartDao;
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void init() {
+        cartDao = new JdbcCartDao(jdbcTemplate);
         productDao = new JdbcProductDao(jdbcTemplate);
-        productService = new ProductService(productDao, new ProductMapper());
+        productRepository = new ProductRepository(productDao, cartDao);
+
+        productService = new ProductService(productRepository, new ProductMapper());
     }
 
     @Test
