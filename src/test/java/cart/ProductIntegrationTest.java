@@ -44,7 +44,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestProductDto)
                 .when()
-                .post("/admin/product/create")
+                .post("/admin/products")
                 .then()
                 .extract();
         
@@ -58,7 +58,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestProductDto)
                 .when()
-                .put("/admin/product/update/1")
+                .put("/admin/products/1")
                 .then()
                 .extract();
         
@@ -77,7 +77,7 @@ public class ProductIntegrationTest {
         final var deleteResult = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/admin/product/delete/2")
+                .delete("/admin/products/2")
                 .then()
                 .extract();
         
@@ -92,7 +92,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestProductDto)
                 .when()
-                .put("/admin/product/update/1")
+                .put("/admin/products/1")
                 .then()
                 .extract();
         
