@@ -7,7 +7,6 @@ import cart.exception.AuthenticationException;
 import cart.exception.CartNotFoundException;
 import cart.exception.DuplicateEmailException;
 import cart.exception.ProductException;
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -56,8 +55,8 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Response> handleAuthenticationException(AuthenticationException e, HttpServletRequest request) {
-        log.info("인증 요청이 실패 했습니다. 사유: {} TOKEN = {}", e.getMessage(), request.getHeader("Authorization"));
+    public ResponseEntity<Response> handleAuthenticationException(AuthenticationException e) {
+        log.info("인증 요청이 실패 했습니다. 사유: {}", e.getMessage());
         Response response = new SimpleResponse("401", e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(response);
