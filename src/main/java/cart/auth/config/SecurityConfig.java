@@ -1,10 +1,13 @@
 package cart.auth.config;
 
 import cart.auth.filter.AuthenticationFilter;
+import cart.auth.resolver.AuthenticationResolver;
 import cart.repository.user.UserRepository;
+import java.util.List;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -22,5 +25,10 @@ public class SecurityConfig implements WebMvcConfigurer {
         registrationBean.setFilter(new AuthenticationFilter(userRepository));
         registrationBean.addUrlPatterns("/*");
         return registrationBean;
+    }
+
+    @Override
+    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(new AuthenticationResolver());
     }
 }
