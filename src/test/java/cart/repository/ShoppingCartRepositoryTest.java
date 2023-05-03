@@ -10,7 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 
 @JdbcTest
-@Import(JdbcShoppingShoppingCartRepository.class)
+@Import(JdbcShoppingCartRepository.class)
 class ShoppingCartRepositoryTest {
 
     @Autowired
