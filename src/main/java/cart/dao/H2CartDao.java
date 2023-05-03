@@ -3,7 +3,6 @@ package cart.dao;
 import cart.entity.CartEntity;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -59,5 +58,11 @@ public class H2CartDao implements CartDao {
         .query(sql, getRowMapper(), memberId, productId)
         .stream()
         .findAny();
+  }
+
+  @Override
+  public void addCartCount(final int count, final long memberId, final long productId) {
+    final String sql = "update cart set cart_count = ? where member_id = ? and product_id = ?";
+    namedParameterjdbcTemplate.getJdbcTemplate().update(sql, count, memberId, productId);
   }
 }

@@ -18,7 +18,10 @@ public class CartService {
   }
 
   public void addCart(final long memberId, final CartRequest cartRequest) {
-    cartDao.save(new CartEntity(cartRequest.getProductId(), memberId));
+    final long productId = cartRequest.getProductId();
+    cartDao.findCartByMemberIdAndProductId(memberId, productId)
+        .ifPresentOrElse(cart -> cartDao.addCartCount(cart.getCartCount()+1, memberId, productId),
+            () -> cartDao.save(new CartEntity(productId, memberId)));
   }
 
   public List<CartResponse> findCartByMemberId(final long memberId) {
