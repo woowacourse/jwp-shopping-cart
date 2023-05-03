@@ -37,13 +37,4 @@ public class ProductViewController {
         return "admin";
     }
 
-    @GetMapping("/cart")
-    public String getCartPage() {
-        return "cart";
-    }
-
-    @GetMapping("/settings")
-    public String getSettingsPage() {
-        return "settings";
-    }
 }
