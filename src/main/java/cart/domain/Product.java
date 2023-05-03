@@ -1,7 +1,6 @@
 package cart.domain;
 
 import cart.controller.dto.request.product.ProductUpdateRequest;
-import cart.dao.ProductEntity;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,14 +50,6 @@ public class Product {
 
     public int getPrice() {
         return price;
-    }
-
-    public ProductEntity toEntity() {
-        return new ProductEntity(name, image, price);
-    }
-
-    public ProductEntity toEntity(int id) {
-        return new ProductEntity(id, name, image, price);
     }
 
     public Product update(ProductUpdateRequest productUpdateRequest) {

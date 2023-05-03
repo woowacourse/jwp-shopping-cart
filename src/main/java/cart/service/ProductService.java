@@ -29,8 +29,12 @@ public class ProductService {
 
     public Integer insert(final ProductInsertRequest productInsertRequest) {
         Product product = productInsertRequest.toProduct();
-        ProductEntity productEntity = product.toEntity();
+        ProductEntity productEntity = makeEntity(product);
         return productDaoImpl.insert(productEntity);
+    }
+
+    private ProductEntity makeEntity(final Product product) {
+        return new ProductEntity(product.getName(), product.getImage(), product.getPrice());
     }
 
     public void update(final int id, final ProductUpdateRequest productUpdateRequest) {
@@ -38,7 +42,11 @@ public class ProductService {
         Product product = productUpdateRequest.toProduct();
         Product updatedProduct = product.update(productUpdateRequest);
 
-        productDaoImpl.update(updatedProduct.toEntity(id));
+        productDaoImpl.update(makeEntity(id, updatedProduct));
+    }
+
+    private ProductEntity makeEntity(final int id, final Product product) {
+        return new ProductEntity(id, product.getName(), product.getImage(), product.getPrice());
     }
 
     private ProductEntity findProductById(final int id) {
