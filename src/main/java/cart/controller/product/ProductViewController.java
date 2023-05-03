@@ -1,6 +1,6 @@
 package cart.controller.product;
 
-import cart.dto.ProductResponse;
+import cart.dto.product.ProductResponse;
 import cart.service.product.ProductQueryService;
 import java.util.List;
 import java.util.stream.Collectors;

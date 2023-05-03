@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.product;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class ResponseFixture {

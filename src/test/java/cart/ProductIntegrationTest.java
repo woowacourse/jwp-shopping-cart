@@ -1,6 +1,6 @@
 package cart;
 
-import static cart.dto.RequestFixture.NUNU_REQUEST;
+import static cart.dto.product.RequestFixture.NUNU_REQUEST;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;

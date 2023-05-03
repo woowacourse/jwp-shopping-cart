@@ -2,8 +2,8 @@ package cart.controller.product;
 
 import static cart.domain.product.ProductFixture.NUNU_ID_PRODUCT;
 import static cart.domain.product.ProductFixture.ODO_ID_PRODUCT;
-import static cart.dto.ResponseFixture.NUNU_RESPONSE;
-import static cart.dto.ResponseFixture.ODO_RESPONSE;
+import static cart.dto.product.ResponseFixture.NUNU_RESPONSE;
+import static cart.dto.product.ResponseFixture.ODO_RESPONSE;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -17,9 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.controller.AbstractControllerTest;
 import cart.domain.product.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-import cart.dto.RequestFixture;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
+import cart.dto.product.RequestFixture;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;

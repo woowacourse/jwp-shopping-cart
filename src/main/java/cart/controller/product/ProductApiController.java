@@ -1,8 +1,8 @@
 package cart.controller.product;
 
 import cart.domain.product.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
 import cart.service.product.ProductCommandService;
 import cart.service.product.ProductQueryService;
 import java.net.URI;
