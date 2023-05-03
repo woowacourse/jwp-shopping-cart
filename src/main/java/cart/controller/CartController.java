@@ -24,11 +24,6 @@ public class CartController {
 
     private final CartService cartService;
 
-    @GetMapping
-    public String myCart() {
-        return "cart";
-    }
-
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getProductsOfCart(@RequestHeader(value = "Authorization") String credentials) {
         final AuthInfo authInfo = BasicAuthorizationExtractor.extract(credentials, "/cart");
