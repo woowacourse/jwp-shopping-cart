@@ -25,7 +25,7 @@ public class JdbcCartDao implements CartDao {
 
     @Override
     public List<ItemEntity> findAll(final String memberEmail) {
-        String sql = "SELECT item.* FROM item LEFT JOIN cart ON cart.id=item.id WHERE cart.email = ?";
+        String sql = "SELECT item.* FROM item LEFT JOIN cart ON cart.item_id=item.id WHERE cart.member_email = ?";
         return jdbcTemplate.query(sql, mapRow(), memberEmail);
     }
 
@@ -41,7 +41,7 @@ public class JdbcCartDao implements CartDao {
 
     @Override
     public void delete(final String memberEmail, final Long itemId) {
-        String sql = "DELETE FROM cart WHERE email = ? and id = ?";
+        String sql = "DELETE FROM cart WHERE member_email = ? and item_id = ?";
         jdbcTemplate.update(sql, memberEmail, itemId);
     }
 }

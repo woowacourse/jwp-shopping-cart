@@ -16,9 +16,9 @@ CREATE TABLE IF NOT EXISTS member
 
 CREATE TABLE IF NOT EXISTS cart
 (
-    email varchar(30) NOT NULL,
-    id    bigint      NOT NULL,
-    PRIMARY KEY (email, id),
-    FOREIGN KEY (id) REFERENCES item (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (email) REFERENCES member (email) ON DELETE CASCADE ON UPDATE CASCADE
+    member_email varchar(30) NOT NULL,
+    item_id    bigint      NOT NULL,
+    PRIMARY KEY (member_email, item_id),
+    FOREIGN KEY (item_id) REFERENCES item (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (member_email) REFERENCES member (email) ON DELETE CASCADE ON UPDATE CASCADE
 );
