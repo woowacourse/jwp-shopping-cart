@@ -1,17 +1,9 @@
 package cart.controller;
 
-import cart.auth.AuthenticateUser;
-import cart.dto.AuthUser;
-import cart.dto.CartResponses;
-import cart.dto.CartSaveRequest;
 import cart.service.CartService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-
-import static java.lang.String.format;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/carts")
@@ -26,27 +18,5 @@ public class CartController {
     @GetMapping
     public String cartHome() {
         return "cart";
-    }
-
-    @GetMapping("/users")
-    public ResponseEntity<CartResponses> getCartsAllByUserId(@AuthenticateUser AuthUser user) {
-        final CartResponses cartResponses = cartService.findAllByUserId(user.getId());
-        return ResponseEntity.ok(cartResponses);
-    }
-
-    @PostMapping("/users/products/{productId}")
-    public ResponseEntity<URI> addProduct(@AuthenticateUser AuthUser user, @PathVariable Long productId) {
-        final CartSaveRequest saveRequest = new CartSaveRequest(user.getId(), productId);
-
-        final Long id = cartService.save(saveRequest);
-
-        final String createdUri = format("/carts/users/%s/products/%s", user.getId(), productId);
-        return ResponseEntity.created(URI.create(createdUri)).build();
-    }
-
-    @DeleteMapping("/users/products/{productId}")
-    public ResponseEntity<Void> removeProduct(@AuthenticateUser AuthUser user, @PathVariable Long productId) {
-        cartService.delete(user.getId(), productId);
-        return ResponseEntity.noContent().build();
     }
 }
