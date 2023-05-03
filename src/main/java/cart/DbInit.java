@@ -38,5 +38,10 @@ public class DbInit {
                         "boxster"
                 )
         );
+        memberDao.save(new Member(
+                        "memeber@email.com",
+                        "member"
+                )
+        );
     }
 }
