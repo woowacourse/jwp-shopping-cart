@@ -1,5 +1,6 @@
 package cart.domain.cart;
 
+import cart.domain.product.Product;
 import cart.domain.user.User;
 import java.util.List;
 
@@ -23,8 +24,8 @@ public class Cart {
         this(new CartId(), user, new CartProducts());
     }
 
-    public Cart(final CartId cartId, final Cart other) {
-        this(cartId, other.user, other.cartProducts);
+    public void addProduct(final Product product) {
+        cartProducts.add(product);
     }
 
     public CartId getCartId() {

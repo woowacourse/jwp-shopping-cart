@@ -3,6 +3,7 @@ package cart.service.product;
 import cart.domain.product.Product;
 import cart.repository.product.ProductRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,5 +19,9 @@ public class ProductQueryService {
 
     public List<Product> find() {
         return productRepository.find();
+    }
+
+    public Optional<Product> findById(final Long id) {
+        return productRepository.findById(id);
     }
 }

@@ -12,6 +12,10 @@ public class CartProduct {
         this.product = product;
     }
 
+    public CartProduct(final Product product) {
+        this(new CartProductId(), product);
+    }
+
     public CartProductId getCartProductId() {
         return cartProductId;
     }
