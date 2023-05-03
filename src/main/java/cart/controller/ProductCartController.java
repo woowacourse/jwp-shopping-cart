@@ -42,7 +42,7 @@ public class ProductCartController {
                 .body(response);
     }
 
-    @DeleteMapping("/{cartId다}")
+    @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> deleteMyCart(
             @PathVariable Long cartId,
             @AuthPrincipal Member member
