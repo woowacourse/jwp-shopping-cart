@@ -9,6 +9,4 @@ public interface CartRepository {
     Cart save(Cart cart);
 
     Optional<Cart> findByUser(User user);
-
-    Cart update(Cart cart);
 }

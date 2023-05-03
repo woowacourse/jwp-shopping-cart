@@ -35,30 +35,15 @@ public class H2CartRepository implements CartRepository {
 
     @Override
     public Cart save(final Cart cart) {
-        final CartEntity cartEntity = CartEntity.from(cart);
-        final CartEntity savedCartEntity = cartDao.save(cartEntity);
-
-        saveCartProducts(cart, savedCartEntity);
-        return findCart(cart.getUser(), savedCartEntity);
-    }
-
-    @Override
-    public Optional<Cart> findByUser(final User user) {
-        final CartEntity cartEntity = cartDao.findByUserId(UserEntityId.from(user.getUserId()));
-        if (cartEntity == null) {
-            return Optional.empty();
+        CartEntity cartEntity = CartEntity.from(cart);
+        if (cartEntity.getCartId().getValue() == null) {
+            cartEntity = cartDao.save(cartEntity);
         }
-        return Optional.of(findCart(user, cartEntity));
-    }
-
-    @Override
-    public Cart update(final Cart cart) {
-        final CartEntity cartEntity = CartEntity.from(cart);
 
         saveCartProducts(cart, cartEntity);
-
         return findCart(cart.getUser(), cartEntity);
     }
+
 
     private void saveCartProducts(final Cart cart, final CartEntity cartEntity) {
         cartProductDao.deleteAllByCartId(cartEntity.getCartId());
@@ -71,12 +56,25 @@ public class H2CartRepository implements CartRepository {
     private List<CartProductEntity> toCartProductEntities(final List<CartProduct> cartProducts,
             final CartEntityId cartEntityId) {
         return cartProducts.stream()
-                .map(cartProduct -> new CartProductEntity(
-                        cartProduct.getCartProductId(),
-                        cartEntityId,
-                        cartProduct.getProduct().getProductId()
-                ))
+                .map(cartProduct -> toCartProductEntity(cartEntityId, cartProduct))
                 .collect(Collectors.toList());
+    }
+
+    private CartProductEntity toCartProductEntity(final CartEntityId cartEntityId, final CartProduct cartProduct) {
+        return new CartProductEntity(
+                cartProduct.getCartProductId(),
+                cartEntityId,
+                cartProduct.getProduct().getProductId()
+        );
+    }
+
+    @Override
+    public Optional<Cart> findByUser(final User user) {
+        final CartEntity cartEntity = cartDao.findByUserId(UserEntityId.from(user.getUserId()));
+        if (cartEntity == null) {
+            return Optional.empty();
+        }
+        return Optional.of(findCart(user, cartEntity));
     }
 
     private Cart findCart(final User user, final CartEntity cartEntity) {

@@ -43,7 +43,7 @@ public class CartCommandService {
                 .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다."));
 
         cart.addProduct(product);
-        return cartRepository.update(cart);
+        return cartRepository.save(cart);
     }
 
     public void deleteProduct(final Long cartProductId, final String email) {
@@ -52,6 +52,6 @@ public class CartCommandService {
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
         cart.deleteProduct(cartProductId);
-        cartRepository.update(cart);
+        cartRepository.save(cart);
     }
 }
