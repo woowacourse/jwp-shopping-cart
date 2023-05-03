@@ -1,6 +1,7 @@
 package cart.dto;
 
 public class AuthInfo {
+
     private String email;
     private String password;
 

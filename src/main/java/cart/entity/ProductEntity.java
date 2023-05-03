@@ -1,6 +1,7 @@
 package cart.entity;
 
 public class ProductEntity {
+
     private int id;
     private String name;
     private String imgUrl;

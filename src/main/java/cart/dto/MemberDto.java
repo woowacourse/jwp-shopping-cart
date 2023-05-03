@@ -1,6 +1,7 @@
 package cart.dto;
 
 public class MemberDto {
+
     private final String email;
     private final String password;
 

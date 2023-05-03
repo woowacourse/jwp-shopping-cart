@@ -1,6 +1,7 @@
 package cart.entity;
 
 public class MemberEntity {
+
     private int id;
     private String email;
     private String password;

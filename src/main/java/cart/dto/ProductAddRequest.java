@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
 public class ProductAddRequest {
+
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
     private final String name;
 

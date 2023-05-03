@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 public class BasicAuthorizationExtractor {
+
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
