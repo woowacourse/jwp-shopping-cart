@@ -9,18 +9,15 @@ import cart.controller.AbstractProductControllerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.context.WebApplicationContext;
 
 @SuppressWarnings("NonAsciiCharacters")
-@WebMvcTest
 class AuthenticationFilterTest extends AbstractProductControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
-
 
     @BeforeEach
     void setUp() {
