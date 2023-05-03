@@ -1,7 +1,5 @@
 package cart.dao;
 
-import cart.domain.product.Product;
-
 public class ProductEntity {
 
     private final Long id;
@@ -16,16 +14,6 @@ public class ProductEntity {
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
-    }
-
-    public ProductEntity(Product product) {
-        this(
-                product.getProductId(),
-                product.getName(),
-                product.getPrice().intValue(),
-                product.getCategory().name(),
-                product.getImageUrl()
-        );
     }
 
     public Long getId() {

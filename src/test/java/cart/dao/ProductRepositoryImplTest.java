@@ -1,15 +1,6 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import cart.domain.product.ImageUrl;
-import cart.domain.product.Product;
-import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductName;
-import cart.domain.product.ProductPrice;
-import cart.domain.product.TestFixture;
-import java.math.BigDecimal;
-import java.util.List;
+import cart.domain.product.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +8,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Import({ProductRepositoryImpl.class, ProductDao.class})
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -27,13 +22,11 @@ class ProductRepositoryImplTest {
     @Autowired
     private ProductRepositoryImpl productRepository;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     @DisplayName("상품 전체 조회 테스트")
     @Test
     void findAll() {
-        jdbcTemplate.update("INSERT INTO product (name, price) VALUES ('Chicken', 18000), ('Pizza', 24000)");
+        productRepository.save(TestFixture.CHICKEN);
+        productRepository.save(TestFixture.PIZZA);
 
         List<Product> allProducts = productRepository.findAll();
 

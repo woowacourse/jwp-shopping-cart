@@ -21,6 +21,12 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("product_id");
     }
 
+    public Long insert(ProductEntity productEntity) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(productEntity);
+
+        return simpleInsert.executeAndReturnKey(params).longValue();
+    }
+
     public List<ProductEntity> findAll() {
         String findAllQuery = "SELECT * FROM product";
 
@@ -32,12 +38,6 @@ public class ProductDao {
                         rs.getString("category"),
                         rs.getString("image_url")
                 ));
-    }
-
-    public Long insert(ProductEntity productEntity) {
-        SqlParameterSource params = new BeanPropertySqlParameterSource(productEntity);
-
-        return simpleInsert.executeAndReturnKey(params).longValue();
     }
 
     public void deleteById(Long id) {
