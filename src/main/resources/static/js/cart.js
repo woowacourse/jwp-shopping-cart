@@ -22,7 +22,7 @@ const addCartItem = (productId) => {
     });
 }
 
-const removeCartItem = (id) => {
+const removeCartItem = (cartId) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
@@ -30,9 +30,9 @@ const removeCartItem = (id) => {
         return;
     }
 
-    // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
     axios.request({
-        url: '/cart/' + id ,
+        url: '/cart/' + cartId ,
+        method: 'delete',
         headers: {
             'Authorization': `Basic ${credentials}`
         }
