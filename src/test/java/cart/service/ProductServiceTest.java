@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest
+@Sql("/test.sql")
 @Transactional
 class ProductServiceTest {
 
@@ -31,6 +33,7 @@ class ProductServiceTest {
     private ProductService productService;
 
 
+    // 더미데이터 2개가 존재한다.
     @Test
     void 상품을_저장한다() {
         ProductRequest productRequest = new ProductRequest("image", "name", 1000);
@@ -70,7 +73,7 @@ class ProductServiceTest {
 
     @Test
     void 존재하지_않는_상품정보를_수정하면_예외가_발생한다() {
-        Long productId = 1L;
+        Long productId = 0L;
         ProductRequest updateRequest = new ProductRequest("expectedUrl", "expected", 1000);
 
 
@@ -88,7 +91,7 @@ class ProductServiceTest {
 
     @Test
     void 존재하지_않는_상품을_삭제하면_예외가_발생한다() {
-        Long productId = 1L;
+        Long productId = 0L;
 
         assertThatThrownBy(() -> productService.deleteById(productId))
                 .isInstanceOf(NoSuchElementException.class)

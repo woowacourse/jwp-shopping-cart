@@ -39,11 +39,11 @@ public class H2MemberDaoTest {
 
     @Test
     public void 전체_멤버를_조회한다() {
-        Member member1 = new Member("cyh6099@gmail.com", "qwer1234");
-        Member member2 = new Member("cyh6099@wooteco.com", "qwer1234");
-
-        memberDao.save(member1);
-        memberDao.save(member2);
+//        Member member1 = new Member("cyh6099@gmail.com", "qwer1234");
+//        Member member2 = new Member("cyh6099@wooteco.com", "qwer1234");
+//
+//        memberDao.save(member1);
+//        memberDao.save(member2);
 
         assertThat(memberDao.findAll()).hasSize(2);
     }
