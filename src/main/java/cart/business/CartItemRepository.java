@@ -10,7 +10,7 @@ public interface CartItemRepository {
 
     Integer save(CartItem cartItem);
 
-    CartItem remove(Integer cartItemId);
+    void remove(Integer cartItemId); // TODO : 삭제한 도메인 객체 반환
 
-    List<CartItem> findAllById(Integer memberId);
+    List<CartItem> findAllByMemberId(Integer memberId);
 }

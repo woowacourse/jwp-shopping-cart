@@ -10,11 +10,9 @@ import java.util.List;
 public class CartService {
 
     private final CartItemRepository cartItemRepository;
-    private final ProductRepository productRepository;
 
-    public CartService(CartItemRepository cartItemRepository, ProductRepository productRepository) {
+    public CartService(CartItemRepository cartItemRepository) {
         this.cartItemRepository = cartItemRepository;
-        this.productRepository = productRepository;
     }
 
     @Transactional
@@ -30,6 +28,6 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public List<CartItem> readAllCartItem(Integer memberId) {
-        return cartItemRepository.findAllById(memberId);
+        return cartItemRepository.findAllByMemberId(memberId);
     }
 }
