@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -31,17 +30,6 @@ class ProductDaoImplTest {
         productDao = new ProductDaoImpl(jdbcTemplate);
     }
 
-    @BeforeEach
-    void setting() {
-        jdbcTemplate.execute("DROP TABLE product IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE product("
-            + "id SERIAL, "
-            + "name VARCHAR(255), "
-            + "image_url VARCHAR(255), "
-            + "price INT "
-            + ")");
-    }
-
     @DisplayName("상품을 저장한다.")
     @Test
     void insert_product() {
@@ -49,10 +37,13 @@ class ProductDaoImplTest {
         Product product = new Product("연필", "이미지url", 1000);
 
         // when
-        Long result = productDao.insertProduct(product);
+        Long savedId = productDao.insertProduct(product);
+        Optional<Product> result  = productDao.findById(savedId);
 
         // then
-        assertThat(result).isEqualTo(1);
+        assertThat(result.get().getName()).isEqualTo(product.getName());
+        assertThat(result.get().getImageUrl()).isEqualTo(product.getImageUrl());
+        assertThat(result.get().getPrice()).isEqualTo(product.getPrice());
     }
 
     @DisplayName("상품 전체를 조회한다.")
@@ -84,9 +75,9 @@ class ProductDaoImplTest {
         Optional<Product> result = productDao.findById(product1Id);
 
         // then
-        assertThat(result.get().getName()).isEqualTo("연필");
-        assertThat(result.get().getImageUrl()).isEqualTo("이미지url");
-        assertThat(result.get().getPrice()).isEqualTo(1000);
+        assertThat(result.get().getName()).isEqualTo(product1.getName());
+        assertThat(result.get().getImageUrl()).isEqualTo(product1.getImageUrl());
+        assertThat(result.get().getPrice()).isEqualTo(product1.getPrice());
     }
 
     @DisplayName("상품의 ID를 통해 내용을 업데이트 한다.")
@@ -102,9 +93,9 @@ class ProductDaoImplTest {
         Optional<Product> result = productDao.findById(productId);
 
         // then
-        assertThat(result.get().getName()).isEqualTo("지우개");
-        assertThat(result.get().getImageUrl()).isEqualTo("이미지url");
-        assertThat(result.get().getPrice()).isEqualTo(2000);
+        assertThat(result.get().getName()).isEqualTo(updateProduct.getName());
+        assertThat(result.get().getImageUrl()).isEqualTo(updateProduct.getImageUrl());
+        assertThat(result.get().getPrice()).isEqualTo(updateProduct.getPrice());
     }
 
     @DisplayName("상품을 ID를 통해서 삭제한다.")
