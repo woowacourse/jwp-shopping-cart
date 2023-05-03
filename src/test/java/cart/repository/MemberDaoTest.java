@@ -1,6 +1,6 @@
 package cart.repository;
 
-import cart.entity.CustomerEntity;
+import cart.entity.MemberEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,26 +14,26 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-class CustomerDaoTest {
+class MemberDaoTest {
 
     @Autowired
     DataSource dataSource;
 
-    CustomerDao customerDao;
+    MemberDao memberDao;
 
     JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setting() {
         jdbcTemplate = new JdbcTemplate(dataSource);
-        customerDao = new CustomerDao(jdbcTemplate);
+        memberDao = new MemberDao(jdbcTemplate);
     }
 
     @DisplayName("현재 등록되어 있는 모든 유저의 정보를 가져온다")
     @Test
     void finaAll() {
         //given,when
-        List<CustomerEntity> customers = customerDao.findAll();
+        List<MemberEntity> customers = memberDao.findAll();
 
         //then
         assertThat(customers).hasSize(2);

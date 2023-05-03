@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.entity.CustomerEntity;
-import cart.repository.CustomerDao;
+import cart.entity.MemberEntity;
+import cart.repository.MemberDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,13 +11,13 @@ import java.util.List;
 public class CustomerService {
 
     @Autowired
-    private final CustomerDao customerDao;
+    private final MemberDao memberDao;
 
-    public CustomerService(final CustomerDao customerDao) {
-        this.customerDao = customerDao;
+    public CustomerService(final MemberDao memberDao) {
+        this.memberDao = memberDao;
     }
 
-    public List<CustomerEntity> findAll() {
-        return customerDao.findAll();
+    public List<MemberEntity> findAll() {
+        return memberDao.findAll();
     }
 }

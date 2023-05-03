@@ -1,11 +1,11 @@
 package cart.entity;
 
-public class CustomerEntity {
+public class MemberEntity {
     private final Integer id;
     private final String email;
     private final String password;
 
-    public CustomerEntity(final Integer id, final String email, final String password) {
+    public MemberEntity(final Integer id, final String email, final String password) {
         this.id = id;
         this.email = email;
         this.password = password;

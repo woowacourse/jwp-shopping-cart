@@ -1,6 +1,6 @@
 package cart.repository;
 
-import cart.entity.CustomerEntity;
+import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -8,21 +8,21 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class CustomerDao {
+public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public CustomerDao(final JdbcTemplate jdbcTemplate) {
+    public MemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CustomerEntity> findAll() {
-        final String sql = "select * from customer";
+    public List<MemberEntity> findAll() {
+        final String sql = "select * from member";
         return jdbcTemplate.query(sql, getCustomerMapper());
     }
 
-    private RowMapper<CustomerEntity> getCustomerMapper() {
-        return (rs, cn) -> new CustomerEntity(
+    private RowMapper<MemberEntity> getCustomerMapper() {
+        return (rs, cn) -> new MemberEntity(
                 rs.getInt("id"),
                 rs.getString("email"),
                 rs.getString("password"));
