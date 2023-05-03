@@ -5,6 +5,7 @@ import cart.product.dto.RequestProductDto;
 import cart.product.dto.ResponseProductDto;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,27 +26,27 @@ public class AdminController {
     }
     
     @GetMapping("/products")
-    @ResponseStatus(HttpStatus.OK)
-    public List<ResponseProductDto> display() {
-        return this.productCatalogService.display();
+    public ResponseEntity<List<ResponseProductDto>> display() {
+        final List<ResponseProductDto> items = this.productCatalogService.display();
+        return ResponseEntity.status(HttpStatus.OK).body(items);
     }
     
     @PostMapping("/products")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody final RequestProductDto requestProductDto) {
+    public ResponseEntity<Void> create(@RequestBody final RequestProductDto requestProductDto) {
         this.productCatalogService.create(requestProductDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     
     @PutMapping("/products/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseProductDto update(@PathVariable final long id,
+    public ResponseEntity<ResponseProductDto> update(@PathVariable final long id,
             @RequestBody final RequestProductDto requestProductDto) {
-        return this.productCatalogService.update(id, requestProductDto);
+        final ResponseProductDto updatedProduct = this.productCatalogService.update(id, requestProductDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(updatedProduct);
     }
     
     @DeleteMapping("/products/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable final long id) {
+    public ResponseEntity<Void> delete(@PathVariable final long id) {
         this.productCatalogService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
