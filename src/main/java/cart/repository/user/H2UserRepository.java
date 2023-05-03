@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public class H2UserRepository implements UserRepository {
 
     private final RowMapper<UserEntity> userEntityRowMapper = (rs, rowNum) -> new UserEntity(
-            new UserEntityId(rs.getLong("user_id")),
+            new UserEntityId(rs.getLong("member_id")),
             rs.getString("email"),
             rs.getString("password"));
 
@@ -25,7 +25,7 @@ public class H2UserRepository implements UserRepository {
     public H2UserRepository(final JdbcTemplate jdbcTemplate) {
         simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("member")
-                .usingGeneratedKeyColumns("user_id");
+                .usingGeneratedKeyColumns("member_id");
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -33,7 +33,7 @@ public class H2UserRepository implements UserRepository {
     public User save(final User user) {
         final UserEntity userEntity = UserEntity.from(user);
         final Map<String, Object> parameters = new HashMap<>(3);
-        parameters.put("user_id", userEntity.getUserId().getValue());
+        parameters.put("member_id", userEntity.getUserId().getValue());
         parameters.put("email", userEntity.getEmail());
         parameters.put("password", userEntity.getPassword());
         final long userId = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
@@ -49,7 +49,7 @@ public class H2UserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByEmail(final String email) {
-        final String sql = "SELECT user_id, email, password FROM MEMBER WHERE email=?";
+        final String sql = "SELECT member_id, email, password FROM MEMBER WHERE email=?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, userEntityRowMapper, email).toDomain());
         } catch (final Exception e) {
