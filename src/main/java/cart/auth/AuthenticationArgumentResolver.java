@@ -1,7 +1,7 @@
 package cart.auth;
 
-import cart.dao.MemberDao;
 import cart.entity.Member;
+import cart.service.MemberService;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import org.springframework.core.MethodParameter;
@@ -14,10 +14,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberDao memberDao;
+    private final MemberService memberService;
 
-    public AuthenticationArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public AuthenticationArgumentResolver(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @Override
@@ -64,8 +64,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
     private Member getMember(String[] emailAndName) {
         String email = emailAndName[0];
         String password = emailAndName[1];
-        Member member = memberDao.findByEmail(email)
-                .orElseThrow(AuthenticationException::new);
+        Member member = memberService.findMember(email);
         if (!member.matchingPassword(password)) {
             throw new AuthenticationException();
         }
