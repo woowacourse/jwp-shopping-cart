@@ -1,5 +1,7 @@
 package cart.vo;
 
+import static cart.vo.util.VoUtil.isInvalidLength;
+
 public class Name {
 
     private static final int NAME_LENGTH_LOWER_BOUND_EXCLUSIVE = 1;
@@ -17,13 +19,9 @@ public class Name {
     }
 
     private static void validateLength(String value) {
-        if (isInvalidLength(value)) {
+        if (isInvalidLength(value, NAME_LENGTH_LOWER_BOUND_EXCLUSIVE, NAME_LENGTH_UPPER_BOUND_EXCLUSIVE)) {
             throw new IllegalStateException("올바르지 않은 이름입니다.");
         }
-    }
-
-    private static boolean isInvalidLength(String value) {
-        return value.length() < NAME_LENGTH_LOWER_BOUND_EXCLUSIVE || NAME_LENGTH_UPPER_BOUND_EXCLUSIVE < value.length();
     }
 
     public String getValue() {
