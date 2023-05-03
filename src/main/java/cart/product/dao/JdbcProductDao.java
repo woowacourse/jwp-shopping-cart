@@ -32,12 +32,12 @@ public class JdbcProductDao implements ProductDao {
     public JdbcProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("product_list")
+                .withTableName("product")
                 .usingGeneratedKeyColumns("id");
     }
     
     public void update(final Product product) {
-        final String sql = "update product_list set name = ?, image = ?, price = ? where id = ?";
+        final String sql = "update product set name = ?, image = ?, price = ? where id = ?";
         jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setString(1, product.getName().getValue());
@@ -60,7 +60,7 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public Optional<Product> findByID(final long id) {
-        final String sql = "select * from product_list where id = ?";
+        final String sql = "select * from product where id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, productRowMapper, id));
         } catch (EmptyResultDataAccessException e) {
@@ -70,13 +70,13 @@ public class JdbcProductDao implements ProductDao {
     
     @Override
     public void deleteByID(final long id) {
-        final String sql = "delete from product_list where id = ?";
+        final String sql = "delete from product where id = ?";
         jdbcTemplate.update(sql, id);
     }
     
     @Override
     public List<Product> findAll() {
-        final String sql = "select * from product_list";
+        final String sql = "select * from product";
         return jdbcTemplate.query(sql, productRowMapper);
     }
 }
