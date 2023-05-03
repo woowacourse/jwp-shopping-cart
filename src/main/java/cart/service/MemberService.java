@@ -20,21 +20,20 @@ public class MemberService {
         MemberEntity memberEntity = memberDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 존재하지 않습니다."));
 
-        return new MemberResponse(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword(), memberEntity.getName());
+        return MemberResponse.from(memberEntity);
     }
 
     public MemberResponse findByEmailAndPassword(String email, String password) {
         MemberEntity memberEntity = memberDao.findByEmailAndPassword(email, password)
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 존재하지 않습니다."));
 
-        return new MemberResponse(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword(), memberEntity.getName());
+        return MemberResponse.from(memberEntity);
     }
 
     public List<MemberResponse> findAll() {
         return memberDao.findAll()
                 .stream()
-                .map(memberEntity -> new MemberResponse(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword(), memberEntity.getName()))
+                .map(MemberResponse::from)
                 .collect(Collectors.toList());
     }
-
 }
