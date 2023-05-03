@@ -54,8 +54,9 @@ public class MemberDao {
     }
 
     public Optional<Member> findByEmail(final String email) {
-        final String sql = "SELECT member.email, member.password, member.created_at, member.updated_at "
-            + "FROM member WHERE email = ?";
+        final String sql =
+            "SELECT member.id, member.email, member.password, member.created_at, member.updated_at "
+                + "FROM member WHERE email = ?";
         try {
             final Member member = jdbcTemplate.queryForObject(sql, rowMapper, email);
             return Optional.ofNullable(member);
@@ -65,8 +66,9 @@ public class MemberDao {
     }
 
     public List<Member> findAll() {
-        final String sql = "SELECT member.id, member.email, member.password, member.created_at, member.updated_at "
-            + "FROM member ORDER BY member.created_at";
+        final String sql =
+            "SELECT member.id, member.email, member.password, member.created_at, member.updated_at "
+                + "FROM member ORDER BY member.created_at";
         return jdbcTemplate.query(sql, rowMapper);
     }
 }

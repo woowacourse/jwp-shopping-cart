@@ -46,8 +46,8 @@ public class CartDao {
     }
 
     public List<Cart> findByMember(final Member member) {
-        final String sql = "SELECT cart.id AS id,"
-            + "       cart.created_at    AS created_at, "
+        final String sql = "SELECT cart.id            AS id,"
+            + "       cart.created_at    AS created_at,"
             + "       cart.updated_at    AS updated_at,"
             + "       product.id         AS product_id,"
             + "       product.name       AS product_name,"
@@ -55,10 +55,10 @@ public class CartDao {
             + "       product.price      AS product_price,"
             + "       product.created_at AS product_created_at,"
             + "       product.updated_at AS product_updated_at "
-            + "FROM cart,"
-            + "     member,"
-            + "     product "
-            + "WHERE member.id = ?;";
+            + "FROM cart"
+            + "         JOIN product on product.id = cart.product_id"
+            + "         JOIN member on member.id = cart.member_id "
+            + "WHERE cart.member_id = ?;";
         final RowMapper<Cart> rowMapper = makeRowMapper(
             member);
         return jdbcTemplate.query(sql, rowMapper, member.getId());
