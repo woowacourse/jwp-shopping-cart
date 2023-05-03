@@ -19,6 +19,11 @@ public class CartControllerAdvice {
         return ResponseEntity.badRequest().body(errorMessage);
     }
 
+    @ExceptionHandler({UserAuthentificationException.class})
+    public ResponseEntity<String> handleAuthentificationException(final UserAuthentificationException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
     @ExceptionHandler({Exception.class})
     public ResponseEntity<String> handleException(final Exception e) {
         return ResponseEntity.internalServerError().body("서버 내부 오류가 발생했습니다.");

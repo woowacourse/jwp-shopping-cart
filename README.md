@@ -1,19 +1,19 @@
 # jwp-shopping-cart
 
 ## 2단계 기능 요구사항
-- [ ] 사용자 기능 구현
+- [x] 사용자 기능 구현
   - [x] 사용자 정보(email, password)
-- [ ] 사용자 설정 페이지 연동
+- [x] 사용자 설정 페이지 연동
   - [x] /settings 로 접근 시 모든 사용자 정보 확인 및 선택 가능
-  - [ ] 사용자를 선택하면 이후 요청에 선택한 사용자의 인증정보 포함됨
-- [ ] 장바구니 기능 구현
-  - [ ] 장바구니에 상품 추가
-    - [ ] 상품목록 페이지(/) 에서 담기 버튼 클릭 시 장바구니에 추가
-  - [ ] 장바구니에 담긴 상품 제거
-  - [ ] 장바구니 목록 조회
-    - [ ] /cart 로 접근 시 장바구니 페이지 조회
-  - [ ] 사용자 정보는 요청 Header의 Authorization 필드를 사용해 인증 처리
-    - [ ] 인증 방식은 Basic 인증 사용
+  - [x] 사용자를 선택하면 이후 요청에 선택한 사용자의 인증정보 포함됨
+- [x] 장바구니 기능 구현
+  - [x] 장바구니에 상품 추가
+    - [x] 상품목록 페이지(/) 에서 담기 버튼 클릭 시 장바구니에 추가 ("/", post)
+  - [x] 장바구니에 담긴 상품 제거 ("/carts/{id}", delete)
+  - [x] 장바구니 목록 조회
+    - [x] /carts 로 접근 시 장바구니 페이지 조회 ("/carts", get)
+  - [x] 사용자 정보는 요청 Header의 Authorization 필드를 사용해 인증 처리
+    - [x] 인증 방식은 Basic 인증 사용
       ```
             Authorization: Basic ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
             type: Basic
@@ -27,7 +27,7 @@
 - [x] ModelAndView 학습
 - [x] 아무것도 반환하지 않을 때 200을 반환한 이유 / 어떤 값을 반환해야 하는지 학습
 - [x] Dao 에 제네릭 적용해보기
-- [x] update, delete 시 해당하는 id 가 없을 때 예외 핸들링
+- [x] update, delete 시 해당하는 productId 가 없을 때 예외 핸들링
 - [x] Service layer 테스트 추가
 - [x] 테스트 DB 분리
 - [x] 어플리케이션 초기 실행 시 상품 목록에 더미데이터 추가    
@@ -48,5 +48,5 @@
 - [x] 관리자 도구 페이지 상품 관리 CRUD API
   - [x] 생성(/admin/product POST)
   - [x] 조회(/admin)
-  - [x] 수정(/admin/product/{id} PUT)
-  - [x] 삭제(/admin/product/{id} DELETE)
+  - [x] 수정(/admin/product/{productId} PUT)
+  - [x] 삭제(/admin/product/{productId} DELETE)

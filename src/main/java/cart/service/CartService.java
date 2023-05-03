@@ -3,10 +3,12 @@ package cart.service;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.dto.UserResponse;
-import cart.persistence.dao.Dao;
+import cart.persistence.dao.JdbcCartDao;
+import cart.persistence.dao.JdbcProductDao;
+import cart.persistence.dao.JdbcUserDao;
+import cart.persistence.entity.CartEntity;
 import cart.persistence.entity.ProductEntity;
 import cart.persistence.entity.UserEntity;
-import org.apache.catalina.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +19,14 @@ import java.util.stream.Collectors;
 public class CartService {
 
     public static final int EXPECTED_SIZE = 1;
-    private final Dao<ProductEntity> productDao;
-    private final Dao<UserEntity> userDao;
+    private final JdbcProductDao productDao;
+    private final JdbcUserDao userDao;
+    private final JdbcCartDao cartDao;
 
-    public CartService(final Dao<ProductEntity> productDao, final Dao<UserEntity> userDao) {
+    public CartService(JdbcProductDao productDao, JdbcUserDao userDao, JdbcCartDao cartDao) {
         this.productDao = productDao;
         this.userDao = userDao;
+        this.cartDao = cartDao;
     }
 
     public long create(final ProductRequest productRequest) {
@@ -44,14 +48,12 @@ public class CartService {
         if (productDao.update(productEntity) != EXPECTED_SIZE) {
             throw new EmptyResultDataAccessException(EXPECTED_SIZE);
         }
-        ;
     }
 
     public void delete(final long id) {
         if (productDao.deleteById(id) != EXPECTED_SIZE) {
             throw new EmptyResultDataAccessException(EXPECTED_SIZE);
         }
-        ;
     }
 
     public List<UserResponse> readAllUsers() {
@@ -59,5 +61,26 @@ public class CartService {
         return products.stream()
                 .map(UserResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    public List<ProductResponse> readCart(final String email) {
+        final List<ProductEntity> products = productDao.findProductsByUser(email);
+        return products.stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    public long addCartItem(final String email, final Long id) {
+        final Long userId = userDao.findUserIdByEmail(email);
+        final CartEntity cartEntity = new CartEntity(userId, id);
+
+        return cartDao.save(cartEntity);
+    }
+
+    public void deleteCartItem(final String email, final Long productId) {
+        final Long userId = userDao.findUserIdByEmail(email);
+        if (cartDao.deleteByUserAndProductId(userId, productId) != EXPECTED_SIZE) {
+            throw new EmptyResultDataAccessException(EXPECTED_SIZE);
+        }
     }
 }

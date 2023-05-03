@@ -59,4 +59,20 @@ public class JdbcProductDao implements Dao<ProductEntity> {
         final String sql = "DELETE FROM product WHERE product_id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    public List<ProductEntity> findProductsByUser(final String email) {
+        final String sql = "SELECT p.product_id, p.name, p.price, p.image_url\n" +
+                "FROM product AS p\n" +
+                "JOIN cart AS c ON p.product_id = c.product_id\n" +
+                "WHERE c.user_id = (\n" +
+                "    SELECT user_id\n" +
+                "    FROM user_info\n" +
+                "    WHERE email = ?)";
+        return jdbcTemplate.query(sql, actorRowMapper, email);
+    }
+
+    public Long findProductIdByName(String name) {
+        final String sql = "SELECT product_id FROM user_info WHERE name = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, name);
+    }
 }
