@@ -42,8 +42,9 @@
 - [x] Product CRUD
 - [ ] User
     - [x] 유저 전체 조회
-    - [ ] 유저 장바구니 상품 추가
-    - [ ] 유저의 장바구니 전체 조회
+    - [ ] 유저 장바구니 상품 추가 (Authentication)
+    - [ ] 유저 장바구니 상품 제거 (Authentication)
+    - [ ] 유저의 장바구니 전체 조회 (Authentication)
 
 ### Service
 
@@ -59,18 +60,32 @@
 
 ### API 명세
 
+#### 상품
+
 - [x] 상품 Create
-    - POST "/product"
+    - POST "/products"
     - Request: name, price, image
     - Response: 200 OK
 - [x] 상품 Read
-    - GET "/products"
-    - Response: products{ {id, name, image, price}, {..}}
+    - GET "/products/all"
+    - Response: products{{id, name, image, price}, {..}}
 - [x] 상품 Update
-    - PUT "/product"
-    - Request: id, name, price, image
+    - PUT "/products/{id}"
+    - Request: name, price, image
     - Response: 200 OK
 - [x] 상품 Delete
-    - DELETE "/product/{id}"
+    - DELETE "/products/{id}"
     - Response: 200 OK
 
+#### 유저 장바구니
+
+- [ ] 유저 장바구니 상품 추가 (Authentication)
+    - POST "/user/cart"
+    - Request: productId
+    - Response: 200 OK
+- [ ] 유저 장바구니 상품 제거 (Authentication)
+    - DELETE "/user/cart/{id}"
+    - Response: 200 OK
+- [ ] 유저의 장바구니 전체 조회 (Authentication)
+    - GET "/user/cart/all"
+    - Response: products{{id, name, image, price}, {...}}
