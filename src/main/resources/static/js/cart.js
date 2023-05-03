@@ -12,7 +12,7 @@ const addCartItem = (productId) => {
         "productId": productId
     };
     axios.request({
-        url: '/cart/cartItems',
+        url: '/cart/cart-items',
         method: 'post',
         headers: {
             'Authorization': `Basic ${credentials}`
