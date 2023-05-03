@@ -27,5 +27,6 @@ DELETE
 FROM users;
 
 INSERT INTO users(email, password)
-VALUES ('hjaehyun25@gmail.com', '비밀번호 입니당'),
+VALUES ('nuyh99@velog', 'chicken123'),
+       ('hjaehyun25@gmail.com', '비밀번호 입니당'),
        ('연어@잠온다.com', 'password');
