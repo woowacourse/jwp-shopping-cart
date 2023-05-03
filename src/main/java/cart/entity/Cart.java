@@ -53,4 +53,8 @@ public class Cart {
 
     }
 
+    public boolean canUserWithThisEmailBeDeleted(Email email) {
+        return this.email.equals(email);
+    }
+
 }
