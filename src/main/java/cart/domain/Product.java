@@ -40,6 +40,10 @@ public class Product {
         return image;
     }
 
+    public boolean isIdNull() {
+        return this.productId == null;
+    }
+
     private void validate(Long productId) {
         if (productId != null && productId < 0) {
             throw new BusinessIllegalArgumentException(ErrorCode.NOT_VALID_ID);
