@@ -20,6 +20,9 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor {
     @Override
     public AuthDto extract(final HttpServletRequest request) {
         final String header = request.getHeader(AUTHORIZATION);
+        if (header == null) {
+            throw new IllegalArgumentException("사용자 인증이 필요합니다");
+        }
         final String token = header.replace(BASIC_TYPE, EMPTY).trim();
 
         final AuthDto authDto = decode(token);
