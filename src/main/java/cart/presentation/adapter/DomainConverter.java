@@ -6,7 +6,7 @@ import cart.business.domain.product.ProductName;
 import cart.business.domain.product.ProductPrice;
 import cart.presentation.dto.ProductDto;
 
-public class ProductConverter {
+public class DomainConverter {
 
     public static Product toProductWithoutId(ProductDto productDto) {
         return new Product(
