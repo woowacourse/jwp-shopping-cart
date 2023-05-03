@@ -1,5 +1,10 @@
 package cart.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class ItemEntity {
 
     private final Long id;
@@ -7,33 +12,10 @@ public class ItemEntity {
     private final String imageUrl;
     private final int price;
 
-    public ItemEntity(final Long id, final String name, final String imageUrl, final int price) {
-        this.id = id;
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.price = price;
-    }
-
     public ItemEntity(final String name, final String imageUrl, final int price) {
         this.id = null;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public int getPrice() {
-        return price;
     }
 }
