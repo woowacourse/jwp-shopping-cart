@@ -46,7 +46,7 @@ form.addEventListener('submit', (event) => {
 
 const createProduct = (product) => {
     try {
-        validImage(product.image)
+        validImage(product.imageUrl)
         axios.request({
             url: '/products',
             method: "POST",

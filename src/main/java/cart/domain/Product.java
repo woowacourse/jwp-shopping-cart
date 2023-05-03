@@ -21,9 +21,9 @@ public class Product {
         this.price = price;
     }
 
-    private void validate(String image, int price) {
+    private void validate(String imageUrl, int price) {
         validatePrice(price);
-        validateImageUrl(image);
+        validateImageUrl(imageUrl);
     }
 
     private void validatePrice(int price) {
@@ -32,9 +32,9 @@ public class Product {
         }
     }
 
-    private void validateImageUrl(String image) {
+    private void validateImageUrl(String imageUrl) {
         Pattern urlPattern = Pattern.compile(URL_REGEX);
-        Matcher matcher = urlPattern.matcher(image);
+        Matcher matcher = urlPattern.matcher(imageUrl);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("유효하지 않은 Url 입니다.");
         }
