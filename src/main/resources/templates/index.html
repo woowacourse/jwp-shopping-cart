@@ -29,7 +29,7 @@
             <div class="product-info">
                 <div class="product-desc">
                     <p th:text="${product.name}" class="product-name"></p> <!-- 상품 이름 -->
-                    <p th:text="${product.price}" class="product-price"></p> <!-- 상품 가격 -->
+성                    <p th:text="|${product.price}원|" class="product-price"></p> <!-- 상품 가격 -->
                 </div>
                 <button type="submit" class="product-btn" th:onclick="addCartItem([[${product.id}]])">담기</button>
             </div>
