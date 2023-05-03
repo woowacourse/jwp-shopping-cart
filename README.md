@@ -47,3 +47,13 @@
     - [x] productId로 사용자의 장바구니에 상품을 추가할 수 있다.
     - [x] productId로 사용자의 장바구니에서 상품을 삭제할 수 있다.
     - [x] 장바구니에 담긴 모든 상품을 조회할 수 있다.
+
+### 발생 예외 정리
+- product 패키지
+  - Product
+    - 이름이 1~30자가 아닌 경우 -> IllegalArgumentException
+    - 이미지 URL이 1~1000자가 아닌 경우 -> IllegalArgumentException
+    - 가격이 영~십억이 아닌 경우 -> IllegalArgumentException
+  - ProductService
+    - getProductById, update, delete에서 productId가 유효하지 않은 경우 -> NoSuchElementException
+  - 

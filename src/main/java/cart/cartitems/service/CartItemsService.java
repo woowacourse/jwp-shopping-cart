@@ -35,7 +35,7 @@ public class CartItemsService {
         final List<Long> itemsIds = cartItemDao.findProductIdsByMemberId(getIdOfMember(authInfo));
 
         return itemsIds.stream()
-                       .map(productService::getById)
+                       .map(productService::getProductById)
                        .collect(Collectors.toUnmodifiableList());
     }
 

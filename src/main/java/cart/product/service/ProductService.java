@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,41 +30,42 @@ public class ProductService {
                          .collect(Collectors.toUnmodifiableList());
     }
 
-    public void validateProductExist(long id) {
-        final Optional<Product> optionalProduct = productDao.findById(id);
-
-        optionalProduct.orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다"));
-    }
-
-    public ProductDto getById(long id) {
-        final Optional<Product> optionalProduct = productDao.findById(id);
-
-        final Product foundProduct = optionalProduct.orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다"));
+    public ProductDto getProductById(long productId) {
+        final Product foundProduct = findProductOrThrow(productId);
 
         return DtoMapper.toProductDto(foundProduct);
     }
 
     public long register(ProductAddRequest productAddRequest) {
-        final Product inserted = productDao.save(DtoMapper.toValidProduct(productAddRequest));
+        final Product validProduct = DtoMapper.toValidProduct(productAddRequest);
+        final Product inserted = productDao.save(validProduct);
+
         return inserted.getId();
     }
 
     public long update(ProductUpdateRequest productUpdateRequest) {
+        findProductOrThrow(productUpdateRequest.getId());
+
         final Product product = DtoMapper.toValidProduct(productUpdateRequest);
-        final int affectedRowsCount = productDao.update(product);
-        validateAffectedRowSingle(affectedRowsCount, "존재하지 않는 상품 id입니다");
+        productDao.update(product);
+
         return product.getId();
     }
 
-    public long delete(long id) {
-        final int affectedRowsCount = productDao.deleteById(id);
-        validateAffectedRowSingle(affectedRowsCount, "존재하지 않는 상품 id입니다");
-        return id;
+    public long delete(long productId) {
+        findProductOrThrow(productId);
+
+        productDao.deleteById(productId);
+
+        return productId;
     }
 
-    private void validateAffectedRowSingle(final int affectedRowsCount, String message) {
-        if (affectedRowsCount != 1) {
-            throw new NoSuchElementException(message);
-        }
+    public void validateProductExist(long productId) {
+        productDao.findById(productId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다"));
+    }
+
+    private Product findProductOrThrow(long productId) {
+        return productDao.findById(productId)
+                         .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다"));
     }
 }
