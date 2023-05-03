@@ -6,10 +6,11 @@ import static cart.ProductFixture.PRODUCT_ENTITY3;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.ProductFixture;
-import cart.entity.Product;
 import cart.repository.JdbcMemberRepository;
 import cart.repository.JdbcShoppingCartRepository;
+import cart.service.dto.CartResponse;
 import cart.service.dto.MemberInfo;
+import cart.service.dto.ProductResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,21 +31,27 @@ class ShoppingCartServiceTest {
     @Test
     @DisplayName("memberInfo로 장바구니에 담은 product들 조회")
     public void findAllTest() {
-        final List<Product> allProduct = shoppingCartService.findAllProduct(MEMBER_INFO);
+        final ProductResponse productResponse = new ProductResponse(ProductFixture.PRODUCT_ENTITY1);
+
+        final List<CartResponse> allProduct = shoppingCartService.findAllProduct(MEMBER_INFO);
 
         assertThat(allProduct)
-                .containsExactly(ProductFixture.PRODUCT_ENTITY1);
+                .extracting(CartResponse::getProductResponse)
+                .containsExactly(productResponse);
     }
 
     @Test
     @Transactional
     @DisplayName("memberInfo와 productid로 장바구니에 값을 추가하는 기능 테스트")
     public void addCartTest() {
+        final ProductResponse productResponse = new ProductResponse(PRODUCT_ENTITY3);
+
         shoppingCartService.addCartProduct(MEMBER_INFO, PRODUCT_ENTITY3.getId());
 
-        final List<Product> allProduct = shoppingCartService.findAllProduct(MEMBER_INFO);
+        final List<CartResponse> allProduct = shoppingCartService.findAllProduct(MEMBER_INFO);
         assertThat(allProduct)
-                .contains(PRODUCT_ENTITY3);
+                .extracting(CartResponse::getProductResponse)
+                .contains(productResponse);
     }
 
     @Test
@@ -53,7 +60,7 @@ class ShoppingCartServiceTest {
     public void removeProduct() {
         shoppingCartService.removeProduct(TEST_CART_RECORD.getId());
 
-        final List<Product> allProduct = shoppingCartService.findAllProduct(MEMBER_INFO);
-        assertThat(allProduct).hasSize(0);
+        final List<CartResponse> cartResponses = shoppingCartService.findAllProduct(MEMBER_INFO);
+        assertThat(cartResponses).hasSize(0);
     }
 }

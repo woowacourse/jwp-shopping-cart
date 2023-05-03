@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JdbcProductRepository implements ProductRepository {
 
-    static final RowMapper<Product> PRODUCT_ROW_MAPPER = (rs, rowNum) -> {
+    private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (rs, rowNum) -> {
         final long id = rs.getLong("id");
         final String name = rs.getString("name");
         final String imageUrl = rs.getString("image_url");

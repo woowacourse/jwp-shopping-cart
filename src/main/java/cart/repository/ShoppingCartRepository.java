@@ -1,6 +1,6 @@
 package cart.repository;
 
-import cart.entity.Product;
+import cart.service.dto.CartResponse;
 import java.util.List;
 
 public interface ShoppingCartRepository {
@@ -9,5 +9,5 @@ public interface ShoppingCartRepository {
 
     void removeProduct(long cartId);
 
-    List<Product> findAllProduct(long memberId);
+    List<CartResponse> findAllProduct(long memberId);
 }

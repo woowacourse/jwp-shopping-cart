@@ -46,13 +46,14 @@
 
             let productElement = '';
             // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
+            console.log(cartItems)
             cartItems.forEach(cartItem => {
                 productElement += `
                         <div class="cart-item">
                           <div class="cart-item-info">
-                            <img src=${cartItem.imageUrl}/> <!-- 상품 이미지 -->
-                            <div class="cart-item-name">${cartItem.name}</div> <!-- 상품 이름 -->
-                            <div class="cart-item-price">${cartItem.price}</div> <!-- 상품 가격 -->
+                            <img src=${cartItem.productResponse.imageUrl}/> <!-- 상품 이미지 -->
+                            <div class="cart-item-name">${cartItem.productResponse.name}</div> <!-- 상품 이름 -->
+                            <div class="cart-item-price">${cartItem.productResponse.price}</div> <!-- 상품 가격 -->
                             <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
                           </div>
                         </div>

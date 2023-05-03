@@ -1,9 +1,9 @@
 package cart.service;
 
-import cart.entity.Product;
 import cart.exception.MemberNotFoundException;
 import cart.repository.MemberRepository;
 import cart.repository.ShoppingCartRepository;
+import cart.service.dto.CartResponse;
 import cart.service.dto.MemberInfo;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class ShoppingCartService {
         this.shoppingCartRepository = shoppingCartRepository;
     }
 
-    public List<Product> findAllProduct(final MemberInfo memberInfo) {
+    public List<CartResponse> findAllProduct(final MemberInfo memberInfo) {
         final long memberId = memberRepository.findId(memberInfo)
                 .orElseThrow(MemberNotFoundException::new);
         return shoppingCartRepository.findAllProduct(memberId);
