@@ -1,38 +1,41 @@
 package cart.web.controller;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import cart.domain.TestFixture;
 import cart.domain.service.ProductService;
+import cart.domain.service.UserService;
 import cart.domain.service.dto.ProductDto;
-import java.util.List;
+import cart.domain.service.dto.UserDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 @WebMvcTest(ViewController.class)
 class ViewControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @MockBean
     private ProductService productService;
 
+    @MockBean
+    private UserService userService;
+
     @DisplayName("루트 경로 요청시, index.html을 반환한다.")
     @Test
     void loadIndexPage() throws Exception {
-        Mockito.when(productService.getAllProducts())
+        when(productService.getAllProducts())
                 .thenReturn(List.of(new ProductDto(TestFixture.CHICKEN), new ProductDto(TestFixture.PIZZA)));
 
         mockMvc.perform(get("/"))
@@ -56,6 +59,23 @@ class ViewControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("products", hasSize(2)))
                 .andExpect(view().name("admin"))
+                .andDo(print());
+    }
+
+    @DisplayName("/settings 요청시, settings.html을 반환한다.")
+    @Test
+    void loadSettingsPage() throws Exception {
+        List<UserDto> expectedUsers = List.of(
+                new UserDto(TestFixture.ZUNY),
+                new UserDto(TestFixture.ADMIN)
+        );
+        when(userService.getAllUsers())
+                .thenReturn(expectedUsers);
+
+        mockMvc.perform(get("/settings"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("users", hasSize(2)))
+                .andExpect(view().name("settings"))
                 .andDo(print());
     }
 }
