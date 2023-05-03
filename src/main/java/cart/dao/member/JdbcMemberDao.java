@@ -1,11 +1,13 @@
 package cart.dao.member;
 
 import cart.entity.MemberEntity;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcMemberDao implements MemberDao {
@@ -31,9 +33,13 @@ public class JdbcMemberDao implements MemberDao {
     }
 
     @Override
-    public MemberEntity findByEmail(final String email) {
+    public Optional<MemberEntity> findByEmail(final String email) {
         String sql = "select * from member where email = ?";
-        return jdbcTemplate.queryForObject(sql, mapRow(), email);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, mapRow(), email));
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     private RowMapper<MemberEntity> mapRow() {

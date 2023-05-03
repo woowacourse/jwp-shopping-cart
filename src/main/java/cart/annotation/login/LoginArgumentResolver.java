@@ -12,6 +12,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
+import java.util.Optional;
 
 public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -56,9 +57,16 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
             String memberEmail = loginInfo[0];
             String memberPassword = loginInfo[1];
 
-            MemberEntity member = memberDao.findByEmail(memberEmail);
-            if (member.isSamePassword(memberPassword)) {
-                return member;
+            Optional<MemberEntity> member = memberDao.findByEmail(memberEmail);
+
+            if (member.isEmpty()) {
+                throw new LoginException("아이디가 일치하지 않습니다. 다시 시도해주세요.");
+            }
+
+            MemberEntity retrievedMember = member.get();
+
+            if (retrievedMember.isSamePassword(memberPassword)) {
+                return retrievedMember;
             }
             throw new LoginException("패스워드가 일치하지 않습니다. 다시 시도해주세요.");
         }
