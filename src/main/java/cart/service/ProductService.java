@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.dao.CartDao;
 import cart.dao.ProductDao;
 import cart.dto.ProductDto;
 import cart.entity.ProductEntity;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductDao productDao;
+    private final CartDao cartDao;
 
     public List<ProductResponse> findAll() {
         final List<ProductEntity> result = productDao.findAll();
@@ -40,6 +42,8 @@ public class ProductService {
 
     public void deleteProduct(final long id) {
         findBy(id);
+
+        cartDao.deleteByProductId(id);
 
         productDao.delete(id);
     }

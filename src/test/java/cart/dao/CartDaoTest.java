@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,5 +51,17 @@ class CartDaoTest {
         cartDao.insert(memberId, 2L);
 
         assertThat(cartDao.findByMemberId(memberId).size()).isEqualTo(2);
+    }
+
+    @Test
+    void 상품의_ID로_저장된_데이터들을_모두_지운다() {
+        final long productId = 2L;
+
+        cartDao.deleteByProductId(productId);
+
+        assertAll(
+                () -> assertThat(cartDao.findByMemberId(1L).size()).isEqualTo(1),
+                () -> assertThat(cartDao.findByMemberId(2L).size()).isEqualTo(0)
+        );
     }
 }
