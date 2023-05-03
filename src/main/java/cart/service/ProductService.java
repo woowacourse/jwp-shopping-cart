@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.product.Product;
+import cart.exception.notfound.ProductNotFoundException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,7 @@ public class ProductService {
 
     private void checkExistProductId(Long id) {
         if (productDao.findById(id).isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 상품 id 입니다.");
+            throw new ProductNotFoundException();
         }
     }
 

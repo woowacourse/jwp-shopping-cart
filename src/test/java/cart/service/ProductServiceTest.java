@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.domain.product.Product;
+import cart.exception.notfound.ProductNotFoundException;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,8 +53,7 @@ class ProductServiceTest {
     @DisplayName("상품을 갱신시 id가 유효하지 않으면 예외 발생")
     void updateInvalidId() {
         assertThatThrownBy(() -> productService.update((long) 9999, "애쉬", 1000, null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 상품 id 입니다.");
+                .isInstanceOf(ProductNotFoundException.class);
     }
 
     @Test

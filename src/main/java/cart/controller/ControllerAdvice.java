@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.dto.ErrorResponse;
 import cart.exception.auth.UnauthenticatedException;
+import cart.exception.notfound.NotFoundException;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,14 @@ public class ControllerAdvice {
         logger.info("[UnauthenticatedException] ", exception);
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    private ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exception) {
+        logger.info("[NotFoundException] ", exception);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(exception.getMessage()));
     }
 
