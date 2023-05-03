@@ -3,6 +3,7 @@ package cart.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -54,11 +55,11 @@ public class ProductJdbcDao implements ProductDao {
     @Override
     public Optional<ProductEntity> findById(final int id) {
         final String sql = "SELECT * FROM PRODUCT WHERE id = ?";
-        ProductEntity productEntity = jdbcTemplate.queryForObject(sql, getProductEntityRowMapper(), id);
-        if (productEntity == null) {
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, getProductEntityRowMapper(), id));
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
-        return Optional.of(productEntity);
     }
 
     @Override
