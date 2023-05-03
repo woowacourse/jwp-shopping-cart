@@ -50,17 +50,11 @@ public class ProductService {
                 updateProductRequest.getImage()
         );
         final int updatedRows = productDao.update(id, product);
-        validateAffectedRowsCount(updatedRows);
-    }
-
-    private void validateAffectedRowsCount(final int affectedRows) {
-        if (affectedRows < MINIMUM_AFFECTED_ROWS) {
-            throw new IllegalArgumentException("접근하려는 데이터가 존재하지 않습니다.");
-        }
+        productDao.validateAffectedRowsCount(updatedRows);
     }
 
     public void delete(final Long id) {
         final int affectedRows = productDao.delete(id);
-        validateAffectedRowsCount(affectedRows);
+        productDao.validateAffectedRowsCount(affectedRows);
     }
 }

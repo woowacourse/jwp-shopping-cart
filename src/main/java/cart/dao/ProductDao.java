@@ -17,6 +17,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProductDao {
 
+    private static final int MINIMUM_AFFECTED_ROWS = 1;
+
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
@@ -76,5 +78,11 @@ public class ProductDao {
     public ProductEntity findById(final Long id) {
         final String sql = "SELECT * from product where id = ?";
         return jdbcTemplate.queryForObject(sql, getProductRowMapper(), id);
+    }
+
+    public void validateAffectedRowsCount(final int affectedRows) {
+        if (affectedRows < MINIMUM_AFFECTED_ROWS) {
+            throw new IllegalArgumentException("접근하려는 데이터가 존재하지 않습니다.");
+        }
     }
 }
