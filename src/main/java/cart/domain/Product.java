@@ -28,7 +28,7 @@ public class Product {
 
     private void validatePrice(int price) {
         if (price < 100 || price > 10_000_000) {
-            throw new IllegalArgumentException("가격은 최소 100, 최대 10000000원 입니다.");
+            throw new IllegalArgumentException("가격은 최소 100, 최대 10,000,000원 입니다.");
         }
     }
 
