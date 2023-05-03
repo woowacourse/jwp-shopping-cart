@@ -29,7 +29,6 @@ public class AdminControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
     }
 
-
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorResponse> handleNoSuchElementException(final NoSuchElementException exception) {
         final String errorMessage = exception.getMessage();

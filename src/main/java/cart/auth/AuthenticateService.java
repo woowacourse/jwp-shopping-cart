@@ -1,5 +1,6 @@
 package cart.auth;
 
+import cart.auth.excpetion.AuthorizeException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -18,7 +19,7 @@ public class AuthenticateService {
         final String header = request.getHeader(AUTHORIZATION);
 
         if (ObjectUtils.isEmpty(header)) {
-            return AuthInfo.nonAuthorize();
+            throw new AuthorizeException("인증 정보가 없습니다.");
         }
 
         return decode(header);
@@ -32,7 +33,7 @@ public class AuthenticateService {
             return createAuthInfo(decodeHeaderValue);
         }
 
-        return AuthInfo.nonAuthorize();
+        throw new AuthorizeException("인증 정보가 다릅니다.");
     }
 
     private static AuthInfo createAuthInfo(String decodeHeaderValue) {
