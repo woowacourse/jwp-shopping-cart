@@ -7,6 +7,7 @@
 - 웹페이지
     - 상품 목록 `/`
     - 관리자 `/admin`
+    - 설정 `/settings`
 - API
     - 추가 `POST /products`
     - 수정 `PUT /products/{id}`

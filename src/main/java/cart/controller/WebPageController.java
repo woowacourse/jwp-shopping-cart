@@ -8,17 +8,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import cart.controller.dto.ProductResponse;
-import cart.dao.ProductEntity;
+import cart.dao.UserDao;
+import cart.dao.UserEntity;
 import cart.domain.Product;
+import cart.domain.User;
 import cart.repository.ProductRepository;
 
 @Controller
 public class WebPageController {
 
     private final ProductRepository productRepository;
+    private final UserDao userDao;
 
-    public WebPageController(final ProductRepository productRepository) {
+    public WebPageController(final ProductRepository productRepository, final UserDao userDao) {
         this.productRepository = productRepository;
+        this.userDao = userDao;
     }
 
     @GetMapping("/")
@@ -33,6 +37,20 @@ public class WebPageController {
         return "admin";
     }
 
+    @GetMapping("/settings")
+    public String renderSettingsPage(final Model model) {
+        List<UserEntity> userEntities = userDao.selectAll();
+        List<User> users = userEntities.stream()
+                .map(userEntity -> new User(
+                        userEntity.getEmail(),
+                        userEntity.getPassword())
+                )
+                .collect(Collectors.toList());
+
+        model.addAttribute("members", mapUsers(users));
+        return "settings";
+    }
+
     private List<ProductResponse> mapProducts(List<Product> products) {
         return products.stream()
                 .map(product -> new ProductResponse(
@@ -40,6 +58,14 @@ public class WebPageController {
                         product.getName(),
                         product.getImage(),
                         product.getPrice())
+                ).collect(Collectors.toList());
+    }
+
+    private List<UserResponse> mapUsers(List<User> users) {
+        return users.stream()
+                .map(user -> new UserResponse(
+                        user.getEmail(),
+                        user.getPassword())
                 ).collect(Collectors.toList());
     }
 }
