@@ -2,7 +2,7 @@ package cart.repository;
 
 import static cart.repository.mapper.EntityRowMapper.productRowMapper;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.entity.ProductEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;

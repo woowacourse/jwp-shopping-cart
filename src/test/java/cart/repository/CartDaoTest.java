@@ -2,8 +2,13 @@ package cart.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.Member;
-import cart.domain.Product;
+import cart.domain.member.Email;
+import cart.domain.member.Member;
+import cart.domain.member.Password;
+import cart.domain.product.ImageUrl;
+import cart.domain.product.Price;
+import cart.domain.product.Product;
+import cart.domain.product.ProductName;
 import cart.dto.cart.CartProductDto;
 import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
@@ -17,6 +22,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
 class CartDaoTest {
+    private static final Member MEMBER = new Member(new Email("glenfiddich@naver.com"), new Password("123456"));
+    private static final Product PRODUCT1 = new Product(new ProductName("글렌피딕 12년"), new Price(10_000), ImageUrl.from("https://image.com/image.png"));
+    private static final Product PRODUCT2 = new Product(new ProductName("글렌리벳 12년"), new Price(20_000), ImageUrl.from("https://image.com/image2.png"));
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -36,9 +44,9 @@ class CartDaoTest {
     @DisplayName("장바구니에 사용자의 ID로 상품의 ID가 저장되어야 한다.")
     void save_success() {
         // given
-        MemberEntity member = memberDao.save(new Member("glenfiddich@naver.com", "123456"));
-        ProductEntity product1 = productDao.save(new Product("글렌피딕 12년", 10_000, "image1.jpg"));
-        ProductEntity product2 = productDao.save(new Product("글렌리벳 12년", 20_000, "image2.jpg"));
+        MemberEntity member = memberDao.save(MEMBER);
+        ProductEntity product1 = productDao.save(PRODUCT1);
+        ProductEntity product2 = productDao.save(PRODUCT2);
 
         // when
         cartDao.save(member.getId(), product1.getId());
@@ -54,9 +62,9 @@ class CartDaoTest {
     @DisplayName("장바구니에 사용자의 ID와 상품의 ID로 상품이 제거되어야 한다.")
     void delete_success() {
         // given
-        MemberEntity member = memberDao.save(new Member("glenfiddich@naver.com", "123456"));
-        ProductEntity product1 = productDao.save(new Product("글렌피딕 12년", 10_000, "image1.jpg"));
-        ProductEntity product2 = productDao.save(new Product("글렌리벳 12년", 20_000, "image2.jpg"));
+        MemberEntity member = memberDao.save(MEMBER);
+        ProductEntity product1 = productDao.save(PRODUCT1);
+        ProductEntity product2 = productDao.save(PRODUCT2);
         cartDao.save(member.getId(), product1.getId());
         cartDao.save(member.getId(), product2.getId());
 

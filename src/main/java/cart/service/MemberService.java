@@ -2,7 +2,9 @@ package cart.service;
 
 import static java.util.stream.Collectors.toList;
 
-import cart.domain.Member;
+import cart.domain.member.Email;
+import cart.domain.member.Member;
+import cart.domain.member.Password;
 import cart.dto.member.MemberDto;
 import cart.exception.DuplicateEmailException;
 import cart.repository.MemberDao;
@@ -22,7 +24,7 @@ public class MemberService {
     @Transactional
     public void signupMember(String email, String password) {
         validateEmail(email);
-        memberDao.save(new Member(email, password));
+        memberDao.save(new Member(new Email(email), new Password(password)));
     }
 
     private void validateEmail(String email) {

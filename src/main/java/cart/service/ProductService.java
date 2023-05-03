@@ -2,7 +2,10 @@ package cart.service;
 
 import static java.util.stream.Collectors.toList;
 
-import cart.domain.Product;
+import cart.domain.product.ImageUrl;
+import cart.domain.product.Price;
+import cart.domain.product.Product;
+import cart.domain.product.ProductName;
 import cart.dto.product.ProductDto;
 import cart.entity.ProductEntity;
 import cart.exception.ProductConstraintException;
@@ -26,11 +29,7 @@ public class ProductService {
 
     @Transactional
     public ProductDto createProduct(String name, int price, String imageUrl) {
-        Product product = Product.Builder.builder()
-                .name(name)
-                .price(price)
-                .imageUrl(imageUrl)
-                .build();
+        Product product = new Product(new ProductName(name), new Price(price), ImageUrl.from(imageUrl));
         ProductEntity productEntity = productDao.save(product);
         return ProductDto.fromEntity(productEntity);
     }

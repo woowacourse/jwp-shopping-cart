@@ -2,7 +2,7 @@ package cart.repository;
 
 import static cart.repository.mapper.EntityRowMapper.memberRowMapper;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 import cart.entity.MemberEntity;
 import java.util.List;
 import java.util.Optional;
