@@ -25,7 +25,7 @@ public class CartApiController {
     public CartApiController(final CartService cartService) {
         this.cartService = cartService;
     }
-    
+
     @PostMapping("/{productId}")
     @ResponseBody
     public ResponseEntity<Void> addProduct(
@@ -36,7 +36,7 @@ public class CartApiController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/items")
+    @GetMapping
     @ResponseBody
     public ResponseEntity<CartProductsResponse> getCartProducts(@Login Member member) {
         List<Product> products = cartService.findCartProducts(member);
