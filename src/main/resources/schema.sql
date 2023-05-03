@@ -19,6 +19,6 @@ CREATE TABLE cart
 (
     id         BIGINT NOT NULL AUTO_INCREMENT,
     product_id BIGINT NOT NULL,
-    user_id    BIGINT NOT NULL,
+    member_id  BIGINT NOT NULL,
     PRIMARY KEY (id)
 );

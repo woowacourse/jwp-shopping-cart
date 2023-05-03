@@ -31,7 +31,7 @@ class MemberControllerTest {
     @Test
     void membersTest() throws Exception {
         given(memberDao.findAll())
-                .willReturn(List.of(new Member("user1@email.com", "1234")));
+                .willReturn(List.of(new Member(1, "user1@email.com", "1234")));
 
         final MvcResult mvcResult = mockMvc.perform(get("/settings")
                         .contentType(MediaType.TEXT_HTML))

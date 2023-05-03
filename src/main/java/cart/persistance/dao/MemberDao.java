@@ -11,6 +11,7 @@ import java.util.List;
 public class MemberDao {
 
     public static final RowMapper<Member> mapper = (rs, rowNum) -> new Member(
+            rs.getLong("id"),
             rs.getString("email"),
             rs.getString("password"));
 
@@ -27,6 +28,11 @@ public class MemberDao {
 
     public Member findByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
-        return jdbcTemplate.queryForObject(sql, mapper, email);
+        final List<Member> result = jdbcTemplate.query(sql, mapper, email);
+
+        if (result.isEmpty()) {
+            return null;
+        }
+        return result.get(0);
     }
 }

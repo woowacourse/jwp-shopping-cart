@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.dao.ProductDao;
 import cart.domain.product.Product;
+import cart.persistance.dao.ProductDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,5 +29,10 @@ public final class ViewController {
         final List<Product> products = productDao.findAll();
         model.addAttribute("products", products);
         return "admin";
+    }
+
+    @GetMapping("/cart")
+    public String cartProductList() {
+        return "cart";
     }
 }
