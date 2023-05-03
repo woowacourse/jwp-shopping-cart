@@ -63,7 +63,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private void logError(final Map<String, Object> body, final String message) {
-        logger.error(body + ", " + message);
+        logger.error(body);
+        logger.error(message);
     }
 
     private Map<String, Object> makeBody(final HttpStatus httpStatus, final String errorMessage) {
