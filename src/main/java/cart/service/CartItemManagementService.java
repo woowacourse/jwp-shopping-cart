@@ -4,6 +4,7 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.dto.CartAdditionDto;
 import cart.dto.CartItemDto;
+import cart.dto.ProductDto;
 import cart.entity.CartItemEntity;
 import cart.entity.ProductEntity;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,13 @@ public class CartItemManagementService {
 
     public long save(final CartAdditionDto cartAdditionDto) {
         return cartItemDao.insert(CartAdditionDto.toEntity(cartAdditionDto));
+    }
+
+    public void deleteById(final Long id){
+        int deletedRowCount = cartItemDao.deleteById(id);
+        if (deletedRowCount == 0) {
+            throw new IllegalArgumentException("장바구니에 없는 상품입니다.");
+        }
     }
 
 }

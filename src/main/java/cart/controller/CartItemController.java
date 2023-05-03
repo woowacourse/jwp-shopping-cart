@@ -9,7 +9,9 @@ import cart.dto.request.CartItemCreationRequest;
 import cart.dto.response.CartItemResponse;
 import cart.service.CartItemManagementService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,5 +56,14 @@ public class CartItemController {
 
         List<CartItemResponse> response = CartItemResponse.from(cartItemManagementService.findAllByMemberId(memberDto.getId()));
         return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/{cartItemId}")
+    public ResponseEntity<Void> deleteCartItems(HttpServletRequest request, @PathVariable Long cartItemId) {
+        MemberAuthentication memberAuthentication = authenticationExtractor.extract(request);
+        MemberDto memberDto = authenticationService.login(memberAuthentication);
+
+        cartItemManagementService.deleteById(cartItemId);
+        return ResponseEntity.noContent().build();
     }
 }

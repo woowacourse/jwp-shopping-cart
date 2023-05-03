@@ -38,4 +38,10 @@ public class JdbcCartItemDao implements CartItemDao {
             throw new IllegalArgumentException("존재하지 않는 상품입니다.");
         }
     }
+
+    @Override
+    public int deleteById(final long id) {
+        final String sql = "DELETE FROM cart_item WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
 }
