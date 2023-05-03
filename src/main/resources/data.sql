@@ -6,13 +6,17 @@ CREATE TABLE PRODUCT (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE Member (
+CREATE TABLE MEMBER (
     email       VARCHAR(255)   NOT NULL,
     password    VARCHAR(255)  NOT NULL,
     PRIMARY KEY (email)
 );
 
-insert into member(email, password) values('naver.com', '1234');
-insert into member(email, password) values('google.com', '1234');
-insert into member(email, password) values('nanan.com', '1234');
-insert into member(email, password) values('nakakver.com', '1234');
+insert into PRODUCT(`name`, image, price) values ('item1', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5c6VkPCiNvUmomb-iGTLqP76uu9FOsJWRpg&usqp=CAU', 1000);
+insert into PRODUCT(`name`, image, price) values ('item2', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5c6VkPCiNvUmomb-iGTLqP76uu9FOsJWRpg&usqp=CAU', 2000);
+insert into PRODUCT(`name`, image, price) values ('item3', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5c6VkPCiNvUmomb-iGTLqP76uu9FOsJWRpg&usqp=CAU', 3000);
+
+insert into MEMBER(email, password) values('naver.com', '1234');
+insert into MEMBER(email, password) values('google.com', '1234');
+insert into MEMBER(email, password) values('nanan.com', '1234');
+insert into MEMBER(email, password) values('nakakver.com', '1234');
