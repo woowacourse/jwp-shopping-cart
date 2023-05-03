@@ -33,4 +33,10 @@ public class JdbcMemberDao implements MemberDao {
         final String sql = "INSERT INTO member(email, password) VALUES (?, ?)";
         return jdbcTemplate.update(sql, memberEntity.getEmail(), memberEntity.getPassword());
     }
+
+    @Override
+    public MemberEntity selectByEmailAndPassword(final MemberEntity memberEntity) {
+        final String sql = "SELECT FROM member WHERE email = ? AND password = ?";
+        return jdbcTemplate.queryForObject(sql, memberEntityRowMapper);
+    }
 }

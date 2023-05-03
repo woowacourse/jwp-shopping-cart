@@ -13,7 +13,7 @@ public interface ProductDao {
 
     long insert(@Valid final ProductEntity productEntity);
 
-    int update(@Valid final ProductEntity productEntity);
+    int updateById(@Valid final ProductEntity productEntity);
 
-    int delete(@Valid final ProductEntity productEntity);
+    int deleteById(@Valid final ProductEntity productEntity);
 }
