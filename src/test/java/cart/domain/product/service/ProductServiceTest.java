@@ -15,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-class CartServiceTest {
+class ProductServiceTest {
 
     @Autowired
-    private CartService cartService;
+    private ProductService productService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -30,7 +30,7 @@ class CartServiceTest {
         productRepository.save(pizza);
         productRepository.save(chicken);
 
-        List<ProductDto> allProducts = cartService.getAllProducts();
+        List<ProductDto> allProducts = productService.getAllProducts();
 
         assertThat(allProducts).hasSize(2);
         assertThat(allProducts).extractingResultOf("getName")

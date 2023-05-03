@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 @Service
-public class CartService {
+public class ProductService {
     private final ProductRepository productRepository;
 
-    public CartService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
