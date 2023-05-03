@@ -1,7 +1,7 @@
 package cart.service.cart;
 
+import cart.common.auth.AuthMember;
 import cart.config.ServiceTestConfig;
-import cart.config.auth.AuthMember;
 import cart.domain.cart.CartId;
 import cart.domain.member.Member;
 import cart.domain.member.MemberId;

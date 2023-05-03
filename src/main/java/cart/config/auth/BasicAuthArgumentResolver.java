@@ -1,5 +1,7 @@
 package cart.config.auth;
 
+import cart.common.auth.AuthMember;
+import cart.common.auth.AuthService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;

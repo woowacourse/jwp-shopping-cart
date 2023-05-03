@@ -1,6 +1,6 @@
 package cart.controller.api;
 
-import cart.config.auth.AuthMember;
+import cart.common.auth.AuthMember;
 import cart.config.auth.BasicAuth;
 import cart.domain.cart.CartId;
 import cart.domain.product.ProductId;

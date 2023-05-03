@@ -1,4 +1,4 @@
-package cart.config.auth;
+package cart.common.auth;
 
 import cart.domain.member.MemberId;
 

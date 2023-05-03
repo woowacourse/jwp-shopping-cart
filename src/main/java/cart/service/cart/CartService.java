@@ -1,6 +1,6 @@
 package cart.service.cart;
 
-import cart.config.auth.AuthMember;
+import cart.common.auth.AuthMember;
 import cart.domain.cart.CartId;
 import cart.domain.product.ProductId;
 import cart.service.response.ProductResponse;
