@@ -1,6 +1,6 @@
 package cart.admin.controller;
 
-import cart.catalog.service.ProductListService;
+import cart.catalog.service.ProductCatalogService;
 import cart.product.dto.RequestProductDto;
 import cart.product.dto.ResponseProductDto;
 import java.util.List;
@@ -19,34 +19,34 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin")
 public class AdminController {
     
-    private final ProductListService productListService;
+    private final ProductCatalogService productCatalogService;
     
-    public AdminController(final ProductListService productListService) {
-        this.productListService = productListService;
+    public AdminController(final ProductCatalogService productCatalogService) {
+        this.productCatalogService = productCatalogService;
     }
     
     @GetMapping("/products")
     @ResponseStatus(HttpStatus.OK)
     public List<ResponseProductDto> display() {
-        return this.productListService.display();
+        return this.productCatalogService.display();
     }
     
     @PostMapping("/products")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody final RequestProductDto requestProductDto) {
-        this.productListService.create(requestProductDto);
+        this.productCatalogService.create(requestProductDto);
     }
     
     @PutMapping("/products/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseProductDto update(@PathVariable final long id,
             @RequestBody final RequestProductDto requestProductDto) {
-        return this.productListService.update(id, requestProductDto);
+        return this.productCatalogService.update(id, requestProductDto);
     }
     
     @DeleteMapping("/products/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable final long id) {
-        this.productListService.delete(id);
+        this.productCatalogService.delete(id);
     }
 }
