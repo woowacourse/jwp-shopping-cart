@@ -27,7 +27,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 @WebMvcTest(CartController.class)
 class CartControllerUnitTest {
@@ -51,6 +50,7 @@ class CartControllerUnitTest {
     @BeforeEach
     void setUp() {
         given(customerService.findIdByEmail(anyString())).willReturn(1L);
+        given(customerService.isAbleToLogin(anyString(), anyString())).willReturn(true);
     }
 
     @DisplayName("장바구니에 상품을 추가할 수 있다.")
@@ -78,7 +78,7 @@ class CartControllerUnitTest {
 
         // when, then
         mockMvc.perform(get("/cart/products")
-                .header("Authorization", "Basic " + encodedString))
+                        .header("Authorization", "Basic " + encodedString))
                 .andExpect(status().isOk())
                 .andExpect(content().string(responseString));
     }
@@ -89,7 +89,7 @@ class CartControllerUnitTest {
         // when, then
         willDoNothing().given(cartService).deleteById(anyLong());
         mockMvc.perform(delete("/cart/1")
-                        .header("Authorization", "Basic "+ encodedString))
+                        .header("Authorization", "Basic " + encodedString))
                 .andExpect(status().isNoContent());
     }
 }

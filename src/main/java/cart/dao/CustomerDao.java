@@ -53,4 +53,13 @@ public class CustomerDao {
                     .password(rs.getString("password"))
                     .build());
     }
+
+    public boolean isEmailAndPasswordExist(final String email, final String password) {
+        String sql = "SELECT EXISTS(SELECT id FROM customer WHERE email = ? AND password = ?) AS customer_id_exist";
+        try {
+            return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, new Object[]{email, password}, Boolean.class));
+        } catch (EmptyResultDataAccessException exception) {
+            return false;
+        }
+    }
 }

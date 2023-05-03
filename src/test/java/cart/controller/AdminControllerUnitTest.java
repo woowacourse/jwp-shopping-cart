@@ -1,6 +1,7 @@
 package cart.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -18,6 +19,7 @@ import cart.service.dto.ProductResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,19 +57,28 @@ public class AdminControllerUnitTest {
     private ObjectMapper objectMapper;
     @MockBean
     private ProductService productService;
+    private static String encodedString;
+
+    static {
+        String testValue = "email:password";
+        byte[] encodedBytes = Base64.encodeBase64(testValue.getBytes());
+        encodedString = new String(encodedBytes);
+    }
 
     @BeforeEach
     void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
+        given(customerService.isAbleToLogin(anyString(), anyString())).willReturn(true);
     }
 
     @DisplayName("전체 상품 조회 API 호출 시 전체 상품이 반환된다.")
     @Test
     void showAllProducts() throws Exception {
         given(productService.findAllProducts()).willReturn(List.of(cuteSeonghaDoll, cuteBaronDoll));
-        mockMvc.perform(get("/admin"))
+        mockMvc.perform(get("/admin")
+                        .header("Authorization", "Basic " + encodedString))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin"));
     }
@@ -82,6 +93,7 @@ public class AdminControllerUnitTest {
         // when then
         mockMvc.perform(post("/admin/product")
                         .accept(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", "Basic " + encodedString)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestString))
                 .andExpect(status().isCreated())
@@ -95,6 +107,7 @@ public class AdminControllerUnitTest {
         String requestString = objectMapper.writeValueAsString(cuteSeonghaDoll);
 
         mockMvc.perform(put("/admin/product/1")
+                        .header("Authorization", "Basic " + encodedString)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestString))
@@ -105,7 +118,8 @@ public class AdminControllerUnitTest {
     @Test
     void deleteProduct() throws Exception {
         // when, then
-        mockMvc.perform(delete("/admin/product/1"))
+        mockMvc.perform(delete("/admin/product/1")
+                        .header("Authorization", "Basic " + encodedString))
                 .andExpect(status().isNoContent());
     }
 
@@ -122,6 +136,7 @@ public class AdminControllerUnitTest {
 
         // when then
         mockMvc.perform(post("/admin/product")
+                        .header("Authorization", "Basic " + encodedString)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -143,6 +158,7 @@ public class AdminControllerUnitTest {
 
         // when then
         mockMvc.perform(post("/admin/product")
+                        .header("Authorization", "Basic " + encodedString)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .characterEncoding(StandardCharsets.UTF_8)

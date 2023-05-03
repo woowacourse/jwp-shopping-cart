@@ -18,13 +18,18 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
+@Sql("/customer_initialize.sql")
 class AdminControllerIntegrationTest {
 
     @LocalServerPort
     int port;
+
+    private final String email = "baron@gmail.com";
+    private final String password = "password";
 
     @BeforeEach
     void setUp() {
@@ -36,6 +41,7 @@ class AdminControllerIntegrationTest {
     void showAllProducts() {
         given().log().all()
                 .when()
+                .auth().preemptive().basic(email, password)
                 .get("/admin")
                 .then()
                 .log().all()
@@ -47,7 +53,9 @@ class AdminControllerIntegrationTest {
     void registerProduct() {
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDollFromController",
+                .auth().preemptive().basic(email, password)
+                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
+                        "CuteSeonghaDollFromController",
                         25000))
                 .when()
                 .post("/admin/product")
@@ -62,6 +70,7 @@ class AdminControllerIntegrationTest {
         String baseUrl = "/admin/product/";
         //given
         String redirectURI = given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
                 .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
                         "CuteSeonghaDoll", 25000))
                 .when()
@@ -72,7 +81,9 @@ class AdminControllerIntegrationTest {
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/70891072?v=4", "CuteBaronDollFromController", 2500))
+                .auth().preemptive().basic(email, password)
+                .body(new ProductRequest("https://avatars.githubusercontent.com/u/70891072?v=4",
+                        "CuteBaronDollFromController", 2500))
                 .when()
                 .put("/admin/product/" + savedId)
                 .then()
@@ -86,6 +97,7 @@ class AdminControllerIntegrationTest {
         String baseUrl = "/admin/product/";
         //given
         String redirectURI = given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
                 .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
                         "CuteSeonghaDoll", 25000))
                 .when()
@@ -95,6 +107,7 @@ class AdminControllerIntegrationTest {
         long savedId = Long.parseLong(redirectURI.replace(baseUrl, ""));
 
         given().log().all()
+                .auth().preemptive().basic(email, password)
                 .when()
                 .delete("/admin/product/" + savedId)
                 .then()
@@ -109,6 +122,7 @@ class AdminControllerIntegrationTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
                 .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
                         price))
                 .when()
@@ -131,6 +145,7 @@ class AdminControllerIntegrationTest {
         String name = "dskjgfdsvesvurevhjdsbvehsbvhjesbvhjesbvfhvsdhvhdsvhfdshv";
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
                 .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", name,
                         10000))
                 .when()
@@ -153,6 +168,7 @@ class AdminControllerIntegrationTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
                 .body(new ProductRequest(imgUrl, "cuteSeongHa", 10000))
                 .when()
                 .post("/admin/product")
@@ -174,6 +190,7 @@ class AdminControllerIntegrationTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
                 .body(new ProductRequest("tmpImg", name, 2000))
                 .when()
                 .post("/admin/product")

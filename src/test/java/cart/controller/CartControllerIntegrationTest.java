@@ -80,6 +80,7 @@ class CartControllerIntegrationTest {
         long savedId = Long.parseLong(redirectURI.replace(baseUrl, ""));
 
         given().log().all()
+                .auth().preemptive().basic(email, pwd)
                 .when()
                 .delete(baseUrl + savedId)
                 .then()

@@ -60,4 +60,8 @@ public class CustomerService {
                 .collect(Collectors.toList());
     }
 
+    public boolean isAbleToLogin(final String email, final String password) {
+        return customerDao.isEmailAndPasswordExist(email, password);
+    }
+
 }
