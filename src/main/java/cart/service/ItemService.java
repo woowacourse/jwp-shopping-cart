@@ -3,7 +3,7 @@ package cart.service;
 import cart.controller.dto.ItemRequest;
 import cart.controller.dto.ItemResponse;
 import cart.dao.ItemDao;
-import cart.dao.dto.ItemDto;
+import cart.dao.entity.ItemEntity;
 import cart.exception.DataBaseSearchException;
 import cart.exception.ItemNotFoundException;
 import cart.domain.Item;
@@ -30,10 +30,10 @@ public class ItemService {
         Item item = new Item(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
         Long savedId = itemDao.insert(item);
 
-        ItemDto itemDto = itemDao.findById(savedId)
+        ItemEntity itemEntity = itemDao.findById(savedId)
                 .orElseThrow(() -> new DataBaseSearchException(DB_ERROR_MESSAGE));
 
-        return ItemResponse.from(itemDto);
+        return ItemResponse.from(itemEntity);
     }
 
     public List<ItemResponse> findAll() {
@@ -50,9 +50,9 @@ public class ItemService {
         Item item = new Item(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
         itemDao.update(id, item);
 
-        ItemDto updatedItemDto = itemDao.findById(id)
+        ItemEntity updatedItemEntity = itemDao.findById(id)
                 .orElseThrow(() -> new DataBaseSearchException(DB_ERROR_MESSAGE));
-        return ItemResponse.from(updatedItemDto);
+        return ItemResponse.from(updatedItemEntity);
     }
 
     @Transactional

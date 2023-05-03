@@ -1,6 +1,6 @@
 package cart.controller.dto;
 
-import cart.dao.dto.ItemDto;
+import cart.dao.entity.ItemEntity;
 
 public class ItemResponse {
 
@@ -16,8 +16,8 @@ public class ItemResponse {
         this.price = price;
     }
 
-    public static ItemResponse from(ItemDto itemDto) {
-        return new ItemResponse(itemDto.getId(), itemDto.getName(), itemDto.getImageUrl(), itemDto.getPrice());
+    public static ItemResponse from(ItemEntity itemEntity) {
+        return new ItemResponse(itemEntity.getId(), itemEntity.getName(), itemEntity.getImageUrl(), itemEntity.getPrice());
     }
 
     public Long getId() {

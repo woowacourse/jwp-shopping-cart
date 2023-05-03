@@ -3,7 +3,7 @@ package cart.service;
 import cart.controller.dto.CartResponse;
 import cart.controller.dto.ItemResponse;
 import cart.dao.CartDao;
-import cart.dao.dto.ItemDto;
+import cart.dao.entity.ItemEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -20,9 +20,9 @@ public class CartService {
     }
 
     public CartResponse findAllByMemberId(Long memberId) {
-        List<ItemDto> itemDtos = cartDao.findAllByMemberId(memberId);
+        List<ItemEntity> itemEntities = cartDao.findAllByMemberId(memberId);
 
-        List<ItemResponse> itemResponses = itemDtos.stream()
+        List<ItemResponse> itemResponses = itemEntities.stream()
                 .map(ItemResponse::from)
                 .collect(Collectors.toList());
         return new CartResponse(memberId, itemResponses);

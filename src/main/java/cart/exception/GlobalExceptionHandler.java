@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.exception;
 
 import cart.controller.dto.ExceptionResponse;
 import cart.exception.DataBaseSearchException;

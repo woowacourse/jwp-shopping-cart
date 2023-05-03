@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dao.dto.MemberDto;
+import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -16,14 +16,14 @@ public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<MemberDto> memberRowMapper = (resultSet, rowNum) -> {
-        MemberDto memberDto = new MemberDto(
+    private final RowMapper<MemberEntity> memberRowMapper = (resultSet, rowNum) -> {
+        MemberEntity memberEntity = new MemberEntity(
                 resultSet.getLong("member_id"),
                 resultSet.getString("email"),
                 resultSet.getString("password"),
                 resultSet.getString("name")
         );
-        return memberDto;
+        return memberEntity;
     };
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
@@ -46,7 +46,7 @@ public class MemberDao {
         return keyHolder.getKey().longValue();
     }
 
-    public Optional<MemberDto> findById(Long id) {
+    public Optional<MemberEntity> findById(Long id) {
         String sql = "SELECT member_id, email, password, name FROM MEMBER WHERE member_id = ?";
 
         return jdbcTemplate.query(sql, memberRowMapper, id)
@@ -54,7 +54,7 @@ public class MemberDao {
                 .findAny();
     }
 
-    public Optional<MemberDto> findByEmailAndPassword(String email, String password) {
+    public Optional<MemberEntity> findByEmailAndPassword(String email, String password) {
         String sql = "SELECT member_id, email, password, name FROM MEMBER WHERE email = ? and password = ?";
 
         return jdbcTemplate.query(sql, memberRowMapper, email, password)
@@ -62,7 +62,7 @@ public class MemberDao {
                 .findAny();
     }
 
-    public List<MemberDto> findAll() {
+    public List<MemberEntity> findAll() {
         String sql = "SELECT member_id, email, password, name FROM MEMBER";
 
         return jdbcTemplate.query(sql, memberRowMapper);

@@ -1,12 +1,12 @@
-package cart.dao.dto;
+package cart.dao.entity;
 
-public class CartDto {
+public class CartEntity {
 
     private final Long id;
     private final Long memberId;
     private final Long itemId;
 
-    public CartDto(Long id, Long memberId, Long itemId) {
+    public CartEntity(Long id, Long memberId, Long itemId) {
         this.id = id;
         this.memberId = memberId;
         this.itemId = itemId;

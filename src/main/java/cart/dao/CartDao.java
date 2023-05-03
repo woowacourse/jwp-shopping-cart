@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.dao.dto.CartDto;
-import cart.dao.dto.ItemDto;
+import cart.dao.entity.CartEntity;
+import cart.dao.entity.ItemEntity;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
@@ -16,23 +16,23 @@ public class CartDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<ItemDto> itemRowMapper = (resultSet, rowNum) -> {
-        ItemDto itemDto = new ItemDto(
+    private final RowMapper<ItemEntity> itemRowMapper = (resultSet, rowNum) -> {
+        ItemEntity itemEntity = new ItemEntity(
                 resultSet.getLong("item_id"),
                 resultSet.getString("name"),
                 resultSet.getString("image_url"),
                 resultSet.getInt("price")
         );
-        return itemDto;
+        return itemEntity;
     };
 
-    private final RowMapper<CartDto> cartRowMapper = (resultSet, rowNum) -> {
-        CartDto cartDto = new CartDto(
+    private final RowMapper<CartEntity> cartRowMapper = (resultSet, rowNum) -> {
+        CartEntity cartEntity = new CartEntity(
                 resultSet.getLong("cart_id"),
                 resultSet.getLong("member_id"),
                 resultSet.getLong("item_id")
         );
-        return cartDto;
+        return cartEntity;
     };
 
     public CartDao(JdbcTemplate jdbcTemplate) {
@@ -54,7 +54,7 @@ public class CartDao {
         return keyHolder.getKey().longValue();
     }
 
-    public Optional<CartDto> findByMemberIdAndItemId(Long memberId, Long itemId) {
+    public Optional<CartEntity> findByMemberIdAndItemId(Long memberId, Long itemId) {
         String sql = "SELECT cart_id, member_id, item_id FROM CART WHERE member_id = ? and item_id = ?";
 
         return jdbcTemplate.query(sql, cartRowMapper, memberId, itemId)
@@ -62,7 +62,7 @@ public class CartDao {
                 .findAny();
     }
 
-    public List<ItemDto> findAllByMemberId(Long memberId) {
+    public List<ItemEntity> findAllByMemberId(Long memberId) {
         String sql = "SELECT ITEM.item_id, name, image_url, price "
                 + "FROM CART JOIN ITEM "
                 + "ON CART.item_id = ITEM.item_id "

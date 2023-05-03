@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dao.dto.ItemDto;
+import cart.dao.entity.ItemEntity;
 import cart.domain.Item;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -16,14 +16,14 @@ public class ItemDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<ItemDto> actorRowMapper = (resultSet, rowNum) -> {
-        ItemDto itemDto = new ItemDto(
+    private final RowMapper<ItemEntity> actorRowMapper = (resultSet, rowNum) -> {
+        ItemEntity itemEntity = new ItemEntity(
                 resultSet.getLong("item_id"),
                 resultSet.getString("name"),
                 resultSet.getString("image_url"),
                 resultSet.getInt("price")
         );
-        return itemDto;
+        return itemEntity;
     };
 
     public ItemDao(JdbcTemplate jdbcTemplate) {
@@ -46,7 +46,7 @@ public class ItemDao {
         return keyHolder.getKey().longValue();
     }
 
-    public Optional<ItemDto> findById(Long id) {
+    public Optional<ItemEntity> findById(Long id) {
         String sql = "SELECT item_id, name, image_url, price FROM ITEM WHERE item_id = ?";
 
         return jdbcTemplate.query(sql, actorRowMapper, id)
@@ -54,7 +54,7 @@ public class ItemDao {
                 .findAny();
     }
 
-    public List<ItemDto> findAll() {
+    public List<ItemEntity> findAll() {
         String sql = "SELECT item_id, name, image_url, price FROM ITEM";
 
         return jdbcTemplate.query(sql, actorRowMapper);
