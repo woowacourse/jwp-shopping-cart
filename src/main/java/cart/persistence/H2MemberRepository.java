@@ -1,6 +1,6 @@
 package cart.persistence;
 
-import cart.business.MemberRepository;
+import cart.business.repository.MemberRepository;
 import cart.business.domain.member.Member;
 import cart.business.domain.member.MemberEmail;
 import cart.business.domain.member.MemberPassword;

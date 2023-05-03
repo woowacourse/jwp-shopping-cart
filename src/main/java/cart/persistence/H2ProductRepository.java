@@ -1,6 +1,6 @@
 package cart.persistence;
 
-import cart.business.ProductRepository;
+import cart.business.repository.ProductRepository;
 import cart.business.domain.product.Product;
 import cart.business.domain.product.ProductImage;
 import cart.business.domain.product.ProductName;

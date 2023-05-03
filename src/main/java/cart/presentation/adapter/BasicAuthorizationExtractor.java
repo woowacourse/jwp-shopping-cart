@@ -1,4 +1,4 @@
-package cart.presentation;
+package cart.presentation.adapter;
 
 import cart.presentation.dto.AuthInfo;
 import org.apache.tomcat.util.codec.binary.Base64;

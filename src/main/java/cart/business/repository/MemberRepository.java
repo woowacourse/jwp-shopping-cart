@@ -1,4 +1,4 @@
-package cart.business;
+package cart.business.repository;
 
 import cart.business.domain.member.Member;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package cart.presentation;
+package cart.presentation.adapter;
 
 import cart.business.domain.product.Product;
 import cart.business.domain.product.ProductImage;

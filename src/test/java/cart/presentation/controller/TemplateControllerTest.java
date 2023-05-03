@@ -1,7 +1,8 @@
-package cart.presentation;
+package cart.presentation.controller;
 
-import cart.business.MemberService;
-import cart.business.ProductService;
+import cart.business.service.MemberService;
+import cart.business.service.ProductService;
+import cart.presentation.controller.TemplateController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

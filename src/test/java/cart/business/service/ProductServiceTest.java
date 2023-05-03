@@ -1,9 +1,10 @@
-package cart.business;
+package cart.business.service;
 
 import cart.business.domain.product.Product;
 import cart.business.domain.product.ProductImage;
 import cart.business.domain.product.ProductName;
 import cart.business.domain.product.ProductPrice;
+import cart.business.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

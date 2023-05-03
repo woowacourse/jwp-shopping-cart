@@ -1,7 +1,8 @@
-package cart.presentation;
+package cart.presentation.controller;
 
-import cart.business.ProductService;
+import cart.business.service.ProductService;
 import cart.business.domain.product.Product;
+import cart.presentation.controller.ProductController;
 import cart.presentation.dto.ProductDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;

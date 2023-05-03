@@ -1,6 +1,6 @@
 package cart.persistence;
 
-import cart.business.CartItemRepository;
+import cart.business.repository.CartItemRepository;
 import cart.business.domain.cart.CartItem;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

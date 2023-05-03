@@ -1,7 +1,8 @@
-package cart.presentation;
+package cart.presentation.controller;
 
 
-import cart.business.ProductService;
+import cart.business.service.ProductService;
+import cart.presentation.adapter.ProductConverter;
 import cart.presentation.dto.ProductDto;
 import cart.presentation.dto.ProductIdDto;
 import org.springframework.http.ResponseEntity;
