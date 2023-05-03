@@ -32,9 +32,8 @@ public class CartDao {
     }
 
     public List<ProductEntity> selectAllProductByMemberId(Long memberId) {
-        String sql = "SELECT * FROM (SELECT CART.* FROM CART INNER JOIN MEMBER ON CART.member_id = MEMBER.member_id) AS CM " +
-                "INNER JOIN PRODUCT ON CM.product_id = PRODUCT.product_id " +
-                "WHERE CM.member_id = ?";
+        String sql = "SELECT PRODUCT.* FROM (SELECT CART.product_id FROM CART WHERE member_id = ?) AS CP "
+                + "INNER JOIN PRODUCT ON CP.product_id = PRODUCT.product_id ";
         return jdbcTemplate.query(sql, productEntityRowMapper(), memberId);
     }
 

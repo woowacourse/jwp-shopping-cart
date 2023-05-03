@@ -23,7 +23,7 @@
 <br>
 
 ### ✅ 장바구니 페이지 연동
-- [ ] `/cart` url로 접속했을 때, 장바구니 페이지로 접속하도록 연동한다.
+- [ ] `/view/cart` url로 접속했을 때, 장바구니 페이지로 접속하도록 연동한다.
 - [ ] `cart.html`에 조회된 정보 표시
 
 ---
@@ -90,7 +90,7 @@
 
 ## 🎯 2-3. 장바구니 API 구현
 ### ✅장바구니 목록 조회 API
-  - [ ] GET `/carts` uri 맵핑
+  - [x] GET `/cart` uri 맵핑
     - 조회될 상품 목록의 상품 정보
       - 상품 이미지
       - 상품 이름
@@ -99,12 +99,12 @@
 <br>
 
 ### ✅장바구니 담기 API
-- [ ] POST  `/carts/{productId}` uri 맵핑 
+- [x] POST  `/cart/{productId}` uri 맵핑 
 
 <br>
 
 ### ✅장바구니 상품 삭제 API 
-- [ ] DELETE `carts/{productId}` uri 맵핑
+- [ ] DELETE `cart/{productId}` uri 맵핑
 
 ---
 

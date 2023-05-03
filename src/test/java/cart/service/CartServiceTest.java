@@ -3,8 +3,7 @@ package cart.service;
 
 import static cart.fixture.MemberFixtures.INSERT_MEMBER_ENTITY;
 import static cart.fixture.MemberFixtures.MEMBER_AUTH_REQUEST;
-import static cart.fixture.ProductFixtures.DUMMY_SEONGHA_ID;
-import static cart.fixture.ProductFixtures.INSERT_PRODUCT_ENTITY;
+import static cart.fixture.ProductFixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -14,7 +13,7 @@ import java.util.List;
 
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.dto.ProductResponse;
+import cart.dto.CartResponse;
 import cart.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,12 +63,12 @@ public class CartServiceTest {
 
         // when
         cartService.saveProduct(MEMBER_AUTH_REQUEST, insertedProductId);
-        List<ProductResponse> allProductByMemberInfo = cartService.findAllProductByMemberInfo(MEMBER_AUTH_REQUEST);
+        List<CartResponse> allProductByMemberInfo = cartService.findAllProductByMemberInfo(MEMBER_AUTH_REQUEST);
 
         // then
         assertAll(
                 () -> assertThat(allProductByMemberInfo).hasSize(1),
-                () -> assertThat(allProductByMemberInfo.get(0).getId()).isEqualTo(insertedProductId)
+                () -> assertThat(allProductByMemberInfo.get(0).getName()).isEqualTo(DUMMY_SEONGHA_NAME)
         );
     }
 }

@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
+import cart.dto.CartResponse;
 import cart.dto.MemberAuthRequest;
-import cart.dto.ProductResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
@@ -42,14 +42,15 @@ public class CartService {
         }
     }
 
-    public List<ProductResponse> findAllProductByMemberInfo(MemberAuthRequest memberAuthRequest) {
+    public List<CartResponse> findAllProductByMemberInfo(MemberAuthRequest memberAuthRequest) {
         String email = memberAuthRequest.getEmail();
         String password = memberAuthRequest.getPassword();
         checkMemberExistByMemberInfo(email, password);
         MemberEntity findMemberEntity = memberDao.selectByEmailAndPassword(email, password);
         List<ProductEntity> productEntities = cartDao.selectAllProductByMemberId(findMemberEntity.getMemberId());
         return productEntities.stream()
-                .map(ProductResponse::fromEntity)
+                .map(productEntity -> new CartResponse(productEntity.getProductId(), productEntity.getImgUrl(),
+                        productEntity.getName(), productEntity.getPrice()))
                 .collect(Collectors.toUnmodifiableList());
     }
 }

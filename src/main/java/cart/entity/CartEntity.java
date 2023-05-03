@@ -2,17 +2,27 @@ package cart.entity;
 
 public class CartEntity {
 
+    private final Long cartId;
     private final Long memberId;
     private final Long productId;
 
-    private CartEntity(final Long memberId, final Long productId) {
+    private CartEntity(final Long cartId, final Long memberId,
+                       final Long productId) {
+        this.cartId = cartId;
         this.memberId = memberId;
         this.productId = productId;
     }
 
     public static class Builder {
+
+        private Long cartId;
         private Long memberId;
         private Long productId;
+
+        public Builder cartId(Long cartId) {
+            this.cartId = cartId;
+            return this;
+        }
 
         public Builder memberId(Long memberId) {
             this.memberId = memberId;
@@ -25,7 +35,7 @@ public class CartEntity {
         }
 
         public CartEntity build() {
-            return new CartEntity(memberId, productId);
+            return new CartEntity(cartId, memberId, productId);
         }
     }
 
