@@ -54,8 +54,8 @@ public class UserDao {
     }
 
     public List<Product> findAllProductsInCart(Long userId) {
-        final String sql = "SELECT p.id, name, image, price " +
-                "FROM user_product " +
+        final String sql = "SELECT up.id, name, image, price " +
+                "FROM user_product up " +
                 "LEFT JOIN products p ON product_id=p.id " +
                 "WHERE user_id = ?";
 
