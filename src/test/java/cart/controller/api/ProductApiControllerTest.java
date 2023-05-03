@@ -59,9 +59,9 @@ class ProductApiControllerTest {
     @DisplayName("/products로 POST 요청과 상품의 정보를 보내면 HTTP 201 코드와 함께 상품이 등록되어야 한다.")
     void createProduct_success() throws Exception {
         // given
-        ProductCreateRequest request = new ProductCreateRequest("글렌피딕", 230_000, "url");
+        ProductCreateRequest request = new ProductCreateRequest("글렌피딕", 230_000, "https://image.com/image.png");
 
-        willReturn(new ProductDto(1L, "글렌피딕", 230_000, "url"))
+        willReturn(new ProductDto(1L, "글렌피딕", 230_000, "https://image.com/image.png"))
                 .given(productService)
                 .createProduct(anyString(), anyInt(), anyString());
 
@@ -75,14 +75,15 @@ class ProductApiControllerTest {
                 .andExpect(jsonPath("$.result.productId").value(1))
                 .andExpect(jsonPath("$.result.name").value("글렌피딕"))
                 .andExpect(jsonPath("$.result.price").value(230000))
-                .andExpect(jsonPath("$.result.imageUrl").value("url"));
+                .andExpect(jsonPath("$.result.imageUrl").value("https://image.com/image.png"));
     }
 
     @Test
     @DisplayName("상품을 생성할 때 이름이 10자를 초과하면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
     void createProduct_nameLengthOverThan10() throws Exception {
         // given
-        ProductCreateRequest request = new ProductCreateRequest("글렌피딕글렌리벳글렌모렌지", 230_000, "url");
+        ProductCreateRequest request = new ProductCreateRequest("글렌피딕글렌리벳글렌모렌지", 230_000,
+                "https://image.com/image.png");
 
         // expect
         mockMvc.perform(post("/products")
@@ -100,7 +101,7 @@ class ProductApiControllerTest {
     @DisplayName("상품을 생성할 때 이름이 빈 값이면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
     void createProduct_nameIsBlank(String name) throws Exception {
         // given
-        ProductCreateRequest request = new ProductCreateRequest(name, 230_000, "url");
+        ProductCreateRequest request = new ProductCreateRequest(name, 230_000, "https://image.com/image.png");
 
         // expect
         mockMvc.perform(post("/products")
@@ -117,7 +118,7 @@ class ProductApiControllerTest {
     @DisplayName("상품을 생성할 때 가격이 0원 이하이면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
     void createProduct_priceIsLessThanZero(Integer price) throws Exception {
         // given
-        ProductCreateRequest request = new ProductCreateRequest("글렌리벳", price, "url");
+        ProductCreateRequest request = new ProductCreateRequest("글렌리벳", price, "https://image.com/image.png");
 
         // expect
         mockMvc.perform(post("/products")
@@ -134,7 +135,7 @@ class ProductApiControllerTest {
     @DisplayName("상품을 생성할 때 가격이 천만원 초과이면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
     void createProduct_priceIsOverThanTenMillion(Integer price) throws Exception {
         // given
-        ProductCreateRequest request = new ProductCreateRequest("글렌리벳", price, "url");
+        ProductCreateRequest request = new ProductCreateRequest("글렌리벳", price, "https://image.com/image.png");
 
         // expect
         mockMvc.perform(post("/products")
@@ -147,7 +148,6 @@ class ProductApiControllerTest {
     }
 
     @ParameterizedTest
-    @EmptySource
     @NullSource
     @DisplayName("상품을 생성할 때 이미지 URL이 빈 값이면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
     void createProduct_imageUrlIsBlank(String imageUrl) throws Exception {
@@ -162,6 +162,38 @@ class ProductApiControllerTest {
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
                 .andExpect(jsonPath("$.validation.imageUrl").value("상품의 이미지가 비어있습니다."));
+    }
+
+    @Test
+    @DisplayName("상품을 생성할 때 이미지 URL이 URL 형식이 아니면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
+    void createProduct_invalidImageUrl() throws Exception {
+        // given
+        ProductCreateRequest request = new ProductCreateRequest("글렌피딕", 230_000, "image.png");
+
+        // expect
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.imageUrl").value("올바른 형식의 URL이 아닙니다."));
+    }
+
+    @Test
+    @DisplayName("상품을 생성할 때 이미지의 포맷이 JPG 또는 PNG가 아니면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
+    void createProduct_invalidImageFormat() throws Exception {
+        // given
+        ProductCreateRequest request = new ProductCreateRequest("글렌피딕", 230_000, "https://image.com/image.exe");
+
+        // expect
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.imageUrl").value("이미지의 확장자는 JPG 또는 PNG만 가능합니다."));
     }
 
     @Test
@@ -218,7 +250,7 @@ class ProductApiControllerTest {
     void updateProduct_success() throws Exception {
         // given
         long productId = 1;
-        ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕", 200000, "url");
+        ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕", 200000, "https://image.com/image.png");
 
         willReturn(new ProductDto(productId, "글렌피딕", 200000, "url"))
                 .given(productService)
@@ -242,7 +274,7 @@ class ProductApiControllerTest {
     void updateProduct_invalidProductId() throws Exception {
         // given
         long productId = 1;
-        ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕", 200000, "url");
+        ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕", 200000, "https://image.com/image.png");
 
         given(productDao.existsById(anyLong()))
                 .willReturn(false);
@@ -262,7 +294,8 @@ class ProductApiControllerTest {
     void updateProduct_nameLengthOverThan10() throws Exception {
         // given
         long productId = 1;
-        ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕글렌리벳글렌모렌지", 230_000, "url");
+        ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕글렌리벳글렌모렌지", 230_000,
+                "https://image.com/image.png");
 
         // expect
         mockMvc.perform(patch("/products/" + productId)
@@ -281,7 +314,7 @@ class ProductApiControllerTest {
     void updateProduct_nameIsBlank(String name) throws Exception {
         // given
         long productId = 1;
-        ProductUpdateRequest request = new ProductUpdateRequest(name, 230_000, "url");
+        ProductUpdateRequest request = new ProductUpdateRequest(name, 230_000, "https://image.com/image.png");
 
         // expect
         mockMvc.perform(patch("/products/" + productId)
@@ -299,7 +332,7 @@ class ProductApiControllerTest {
     void updateProduct_priceIsLessThanZero(Integer price) throws Exception {
         // given
         long productId = 1;
-        ProductUpdateRequest request = new ProductUpdateRequest("글렌리벳", price, "url");
+        ProductUpdateRequest request = new ProductUpdateRequest("글렌리벳", price, "https://image.com/image.png");
 
         // expect
         mockMvc.perform(patch("/products/" + productId)
@@ -317,7 +350,7 @@ class ProductApiControllerTest {
     void updateProduct_priceIsOverThanTenMillion(Integer price) throws Exception {
         // given
         long productId = 1;
-        ProductUpdateRequest request = new ProductUpdateRequest("글렌리벳", price, "url");
+        ProductUpdateRequest request = new ProductUpdateRequest("글렌리벳", price, "https://image.com/image.png");
 
         // expect
         mockMvc.perform(patch("/products/" + productId)
@@ -330,7 +363,6 @@ class ProductApiControllerTest {
     }
 
     @ParameterizedTest
-    @EmptySource
     @NullSource
     @DisplayName("상품을 수정할 때 이미지 URL이 빈 값이면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
     void updateProduct_imageUrlIsBlank(String imageUrl) throws Exception {
@@ -346,6 +378,38 @@ class ProductApiControllerTest {
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
                 .andExpect(jsonPath("$.validation.imageUrl").value("상품의 이미지가 비어있습니다."));
+    }
+
+    @Test
+    @DisplayName("상품을 수정할 때 이미지 URL이 URL 형식이 아니면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
+    void updateProduct_invalidImageUrl() throws Exception {
+        // given
+        ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕", 230_000, "image.png");
+
+        // expect
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.imageUrl").value("올바른 형식의 URL이 아닙니다."));
+    }
+
+    @Test
+    @DisplayName("상품을 수정할 때 이미지의 포맷이 JPG 또는 PNG가 아니면 HTTP 400 코드와 검증 메시지가 반환되어야 한다.")
+    void updateProduct_invalidImageFormat() throws Exception {
+        // given
+        ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕", 230_000, "https://image.com/image.exe");
+
+        // expect
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.imageUrl").value("이미지의 확장자는 JPG 또는 PNG만 가능합니다."));
     }
 
     @Test
