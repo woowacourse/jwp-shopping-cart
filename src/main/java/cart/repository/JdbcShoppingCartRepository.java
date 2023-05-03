@@ -9,11 +9,11 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcShoppingShoppingCartRepository implements ShoppingCartRepository {
+public class JdbcShoppingCartRepository implements ShoppingCartRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public JdbcShoppingShoppingCartRepository(final DataSource dataSource) {
+    public JdbcShoppingCartRepository(final DataSource dataSource) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 

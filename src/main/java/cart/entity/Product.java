@@ -3,6 +3,7 @@ package cart.entity;
 import cart.exception.ImageUrlExtensionNotValidException;
 import cart.exception.NegativePriceException;
 import cart.exception.ProductNameLengthOverException;
+import java.util.Objects;
 
 public class Product {
 
@@ -75,5 +76,22 @@ public class Product {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", price=" + price +
                 '}';
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
