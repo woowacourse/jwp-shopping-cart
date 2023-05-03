@@ -31,7 +31,7 @@ public class ProductService {
     }
 
     public void updateProduct(final long id, final ProductDto productDto) {
-        validateExistData(id);
+        findBy(id);
 
         final ProductEntity newProductEntity = new ProductEntity(id, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
 
@@ -39,16 +39,27 @@ public class ProductService {
     }
 
     public void deleteProduct(final long id) {
-        validateExistData(id);
+        findBy(id);
 
         productDao.delete(id);
     }
 
-    private void validateExistData(final long id) {
+    public List<ProductEntity> findByProductIds(final List<Long> productIds) {
+        for (final Long productId : productIds) {
+            findBy(productId);
+        }
+
+        return productIds.stream()
+                .map(this::findBy)
+                .collect(Collectors.toList());
+    }
+
+    private ProductEntity findBy(final long id) {
         final Optional<ProductEntity> result = productDao.findById(id);
 
-        if (result.isEmpty()) {
-            throw new IllegalArgumentException("찾는 상품은 없는 상품입니다.");
+        if (result.isPresent()) {
+            return result.get();
         }
+        throw new IllegalArgumentException("찾는 상품은 없는 상품입니다.");
     }
 }
