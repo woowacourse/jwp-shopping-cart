@@ -31,7 +31,7 @@ public class ExceptionAdvice {
     }
 
     @ExceptionHandler({IllegalArgumentException.class, UnauthorizedMemberException.class})
-    public ResponseEntity<ErrorDto> handleException(IllegalArgumentException exception, HttpServletRequest request) {
+    public ResponseEntity<ErrorDto> handleException(Exception exception, HttpServletRequest request) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         return handleException(exception, httpStatus, request.getRequestURI());
     }

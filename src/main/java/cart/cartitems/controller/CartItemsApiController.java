@@ -5,7 +5,6 @@ import cart.cartitems.dto.request.CartItemAddRequest;
 import cart.cartitems.service.CartItemsService;
 import cart.infrastructure.AuthInfo;
 import cart.product.dto.ProductDto;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequestMapping("/cart/items")
 public class CartItemsApiController {
