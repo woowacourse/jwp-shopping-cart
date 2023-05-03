@@ -17,10 +17,14 @@ public class MemberInitializer {
 
     @PostConstruct
     public void init() {
-        final Member memberA = new Member("a@a.com", "password1");
-        final Member memberB = new Member("b@b.com", "password2");
+        final Member gitchan = new Member("gitchan@wooteco.com", "password1");
+        final Member boxster = new Member("boxster@wooteco.com", "password2");
+        final Member irene = new Member("irene@wooteco.com", "password3");
+        final Member hyun9mak = new Member("hyun9mak@wooteco.com", "password4");
 
-        memberDao.save(memberA);
-        memberDao.save(memberB);
+        memberDao.save(gitchan);
+        memberDao.save(boxster);
+        memberDao.save(irene);
+        memberDao.save(hyun9mak);
     }
 }

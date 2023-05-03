@@ -17,23 +17,12 @@ public class ProductInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        // 더미 데이터 작성
-        Product pizza = new Product(
-                "피자",
-                "https://cdn.dominos.co.kr/admin/upload/goods/20200311_x8StB1t3.jpg",
-                13000);
-        Product salad = new Product(
-                "샐러드",
-                "https://m.subway.co.kr/upload/menu/K-%EB%B0%94%EB%B9%84%ED%81%90-%EC%83%90%EB%9F%AC%EB%93%9C-%EB%8B%A8%ED%92%88_20220413025007802.png",
-                20000);
-        Product chicken = new Product(
-                "치킨",
-                "https://cdn.thescoop.co.kr/news/photo/202010/41306_58347_1055.jpg",
-                10000);
+        final Product pome = new Product("포메라니안", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F990BA4415C432CC601", 1300);
+        final Product poodle = new Product("푸들", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F9966693C5C43BCF227", 130000000);
+        final Product dockHoon = new Product("닥스훈트", "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F995C704C5C43BF6731", 1000);
 
-        // 더미 데이터 저장
-        productDao.save(pizza);
-        productDao.save(salad);
-        productDao.save(chicken);
+        productDao.save(pome);
+        productDao.save(poodle);
+        productDao.save(dockHoon);
     }
 }
