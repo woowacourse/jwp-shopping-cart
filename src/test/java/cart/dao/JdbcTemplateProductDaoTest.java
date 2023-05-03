@@ -60,8 +60,8 @@ class JdbcTemplateProductDaoTest {
 
     @Test
     void selectAllTest() {
-        productDao.insert(new ProductEntity(null, "name1", 1000, "image1"));
-        productDao.insert(new ProductEntity(null, "name2", 2000, "image2"));
+        productDao.insert(new ProductEntity("name1", 1000, "image1"));
+        productDao.insert(new ProductEntity("name2", 2000, "image2"));
 
         List<ProductEntity> products = productDao.selectAll();
         assertThat(products).hasSize(2);
