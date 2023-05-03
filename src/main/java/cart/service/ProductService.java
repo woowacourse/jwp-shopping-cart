@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductDto;
 import cart.dto.ProductResponseDto;
 import cart.entity.Product;
 import org.springframework.stereotype.Service;
@@ -29,12 +29,12 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
-    public void add(ProductRequestDto productRequestDto) {
-        productDao.save(productRequestDto.toEntity());
+    public void add(ProductDto productDto) {
+        productDao.save(productDto.toEntity());
     }
 
-    public void modifyById(Long id, ProductRequestDto productRequestDto) {
-        productDao.updateById(id, productRequestDto.toEntity());
+    public void modifyById(Long id, ProductDto productDto) {
+        productDao.updateById(id, productDto.toEntity());
     }
 
     public void removeById(Long id) {

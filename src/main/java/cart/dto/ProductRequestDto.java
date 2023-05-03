@@ -43,12 +43,8 @@ public class ProductRequestDto {
         return imageUrl;
     }
 
-    public Product toEntity() {
-        return new Product.Builder()
-                .name(Name.from(name))
-                .price(Price.from(price))
-                .imageUrl(Url.from(imageUrl))
-                .build();
+    public ProductDto toDto() {
+        return new ProductDto(name, price, imageUrl);
     }
 
 }
