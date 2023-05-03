@@ -2,11 +2,11 @@ package cart.settings.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.user.dao.UserDAO;
-import cart.user.domain.Email;
-import cart.user.domain.Password;
-import cart.user.domain.User;
-import cart.user.dto.ResponseUserDTO;
+import cart.settings.dao.UserDAO;
+import cart.settings.domain.Email;
+import cart.settings.domain.Password;
+import cart.settings.domain.User;
+import cart.settings.dto.ResponseUserDTO;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
-package cart.user.dto;
+package cart.settings.dto;
 
-import cart.user.domain.User;
+import cart.settings.domain.User;
 
 public class ResponseUserDTO {
     

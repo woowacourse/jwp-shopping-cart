@@ -1,4 +1,4 @@
-package cart.user.domain;
+package cart.settings.domain;
 
 public final class User {
     

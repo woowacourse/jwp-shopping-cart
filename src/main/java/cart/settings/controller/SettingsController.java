@@ -1,7 +1,7 @@
 package cart.settings.controller;
 
+import cart.settings.dto.ResponseUserDTO;
 import cart.settings.service.SettingsService;
-import cart.user.dto.ResponseUserDTO;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

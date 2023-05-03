@@ -1,8 +1,8 @@
-package cart.user.dao;
+package cart.settings.dao;
 
-import cart.user.domain.Email;
-import cart.user.domain.Password;
-import cart.user.domain.User;
+import cart.settings.domain.Email;
+import cart.settings.domain.Password;
+import cart.settings.domain.User;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;

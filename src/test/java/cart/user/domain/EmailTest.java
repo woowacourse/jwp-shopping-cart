@@ -2,6 +2,7 @@ package cart.user.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import cart.settings.domain.Email;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

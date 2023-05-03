@@ -1,6 +1,6 @@
-package cart.user.dao;
+package cart.settings.dao;
 
-import cart.user.domain.User;
+import cart.settings.domain.User;
 import java.util.List;
 
 public interface UserDAO {

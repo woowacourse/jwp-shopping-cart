@@ -1,8 +1,8 @@
 package cart.settings.service;
 
-import cart.user.dao.UserDAO;
-import cart.user.domain.User;
-import cart.user.dto.ResponseUserDTO;
+import cart.settings.dao.UserDAO;
+import cart.settings.domain.User;
+import cart.settings.dto.ResponseUserDTO;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

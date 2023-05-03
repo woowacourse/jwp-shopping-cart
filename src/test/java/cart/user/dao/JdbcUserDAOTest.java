@@ -1,7 +1,8 @@
 package cart.user.dao;
 
-import cart.user.domain.Email;
-import cart.user.domain.User;
+import cart.settings.dao.JdbcUserDAO;
+import cart.settings.domain.Email;
+import cart.settings.domain.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
