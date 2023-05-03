@@ -11,9 +11,10 @@ import org.springframework.stereotype.Repository;
 public class CartDao {
 
     private final RowMapper<CartEntity> cartEntityRowMapper = (resultSet, rowNum) -> {
+        Long cartId = resultSet.getLong("cart_id");
         String email = resultSet.getString("email");
         Long productId = resultSet.getLong("product_id");
-        return new CartEntity(email, productId);
+        return new CartEntity(cartId, email, productId);
     };
 
     private final JdbcTemplate jdbcTemplate;
@@ -29,12 +30,12 @@ public class CartDao {
     }
 
     public List<CartEntity> findByEmail(final String email) {
-        final String sql = "SELECT email, product_id FROM CART WHERE email=?";
+        final String sql = "SELECT cart_id, email, product_id FROM CART WHERE email=?";
         return jdbcTemplate.query(sql, cartEntityRowMapper, email);
     }
 
     public void deleteById(final Long id) {
-        final String sql = "DELETE FROM Cart WHERE cart_id=?";
+        final String sql = "DELETE FROM CART WHERE cart_id=?";
         jdbcTemplate.update(sql, id);
     }
 }
