@@ -1,5 +1,7 @@
 package cart.domain.product;
 
+import java.util.Objects;
+
 public class Product {
 
     private static final int MAX_NAME_LENGTH = 255;
@@ -40,6 +42,23 @@ public class Product {
         if (productName.isBlank()) {
             throw new IllegalArgumentException("이름은 공백일 수 없습니다.");
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Product product = (Product) o;
+        return productId.equals(product.productId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productId);
     }
 
     public ProductId getProductId() {
