@@ -62,8 +62,9 @@ class ProductControllerTest {
     }
 
 
+    @DisplayName("상품을 수정한다")
     @Test
-    public void testUpdateProduct() throws Exception {
+    public void updateProductTest() throws Exception {
         Long productId = 1L;
         ProductRequest productRequest = new ProductRequest("박스터", "https://boxster.com", 10000);
         String requestString = objectMapper.writeValueAsString(productRequest);
@@ -74,8 +75,9 @@ class ProductControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    @DisplayName("상품을 삭제한다")
     @Test
-    public void testDeleteProduct() throws Exception {
+    public void deleteProductTest() throws Exception {
         Long productId = 1L;
 
         mockMvc.perform(delete("/products/{id}", productId))
