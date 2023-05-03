@@ -52,4 +52,13 @@ public class MemberRepository {
             return null;
         }
     }
+
+    public Member findByEmail(final String email){
+        final String sql = "SELECT * FROM members WHERE email = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, memberRowMapper, email);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 }

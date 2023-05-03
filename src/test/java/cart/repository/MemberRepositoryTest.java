@@ -67,4 +67,20 @@ public class MemberRepositoryTest {
                 .ignoringFields("id")
                 .isEqualTo(new Member("kiara", "email@email", "pw"));
     }
+
+    @DisplayName("email로 회원 조회 테스트")
+    @Test
+    void findByEmail() {
+        // given
+        memberRepository.insert(new Member("kiara", "email@email", "pw"));
+
+        // when
+        final Member memberByEmail = memberRepository.findByEmail("email@email");
+
+        // then
+        Assertions.assertThat(memberByEmail)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(new Member("kiara", "email@email", "pw"));
+    }
 }
