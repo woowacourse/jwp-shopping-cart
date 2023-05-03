@@ -18,8 +18,7 @@ public class PageController {
     private final ProductDao mySQLProductDao;
     private final MemberDao mySQLMemberDao;
 
-    public PageController(ProductDao mySQLProductDao, MemberDao mySQLMemberDao,
-        CartDao mySQLCartDao) {
+    public PageController(ProductDao mySQLProductDao, MemberDao mySQLMemberDao) {
         this.mySQLProductDao = mySQLProductDao;
         this.mySQLMemberDao = mySQLMemberDao;
     }
