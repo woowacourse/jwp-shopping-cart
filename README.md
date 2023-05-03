@@ -16,14 +16,14 @@
 ## 2단계 기능 요구사항
 
 - [ ]  사용자 기능 구현
-    - [ ]  사용자 기본 정보
+    - [x]  사용자 기본 정보
         - name
         - email
         - phone_number
         - password
-    - [ ]  사용자 설정 페이지 연동
-        - [ ]  `/settings` ****url로 접근
-        - [ ]  사용자 선택 시, 이후 요청에 선택한 사용자의 인증 정보 포함
+    - [x]  사용자 설정 페이지 연동
+        - [x]  `/settings` ****url로 접근
+        - [x]  사용자 선택 시, 이후 요청에 선택한 사용자의 인증 정보 포함
     - [ ]  사용자 인증 처리
         - [ ]  사용자 정보 : 요청 Header의`Authorization`필드 디코딩
         - [ ]  인증 방식 :[Basic 인증](https://en.wikipedia.org/wiki/Basic_access_authentication)
