@@ -1,6 +1,7 @@
 package cart.repository;
 
 import cart.entity.CartEntity;
+import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import javax.sql.DataSource;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -58,5 +62,24 @@ class CartDaoTest {
                         rs.getInt("user_id"),
                         rs.getInt("product_id")
                 ), userId, productId);
+    }
+
+    @Test
+    @DisplayName("장바구니 조회 성공")
+    @Sql({"/product_dummy_data.sql", "/cart_dummy_data.sql"})
+    void findProductByUserId_success() {
+        // given
+        final int userId = 1;
+
+        // when
+        final List<ProductEntity> productsInCart = cartDao.findProductByUserId(userId);
+
+        // then
+        assertAll(
+                () -> assertThat(productsInCart).hasSize(2),
+                () -> assertThat(productsInCart.get(0).getName()).isEqualTo("pooh"),
+                () -> assertThat(productsInCart.get(0).getImage()).isEqualTo("pooh.jpg"),
+                () -> assertThat(productsInCart.get(0).getPrice()).isEqualTo(1000000)
+        );
     }
 }
