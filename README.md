@@ -119,7 +119,7 @@ CREATE TABLE product
     PRIMARY KEY (id)
 );
 
-CREATE TABLE members
+CREATE TABLE member
 (
     id       INT          NOT NULL AUTO_INCREMENT,
     email    VARCHAR(320) NOT NULL,
@@ -133,10 +133,37 @@ CREATE TABLE cart
     member_id  INT NOT NULL,
     product_id INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (member_id) REFERENCES members (id) ON DELETE CASCADE,
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE
 )
 ```
+
+## 테스트
+
+### Dao
+
+- [x] @JdbcTest
+    - [x] Transaction 관리 가능
+
+### Service
+
+- [x] MockitoExtension
+    - [x] Mock 을 활용한 단위 테스트
+    - [x] 실제 DB와 연결되지 않는 테스트
+
+### Controller
+
+- [ ] @SpringBootTest
+    - [ ] 통합 테스트
+
+- [ ] @WebMvcTest
+    - [ ] Mock 을 활용한 단위 테스트
+    - [ ] 실제 Service 와 연결되지 않는 테스트
+
+### 인수 테스트
+
+- [ ] @SpringBootTest
+    - [ ] 시나리오 기반 테스트
 
 ## 기록
 
