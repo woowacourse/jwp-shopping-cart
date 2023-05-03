@@ -7,15 +7,16 @@ CREATE TABLE Product (
 );
 
 CREATE TABLE Member (
-    id INT NOT NULL AUTO_INCREMENT,
     email VARCHAR(50) NOT NULL,
     password VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (email)
 );
 
 CREATE TABLE Cart (
-    member_id INT NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    member_email VARCHAR(50) NOT NULL,
     product_id INT NOT NULL,
-    FOREIGN KEY(member_id) REFERENCES Member(id),
+    PRIMARY KEY (id),
+    FOREIGN KEY(member_email) REFERENCES Member(email),
     FOREIGN KEY(product_id) REFERENCES Product(id)
 );
