@@ -30,29 +30,45 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader("Authorization");
-        String credentials = extracted(authorization);
+        validateCredentials(authorization);
+        String[] emailAndName = extractBasicAuthInfo(authorization);
+        return getMember(emailAndName);
+    }
+
+    private void validateCredentials(String authorization) {
+        validateNull(authorization);
+        validateBasicAuth(authorization);
+    }
+
+    private void validateNull(String authorization) {
+        if (authorization == null || authorization.isBlank()) {
+            throw new AuthenticationException();
+        }
+    }
+
+    private void validateBasicAuth(String authorization) {
+        String regex = "^Basic [A-Za-z0-9+/]+=*$";
+
+        if (!authorization.matches(regex) || !authorization.contains(":")) {
+            throw new AuthenticationException();
+        }
+    }
+
+    private String[] extractBasicAuthInfo(String authorization) {
+        String credentials = authorization.replace("Basic ", "");
         byte[] decodedBytes = Base64.getDecoder().decode(credentials);
         String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
-        String[] emailAndName = decodedString.split(":");
+        return decodedString.split(":");
+    }
+
+    private Member getMember(String[] emailAndName) {
         String email = emailAndName[0];
         String password = emailAndName[1];
         Member member = memberDao.findByEmail(email)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(AuthenticationException::new);
         if (!member.matchingPassword(password)) {
-            throw new IllegalArgumentException();
+            throw new AuthenticationException();
         }
         return member;
-    }
-
-    private String extracted(String authorization) {
-        if (authorization.isBlank()) {
-//             TODO: 2023/05/01 커스텀 예외
-            throw new IllegalArgumentException();
-        }
-        String regex = "^Basic [A-Za-z0-9+/]+=*$";
-        if (!authorization.matches(regex)) {
-            throw new IllegalArgumentException();
-        }
-        return authorization.replace("Basic ", "");
     }
 }
