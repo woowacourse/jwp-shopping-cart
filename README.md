@@ -17,9 +17,7 @@
 
 - [ ]  사용자 기능 구현
     - [x]  사용자 기본 정보
-        - name
         - email
-        - phone_number
         - password
     - [x]  사용자 설정 페이지 연동
         - [x]  `/settings` ****url로 접근
@@ -72,11 +70,3 @@
 | patch       | /cart/{id} | 장바구니 수량 수정 | 200         |
 | delete      | /cart/{id} | 장바구니 삭제    | 204         |
 
-### UsersAPI
-
-| HTTP Method | URL         | 설명       | HTTP Status |
-|-------------|-------------|----------|-------------|
-| get         | /users      | 유저 목록 조회 | 200         |
-| post        | /users      | 유저 회원 가입 | 201         |
-| patch       | /users/{id} | 유저 정보 수정 | 200         |
-| delete      | /users/{id} | 유저 탈퇴    | 204         |
