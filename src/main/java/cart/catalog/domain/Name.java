@@ -1,4 +1,4 @@
-package cart.product.domain;
+package cart.catalog.domain;
 
 public class Name {
     
@@ -8,13 +8,13 @@ public class Name {
     private final String value;
     
     public Name(final String value) {
-        validate(value);
+        this.validate(value);
         this.value = value;
     }
     
     private void validate(final String value) {
-        validateEmpty(value);
-        validateLength(value);
+        this.validateEmpty(value);
+        this.validateLength(value);
     }
     
     private void validateLength(final String value) {

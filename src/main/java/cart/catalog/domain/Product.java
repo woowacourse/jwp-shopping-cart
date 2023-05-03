@@ -1,6 +1,6 @@
-package cart.product.domain;
+package cart.catalog.domain;
 
-import cart.product.dto.RequestProductDto;
+import cart.catalog.dto.RequestProductDto;
 
 public class Product {
     

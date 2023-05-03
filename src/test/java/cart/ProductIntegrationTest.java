@@ -3,7 +3,7 @@ package cart;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.product.dto.RequestProductDto;
+import cart.catalog.dto.RequestProductDto;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.BeforeEach;

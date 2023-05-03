@@ -1,4 +1,4 @@
-package cart.product.domain;
+package cart.catalog.domain;
 
 public class Price {
     
@@ -7,7 +7,7 @@ public class Price {
     private final int value;
     
     public Price(final int value) {
-        validate(value);
+        this.validate(value);
         this.value = value;
     }
     

@@ -1,6 +1,6 @@
-package cart.product.dto;
+package cart.catalog.dto;
 
-import cart.product.domain.Product;
+import cart.catalog.domain.Product;
 
 public class ResponseProductDto {
     

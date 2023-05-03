@@ -3,9 +3,9 @@ package cart.product.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import cart.catalog.dao.JdbcCatalogDao;
-import cart.product.domain.Name;
-import cart.product.domain.Price;
-import cart.product.domain.Product;
+import cart.catalog.domain.Name;
+import cart.catalog.domain.Price;
+import cart.catalog.domain.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

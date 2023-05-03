@@ -1,19 +1,19 @@
 package cart.catalog.service;
 
 import cart.catalog.dao.CatalogDao;
-import cart.product.domain.Product;
-import cart.product.dto.RequestProductDto;
-import cart.product.dto.ResponseProductDto;
+import cart.catalog.domain.Product;
+import cart.catalog.dto.RequestProductDto;
+import cart.catalog.dto.ResponseProductDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductCatalogService {
+public class CatalogService {
     
     private final CatalogDao catalogDao;
     
-    public ProductCatalogService(final CatalogDao catalogDao) {
+    public CatalogService(final CatalogDao catalogDao) {
         this.catalogDao = catalogDao;
     }
     

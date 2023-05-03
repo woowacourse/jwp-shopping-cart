@@ -1,6 +1,6 @@
 package cart.catalog.dao;
 
-import cart.product.domain.Product;
+import cart.catalog.domain.Product;
 import java.util.List;
 
 public interface CatalogDao {

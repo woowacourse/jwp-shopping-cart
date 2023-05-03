@@ -1,4 +1,4 @@
-package cart.product.dto;
+package cart.catalog.dto;
 
 public class RequestProductDto {
     

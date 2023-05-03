@@ -1,8 +1,8 @@
 package cart.catalog.dao;
 
-import cart.product.domain.Name;
-import cart.product.domain.Price;
-import cart.product.domain.Product;
+import cart.catalog.domain.Name;
+import cart.catalog.domain.Price;
+import cart.catalog.domain.Product;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
