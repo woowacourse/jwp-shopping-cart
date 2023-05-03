@@ -25,7 +25,7 @@ public class MemberDao {
     }
 
     public void create(final MemberEntity entity) {
-        String sql = "INSERT INTO MEMEBER (email, password) VALUES (?, ?)";
+        String sql = "INSERT INTO MEMBER (email, password) VALUES (?, ?)";
         jdbcTemplate.update(sql, entity.getEmail(), entity.getPassword());
     }
 

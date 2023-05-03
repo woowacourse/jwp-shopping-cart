@@ -21,20 +21,22 @@ public class CustomHandlerMethodArgumentResolver implements HandlerMethodArgumen
 
     private static final String HEADER_PREFIX = "Authorization";
     private static final String BASIC_TYPE = "Basic ";
+    private static final String DELIMITER = ":";
+    private static final Integer EMAIL_INDEX = 0;
+    private static final Integer PASSWORD_INDEX = 1;
+
     private final MemberDao memberDao;
 
     public CustomHandlerMethodArgumentResolver(MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
-    // supportsParameter 메서드는 현재 파라미터를 resolver가 지원하는지에 대한 boolean을 리턴한다.
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.hasParameterAnnotation(Authenticate.class)
                 && parameter.getParameterType().equals(Long.class);
     }
 
-    // resolveArgument 메서드는 실제로 바인딩을 할 객체를 리턴한다.
     @Override
     public Object resolveArgument(
             final MethodParameter parameter,
@@ -42,22 +44,16 @@ public class CustomHandlerMethodArgumentResolver implements HandlerMethodArgumen
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
     ) throws Exception {
-        final String token = getBasicToken(webRequest);
-        final String[] authInformation = getAuthInformation(token);
-        final String email = authInformation[0];
-        final MemberEntity member = memberDao.findByEmail(email)
-                .orElseThrow(() -> NotFoundMemberException.EXCEPTION);
-        final String password = authInformation[1];
+        final String token = webRequest.getHeader(HEADER_PREFIX);
+        final String basicToken = getBasicToken(token);
+        final String[] authInformation = getAuthInformation(basicToken);
+        final String email = authInformation[EMAIL_INDEX];
+        final String password = authInformation[PASSWORD_INDEX];
 
-        if (!password.equals(member.getPassword())) {
-            throw PasswordNotMatchException.EXCEPTION;
-        }
-
-        return member.getId();
+        return getMemberId(email, password);
     }
 
-    private String getBasicToken(final NativeWebRequest webRequest) {
-        final String token = webRequest.getHeader(HEADER_PREFIX);
+    private String getBasicToken(final String token) {
         if (!StringUtils.hasText(token)) {
             throw HeaderPrefixNotFoundException.EXCEPTION;
         }
@@ -67,9 +63,19 @@ public class CustomHandlerMethodArgumentResolver implements HandlerMethodArgumen
         return token.replaceFirst(BASIC_TYPE, "");
     }
 
+    private Long getMemberId(String email, String password) {
+        final MemberEntity member = memberDao.findByEmail(email)
+                .orElseThrow(() -> NotFoundMemberException.EXCEPTION);
+
+        if (!password.equals(member.getPassword())) {
+            throw PasswordNotMatchException.EXCEPTION;
+        }
+        return member.getId();
+    }
+
     private String[] getAuthInformation(final String token) {
         final String emailAndPassword = new String(Base64Utils.decodeFromString(token));
-        return emailAndPassword.split(":");
+        return emailAndPassword.split(DELIMITER);
     }
 
 }
