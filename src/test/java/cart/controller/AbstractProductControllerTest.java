@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.repository.user.UserRepository;
 import cart.service.ProductCommandService;
 import cart.service.ProductQueryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,4 +20,6 @@ public abstract class AbstractProductControllerTest {
     protected ObjectMapper objectMapper;
     @Autowired
     protected MockMvc mockMvc;
+    @MockBean
+    protected UserRepository userRepository;
 }
