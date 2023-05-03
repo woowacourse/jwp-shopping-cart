@@ -14,6 +14,10 @@ public class MemberEntity {
         this.password = password;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getEmail() {
         return email;
     }
