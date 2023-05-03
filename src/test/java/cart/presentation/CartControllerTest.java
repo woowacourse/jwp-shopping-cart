@@ -1,7 +1,7 @@
 package cart.presentation;
 
 import cart.business.CartService;
-import cart.business.ProductCRUDService;
+import cart.business.ProductService;
 import cart.presentation.dto.CartItemIdDto;
 import cart.presentation.dto.ProductIdDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +33,7 @@ class CartControllerTest {
     @MockBean
     private CartService cartService;
     @MockBean
-    private ProductCRUDService productCRUDService;
+    private ProductService productService;
 
     @Test
     @DisplayName("/cart로 POST 요청을 보낼 수 있다")
@@ -57,7 +57,7 @@ class CartControllerTest {
     void test_read_request() throws Exception {
         // given
         given(cartService.readAllCartItem(any())).willReturn(Collections.emptyList());
-        given(productCRUDService.readById(any())).willReturn(null);
+        given(productService.readById(any())).willReturn(null);
 
         // when
         mockMvc.perform(get("/cart"))

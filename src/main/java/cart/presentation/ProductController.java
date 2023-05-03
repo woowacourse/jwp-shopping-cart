@@ -1,7 +1,7 @@
 package cart.presentation;
 
 
-import cart.business.ProductCRUDService;
+import cart.business.ProductService;
 import cart.presentation.dto.ProductDto;
 import cart.presentation.dto.ProductIdDto;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +15,20 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/product")
 public class ProductController {
 
-    private final ProductCRUDService productCRUDService;
+    private final ProductService productService;
 
-    public ProductController(ProductCRUDService productCRUDService) {
-        this.productCRUDService = productCRUDService;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @PostMapping
     public void productCreate(@RequestBody @Valid ProductDto request) {
-        productCRUDService.create(ProductConverter.toProductWithoutId(request));
+        productService.create(ProductConverter.toProductWithoutId(request));
     }
 
     @GetMapping
     public ResponseEntity<List<ProductDto>> productRead() {
-        List<ProductDto> response = productCRUDService.readAll()
+        List<ProductDto> response = productService.readAll()
                 .stream()
                 .map(ProductConverter::toProductDto)
                 .collect(Collectors.toList());
@@ -38,11 +38,11 @@ public class ProductController {
 
     @PutMapping
     public void productUpdate(@RequestBody @Valid ProductDto request) {
-        productCRUDService.update(ProductConverter.toProductWithId(request));
+        productService.update(ProductConverter.toProductWithId(request));
     }
 
     @DeleteMapping
     public void productDelete(@RequestBody @Valid ProductIdDto request) {
-        productCRUDService.delete(request.getId());
+        productService.delete(request.getId());
     }
 }

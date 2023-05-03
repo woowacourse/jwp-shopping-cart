@@ -1,7 +1,7 @@
 package cart.presentation;
 
 import cart.business.MemberService;
-import cart.business.ProductCRUDService;
+import cart.business.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ class TemplateControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private ProductCRUDService productCRUDApplication;
+    private ProductService productCRUDApplication;
     @MockBean
     private MemberService memberService;
 

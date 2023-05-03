@@ -8,10 +8,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class ProductCRUDServiceTest {
+class ProductServiceTest {
 
     private final ProductRepository productRepository = new MockProductRepository();
-    private final ProductCRUDService productCRUDService = new ProductCRUDService(productRepository);
+    private final ProductService productService = new ProductService(productRepository);
 
     @Test
     @DisplayName("동일한 이름을 가진 상품을 create 할 시 예외를 던진다")
@@ -23,10 +23,10 @@ class ProductCRUDServiceTest {
         Product sameNameTeo = new Product(null, new ProductName("teo"),
                 new ProductImage("https://123"), new ProductPrice(2000));
         //when
-        productCRUDService.create(teo);
+        productService.create(teo);
 
         //then
-        Assertions.assertThatThrownBy(() -> productCRUDService.create(sameNameTeo))
+        Assertions.assertThatThrownBy(() -> productService.create(sameNameTeo))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -38,7 +38,7 @@ class ProductCRUDServiceTest {
                 new ProductImage("https://"), new ProductPrice(10));
 
         //when, then
-        Assertions.assertThatThrownBy(() -> productCRUDService.update(teo))
+        Assertions.assertThatThrownBy(() -> productService.update(teo))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -50,7 +50,7 @@ class ProductCRUDServiceTest {
                 new ProductImage("https://"), new ProductPrice(10));
 
         //when, then
-        Assertions.assertThatThrownBy(() -> productCRUDService.delete(teo.getId()))
+        Assertions.assertThatThrownBy(() -> productService.delete(teo.getId()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

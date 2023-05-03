@@ -1,7 +1,7 @@
 package cart.presentation;
 
 import cart.business.MemberService;
-import cart.business.ProductCRUDService;
+import cart.business.ProductService;
 import cart.business.domain.member.Member;
 import cart.presentation.dto.ProductDto;
 import org.springframework.stereotype.Controller;
@@ -14,17 +14,17 @@ import java.util.stream.Collectors;
 @Controller
 public class TemplateController {
 
-    private final ProductCRUDService productCRUDService;
+    private final ProductService productService;
     private final MemberService memberService;
 
-    public TemplateController(ProductCRUDService productCRUDService, MemberService memberService) {
-        this.productCRUDService = productCRUDService;
+    public TemplateController(ProductService productService, MemberService memberService) {
+        this.productService = productService;
         this.memberService = memberService;
     }
 
     @GetMapping("/")
     public String home(Model model) {
-        List<ProductDto> products = productCRUDService.readAll()
+        List<ProductDto> products = productService.readAll()
                 .stream()
                 .map(ProductConverter::toProductDto)
                 .collect(Collectors.toList());
@@ -35,7 +35,7 @@ public class TemplateController {
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        List<ProductDto> products = productCRUDService.readAll()
+        List<ProductDto> products = productService.readAll()
                 .stream()
                 .map(ProductConverter::toProductDto)
                 .collect(Collectors.toList());

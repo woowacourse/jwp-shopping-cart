@@ -7,11 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class ProductCRUDService {
+public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductCRUDService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

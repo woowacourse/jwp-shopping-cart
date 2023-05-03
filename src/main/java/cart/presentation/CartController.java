@@ -2,7 +2,7 @@ package cart.presentation;
 
 import cart.business.CartService;
 import cart.business.MemberService;
-import cart.business.ProductCRUDService;
+import cart.business.ProductService;
 import cart.business.domain.cart.CartItem;
 import cart.business.domain.member.Member;
 import cart.business.domain.member.MemberEmail;
@@ -29,13 +29,13 @@ import java.util.stream.Collectors;
 public class CartController {
 
     private final CartService cartService;
-    private final ProductCRUDService productCRUDService;
+    private final ProductService productService;
     private final MemberService memberService;
 
-    public CartController(CartService cartService, ProductCRUDService productCRUDService,
+    public CartController(CartService cartService, ProductService productService,
                           MemberService memberService) {
         this.cartService = cartService;
-        this.productCRUDService = productCRUDService;
+        this.productService = productService;
         this.memberService = memberService;
     }
 
@@ -52,7 +52,7 @@ public class CartController {
 
         List<CartItemDto> response = cartService.readAllCartItem(memberId).stream()
                 .map(cartItem -> toCartItemDto(
-                        productCRUDService.readById(cartItem.getProductId()),
+                        productService.readById(cartItem.getProductId()),
                         cartItem.getId())
                 ).collect(Collectors.toList());
 

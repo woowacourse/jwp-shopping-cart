@@ -1,6 +1,6 @@
 package cart.presentation;
 
-import cart.business.ProductCRUDService;
+import cart.business.ProductService;
 import cart.business.domain.product.Product;
 import cart.presentation.dto.ProductDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,13 +30,13 @@ class ProductControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private ProductCRUDService productCRUDService;
+    private ProductService productService;
 
     @Test
     @DisplayName("/product 로 POST 요청을 보낼 수 있다")
     void test_create_request() throws Exception {
         // given
-        willDoNothing().given(productCRUDService).create(any(Product.class));
+        willDoNothing().given(productService).create(any(Product.class));
 
         String content = objectMapper.writeValueAsString(
                 new ProductDto(1, "teo", "https://", 1));
@@ -53,7 +53,7 @@ class ProductControllerTest {
     @DisplayName("/product 로 GET 요청을 보낼 수 있다")
     void test_read_request() throws Exception {
         // given
-        given(productCRUDService.readAll()).willReturn(Collections.emptyList());
+        given(productService.readAll()).willReturn(Collections.emptyList());
 
         // when
         mockMvc.perform(get("/product"))
@@ -66,7 +66,7 @@ class ProductControllerTest {
     @DisplayName("/product 로 POST 요청을 보낼 수 있다")
     void test_update_request() throws Exception {
         // given
-        willDoNothing().given(productCRUDService).update(any(Product.class));
+        willDoNothing().given(productService).update(any(Product.class));
 
         String content = objectMapper.writeValueAsString(
                 new ProductDto(1, "teo", "https://", 1)
@@ -84,7 +84,7 @@ class ProductControllerTest {
     @DisplayName("/product 로 DELETE 요청을 보낼 수 있다")
     void test_delete_request() throws Exception {
         // given
-        willDoNothing().given(productCRUDService).delete(any(Integer.class));
+        willDoNothing().given(productService).delete(any(Integer.class));
 
         String content = objectMapper.writeValueAsString(
                 new ProductDto(1, "teo", "https://", 1)
