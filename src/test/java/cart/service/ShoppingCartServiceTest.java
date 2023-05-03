@@ -1,5 +1,6 @@
 package cart.service;
 
+import static cart.CartFixture.TEST_CART_RECORD;
 import static cart.MemberFixture.TEST_MEMBER;
 import static cart.ProductFixture.PRODUCT_ENTITY3;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,5 +45,15 @@ class ShoppingCartServiceTest {
         final List<Product> allProduct = shoppingCartService.findAllProduct(MEMBER_INFO);
         assertThat(allProduct)
                 .contains(PRODUCT_ENTITY3);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("cartId로 장바구니에 있는 item을 제거하는 기능 테스트")
+    public void removeProduct() {
+        shoppingCartService.removeProduct(TEST_CART_RECORD.getId());
+
+        final List<Product> allProduct = shoppingCartService.findAllProduct(MEMBER_INFO);
+        assertThat(allProduct).hasSize(0);
     }
 }

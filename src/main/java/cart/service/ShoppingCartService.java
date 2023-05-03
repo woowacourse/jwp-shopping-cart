@@ -31,4 +31,8 @@ public class ShoppingCartService {
                 .orElseThrow(MemberNotFoundException::new);
         shoppingCartRepository.addProduct(memberId, productId);
     }
+
+    public void removeProduct(final Long cartId) {
+        shoppingCartRepository.removeProduct(cartId);
+    }
 }
