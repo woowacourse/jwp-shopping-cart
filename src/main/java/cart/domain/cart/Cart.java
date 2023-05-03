@@ -6,6 +6,7 @@ import cart.domain.product.Product;
 public class Cart {
 
     private static final int MIN_QUANTITY = 1;
+
     private final Long id;
     private final long memberId;
     private final long productId;
