@@ -42,7 +42,6 @@ public class CartController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<List<ProductResponse>> showCart(HttpServletRequest request) {
-        System.out.println(request.getHeader("Authorization"));
         LoginRequest loginRequest = basicAuthExtractor.extract(request);
         List<ProductResponse> cartByUser = cartService.findCartByUser(authService.basicLogin(loginRequest));
         return ResponseEntity.ok(cartByUser);
