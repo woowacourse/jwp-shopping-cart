@@ -37,7 +37,7 @@ class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequestDto)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/admin/products")
+                .when().post("products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -51,7 +51,7 @@ class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequestDto)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/admin/products")
+                .when().post("products")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -65,7 +65,7 @@ class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequestDto)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/admin/products")
+                .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -79,7 +79,7 @@ class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequestDto)
                 .accept(MediaType.TEXT_HTML_VALUE)
-                .when().put("/admin/products/1")
+                .when().put("products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -93,7 +93,7 @@ class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequestDto)
                 .accept(MediaType.TEXT_HTML_VALUE)
-                .when().put("/admin/products/1")
+                .when().put("products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -107,7 +107,7 @@ class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequestDto)
                 .accept(MediaType.TEXT_HTML_VALUE)
-                .when().put("/admin/products/1")
+                .when().put("products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -117,7 +117,7 @@ class ProductControllerTest {
     void removeProduct() {
         RestAssured.given().log().all()
                 .accept(MediaType.TEXT_HTML_VALUE)
-                .when().delete("/admin/products/1")
+                .when().delete("products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

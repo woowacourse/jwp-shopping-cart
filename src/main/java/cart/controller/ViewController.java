@@ -14,7 +14,7 @@ public class ViewController {
         this.productService = productService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String addProduct(Model model) {
         model.addAttribute("products", productService.findAll());
         return "index";

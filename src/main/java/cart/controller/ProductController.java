@@ -15,7 +15,6 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/admin")
 public class ProductController {
 
     private final ProductService productService;
