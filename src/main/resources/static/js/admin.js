@@ -63,7 +63,7 @@ const updateProduct = (product) => {
 
     axios.request({
         url: 'admin/products/' + id,
-        method: 'patch',
+        method: 'put',
         data: product
     }).then((response) => {
         window.location.reload();

@@ -82,7 +82,7 @@ class AdminProductAcceptanceTest {
             .queryParam("id", id)
             .body(productUpdateDto)
             .when()
-            .patch("admin/products/" + id)
+            .put("admin/products/" + id)
             .then()
             .extract();
 
