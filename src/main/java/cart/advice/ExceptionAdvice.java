@@ -62,6 +62,12 @@ public class ExceptionAdvice {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler(CartItemDuplicatedException.class)
+    public ResponseEntity<String> HandleCartItemDuplicatedException(final CartItemDuplicatedException exception) {
+        return ResponseEntity.badRequest()
+                .body(exception.getMessage());
+    }
+
     @ExceptionHandler(AuthorizationInvalidException.class)
     public ResponseEntity<String> handleAuthorizationInvalidException(final AuthorizationInvalidException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

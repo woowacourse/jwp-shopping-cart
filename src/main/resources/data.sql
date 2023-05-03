@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS cart_item;
 DROP TABLE IF EXISTS cart;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS member;
@@ -7,7 +8,7 @@ CREATE TABLE product
     id      BIGINT AUTO_INCREMENT,
     name    VARCHAR(45) NOT NULL,
     price   INT         NOT NULL,
-    img_url CLOB(10K) NOT NULL,
+    img_url CLOB(10 K)  NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -21,11 +22,19 @@ CREATE TABLE member
 
 CREATE TABLE cart
 (
+    id        BIGINT AUTO_INCREMENT,
+    member_id BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (member_id) REFERENCES member (id)
+);
+
+CREATE TABLE cart_item
+(
     id         BIGINT AUTO_INCREMENT,
-    member_id  BIGINT NOT NULL,
+    cart_id    BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (cart_id) REFERENCES cart (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
@@ -35,4 +44,4 @@ VALUES (1, '상품명 테스트1', 100, 'https://cdn.pixabay.com/photo/2014/06/0
 
 INSERT INTO member(id, email, password)
 VALUES (1, 'test1@test.com', '!!abc123'),
-       (2, 'test2@test.com', '!!abc123')
+       (2, 'test2@test.com', '!!abc123');

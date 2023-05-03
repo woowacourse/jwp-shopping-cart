@@ -4,13 +4,15 @@ import cart.domain.cart.Cart;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 
-import java.util.List;
-
 public interface CartRepository {
 
-    List<Cart> findAllByMember(Member member);
+    boolean existCart(Member member);
 
-    Long save(Cart cart);
+    Cart findCartByMember(Member member);
 
-    void delete(Member member, Product product);
+    void createCart(Cart cart);
+
+    Long saveCartItem(Cart cart);
+
+    void deleteCartItem(Cart cart, Product product);
 }

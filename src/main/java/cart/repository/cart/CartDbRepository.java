@@ -1,23 +1,19 @@
 package cart.repository.cart;
 
 import cart.domain.cart.Cart;
+import cart.domain.cart.CartItems;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
-import cart.dto.cart.CartDbResponseDto;
-import cart.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Component
 public class CartDbRepository implements CartRepository {
@@ -35,60 +31,64 @@ public class CartDbRepository implements CartRepository {
     }
 
     @Override
-    public List<Cart> findAllByMember(final Member member) {
-        String loadingCartSql = "SELECT id, member_id, product_id FROM cart WHERE member_id = :memberId";
-        List<CartDbResponseDto> cartDbResponses = namedParameterJdbcTemplate.query(loadingCartSql, new MapSqlParameterSource("memberId", member.getId()), getCartRowMapper());
+    public Cart findCartByMember(final Member member) {
+        String sql = "SELECT id FROM cart WHERE member_id = ?";
+        Long cartId = jdbcTemplate.queryForObject(sql, Long.class, member.getId());
 
-        List<Long> productIds = cartDbResponses.stream()
-                .map(CartDbResponseDto::getProductId)
-                .collect(Collectors.toList());
+        List<Product> products = findAllProductsByCartId(cartId);
+        CartItems cartItems = new CartItems(products);
 
-        if (productIds.isEmpty()) {
-            return new ArrayList<>();
+        return new Cart(cartId, member, cartItems);
+    }
+
+    private List<Product> findAllProductsByCartId(Long cartId) {
+        String sql = "SELECT p.* FROM product p JOIN cart_item ci ON p.id = ci.product_id WHERE ci.cart_id = ?";
+        return jdbcTemplate.query(sql, getProductRowMapper(), cartId);
+    }
+
+    @Override
+    public boolean existCart(Member member) {
+        String sql = "SELECT COUNT(*) FROM cart WHERE member_id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, member.getId());
+        return count > 0;
+    }
+
+    @Override
+    public void createCart(final Cart cart) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("member_id", cart.getMember().getId());
+        Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
+        key.longValue();
+    }
+
+    @Override
+    public Long saveCartItem(final Cart cart) {
+        SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id");
+
+        Product product = cart.getLastCartItem();
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("cart_id", cart.getId());
+        parameters.put("product_id", product.getId());
+
+        Long cartItemId = insert.executeAndReturnKey(parameters).longValue();
+        return cartItemId;
+    }
+
+    @Override
+    public void deleteCartItem(Cart cart, Product product) {
+        String findCartItemSql = "SELECT ci.id FROM cart_item ci " +
+                "JOIN cart c ON ci.cart_id = c.id " +
+                "WHERE c.id = ? AND ci.product_id = ?";
+
+        Long cartItemId = jdbcTemplate.queryForObject(findCartItemSql, Long.class, cart.getId(), product.getId());
+
+        if (cartItemId != null) {
+            String deleteCartItemSql = "DELETE FROM cart_item WHERE id = ?";
+            jdbcTemplate.update(deleteCartItemSql, cartItemId);
         }
-
-        return getCarts(member, cartDbResponses, productIds);
-    }
-
-    private List<Cart> getCarts(final Member member, final List<CartDbResponseDto> cartDbResponses, final List<Long> productIds) {
-        String loadingProductSql = "SELECT id, name, price, img_url FROM product WHERE id IN (:productIds)";
-        List<Product> products = namedParameterJdbcTemplate.query(loadingProductSql, new MapSqlParameterSource("productIds", productIds), getProductRowMapper());
-
-        return cartDbResponses.stream()
-                .map(cartDbResponse -> {
-                    Long cartId = cartDbResponse.getId();
-                    Long productId = cartDbResponse.getProductId();
-                    Product foundProduct = products.stream()
-                            .filter(product -> product.isSameId(productId))
-                            .findAny()
-                            .orElseThrow(ProductNotFoundException::new);
-                    return Cart.from(cartId, member, foundProduct);
-                })
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Long save(final Cart cart) {
-        CartDbResponseDto cartDbResponseDto = CartDbResponseDto.from(cart.getId(), cart.getMemberId(), cart.getProductId());
-        BeanPropertySqlParameterSource source = new BeanPropertySqlParameterSource(cartDbResponseDto);
-        KeyHolder keyHolder = simpleJdbcInsert.executeAndReturnKeyHolder(source);
-        return keyHolder.getKeyAs(Long.class);
-    }
-
-    @Override
-    public void delete(final Member member, final Product product) {
-        String sql = "DELETE FROM cart WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, member.getId(), product.getId());
-    }
-
-    private RowMapper<CartDbResponseDto> getCartRowMapper() {
-        return (rs, rowNum) -> {
-            Long id = rs.getLong("id");
-            Long member_id = rs.getLong("member_id");
-            Long product_id = rs.getLong("product_id");
-
-            return CartDbResponseDto.from(id, member_id, product_id);
-        };
     }
 
     private RowMapper<Product> getProductRowMapper() {

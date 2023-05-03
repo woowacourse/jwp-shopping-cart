@@ -22,13 +22,13 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<ProductsResponseDto> findMemberCarts(@LoginBasic final Member member) {
-        return ResponseEntity.ok(cartService.findAll(member));
+        return ResponseEntity.ok(cartService.findAllCartItems(member));
     }
 
     @PostMapping("/{productId}")
     public ResponseEntity<Void> addCart(@PathVariable final Long productId,
                                         @LoginBasic Member member) {
-        Long cartId = cartService.addCart(member, productId);
+        Long cartId = cartService.addCartItem(member, productId);
 
         return ResponseEntity.created(URI.create("/carts/" + cartId))
                 .build();
@@ -37,7 +37,7 @@ public class CartController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteCart(@PathVariable final Long productId,
                                            @LoginBasic final Member member) {
-        cartService.deleteCart(member, productId);
+        cartService.deleteCartItem(member, productId);
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
     }

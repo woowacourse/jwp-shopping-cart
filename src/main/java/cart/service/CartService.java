@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.domain.cart.Cart;
+import cart.domain.cart.CartItems;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.dto.product.ProductsResponseDto;
@@ -9,9 +10,6 @@ import cart.repository.cart.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -25,45 +23,49 @@ public class CartService {
         this.productService = productService;
     }
 
-    @Transactional(readOnly = true)
-    public ProductsResponseDto findAll(final Member member) {
-        List<Cart> carts = cartRepository.findAllByMember(member);
-        return getProductsResponseDto(carts);
-    }
-
-    private ProductsResponseDto getProductsResponseDto(final List<Cart> carts) {
-        List<Product> products = carts.stream()
-                .map(cart -> productService.findById(cart.getProductId()))
-                .collect(Collectors.toList());
-
-        return ProductsResponseDto.from(products);
+    @Transactional
+    public ProductsResponseDto findAllCartItems(final Member member) {
+        checkMemberHasCartOrCreateEmptyCart(member);
+        Cart cart = cartRepository.findCartByMember(member);
+        return getProductsResponseDto(cart.getCartItems());
     }
 
     @Transactional
-    public Long addCart(final Member member, final Long productId) {
-        Product product = productService.findById(productId);
-        Cart cart = Cart.from(member, product);
+    public Long addCartItem(final Member member, final Long productId) {
+        checkMemberHasCartOrCreateEmptyCart(member);
 
-        return cartRepository.save(cart);
+        Cart cart = cartRepository.findCartByMember(member);
+        Product product = productService.findById(productId);
+
+        cart.addCartItem(product);
+
+        return cartRepository.saveCartItem(cart);
     }
 
     @Transactional
-    public void deleteCart(final Member member, final Long productId) {
+    public void deleteCartItem(final Member member, final Long productId) {
+        Cart cart = cartRepository.findCartByMember(member);
         Product product = productService.findById(productId);
-        List<Cart> memberCarts = cartRepository.findAllByMember(member);
 
-        validateCartHasRequestProduct(product, memberCarts);
+        validateCartHasRequestProduct(product, cart);
+        Product deletedProduct = cart.removeCartItem(product);
 
-        cartRepository.delete(member, product);
+        cartRepository.deleteCartItem(cart, deletedProduct);
     }
 
-    private void validateCartHasRequestProduct(final Product product, final List<Cart> memberCarts) {
-        List<Product> memberCartProducts = memberCarts.stream()
-                .map(cart -> productService.findById(cart.getProductId()))
-                .collect(Collectors.toList());
+    private ProductsResponseDto getProductsResponseDto(final CartItems cartItems) {
+        return ProductsResponseDto.from(cartItems.getCartItems());
+    }
 
-        if (!memberCartProducts.contains(product)) {
+    private void validateCartHasRequestProduct(final Product product, final Cart cart) {
+        if (!cart.containsCartItem(product)) {
             throw new ProductNotFoundException();
+        }
+    }
+
+    private void checkMemberHasCartOrCreateEmptyCart(final Member member) {
+        if (!cartRepository.existCart(member)) {
+            cartRepository.createCart(Cart.createEmptyCart(member));
         }
     }
 }

@@ -21,14 +21,12 @@ public class MemberDbRepository implements MemberRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    @Autowired
     public MemberDbRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("member")
                 .usingGeneratedKeyColumns("id");
     }
-
 
     @Override
     public List<Member> findAll() {

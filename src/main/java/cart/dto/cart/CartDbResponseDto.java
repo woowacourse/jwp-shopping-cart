@@ -4,16 +4,14 @@ public class CartDbResponseDto {
 
     private final Long id;
     private final Long memberId;
-    private final Long productId;
 
-    private CartDbResponseDto(final Long id, final Long memberId, final Long productId) {
+    private CartDbResponseDto(final Long id, final Long memberId) {
         this.id = id;
         this.memberId = memberId;
-        this.productId = productId;
     }
 
-    public static CartDbResponseDto from(final Long id, final Long memberId, final Long productId) {
-        return new CartDbResponseDto(id, memberId, productId);
+    public static CartDbResponseDto from(final Long id, final Long memberId) {
+        return new CartDbResponseDto(id, memberId);
     }
 
     public Long getId() {
@@ -22,9 +20,5 @@ public class CartDbResponseDto {
 
     public Long getMemberId() {
         return memberId;
-    }
-
-    public Long getProductId() {
-        return productId;
     }
 }

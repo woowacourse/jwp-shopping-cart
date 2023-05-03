@@ -3,9 +3,7 @@ package cart.controller.cart;
 import cart.config.auth.LoginMemberArgumentResolver;
 import cart.controller.CartController;
 import cart.domain.member.Member;
-import cart.dto.member.MemberLoginRequestDto;
 import cart.dto.product.ProductsResponseDto;
-import cart.repository.member.MemberRepository;
 import cart.service.CartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -47,7 +45,7 @@ class CartControllerWebMvcTest {
         // given
         String authHeaderValue = "Basic dGVzdDFAdGVzdC5jb206ISFhYmMxMjM=";
         ProductsResponseDto expected = ProductsResponseDto.from(List.of(createProduct()));
-        given(cartService.findAll(any(Member.class))).willReturn(expected);
+        given(cartService.findAllCartItems(any(Member.class))).willReturn(expected);
 
         mockMvc.perform(get("/carts")
                         .header("Authorization", authHeaderValue))
@@ -55,7 +53,7 @@ class CartControllerWebMvcTest {
                 .andExpect(jsonPath("$.products[0].name").value("치킨"));
 
         // then
-        verify(cartService).findAll(any(Member.class));
+        verify(cartService).findAllCartItems(any(Member.class));
     }
 
     @Test
@@ -70,7 +68,7 @@ class CartControllerWebMvcTest {
                 .andExpect(status().isCreated());
 
         // then
-        verify(cartService).addCart(any(Member.class), eq(productId));
+        verify(cartService).addCartItem(any(Member.class), eq(productId));
     }
 
     @Test
@@ -85,6 +83,6 @@ class CartControllerWebMvcTest {
                 .andExpect(status().isOk());
 
         // then
-        verify(cartService).deleteCart(any(Member.class), eq(productId));
+        verify(cartService).deleteCartItem(any(Member.class), eq(productId));
     }
 }
