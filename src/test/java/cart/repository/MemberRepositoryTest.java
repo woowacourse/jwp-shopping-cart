@@ -31,10 +31,10 @@ public class MemberRepositoryTest {
         final Member member = new Member("kiara", "email@email", "pw");
 
         // when
-        long id = memberRepository.insert(member);
+        MemberId insertId = memberRepository.insert(member);
 
         // then
-        Assertions.assertThat(1L).isEqualTo(id);
+        Assertions.assertThat(new MemberId(1L)).isEqualTo(insertId);
     }
 
     @DisplayName("전체 회원 조회 테스트")

@@ -9,8 +9,12 @@ public class MemberId {
 		this.id = id;
 	}
 
-	public MemberId from(final long id) {
+	public static MemberId from(final long id) {
 		return new MemberId(id);
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	@Override

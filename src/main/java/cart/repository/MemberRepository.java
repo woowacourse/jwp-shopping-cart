@@ -18,7 +18,7 @@ public class MemberRepository {
     private final RowMapper<Member> memberRowMapper =
             (resultSet, rowNum) ->
                     new Member(
-                            resultSet.getLong("id"),
+                            MemberId.from(resultSet.getLong("id")),
                             resultSet.getString("name"),
                             resultSet.getString("email"),
                             resultSet.getString("password")
@@ -31,9 +31,10 @@ public class MemberRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public long insert(final Member member){
+    public MemberId insert(final Member member){
         SqlParameterSource params = new BeanPropertySqlParameterSource(member);
-        return jdbcInsert.executeAndReturnKey(params).longValue();
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return MemberId.from(id);
     }
 
     public List<Member> findAll(){
