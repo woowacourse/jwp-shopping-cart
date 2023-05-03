@@ -39,7 +39,7 @@ class CartDaoTest {
         saveMember();
         saveProduct();
         final Long memberId = 1L;
-        final Long productId = 2L;
+        final Long productId = 1L;
 
         // when
         cartDao.save(memberId, productId);
@@ -49,7 +49,32 @@ class CartDaoTest {
         assertAll(
                 () -> Assertions.assertThat(responses).hasSize(1),
                 () -> Assertions.assertThat(responses.get(0).getMemberId()).isEqualTo(1L),
-                () -> Assertions.assertThat(responses.get(0).getProductId()).isEqualTo(2L)
+                () -> Assertions.assertThat(responses.get(0).getProductId()).isEqualTo(1L)
+        );
+    }
+
+    @DisplayName("장바구니에 있는 모든 상품을 조회한다.")
+    @Test
+    void findAll() {
+        // given
+        saveMember();
+        saveProduct();
+
+        memberDao.create(new MemberEntity(1L, "a@a.com", "1234"));
+        productDao.create(new ProductEntity(1L, "상품", "img", 1000));
+
+        // when
+        cartDao.save(1L, 1L);
+        cartDao.save(2L, 2L);
+
+        // then
+        List<CartEntity> responses = cartDao.findAll();
+        assertAll(
+                () -> Assertions.assertThat(responses).hasSize(2),
+                () -> Assertions.assertThat(responses.get(0).getMemberId()).isEqualTo(1L),
+                () -> Assertions.assertThat(responses.get(0).getProductId()).isEqualTo(1L),
+                () -> Assertions.assertThat(responses.get(1).getMemberId()).isEqualTo(2L),
+                () -> Assertions.assertThat(responses.get(1).getProductId()).isEqualTo(2L)
         );
     }
 
