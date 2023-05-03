@@ -18,10 +18,10 @@ CREATE TABLE IF NOT EXISTS ITEMS
 CREATE TABLE IF NOT EXISTS CARTS
 (
     user_id     BIGINT          NOT NULL,
-    cart_id     BIGINT          NOT NULL,
-    PRIMARY KEY (user_id, cart_id),
+    item_id     BIGINT          NOT NULL,
+    PRIMARY KEY (user_id, item_id),
     FOREIGN KEY (user_id) REFERENCES USERS(id),
-    FOREIGN KEY (cart_id) REFERENCES ITEMS(id)
+    FOREIGN KEY (item_id) REFERENCES ITEMS(id)
 );
 
 INSERT INTO users (email, password) values ('email1@email.com', '12345678');
@@ -31,7 +31,7 @@ INSERT INTO items (name, image_url, price) values ('위키드', 'https://image.y
 INSERT INTO items (name, image_url, price) values ('마틸다', 'https://ticketimage.interpark.com/Play/image/large/22/22009226_p.gif', 100000);
 INSERT INTO items (name, image_url, price) values ('빌리 엘리어트', 'https://t1.daumcdn.net/cfile/226F4D4C544F42CF34', 200000);
 
-INSERT INTO carts (user_id, cart_id) values (1, 1);
-INSERT INTO carts (user_id, cart_id) values (1, 2);
-INSERT INTO carts (user_id, cart_id) values (2, 2);
-INSERT INTO carts (user_id, cart_id) values (2, 3);
+INSERT INTO carts (user_id, item_id) values (1, 1);
+INSERT INTO carts (user_id, item_id) values (1, 2);
+INSERT INTO carts (user_id, item_id) values (2, 2);
+INSERT INTO carts (user_id, item_id) values (2, 3);

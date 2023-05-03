@@ -22,17 +22,17 @@ public class CartDao {
     }
 
     public void save(Cart cart) {
-        final String sql = "INSERT INTO cart(user_id, item_id) VALUES(?, ?)";
+        final String sql = "INSERT INTO carts(user_id, item_id) VALUES(?, ?)";
         jdbcTemplate.update(sql, cart.getUserId(), cart.getItemId());
     }
 
     public List<Cart> findBy(Long userId) {
-        final String sql = "SELECT user_id, item_id FROM cart WHERE user_id = ?";
+        final String sql = "SELECT user_id, item_id FROM carts WHERE user_id = ?";
         return jdbcTemplate.query(sql, actorMapper, userId);
     }
 
     public void delete(Cart cart) {
-        final String sql = "DELETE FROM cart WHERE user_id = ? AND item_id = ?";
+        final String sql = "DELETE FROM carts WHERE user_id = ? AND item_id = ?";
         jdbcTemplate.update(sql, cart.getUserId(), cart.getItemId());
     }
 }
