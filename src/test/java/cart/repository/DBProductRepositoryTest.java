@@ -1,7 +1,6 @@
 package cart.repository;
 
 import cart.domain.Product;
-import cart.domain.ProductRepository;
 import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

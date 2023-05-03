@@ -1,10 +1,10 @@
 package cart.service;
 
 import cart.domain.Product;
-import cart.domain.ProductRepository;
 import cart.dto.ProductDto;
 import cart.dto.ProductRequestDto;
 import cart.entity.ProductEntity;
+import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

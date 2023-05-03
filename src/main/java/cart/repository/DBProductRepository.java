@@ -1,7 +1,6 @@
 package cart.repository;
 
 import cart.domain.Product;
-import cart.domain.ProductRepository;
 import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
