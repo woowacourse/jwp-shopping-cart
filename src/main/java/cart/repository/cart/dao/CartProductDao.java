@@ -37,7 +37,7 @@ public class CartProductDao {
     }
 
     public void deleteAllByCartId(final CartEntityId cartId) {
-        jdbcTemplate.update("DELETE FROM cart_product WHERE cart_id = ?", cartId);
+        jdbcTemplate.update("DELETE FROM cart_product WHERE cart_id = ?", cartId.getValue());
     }
 
     public List<CartProductEntity> findAllByCartId(final CartEntityId cartId) {

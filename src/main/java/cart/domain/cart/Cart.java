@@ -20,7 +20,7 @@ public class Cart {
     }
 
     public Cart(final User user) {
-        this(null, user, new CartProducts());
+        this(new CartId(), user, new CartProducts());
     }
 
     public Cart(final CartId cartId, final Cart other) {

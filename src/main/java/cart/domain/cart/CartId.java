@@ -8,6 +8,10 @@ public class CartId {
         this.id = id;
     }
 
+    public CartId() {
+        this(null);
+    }
+
     public Long getValue() {
         return id;
     }
