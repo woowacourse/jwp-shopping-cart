@@ -22,6 +22,7 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
+    @Transactional
     public void addCart(UserResponse userResponse, Long productId) {
         if (!productDao.existById(productId)) {
             throw new IllegalStateException();
