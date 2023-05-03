@@ -30,7 +30,7 @@ class ProductDaoTest {
 
     @Test
     void save는_상품을_저장한다() {
-        Product product = Product.of("치킨",
+        Product product = new Product("치킨",
                 "https://img.freepik.com/free-photo/crispy-fried-chicken-on-a-plate-with-salad-and-carrot_1150-20212.jpg",
                 19000);
 
@@ -50,20 +50,20 @@ class ProductDaoTest {
     @Test
     void updateProduct는_상품_정보를_수정한다() {
         //todo : 테스트를 위한 사전 상황을 어떻게 할지.
-        Product before = Product.of("chicken", "imagelink", 100);
+        Product before = new Product("chicken", "imagelink", 100);
         long productId = productDao.save(before);
 
         Product after = new Product(productId, "chicken", "imagelink",19000);
         productDao.updateProduct(after);
 
-        Product savedProduct = productDao.findProductById(productId);
+        Product savedProduct = productDao.findProductById(productId).get();
         assertThat(savedProduct).usingRecursiveComparison().isEqualTo(after);
     }
 
     @Test
     void deleteProduct는_상품을_삭제한다() {
         //todo : 테스트를 위한 사전 상황을 어떻게 할지.
-        Product product = Product.of("chicken", "imagelink", 100);
+        Product product = new Product("chicken", "imagelink", 100);
         long productId = productDao.save(product);
         assertThat(productDao.findAllProducts()).hasSize(1);
 
