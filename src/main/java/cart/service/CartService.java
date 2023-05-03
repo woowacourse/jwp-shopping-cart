@@ -49,6 +49,7 @@ public class CartService {
         cartDao.delete(cartEntity.get());
     }
 
+    @Transactional(readOnly = true)
     public List<CartResponse> selectCart(final AuthDto authDto) {
         final MemberEntity memberEntity = memberService.findMember(authDto);
         final Long memberId = memberEntity.getId();

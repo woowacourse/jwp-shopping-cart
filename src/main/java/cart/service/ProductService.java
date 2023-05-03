@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -24,6 +25,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
         final List<ProductEntity> productEntities = productDao.selectAll();
         return productEntities.stream()
@@ -35,6 +37,7 @@ public class ProductService {
                 ).collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional(readOnly = true)
     public ProductEntity findById(final Long id) {
         Optional<ProductEntity> productEntity = productDao.findById(id);
         if (productEntity.isEmpty()) {
@@ -43,6 +46,7 @@ public class ProductService {
         return productEntity.get();
     }
 
+    @Transactional
     public void insert(final CreateProductRequest createProductRequest) {
         final Product newProduct = new Product(
                 createProductRequest.getName(),
@@ -52,6 +56,7 @@ public class ProductService {
         productDao.insert(newProduct);
     }
 
+    @Transactional
     public void update(final Long id, final UpdateProductRequest updateProductRequest) {
         final Product product = new Product(
                 updateProductRequest.getName(),
@@ -62,6 +67,7 @@ public class ProductService {
         productDao.validateAffectedRowsCount(updatedRows);
     }
 
+    @Transactional
     public void delete(final Long id) {
         final int affectedRows = productDao.delete(id);
         productDao.validateAffectedRowsCount(affectedRows);
