@@ -52,7 +52,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(final Exception e) {
         log.error("error", e);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ExceptionResponse("알 수 없는 오류가 발생했습니다."));
     }
 }
