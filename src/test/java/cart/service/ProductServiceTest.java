@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -21,12 +20,11 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Sql("classpath:schema.sql")
+@Sql("classpath:test.sql")
 class ProductServiceTest {
 
     @LocalServerPort
     private int port;
-
     @Autowired
     private ProductService productService;
     @Autowired
@@ -35,26 +33,21 @@ class ProductServiceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-
-        productDao.insert(new Product("pizza", 1000,
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg/800px-Eq_it-na_pizza-margherita_sep2005_sml.jpg"));
-        productDao.insert(
-                new Product("salad", 2000,
-                        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Salad_platter.jpg/1200px-Salad_platter.jpg"));
     }
 
     @Test
     void 모든_상품_목록_조회() {
         final List<Product> products = productService.findAll();
 
-        assertThat(products.size()).isEqualTo(2);
+        assertThat(products.size()).isEqualTo(3);
     }
 
-    @ParameterizedTest
-    @CsvSource(value = {"applePizza:10000:https://apple.pizza", "salmonSalad:20000:https://salmon.salad"},
-            delimiter = ':')
-    void 상품_등록(final String name, final int price, final String imageUrl) {
-        final long expectedId = 3L;
+    @Test
+    void 상품_등록() {
+        final long expectedId = 4L;
+        final String name = "name4";
+        final int price = 4000;
+        final String imageUrl = "https://image4.com";
         final Product savedProduct = productService.register(new ProductDto(name, price, imageUrl));
 
         assertThat(savedProduct.getId()).isEqualTo(expectedId);
@@ -81,18 +74,18 @@ class ProductServiceTest {
         ).withMessage("존재하지 않는 id 입니다.");
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {1, 2})
-    void 상품_삭제(final long id) {
+    @Test
+    void 상품_삭제() {
+        final long id = 1L;
         productService.deleteProduct(id);
 
-        assertThat(productService.findAll().size()).isEqualTo(1);
+        assertThat(productService.findAll().size()).isEqualTo(2);
     }
 
     @Test
     void 존재하지_않는_상품_삭제시_예외_발생() {
         assertThatIllegalArgumentException().isThrownBy(
-                () -> productService.deleteProduct(3L)
+                () -> productService.deleteProduct(4L)
         ).withMessage("존재하지 않는 id 입니다.");
     }
 }

@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Sql("classpath:schema.sql")
+@Sql("classpath:test.sql")
 class ProductResourceControllerTest {
 
     @LocalServerPort
@@ -42,14 +42,6 @@ class ProductResourceControllerTest {
         final long id = 1L;
 
         RestAssured.given()
-                .body(new ProductRequest("족발", 5000, "https://image.com"))
-                .contentType(ContentType.JSON)
-                .when()
-                .post("/admin/products")
-                .then()
-                .statusCode(HttpStatus.CREATED.value());
-
-        RestAssured.given()
                 .body(new ProductRequest("피자", 3000, "https://image.com"))
                 .contentType(ContentType.JSON)
                 .when()
@@ -60,15 +52,7 @@ class ProductResourceControllerTest {
 
     @Test
     void 상품_삭제() {
-        final long id = 1L;
-
-        RestAssured.given()
-                .body(new ProductRequest("족발", 5000, "https://image.com"))
-                .contentType(ContentType.JSON)
-                .when()
-                .post("/admin/products")
-                .then()
-                .statusCode(HttpStatus.CREATED.value());
+        final long id = 2L;
 
         RestAssured.given()
                 .when()
