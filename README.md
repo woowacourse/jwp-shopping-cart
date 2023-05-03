@@ -77,10 +77,10 @@
         - [ ] 응답 : 200 List\<CartResponse>
   - 장바구니 추가
     - URI : `/carts/{productId}`
-      - [ ] 요청 : post
+      - [x] 요청 : post
         - header : Basic 형식의 토큰 
         - path variable : 상품 id 전송
-      - [ ] 응답 : 201
+      - [x] 응답 : 201
   - 장바구니 삭제
     - URI : `/carts/{cartId}`
       - [ ] 요청 : delete

@@ -2,8 +2,11 @@ package cart.service;
 
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
+import cart.domain.Member;
+import cart.dto.AuthDto;
 import cart.dto.response.MemberResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,15 +14,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberService {
 
-    private final MemberDao userDao;
+    private final MemberDao memberDao;
 
     @Autowired
-    public MemberService(final MemberDao userDao) {
-        this.userDao = userDao;
+    public MemberService(final MemberDao memberDao) {
+        this.memberDao = memberDao;
     }
 
     public List<MemberResponse> findAll() {
-        final List<MemberEntity> memberEntities = userDao.selectAll();
+        final List<MemberEntity> memberEntities = memberDao.findAll();
         return memberEntities.stream()
                 .map(entity -> new MemberResponse(
                         entity.getId(),
@@ -27,5 +30,15 @@ public class MemberService {
                         entity.getPassword()
                         )
                 ).collect(Collectors.toUnmodifiableList());
+    }
+
+    public MemberEntity findMember(final AuthDto authDto) {
+        final Member member = new Member(authDto.getEmail(), authDto.getPassword());
+        Optional<MemberEntity> memberEntity = memberDao.findMember(member);
+        if (memberEntity.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 회원입니다");
+        }
+
+        return memberEntity.get();
     }
 }
