@@ -1,7 +1,8 @@
-package cart.entity;
+package cart.entity.product;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.entity.product.Product;
 import cart.exception.common.NullOrBlankException;
 import cart.exception.product.PriceNotUnderZeroException;
 import org.junit.jupiter.api.DisplayName;

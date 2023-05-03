@@ -3,7 +3,7 @@ package cart.service.product;
 import cart.dao.product.ProductDao;
 import cart.dto.product.ProductRequest;
 import cart.dto.product.ProductResponse;
-import cart.entity.Product;
+import cart.entity.product.Product;
 import cart.exception.notfound.ProductNotFoundException;
 import java.util.List;
 import java.util.Optional;

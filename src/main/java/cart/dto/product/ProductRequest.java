@@ -1,6 +1,6 @@
 package cart.dto.product;
 
-import cart.entity.Product;
+import cart.entity.product.Product;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 

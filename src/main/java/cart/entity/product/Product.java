@@ -1,4 +1,4 @@
-package cart.entity;
+package cart.entity.product;
 
 import cart.exception.common.NullOrBlankException;
 import cart.exception.product.PriceNotUnderZeroException;

@@ -3,9 +3,7 @@ package cart.dao.product;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.dao.product.ProductDao;
-import cart.dao.product.ProductDaoImpl;
-import cart.entity.Product;
+import cart.entity.product.Product;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
