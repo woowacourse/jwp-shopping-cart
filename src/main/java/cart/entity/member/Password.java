@@ -11,6 +11,10 @@ public class Password {
         this.password = password;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     private void validateNullOrBlank(String password) {
         if (password == null || password.isBlank()) {
             throw new NullOrBlankException();

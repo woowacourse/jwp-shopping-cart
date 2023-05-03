@@ -17,6 +17,10 @@ public class Email {
         this.email = email;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     private void validateNullOrBlank(String email) {
         if (email == null || email.isBlank()) {
             throw new NullOrBlankException();

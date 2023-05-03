@@ -12,3 +12,5 @@ CREATE TABLE IF NOT EXISTS member (
     password VARCHAR(255) NOT NULL,
     primary key (id)
 );
+
+INSERT INTO member(email, password) values ('ako@naver.com', 'ako');
