@@ -28,19 +28,19 @@ public class ProductService {
     }
 
     public Long save(final ProductRequest productRequest) {
-        final Product product = map2Product(productRequest);
+        final Product product = mapToProduct(productRequest);
         return productDao.insert(product);
     }
 
     public void update(final Long id, final ProductRequest productRequest) {
-        final Product product = map2Product(productRequest);
+        final Product product = mapToProduct(productRequest);
         int updatedCount = productDao.update(id, product);
         if (updatedCount != 1) {
             throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
         }
     }
 
-    private Product map2Product(final ProductRequest productRequest) {
+    private Product mapToProduct(final ProductRequest productRequest) {
         return new Product(
                 productRequest.getName(),
                 productRequest.getImageUrl(),
@@ -61,10 +61,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Product getById(final Long id) {
-        final Optional<Product> productById = productDao.findById(id);
-        if (productById.isEmpty()) {
-            throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
-        }
-        return productById.get();
+        final Optional<Product> productOptional = productDao.findById(id);
+        return productOptional.orElseThrow(() -> new GlobalException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 }

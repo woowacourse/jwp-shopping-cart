@@ -22,22 +22,22 @@ class ProductDaoImplTest {
     @Autowired
     private ProductDaoImpl productDao;
 
-    private final Product productEntity = new Product("치킨", IMAGE_URL, 20000, ProductCategory.KOREAN);
+    private final Product product = new Product("치킨", IMAGE_URL, 20000, ProductCategory.KOREAN);
 
     @DisplayName("존재하는 상품을 조회하면, 성공적으로 가져온다")
     @Test
     void findById_success() {
         // given
-        final Long productId = productDao.insert(productEntity);
+        final Long productId = productDao.insert(product);
 
         // when
-        final Product findProductEntity = productDao.findById(productId).get();
+        final Product product = productDao.findById(productId).get();
 
         // then
-        assertAll(() -> assertThat(findProductEntity.getProductNameValue()).isEqualTo("치킨"),
-                () -> assertThat(findProductEntity.getPriceValue()).isEqualTo(20000),
-                () -> assertThat(findProductEntity.getImageUrlValue()).isEqualTo(IMAGE_URL),
-                () -> assertThat(findProductEntity.getCategory()).isEqualTo(ProductCategory.KOREAN));
+        assertAll(() -> assertThat(product.getProductNameValue()).isEqualTo("치킨"),
+                () -> assertThat(product.getPriceValue()).isEqualTo(20000),
+                () -> assertThat(product.getImageUrlValue()).isEqualTo(IMAGE_URL),
+                () -> assertThat(product.getCategory()).isEqualTo(ProductCategory.KOREAN));
     }
 
     @DisplayName("존재하지 않는 상품을 조회하면 Optional을 반환한다")
@@ -51,7 +51,7 @@ class ProductDaoImplTest {
     @Test
     void insert() {
         // given
-        final Long productId = productDao.insert(productEntity);
+        final Long productId = productDao.insert(product);
 
         // when
         final Product findProductEntity = productDao.findById(productId).get();
@@ -67,7 +67,7 @@ class ProductDaoImplTest {
     @Test
     void update() {
         // given
-        final Long productId = productDao.insert(productEntity);
+        final Long productId = productDao.insert(product);
         final Product updateProductEntity = new Product(productId, "탕수육", "imageUrl", 30000, ProductCategory.CHINESE);
         int updatedCount = productDao.update(productId, updateProductEntity);
 
@@ -87,7 +87,7 @@ class ProductDaoImplTest {
     @Test
     void delete() {
         // given
-        final Long productId = productDao.insert(productEntity);
+        final Long productId = productDao.insert(product);
 
         // when
         int deletedCount = productDao.deleteById(productId);
