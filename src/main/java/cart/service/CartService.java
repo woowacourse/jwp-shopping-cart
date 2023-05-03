@@ -21,11 +21,11 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    public List<Product> fetchAll(final long userId) {
-        final List<Item> items = cartDao.fetchAll(userId);
+    public List<Product> findAll(final long userId) {
+        final List<Item> items = cartDao.findAll(userId);
 
         return items.stream()
-                .map(item -> productDao.findById(item.getProductId()))
+                .map(item -> productDao.find(item.getProductId()))
                 .collect(Collectors.toList());
     }
 

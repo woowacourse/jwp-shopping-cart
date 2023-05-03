@@ -16,7 +16,7 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Member> fetchAll() {
+    public List<Member> findAll() {
         final String sql = "SELECT id, username, password FROM Member";
         return jdbcTemplate.query(sql, getMemberRowMapper());
     }

@@ -33,7 +33,7 @@ class CartServiceTest {
     @Test
     void 상품_조회() {
         final int userId = 1;
-        final List<Product> products = cartService.fetchAll(userId);
+        final List<Product> products = cartService.findAll(userId);
 
         assertThat(products.size()).isEqualTo(3);
     }
@@ -61,8 +61,8 @@ class CartServiceTest {
         final int expectedSize = 2;
 
         cartService.delete(itemId);
-        
-        final List<Product> remainProducts = cartService.fetchAll(userId);
+
+        final List<Product> remainProducts = cartService.findAll(userId);
         assertThat(remainProducts.size()).isEqualTo(expectedSize);
     }
 }

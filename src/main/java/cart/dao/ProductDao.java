@@ -28,7 +28,7 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
-    public Product findById(final long id) {
+    public Product find(final long id) {
         final String sql = "select id, name, price, image_url from Product where id = ?";
 
         return jdbcTemplate.queryForObject(sql, productRowMapper(), id);

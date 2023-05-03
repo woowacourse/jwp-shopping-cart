@@ -59,7 +59,7 @@ class ProductServiceTest {
     void 상품_수정(final long id, final String newName, final int newPrice, final String newImageUrl) {
         productService.updateProduct(id, new ProductDto(newName, newPrice, newImageUrl));
 
-        final Product updatedProduct = productDao.findById(id);
+        final Product updatedProduct = productDao.find(id);
         assertAll(
                 () -> assertThat(updatedProduct.getName()).isEqualTo(newName),
                 () -> assertThat(updatedProduct.getPrice()).isEqualTo(newPrice),

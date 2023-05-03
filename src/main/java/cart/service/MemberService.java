@@ -15,8 +15,8 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public List<Member> fetchAll() {
-        return memberDao.fetchAll();
+    public List<Member> findAll() {
+        return memberDao.findAll();
     }
 
     public boolean isMember(final MemberDto memberDto) {

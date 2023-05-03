@@ -26,7 +26,7 @@ class CartDaoTest {
 
     @Test
     void 전체_상품_조회() {
-        final List<Item> items = cartDao.fetchAll(1);
+        final List<Item> items = cartDao.findAll(1);
 
         assertThat(items.size()).isEqualTo(3);
     }
@@ -43,7 +43,7 @@ class CartDaoTest {
     @Test
     void 상품_삭제() {
         cartDao.delete(1);
-        final List<Item> userOneRemainItems = cartDao.fetchAll(1);
+        final List<Item> userOneRemainItems = cartDao.findAll(1);
 
         assertThat(userOneRemainItems.size()).isEqualTo(2);
     }

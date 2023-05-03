@@ -38,7 +38,7 @@ class ProductDaoTest {
     void 상품_데이터_조회() {
         final long id = 2L;
 
-        final Product foundProduct = productDao.findById(id);
+        final Product foundProduct = productDao.find(id);
 
         assertAll(
                 () -> assertThat(foundProduct.getName()).isEqualTo("name2"),
@@ -59,7 +59,7 @@ class ProductDaoTest {
         final Product newProduct = new Product(id, "new salad", 3000, "https://salad.com");
 
         productDao.update(newProduct);
-        final Product foundProduct = productDao.findById(id);
+        final Product foundProduct = productDao.find(id);
 
         assertAll(
                 () -> assertThat(foundProduct.getName()).isEqualTo(newProduct.getName()),

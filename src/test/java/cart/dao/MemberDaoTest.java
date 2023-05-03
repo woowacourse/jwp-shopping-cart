@@ -24,7 +24,7 @@ class MemberDaoTest {
 
     @Test
     void 사용자_목록_반환() {
-        final List<Member> members = memberDao.fetchAll();
+        final List<Member> members = memberDao.findAll();
 
         assertThat(members.size()).isEqualTo(2);
     }

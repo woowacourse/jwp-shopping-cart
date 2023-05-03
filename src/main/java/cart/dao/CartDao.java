@@ -22,7 +22,7 @@ public class CartDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Item> fetchAll(final long userId) {
+    public List<Item> findAll(final long userId) {
         final String sql = "SELECT * FROM cart WHERE user_id = ?";
 
         return jdbcTemplate.query(sql, itemRowMapper(), userId);
