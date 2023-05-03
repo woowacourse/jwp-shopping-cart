@@ -14,3 +14,9 @@ CREATE TABLE IF NOT EXISTS member
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS cart
+(
+    member_id INT NOT NULL,
+    product_id INT NOT NULL
+);
