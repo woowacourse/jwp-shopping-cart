@@ -31,6 +31,18 @@ public class CartController {
         this.authorizationExtractor = new BasicAuthorizationExtractor();
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<Object> findAllProductInCart(HttpServletRequest request) {
+        AuthInfo authInfo = authorizationExtractor.extract(request);
+        String email = authInfo.getEmail();
+        String password = authInfo.getPassword();
+
+        int memberId = memberService.findMemberId(email, password);
+
+        List<ProductDto> allProduct = cartService.findAllProduct(memberId);
+        return ResponseEntity.ok().body(allProduct);
+    }
+
     @PostMapping("/{productId}")
     public ResponseEntity<Object> addProductToCart(HttpServletRequest request, @PathVariable int productId) {
         AuthInfo authInfo = authorizationExtractor.extract(request);

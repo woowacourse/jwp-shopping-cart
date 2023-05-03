@@ -13,7 +13,6 @@ public class BasicAuthorizationExtractor {
     public AuthInfo extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
-        System.out.println(header);
         if (header == null) {
             return null;
         }

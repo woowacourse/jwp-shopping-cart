@@ -19,4 +19,14 @@ public class CartDao {
         String sql = "INSERT INTO cart (member_id, product_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, memberId, productId);
     }
+
+    public List<ProductEntity> findAllByMemberId(int memberId) {
+        String sql = "SELECT product_id, name, imgUrl, price\n"
+                + "FROM cart AS c\n"
+                + "INNER JOIN product AS p\n"
+                + "ON c.product_id = p.id\n"
+                + "WHERE member_id = ?;";
+        BeanPropertyRowMapper<ProductEntity> mapper = BeanPropertyRowMapper.newInstance(ProductEntity.class);
+        return jdbcTemplate.query(sql, mapper, memberId);
+    }
 }
