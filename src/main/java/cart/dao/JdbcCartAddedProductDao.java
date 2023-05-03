@@ -10,15 +10,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class JdbcCartsDao implements CartsDao {
+public class JdbcCartAddedProductDao implements cartAddedProductDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public JdbcCartsDao(final JdbcTemplate jdbcTemplate) {
+    public JdbcCartAddedProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("carts")
+                .withTableName("cart_added_product")
                 .usingGeneratedKeyColumns("id");
     }
 

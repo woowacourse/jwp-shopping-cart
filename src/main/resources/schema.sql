@@ -14,7 +14,7 @@ create table users
     PRIMARY KEY (email)
 );
 
-create table carts
+create table cart_added_product
 (
     id         BIGINT      NOT NULL AUTO_INCREMENT,
     user_email VARCHAR(20) NOT NULL,
