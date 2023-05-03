@@ -19,24 +19,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class CartService {
 
     private final MemberService memberService;
+    private final ProductService productService;
     private final CartDao cartDao;
-    private final MemberDao memberDao;
-    private final ProductDao productDao;
 
     @Autowired
-    public CartService(final MemberService memberService, final CartDao cartDao, final MemberDao memberDao,
-                       final ProductDao productDao) {
+    public CartService(final MemberService memberService, final CartDao cartDao, final ProductService productService) {
         this.memberService = memberService;
         this.cartDao = cartDao;
-        this.memberDao = memberDao;
-        this.productDao = productDao;
+        this.productService = productService;
     }
 
     @Transactional
     public void insert(final Long productId, final AuthDto authDto) {
         final MemberEntity memberEntity = memberService.findMember(authDto);
         final Optional<CartEntity> cartEntity = cartDao.findCart(productId, memberEntity.getId());
-        if (!cartEntity.isEmpty()) {
+        if (cartEntity.isPresent()) {
             throw new IllegalArgumentException("이미 카트에 담겨진 제품입니다.");
         }
         cartDao.insert(productId, memberEntity.getId());
@@ -60,7 +57,7 @@ public class CartService {
             return List.of();
         }
         final List<ProductEntity> productEntities = cartEntities.get().stream()
-                .map(cartEntity -> productDao.findById(cartEntity.getProductId()))
+                .map(cartEntity -> productService.findById(cartEntity.getProductId()))
                 .collect(Collectors.toUnmodifiableList());
         return productEntities.stream()
                 .map(productEntity -> new CartResponse(

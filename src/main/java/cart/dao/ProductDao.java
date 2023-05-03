@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -75,9 +77,13 @@ public class ProductDao {
         return jdbcTemplate.update(sql, id);
     }
 
-    public ProductEntity findById(final Long id) {
+    public Optional<ProductEntity> findById(final Long id) {
         final String sql = "SELECT * from product where id = ?";
-        return jdbcTemplate.queryForObject(sql, getProductRowMapper(), id);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, getProductRowMapper(), id));
+        } catch (EmptyResultDataAccessException error) {
+            return Optional.empty();
+        }
     }
 
     public void validateAffectedRowsCount(final int affectedRows) {

@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;

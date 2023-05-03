@@ -20,7 +20,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
 class ProductDaoTest {
-
+    
     private ProductDao productDao;
 
     @Autowired
@@ -54,7 +54,7 @@ class ProductDaoTest {
         // then
         assertSoftly(softly -> {
             softly.assertThat(updatedRows).isEqualTo(1);
-            ProductEntity productEntity = productDao.findById(id);
+            ProductEntity productEntity = productDao.findById(id).get();
             softly.assertThat(productEntity.getName()).isEqualTo("치킨");
             softly.assertThat(productEntity.getPrice()).isEqualTo(1_000);
             softly.assertThat(productEntity.getImage()).isEqualTo("치킨 이미지 주소");
@@ -76,7 +76,7 @@ class ProductDaoTest {
         final Long id = productDao.insert(new Product("돈까스", 10_000, "돈까스 이미지 주소"));
 
         // when
-        final ProductEntity productEntity = productDao.findById(id);
+        final ProductEntity productEntity = productDao.findById(id).get();
 
         // then
         assertSoftly(softly -> {

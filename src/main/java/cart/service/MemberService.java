@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -21,6 +22,7 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
+    @Transactional(readOnly = true)
     public List<MemberResponse> findAll() {
         final List<MemberEntity> memberEntities = memberDao.findAll();
         return memberEntities.stream()
@@ -32,13 +34,14 @@ public class MemberService {
                 ).collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional(readOnly = true)
     public MemberEntity findMember(final AuthDto authDto) {
         final Member member = new Member(authDto.getEmail(), authDto.getPassword());
-        Optional<MemberEntity> memberEntity = memberDao.findMember(member);
-        if (memberEntity.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 회원입니다");
+        final Optional<MemberEntity> memberResult = memberDao.findMember(member);
+        if (memberResult.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 회원 토큰입니다");
         }
 
-        return memberEntity.get();
+        return memberResult.get();
     }
 }

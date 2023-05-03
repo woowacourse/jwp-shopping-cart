@@ -7,6 +7,7 @@ import cart.dto.request.CreateProductRequest;
 import cart.dto.request.UpdateProductRequest;
 import cart.dto.response.ProductResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,14 @@ public class ProductService {
                         entity.getPrice(),
                         entity.getImage())
                 ).collect(Collectors.toUnmodifiableList());
+    }
+
+    public ProductEntity findById(final Long id) {
+        Optional<ProductEntity> productEntity = productDao.findById(id);
+        if (productEntity.isEmpty()) {
+            throw new IllegalArgumentException("해당 id를 가진 상품이 존재하지 않습니다.");
+        }
+        return productEntity.get();
     }
 
     public void insert(final CreateProductRequest createProductRequest) {
