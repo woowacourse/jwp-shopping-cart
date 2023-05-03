@@ -46,12 +46,12 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .body(new ProductCreationRequest("비버", "a", 100))
+                .body(new ProductCreationRequest("비버", "a", 100L))
                 .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 
-        final Optional<ProductEntity> ProductEntity = productJdbcDao.findById(Id);
+        final Optional<ProductEntity> ProductEntity = productJdbcDao.findById(Long.valueOf(Id));
 
         assertAll(
                 () -> assertThat(ProductEntity.get().getName()).isEqualTo("비버"),
@@ -68,12 +68,12 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .body(new ProductUpdateRequest(id, "비버", "abc", 1000))
+                .body(new ProductUpdateRequest(Long.valueOf(id), "비버", "abc", 1000L))
                 .when().put("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 
-        final Optional<ProductEntity> productEntity = productJdbcDao.findById(id);
+        final Optional<ProductEntity> productEntity = productJdbcDao.findById(Long.valueOf(id));
 
         assertAll(
                 () -> assertThat(productEntity.get().getName()).isEqualTo("비버"),
@@ -94,7 +94,7 @@ class ProductControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        final Optional<ProductEntity> productEntity = productJdbcDao.findById(id);
+        final Optional<ProductEntity> productEntity = productJdbcDao.findById(Long.valueOf(id));
 
         assertThat(productEntity).isEmpty();
     }

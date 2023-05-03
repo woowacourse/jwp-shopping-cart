@@ -1,8 +1,8 @@
 package cart.service;
 
-import cart.domain.dto.ProductCreationDto;
+import cart.controller.dto.ProductCreationRequest;
+import cart.controller.dto.ProductUpdateRequest;
 import cart.domain.dto.ProductDto;
-import cart.domain.dto.ProductUpdateDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +27,15 @@ class AdminServiceTest {
 
     @BeforeEach
     private void clear() {
+        jdbcTemplate.update("SET FOREIGN_KEY_CHECKS = 0");
         jdbcTemplate.update("TRUNCATE TABLE product");
+        jdbcTemplate.update("SET FOREIGN_KEY_CHECKS = 1");
     }
 
     @Test
     void add() {
-        final ProductCreationDto productCreationDto = new ProductCreationDto("땡칠", "asdf", 100);
-        adminService.save(productCreationDto);
+        final ProductCreationRequest productCreationRequest = new ProductCreationRequest("땡칠", "asdf", 100L);
+        adminService.save(productCreationRequest);
 
         final List<ProductDto> productDtos = productService.getAll();
         assertAll(
@@ -46,10 +48,10 @@ class AdminServiceTest {
 
     @Test
     void delete() {
-        final ProductCreationDto productCreationDto = new ProductCreationDto("땡칠", "asdf", 100);
-        adminService.save(productCreationDto);
+        final ProductCreationRequest productCreationRequest = new ProductCreationRequest("땡칠", "asdf", 100L);
+        adminService.save(productCreationRequest);
 
-        adminService.delete(1);
+        adminService.delete(1L);
 
         final List<ProductDto> productDtos = productService.getAll();
 
@@ -58,11 +60,11 @@ class AdminServiceTest {
 
     @Test
     void update() {
-        final ProductCreationDto productCreationDto = new ProductCreationDto("땡칠", "asdf", 100);
-        adminService.save(productCreationDto);
+        final ProductCreationRequest productCreationRequest = new ProductCreationRequest("땡칠", "asdf", 100L);
+        adminService.save(productCreationRequest);
 
-        final ProductUpdateDto productUpdateDto = new ProductUpdateDto(1, "비버", "VERY_BIG_IMAGE", 10000);
-        adminService.update(productUpdateDto);
+        final ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(1L, "비버", "VERY_BIG_IMAGE", 10000L);
+        adminService.update(productUpdateRequest);
 
         final List<ProductDto> productDtos = productService.getAll();
 
@@ -75,11 +77,11 @@ class AdminServiceTest {
 
     @Test
     void getAll() {
-        final ProductCreationDto productCreationDto1 = new ProductCreationDto("비버", "SMALL_IMAGE", 100);
-        final ProductCreationDto productCreationDto2 = new ProductCreationDto("땡칠", "asdf", 100);
+        final ProductCreationRequest productCreationRequest1 = new ProductCreationRequest("비버", "SMALL_IMAGE", 100L);
+        final ProductCreationRequest productCreationRequest2 = new ProductCreationRequest("땡칠", "asdf", 100L);
 
-        adminService.save(productCreationDto1);
-        adminService.save(productCreationDto2);
+        adminService.save(productCreationRequest1);
+        adminService.save(productCreationRequest2);
 
         final List<ProductDto> productDtos = productService.getAll();
 

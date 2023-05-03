@@ -36,7 +36,7 @@ class ProductInMemoryDaoTest {
         final ProductEntity productEntity = new ProductEntity(1L, "비버", "A", 100000L);
         productInMemoryDao.update(productEntity);
 
-        final Optional<ProductEntity> productEntityById = productInMemoryDao.findById(insertedId);
+        final Optional<ProductEntity> productEntityById = productInMemoryDao.findById(Long.valueOf(insertedId));
         assertThat(productEntityById.get().getPrice()).isEqualTo(100000L);
     }
 
@@ -45,7 +45,7 @@ class ProductInMemoryDaoTest {
     void deleteById() {
         System.out.println(insertedId);
 
-        productInMemoryDao.deleteById(insertedId);
+        productInMemoryDao.deleteById(Long.valueOf(insertedId));
 
         assertThat(productInMemoryDao.findAll().size()).isZero();
     }
@@ -54,7 +54,7 @@ class ProductInMemoryDaoTest {
     @DisplayName("조회 테스트")
     void select() {
         final ProductEntity expectEntity = new ProductEntity(1L, "비버", "A", 1000L);
-        final Optional<ProductEntity> byId = productInMemoryDao.findById(insertedId);
+        final Optional<ProductEntity> byId = productInMemoryDao.findById(Long.valueOf(insertedId));
 
         assertThat(byId.get()).isEqualTo(expectEntity);
     }

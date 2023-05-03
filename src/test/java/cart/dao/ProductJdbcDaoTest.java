@@ -41,14 +41,14 @@ class ProductJdbcDaoTest {
         final ProductEntity productEntity = new ProductEntity(insertedId, "비버", "A", 100000L);
         productJdbcDao.update(productEntity);
 
-        final Optional<ProductEntity> ProductEntityById = productJdbcDao.findById(Math.toIntExact(insertedId));
+        final Optional<ProductEntity> ProductEntityById = productJdbcDao.findById(Long.valueOf(insertedId));
         assertThat(ProductEntityById.get().getPrice()).isEqualTo(100000L);
     }
 
     @Test
     @DisplayName("삭제 테스트")
     void deleteById() {
-        productJdbcDao.deleteById(Math.toIntExact(insertedId));
+        productJdbcDao.deleteById(Long.valueOf(insertedId));
 
         assertThat(productJdbcDao.findAll().size()).isZero();
     }
@@ -57,8 +57,8 @@ class ProductJdbcDaoTest {
     @DisplayName("조회 테스트")
     void select() {
         final ProductEntity expectEntity = new ProductEntity(insertedId, "비버", "A", 1000L);
-        final Optional<ProductEntity> ProductEntityById = productJdbcDao.findById(Math.toIntExact(insertedId));
-
+        final Optional<ProductEntity> ProductEntityById = productJdbcDao.findById(Long.valueOf(insertedId));
+        
         assertThat(ProductEntityById.get()).isEqualTo(expectEntity);
     }
 
