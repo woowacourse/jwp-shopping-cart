@@ -5,13 +5,13 @@ import java.util.Objects;
 
 public class ProductResponse {
 
-    private final long id;
+    private final long productId;
     private final String name;
     private final String image;
     private final int price;
 
-    public ProductResponse(final long id, final String name, final String image, final int price) {
-        this.id = id;
+    public ProductResponse(final long productId, final String name, final String image, final int price) {
+        this.productId = productId;
         this.name = name;
         this.image = image;
         this.price = price;
@@ -26,8 +26,8 @@ public class ProductResponse {
         );
     }
 
-    public long getId() {
-        return id;
+    public long getProductId() {
+        return productId;
     }
 
     public String getName() {
@@ -51,12 +51,13 @@ public class ProductResponse {
             return false;
         }
         final ProductResponse that = (ProductResponse) o;
-        return id == that.id && price == that.price && Objects.equals(name, that.name) && Objects.equals(image,
+        return productId == that.productId && price == that.price && Objects.equals(name, that.name) && Objects.equals(
+                image,
                 that.image);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, image, price);
+        return Objects.hash(productId, name, image, price);
     }
 }
