@@ -11,7 +11,7 @@ public interface Dao<T> {
 
     List<T> findAll();
 
-    void update(T t);
+    int update(T t);
 
-    void deleteById(long id);
+    int deleteById(long id);
 }
