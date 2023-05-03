@@ -1,21 +1,21 @@
 CREATE TABLE IF NOT EXISTS item
 (
-    id       bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    name     varchar(30)        NOT NULL,
-    item_url text               NOT NULL,
-    price    int                NOT NULL
+    id       BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    name     VARCHAR(30)        NOT NULL,
+    item_url TEXT               NOT NULL,
+    price    INT                NOT NULL
     );
 
-CREATE TABLE IF NOT EXISTS Member
+CREATE TABLE IF NOT EXISTS member
 (
     id       BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     email    VARCHAR(320)       NOT NULL,
     password VARCHAR(20)        NOT NULL
     );
 
-CREATE TABLE IF NOT EXISTS basket
+CREATE TABLE IF NOT EXISTS cart
 (
-    id      BIGINT NOT NULL,
+    id      BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
     item_id BIGINT NOT NULL
 );
