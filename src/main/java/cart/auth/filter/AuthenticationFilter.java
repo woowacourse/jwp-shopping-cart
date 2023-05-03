@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-//@Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 
     private static final String AUTHORIZATION = "Authorization";

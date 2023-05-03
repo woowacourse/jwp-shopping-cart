@@ -22,6 +22,6 @@ public class InitialDataListener {
     public void setDefaultUsers() {
         userCommandService.save("a@naver.com", "1234");
         userCommandService.save("b@naver.com", "1234");
-        productRepository.save(new Product("라빈", "https://avatars.githubusercontent.com/u/39546083?v=4", 100));
+        productRepository.save(new Product("라빈", "https://avatars.githubusercontent.com/u/45747236?s=200&v=4", 100));
     }
 }

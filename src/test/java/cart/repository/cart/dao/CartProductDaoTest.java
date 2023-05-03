@@ -53,7 +53,7 @@ class CartProductDaoTest {
         final CartProductEntity cartProductEntity = new CartProductEntity(null, cartId, productId);
         cartProductDao.insertAll(List.of(cartProductEntity));
 
-        final List<CartProductEntity> result = cartProductDao.findAllByCartId(new CartEntityId(1L));
+        final List<CartProductEntity> result = cartProductDao.findAllByCartId(new CartEntityId(cartId));
 
         assertAll(
                 () -> assertThat(result).hasSize(1),
