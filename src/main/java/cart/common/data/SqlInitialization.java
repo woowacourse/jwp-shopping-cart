@@ -1,18 +1,18 @@
-package cart.config.data;
+package cart.common.data;
 
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.repository.member.MemberRepository;
 import cart.repository.product.ProductRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
-public class DatabaseConfig implements CommandLineRunner {
+@Component
+public class SqlInitialization implements CommandLineRunner {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
-    public DatabaseConfig(final MemberRepository memberRepository, final ProductRepository productRepository) {
+    public SqlInitialization(final MemberRepository memberRepository, final ProductRepository productRepository) {
         this.memberRepository = memberRepository;
         this.productRepository = productRepository;
     }
