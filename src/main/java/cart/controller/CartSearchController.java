@@ -28,9 +28,9 @@ public class CartSearchController {
 
     @GetMapping("/carts")
     public ResponseEntity<List<ProductResponse>> getCarts(final HttpServletRequest request) {
-        final UserResponse extract = basicAuthorizationExtractor.extract(request);
-        final String email = extract.getEmail();
-        final String password = extract.getPassword();
+        final UserResponse userResponse = basicAuthorizationExtractor.extract(request);
+        final String email = userResponse.getEmail();
+        final String password = userResponse.getPassword();
         if (authService.isValidLogin(email, password)) {
             final List<Product> products = cartSearchService.findByEmail(email);
             final List<ProductResponse> productResponses = products.stream()
