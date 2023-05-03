@@ -11,7 +11,7 @@ const showEditModal = (product) => {
         element.value = product[element.getAttribute('name')];
     }
     modal.dataset.formType = 'edit';
-    modal.dataset.productId = product.id;
+    modal.dataset.productId = product.productId;
     modal.style.display = 'block';
 };
 
@@ -21,7 +21,7 @@ const hideAddModal = () => {
     for (const element of elements) {
         element.value = '';
     }
-}
+};
 
 const form = document.getElementById('form');
 
@@ -36,7 +36,7 @@ form.addEventListener('submit', (event) => {
     }
 
     if (modal.dataset.formType === 'edit') {
-        product['id'] = modal.dataset.productId;
+        product['productId'] = modal.dataset.productId;
         updateProduct(product);
         return;
     }
@@ -44,34 +44,43 @@ form.addEventListener('submit', (event) => {
     createProduct(product);
 });
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '',
-    }).then((response) => {
+        method: 'post',
+        url: '/products',
+        data: product
+    }
+    ).then((response) => {
         window.location.reload();
     }).catch((error) => {
-        console.error(error);
+        const {data} = error.response;
+        console.log(data);
+        window.alert(data.message)
     });
 };
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
+// 상품 업데이
 const updateProduct = (product) => {
-    const { id } = product;
+    const { productId } = product; //왜???
 
     axios.request({
-        url: '',
+        method: 'put',
+        url: '/products/' + productId,
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
-        console.error(error);
+        const {data} = error.response;
+        console.log(data);
+        window.alert(data.message)
     });
 };
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
+// 상품 삭제
 const deleteProduct = (id) => {
     axios.request({
-        url: '',
+        method: 'delete',
+        url: '/products/' + id,
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
