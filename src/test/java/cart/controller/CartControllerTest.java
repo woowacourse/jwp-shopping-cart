@@ -44,4 +44,20 @@ class CartControllerTest {
                 () -> assertThat(result.getList("cartResponses.count")).containsExactly(3, 5)
         );
     }
+
+    @Test
+    @Sql(value = {"classpath:dataTruncator.sql", "classpath:jdbcTestInitializer.sql"})
+    void 장바구니를_추가한다() {
+        // when
+        final ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .auth().preemptive().basic("test@test.com", "test")
+                .when()
+                .post("/carts/users/products/{productId}", 3L)
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract();
+
+        // then
+        assertThat(response.header("Location")).isEqualTo("/carts/users/1/products/3");
+    }
 }

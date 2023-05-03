@@ -1,4 +1,6 @@
 const addCartItem = (productId) => {
+    console.log(productId)
+    console.log("실행완료")
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
@@ -6,9 +8,9 @@ const addCartItem = (productId) => {
         return;
     }
 
-    // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
     axios.request({
-        url: '',
+        url: `/carts/users/products/${productId}`,
+        method: 'POST',
         headers: {
             'Authorization': `Basic ${credentials}`
         }
