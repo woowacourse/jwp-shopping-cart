@@ -10,6 +10,10 @@ public final class User {
         this.password = password;
     }
     
+    public static User of(final String email, final String password) {
+        return new User(new Email(email), new Password(password));
+    }
+    
     public Email getEmail() {
         return this.email;
     }
