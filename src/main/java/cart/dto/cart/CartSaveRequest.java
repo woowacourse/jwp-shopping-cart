@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CartSaveRequest {
 
-    @NotNull
+    @NotNull(message = "상품 ID는 공백일 수 없습니다.")
     @JsonProperty("productId")
     private Long id;
 }

@@ -12,13 +12,13 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class MemberResponse {
 
-    @NotNull
+    @NotNull(message = "이메일은 공백일 수 없습니다.")
     private String email;
-    @NotNull
+    @NotNull(message = "유저명은 공백일 수 없습니다.")
     private String name;
-    @NotNull
+    @NotNull(message = "휴대폰 번호는 공백일 수 없습니다.")
     @JsonProperty("phone-number")
     private String phoneNumber;
-    @NotNull
+    @NotNull(message = "패스워드는 공백일 수 없습니다.")
     private String password;
 }
