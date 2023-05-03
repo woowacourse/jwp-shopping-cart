@@ -50,4 +50,54 @@ class CartDaoTest {
         assertThat(products.get(0).getMember().getId()).isEqualTo(result.getMember().getId());
         assertThat(products.get(0).getMember().getId()).isEqualTo(result.getProduct().getId());
     }
+
+    @Test
+    @DisplayName("회원 별 장바구니를 조회한다.")
+    public void testFindByMember() {
+        //given
+        final CartDao cartDao = new CartDao(jdbcTemplate);
+        final MemberDao memberDao = new MemberDao(jdbcTemplate);
+        final ProductDao productDao = new ProductDao(jdbcTemplate);
+        final Member member = new Member(1L, "test@test.com", "password", LocalDateTime.now(),
+            LocalDateTime.now());
+        final Product product = new Product(1L, "product", 1000, "imageUrl", LocalDateTime.now(),
+            LocalDateTime.now());
+        memberDao.save(member);
+        productDao.save(product);
+        final Cart cart = new Cart(null, product, member, null, null);
+        final Cart savedCart = cartDao.save(cart);
+
+        //when
+        final List<Cart> carts = cartDao.findByMember(member);
+
+        //then
+        assertThat(carts.size()).isEqualTo(1);
+        assertThat(carts.get(0).getMember().getId()).isEqualTo(member.getId());
+        assertThat(carts.get(0).getProduct().getId()).isEqualTo(product.getId());
+        assertThat(carts.get(0).getId()).isEqualTo(savedCart.getId());
+    }
+
+    @Test
+    @DisplayName("장바구니에서 제외한다.")
+    public void testDelete() {
+        //given
+        final CartDao cartDao = new CartDao(jdbcTemplate);
+        final MemberDao memberDao = new MemberDao(jdbcTemplate);
+        final ProductDao productDao = new ProductDao(jdbcTemplate);
+        final Member member = new Member(1L, "test@test.com", "password", LocalDateTime.now(),
+            LocalDateTime.now());
+        final Product product = new Product(1L, "product", 1000, "imageUrl", LocalDateTime.now(),
+            LocalDateTime.now());
+        memberDao.save(member);
+        productDao.save(product);
+        final Cart cart = new Cart(null, product, member, null, null);
+        final Cart savedCart = cartDao.save(cart);
+
+        //when
+        cartDao.deleteById(savedCart.getId());
+
+        //then
+        final List<Cart> carts = cartDao.findByMember(member);
+        assertThat(carts.size()).isEqualTo(0);
+    }
 }

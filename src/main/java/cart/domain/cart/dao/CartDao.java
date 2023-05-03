@@ -59,12 +59,11 @@ public class CartDao {
             + "         JOIN product on product.id = cart.product_id"
             + "         JOIN member on member.id = cart.member_id "
             + "WHERE cart.member_id = ?;";
-        final RowMapper<Cart> rowMapper = makeRowMapper(
-            member);
+        final RowMapper<Cart> rowMapper = makeRowMapper(member);
         return jdbcTemplate.query(sql, rowMapper, member.getId());
     }
 
-    private static RowMapper<Cart> makeRowMapper(final Member member) {
+    private RowMapper<Cart> makeRowMapper(final Member member) {
         return (resultSet, rowNum) -> new Cart(resultSet.getLong("id"),
             new Product(
                 resultSet.getLong("product_id"),
@@ -78,5 +77,10 @@ public class CartDao {
             resultSet.getTimestamp("created_at").toLocalDateTime(),
             resultSet.getTimestamp("updated_at").toLocalDateTime()
         );
+    }
+
+    public void deleteById(final Long id) {
+        final String sql = "DELETE FROM cart WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
