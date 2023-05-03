@@ -20,8 +20,8 @@
   - [x] '/admin' url로 접근할 경우 관리자 도구 페이지를 조회
 
 ### step2
-- [ ] 사용자 기능 구현
-  - [ ] 사용자가 가지고 있는 정보 : email, password
+- [x] 사용자 기능 구현
+  - [x] 사용자가 가지고 있는 정보 : email, password
   
 - [ ] 사용자 설정 페이지 연동
   - [ ] settings.html, settings.js 파일 내 TODO 주석을 참고하여 설계한 사용자 정보에 맞게 코드를 변경
