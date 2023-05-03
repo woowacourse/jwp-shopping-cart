@@ -29,6 +29,16 @@ public class MemberDao {
         return jdbcTemplate.queryForObject(sql, Integer.class, member.getUsername(), member.getPassword()) > 0;
     }
 
+    public long findMemberId(final Member member) {
+        final String sql = "SELECT id FROM Member WHERE username = ? AND password= ?";
+
+        return jdbcTemplate.queryForObject(sql, memberIdRowMapper(), member.getUsername(), member.getPassword());
+    }
+
+    private RowMapper<Long> memberIdRowMapper() {
+        return (resultSet, rowNum) -> new Long(resultSet.getLong("id"));
+    }
+
     private RowMapper<MemberEntity> memberEntityRowMapper() {
         return (resultSet, rowNum) -> new MemberEntity(
                 resultSet.getLong("id"),

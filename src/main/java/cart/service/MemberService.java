@@ -25,4 +25,8 @@ public class MemberService {
     public boolean isMember(@Valid final Member member) {
         return memberDao.isMember(member);
     }
+
+    public long findMemberId(final Member member) {
+        return memberDao.findMemberId(member);
+    }
 }
