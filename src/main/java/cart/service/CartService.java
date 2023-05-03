@@ -14,8 +14,8 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    public int create(final CartRequestDto cartRequestDto) {
-        final CartEntity cart = new CartEntity(cartRequestDto.getUserId(), cartRequestDto.getProductId());
+    public int create(final CartRequestDto cartRequestDto, final int userId) {
+        final CartEntity cart = new CartEntity(userId, cartRequestDto.getProductId());
         return cartDao.create(cart);
     }
 }

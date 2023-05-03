@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.auth.AuthArgumentResolver;
 import cart.dto.ProductRequestDto;
 import cart.exception.ProductNotFoundException;
 import cart.service.ProductService;
@@ -31,6 +32,9 @@ class ProductControllerTest {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private AuthArgumentResolver authArgumentResolver;
 
     @Test
     @DisplayName("상품 생성 성공")

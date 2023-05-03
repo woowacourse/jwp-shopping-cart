@@ -1,8 +1,6 @@
 package cart.repository;
 
 import cart.entity.CartEntity;
-import cart.entity.ProductEntity;
-import cart.entity.UserEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;

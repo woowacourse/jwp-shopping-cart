@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.auth.AuthArgumentResolver;
 import cart.entity.ProductEntity;
 import cart.entity.UserEntity;
 import cart.service.ProductService;
@@ -30,6 +31,9 @@ class MainControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private AuthArgumentResolver authArgumentResolver;
 
     @Test
     @DisplayName("root directory 로 요청을 보내면 홈 html 화면을 보내준다")

@@ -1,24 +1,20 @@
 package cart.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import javax.validation.constraints.NotNull;
 
 public class CartRequestDto {
 
-    @NotNull(message = "userId는 null이면 안됩니다.")
-    private final int userId;
     @NotNull(message = "productId는 null이면 안됩니다.")
-    private final int productId;
+    private final Integer productId;
 
-    public CartRequestDto(final int userId, final int productId) {
-        this.userId = userId;
+    @JsonCreator
+    public CartRequestDto(final Integer productId) {
         this.productId = productId;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public int getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 }
