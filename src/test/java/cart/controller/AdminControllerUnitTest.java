@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.service.CustomerService;
 import cart.service.ProductService;
 import cart.service.dto.ProductRequest;
 import cart.service.dto.ProductResponse;
@@ -34,6 +35,9 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 @WebMvcTest(AdminController.class)
 public class AdminControllerUnitTest {
+
+    @MockBean
+    private CustomerService customerService;
 
     private final ProductResponse cuteSeonghaDoll =
             new ProductResponse(1, "https://avatars.githubusercontent.com/u/95729738?v=4",

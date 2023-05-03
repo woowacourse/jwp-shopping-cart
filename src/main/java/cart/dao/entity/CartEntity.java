@@ -36,4 +36,16 @@ public class CartEntity {
             return new CartEntity(id, productId, customerId);
         }
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public long getProductId() {
+        return productId;
+    }
+
+    public long getCustomerId() {
+        return customerId;
+    }
 }
