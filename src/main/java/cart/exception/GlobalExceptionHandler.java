@@ -22,4 +22,16 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(e.getMessage());
     }
 
+    @ExceptionHandler(ExistProductException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleExistProduct(final ExistProductException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleAuthorization(final AuthorizationException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
 }
