@@ -40,7 +40,7 @@ class CartControllerTest {
                 .auth().preemptive().basic("a@a.com", "password1")
                 .when().post("/cart/{id}", 2)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
 
         ProductEntity product = cartDao.findAllByMemberId(1).get(0);
         assertThat(product.getName()).isEqualTo("피자");
@@ -55,14 +55,14 @@ class CartControllerTest {
                 .auth().preemptive().basic("a@a.com", "password1")
                 .when().post("/cart/{id}", 2)
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
 
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic("a@a.com", "password1")
                 .when().delete("/cart/{id}", 2)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
 
         assertThat(cartDao.findAllByMemberId(1).size()).isEqualTo(0);
     }
@@ -75,14 +75,14 @@ class CartControllerTest {
                 .auth().preemptive().basic("a@a.com", "password1")
                 .when().post("/cart/{id}", 2)
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
 
         RestAssured
                 .given()
                 .auth().preemptive().basic("a@a.com", "password1")
                 .when().post("/cart/{id}", 3)
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
 
         assertThat(cartDao.findAllByMemberId(1).size()).isEqualTo(2);
 

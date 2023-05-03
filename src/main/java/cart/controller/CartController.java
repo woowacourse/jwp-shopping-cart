@@ -28,7 +28,7 @@ public class CartController {
         int memberId = (int) request.getAttribute("memberId");
 
         List<ProductDto> allProduct = cartService.findAllProduct(memberId);
-        return ResponseEntity.ok().body(allProduct);
+        return ResponseEntity.status(HttpStatus.OK).body(allProduct);
     }
 
     @PostMapping("/{productId}")
@@ -36,7 +36,7 @@ public class CartController {
         int memberId = (int) request.getAttribute("memberId");
 
         cartService.addProduct(memberId, productId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/{productId}")
@@ -44,6 +44,6 @@ public class CartController {
         int memberId = (int) request.getAttribute("memberId");
 
         cartService.deleteProduct(memberId, productId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
