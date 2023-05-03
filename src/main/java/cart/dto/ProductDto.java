@@ -42,7 +42,7 @@ public class ProductDto {
     }
 
     public static ProductEntity toEntity(final ProductDto productDto) {
-        return ProductEntity.of(productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice());
+        return ProductEntity.of(productDto.id, productDto.name, productDto.image, productDto.price);
     }
 
     public Long getId() {

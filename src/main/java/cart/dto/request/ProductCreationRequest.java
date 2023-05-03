@@ -31,7 +31,7 @@ public class ProductCreationRequest {
     }
 
     public static ProductDto toProductDto(final ProductCreationRequest request) {
-        return ProductDto.of(request.getName(), request.getImage(), request.getPrice());
+        return ProductDto.of(request.name, request.image, request.price);
     }
 
     public String getName() {

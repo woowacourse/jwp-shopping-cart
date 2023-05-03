@@ -38,7 +38,7 @@ public class ProductModificationRequest {
     }
 
     public static ProductDto toProductDto(final ProductModificationRequest request) {
-        return ProductDto.of(request.getId(), request.getName(), request.getImage(), request.getPrice());
+        return ProductDto.of(request.id, request.name, request.image, request.price);
     }
 
     public Long getId() {
