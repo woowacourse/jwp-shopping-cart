@@ -5,9 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.entiy.ProductEntity;
 import java.util.List;
 import java.util.Optional;
+
+import cart.entiy.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -89,7 +90,7 @@ class ProductDaoTest {
 
         @Test
         void 조회_테스트() {
-            final List<ProductEntity> result = productDao.find();
+            final List<ProductEntity> result = productDao.findAll();
             assertThat(result).hasSize(1);
         }
     }

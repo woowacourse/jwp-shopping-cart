@@ -31,7 +31,7 @@ public class RdsProductRepository implements ProductRepository {
 
     @Override
     public List<Product> findAll() {
-        return productDao.find()
+        return productDao.findAll()
                 .stream()
                 .map(ProductEntity::toDomain)
                 .collect(Collectors.toList());
