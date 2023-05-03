@@ -1,14 +1,11 @@
 package cart.presentation.controller;
 
+import cart.business.domain.member.Member;
 import cart.business.service.CartService;
 import cart.business.service.MemberService;
 import cart.business.service.ProductService;
-import cart.business.domain.cart.CartItem;
-import cart.business.domain.member.Member;
-import cart.business.domain.member.MemberEmail;
-import cart.business.domain.member.MemberPassword;
-import cart.business.domain.product.Product;
 import cart.presentation.adapter.BasicAuthorizationExtractor;
+import cart.presentation.adapter.DomainConverter;
 import cart.presentation.dto.AuthInfo;
 import cart.presentation.dto.CartItemDto;
 import cart.presentation.dto.CartItemIdDto;
@@ -43,7 +40,7 @@ public class CartController {
     @PostMapping
     public void cartCreate(HttpServletRequest request, @RequestBody ProductIdDto productIdDto) {
         Integer memberId = getMemberId(request);
-        cartService.addCartItem(new CartItem(null, productIdDto.getId(), memberId));
+        cartService.addCartItem(DomainConverter.toCartItemWithoutId(productIdDto.getId(), memberId));
         // TODO: URI CREATED 반환
     }
 
@@ -52,7 +49,7 @@ public class CartController {
         Integer memberId = getMemberId(request);
 
         List<CartItemDto> response = cartService.readAllCartItem(memberId).stream()
-                .map(cartItem -> toCartItemDto(
+                .map(cartItem -> DomainConverter.toCartItemDto(
                         productService.readById(cartItem.getProductId()),
                         cartItem.getId())
                 ).collect(Collectors.toList());
@@ -60,16 +57,11 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    private CartItemDto toCartItemDto(Product product, Integer cartItemId) {
-        return new CartItemDto(cartItemId, product.getName(),
-                product.getUrl(), product.getPrice());
-    }
-
     private Integer getMemberId(HttpServletRequest request) {
         AuthInfo authInfo = BasicAuthorizationExtractor.extract(request);
         String email = authInfo.getEmail();
         String password = authInfo.getPassword();
-        Member member = new Member(null, new MemberEmail(email), new MemberPassword(password));
+        Member member = DomainConverter.toMemberWithoutId(email, password);
 
         return memberService.findAndReturnId(member);
     }

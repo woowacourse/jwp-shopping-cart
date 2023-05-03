@@ -2,7 +2,7 @@ package cart.presentation.controller;
 
 
 import cart.business.service.ProductService;
-import cart.presentation.adapter.ProductConverter;
+import cart.presentation.adapter.DomainConverter;
 import cart.presentation.dto.ProductDto;
 import cart.presentation.dto.ProductIdDto;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +24,14 @@ public class ProductController {
 
     @PostMapping
     public void productCreate(@RequestBody @Valid ProductDto request) {
-        productService.create(ProductConverter.toProductWithoutId(request));
+        productService.create(DomainConverter.toProductWithoutId(request));
     }
 
     @GetMapping
     public ResponseEntity<List<ProductDto>> productRead() {
         List<ProductDto> response = productService.readAll()
                 .stream()
-                .map(ProductConverter::toProductDto)
+                .map(DomainConverter::toProductDto)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(response);
@@ -39,7 +39,7 @@ public class ProductController {
 
     @PutMapping
     public void productUpdate(@RequestBody @Valid ProductDto request) {
-        productService.update(ProductConverter.toProductWithId(request));
+        productService.update(DomainConverter.toProductWithId(request));
     }
 
     @DeleteMapping

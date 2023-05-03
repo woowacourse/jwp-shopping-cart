@@ -3,7 +3,7 @@ package cart.presentation.controller;
 import cart.business.service.MemberService;
 import cart.business.service.ProductService;
 import cart.business.domain.member.Member;
-import cart.presentation.adapter.ProductConverter;
+import cart.presentation.adapter.DomainConverter;
 import cart.presentation.dto.ProductDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +27,7 @@ public class TemplateController {
     public String home(Model model) {
         List<ProductDto> products = productService.readAll()
                 .stream()
-                .map(ProductConverter::toProductDto)
+                .map(DomainConverter::toProductDto)
                 .collect(Collectors.toList());
 
         model.addAttribute("products", products);
@@ -38,7 +38,7 @@ public class TemplateController {
     public String admin(Model model) {
         List<ProductDto> products = productService.readAll()
                 .stream()
-                .map(ProductConverter::toProductDto)
+                .map(DomainConverter::toProductDto)
                 .collect(Collectors.toList());
 
         model.addAttribute("products", products);
