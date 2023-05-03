@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import cart.auth.LoginArgumentResolver;
+import cart.controller.web.HomeController;
 import cart.domain.product.Product;
 import cart.dto.ProductsResponse;
 import cart.service.ProductService;
@@ -39,12 +40,11 @@ class HomeControllerTest {
 
     @DisplayName("GET /")
     @Test
-    void getAdmin() throws Exception {
+    void getHome() throws Exception {
         List<Product> products = List.of(
-                new Product("피자", 1000, "http://pizza"),
-                new Product("햄버거", 2000, "http://hamburger"));
+                new Product((long) 1, "피자", 1000, "http://pizza"),
+                new Product((long) 2, "햄버거", 2000, "http://hamburger"));
         given(productService.findAll()).willReturn(products);
-        ProductsResponse response = ProductsResponse.of(products);
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())

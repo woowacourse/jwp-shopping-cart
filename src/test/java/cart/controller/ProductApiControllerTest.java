@@ -19,7 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ProductControllerTest {
+class ProductApiControllerTest {
 
     @Autowired
     private ProductDao productDao;
@@ -40,7 +40,7 @@ class ProductControllerTest {
     }
 
 
-    @DisplayName("POST /product")
+    @DisplayName("POST /api/product")
     @Test
     void createProduct() {
         ProductRequest request = new ProductRequest("이오", 1000, null);
@@ -48,12 +48,12 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().post("/product")
+                .when().post("/api/product")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("PUT /product/{id}")
+    @DisplayName("PUT /api/product/{id}")
     @Test
     void updateProduct() {
         Long id = productDao.insert(new Product("이오", 1000, null));
@@ -63,7 +63,7 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put("/product/" + id)
+                .when().put("/api/product/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
@@ -78,13 +78,13 @@ class ProductControllerTest {
         );
     }
 
-    @DisplayName("DELETE /product/{id}")
+    @DisplayName("DELETE /api/product/{id}")
     @Test
     void deleteProduct() {
         Long id = productDao.insert(new Product("이오", 1000, null));
 
         RestAssured.given().log().all()
-                .when().delete("/product/" + id)
+                .when().delete("/api/product/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 

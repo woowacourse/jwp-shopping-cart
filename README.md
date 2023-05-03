@@ -53,10 +53,10 @@ member
 
 ### API
 
-#### /product
+#### /api/product
 
 - Create
-    - POST /product
+    - POST /api/product
     - Request Body
 
         ```json
@@ -68,7 +68,7 @@ member
         ```
 
 - Read
-    - GET /product
+    - GET /api/product
     - Response Body
 
         ```json
@@ -86,7 +86,7 @@ member
         ```
 
 - Update
-    - PUT /product/:productId
+    - PUT /api/product/:productId
     - Request Body
 
         ```json
@@ -98,4 +98,4 @@ member
         ```
 
 - Delete
-    - DELETE /product/:productId
+    - DELETE /api/product/:productId

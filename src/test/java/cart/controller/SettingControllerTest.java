@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.controller.web.SettingController;
 import cart.domain.member.Member;
 import cart.dto.MembersResponse;
 import cart.service.MemberService;

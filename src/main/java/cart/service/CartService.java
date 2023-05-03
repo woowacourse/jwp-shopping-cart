@@ -6,6 +6,7 @@ import cart.domain.cart.Cart;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.exception.notfound.ProductNotFoundException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,10 @@ public class CartService {
     @Transactional(readOnly = true)
     public List<Product> findCartProducts(final Member member) {
         List<Cart> carts = cartDao.findAllByMemberId(member.getId());
+
+        if (carts.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         List<Long> productIds = carts.stream()
                 .map(Cart::getProductId)

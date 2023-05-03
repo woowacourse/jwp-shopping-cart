@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import cart.domain.product.Product;
 import cart.dto.ProductRequest;
@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/product")
-public class ProductController {
+@RequestMapping("/api/product")
+public class ProductApiController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductApiController(ProductService productService) {
         this.productService = productService;
     }
 

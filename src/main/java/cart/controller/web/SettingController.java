@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.web;
 
 import cart.domain.member.Member;
 import cart.dto.MembersResponse;
