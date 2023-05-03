@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.view;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +9,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class IndexControllerTest {
+class CartControllerTest {
 
     @LocalServerPort
     int port;
@@ -19,11 +19,11 @@ class IndexControllerTest {
         RestAssured.port = port;
     }
 
-    @DisplayName("메인 페이지 접속")
+    @DisplayName("어드민 메인 페이지 접속")
     @Test
-    void mainPage() {
+    void adminPage() {
         RestAssured.given().log().all()
-                .when().get("/")
+                .when().get("/admin/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
