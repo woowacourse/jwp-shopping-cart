@@ -29,13 +29,14 @@
 
 ### API 명세서
 
-| Method | URI             | Description |
-|--------|-----------------|-------------|
-| GET    | /settings       | 사용자선택 페이지   |
-| GET    | /settings/login | 사용자 로그인 기능  |
-| GET    | /cart           | 장바구니 목록 페이지 |
-| POST   | /cart/{id}      | 장바구니에 상품 추가 |
-| DELETE | /cart/{id}      | 장바구니에 상품 삭제 |
+| Method | URI              | Description |
+|--------|------------------|-------------|
+| GET    | /settings        | 사용자선택 페이지   |
+| GET    | /settings/login  | 사용자 로그인 기능  |
+| GET    | /cart            | 장바구니 목록 페이지 |
+| GET    | /cart/items      | 장바구니 목록 반환  |
+| POST   | /cart/items      | 장바구니에 상품 추가 |
+| DELETE | /cart/items/{id} | 장바구니에 상품 삭제 |
 
 ### 기능 요구사항
 
