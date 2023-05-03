@@ -12,24 +12,24 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import cart.domain.admin.persistence.entity.ProductEntity;
-import cart.domain.admin.service.CartService;
+import cart.domain.persistence.entity.ProductEntity;
+import cart.domain.admin.AdminService;
 import cart.web.admin.dto.PostProductRequest;
 import cart.web.admin.dto.PutProductRequest;
 
 @RestController
 public class AdminApiController {
 
-    private final CartService cartService;
+    private final AdminService adminService;
 
-    public AdminApiController(final CartService cartService) {
-        this.cartService = cartService;
+    public AdminApiController(final AdminService adminService) {
+        this.adminService = adminService;
     }
 
     @PostMapping("/admin/products")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final PostProductRequest request) {
         final ProductEntity productEntity = PostProductRequest.toEntity(request);
-        final long id = cartService.create(productEntity);
+        final long id = adminService.create(productEntity);
         return ResponseEntity.created(URI.create("/admin/products/" + id)).build();
     }
 
@@ -39,13 +39,13 @@ public class AdminApiController {
         @RequestBody @Valid final PutProductRequest putProductRequest
     ) {
         final ProductEntity productEntity = PutProductRequest.toEntity(putProductRequest);
-        cartService.update(id, productEntity);
+        adminService.update(id, productEntity);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/admin/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable final Long id) {
-        cartService.delete(id);
+        adminService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

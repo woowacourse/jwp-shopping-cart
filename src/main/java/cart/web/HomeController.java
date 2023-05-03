@@ -7,21 +7,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import cart.domain.admin.service.CartService;
+import cart.domain.admin.AdminService;
 import cart.web.admin.dto.ProductResponse;
 
 @Controller
 public class HomeController {
 
-    private final CartService cartService;
+    private final AdminService adminService;
 
-    public HomeController(final CartService cartService) {
-        this.cartService = cartService;
+    public HomeController(final AdminService adminService) {
+        this.adminService = adminService;
     }
 
     @GetMapping("/")
     public String getAllProducts(final Model model) {
-        final List<ProductResponse> response = cartService.findAll().stream()
+        final List<ProductResponse> response = adminService.findAll().stream()
             .map(ProductResponse::from)
             .collect(Collectors.toList());
         model.addAttribute("products", response);

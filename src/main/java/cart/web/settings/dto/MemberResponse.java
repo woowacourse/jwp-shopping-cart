@@ -1,6 +1,6 @@
 package cart.web.settings.dto;
 
-import cart.domain.settings.persistence.entity.MemberEntity;
+import cart.domain.persistence.entity.MemberEntity;
 
 public class MemberResponse {
 

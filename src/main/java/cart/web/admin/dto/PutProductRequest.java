@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
-import cart.domain.admin.persistence.entity.ProductEntity;
+import cart.domain.persistence.entity.ProductEntity;
 
 public class PutProductRequest {
 

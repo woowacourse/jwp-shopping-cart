@@ -17,8 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
-import cart.domain.admin.persistence.dao.ProductDao;
-import cart.domain.admin.persistence.entity.ProductEntity;
+import cart.domain.persistence.dao.ProductDao;
+import cart.domain.persistence.entity.ProductEntity;
 import cart.web.admin.dto.PostProductRequest;
 import cart.web.admin.dto.PutProductRequest;
 import io.restassured.RestAssured;
@@ -211,7 +211,7 @@ class AdminApiEndToEndTest {
             final ProductEntity request = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
             productDao.save(request);
 
-            final Long wrongId = 0L;
+            final long wrongId = 0L;
             final PutProductRequest putRequest = new PutProductRequest("modi", 7770, "https://woowacourse.github.io/");
 
             final ExtractableResponse<Response> response = given()
@@ -227,7 +227,7 @@ class AdminApiEndToEndTest {
 
         @Test
         void Product_DELETE_없는_ID_예외_테스트() {
-            final Long wrongId = 0L;
+            final long wrongId = 0L;
 
             final ExtractableResponse<Response> response = given()
                 .when()

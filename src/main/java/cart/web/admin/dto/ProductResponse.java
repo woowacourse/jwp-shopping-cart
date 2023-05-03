@@ -1,6 +1,6 @@
 package cart.web.admin.dto;
 
-import cart.domain.admin.persistence.entity.ProductEntity;
+import cart.domain.persistence.entity.ProductEntity;
 
 public class ProductResponse {
 
