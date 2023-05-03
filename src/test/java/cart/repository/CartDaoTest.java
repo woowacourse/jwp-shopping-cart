@@ -35,28 +35,14 @@ class CartDaoTest {
 
     @Test
     @DisplayName("장바구니에 추가 성공")
-    @Sql(scripts = "/product_dummy_data.sql")
     void create_success() {
         // given
-        final String findDitooUserSql = "select * from users where id = 1";
-        final UserEntity ditooUser = jdbcTemplate.queryForObject(findDitooUserSql,
-                (rs, rowNum) -> new UserEntity(
-                        rs.getInt("id"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("name")
-                ));
-        final String findDitooProductSql = "select * from product where id = 2";
-        final ProductEntity ditooProduct = jdbcTemplate.queryForObject(findDitooProductSql,
-                (rs, rowNum) -> new ProductEntity(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("image"),
-                        rs.getInt("price")
-                ));
+        final int ditooUserId = 1;
+        final int ditooProductId = 2;
+        final CartEntity cartEntity = new CartEntity(ditooUserId, ditooProductId);
 
         // when
-        final int id = cartDao.create(ditooUser, ditooProduct);
+        final int id = cartDao.create(cartEntity);
         final String sql = "select * from cart where user_id = 1 and product_id = 2";
         final CartEntity result = jdbcTemplate.queryForObject(sql,
                 (rs, rowNum) -> new CartEntity(
@@ -68,8 +54,8 @@ class CartDaoTest {
         // then
         assertAll(
                 () -> assertThat(result.getId()).isEqualTo(id),
-                () -> assertThat(result.getUserId()).isEqualTo(ditooUser.getId()),
-                () -> assertThat(result.getProductId()).isEqualTo(ditooProduct.getId())
+                () -> assertThat(result.getUserId()).isEqualTo(ditooUserId),
+                () -> assertThat(result.getProductId()).isEqualTo(ditooProductId)
         );
     }
 }

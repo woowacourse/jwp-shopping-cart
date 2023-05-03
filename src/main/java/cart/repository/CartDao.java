@@ -21,11 +21,10 @@ public class CartDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("cart")
-                .usingGeneratedKeyColumns("id");;
+                .usingGeneratedKeyColumns("id");
     }
 
-    public int create(final UserEntity user, final ProductEntity product) {
-        final CartEntity cartEntity = new CartEntity(user.getId(), product.getId());
+    public int create(final CartEntity cartEntity) {
         final SqlParameterSource params = new BeanPropertySqlParameterSource(cartEntity);
         return simpleJdbcInsert.executeAndReturnKey(params).intValue();
     }
