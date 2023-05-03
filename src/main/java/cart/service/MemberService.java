@@ -4,6 +4,7 @@ import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
 import cart.dto.AuthDto;
+import cart.dto.CreateMemberRequest;
 import cart.dto.response.MemberResponse;
 import java.util.List;
 import java.util.Optional;
@@ -39,11 +40,19 @@ public class MemberService {
         final Member member = new Member(authDto.getEmail(), authDto.getPassword());
         final Optional<MemberEntity> memberResult = memberDao.findMember(member);
         if (memberResult.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 회원 토큰입니다");
+            throw new IllegalArgumentException("존재하지 않는 회원 토큰입니다.");
         }
 
         return memberResult.get();
     }
 
-
+    @Transactional
+    public void create(final CreateMemberRequest createMemberRequest) {
+        final Member member = new Member(createMemberRequest.getEmail(), createMemberRequest.getPassword());
+        final Optional<MemberEntity> memberResult = memberDao.findMemberByEmail(member);
+        if (memberResult.isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        }
+        memberDao.insert(member);
+    }
 }

@@ -42,4 +42,18 @@ public class MemberDao {
             return Optional.empty();
         }
     }
+
+    public Optional<MemberEntity> findMemberByEmail(final Member member) {
+        final String sql = "SELECT * FROM MEMBER WHERE email = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper(), member.getEmail()));
+        } catch (EmptyResultDataAccessException error) {
+            return Optional.empty();
+        }
+    }
+
+    public void insert(final Member member) {
+        final String sql = "INSERT INTO MEMBER (email, password) VALUES (?, ?)";
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+    }
 }

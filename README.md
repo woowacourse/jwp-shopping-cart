@@ -87,6 +87,11 @@
         - header : Basic 형식의 토큰
         - path variable : 카트 id 전송
       - [x] 응답 : 202
+  - 회원 추가
+    - URI : `/members`
+        - [x] 요청 : post
+          - body : `CreateMemberRequest`
+        - [x] 응답 : 201
 
 ----
 #### DB 테이블
