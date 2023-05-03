@@ -1,7 +1,3 @@
-CREATE TABLE IF NOT EXISTS product (
-    id       INT           AUTO_INCREMENT,
-    name     VARCHAR(20)   NOT NULL,
-    image    VARCHAR       NOT NULL,
-    price    INT           NOT NULL,
-    PRIMARY KEY (id)
-);
+INSERT INTO customer (email, password)
+values ('pooh@naver.com', '123'),
+       ('jun@naver.com', '123');
