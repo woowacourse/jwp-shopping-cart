@@ -1,8 +1,10 @@
 package cart.exceptionHandler;
 
+import cart.auth.exception.AuthorizationException;
 import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -32,5 +34,10 @@ public class GlobalExceptionHandler {
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.joining("\n"));
         return ResponseEntity.badRequest().body(message);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<String> authorizationException(final AuthorizationException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }
