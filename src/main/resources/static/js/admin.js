@@ -53,23 +53,26 @@ const createProduct = (product) => {
     ).then((response) => {
         window.location.reload();
     }).catch((error) => {
-        console.error(error);
+        const {data} = error.response;
+        console.log(data);
+        window.alert(data.message)
     });
 };
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    console.log(product);
-    const { id } = product.productId;
+    const { productId } = product; //왜???
 
     axios.request({
         method: 'put',
-        url: '/products',
+        url: '/products/' + productId,
         data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
-        console.error(error);
+        const {data} = error.response;
+        console.log(data);
+        window.alert(data.message)
     });
 };
 
