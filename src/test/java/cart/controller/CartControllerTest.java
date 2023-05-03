@@ -58,9 +58,9 @@ class CartControllerTest {
     @Test
     void 장바구니에_상품을_가져올_때_인증정보가_포함되면_성공() {
         RestAssured.given()
-                .auth().preemptive().basic("userB@woowahan.com", "passwordB")
+                .auth().preemptive().basic("userA@woowahan.com", "passwordA")
                 .when()
-                .post("/cart/1")
+                .get("/cart/products")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }

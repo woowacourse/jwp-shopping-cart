@@ -30,7 +30,7 @@ class CartDaoTest {
 
     @Test
     void 데이터_정상_삽입() {
-        final var memberId = 1L;
+        final var memberId = 2L;
         final var productId = 1L;
 
         assertThatNoException().isThrownBy(() -> cartDao.insert(memberId, productId));
@@ -48,9 +48,6 @@ class CartDaoTest {
     @Test
     void 멤버ID로_저장된_상품들을_모두_가져온다() {
         final long memberId = 1L;
-
-        cartDao.insert(memberId, 1L);
-        cartDao.insert(memberId, 2L);
 
         assertThat(cartDao.findByMemberId(memberId).size()).isEqualTo(2);
     }
