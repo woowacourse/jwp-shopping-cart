@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MemberDao implements Dao<MemberEntity> {
 
-    final RowMapper<MemberEntity> rowMapper = (rs, rowNum) ->
+    private final RowMapper<MemberEntity> rowMapper = (rs, rowNum) ->
             new MemberEntity(
                     rs.getLong("id"),
                     rs.getString("email"),

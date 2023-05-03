@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @Transactional
+@Service
 public class ProductService {
 
     private final ProductDao productDao;
