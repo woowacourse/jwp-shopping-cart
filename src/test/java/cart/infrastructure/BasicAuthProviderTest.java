@@ -22,6 +22,9 @@ import org.springframework.util.Base64Utils;
 
 @ExtendWith(MockitoExtension.class)
 class BasicAuthProviderTest {
+    private static final String EMAIL = "glenfiddich@naver.com";
+    private static final String PASSWORD = "123456";
+
     @Mock
     MemberDao memberDao;
 
@@ -33,7 +36,7 @@ class BasicAuthProviderTest {
     void resolveUser_success() {
         // given
         String token = "Basic Z2xlbmZpZGRpY2hAbmF2ZXIuY29tOjEyMzQ1Ng==";
-        given(memberDao.findByEmailAndPassword("glenfiddich@naver.com", "123456"))
+        given(memberDao.findByEmailAndPassword(EMAIL, PASSWORD))
                 .willReturn(Optional.of(1L));
 
         // when
@@ -43,9 +46,9 @@ class BasicAuthProviderTest {
         assertThat(user.getMemberId())
                 .isEqualTo(1L);
         assertThat(user.getEmail())
-                .isEqualTo("glenfiddich@naver.com");
+                .isEqualTo(EMAIL);
         assertThat(user.getPassword())
-                .isEqualTo("123456");
+                .isEqualTo(PASSWORD);
     }
 
     @ParameterizedTest
