@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.common.AuthInfoHandlerMethodArgumentResolver;
 import cart.domain.auth.service.AuthService;
 import cart.domain.cart.service.CartService;
 import cart.dto.AuthInfo;
@@ -34,6 +35,8 @@ class CartControllerTest {
     private AuthService authService;
     @MockBean
     private CartService cartService;
+    @MockBean
+    private AuthInfoHandlerMethodArgumentResolver authInfoHandlerMethodArgumentResolver;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -44,12 +47,13 @@ class CartControllerTest {
     public void testGetCarts() throws Exception {
         //given
         final AuthInfo authInfo = new AuthInfo("test@test.com", "password");
-        when(authService.checkAuthenticationHeader(any()))
+        when(authInfoHandlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
             .thenReturn(authInfo);
         final List<CartResponse> cartResponses = List.of(
             new CartResponse(1L, "name1", "imageUrl1", 1000),
             new CartResponse(2L, "name2", "imageUrl2", 2000)
         );
+
         when(cartService.findByEmail(any()))
             .thenReturn(cartResponses);
 
@@ -78,7 +82,7 @@ class CartControllerTest {
     public void testAddCart() throws Exception {
         //given
         final AuthInfo authInfo = new AuthInfo("test@test.com", "password");
-        when(authService.checkAuthenticationHeader(any()))
+        when(authInfoHandlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
             .thenReturn(authInfo);
 
         //when
