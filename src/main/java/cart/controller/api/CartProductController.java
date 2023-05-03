@@ -4,8 +4,8 @@ import cart.controller.auth.AuthorizationExtractor;
 import cart.controller.auth.BasicAuthorizationExtractor;
 import cart.dto.AuthInfo;
 import cart.dto.ProductResponse;
-import cart.service.CartManagementService;
-import cart.service.ProductManagementService;
+import cart.service.CartProductService;
+import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,13 +23,25 @@ public class CartProductController {
 
     private final AuthorizationExtractor<AuthInfo> basicAuthorizationExtractor = new BasicAuthorizationExtractor();
 
-    private final ProductManagementService productManagementService;
-    private final CartManagementService cartManagementService;
+    private final ProductService productService;
+    private final CartProductService cartProductService;
 
-    public CartProductController(final ProductManagementService productManagementService,
-                                 final CartManagementService cartManagementService) {
-        this.productManagementService = productManagementService;
-        this.cartManagementService = cartManagementService;
+    public CartProductController(final ProductService productService,
+                                 final CartProductService cartProductService) {
+        this.productService = productService;
+        this.cartProductService = cartProductService;
+    }
+
+    @PostMapping("/{productId}")
+    public ResponseEntity<Void> postCartProduct(@PathVariable final Long productId,
+                                                final HttpServletRequest request) {
+        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+
+        final String email = authInfo.getEmail();
+        final String password = authInfo.getPassword();
+        cartProductService.addCartProduct(productId, email, password);
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
@@ -38,31 +50,19 @@ public class CartProductController {
 
         final String email = authInfo.getEmail();
         final String password = authInfo.getPassword();
-        final List<Long> productIds = cartManagementService.findAll(email, password);
+        final List<Long> productIds = cartProductService.findAllProductIds(email, password);
 
-        return ResponseEntity.ok(productManagementService.findByIds(productIds));
-    }
-
-    @PostMapping("/{productId}")
-    public ResponseEntity<Void> postCart(@PathVariable final Long productId,
-                                         final HttpServletRequest request) {
-        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-
-        final String email = authInfo.getEmail();
-        final String password = authInfo.getPassword();
-        cartManagementService.enroll(productId, email, password);
-
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(productService.findByIds(productIds));
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteCart(@PathVariable final Long productId,
-                                           final HttpServletRequest request) {
+    public ResponseEntity<Void> deleteCartProduct(@PathVariable final Long productId,
+                                                  final HttpServletRequest request) {
         final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
 
         final String email = authInfo.getEmail();
         final String password = authInfo.getPassword();
-        cartManagementService.delete(productId, email, password);
+        cartProductService.delete(productId, email, password);
 
         return ResponseEntity.noContent().build();
     }

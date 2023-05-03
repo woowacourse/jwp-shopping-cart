@@ -21,10 +21,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ProductManagementServiceTest {
+class ProductServiceTest {
 
     @InjectMocks
-    ProductManagementService managementService;
+    ProductService managementService;
 
     @Mock
     JdbcProductDao productDao;
@@ -36,7 +36,7 @@ class ProductManagementServiceTest {
                 ProductEntity.of(1L, "chicken", "https://image", 10_000),
                 ProductEntity.of(2L, "pizza", "https://image2", 20_000)
         );
-        when(productDao.selectAll()).thenReturn(data);
+        when(productDao.findAll()).thenReturn(data);
 
         final List<ProductResponse> productResponses = managementService.findAll();
 

@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.service.ProductManagementService;
+import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,9 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final ProductManagementService managementService;
+    private final ProductService managementService;
 
-    public AdminController(final ProductManagementService managementService) {
+    public AdminController(final ProductService managementService) {
         this.managementService = managementService;
     }
 

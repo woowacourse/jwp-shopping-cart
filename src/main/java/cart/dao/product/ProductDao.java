@@ -8,11 +8,11 @@ import java.util.List;
 @Validated
 public interface ProductDao {
 
-    List<ProductEntity> selectAll();
-
-    ProductEntity select(final Long id);
-
     void insert(final ProductEntity productEntity);
+
+    ProductEntity findById(final Long id);
+
+    List<ProductEntity> findAll();
 
     void updateById(final Long id, final ProductEntity productEntity);
 

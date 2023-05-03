@@ -17,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class MemberManagementServiceTest {
+class MemberServiceTest {
 
     @InjectMocks
-    MemberManagementService managementService;
+    MemberService managementService;
 
     @Mock
     JdbcMemberDao memberDao;
@@ -32,7 +32,7 @@ class MemberManagementServiceTest {
                 Member.of(1L, "test@test.com", "test"),
                 Member.of(2L, "woowacourse@woowa.com", "pobi")
         );
-        when(memberDao.selectAll()).thenReturn(data);
+        when(memberDao.findAll()).thenReturn(data);
 
         final List<MemberResponse> memberResponses = managementService.findAll();
 

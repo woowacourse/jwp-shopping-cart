@@ -9,16 +9,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class MemberManagementService {
+public class MemberService {
 
     private final MemberDao memberDao;
 
-    public MemberManagementService(final MemberDao memberDao) {
+    public MemberService(final MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
     public List<MemberResponse> findAll() {
-        final List<Member> members = memberDao.selectAll();
+        final List<Member> members = memberDao.findAll();
         return MemberResponseMapper.from(members);
     }
 

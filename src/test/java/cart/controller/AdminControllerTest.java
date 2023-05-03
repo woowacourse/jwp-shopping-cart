@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.dto.ProductResponse;
-import cart.service.ProductManagementService;
+import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class AdminControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    ProductManagementService managementService;
+    ProductService managementService;
 
     @DisplayName("상품 전체 목록을 조회하면 상태코드 200을 반환하는지 확인한다")
     @Test

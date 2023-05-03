@@ -25,23 +25,23 @@ public class JdbcProductDao implements ProductDao {
     );
 
     @Override
-    @Transactional(readOnly = true)
-    public List<ProductEntity> selectAll() {
-        final String sql = "SELECT * FROM product";
-        return jdbcTemplate.query(sql, productEntityRowMapper);
+    public void insert(final ProductEntity productEntity) {
+        final String sql = "INSERT INTO product(name, image_url, price) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImageUrl(), productEntity.getPrice());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ProductEntity select(final Long id) {
+    public ProductEntity findById(final Long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
     }
 
     @Override
-    public void insert(final ProductEntity productEntity) {
-        final String sql = "INSERT INTO product(name, image_url, price) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImageUrl(), productEntity.getPrice());
+    @Transactional(readOnly = true)
+    public List<ProductEntity> findAll() {
+        final String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
     @Override

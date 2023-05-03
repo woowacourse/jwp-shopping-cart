@@ -4,7 +4,7 @@ import cart.dto.ProductCreationRequest;
 import cart.dto.ProductModificationRequest;
 import cart.dto.ProductResponse;
 import cart.mapper.ProductEntityMapper;
-import cart.service.ProductManagementService;
+import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,21 +22,21 @@ import java.util.List;
 @RestController
 public class ProductController {
 
-    private final ProductManagementService managementService;
+    private final ProductService managementService;
 
-    public ProductController(final ProductManagementService managementService) {
+    public ProductController(final ProductService managementService) {
         this.managementService = managementService;
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ProductResponse>> getProducts() {
-        return ResponseEntity.ok(managementService.findAll());
     }
 
     @PostMapping
     public ResponseEntity<Void> postProducts(@RequestBody ProductCreationRequest request) {
         managementService.add(ProductEntityMapper.from(request));
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> getProducts() {
+        return ResponseEntity.ok(managementService.findAll());
     }
 
     @PatchMapping("/{productId}")

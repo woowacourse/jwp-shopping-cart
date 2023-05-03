@@ -1,6 +1,5 @@
 package cart.dao.product;
 
-import cart.dao.product.JdbcProductDao;
 import cart.domain.product.ProductEntity;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +36,7 @@ class JdbcProductDaoTest {
     @DisplayName("모든 상품 데이터를 반환하는지 확인한다")
     @Test
     void selectAllTest() {
-        final List<ProductEntity> productEntities = productDao.selectAll();
+        final List<ProductEntity> productEntities = productDao.findAll();
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(productEntities.size()).isEqualTo(2);

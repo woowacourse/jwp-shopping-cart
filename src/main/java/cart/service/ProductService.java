@@ -10,23 +10,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProductManagementService {
+public class ProductService {
 
     private final ProductDao productDao;
 
-    public ProductManagementService(final ProductDao productDao) {
+    public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
     public List<ProductResponse> findAll() {
-        final List<ProductEntity> productEntities = productDao.selectAll();
+        final List<ProductEntity> productEntities = productDao.findAll();
         return ProductResponseMapper.from(productEntities);
     }
 
     public List<ProductResponse> findByIds(final List<Long> productIds) {
         final List<ProductEntity> productEntities = new ArrayList<>();
         for (Long productId : productIds) {
-            productEntities.add(productDao.select(productId));
+            productEntities.add(productDao.findById(productId));
         }
 
         return ProductResponseMapper.from(productEntities);

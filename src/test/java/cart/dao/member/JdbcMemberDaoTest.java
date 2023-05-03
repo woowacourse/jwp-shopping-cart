@@ -30,7 +30,7 @@ class JdbcMemberDaoTest {
     @DisplayName("모든 멤버 데이터를 반환하는지 확인한다")
     @Test
     void selectAllTest() {
-        final List<Member> members = memberDao.selectAll();
+        final List<Member> members = memberDao.findAll();
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(members.size()).isEqualTo(2);
