@@ -1,4 +1,4 @@
-const addCartItem = (productId) => {
+const addCartItem = (itemId) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
@@ -14,7 +14,7 @@ const addCartItem = (productId) => {
             'Authorization': `Basic ${credentials}`
         },
         data: {
-            "productId": productId
+            "itemId": itemId
         }
     }).then((response) => {
         alert('장바구니에 담았습니다.');
