@@ -52,7 +52,7 @@ class CartServiceTest {
         given(productDao.findAll()).willReturn(givenProducts);
 
         //when
-        List<ProductResponse> products = cartService.readAll();
+        List<ProductResponse> products = cartService.readAllProducts();
 
         //then
         assertThat(products).isEqualTo(givenProducts.stream()

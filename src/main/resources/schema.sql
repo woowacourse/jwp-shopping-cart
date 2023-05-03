@@ -7,3 +7,11 @@ CREATE TABLE IF NOT EXISTS product
 
     PRIMARY KEY (product_id)
 );
+
+CREATE TABLE IF NOT EXISTS user_info
+(
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (email)
+);

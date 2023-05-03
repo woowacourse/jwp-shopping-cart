@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.dto.ProductResponse;
+import cart.dto.UserResponse;
 import cart.service.CartService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,16 +19,23 @@ public class ViewController {
     }
 
     @GetMapping("/")
-    public String getIndex(final Model model) {
-        List<ProductResponse> products = cartService.readAll();
+    public String getIndexView(final Model model) {
+        List<ProductResponse> products = cartService.readAllProducts();
         model.addAttribute("products", products);
         return "index";
     }
 
     @GetMapping("/admin")
-    public String getAdmin(final Model model) {
-        List<ProductResponse> products = cartService.readAll();
+    public String getAdminView(final Model model) {
+        List<ProductResponse> products = cartService.readAllProducts();
         model.addAttribute("products", products);
         return "admin";
+    }
+
+    @GetMapping("/settings")
+    public String getSettingsView(final Model model) {
+        List<UserResponse> users = cartService.readAllUsers();
+        model.addAttribute("members", users);
+        return "settings";
     }
 }
