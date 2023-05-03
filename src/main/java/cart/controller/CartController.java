@@ -25,7 +25,7 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/addCart/{productId}")
+    @PostMapping("/carts/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addCartItem(HttpServletRequest request, @PathVariable(value = "productId") Long productId) {
         LoginRequest loginRequest = basicAuthExtractor.extract(request);
@@ -38,8 +38,9 @@ public class CartController {
         return "cart";
     }
 
-    @GetMapping("/findCart")
+    @GetMapping("/carts")
     @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     public ResponseEntity<List<ProductResponse>> showCart(HttpServletRequest request) {
         System.out.println(request.getHeader("Authorization"));
         LoginRequest loginRequest = basicAuthExtractor.extract(request);
@@ -47,8 +48,8 @@ public class CartController {
         return ResponseEntity.ok(cartByUser);
     }
 
-    @DeleteMapping("/deleteCart")
-    public void deleteCartItem(HttpServletRequest request) {
+    @DeleteMapping("/carts/{productId}")
+    public void deleteCartItem(HttpServletRequest request, @PathVariable(value = "productId") Long productId) {
 
     }
 }
