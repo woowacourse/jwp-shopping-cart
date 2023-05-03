@@ -1,4 +1,8 @@
-CREATE TABLE IF NOT EXISTS product
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS member;
+DROP TABLE IF EXISTS cart;
+
+CREATE TABLE product
 (
     id     INT          NOT NULL AUTO_INCREMENT,
     name   VARCHAR(255) NOT NULL,
@@ -7,15 +11,16 @@ CREATE TABLE IF NOT EXISTS product
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS member
+CREATE TABLE member
 (
     id INT NOT NULL AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
-);
+    );
 
-CREATE TABLE IF NOT EXISTS cart
+
+CREATE TABLE cart
 (
     member_id INT NOT NULL,
     product_id INT NOT NULL
