@@ -1,9 +1,7 @@
 package cart.business;
 
-import cart.business.domain.Product;
-import cart.business.domain.ProductImage;
-import cart.business.domain.ProductName;
-import cart.business.domain.ProductPrice;
+import cart.entity.Product;
+import cart.persistence.ProductRepository;
 import cart.presentation.dto.ProductRequest;
 import cart.presentation.dto.ProductResponse;
 import org.springframework.stereotype.Service;
@@ -14,54 +12,42 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductRepository jdbcTemplateRepository;
 
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductService(ProductRepository jdbcTemplateRepository) {
+        this.jdbcTemplateRepository = jdbcTemplateRepository;
     }
 
     @Transactional
     public Integer create(ProductRequest request) {
         Product product = makeProductFromRequest(request);
+        jdbcTemplateRepository.findSameProductExist(product);
 
-        if (productRepository.findSameProductExist(product)) {
-            throw new IllegalArgumentException("이미 동일한 상품이 존재합니다.");
-        }
-
-        return productRepository.insert(product);
+        return jdbcTemplateRepository.insert(product);
     }
 
     @Transactional(readOnly = true)
     public List<Product> read() {
-        return productRepository.findAll();
+        return jdbcTemplateRepository.findAll();
     }
 
     @Transactional
     public Integer update(Integer id, ProductRequest request) {
         Product product = makeProductFromRequest(request);
-        return productRepository.update(id, product);
+        return jdbcTemplateRepository.update(id, product);
     }
 
     @Transactional
     public Integer delete(Integer id) {
-        return productRepository.remove(id);
+        return jdbcTemplateRepository.remove(id);
     }
 
     private Product makeProductFromRequest(ProductRequest request) {
-        return new Product(
-                null,
-                new ProductName(request.getName()),
-                new ProductImage(request.getUrl()),
-                new ProductPrice(request.getPrice())
-        );
+        return new Product(null, request.getName(), request.getUrl(), request.getPrice());
     }
 
     private Product makeProductFromResponse(ProductResponse response) {
         return new Product(
-                response.getId(),
-                new ProductName(response.getName()),
-                new ProductImage(response.getUrl()),
-                new ProductPrice(response.getPrice())
-        );
+                response.getId(), (response.getName()), response.getUrl(), response.getPrice());
     }
 }

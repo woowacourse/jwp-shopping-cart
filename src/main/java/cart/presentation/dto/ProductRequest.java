@@ -13,6 +13,9 @@ public class ProductRequest {
     private String url;
     private Integer price;
 
+    public ProductRequest() {
+    }
+
     public ProductRequest(String name, String url, Integer price) {
         validateParameters(name, url, price);
         this.name = name;

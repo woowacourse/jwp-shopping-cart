@@ -1,18 +1,15 @@
-package cart.business.domain;
-
-import org.springframework.lang.NonNull;
+package cart.entity;
 
 import java.util.Objects;
 
 public class Product {
 
     private final Integer id;
-    private final ProductName name;
-    private final ProductImage url;
-    private final ProductPrice price;
+    private final String name;
+    private final String url;
+    private final Integer price;
 
-    public Product(@NonNull Integer id, @NonNull ProductName name,
-                   @NonNull ProductImage url, @NonNull ProductPrice price) {
+    public Product(Integer id, String name, String url, Integer price) {
         this.id = id;
         this.name = name;
         this.url = url;
@@ -24,25 +21,23 @@ public class Product {
     }
 
     public String getName() {
-        return name.getValue();
+        return name;
     }
 
     public String getUrl() {
-        return url.getValue();
+        return url;
     }
 
     public Integer getPrice() {
-        return price.getValue();
+        return price;
     }
-
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return name.getValue().equals(product.getName())
-                && url.getValue().equals(product.getUrl())
-                && price.getValue() == product.getPrice();
+        return Objects.equals(name, product.name) && Objects.equals(url, product.url) && Objects.equals(price, product.price);
     }
 
     @Override

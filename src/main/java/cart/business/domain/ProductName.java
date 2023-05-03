@@ -1,13 +1,11 @@
 package cart.business.domain;
 
-import org.springframework.lang.NonNull;
-
 public class ProductName {
 
     private static final int MAX_LENGTH = 10;
     private final String name;
 
-    public ProductName(@NonNull String name) {
+    public ProductName(String name) {
         validate(name);
         this.name = name;
     }

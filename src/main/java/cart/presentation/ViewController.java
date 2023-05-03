@@ -15,16 +15,15 @@ public class ViewController {
     //interface bean을 어떻게 주입하는가? 어떻게 알고 주입하는가?에 대한 내용임
     // 방법은 여러가지. 1. 우선순위주기 @Primary 2. 이름으로 주입, 3. @Qualifier
 
-    private final ProductService readProductService;
+    private final ProductService productService;
 
-
-    public ViewController(ProductService readProductService) {
-        this.readProductService = readProductService;
+    public ViewController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/")
     public String home(Model model) {
-        List<ProductResponse> products = readProductService.read().stream()
+        List<ProductResponse> products = productService.read().stream()
                 .map(product -> new ProductResponse(product.getId(),
                         product.getName(),
                         product.getUrl(),
@@ -36,7 +35,7 @@ public class ViewController {
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        List<ProductResponse> products = readProductService.read().stream()
+        List<ProductResponse> products = productService.read().stream()
                 .map(product -> new ProductResponse(product.getId(),
                         product.getName(),
                         product.getUrl(),

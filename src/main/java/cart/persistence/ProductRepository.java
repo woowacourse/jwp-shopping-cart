@@ -1,6 +1,6 @@
-package cart.business;
+package cart.persistence;
 
-import cart.business.domain.Product;
+import cart.entity.Product;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ public interface ProductRepository {
 
     Integer remove(Integer id);
 
-    Boolean findSameProductExist(Product product);
+    void findSameProductExist(Product product);
 }

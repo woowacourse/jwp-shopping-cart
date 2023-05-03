@@ -15,6 +15,9 @@ public class ProductResponse {
     private String url;
     private Integer price;
 
+    public ProductResponse() {
+    }
+
     public ProductResponse(Integer id, String name, String url, Integer price) {
         validateParameters(name, url, price);
         this.id = id;
@@ -40,11 +43,11 @@ public class ProductResponse {
         return id;
     }
 
-    public String getName() {
+    public java.lang.String getName() {
         return name;
     }
 
-    public String getUrl() {
+    public java.lang.String getUrl() {
         return url;
     }
 

@@ -1,10 +1,6 @@
 package cart.persistence;
 
-import cart.business.ProductRepository;
-import cart.business.domain.Product;
-import cart.business.domain.ProductImage;
-import cart.business.domain.ProductName;
-import cart.business.domain.ProductPrice;
+import cart.entity.Product;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,9 +25,9 @@ public class MemoryProductRepository implements ProductRepository {
         return store.entrySet()
                 .stream()
                 .map(entry -> new Product(entry.getKey(),
-                        new ProductName(entry.getValue().getName()),
-                        new ProductImage(entry.getValue().getUrl()),
-                        new ProductPrice(entry.getValue().getPrice())))
+                        (entry.getValue().getName()),
+                        (entry.getValue().getUrl()),
+                        (entry.getValue().getPrice())))
                 .collect(Collectors.toList());
     }
 
@@ -48,7 +44,9 @@ public class MemoryProductRepository implements ProductRepository {
     }
 
     @Override
-    public Boolean findSameProductExist(Product product) {
-        return store.containsValue(product);
+    public void findSameProductExist(Product product) {
+        if (store.containsValue(product)) {
+            throw new IllegalArgumentException("동일한 상품이 존재합니다");
+        }
     }
 }

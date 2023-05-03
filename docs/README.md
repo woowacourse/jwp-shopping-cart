@@ -28,9 +28,10 @@
 
 ## 2단계
 
-- [] MemoryRepository DB로 변경
+- [x] MemoryRepository DB로 변경
 - [] 사용자 기능 구현
     - [] 사용자는 email, password를 가진다
+        - [x] (검증) 올바른 이메일 형식이 아니라면 예외처리
 - [] 사용자 설정 페이지 연동
     - [] settings.html 파일 설계한 사용자 정보에 맞게 코드를 변경
     - [] settings.js 파일 설계한 사용자 정보에 맞게 코드를 변경

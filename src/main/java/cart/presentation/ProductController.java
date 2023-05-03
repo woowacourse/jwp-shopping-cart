@@ -2,7 +2,7 @@ package cart.presentation;
 
 
 import cart.business.ProductService;
-import cart.business.domain.Product;
+import cart.entity.Product;
 import cart.presentation.dto.ProductRequest;
 import cart.presentation.dto.ProductResponse;
 import org.springframework.http.ResponseEntity;
