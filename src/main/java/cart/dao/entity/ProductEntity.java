@@ -41,7 +41,9 @@ public class ProductEntity {
             return false;
         }
         ProductEntity that = (ProductEntity) o;
-        return Objects.equals(this.id, that.id);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
+            && Objects.equals(price, that.price) && Objects.equals(imageUrl,
+            that.imageUrl);
     }
 
     @Override

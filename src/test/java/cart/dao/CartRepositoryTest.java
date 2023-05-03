@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.controller.dto.ProductResponse;
 import cart.dao.entity.ProductEntity;
@@ -49,9 +50,16 @@ class CartRepositoryTest {
         //given, when
         List<ProductEntity> products = cartRepository.getProducts(member);
         int actual = products.size();
+        ProductEntity product1 = new ProductEntity(1L, "피자", 13000,
+            "https://searchad-phinf.pstatic.net/MjAyMjEyMjdfMTE1/MDAxNjcyMTAxNTI0Nzg4.WfiSlsy9fTUQJ6q2FTGOaaOVU0QpSB0U1LvplKZQXzIg.H4UgI0VbKUszP7mzC3qhwpSMe15DluJnxjxVGDq_QUgg.PNG/451708-1fa87663-02e3-4303-b8a9-d7eea3676018.png?type=f160_160");
+        ProductEntity product2 = new ProductEntity(2L, "치킨", 27000,
+            "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzAzMjdfMTI2%2FMDAxNjc5OTI1ODQ4NTgy.6RT9z-i5prsnwwc-6B9TaK6Q0Zcgsd3TeDGiUdqyDRIg.rW2kMtzBKNFhWWXyr_X2bZfR15AEPUOz-VJnqVaP0jEg.JPEG.koreasinju%2FIMG_3379.jpg&type=ff332_332");
 
         //then
-        assertThat(actual).isEqualTo(2);
+        assertAll(
+            () -> assertThat(actual).isEqualTo(2),
+            () -> assertThat(products).contains(product1, product2)
+        );
     }
 
     @Test
