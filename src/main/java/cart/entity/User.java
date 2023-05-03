@@ -1,28 +1,18 @@
 package cart.entity;
 
+import cart.entity.vo.Email;
+
 public class User {
 
-    private final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
     private final int MIN_PASSWORD_LENGTH = 5;
 
-    private final String email;
+    private final Email email;
     private final String password;
 
     public User(final String email, final String password) {
-        validateFields(email, password);
-        this.email = email;
-        this.password = password;
-    }
-
-    private void validateFields(final String email, final String password) {
-        validateEmail(email);
         validatePassword(password);
-    }
-
-    private void validateEmail(final String email) {
-        if (!email.matches(EMAIL_REGEX)) {
-            throw new IllegalArgumentException("email이 형식에 맞지 않습니다. 입력된 값 : " + email);
-        }
+        this.email = new Email(email);
+        this.password = password;
     }
 
     private void validatePassword(final String password) {
@@ -31,7 +21,7 @@ public class User {
         }
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 

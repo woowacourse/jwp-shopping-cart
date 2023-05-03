@@ -1,6 +1,8 @@
 package cart.dao;
 
 import cart.entity.User;
+import cart.exception.UserAuthorizationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -28,6 +30,10 @@ public class JdbcUsersDao implements UsersDao {
     @Override
     public User findByEmail(final String email) {
         final String sql = "SELECT * FROM users WHERE email=?;";
-        return jdbcTemplate.queryForObject(sql, userRowMapper, email);
+        try {
+            return jdbcTemplate.queryForObject(sql, userRowMapper, email);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new UserAuthorizationException("입력된 email을 사용하는 사용자를 찾을 수 없습니다. 입력된 email : " + email);
+        }
     }
 }
