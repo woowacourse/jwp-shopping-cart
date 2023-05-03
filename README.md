@@ -33,8 +33,8 @@
 
 - [x] `/cart`로 접근할 경우 장바구니 페이지 조회 => `GET /cart`
 
-- [ ] 장바구니 기능 구현
+- [x] 장바구니 기능 구현
     - [x] 상품 추가 => `POST /cart`
-    - [ ] 장바구니에 담긴 상품 제거 => `DELETE /cart`
+    - [x] 장바구니에 담긴 상품 제거 => `DELETE /cart`
     - [x] 목록 조회 => `GET /cart`
     - [x] 목록 불러오기 => `GET /cart/all`
