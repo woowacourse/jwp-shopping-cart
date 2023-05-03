@@ -1,7 +1,7 @@
 package cart.controller;
 
+import cart.domain.product.Product;
 import cart.domain.product.ProductEntity;
-import cart.dto.application.ProductDto;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.service.ProductService;
@@ -27,21 +27,26 @@ public class ProductResourceController {
     @PostMapping("/admin/products")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ProductResponse createProduct(@RequestBody @Valid final ProductRequest productRequest) {
-        final ProductDto productDto = new ProductDto(
+        final Product product = new Product(
                 productRequest.getName(),
                 productRequest.getPrice(),
                 productRequest.getImageUrl()
         );
-        final ProductEntity product = productService.register(productDto);
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        final ProductEntity result = productService.register(product);
+        return new ProductResponse(result.getId(), result.getName(), result.getPrice(), result.getImageUrl());
     }
 
     @PutMapping("/admin/products/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public ProductResponse updateProduct(@PathVariable final long id,
                                          @RequestBody @Valid final ProductRequest productRequest) {
-        final ProductEntity product = productService.updateProduct(id, new ProductDto(productRequest));
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        final Product product = new Product(
+                productRequest.getName(),
+                productRequest.getPrice(),
+                productRequest.getImageUrl()
+        );
+        final ProductEntity result = productService.updateProduct(id, product);
+        return new ProductResponse(result.getId(), result.getName(), result.getPrice(), result.getImageUrl());
     }
 
     @DeleteMapping("/admin/products/{id}")

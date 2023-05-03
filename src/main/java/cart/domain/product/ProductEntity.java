@@ -1,8 +1,11 @@
 package cart.domain.product;
 
+import javax.validation.Valid;
+
 public class ProductEntity {
 
     private final ProductId id;
+    @Valid
     private final Product product;
 
     public ProductEntity(final long id, final String name, final int price, final String imageUrl) {

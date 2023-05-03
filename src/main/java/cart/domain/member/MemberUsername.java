@@ -1,21 +1,20 @@
 package cart.domain.member;
 
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 
 public class MemberUsername {
 
-    private static final int USERNAME_MAX_LENGTH = 100;
+    private static final int MIN_LENGTH = 8;
+    private static final int MAX_LENGTH = 100;
+
+    @NotBlank
+    @Length(min = MIN_LENGTH, max = MAX_LENGTH, message = MIN_LENGTH + "-" + MAX_LENGTH + "자 사이의 사용자명을 입력해 주세요.")
     private final String value;
 
     public MemberUsername(final String username) {
-        validateUsername(username);
         this.value = username;
-    }
-
-    private void validateUsername(final String username) {
-        if (username.length() > USERNAME_MAX_LENGTH) {
-            throw new IllegalArgumentException(USERNAME_MAX_LENGTH + "자 이하의 사용자명을 입력해 주세요.");
-        }
     }
 
     public String getValue() {

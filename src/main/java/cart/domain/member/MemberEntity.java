@@ -1,8 +1,11 @@
 package cart.domain.member;
 
+import javax.validation.Valid;
+
 public class MemberEntity {
 
     private final MemberId id;
+    @Valid
     private final Member member;
 
     public MemberEntity(final long id, final String username, final String password) {

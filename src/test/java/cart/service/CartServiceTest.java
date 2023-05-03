@@ -3,9 +3,9 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.domain.cart.Item;
 import cart.domain.cart.ItemEntity;
 import cart.domain.product.ProductEntity;
-import cart.dto.application.ItemDto;
 import io.restassured.RestAssured;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,13 +44,13 @@ class CartServiceTest {
         final int userId = 2;
         final int productId = 1;
 
-        final ItemDto itemDto = new ItemDto(userId, productId);
-        final ItemEntity item = cartService.insert(itemDto);
+        final Item item = new Item(userId, productId);
+        final ItemEntity result = cartService.insert(item);
 
         assertAll(
-                () -> assertThat(item.getId()).isEqualTo(expectedId),
-                () -> assertThat(item.getUserId()).isEqualTo(userId),
-                () -> assertThat(item.getProductId()).isEqualTo(productId)
+                () -> assertThat(result.getId()).isEqualTo(expectedId),
+                () -> assertThat(result.getUserId()).isEqualTo(userId),
+                () -> assertThat(result.getProductId()).isEqualTo(productId)
         );
     }
 

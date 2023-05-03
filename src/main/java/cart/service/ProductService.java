@@ -3,12 +3,14 @@ package cart.service;
 import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import cart.domain.product.ProductEntity;
-import cart.dto.application.ProductDto;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 public class ProductService {
 
     private final ProductDao productDao;
@@ -22,23 +24,17 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductEntity register(final ProductDto productDto) {
-        final Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+    public ProductEntity register(@Valid final Product product) {
         final long id = productDao.insert(product);
 
         return new ProductEntity(id, product);
     }
 
     @Transactional
-    public ProductEntity updateProduct(final long id, final ProductDto productDto) {
+    public ProductEntity updateProduct(final long id, @Valid final Product product) {
         validateExistData(id);
 
-        final ProductEntity newProduct = new ProductEntity(
-                id,
-                productDto.getName(),
-                productDto.getPrice(),
-                productDto.getImageUrl()
-        );
+        final ProductEntity newProduct = new ProductEntity(id, product);
 
         productDao.update(newProduct);
 

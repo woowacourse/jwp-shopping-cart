@@ -1,25 +1,22 @@
 package cart.domain.product;
 
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 
 public class ProductName {
-    private static final int MAX_NAME_LENGTH = 20;
+    private static final int MAX_LENGTH = 20;
 
+    @NotBlank
+    @Length(max = MAX_LENGTH, message = MAX_LENGTH + "자 이하의 이름을 입력해 주세요.")
     private final String value;
 
     public ProductName(final String name) {
-        validateName(name);
         this.value = name;
     }
 
     public String getValue() {
         return value;
-    }
-
-    private void validateName(final String name) {
-        if (name.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException(MAX_NAME_LENGTH + "자 이하의 이름을 입력해 주세요.");
-        }
     }
 
     @Override

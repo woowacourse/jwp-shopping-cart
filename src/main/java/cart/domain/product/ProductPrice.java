@@ -1,25 +1,22 @@
 package cart.domain.product;
 
 import java.util.Objects;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.PositiveOrZero;
 
 public class ProductPrice {
-    private static final int MIN_PRICE_RANGE = 0;
-    private static final int MAX_PRICE_RANGE = 100_000_000;
+    private static final int MAX_RANGE = 100_000_000;
+
+    @PositiveOrZero
+    @Max(value = MAX_RANGE, message = MAX_RANGE + "원 이하의 가격을 입력해주세요.")
     private final int value;
 
     public ProductPrice(final int price) {
-        validatePrice(price);
         this.value = price;
     }
 
     public int getValue() {
         return value;
-    }
-
-    private void validatePrice(final int price) {
-        if (price < MIN_PRICE_RANGE || price > MAX_PRICE_RANGE) {
-            throw new IllegalArgumentException("0원 이상 1억 이하의 가격을 입력해주세요.");
-        }
     }
 
     @Override
