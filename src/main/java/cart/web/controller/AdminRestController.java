@@ -6,7 +6,6 @@ import cart.domain.product.service.dto.ProductModificationDto;
 import cart.web.controller.dto.request.ProductCreationRequest;
 import cart.web.controller.dto.request.ProductModificationRequest;
 import cart.web.controller.dto.response.ProductCreationResponse;
-import cart.web.controller.dto.response.ProductDeleteResponse;
 import cart.web.controller.dto.response.ProductModificationResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,11 +46,12 @@ public class AdminRestController {
     }
 
     @DeleteMapping("/{deleteId}")
-    public ResponseEntity<ProductDeleteResponse> deleteProduct(@PathVariable Long deleteId) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long deleteId) {
         adminService.delete(deleteId);
 
         return ResponseEntity
-                .ok(new ProductDeleteResponse(deleteId));
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @PutMapping
