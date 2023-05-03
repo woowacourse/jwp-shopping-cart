@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.ProductEntity;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -63,7 +64,13 @@ public class H2ProductDao implements ProductDao {
 
     @Override
     public Optional<ProductEntity> findById(final long id) {
-        final String sql = "select * from product where id=?";
-        return Optional.of(namedParameterjdbcTemplate.getJdbcTemplate().queryForObject(sql, getRowMapper(), id));
+        try {
+            final String sql = "select * from product where id=?";
+            final ProductEntity productEntity = namedParameterjdbcTemplate.getJdbcTemplate()
+                .queryForObject(sql, getRowMapper(), id);
+            return Optional.of(productEntity);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 }

@@ -2,6 +2,9 @@ package cart.dao;
 
 import cart.entity.CartEntity;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -43,5 +46,16 @@ public class H2CartDao implements CartDao{
   public void deleteByMemberIdAndProductId(final long memberId, final long productId) {
     final String sql = "delete from cart where member_id=? and product_id=?";
     namedParameterjdbcTemplate.getJdbcOperations().update(sql, memberId, productId);
+  }
+
+  @Override
+  public Optional<CartEntity> findCartByMemberIdAndProductId(long memberId, long productId) {
+    try {
+      final String sql = "select * from cart where member_id=? and product_id=?";
+      final CartEntity cartEntity = namedParameterjdbcTemplate.getJdbcTemplate().queryForObject(sql, getRowMapper(), memberId, productId);
+      return Optional.of(cartEntity);
+    } catch (EmptyResultDataAccessException exception) {
+      return Optional.empty();
+    }
   }
 }
