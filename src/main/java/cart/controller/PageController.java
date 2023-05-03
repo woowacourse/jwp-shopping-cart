@@ -37,6 +37,11 @@ public class PageController {
         return "settings";
     }
 
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
+    }
+
     @GetMapping("/products/{id}")
     public String productDetail(@PathVariable final Long id, final Model model) {
         final ProductDto result = productService.findById(id);

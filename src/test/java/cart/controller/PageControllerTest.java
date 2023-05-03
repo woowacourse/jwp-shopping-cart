@@ -76,6 +76,7 @@ class PageControllerTest {
 
         // expect
         mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
                 .andExpect(model().attribute("products", hasSize(2)))
                 .andExpect(model().attribute(
                         "products",
@@ -98,6 +99,7 @@ class PageControllerTest {
 
         // expect
         mockMvc.perform(get("/admin"))
+                .andExpect(status().isOk())
                 .andExpect(model().attribute("products", hasSize(2)))
                 .andExpect(model().attribute(
                         "products",
@@ -118,6 +120,7 @@ class PageControllerTest {
 
         // expect
         mockMvc.perform(get("/products/" + id))
+                .andExpect(status().isOk())
                 .andExpect(model().attribute(
                         "product",
                         is(generateProductPropertiesMatcher(id, "허브티", "tea.jpg", 1000L))
@@ -144,6 +147,7 @@ class PageControllerTest {
 
         // expect
         mockMvc.perform(get("/settings"))
+                .andExpect(status().isOk())
                 .andExpect(model().attribute("members", hasSize(2)))
                 .andExpect(model().attribute(
                         "members",
@@ -153,6 +157,14 @@ class PageControllerTest {
                         "members",
                         hasItem(generateMemberPropertiesMatcher(id2, "pizza2@pizza.com", "password2"))
                 ))
+                .andDo(print());
+    }
+
+    @Test
+    void 카트_페이지에_접근한다() throws Exception {
+        // expect
+        mockMvc.perform(get("/cart"))
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 }
