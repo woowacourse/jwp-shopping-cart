@@ -2,6 +2,7 @@ package cart.dto.member;
 
 import cart.domain.member.Member;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,6 @@ public class MembersResponseDto {
     }
 
     public List<MemberResponseDto> getMembers() {
-        return members;
+        return Collections.unmodifiableList(this.members);
     }
 }

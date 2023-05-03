@@ -4,10 +4,10 @@ import cart.domain.product.Product;
 
 public class ProductResponseDto {
 
-    private Long id;
-    private String name;
-    private String imgUrl;
-    private int price;
+    private final Long id;
+    private final String name;
+    private final String imgUrl;
+    private final int price;
 
     private ProductResponseDto(final Long id, final String name, final String imgUrl, final int price) {
         this.id = id;

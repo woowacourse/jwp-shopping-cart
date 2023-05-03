@@ -21,13 +21,13 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductsResponseDto> findMemberCarts(@LoginBasic final Member member) {
+    public ResponseEntity<ProductsResponseDto> findMemberCartItems(@LoginBasic final Member member) {
         return ResponseEntity.ok(cartService.findAllCartItems(member));
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<Void> addCart(@PathVariable final Long productId,
-                                        @LoginBasic Member member) {
+    public ResponseEntity<Void> addCartItem(@PathVariable final Long productId,
+                                            @LoginBasic Member member) {
         Long cartId = cartService.addCartItem(member, productId);
 
         return ResponseEntity.created(URI.create("/carts/" + cartId))
@@ -35,8 +35,8 @@ public class CartController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteCart(@PathVariable final Long productId,
-                                           @LoginBasic final Member member) {
+    public ResponseEntity<Void> deleteCartItem(@PathVariable final Long productId,
+                                               @LoginBasic final Member member) {
         cartService.deleteCartItem(member, productId);
         return ResponseEntity.status(HttpStatus.OK)
                 .build();

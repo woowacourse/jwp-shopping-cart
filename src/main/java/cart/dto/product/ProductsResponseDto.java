@@ -2,6 +2,7 @@ package cart.dto.product;
 
 import cart.domain.product.Product;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,6 @@ public class ProductsResponseDto {
     }
 
     public List<ProductResponseDto> getProducts() {
-        return products;
+        return Collections.unmodifiableList(this.products);
     }
 }
