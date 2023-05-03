@@ -51,7 +51,7 @@ public class H2UserRepository implements UserRepository {
     public Optional<User> findByEmail(final String email) {
         final String sql = "SELECT member_id, email, password FROM MEMBER WHERE email=?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, userEntityRowMapper, email).toDomain());
+            return Optional.of(jdbcTemplate.queryForObject(sql, userEntityRowMapper, email).toDomain());
         } catch (final Exception e) {
             return Optional.empty();
         }
