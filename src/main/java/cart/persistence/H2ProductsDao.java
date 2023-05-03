@@ -2,11 +2,13 @@ package cart.persistence;
 
 import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,6 +57,20 @@ public class H2ProductsDao implements ProductsDao {
                 resultSet.getInt("price"),
                 resultSet.getString("image_url")
         ));
+    }
+
+    @Override
+    public List<Product> findAll(List<Long> productIds) {
+        final String inSql = String.join(",", Collections.nCopies(productIds.size(), "?"));
+        String sql = String.format("SELECT id, name, image_url, price FROM PRODUCT WHERE id IN (%s)", inSql);
+
+        return jdbcTemplate.query(sql,
+                (resultSet, rowNum) -> new Product(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt("price"),
+                        resultSet.getString("image_url")
+                ), productIds.toArray());
     }
 
     @Override
