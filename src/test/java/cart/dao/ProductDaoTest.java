@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cart.TestFixture;
+import cart.dao.dto.ProductDto;
 
 @JdbcTest
 class ProductDaoTest {
@@ -42,7 +43,7 @@ class ProductDaoTest {
     @Test
     @DisplayName("상품 하나 조회")
     void select() {
-        final ProductEntity entity = productDao.select(getGreatestId());
+        final ProductDto entity = productDao.select(getGreatestId());
 
         assertThat(entity)
                 .extracting("name", "image", "price")

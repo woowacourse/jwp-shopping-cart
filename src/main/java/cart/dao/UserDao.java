@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import cart.dao.dto.UserDto;
+
 @Repository
 public class UserDao {
 
@@ -29,12 +31,12 @@ public class UserDao {
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).intValue();
     }
 
-    public List<UserEntity> selectAll() {
+    public List<UserDto> selectAll() {
         String sql = "SELECT id, email, password FROM USERS";
 
         return jdbcTemplate.query(
                 sql,
-                (rs, rowNum) -> new UserEntity(
+                (rs, rowNum) -> new UserDto(
                         rs.getInt("id"),
                         rs.getString("email"),
                         rs.getString("password")

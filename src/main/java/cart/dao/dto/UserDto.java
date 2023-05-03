@@ -1,12 +1,12 @@
-package cart.dao;
+package cart.dao.dto;
 
-public class UserEntity {
+public class UserDto {
 
     private final Integer id;
     private final String email;
     private final String password;
 
-    public UserEntity(Integer id, String email, String password) {
+    public UserDto(Integer id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;

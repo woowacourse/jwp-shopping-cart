@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
+import cart.dao.dto.ProductDto;
+
 @Component
 public class ProductDao {
 
@@ -43,13 +45,13 @@ public class ProductDao {
         return jdbcTemplate.update(sql, id);
     }
 
-    public ProductEntity select(final Integer id) {
+    public ProductDto select(final Integer id) {
         String sql = "select * from product where id = ?";
 
         return jdbcTemplate.queryForObject(
                 sql,
                 (rs, rowNum) ->
-                        new ProductEntity(
+                        new ProductDto(
                                 rs.getInt("id"),
                                 rs.getString("name"),
                                 rs.getString("image"),
@@ -59,13 +61,13 @@ public class ProductDao {
         );
     }
 
-    public List<ProductEntity> findAll() {
+    public List<ProductDto> findAll() {
         String sql = "select * from product";
 
         return jdbcTemplate.query(
                 sql,
                 (rs, rowNum) ->
-                        new ProductEntity(
+                        new ProductDto(
                                 rs.getInt("id"),
                                 rs.getString("name"),
                                 rs.getString("image"),

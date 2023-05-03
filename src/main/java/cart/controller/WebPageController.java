@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import cart.controller.dto.ProductResponse;
 import cart.dao.UserDao;
-import cart.dao.UserEntity;
+import cart.dao.dto.UserDto;
 import cart.domain.Product;
 import cart.domain.User;
 import cart.repository.ProductRepository;
@@ -39,11 +39,12 @@ public class WebPageController {
 
     @GetMapping("/settings")
     public String renderSettingsPage(final Model model) {
-        List<UserEntity> userEntities = userDao.selectAll();
-        List<User> users = userEntities.stream()
-                .map(userEntity -> new User(
-                        userEntity.getEmail(),
-                        userEntity.getPassword())
+        List<UserDto> userDtos = userDao.selectAll();
+        List<User> users = userDtos.stream()
+                .map(userDto -> new User(
+                        userDto.getId(),
+                        userDto.getEmail(),
+                        userDto.getPassword())
                 )
                 .collect(Collectors.toList());
 

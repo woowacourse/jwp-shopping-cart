@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 import cart.dao.ProductDao;
-import cart.dao.ProductEntity;
+import cart.dao.dto.ProductDto;
 import cart.domain.Product;
 import cart.repository.exception.NoSuchIdException;
 
@@ -53,12 +53,12 @@ public class ProductRepository {
                 .collect(Collectors.toList());
     }
 
-    private Product toProduct(ProductEntity productEntity) {
+    private Product toProduct(ProductDto productDto) {
         return new Product(
-                productEntity.getId(),
-                productEntity.getName(),
-                productEntity.getImage(),
-                productEntity.getPrice()
+                productDto.getId(),
+                productDto.getName(),
+                productDto.getImage(),
+                productDto.getPrice()
         );
     }
 }
