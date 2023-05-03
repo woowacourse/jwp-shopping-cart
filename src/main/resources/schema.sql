@@ -13,3 +13,13 @@ CREATE TABLE IF NOT EXISTS MEMBER
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (email)
 );
+
+CREATE TABLE IF NOT EXISTS CART
+(
+    cart_id    BIGINT       NOT NULL AUTO_INCREMENT,
+    email      VARCHAR(255) NOT NULL,
+    product_id BIGINT       NOT NULL,
+    PRIMARY KEY (cart_id),
+    FOREIGN KEY (email) REFERENCES MEMBER (email),
+    FOREIGN KEY (product_id) REFERENCES PRODUCT (product_id)
+);
