@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Controller
-public class MemberController {
+public class MemberViewController {
     private final MemberService memberService;
 
-    public MemberController(final MemberService memberService) {
+    public MemberViewController(final MemberService memberService) {
         this.memberService = memberService;
     }
 
