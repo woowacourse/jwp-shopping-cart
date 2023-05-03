@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.dto.UserAuthenticationDto;
+import cart.auth.dto.AuthenticationDto;
 import cart.exception.AuthorizationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 
@@ -10,13 +10,13 @@ public class BasicAuthorizationExtractor {
     private static final String DELIMITER = ":";
     private static final int CREDENTIALS_LENGTH = 2;
 
-    public static UserAuthenticationDto extract(final String authorizationHeader) {
+    public static AuthenticationDto extract(final String authorizationHeader) {
         if (authorizationHeader.startsWith(BASIC_TYPE)) {
             final String[] credentials = decode(authorizationHeader).split(DELIMITER);
             validateCredentials(credentials);
             final String email = credentials[0];
             final String password = credentials[1];
-            return new UserAuthenticationDto(email, password);
+            return new AuthenticationDto(email, password);
         }
         throw new AuthorizationException("Basic Authentication이 아닙니다.");
     }

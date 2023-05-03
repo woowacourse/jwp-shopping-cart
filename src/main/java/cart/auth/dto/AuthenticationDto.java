@@ -1,11 +1,11 @@
-package cart.dto;
+package cart.auth.dto;
 
-public class UserAuthenticationDto {
+public class AuthenticationDto {
 
     private final String email;
     private final String password;
 
-    public UserAuthenticationDto(final String email, final String password) {
+    public AuthenticationDto(final String email, final String password) {
         this.email = email;
         this.password = password;
     }
