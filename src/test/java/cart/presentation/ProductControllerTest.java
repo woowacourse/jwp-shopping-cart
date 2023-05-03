@@ -30,7 +30,7 @@ class ProductControllerTest {
 
 
     @Test
-    @DisplayName("product/create로 POST 요청을 보낼 수 있다")
+    @DisplayName("/product 로 POST 요청을 보낼 수 있다")
     void test_create_request() throws Exception {
         // given
         willDoNothing().given(productCRUDApplication).create(any(ProductDto.class));
@@ -47,7 +47,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("product/read로 GET 요청을 보낼 수 있다")
+    @DisplayName("/product 로 GET 요청을 보낼 수 있다")
     void test_read_request() throws Exception {
         // given
         given(productCRUDApplication.readAll()).willReturn(null);
@@ -60,7 +60,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("product/update로 POST 요청을 보낼 수 있다")
+    @DisplayName("/product 로 POST 요청을 보낼 수 있다")
     void test_update_request() throws Exception {
         // given
         willDoNothing().given(productCRUDApplication).update(any(ProductDto.class));
@@ -78,7 +78,7 @@ class ProductControllerTest {
                 .andExpect(status().isOk());
     }
     @Test
-    @DisplayName("product/delete로 DELETE 요청을 보낼 수 있다")
+    @DisplayName("/product 로 DELETE 요청을 보낼 수 있다")
     void test_delete_request() throws Exception {
         // given
         willDoNothing().given(productCRUDApplication).delete(any(ProductIdDto.class));
