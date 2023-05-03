@@ -1,17 +1,19 @@
 package cart.dao;
 
 import cart.entity.Member;
-import org.assertj.core.api.Assertions;
+import cart.exception.ServiceIllegalArgumentException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Sql({"classpath:test_init.sql"})
@@ -39,7 +41,7 @@ class JdbcMemberDaoTest {
     @CsvSource(value = {"gksqlsl11@khu.ac.kr:qlalfqjsgh123", ":qlalfqjsgh", "gksqlsl11:qlalf", ":"}, delimiter = ':')
     void isMemberExists_false(String email, String password) {
         Member member = new Member(email, password);
-        assertThat(memberDao.isMemberExists(member)).isFalse();
+        assertThat(memberDao.isValidMember(member)).isFalse();
     }
 
     @DisplayName("이메일이 저장되어있다면 true를 반환한다.")

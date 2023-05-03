@@ -19,5 +19,5 @@ CREATE TABLE IF NOT EXISTS basket
     user_id BIGINT NOT NULL,
     item_id BIGINT NOT NULL
 );
-
-INSERT INTO MEMBER values (1, 'gksqlsl11@khu.ac.kr', 'qlalfqjsgh');
+--
+-- INSERT INTO MEMBER values (1, 'gksqlsl11@khu.ac.kr', 'qlalfqjsgh');

@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.Member;
+import cart.exception.ServiceIllegalArgumentException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
