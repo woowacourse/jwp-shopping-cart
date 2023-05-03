@@ -27,8 +27,11 @@ public class CartService {
         return cartDao.findAllCartProductByCustomerId(customerId)
                 .stream()
                 .map(CartResponse::from)
-                // 근데 이러면 조회할 필드가 바뀌면 서비스 바뀌고 + dao도 바뀌는거 아닌가? 그러면 dao에서는 그냥 전체값을 조회해오는게 낫나?
                 .collect(Collectors.toList());
+    }
+
+    public void deleteById(final long cartId) {
+        cartDao.deleteById(cartId);
     }
 
 }

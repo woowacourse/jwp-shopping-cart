@@ -38,4 +38,9 @@ public class CartDao {
                 .build(), customerId);
     }
 
+    public void deleteById(final long cartId) {
+        String sql = "DELETE FROM cart WHERE id = ?";
+        jdbcTemplate.update(sql, cartId);
+    }
+
 }

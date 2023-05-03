@@ -21,6 +21,9 @@ class CartDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    private long customerId = 1L;
+    private long productId = 1L;
+
     @BeforeEach
     void setUp() {
         this.cartDao = new CartDao(jdbcTemplate);
@@ -30,10 +33,6 @@ class CartDaoTest {
     @DisplayName("사용자 id와 상품 id로 장바구니를 담는다.")
     @Test
     void insert() {
-        // given
-        long customerId = 1L;
-        long productId = 1L;
-
         // when
         long savedId = cartDao.insert(customerId, productId);
 
@@ -59,8 +58,6 @@ class CartDaoTest {
     @Sql("/cart_initialize.sql")
     void findAllCartProductByCustomerId() {
         // given
-        long customerId = 1L;
-        long productId = 1L;
         long cartId = cartDao.insert(customerId, productId);
         String name = "baron";
         String imgUrl = "tempUrl";
@@ -73,5 +70,20 @@ class CartDaoTest {
         List<CartProductDto> expectedCartProducts = List.of(new CartProductDto(cartId, name, price, imgUrl));
         assertThat(cartProducts).usingRecursiveComparison()
                 .isEqualTo(expectedCartProducts);
+    }
+
+    @DisplayName("사용자 장바구니 상품을 삭제할 수 있다.")
+    @Test
+    @Sql("/cart_initialize.sql")
+    void deleteById() {
+        // given
+        long cartId = cartDao.insert(customerId, productId);
+
+        // when
+        cartDao.deleteById(cartId);
+
+        // then
+        List<CartProductDto> cartProducts = cartDao.findAllCartProductByCustomerId(customerId);
+        assertThat(cartProducts).isEmpty();
     }
 }
