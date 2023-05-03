@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.exception.product.NullOrBlankException;
+import cart.exception.common.NullOrBlankException;
 import cart.exception.product.PriceNotUnderZeroException;
 
 public class Product {

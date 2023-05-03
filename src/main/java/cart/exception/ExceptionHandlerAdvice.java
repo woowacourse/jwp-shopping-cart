@@ -1,5 +1,6 @@
 package cart.exception;
 
+import cart.exception.common.CommonException;
 import cart.exception.notfound.NotFoundException;
 import cart.exception.product.ProductException;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ public class ExceptionHandlerAdvice {
         return ResponseEntity.badRequest().body(errorMessage);
     }
 
-    @ExceptionHandler(ProductException.class)
+    @ExceptionHandler({ProductException.class, CommonException.class})
     public ResponseEntity<String> handleProductException(ProductException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
