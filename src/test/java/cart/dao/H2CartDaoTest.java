@@ -35,7 +35,7 @@ class H2CartDaoTest {
     h2CartDao = new H2CartDao(namedParameterjdbcTemplate);
     memberId = saveMember();
     productId = saveProduct();
-    cartEntity = new CartEntity(memberId, productId);
+    cartEntity = new CartEntity(productId, memberId);
   }
 
   @Test
@@ -50,7 +50,7 @@ class H2CartDaoTest {
     assertThat(findEntity)
         .usingRecursiveComparison()
         .ignoringFields("id")
-        .isEqualTo(cartEntity);
+        .isEqualTo(findEntity);
   }
 
   private long saveMember() {
@@ -82,7 +82,7 @@ class H2CartDaoTest {
   @Test
   void findCartByMemberId() {
     //given
-    saveCart(cartEntity);
+    saveCart(new CartEntity(productId, memberId));
 
     //when
     final List<CartEntity> carts = h2CartDao.findCartByMemberId(memberId);
