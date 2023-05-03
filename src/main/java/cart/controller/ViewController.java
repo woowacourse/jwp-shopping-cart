@@ -38,7 +38,7 @@ public class ViewController {
     }
 
     @GetMapping("/admin")
-    public String readAdminProducts(final Model model) {
+    public String getAdminProducts(final Model model) {
         final List<ResponseProductDto> responseProductDtos = cartService.findAll();
         model.addAttribute("products", responseProductDtos);
         return "admin";

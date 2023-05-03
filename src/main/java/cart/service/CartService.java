@@ -1,7 +1,10 @@
 package cart.service;
 
+import cart.dao.CartDao;
+import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.dao.entity.ProductEntity;
+import cart.dto.auth.AuthInfo;
 import cart.dto.request.RequestCreateProductDto;
 import cart.dto.request.RequestUpdateProductDto;
 import cart.dto.response.ResponseProductDto;
@@ -18,10 +21,14 @@ public class CartService {
     private static final int MINIMUM_AFFECTED_ROWS = 1;
 
     private final ProductDao productDao;
+    private final MemberDao memberDao;
+    private final CartDao cartDao;
 
     @Autowired
-    public CartService(final ProductDao productDao) {
+    public CartService(final ProductDao productDao, MemberDao memberDao, final CartDao cartDao) {
         this.productDao = productDao;
+        this.memberDao = memberDao;
+        this.cartDao = cartDao;
     }
 
     @Transactional(readOnly = true)
@@ -68,5 +75,13 @@ public class CartService {
     public void delete(final Long id) {
         final int affectedRows = productDao.delete(id);
         validateAffectedRowsCount(affectedRows);
+    }
+
+    public List<ResponseProductDto> findCartProductsByMember(final AuthInfo authInfo) {
+        int memberId = memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
+        List<ProductEntity> productEntities = cartDao.findProductsByMemberId(memberId);
+        return productEntities.stream()
+                .map(ResponseProductDto::transferEntityToDto)
+                .collect(Collectors.toList());
     }
 }

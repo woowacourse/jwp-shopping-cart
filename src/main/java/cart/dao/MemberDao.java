@@ -30,4 +30,9 @@ public class MemberDao {
                 .password(resultSet.getString("password"))
                 .build();
     }
+
+    public int findIdByAuthInfo(final String email, final String password) {
+        final String query = "SELECT id FROM MEMBER WHERE email = ? AND password = ?";
+        return jdbcTemplate.queryForObject(query, Integer.class, email, password);
+    }
 }
