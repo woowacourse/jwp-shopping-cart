@@ -30,6 +30,4 @@ public class CartApiController {
         return ResponseEntity.ok().build();
     }
 
-
-
 }

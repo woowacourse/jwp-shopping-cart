@@ -16,7 +16,7 @@ public class CartService {
 
     @Transactional
     public void save(final Long memberId, final ProductIdRequest request) {
-        cartDao.create(memberId, request.getProductId());
+        cartDao.save(memberId, request.getProductId());
     }
 
 }
