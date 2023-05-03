@@ -1,13 +1,10 @@
 package cart.controller;
 
-import cart.dto.AuthInfo;
 import cart.dto.MemberDto;
 import cart.dto.ProductDto;
-import cart.service.CartService;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/")
 public class ViewController {
+
     private final ProductService productService;
     private final MemberService memberService;
 
