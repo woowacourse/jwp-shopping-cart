@@ -35,7 +35,7 @@
 ```mermaid
 graph TD
 
-user --> cart
+cart --> user
 cart --many--> product
 ```
 
@@ -44,7 +44,7 @@ cart --many--> product
 ```mermaid
 graph TD
 
-user --> cart
+cart --> user
 cart --many--> cart_product
 product --many--> cart_product
 ```
