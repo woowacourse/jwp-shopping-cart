@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import cart.dao.product.ProductDao;
 import cart.dto.ProductCreationRequest;
