@@ -11,7 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.dao.MemberDao;
 import cart.dao.ProductDao;
+import cart.domain.Member;
 import cart.domain.Product;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -35,7 +37,10 @@ class PageControllerTest {
     @Autowired
     private ProductDao productDao;
 
-    private Matcher<Object> generatePropertiesMatcher(
+    @Autowired
+    private MemberDao memberDao;
+
+    private Matcher<Object> generateProductPropertiesMatcher(
             final Long id,
             final String name,
             final String image,
@@ -46,6 +51,18 @@ class PageControllerTest {
                 hasProperty("name", is(name)),
                 hasProperty("image", is(image)),
                 hasProperty("price", is(price))
+        );
+    }
+
+    private Matcher<Object> generateMemberPropertiesMatcher(
+            final Long id,
+            final String email,
+            final String password
+    ) {
+        return allOf(
+                hasProperty("id", is(id)),
+                hasProperty("email", is(email)),
+                hasProperty("password", is(password))
         );
     }
 
@@ -62,11 +79,11 @@ class PageControllerTest {
                 .andExpect(model().attribute("products", hasSize(2)))
                 .andExpect(model().attribute(
                         "products",
-                        hasItem(generatePropertiesMatcher(id1, "허브티", "tea.jpg", 1000L))
+                        hasItem(generateProductPropertiesMatcher(id1, "허브티", "tea.jpg", 1000L))
                 ))
                 .andExpect(model().attribute(
                         "products",
-                        hasItem(generatePropertiesMatcher(id2, "고양이", "cat.jpg", 1000000L))
+                        hasItem(generateProductPropertiesMatcher(id2, "고양이", "cat.jpg", 1000000L))
                 ))
                 .andDo(print());
     }
@@ -84,11 +101,11 @@ class PageControllerTest {
                 .andExpect(model().attribute("products", hasSize(2)))
                 .andExpect(model().attribute(
                         "products",
-                        hasItem(generatePropertiesMatcher(id1, "허브티", "tea.jpg", 1000L))
+                        hasItem(generateProductPropertiesMatcher(id1, "허브티", "tea.jpg", 1000L))
                 ))
                 .andExpect(model().attribute(
                         "products",
-                        hasItem(generatePropertiesMatcher(id2, "고양이", "cat.jpg", 1000000L))
+                        hasItem(generateProductPropertiesMatcher(id2, "고양이", "cat.jpg", 1000000L))
                 ))
                 .andDo(print());
     }
@@ -103,7 +120,7 @@ class PageControllerTest {
         mockMvc.perform(get("/products/" + id))
                 .andExpect(model().attribute(
                         "product",
-                        is(generatePropertiesMatcher(id, "허브티", "tea.jpg", 1000L))
+                        is(generateProductPropertiesMatcher(id, "허브티", "tea.jpg", 1000L))
                 ))
                 .andDo(print());
     }
@@ -114,6 +131,28 @@ class PageControllerTest {
         mockMvc.perform(get("/products/" + Long.MAX_VALUE))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("상품을 찾을 수 없습니다."))
+                .andDo(print());
+    }
+
+    @Test
+    void 세팅_페이지에_접근한다() throws Exception {
+        // given
+        final Member member1 = new Member("pizza1@pizza.com", "password1");
+        final Member member2 = new Member("pizza2@pizza.com", "password2");
+        final Long id1 = memberDao.saveAndGetId(member1);
+        final Long id2 = memberDao.saveAndGetId(member2);
+
+        // expect
+        mockMvc.perform(get("/settings"))
+                .andExpect(model().attribute("members", hasSize(2)))
+                .andExpect(model().attribute(
+                        "members",
+                        hasItem(generateMemberPropertiesMatcher(id1, "pizza1@pizza.com", "password1"))
+                ))
+                .andExpect(model().attribute(
+                        "members",
+                        hasItem(generateMemberPropertiesMatcher(id2, "pizza2@pizza.com", "password2"))
+                ))
                 .andDo(print());
     }
 }
