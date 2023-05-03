@@ -21,4 +21,8 @@ public class MemberManagementService {
         final List<Member> members = memberDao.selectAll();
         return MemberResponseMapper.from(members);
     }
+
+    public Member find(final String email, final String password) {
+        return memberDao.findByEmailAndPassword(email, password);
+    }
 }

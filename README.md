@@ -32,9 +32,9 @@
   - [ ] API 추가
     - [ ] 장바구니 상품 추가`POST /cart/products/{productId}` → `201 CREATED`
     - [ ] 장바구니에 담긴 상품 제거 `DELETE /cart/products/{productId}` → `204 NO CONTENT`
-    - [ ] 장바구니 목록 조회 `GET /cart/products` → `200 OK`
-  - [ ] 사용자 정보는 Authorization 필드를 사용해 인증 처리를 한다.
-  - [ ] 인증 방식은 Basic 인증을 사용한다.
+    - [x] 장바구니 목록 조회 `GET /cart/products` → `200 OK`
+  - [x] 사용자 정보는 Authorization 필드를 사용해 인증 처리를 한다.
+  - [x] 인증 방식은 Basic 인증을 사용한다.
 - [ ] 장바구니 페이지 연동
   - [ ] 상품 목록 페이지에서 장바구니를 추가할 수 있다.
   - [ ] 장바구니 페이지를 통해 각 유저에 맞는 장바구니 목록을 확인하고, 상품을 제거하는 기능을 동작하게 한다.
