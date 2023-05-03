@@ -1,7 +1,10 @@
 package cart.dao;
 
+import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class CartDao {
@@ -19,4 +22,14 @@ public class CartDao {
         jdbcTemplate.update(sql, userId, productId, DEFAULT_COUNT);
     }
 
+    public List<ProductEntity> findByUserId(Long id) {
+        String sql = "SELECT P.ID, PRICE, NAME, IMAGE_URL  FROM PRODUCT P, CART C WHERE P.ID = C.PRODUCT_ID AND C.USER_ID = ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new ProductEntity(
+                rs.getLong("ID"),
+                rs.getString("NAME"),
+                rs.getString("IMAGE_URL"),
+                rs.getInt("PRICE"))
+                , id
+        );
+    }
 }
