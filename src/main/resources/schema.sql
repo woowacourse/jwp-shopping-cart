@@ -1,8 +1,4 @@
-DROP TABLE IF EXISTS cart;
-DROP TABLE IF EXISTS product;
-DROP TABLE IF EXISTS _user;
-
-CREATE TABLE product
+CREATE TABLE IF NOT EXISTS product
 (
     `id`        BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     `name`      VARCHAR(25)   NOT NULL,
@@ -12,7 +8,7 @@ CREATE TABLE product
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE _user
+CREATE TABLE IF NOT EXISTS _user
 (
     `id`       BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     `email`    VARCHAR(30)   NOT NULL,
@@ -20,7 +16,7 @@ CREATE TABLE _user
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE cart
+CREATE TABLE IF NOT EXISTS cart
 (
     `id`         BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
     `product_id` BIGINT        NOT NULL,

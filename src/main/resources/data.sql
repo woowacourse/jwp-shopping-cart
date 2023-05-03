@@ -1,31 +1,3 @@
-CREATE TABLE IF NOT EXISTS product
-(
-    `id`        BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    `name`      VARCHAR(25)   NOT NULL,
-    `image_url` VARCHAR(500),
-    `price`     INT           NOT NULL,
-    `category`  VARCHAR(10)   NOT NULL,
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE IF NOT EXISTS _user
-(
-    `id`       BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    `email`    VARCHAR(30)   NOT NULL,
-    `password` VARCHAR(500),
-    PRIMARY KEY (`id`)
-);
-
-CREATE TABLE IF NOT EXISTS cart
-(
-    `id`         BIGINT UNIQUE NOT NULL AUTO_INCREMENT,
-    `product_id` BIGINT        NOT NULL,
-    `user_id`    BIGINT        NOT NULL,
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`product_id`) REFERENCES product (`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`user_id`) REFERENCES _user (`id`) ON DELETE CASCADE
-);
-
 INSERT INTO product(`name`, `image_url`, `price`, `category`)
 VALUES ('치킨',
         'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA0MDlfNjAg%2FMDAxNjgxMDA1NjI3OTMz.qOnKFKiwedtqn10zbps-4_RMwfjNa_HBsJ4SZOkuvKAg.jY1kM1nc6XpMWr7RTH-rZbVFL8fQXRjAnIBygcZ8OwQg.JPEG.nicebina%2FIMG_3773.jpg&type=sc960_832',
@@ -40,7 +12,5 @@ VALUES ('파스타',
         25000, 'WESTERN');
 
 
-INSERT INTO _user(`email`, `password`)
-VALUES ('a@a.com', 'password1');
-INSERT INTO _user(`email`, `password`)
-VALUES ('b@b.com', 'password2');
+INSERT INTO _user(`email`, `password`) VALUES ('a@a.com', 'password1');
+INSERT INTO _user(`email`, `password`) VALUES ('b@b.com', 'password2');
