@@ -18,7 +18,7 @@ public final class ProductRestController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<String> createProduct(@RequestBody @Valid ProductRequest productRequest) {
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequest productRequest) {
         productService.addProduct(productRequest);
         return ResponseEntity.ok().build();
     }
@@ -31,8 +31,8 @@ public final class ProductRestController {
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<String> updateProduct(@RequestBody @Valid ProductRequest productRequest,
-                                                @PathVariable Long id) {
+    public ResponseEntity<Void> updateProduct(@RequestBody @Valid ProductRequest productRequest,
+                                              @PathVariable Long id) {
         productRequest.setId(id);
         productService.updateProduct(productRequest);
 
@@ -40,7 +40,7 @@ public final class ProductRestController {
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
 
         return ResponseEntity.ok().build();
