@@ -24,11 +24,17 @@ public class UserDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public UserEntity insert(final UserEntity userEntity) {
+        final String sql = "INSERT INTO MEMBER (email, password) VALUES (?, ?)";
+        jdbcTemplate.update(sql, userEntity.getEmail(), userEntity.getPassword());
+        return userEntity;
+    }
+
     public List<UserEntity> findAll() {
         final String sql = "SELECT email, password from MEMBER";
         return jdbcTemplate.query(sql, userEntityRowMapper);
     }
-    
+
     public Optional<UserEntity> findByEmail(final String email) {
         final String sql = "SELECT email, password from MEMBER where email=?";
         try {
