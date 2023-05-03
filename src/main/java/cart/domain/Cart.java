@@ -8,19 +8,19 @@ public class Cart {
      private final Item item;
      */
 
-    private final Long user_id;
-    private final Long item_id;
+    private final Long userId;
+    private final Long itemId;
 
-    public Cart(final Long user_id, final Long item_id) {
-        this.user_id = user_id;
-        this.item_id = item_id;
+    public Cart(final Long userId, final Long itemId) {
+        this.userId = userId;
+        this.itemId = itemId;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public Long getItem_id() {
-        return item_id;
+    public Long getItemId() {
+        return itemId;
     }
 }
