@@ -6,6 +6,8 @@ import cart.dto.CartItemResponseDto;
 import cart.service.CartService;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +24,11 @@ public class CartController {
     @GetMapping("")
     public List<CartItemResponseDto> cartItemList(@AuthenticatedMember AuthInfo authInfo) {
         return cartService.findAll(authInfo.getEmail());
+    }
+
+    @PostMapping("/{productId}")
+    public void addCartItem(@PathVariable int productId, @AuthenticatedMember AuthInfo authInfo) {
+        cartService.add(productId, authInfo.getEmail());
     }
 
 }
