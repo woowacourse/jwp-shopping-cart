@@ -19,7 +19,7 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MemberSearchResponse>> searchAll() {
+    public ResponseEntity<List<MemberSearchResponse>> searchAllMembers() {
         return ResponseEntity.ok()
                 .body(memberService.searchAllMembers());
     }
