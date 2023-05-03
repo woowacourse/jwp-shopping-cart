@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.dto.ProductDto;
 import cart.dto.ProductRequest;
 import cart.response.ApiResponse;
 import cart.service.ProductService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,6 +26,14 @@ public class ProductController {
 
     public ProductController(ProductService productService) {
         this.productService = productService;
+    }
+
+    @GetMapping()
+    public ResponseEntity<ApiResponse<?>> productList() {
+        List<ProductDto> products = productService.findAll();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.createSuccess(products));
     }
 
     @PostMapping()
