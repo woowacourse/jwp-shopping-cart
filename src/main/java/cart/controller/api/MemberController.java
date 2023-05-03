@@ -1,6 +1,6 @@
 package cart.controller.api;
 
-import cart.dto.CreateMemberRequest;
+import cart.dto.request.CreateMemberRequest;
 import cart.service.MemberService;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;

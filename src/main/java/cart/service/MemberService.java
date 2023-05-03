@@ -4,7 +4,7 @@ import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
 import cart.dto.AuthDto;
-import cart.dto.CreateMemberRequest;
+import cart.dto.request.CreateMemberRequest;
 import cart.dto.response.MemberResponse;
 import java.util.List;
 import java.util.Optional;
