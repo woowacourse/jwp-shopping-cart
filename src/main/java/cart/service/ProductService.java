@@ -44,6 +44,7 @@ public class ProductService {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findById(final List<CartDto> cartDtos) {
         List<Product> products = cartDtos.stream()
                 .map(cartDto -> productDao.findById(cartDto.getProductId())

@@ -4,11 +4,13 @@ import cart.dao.CartDao;
 import cart.domain.dto.CartDto;
 import cart.entity.CartEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CartService {
 
     private final CartDao cartDao;
@@ -28,6 +30,7 @@ public class CartService {
         cartDao.deleteById(memberId, productId);
     }
 
+    @Transactional(readOnly = true)
     public List<CartDto> getProducts(final Long memberId) {
         final List<CartEntity> cartEntities = cartDao.findByMemberId(memberId);
 
