@@ -1,4 +1,20 @@
-# jwp-shopping-cart 기능목록
+# 미션2 jwp-shopping-cart 기능목록
+
+## 사용자 기능 구현
+
+- [ ] 사용자 정보에는 이메일과 패스워드 정보가 담겨있다.
+- [ ] 필요한 경우 사용자 정보 종류를 추가할 수 있다.(ex. 이름, 전화번호 등)
+    - [ ] UserCredentials와 User를 분리한다.
+    - [ ] UserCredentials는 이메일과 패스워드 정보를 담고 있다.
+    - [ ] User는 UserCredentials와 추가 정보를 담고 있다.
+
+## 사용자 설정 페이지 연동
+
+## 장바구니 기능 구현
+
+## 장바구니 페이지 연동
+
+# 미션1 jwp-shopping-cart 기능목록
 
 ## 상품 목록 페이지 연동
 
