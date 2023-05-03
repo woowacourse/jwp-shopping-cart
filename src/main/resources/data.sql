@@ -14,5 +14,13 @@ CREATE TABLE IF NOT EXISTS `USER` (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS CART (
+    id bigint NOT NULL AUTO_INCREMENT,
+    PRODUCT_ID int NOT NULL,
+    USER_ID int NOT NULL,
+    COUNT int NOT NULL,
+    PRIMARY KEY (id)
+);
+
 INSERT INTO `USER` (email, password) VALUES ('aaa1234@google.com', 'aaaa');
 INSERT INTO `USER` (email, password) VALUES ('bbb1234@google.com', 'bbbbb');

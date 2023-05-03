@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public class ProductDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
@@ -41,5 +42,14 @@ public class ProductDao {
     public void deleteById(Long id) {
         String sql = "DELETE FROM PRODUCT WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public boolean existById(Long productId) {
+        String sql = "SELECT COUNT(*) FROM PRODUCT";
+        Long count = Long.valueOf(jdbcTemplate.queryForObject(sql, Integer.class));
+        if (count == 1) {
+            return true;
+        }
+        return false;
     }
 }

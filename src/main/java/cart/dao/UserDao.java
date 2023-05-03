@@ -24,4 +24,15 @@ public class UserDao {
                 rs.getString("password"))
         );
     }
+
+    public UserEntity findByEmailAndPassword(String email, String password) {
+        String sql = "SELECT * FROM `USER` WHERE email=? AND password=?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum)
+                -> new UserEntity(
+                rs.getLong("id"),
+                rs.getString("email"),
+                rs.getString("password"))
+                , email, password
+        );
+    }
 }
