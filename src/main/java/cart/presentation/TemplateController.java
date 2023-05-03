@@ -2,16 +2,13 @@ package cart.presentation;
 
 import cart.application.ProductCRUDApplication;
 import cart.business.MemberReadService;
-import cart.business.ProductCRUDService;
 import cart.business.domain.member.Member;
-import cart.business.domain.product.Product;
 import cart.presentation.dto.ProductDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class TemplateController {
@@ -43,5 +40,10 @@ public class TemplateController {
         List<Member> members = memberReadService.readAll();
         model.addAttribute("members", members);
         return "settings";
+    }
+
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
     }
 }
