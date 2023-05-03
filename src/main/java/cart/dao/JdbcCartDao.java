@@ -2,8 +2,6 @@ package cart.dao;
 
 import cart.domain.cart.Cart;
 import java.util.List;
-import java.util.Optional;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -20,8 +18,7 @@ public class JdbcCartDao implements CartDao {
             new Cart(
                     resultSet.getLong("id"),
                     resultSet.getLong("member_id"),
-                    resultSet.getLong("product_id"),
-                    resultSet.getInt("quantity")
+                    resultSet.getLong("product_id")
             );
 
     public JdbcCartDao(JdbcTemplate jdbcTemplate) {
@@ -38,26 +35,8 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
-    public Optional<Cart> findByMemberIdAndProductId(final long memberId, final long productId) {
-        final String sql = "SELECT * FROM cart WHERE member_id = ? AND product_id = ?";
-        try {
-            Cart cart = jdbcTemplate.queryForObject(sql, cartRowMapper, memberId, productId);
-            return Optional.of(cart);
-        } catch (IncorrectResultSizeDataAccessException exception) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
     public List<Cart> findAllByMemberId(final long memberId) {
         final String sql = "SELECT * FROM cart WHERE member_id = ?";
         return jdbcTemplate.query(sql, cartRowMapper, memberId);
-    }
-
-    @Override
-    public void updateQuantity(final Cart cart) {
-        final String sql = "UPDATE cart SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, cart.getQuantity(), cart.getId());
-
     }
 }
