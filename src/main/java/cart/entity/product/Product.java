@@ -6,13 +6,11 @@ import cart.exception.product.PriceNotUnderZeroException;
 public class Product {
 
     private final Long id;
-    private final String name;
-    private final String imageUrl;
-    private final int price;
+    private final Name name;
+    private final ImageUrl imageUrl;
+    private final Price price;
 
-    public Product(final Long id, final String name, final String imageUrl, final int price) {
-        validateNullOrBlank(name, imageUrl);
-        validatePriceValue(price);
+    public Product(final Long id, final Name name, final ImageUrl imageUrl, final Price price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -20,7 +18,12 @@ public class Product {
     }
 
     public Product(final String name, final String imageUrl, final int price) {
-        this(null, name, imageUrl, price);
+        this(
+            null,
+            new Name(name),
+            new ImageUrl(imageUrl),
+            new Price(price)
+        );
     }
 
     public Long getId() {
@@ -28,26 +31,14 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return name.getName();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUrl.getImageUrl();
     }
 
     public int getPrice() {
-        return price;
-    }
-
-    private void validateNullOrBlank(String name, String imageUrl) {
-        if (name == null || imageUrl == null || name.isBlank() || imageUrl.isBlank()) {
-            throw new NullOrBlankException();
-        }
-    }
-
-    private void validatePriceValue(int price) {
-        if (price < 0) {
-            throw new PriceNotUnderZeroException();
-        }
+        return price.getPrice();
     }
 }
