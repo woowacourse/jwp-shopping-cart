@@ -41,4 +41,14 @@ public class CartService {
         }
         cartDao.insert(productId, memberEntity.getId());
     }
+
+    @Transactional
+    public void delete(final Long productId, final AuthDto authDto) {
+        final MemberEntity memberEntity = memberService.findMember(authDto);
+        final Optional<CartEntity> cartEntity = cartDao.findCart(productId, memberEntity.getId());
+        if (cartEntity.isEmpty()) {
+            throw new IllegalArgumentException("삭제하려는 카트가 존재하지 않습니다");
+        }
+        cartDao.delete(cartEntity.get());
+    }
 }

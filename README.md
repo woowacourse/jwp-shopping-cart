@@ -83,10 +83,10 @@
       - [x] 응답 : 201
   - 장바구니 삭제
     - URI : `/carts/{cartId}`
-      - [ ] 요청 : delete
+      - [x] 요청 : delete
         - header : Basic 형식의 토큰
         - path variable : 카트 id 전송
-      - [ ] 응답 : 202
+      - [x] 응답 : 202
 
 ----
 #### DB 테이블

@@ -38,4 +38,11 @@ public class CartController {
         cartService.insert(productId, authDto);
         return ResponseEntity.created(URI.create("/carts")).build();
     }
+
+    @DeleteMapping("/carts/{productId}")
+    public ResponseEntity<Void> removeCart(@PathVariable("productId") final Long productId, final HttpServletRequest requestHeader) {
+        final AuthDto authDto = basicAuthorizationExtractor.extract(requestHeader);
+        cartService.delete(productId, authDto);
+        return ResponseEntity.accepted().build();
+    }
 }

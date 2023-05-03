@@ -41,4 +41,10 @@ public class CartDao {
         final String sql = "INSERT INTO CART (product_id, member_id) VALUES (?,?)";
         return jdbcTemplate.update(sql, productId, memberId);
     }
+
+    public int delete(final CartEntity cartEntity) {
+        final String sql = "DELETE FROM CART WHERE id = ?";
+        return jdbcTemplate.update(sql, cartEntity.getId());
+    }
+
 }
