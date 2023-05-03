@@ -1,5 +1,6 @@
 package cart.member.service;
 
+import cart.member.DuplicateEmailException;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.member.dto.DtoMapper;
@@ -29,12 +30,12 @@ public class MemberService {
     }
 
     public long register(MemberAddRequest memberAddRequest) {
-        final Member member = DtoMapper.toValidMember(memberAddRequest);
-        try {
-            final Member saved = memberDao.save(member);
-            return saved.getId();
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다");
+        final Member validMember = DtoMapper.toValidMember(memberAddRequest);
+        if (memberDao.containsEmail(validMember.getEmail())) {
+            throw new DuplicateEmailException("이미 존재하는 이메일입니다");
         }
+
+        final Member saved = memberDao.save(validMember);
+        return saved.getId();
     }
 }

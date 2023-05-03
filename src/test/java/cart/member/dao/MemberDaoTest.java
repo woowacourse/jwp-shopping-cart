@@ -106,4 +106,17 @@ class MemberDaoTest {
         // then
         assertThat(memberDao.findById(deleted).isEmpty()).isTrue();
     }
+
+    @Test
+    @DisplayName("이미 이메일이 존재하면 true, 없으면 false를 반환한다.")
+    void containsEmail() {
+        final String EMAIL = "email@email.com";
+        Member member = new Member(EMAIL, "password", "0100100100");
+
+        assertThat(memberDao.containsEmail(EMAIL)).isFalse();
+
+        memberDao.save(member);
+
+        assertThat(memberDao.containsEmail(EMAIL)).isTrue();
+    }
 }

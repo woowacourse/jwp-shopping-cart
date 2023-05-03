@@ -163,7 +163,7 @@ public class ProductApiIntegrationTest {
                               .then()
                               .assertThat()
                               .statusCode(HttpStatus.NOT_FOUND.value())
-                              .body("message", Matchers.containsStringIgnoringCase("id"));
+                              .body("message", Matchers.containsStringIgnoringCase("상품"));
     }
 
     @Test
@@ -190,6 +190,6 @@ public class ProductApiIntegrationTest {
                               .then()
                               .assertThat()
                               .statusCode(HttpStatus.NOT_FOUND.value())
-                              .body("message", Matchers.containsStringIgnoringCase("id"));
+                              .body("message", Matchers.containsStringIgnoringCase("상품"));
     }
 }

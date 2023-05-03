@@ -8,13 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class MainController {
+public class ViewController {
 
     private final ProductService productService;
     private final MemberService memberService;
 
     @Autowired
-    public MainController(final ProductService productService, final MemberService memberService) {
+    public ViewController(final ProductService productService, final MemberService memberService) {
         this.productService = productService;
         this.memberService = memberService;
     }
