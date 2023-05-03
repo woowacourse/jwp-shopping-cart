@@ -27,8 +27,11 @@ public class JdbcShoppingCartRepository implements ShoppingCartRepository {
     }
 
     @Override
-    public void removeProduct(final long memberId, final long productId) {
-
+    public void removeProduct(final long cartId) {
+        final String sql = "delete from cart where id=:cartId";
+        final SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("cartId", cartId);
+        namedParameterJdbcTemplate.update(sql, parameterSource);
     }
 
     @Override

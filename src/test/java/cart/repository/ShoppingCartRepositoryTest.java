@@ -30,8 +30,15 @@ class ShoppingCartRepositoryTest {
     }
 
     @Test
+    @DisplayName("cartid로 장바구니에 있는 product를 삭제하는 기능 테스트")
     void removeProduct() {
+        final List<Product> allProduct = shoppingCartRepository.findAllProduct(1L);
+        assertThat(allProduct).hasSize(1);
 
+        shoppingCartRepository.removeProduct(1L);
+
+        final List<Product> afterRemoveProduct = shoppingCartRepository.findAllProduct(1L);
+        assertThat(afterRemoveProduct).hasSize(0);
     }
 
     @Test
