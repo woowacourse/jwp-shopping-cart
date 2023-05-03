@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.dto.ProductDto;
 import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.entity.ProductEntity;
 import cart.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class AdminController {
 
     @GetMapping
     public String adminPage(final Model model) {
-        final List<ProductResponse> products = productService.findAll();
+        final List<ProductEntity> products = productService.findAll();
 
         model.addAttribute("products", products);
 

@@ -9,7 +9,6 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dto.AuthInfo;
-import cart.dto.ProductResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
@@ -77,7 +76,7 @@ class CartServiceTest {
                         new ProductEntity(2L, "item2", 2000, "image2")
                 ));
 
-        final List<ProductResponse> productResponses = cartService.showProductsBy(authInfo);
+        final List<ProductEntity> productResponses = cartService.showProductsBy(authInfo);
         assertThat(productResponses.size()).isEqualTo(2);
     }
 }

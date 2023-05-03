@@ -4,7 +4,6 @@ import cart.dao.CartDao;
 import cart.dao.ProductDao;
 import cart.dto.ProductDto;
 import cart.entity.ProductEntity;
-import cart.dto.ProductResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -18,12 +17,8 @@ public class ProductService {
     private final ProductDao productDao;
     private final CartDao cartDao;
 
-    public List<ProductResponse> findAll() {
-        final List<ProductEntity> result = productDao.findAll();
-
-        return result.stream()
-                .map(ProductResponse::from)
-                .collect(Collectors.toList());
+    public List<ProductEntity> findAll() {
+        return productDao.findAll();
     }
 
     public Long register(final ProductDto productDto) {

@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductResponse;
+import cart.entity.ProductEntity;
 import cart.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ public class ProductController {
 
     @GetMapping(value = {"/products", "/"})
     public String indexPage(final Model model) {
-        final List<ProductResponse> products = productService.findAll();
+        final List<ProductEntity> products = productService.findAll();
 
         model.addAttribute("products", products);
 

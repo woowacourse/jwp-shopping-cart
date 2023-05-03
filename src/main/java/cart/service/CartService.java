@@ -3,7 +3,6 @@ package cart.service;
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dto.AuthInfo;
-import cart.dto.ProductResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
@@ -27,7 +26,7 @@ public class CartService {
         cartDao.insert(member.getId(), productId);
     }
 
-    public List<ProductResponse> showProductsBy(final AuthInfo authInfo) {
+    public List<ProductEntity> showProductsBy(final AuthInfo authInfo) {
         final MemberEntity member = findBy(authInfo);
 
         final List<CartEntity> cartOfUser = cartDao.findByMemberId(member.getId());
@@ -35,10 +34,7 @@ public class CartService {
                 .map(CartEntity::getProductId)
                 .collect(Collectors.toList());
 
-        final List<ProductEntity> savedProducts = productService.findByProductIds(productIds);
-        return savedProducts.stream()
-                .map(ProductResponse::from)
-                .collect(Collectors.toList());
+        return productService.findByProductIds(productIds);
     }
 
     public void deleteProductBy(final AuthInfo authInfo, final long productId) {
