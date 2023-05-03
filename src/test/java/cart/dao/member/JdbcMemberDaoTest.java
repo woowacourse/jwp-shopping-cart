@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @Sql("classpath:schema.sql")
@@ -42,8 +43,9 @@ class JdbcMemberDaoTest {
     @Test
     @DisplayName("이메일 단일 멤버 조회 테스트")
     void findByEmail() {
-        MemberEntity member = memberDao.findByEmail("test@gmail.com");
-        Assertions.assertThat(member.getEmail()).isEqualTo("test@gmail.com");
+        Optional<MemberEntity> member = memberDao.findByEmail("test@gmail.com");
+        MemberEntity retrievedMember = member.get();
+        Assertions.assertThat(retrievedMember.getEmail()).isEqualTo("test@gmail.com");
     }
 
     @Test
