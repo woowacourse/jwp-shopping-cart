@@ -43,12 +43,6 @@ class CartApiControllerUnitTest {
     @Test
     void 장바구니_상품을_읽는다() throws Exception {
         //given
-        given(memberService.findIdByEmail(any(String.class)))
-                .willReturn(1L);
-
-        given(cartService.findProductIdsByMemberId(any(Long.class)))
-                .willReturn(List.of(1L));
-
         given(productService.findByIds(any()))
                 .willReturn(List.of(new ResponseProductDto(new ProductEntity(1L, "치킨", 10_000, "치킨 주소"))));
 
@@ -64,14 +58,6 @@ class CartApiControllerUnitTest {
 
     @Test
     void 장바구니에_상품을_추가한다() throws Exception {
-        //given
-        given(memberService.findIdByEmail(any(String.class)))
-                .willReturn(1L);
-
-        given(cartService.insert(any(Long.class), any(Long.class)))
-                .willReturn(1L);
-
-        //expect
         mockMvc.perform(post("/carts/{id}", 1)
                         .header("Authorization", "Basic " + ENCODED_CREDENTIALS)
                         .accept(MediaType.APPLICATION_JSON))
@@ -80,14 +66,6 @@ class CartApiControllerUnitTest {
 
     @Test
     void 장바구니에_상품을_제거한다() throws Exception {
-        //given
-        given(memberService.findIdByEmail(any(String.class)))
-                .willReturn(1L);
-
-        given(cartService.delete(any(Long.class), any(Long.class)))
-                .willReturn(1);
-
-        //expect
         mockMvc.perform(delete("/carts/{id}", 1)
                         .header("Authorization", "Basic " + ENCODED_CREDENTIALS)
                         .accept(MediaType.APPLICATION_JSON))
