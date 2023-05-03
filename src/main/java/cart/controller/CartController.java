@@ -35,6 +35,7 @@ public class CartController {
         int memberId = validateMember(request);
 
         List<ProductDto> allProduct = cartService.findAllProduct(memberId);
+
         return ResponseEntity.ok().body(allProduct);
     }
 
