@@ -6,3 +6,12 @@ CREATE TABLE IF NOT EXISTS PRODUCT
     price      INT           NOT NULL,
     PRIMARY KEY (product_id)
 );
+
+CREATE TABLE IF NOT EXISTS MEMBER
+(
+    user_id  BIGINT       NOT NULL AUTO_INCREMENT,
+    email    VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    UNIQUE (email),
+    PRIMARY KEY (user_id)
+);

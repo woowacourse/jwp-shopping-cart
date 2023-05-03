@@ -1,6 +1,7 @@
 package cart.repository.user;
 
 import cart.domain.user.User;
+import java.util.Optional;
 
 public interface UserRepository {
 
@@ -8,5 +9,5 @@ public interface UserRepository {
 
     boolean existsByEmailAndPassword(String email, String password);
 
-    User findUserByEmail(String email);
+    Optional<User> findByEmail(String email);
 }

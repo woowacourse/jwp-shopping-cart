@@ -1,7 +1,7 @@
-package cart.controller;
+package cart.controller.product;
 
 import cart.dto.ProductResponse;
-import cart.service.ProductQueryService;
+import cart.service.product.ProductQueryService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
@@ -35,5 +35,15 @@ public class ProductViewController {
                 .collect(Collectors.toList());
         model.addAttribute("products", productResponses);
         return "admin";
+    }
+
+    @GetMapping("/cart")
+    public String getCartPage() {
+        return "cart";
+    }
+
+    @GetMapping("/settings")
+    public String getSettingsPage() {
+        return "settings";
     }
 }

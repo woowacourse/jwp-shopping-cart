@@ -1,5 +1,7 @@
 package cart.entiy.user;
 
+import cart.domain.user.UserId;
+
 public class UserEntityId {
 
     private final Long id;
@@ -8,7 +10,11 @@ public class UserEntityId {
         this.id = id;
     }
 
-    public Long getId() {
+    public UserEntityId(final UserId userId) {
+        this(userId.getValue());
+    }
+
+    public Long getValue() {
         return id;
     }
 }

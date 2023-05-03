@@ -10,6 +10,10 @@ public class User {
         this(null, email, password);
     }
 
+    public User(final long userId, final User other) {
+        this(new UserId(userId), other.getEmail(), other.getPassword());
+    }
+
     public User(final Long id, final String email, final String password) {
         this(new UserId(id), new Email(email), new Password(password));
     }
