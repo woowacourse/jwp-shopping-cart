@@ -23,7 +23,8 @@ public class ProductDao {
         return jdbcTemplate.query(
                 sqlForSelectAll,
                 (resultSet, rowNum) ->
-                        new Product.Builder().id(resultSet.getInt("id"))
+                        new Product.Builder()
+                                .id(resultSet.getLong("id"))
                                 .price(Price.of(resultSet.getInt("price")))
                                 .name(Name.of(resultSet.getString("name")))
                                 .imageUrl(Url.of(resultSet.getString("image_url")))
@@ -36,12 +37,12 @@ public class ProductDao {
         jdbcTemplate.update(sqlForSave, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         String sqlForDeleteById = "DELETE FROM Product WHERE id = ?";
         jdbcTemplate.update(sqlForDeleteById, id);
     }
 
-    public void updateById(int id, Product product) {
+    public void updateById(Long id, Product product) {
         String sqlForUpdateById = "UPDATE Product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sqlForUpdateById, product.getName(), product.getPrice(), product.getImageUrl(), id);
     }

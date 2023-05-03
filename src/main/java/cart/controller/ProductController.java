@@ -30,13 +30,13 @@ public class ProductController {
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<Void> modifyProduct(@PathVariable int id, @RequestBody @Valid ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> modifyProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDto productRequestDto) {
         productService.modifyById(id, productRequestDto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<Void> removeProduct(@PathVariable int id) {
+    public ResponseEntity<Void> removeProduct(@PathVariable Long id) {
         productService.removeById(id);
         return ResponseEntity.noContent().build();
     }

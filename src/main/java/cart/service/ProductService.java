@@ -33,11 +33,11 @@ public class ProductService {
         productDao.save(productRequestDto.toEntity());
     }
 
-    public void modifyById(int id, ProductRequestDto productRequestDto) {
+    public void modifyById(Long id, ProductRequestDto productRequestDto) {
         productDao.updateById(id, productRequestDto.toEntity());
     }
 
-    public void removeById(int id) {
+    public void removeById(Long id) {
         productDao.deleteById(id);
     }
 
