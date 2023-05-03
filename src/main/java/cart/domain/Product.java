@@ -1,9 +1,8 @@
 package cart.domain;
 
 public class Product {
-
     private static final int MAX_NAME_LENGTH = 50;
-    
+
     private final String name;
     private final Image image;
     private final Price price;

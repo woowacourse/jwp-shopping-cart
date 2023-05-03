@@ -2,8 +2,8 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import cart.entity.ProductEntity;
 import cart.exception.ResourceNotFoundException;
 import cart.mapper.ProductMapper;
@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-
     private final ProductDao productDao;
     private final ProductMapper productMapper;
 

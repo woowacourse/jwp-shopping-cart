@@ -1,14 +1,13 @@
 package cart.mapper;
 
 import cart.domain.Cart;
-import cart.dto.CartRequest;
-import cart.dto.CartResponse;
+import cart.dto.request.CartRequest;
+import cart.dto.response.CartResponse;
 import cart.entity.CartEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CartMapper {
-
     private final ProductMapper productMapper;
     private final MemberMapper memberMapper;
 

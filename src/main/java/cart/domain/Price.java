@@ -1,7 +1,8 @@
 package cart.domain;
 
 public class Price {
-    public static final int MAX_PRICE_VALUE = 1_000_000_000;
+    private static final int MAX_PRICE_VALUE = 1_000_000_000;
+
     private final long value;
 
     public Price(long value) {

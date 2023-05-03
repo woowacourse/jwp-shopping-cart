@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.dto.CartRequest;
+import cart.dto.request.CartRequest;
 
 import java.sql.Timestamp;
 
@@ -9,8 +9,8 @@ public class CartEntity {
     private final MemberEntity member;
     private final ProductEntity product;
     private int count;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private final Timestamp createdAt;
+    private final Timestamp updatedAt;
 
     public CartEntity(Long id, MemberEntity member, ProductEntity product, int count, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;

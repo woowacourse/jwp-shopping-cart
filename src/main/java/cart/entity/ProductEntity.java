@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.dto.ProductRequest;
+import cart.dto.request.ProductRequest;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -10,8 +10,8 @@ public class ProductEntity {
     private String name;
     private String image;
     private long price;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private final Timestamp createdAt;
+    private final Timestamp updatedAt;
 
     public ProductEntity(Long id, String name, String image, long price, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;

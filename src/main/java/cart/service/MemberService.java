@@ -2,8 +2,8 @@ package cart.service;
 
 import cart.dao.MemberDaoImpl;
 import cart.domain.Member;
-import cart.dto.MemberRequest;
-import cart.dto.MemberResponse;
+import cart.dto.request.MemberRequest;
+import cart.dto.response.MemberResponse;
 import cart.entity.MemberEntity;
 import cart.exception.ResourceNotFoundException;
 import cart.mapper.MemberMapper;

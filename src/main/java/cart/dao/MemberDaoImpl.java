@@ -17,9 +17,6 @@ import java.util.Optional;
 
 @Repository
 public class MemberDaoImpl {
-
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
     private static final RowMapper<MemberEntity> memberEntityRowMapper = (resultSet, rowNum) ->
             new MemberEntity(
                     resultSet.getLong("id"),
@@ -30,6 +27,9 @@ public class MemberDaoImpl {
                     resultSet.getTimestamp("created_at"),
                     resultSet.getTimestamp("updated_at")
             );
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public MemberDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

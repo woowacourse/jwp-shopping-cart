@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.dto.MemberRequest;
-import cart.dto.MemberResponse;
+import cart.dto.request.MemberRequest;
+import cart.dto.response.MemberResponse;
 import cart.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -16,22 +16,25 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<?> handleValidException(MethodArgumentNotValidException e) {
+        System.out.println(e.getMessage());
         List<String> errors = e.getBindingResult().getAllErrors()
                 .stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
         Map<String, List<String>> errorsResult = Map.of("errors", errors);
-
+        
         return ResponseEntity.badRequest().body(errorsResult);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> handleDBException(ApiException e) {
+        System.out.println(e.getMessage());
         return ResponseEntity.internalServerError().body(e.getMessage());
     }
 
     @ExceptionHandler
     public ResponseEntity<?> handleIllegalArgumentsException(IllegalArgumentException e) {
+        System.out.println(e.getMessage());
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 

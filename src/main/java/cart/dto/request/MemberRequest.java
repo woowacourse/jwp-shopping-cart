@@ -1,12 +1,11 @@
-package cart.dto;
+package cart.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class MemberRequest {
-
-    public static final String PHONE_REGEX = "^01(?:0|1|[6-9]) - (?:\\d{3}|\\d{4}) - \\d{4}$";
+    private static final String PHONE_REGEX = "^01(?:0|1|[6-9]) - (?:\\d{3}|\\d{4}) - \\d{4}$";
 
     @Email(message = "이메일 형식이여야합니다.")
     private String email;

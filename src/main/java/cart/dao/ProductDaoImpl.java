@@ -17,9 +17,6 @@ import java.util.Optional;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
-
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
     private static final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) ->
             ProductEntity.create(
                     resultSet.getLong("id"),
@@ -27,6 +24,9 @@ public class ProductDaoImpl implements ProductDao {
                     resultSet.getString("image"),
                     resultSet.getInt("price")
             );
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ProductDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

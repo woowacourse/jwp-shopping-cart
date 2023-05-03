@@ -2,8 +2,8 @@ package cart.service;
 
 import cart.dao.CartDaoImpl;
 import cart.domain.Cart;
-import cart.dto.CartRequest;
-import cart.dto.CartResponse;
+import cart.dto.request.CartRequest;
+import cart.dto.response.CartResponse;
 import cart.entity.CartEntity;
 import cart.exception.ResourceNotFoundException;
 import cart.mapper.CartMapper;

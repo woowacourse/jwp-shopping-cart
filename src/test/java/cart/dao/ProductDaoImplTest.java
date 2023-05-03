@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.domain.Product;
-import cart.dto.ProductRequest;
+import cart.dto.request.ProductRequest;
 import cart.entity.ProductEntity;
 import cart.fixture.ImageFixture;
 import cart.fixture.ProductFixture.COFFEE;
@@ -11,6 +11,8 @@ import cart.fixture.ProductFixture.SNACK;
 import cart.fixture.ProductFixture.WATER;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -21,6 +23,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
 class ProductDaoImplTest {
 

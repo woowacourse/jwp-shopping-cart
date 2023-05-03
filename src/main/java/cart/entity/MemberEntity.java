@@ -1,6 +1,6 @@
 package cart.entity;
 
-import cart.dto.MemberRequest;
+import cart.dto.request.MemberRequest;
 
 import java.sql.Timestamp;
 
@@ -10,8 +10,8 @@ public class MemberEntity {
     private String password;
     private String name;
     private String phone;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private final Timestamp createdAt;
+    private final Timestamp updatedAt;
 
     public MemberEntity(Long id, String email, String password, String name, String phone, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
@@ -41,6 +41,14 @@ public class MemberEntity {
 
     public String getPhone() {
         return phone;
+    }
+
+    private Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    private Timestamp getUpdatedAt() {
+        return updatedAt;
     }
 
     public void replace(MemberRequest memberRequest) {

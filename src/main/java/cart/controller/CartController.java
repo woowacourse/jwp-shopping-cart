@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.auth.AuthMember;
 import cart.dao.CartDaoImpl;
-import cart.dto.CartRequest;
-import cart.dto.CartResponse;
+import cart.dto.request.CartRequest;
+import cart.dto.response.CartResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
 import cart.exception.ApiException;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -55,9 +54,9 @@ public class CartController {
     }
 
     @DeleteMapping("/{cartId}")
-    @ResponseBody
-    public void delete(@PathVariable Long cartId) {
+    public ResponseEntity<Object> delete(@PathVariable Long cartId) {
         cartService.deleteById(cartId);
+        return ResponseEntity.ok().build();
     }
 
     private void validateMember(Long cartId, MemberEntity member) {

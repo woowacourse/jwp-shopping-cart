@@ -10,7 +10,6 @@ import java.util.List;
 
 @Configuration
 public class CustomWebConfig implements WebMvcConfigurer {
-
     private final CustomAuthResolver customArgumentResolver;
 
     public CustomWebConfig(CustomAuthResolver customArgumentResolver) {
