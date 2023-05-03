@@ -24,6 +24,9 @@ const hideAddModal = () => {
 }
 
 const form = document.getElementById('form');
+const error_name = document.getElementById('error_name');
+const error_price = document.getElementById('error_price');
+const error_image = document.getElementById('error_image');
 
 form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -44,37 +47,64 @@ form.addEventListener('submit', (event) => {
     createProduct(product);
 });
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '',
+        url: '/products',
+        method: 'post',
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+        },
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        showAllError(error.response.data.validation);
         console.error(error);
     });
 };
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const updateProduct = (product) => {
-    const { id } = product;
+    const {id} = product;
 
     axios.request({
-        url: '',
+        url: '/products/' + id,
+        method: 'put',
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+        },
+        data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        showAllError(error.response.data.validation);
         console.error(error);
     });
 };
 
-// TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
     axios.request({
-        url: '',
+        url: '/products/' + id,
+        method: 'delete',
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+        }
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        showAllError(error.response.data.validation);
         console.error(error);
     });
 };
+
+const showError = (component, message) => {
+    if (!message) {
+        message = "";
+    }
+    component.innerHTML = message;
+}
+
+const showAllError = (error) => {
+    showError(error_name, error.name);
+    showError(error_price, error.price);
+    showError(error_image, error.imageUrl);
+}
