@@ -59,13 +59,13 @@ public class ProductDao {
         }
     }
 
-    public void updateProduct(Product after) {
+    public void updateProduct(Product product) {
         String sql = "update PRODUCT set name = :name, image = :image, price = :price where product_id = :product_id";
         SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("product_id", after.getProductId())
-                .addValue("name", after.getName())
-                .addValue("image", after.getImage())
-                .addValue("price", after.getPrice());
+                .addValue("product_id", product.getProductId())
+                .addValue("name", product.getName())
+                .addValue("image", product.getImage())
+                .addValue("price", product.getPrice());
 
         jdbcTemplate.update(sql, paramSource);
     }
