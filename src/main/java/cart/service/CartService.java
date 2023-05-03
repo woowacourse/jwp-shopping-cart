@@ -29,18 +29,27 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public List<CartItem> getCartItems(String userEmail) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException());
+        User user = getUser(userEmail);
         Cart cart = cartRepository.findByUser(user);
         return cart.getCartItems();
     }
 
+    private User getUser(String userEmail) {
+        return userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException());
+    }
+
     @Transactional
     public void addCartItem(String userEmail, Long productId) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException());
+        User user = getUser(userEmail);
         Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException());
         Cart cart = cartRepository.findByUser(user);
         cartRepository.addCartItem(cart, new CartItem(product));
     }
 
-
+    @Transactional
+    public void deleteCartItem(String userEmail, Long cartItemId) {
+        User user = getUser(userEmail);
+        Cart cart = cartRepository.findByUser(user);
+        cartRepository.removeCartItem(cart, cartItemId);
+    }
 }

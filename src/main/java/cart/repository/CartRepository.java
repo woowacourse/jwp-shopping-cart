@@ -8,7 +8,7 @@ public interface CartRepository {
 
     Cart findByUser(User user);
 
-    void removeCartItem(Cart cart, CartItem removalItem);
+    void removeCartItem(Cart cart, Long CartItemId);
 
     void addCartItem(Cart cart, CartItem cartItem);
 }

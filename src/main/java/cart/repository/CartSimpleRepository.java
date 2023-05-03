@@ -26,11 +26,11 @@ public class CartSimpleRepository implements CartRepository {
     }
 
     @Override
-    public void removeCartItem(Cart cart, CartItem removalItem) {
+    public void removeCartItem(Cart cart, Long removalItemId) {
         // TODO: removalItem 삭제하기
         Cart foundCart = carts.stream().filter(element -> element.equals(cart)).findAny()
                 .orElseThrow(() -> new IllegalArgumentException());
-        foundCart.removeCartItem(removalItem);
+        foundCart.removeCartItem(removalItemId);
     }
 
     @Override
@@ -38,6 +38,7 @@ public class CartSimpleRepository implements CartRepository {
         // TODO: cartItem 생성하기
         Cart foundCart = carts.stream().filter(element -> element.equals(cart)).findAny()
                 .orElseThrow(() -> new IllegalArgumentException());
-        foundCart.addCartItem(cartItem);
+        Long newId = foundCart.getCartItems().size() + 1L;
+        foundCart.addCartItem(new CartItem(newId, cartItem.getProduct()));
     }
 }

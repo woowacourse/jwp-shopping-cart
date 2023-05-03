@@ -16,9 +16,10 @@ public class Cart {
         cartItems.add(cartItem);
     }
 
-    public void removeCartItem(CartItem cartItem) {
-        cartItems.remove(cartItem.getId());
+    public void removeCartItem(Long cartItemId) {
+        cartItems.remove(cartItemId);
     }
+
 
     @Override
     public boolean equals(Object o) {

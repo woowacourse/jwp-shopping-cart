@@ -24,7 +24,6 @@
     </div>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script th:src="@{/js/cart.js}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const credentials = localStorage.getItem('credentials');
@@ -45,6 +44,7 @@
             let productElement = '';
             cartItems.forEach(cartItem => {
                 const { id, product } = cartItem;
+                console.log('id는 '+ id);
                 productElement += `
                         <div class="cart-item">
                           <div class="cart-item-info">
@@ -64,5 +64,6 @@
 
     });
 </script>
+<script th:src="@{/js/cart.js}"></script>
 </body>
 </html>

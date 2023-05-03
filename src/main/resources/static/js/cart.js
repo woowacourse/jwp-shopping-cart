@@ -1,6 +1,5 @@
 const cartBaseUrl = 'http://localhost:8080/user/cartItems';
 const addCartItem = (productId) => {
-    console.log('되는거 맞음?' + productId);
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
@@ -10,7 +9,7 @@ const addCartItem = (productId) => {
 
     axios.post(cartBaseUrl,
         JSON.stringify({
-            productId
+            productId: +productId
         }),
         {
             headers: {
@@ -32,14 +31,13 @@ const removeCartItem = (id) => {
         window.location.href = '/settings';
         return;
     }
-
-    // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
-    axios.request({
-        url: '',
-        headers: {
-            'Authorization': `Basic ${credentials}`
-        }
-    }).then((response) => {
+    axios.delete(
+        cartBaseUrl + `/${id}`,
+        {
+            headers: {
+                'Authorization': `Basic ${credentials}`,
+            }
+        }).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
