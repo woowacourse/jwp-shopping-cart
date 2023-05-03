@@ -1,19 +1,13 @@
 package cart.entity;
 
-public class Member {
+public class AuthMember {
 
-    private final Long id;
     private final String email;
     private final String password;
 
-    public Member(Long id, String email, String password) {
-        this.id = id;
+    public AuthMember(final String email, final String password) {
         this.email = email;
         this.password = password;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getEmail() {

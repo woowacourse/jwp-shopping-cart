@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.entity.AuthMember;
 import cart.entity.Member;
 import cart.exception.ServiceIllegalArgumentException;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Sql({"classpath:test_init.sql"})
@@ -24,24 +28,24 @@ class JdbcMemberDaoTest {
 
     @BeforeEach
     void setUp() {
-        memberDao.save(new Member("gksqlsl11@khu.ac.kr", "qlalfqjsgh"));
-        memberDao.save(new Member("kong@google.com", "pw"));
+        memberDao.save(new AuthMember("gksqlsl11@khu.ac.kr", "qlalfqjsgh"));
+        memberDao.save(new AuthMember("kong@google.com", "pw"));
     }
 
     @DisplayName("사용자가 저장되어있다면 true를 반환한다.")
     @ParameterizedTest
     @CsvSource(value = {"gksqlsl11@khu.ac.kr:qlalfqjsgh", "kong@google.com:pw"}, delimiter = ':')
     void isMemberExists_true(String email, String password) {
-        Member member = new Member(email, password);
-        assertThat(memberDao.isMemberExists(member)).isTrue();
+        AuthMember authMember = new AuthMember(email, password);
+        assertThat(memberDao.isMemberExists(authMember)).isTrue();
     }
 
     @DisplayName("사용자가 저장되어있지 않다면 false를 반환한다.")
     @ParameterizedTest
     @CsvSource(value = {"gksqlsl11@khu.ac.kr:qlalfqjsgh123", ":qlalfqjsgh", "gksqlsl11:qlalf", ":"}, delimiter = ':')
     void isMemberExists_false(String email, String password) {
-        Member member = new Member(email, password);
-        assertThat(memberDao.isMemberExists(member)).isFalse();
+        AuthMember authMember = new AuthMember(email, password);
+        assertThat(memberDao.isMemberExists(authMember)).isFalse();
     }
 
     @DisplayName("이메일이 저장되어있다면 true를 반환한다.")
@@ -61,21 +65,34 @@ class JdbcMemberDaoTest {
     @DisplayName("중복되지 않은 사용자 정보를 저장할 수 있다.")
     @Test
     void save_success() {
-        Member member = new Member("power@google.com", "power");
+        AuthMember authMember = new AuthMember("power@google.com", "power");
 
-        memberDao.save(member);
-        
-        assertThat(memberDao.isMemberExists(member)).isTrue();
+        memberDao.save(authMember);
+
+        assertThat(memberDao.isMemberExists(authMember)).isTrue();
     }
 
     @DisplayName("중복된 사용자는 저장할 수 없다.")
     @Test
     void save_fail() {
-        Member member = new Member("power@google.com", "power");
+        AuthMember authMember = new AuthMember("power@google.com", "power");
 
-        memberDao.save(member);
-        assertThatThrownBy(() -> memberDao.save(member))
+        memberDao.save(authMember);
+        assertThatThrownBy(() -> memberDao.save(authMember))
                 .isInstanceOf(ServiceIllegalArgumentException.class)
                 .hasMessage("이메일이 중복되었습니다.");
+    }
+
+    @Test
+    @DisplayName("사용자 목록을 조회할 수 있다.")
+    void findAll_success() {
+        List<Member> members = memberDao.findAll();
+        Member member1 = new Member(1L, "gksqlsl11@khu.ac.kr", "qlalfqjsgh");
+        Member member2 = new Member(2L, "kong@google.com", "pw");
+        assertAll(
+                () -> assertThat(members).hasSize(2),
+                () -> assertThat(members.get(0)).usingRecursiveComparison().isEqualTo(member1),
+                () -> assertThat(members.get(1)).usingRecursiveComparison().isEqualTo(member2)
+        );
     }
 }
