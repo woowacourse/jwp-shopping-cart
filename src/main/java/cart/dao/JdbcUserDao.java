@@ -3,6 +3,8 @@ package cart.dao;
 import cart.domain.user.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -19,11 +21,17 @@ public class JdbcUserDao implements UserDao {
                     resultSet.getString("password")
             );
 
-    public JdbcUserDao(JdbcTemplate jdbcTemplate) {
+    public JdbcUserDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("user_list")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    @Override
+    public Long insert(final User user) {
+        final SqlParameterSource parameters = new BeanPropertySqlParameterSource(user);
+        return insertActor.executeAndReturnKey(parameters).longValue();
     }
 
     @Override
