@@ -5,15 +5,16 @@ import javax.validation.constraints.NotNull;
 
 public class ProductRequest {
 
-    private Long id;
+    private final Long id;
     @NotBlank(message = "이름이 비어있을 수는 없습니다.")
-    private String name;
+    private final String name;
     @NotBlank(message = "imageUrl이 비어있을 수 없습니다.")
-    private String imageUrl;
+    private final String imageUrl;
     @NotNull(message = "가격은 비어있을 수 없습니다.")
-    private Integer price;
+    private final Integer price;
 
     private ProductRequest() {
+        this(null, null, null, null);
     }
 
     public ProductRequest(final Long id, final String name, final String imageUrl, final Integer price) {
