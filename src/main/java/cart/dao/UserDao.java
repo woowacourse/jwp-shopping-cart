@@ -2,12 +2,14 @@ package cart.dao;
 
 import cart.entity.Product;
 import cart.entity.User;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class UserDao {
@@ -19,6 +21,17 @@ public class UserDao {
         simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("user_product")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    public Optional<User> findByEmail(final String email) {
+        final String sql = "SELECT id, email, password FROM users WHERE email = ?";
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+                    (rs, rowNum) -> new User(rs.getLong(1), rs.getString(2), rs.getString(3)), email));
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<User> findAll() {

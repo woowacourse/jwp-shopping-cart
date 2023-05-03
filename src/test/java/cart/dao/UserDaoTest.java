@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.Product;
+import cart.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -38,6 +39,18 @@ class UserDaoTest {
 
         //then
         assertThat(userDao.findAll()).hasSize(count);
+    }
+
+    @DisplayName("유저를 이메일로 찾을 수 있다")
+    @Test
+    void findByEmail() {
+        //given
+        final User user = userDao.findAll().get(0);
+
+        //then
+        assertAll(
+                () -> assertThat(userDao.findByEmail(user.getEmail())).isPresent(),
+                () -> assertThat(userDao.findByEmail(" ")).isNotPresent());
     }
 
     @Nested
