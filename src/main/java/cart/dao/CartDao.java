@@ -19,6 +19,11 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public int delete(final CartEntity cartEntity) {
+        final String sql = "DELETE FROM CART WHERE id = ?";
+        return jdbcTemplate.update(sql, cartEntity.getId());
+    }
+
     public Optional<CartEntity> findCart(final Long productId, Long memberId) {
         final String sql = "SELECT * FROM CART WHERE product_id = ? and member_id = ?";
         try {
@@ -42,9 +47,17 @@ public class CartDao {
         return jdbcTemplate.update(sql, productId, memberId);
     }
 
-    public int delete(final CartEntity cartEntity) {
-        final String sql = "DELETE FROM CART WHERE id = ?";
-        return jdbcTemplate.update(sql, cartEntity.getId());
+    public List<CartEntity> findByMemberId(final Long memberId) {
+        final String sql = "SELECT * FROM CART WHERE member_id = ?";
+        return jdbcTemplate.query(sql, carEntityMapper(), memberId);
     }
 
+    public Optional<List<CartEntity>> findAllByMemberId(final Long memberId) {
+        final String sql = "SELECT * FROM CART WHERE member_id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.query(sql, carEntityMapper(), memberId));
+        } catch (EmptyResultDataAccessException error) {
+            return Optional.empty();
+        }
+    }
 }

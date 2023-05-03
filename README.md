@@ -72,9 +72,9 @@
       - [x] DB 관련 예외가 생긴 경우
   - 장바구니 조회
     - URI : `/carts`
-        - [ ] 요청 : get
+        - [x] 요청 : get
             - header : Basic 형식의 토큰
-        - [ ] 응답 : 200 List\<CartResponse>
+        - [x] 응답 : 200 List\<CartResponse>
   - 장바구니 추가
     - URI : `/carts/{productId}`
       - [x] 요청 : post

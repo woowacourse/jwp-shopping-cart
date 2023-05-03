@@ -32,6 +32,13 @@ public class CartController {
         this.memberService = memberService;
     }
 
+    @GetMapping("/carts")
+    public ResponseEntity<List<CartResponse>> getCarts(final HttpServletRequest requestHeader) {
+        final AuthDto authDto = basicAuthorizationExtractor.extract(requestHeader);
+        final List<CartResponse> productResponses = cartService.selectCart(authDto);
+        return ResponseEntity.ok(productResponses);
+    }
+
     @PostMapping("/carts/{productId}")
     public ResponseEntity<Void> addCart(@PathVariable("productId") final Long productId, final HttpServletRequest requestHeader) {
         final AuthDto authDto = basicAuthorizationExtractor.extract(requestHeader);

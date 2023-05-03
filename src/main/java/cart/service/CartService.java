@@ -51,4 +51,23 @@ public class CartService {
         }
         cartDao.delete(cartEntity.get());
     }
+
+    public List<CartResponse> selectCart(final AuthDto authDto) {
+        final MemberEntity memberEntity = memberService.findMember(authDto);
+        final Long memberId = memberEntity.getId();
+        final Optional<List<CartEntity>> cartEntities = cartDao.findAllByMemberId(memberId);
+        if (cartEntities.isEmpty()) {
+            return List.of();
+        }
+        final List<ProductEntity> productEntities = cartEntities.get().stream()
+                .map(cartEntity -> productDao.findById(cartEntity.getProductId()))
+                .collect(Collectors.toUnmodifiableList());
+        return productEntities.stream()
+                .map(productEntity -> new CartResponse(
+                        productEntity.getId(),
+                        productEntity.getName(),
+                        productEntity.getPrice(),
+                        productEntity.getImage()
+                )).collect(Collectors.toUnmodifiableList());
+    }
 }
