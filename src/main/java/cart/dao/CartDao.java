@@ -44,6 +44,11 @@ public class CartDao {
         }, keyHolder);
     }
 
+    public void deleteById(int cartId) {
+        String sqlForDeleteById = "DELETE FROM Cart WHERE id = ?";
+        jdbcTemplate.update(sqlForDeleteById, cartId);
+    }
+
     public List<Integer> findCartIdByProductId(int productId, String memberEmail) {
         String sqlForFindByProductId = "SELECT id FROM Cart WHERE product_id = ? and member_email = ?";
 

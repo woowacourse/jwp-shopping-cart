@@ -32,4 +32,8 @@ public class CartService {
         return cartDao.save(productId, memberEmail);
     }
 
+    public void remove(int cartId) {
+        cartDao.deleteById(cartId);
+    }
+
 }
