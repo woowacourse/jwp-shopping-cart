@@ -1,5 +1,8 @@
 package cart.controller;
 
+import cart.exception.CartNotFoundException;
+import cart.exception.ProductNotFoundException;
+import cart.exception.UserNotFoundException;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -29,6 +32,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<String> handleIllegalArgumentException(final IllegalArgumentException exception) {
         log.warn("잘못된 인자가 들어왔습니다", exception);
         return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @ExceptionHandler({CartNotFoundException.class, ProductNotFoundException.class, UserNotFoundException.class})
+    private ResponseEntity<String> handleNotFoundException(final Exception exception) {
+        log.warn("존재하지 않는 리소스에 접근했습니다.", exception);
+        return ResponseEntity.notFound().build();
     }
 
     @Override
