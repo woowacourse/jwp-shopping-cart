@@ -2,6 +2,8 @@ package cart.dao;
 
 import cart.entity.Cart;
 import cart.entity.PutCart;
+import cart.exception.ServiceIllegalArgumentException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,6 +46,14 @@ class JdbcCartDaoTest {
     @Test
     void save_success() {
         cartDao.save(new PutCart(2L, 1L));
+    }
+
+    @DisplayName("장바구니에 이미 상품을 담은 경우 상품을 추가할 수 없다.")
+    @Test
+    void save_fail() {
+        Assertions.assertThatThrownBy(() -> cartDao.save(PUT_CART1))
+                .isInstanceOf(ServiceIllegalArgumentException.class)
+                .hasMessage("이미 장바구니에 담은 상품입니다.");
     }
 
     @DisplayName("사용자 id를 기준으로 장바구니에 저장된 값을 조회할 수 있다.")

@@ -37,10 +37,10 @@ public class JdbcMemberDao implements MemberDao {
 
     @Override
     public void save(AuthMember authMember) {
-        String sql = "insert into member(email, password) values(?, ?)";
         if (isEmailExists(authMember.getEmail())) {
             throw new ServiceIllegalArgumentException("이메일이 중복되었습니다.");
         }
+        String sql = "insert into member(email, password) values(?, ?)";
 
         jdbcTemplate.update(sql, authMember.getEmail(), authMember.getPassword());
     }
