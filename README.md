@@ -44,5 +44,5 @@
 - [x] [PUT vs PATCH](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1181092924)
 - [x] [서비스 테스트에서 Mocking을 사용한 이유](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1181093100)
 - [ ] [REST API 관련 학습 및 자원 표기 방법 변경](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1184665185)
-- [ ] [현재 상황에서 서비스 계층 트랜잭션 어노테이션, read-only 옵션의 필요성](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1181093361)
+- [x] [현재 상황에서 서비스 계층 트랜잭션 어노테이션, read-only 옵션의 필요성](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1181093361)
 - [ ] 실행 테스트의 편의를 위해 더미 데이터 저장하기
