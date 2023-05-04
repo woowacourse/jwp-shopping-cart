@@ -60,4 +60,14 @@ class JdbcMemberDaoTest {
                 () -> assertThat(member.get()).extracting("name").isEqualTo("홍길동")
         );
     }
+
+    @Test
+    @DisplayName("이메일과 비밀번호가 올바르지 않을시 empty 반환")
+    void findByEmailAndPassword_empty() {
+        // when
+        Optional<Member> member = jdbcMemberDao.findByEmailAndPassword("test@test.com", "testPassword");
+
+        // then
+        assertThat(member).isEmpty();
+    }
 }
