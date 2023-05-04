@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import cart.controller.dto.AuthInfo;
 import cart.controller.dto.CartResponse;
@@ -46,19 +48,28 @@ public class CartController {
         return "cart";
     }
 
-    @GetMapping("/cart/products")
-    public ResponseEntity<List<CartResponse>> findAllProductsByMember(final HttpServletRequest request, final Model model) {
+    @PostMapping("/cart/products/{productId}")
+    public ResponseEntity<Void> addProduct(@PathVariable final Long productId, final HttpServletRequest request) {
         AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
         String email = authInfo.getEmail();
         String password = authInfo.getPassword();
 
-        List<Product> cartItems = cartDao.findAllByMemberEmail(email);
-        System.out.println(cartItems.get(0).getName());
+        cartDao.saveCartItemByMemberEmail(email, productId);
+        System.out.println("반갑습니다.");
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/cart/products")
+    public ResponseEntity<List<CartResponse>> findAllProductsByMember(final HttpServletRequest request) {
+        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+        String email = authInfo.getEmail();
+        String password = authInfo.getPassword();
+
+        List<Product> cartItems = cartDao.findCartItemsByMemberEmail(email);
         List<CartResponse> cartResponses = cartItems.stream()
                 .map(cartItem -> new CartResponse(cartItem.getName(), cartItem.getImageUrl(), cartItem.getPrice()))
                 .collect(Collectors.toList());
-
-        model.addAttribute("cartItems", cartResponses);
 
         return ResponseEntity.ok().body(cartResponses);
     }
