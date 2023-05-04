@@ -20,12 +20,12 @@
     - [x] 상품의 이미지는 null일 수 있다.
     - [x] 상품 이미지 주소의 최대 길이는 2048이다.
     - [x] 이미지가 null일 경우 default image를 보여준다
-- [ ] 사용자 기능 구현
-- [ ] 사용자 설정 페이지 연동
+- [x] 사용자 기능 구현
+- [x] 사용자 설정 페이지 연동
     - [x] 사용자 리스트 출력
-    - [ ] 사용자 선택 및 로그인
-- [ ] 장바구니 기능 구현
-- [ ] 장바구니 페이지 연동
+    - [x] 사용자 선택 및 로그인
+- [x] 장바구니 기능 구현
+- [x] 장바구니 페이지 연동
 
 ---
 
@@ -55,7 +55,7 @@ member
 
 #### /api/product
 
-- Create
+- Create (상품 생성)
     - POST /api/product
     - Request Body
 
@@ -67,7 +67,7 @@ member
         }
         ```
 
-- Read
+- Read (상품 조회)
     - GET /api/product
     - Response Body
 
@@ -79,13 +79,12 @@ member
               "name":"",
               "price":0,
               "imageUrl":""
-            },
-            ...
+            }
           ]
         }
         ```
 
-- Update
+- Update (상품 갱신)
     - PUT /api/product/:productId
     - Request Body
 
@@ -97,5 +96,35 @@ member
         }
         ```
 
-- Delete
+- Delete (상품 삭제)
     - DELETE /api/product/:productId
+
+#### /api/cart
+
+- 장바구니 담기
+    - POST /api/cart/:productId
+    - Request Header
+        - Authorization: BASIC email:password
+
+- 장바구니 조회
+    - GET /api/cart
+    - Request Header
+        - Authorization: BASIC email:password
+    - Response Body
+      ```json
+      {
+          "products": [
+              {
+                  "id": 0,
+                  "name": "",
+                  "price": 0,
+                  "imageUrl": ""
+              }
+          ]
+      }
+      ```
+
+- 장바구니 삭제
+    - DELETE /api/cart/:productId
+    - Request Header
+        - Authorization: BASIC email:password
