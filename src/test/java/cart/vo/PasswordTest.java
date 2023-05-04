@@ -1,11 +1,9 @@
 package cart.vo;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static cart.vo.Password.from;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -15,7 +13,7 @@ class PasswordTest {
     @ParameterizedTest
     @ValueSource(strings = {"sksk11!", "sksksksk1", "ssssssssssssssssssssssssssss11!"})
     void createPasswordFail(String input) {
-        assertThatThrownBy(() -> from(input))
+        assertThatThrownBy(() -> Password.from(input))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("올바르지 않은 비밀번호 형식입니다.");
     }
@@ -24,7 +22,7 @@ class PasswordTest {
     @ParameterizedTest
     @ValueSource(strings = {"sksk583!", "ssssssssssssssssssssssssssss1!"})
     void createPasswordSuccess(String input) {
-        Password password = from(input);
+        Password password = Password.from(input);
 
         assertThat(password.getValue()).isEqualTo(input);
     }
