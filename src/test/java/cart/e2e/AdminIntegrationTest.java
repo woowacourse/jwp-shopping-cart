@@ -49,19 +49,19 @@ public class AdminIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonRequest1)
                 .when()
-                .post("/admin/products");
+                .post("/products");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonRequest2)
                 .when()
-                .post("/admin/products");
+                .post("/products");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonRequest3)
                 .when()
-                .post("/admin/products");
+                .post("/products");
 
         // 1개의 상품 수정
         ModifyRequest request4 = new ModifyRequest("사과즙", 1000, "super.com");
@@ -70,12 +70,12 @@ public class AdminIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonRequest4)
                 .when()
-                .put("admin/products/1");
+                .put("/products/1");
 
         // 1개의 상품 삭제
         given()
                 .when()
-                .delete("admin/products/2");
+                .delete("/products/2");
 
         // 상품 리스트 조회
         ExtractableResponse<Response> result = given().log().all()

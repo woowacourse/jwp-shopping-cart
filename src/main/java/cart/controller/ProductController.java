@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Transactional
+@RequestMapping("/products")
 @RestController
 public class ProductController {
 
@@ -24,7 +26,7 @@ public class ProductController {
         this.productDao = productDao;
     }
 
-    @PostMapping("/products")
+    @PostMapping
     public ResponseEntity<Void> saveProduct(@Valid @RequestBody final ModifyRequest modifyRequest) {
         Product product = Product.createWithoutId(
                 modifyRequest.getName(),
@@ -36,7 +38,7 @@ public class ProductController {
     }
 
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(@Valid @RequestBody final ModifyRequest modifyRequest,
                                               @PathVariable Long id,
                                               final HttpServletResponse response) {
@@ -47,7 +49,7 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productDao.deleteById(id);
         return ResponseEntity.ok().build();
