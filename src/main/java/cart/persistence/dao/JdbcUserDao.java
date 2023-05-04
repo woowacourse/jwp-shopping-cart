@@ -3,6 +3,8 @@ package cart.persistence.dao;
 import cart.persistence.entity.UserEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -28,7 +30,8 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public Long save(UserEntity userEntity) {
-        return null;
+        final SqlParameterSource parameters = new BeanPropertySqlParameterSource(userEntity);
+        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
     @Override

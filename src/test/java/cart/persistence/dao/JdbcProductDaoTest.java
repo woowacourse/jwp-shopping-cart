@@ -36,8 +36,7 @@ class JdbcProductDaoTest {
 
     @Test
     void save_메서드로_Product를_저장한다() {
-        final ProductEntity productEntity = new ProductEntity("modi", 10000, "");
-
+        final ProductEntity productEntity = new ProductEntity("pojo", 10000, "");
         final Long productId = productDao.save(productEntity);
 
         assertThat(productId).isGreaterThan(0L);
@@ -45,7 +44,7 @@ class JdbcProductDaoTest {
 
     @Test
     void findAll_메서드로_저장된_Product의_목록을_불러온다() {
-        final ProductEntity modi = new ProductEntity("modi", 10000, "");
+        final ProductEntity modi = new ProductEntity("modi2", 10000, "");
         final ProductEntity jena = new ProductEntity("jena", 100000, "");
         productDao.save(modi);
         productDao.save(jena);
@@ -57,7 +56,7 @@ class JdbcProductDaoTest {
 
     @Test
     void update_메서드로_저장된_Product를_수정한다() throws Throwable {
-        final ProductEntity modi = new ProductEntity("modi", 10000, "");
+        final ProductEntity modi = new ProductEntity("modi3", 10000, "");
         final Long productId = productDao.save(modi);
         final ProductEntity originalJena = new ProductEntity(productId, "jena", 10000, "");
 
@@ -68,7 +67,7 @@ class JdbcProductDaoTest {
 
     @Test
     void deleteByName_메서드로_저장된_Product를_삭제한다() {
-        final ProductEntity modi = new ProductEntity("modi", 10000, "");
+        final ProductEntity modi = new ProductEntity("modi4", 10000, "");
         final Long id = productDao.save(modi);
 
         productDao.deleteById(id);
