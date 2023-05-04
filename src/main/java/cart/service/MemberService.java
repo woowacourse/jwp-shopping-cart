@@ -2,14 +2,13 @@ package cart.service;
 
 import cart.dao.MemberDao;
 import cart.domain.member.Member;
-import cart.domain.member.MemberEntity;
-import java.util.List;
-import javax.validation.Valid;
+import cart.dto.application.MemberDto;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@Validated
 public class MemberService {
 
     private final MemberDao memberDao;
@@ -18,12 +17,20 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public List<MemberEntity> findAll() {
-        return memberDao.findAll();
+    public List<MemberDto> findAll() {
+        return memberDao.findAll().stream()
+                .map(member -> new MemberDto(member.getUsername(), member.getPassword()))
+                .collect(Collectors.toList());
     }
 
-    public boolean isMember(@Valid final Member member) {
+    public boolean isMember(final MemberDto memberDto) {
+        final Member member = new Member(memberDto.getUsername(), memberDto.getPassword());
         return memberDao.isMember(member);
+    }
+
+    public long findMemberId(final MemberDto memberDto) {
+        final Member member = new Member(memberDto.getUsername(), memberDto.getPassword());
+        return memberDao.findMemberId(member);
     }
 
     public long findMemberId(final Member member) {

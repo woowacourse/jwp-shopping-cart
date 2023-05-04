@@ -3,10 +3,11 @@ package cart.dao;
 
 import cart.domain.member.Member;
 import cart.domain.member.MemberEntity;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class MemberDao {
@@ -32,11 +33,7 @@ public class MemberDao {
     public long findMemberId(final Member member) {
         final String sql = "SELECT id FROM Member WHERE username = ? AND password= ?";
 
-        return jdbcTemplate.queryForObject(sql, memberIdRowMapper(), member.getUsername(), member.getPassword());
-    }
-
-    private RowMapper<Long> memberIdRowMapper() {
-        return (resultSet, rowNum) -> new Long(resultSet.getLong("id"));
+        return jdbcTemplate.queryForObject(sql, Long.class, member.getUsername(), member.getPassword());
     }
 
     private RowMapper<MemberEntity> memberEntityRowMapper() {

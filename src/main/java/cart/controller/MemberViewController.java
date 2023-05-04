@@ -1,12 +1,14 @@
 package cart.controller;
 
-import cart.domain.member.MemberEntity;
+import cart.dto.response.MemberResponse;
 import cart.service.MemberService;
-import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/settings")
@@ -20,7 +22,9 @@ public class MemberViewController {
 
     @GetMapping
     public String settingsPage(final Model model) {
-        final List<MemberEntity> members = memberService.findAll();
+        final List<MemberResponse> members = memberService.findAll().stream()
+                .map(MemberResponse::new)
+                .collect(Collectors.toList());
 
         model.addAttribute("members", members);
 
