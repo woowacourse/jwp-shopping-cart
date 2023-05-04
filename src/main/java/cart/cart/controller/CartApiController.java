@@ -14,6 +14,7 @@ import cart.member.service.MemberService;
 import java.net.URI;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,7 +41,7 @@ public class CartApiController {
 
     @PostMapping("/cart")
     public ResponseEntity<CartEntity> addProduct(HttpServletRequest request,
-                                                 @RequestBody CartInsertRequestDto insertRequestDto) {
+                                                 @RequestBody @Valid CartInsertRequestDto insertRequestDto) {
 
         final AuthInfo authInfo = authorizationExtractor.extract(request);
         checkAuth(authInfo);
