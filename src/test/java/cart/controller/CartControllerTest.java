@@ -1,5 +1,7 @@
 package cart.controller;
 
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,6 +49,18 @@ public class CartControllerTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 상품을 추가하면 예외가 발생한다.")
+    void validateAddNonExistProduct() {
+        RestAssured.given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/carts/products/10")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("존재하지 않는 id 입니다."));
+    }
+
+    @Test
     @DisplayName("장바구니에서 상품을 삭제한다.")
     void removeCartItem() {
         RestAssured.given().log().all()
@@ -55,5 +69,17 @@ public class CartControllerTest {
                 .when().delete("/carts/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품을 삭제하면 예외가 발생한다.")
+    void validateRemoveNonExistCartItem() {
+        RestAssured.given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/carts/10")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("존재하지 않는 cart id 입니다."));
     }
 }
