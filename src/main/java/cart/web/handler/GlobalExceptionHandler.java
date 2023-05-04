@@ -1,6 +1,7 @@
 package cart.web.handler;
 
 import cart.exception.GlobalException;
+import cart.exception.UnAuthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -28,6 +29,12 @@ public class GlobalExceptionHandler {
         final String errorMessages = getErrorMessage(e);
         log.info("errorMessages = {}", errorMessages);
         return new ResponseEntity<>(new ExceptionResponse(errorMessages), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnAuthorizedException.class)
+    public ResponseEntity<ExceptionResponse> unAuthorizedException(final UnAuthorizedException e) {
+        log.info("errorMessage = {}", e.getMessage());
+        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

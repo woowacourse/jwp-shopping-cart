@@ -21,8 +21,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CartRestController.class)
+@WebMvcTest(controllers = CartRestController.class)
 class CartRestControllerTest {
+
+    private static final String COOKIE_VALUE = "Basic : YUBhLmNvbTpwYXNzd29yZDE=";
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,7 +39,7 @@ class CartRestControllerTest {
         when(cartService.add(any(), any())).thenReturn(1L);
 
         // when, then
-        mockMvc.perform(post("/cart/1"))
+        mockMvc.perform(post("/cart/1").header("Authorization", COOKIE_VALUE))
                 .andExpect(status().isCreated());
     }
 
@@ -48,7 +50,7 @@ class CartRestControllerTest {
         doNothing().when(cartService).delete(any(), any());
 
         // when, then
-        mockMvc.perform(delete("/cart/1"))
+        mockMvc.perform(delete("/cart/1").header("Authorization", COOKIE_VALUE))
                 .andExpect(status().isNoContent());
     }
 
@@ -68,7 +70,7 @@ class CartRestControllerTest {
         when(cartService.getCartProducts(any())).thenReturn(cartProducts);
 
         // when
-        mockMvc.perform(get("/cart/all"))
+        mockMvc.perform(get("/cart/all").header("Authorization", COOKIE_VALUE))
                 .andExpect(status().isOk());
     }
 }

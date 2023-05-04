@@ -41,4 +41,15 @@ public class UserDao implements UserRepository {
             return Optional.empty();
         }
     }
+
+    @Override
+    public boolean isExist(final String email, final String password) {
+        final String query = "SELECT COUNT(*) FROM _user u WHERE u.email = ? and u.password = ?";
+        try {
+            final User user = jdbcTemplate.queryForObject(query, userRowMapper, email, password);
+            return true;
+        } catch (EmptyResultDataAccessException exception) {
+            return false;
+        }
+    }
 }

@@ -34,7 +34,7 @@ public class UserViewController {
     }
 
     @GetMapping("/settings")
-    public String renderSettings(final Model model) {
+    public String renderSettings(final Model modelw) {
         final List<UserResponse> userResponses = userService.getUsers()
                 .stream()
                 .map(user -> new UserResponse(user.getUserEmailValue(), user.getUserPasswordValue()))

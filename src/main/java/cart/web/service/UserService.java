@@ -2,13 +2,14 @@ package cart.web.service;
 
 import cart.domain.user.User;
 import cart.domain.user.UserRepository;
+import cart.web.controller.user.dto.UserRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -17,8 +18,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    @Transactional(readOnly = true)
+
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    public boolean isLoggedIn(final UserRequest userRequest) {
+        return userRepository.isExist(userRequest.getEmail(), userRequest.getPassword());
     }
 }
