@@ -1,5 +1,9 @@
 package cart.controller.dto.response;
 
+<<<<<<< HEAD
+=======
+import cart.entity.CartEntity;
+>>>>>>> 28a6d971 (feat: findAllByMemberId 구현)
 import cart.entity.ProductEntity;
 
 public class CartItemResponse {
@@ -40,4 +44,9 @@ public class CartItemResponse {
     public String getImageUrl() {
         return imageUrl;
     }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 28a6d971 (feat: findAllByMemberId 구현)
 }

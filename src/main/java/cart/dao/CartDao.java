@@ -4,9 +4,12 @@ package cart.dao;
 <<<<<<< HEAD
 import cart.entity.CartEntity;
 import cart.entity.ProductEntity;
+<<<<<<< HEAD
 =======
 import cart.entity.CartEntity;
 >>>>>>> db0c1803 (feat: CartDao save 테스트)
+=======
+>>>>>>> 28a6d971 (feat: findAllByMemberId 구현)
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +61,9 @@ public class CartDao {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 28a6d971 (feat: findAllByMemberId 구현)
     public List<ProductEntity> findAllByMemberId(Long memberId) {
         String sql = "SELECT * FROM product " +
                 "INNER JOIN cart " +
@@ -73,6 +79,7 @@ public class CartDao {
         ), memberId);
     }
 
+<<<<<<< HEAD
     public void deleteById(final Long id) {
         String sql = "DELETE FROM CART WHERE id = ?";
         jdbcTemplate.update(sql, id);
@@ -82,4 +89,6 @@ public class CartDao {
 >>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
 =======
 >>>>>>> db0c1803 (feat: CartDao save 테스트)
+=======
+>>>>>>> 28a6d971 (feat: findAllByMemberId 구현)
 }
