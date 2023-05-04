@@ -3,6 +3,7 @@ package cart.service;
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
+import cart.dao.entity.CartEntity;
 import cart.dao.entity.ProductEntity;
 import cart.dto.auth.AuthInfo;
 import cart.dto.request.RequestCreateProductDto;
@@ -83,5 +84,13 @@ public class CartService {
         return productEntities.stream()
                 .map(ResponseProductDto::transferEntityToDto)
                 .collect(Collectors.toList());
+    }
+
+    public void addProduct(final int memberId, final int productId) {
+        CartEntity cartEntity = new CartEntity.Builder()
+                .memberId(memberId)
+                .productId(productId)
+                .build();
+        cartDao.add(cartEntity);
     }
 }

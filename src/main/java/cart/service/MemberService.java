@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
+import cart.dto.auth.AuthInfo;
 import cart.dto.response.ResponseMemberDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,5 +25,9 @@ public class MemberService {
         return memberEntities.stream()
                 .map(memberEntity -> ResponseMemberDto.transferEntityToDto(memberEntity))
                 .collect(Collectors.toList());
+    }
+
+    public int findIdByAuthInfo(AuthInfo authInfo) {
+        return memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
     }
 }

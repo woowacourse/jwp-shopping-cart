@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.dao.entity.CartEntity;
 import cart.dao.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,5 +35,11 @@ public class CartDao {
                 .price(resultSet.getInt("price"))
                 .image(resultSet.getString("image"))
                 .build();
+    }
+
+    public void add(final CartEntity cartEntity) {
+        final String query = "INSERT INTO CART (member_id, product_id) VALUES (?, ?)";
+        // TODO : 키홀더 추가해서 제대로 추가되었는지 검증
+        jdbcTemplate.update(query, cartEntity.getMemberId(), cartEntity.getProductId());
     }
 }

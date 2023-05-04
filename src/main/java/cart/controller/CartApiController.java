@@ -6,6 +6,7 @@ import cart.dto.request.RequestUpdateProductDto;
 import cart.dto.response.ResponseProductDto;
 import cart.infrastructure.BasicAuthorizationExtractor;
 import cart.service.CartService;
+import cart.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,10 +22,13 @@ import java.util.List;
 public class CartApiController {
 
     private final CartService cartService;
+    private final MemberService memberService;
+    private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
 
     @Autowired
-    public CartApiController(final CartService cartService) {
+    public CartApiController(final CartService cartService, MemberService memberService) {
         this.cartService = cartService;
+        this.memberService = memberService;
     }
 
     @PostMapping("/product")
@@ -47,9 +51,18 @@ public class CartApiController {
 
     @GetMapping("/carts")
     public ResponseEntity<List<ResponseProductDto>> getProducts(final HttpServletRequest request) {
-        BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
         AuthInfo authIfo = basicAuthorizationExtractor.extract(request);
         List<ResponseProductDto> cartProductsByMember = cartService.findCartProductsByMember(authIfo);
         return ResponseEntity.ok().body(cartProductsByMember);
     }
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<Void> addProductToCart(@PathVariable final int id, final HttpServletRequest request) {
+        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+        // TODO : 컨트롤러의 역할인가?
+        int memberId = memberService.findIdByAuthInfo(authInfo);
+        cartService.addProduct(memberId, id);
+        return ResponseEntity.ok().build();
+    }
+
 }
