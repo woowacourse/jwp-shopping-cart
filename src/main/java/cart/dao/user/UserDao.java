@@ -54,6 +54,18 @@ public class UserDao {
         }
     }
 
+    public Optional<UserEntity> findByEmailAndPassword(String email, String password) {
+        String findByEmailQuery = "SELECT * FROM user WHERE email = ? AND password = ?";
+
+        try {
+            UserEntity userEntity = jdbcTemplate.queryForObject(findByEmailQuery, rowMapper, email, password);
+
+            return Optional.of(userEntity);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public void deleteById(Long id) {
         String deleteByIdQuery = "DELETE FROM user WHERE user_id = ?";
 
