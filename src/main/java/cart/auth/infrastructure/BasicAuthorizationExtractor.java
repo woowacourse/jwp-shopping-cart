@@ -1,7 +1,6 @@
 package cart.auth.infrastructure;
 
 import cart.dto.UserAuthInfo;
-import cart.exception.UserAuthentificationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +14,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<UserA
         String header = request.getHeader(AUTHORIZATION);
 
         if (header == null) {
-            throw new UserAuthentificationException("사용자 권한이 없습니다.");
+            return null;
         }
 
         if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
@@ -30,6 +29,6 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<UserA
             return new UserAuthInfo(email, password);
         }
 
-        throw new UserAuthentificationException("사용자 권한이 없습니다.");
+        return null;
     }
 }
