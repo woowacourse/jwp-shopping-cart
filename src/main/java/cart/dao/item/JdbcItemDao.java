@@ -21,7 +21,7 @@ public class JdbcItemDao implements ItemDao {
     public static final String KEY_COLUMN_NAME = "id";
 
     private final JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert simpleJdbcInsert;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
 
     public JdbcItemDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
@@ -66,10 +66,11 @@ public class JdbcItemDao implements ItemDao {
         };
     }
 
-    public Optional<ItemEntity> findById(Long id) {
+    public ItemEntity findById(Long id) {
         String sql = "select * from item where id = ?";
+
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, mapRow(), id));
+            return jdbcTemplate.queryForObject(sql, mapRow(), id);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new IllegalArgumentException("요청하신 상품을 찾을 수 없습니다. 올바른 상품 ID를 입력해주세요.");
         }

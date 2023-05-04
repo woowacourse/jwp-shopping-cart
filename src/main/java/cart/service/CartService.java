@@ -7,6 +7,7 @@ import cart.dto.item.ItemResponse;
 import cart.entity.ItemEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,11 +25,15 @@ public class CartService {
     }
 
     public ItemEntity save(String memberEmail, Long itemId) {
-        return cartDao.save(memberEmail, itemDao.findById(itemId).get());
+        return cartDao.save(memberEmail, itemDao.findById(itemId));
     }
 
     public List<CartResponse> findAll(String memberEmail) {
         Optional<Map<ItemEntity, Long>> cart = cartDao.findAll(memberEmail);
+
+        if(cart.isEmpty()){
+            return Collections.emptyList();
+        }
 
         return convertItemEntityMapToCartItemEntityList(cart.get());
     }
@@ -48,6 +53,6 @@ public class CartService {
     }
 
     public void delete(String memberEmail, Long itemId) {
-        cartDao.delete(memberEmail, itemDao.findById(itemId).get());
+        cartDao.delete(memberEmail, itemDao.findById(itemId));
     }
 }

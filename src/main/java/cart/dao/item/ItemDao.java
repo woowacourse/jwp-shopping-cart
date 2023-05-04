@@ -12,7 +12,7 @@ public interface ItemDao {
 
     Optional<List<ItemEntity>> findAll();
 
-    Optional<ItemEntity> findById(Long id);
+    ItemEntity findById(Long id);
 
     void update(Long id, ItemEntity item);
 

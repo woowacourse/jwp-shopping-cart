@@ -39,14 +39,14 @@ class CartControllerTest {
 
     @BeforeEach
     void setUp() {
-        ItemEntity item1 = itemDao.save(new ItemEntity("치킨", "a", 10000));
+        ItemEntity item = itemDao.save(new ItemEntity("치킨", "a", 10000));
 
-        MemberEntity member1 = memberDao.save(new MemberEntity("email@email.com", "hello", "01012345678", "password"));
+        MemberEntity member = memberDao.save(new MemberEntity("email@email.com", "hello", "01012345678", "password"));
 
-        cartDao.save(member1.getEmail(), itemDao.findById(item1.getId()).get());
+        cartDao.save(member.getEmail(), itemDao.findById(item.getId()));
 
-        authorization = Base64Utils.encodeToString((member1.getEmail() + ":" + member1.getPassword()).getBytes());
-        invalidAuthorization = Base64Utils.encodeToString((member1.getEmail() + ":" + "abc").getBytes());
+        authorization = Base64Utils.encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes());
+        invalidAuthorization = Base64Utils.encodeToString((member.getEmail() + ":" + "abc").getBytes());
     }
 
     @Test

@@ -5,6 +5,7 @@ import cart.dto.member.MemberResponse;
 import cart.entity.MemberEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,8 +30,12 @@ public class MemberService {
 
     public List<MemberResponse> findAll() {
         Optional<List<MemberEntity>> members = memberDao.findAll();
-        List<MemberEntity> retrievedMembers = members.get();
-        return convertMembersToMemberResponses(retrievedMembers);
+
+        if(members.isEmpty()){
+            return Collections.emptyList();
+        }
+
+        return convertMembersToMemberResponses(members.get());
     }
 
     private List<MemberResponse> convertMembersToMemberResponses(final List<MemberEntity> members) {

@@ -35,8 +35,8 @@ class JdbcCartDaoTest {
 
         MemberEntity member = memberDao.save(new MemberEntity("test@naver.com", "test", "01012345678", "qwer1234"));
 
-        cartDao.save(member.getEmail(), itemDao.findById(item1.getId()).get());
-        cartDao.save(member.getEmail(), itemDao.findById(item2.getId()).get());
+        cartDao.save(member.getEmail(), itemDao.findById(item1.getId()));
+        cartDao.save(member.getEmail(), itemDao.findById(item2.getId()));
     }
 
     @Test

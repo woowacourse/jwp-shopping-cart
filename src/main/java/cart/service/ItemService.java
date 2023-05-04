@@ -5,6 +5,7 @@ import cart.dto.item.ItemResponse;
 import cart.entity.ItemEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,8 +26,12 @@ public class ItemService {
 
     public List<ItemResponse> findAll() {
         Optional<List<ItemEntity>> items = itemDao.findAll();
-        List<ItemEntity> retrievedItems = items.get();
-        return convertItemsToItemResponses(retrievedItems);
+
+        if(items.isEmpty()){
+            return Collections.emptyList();
+        }
+
+        return convertItemsToItemResponses(items.get());
     }
 
     private List<ItemResponse> convertItemsToItemResponses(final List<ItemEntity> itemEntities) {
