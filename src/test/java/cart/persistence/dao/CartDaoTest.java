@@ -1,6 +1,7 @@
 package cart.persistence.dao;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -25,6 +26,7 @@ class CartDaoTest {
     }
 
     @Test
+    @DisplayName("Cart를 추가한다")
     void createCart() {
         cartDao.createCart(2L);
         cartDao.createCart(3L);
@@ -34,11 +36,13 @@ class CartDaoTest {
     }
 
     @Test
+    @DisplayName("cartId에 해당하는 cart가 존재하는지 판단한다")
     void existsByCartId() {
         assertThat(cartDao.existsByCartId(1L)).isTrue();
     }
 
     @Test
+    @DisplayName("MemeberId에 해당하는 CartId를 찾는다")
     void findCartIdByMemberId() {
         assertThat(cartDao.findCartIdByMemberId(1L)).isNotEmpty();
     }

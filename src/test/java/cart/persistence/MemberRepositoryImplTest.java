@@ -41,7 +41,7 @@ class MemberRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("해당 member를 포함하고 있다")
     void containsTest() {
         assertAll(
                 () -> assertThat(memberRepository.contains(member1)).isTrue(),
@@ -50,6 +50,7 @@ class MemberRepositoryImplTest {
     }
 
     @Test
+    @DisplayName("email과 password가 일치하는 member를 찾는다")
     void findByEmailAndPasswordTest() {
         LoginDto loginDto1 = new LoginDto(member1.getEmail(), member1.getPassword());
         LoginDto loginDto2 = new LoginDto(member2.getEmail(), member2.getPassword());
