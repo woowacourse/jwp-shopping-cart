@@ -6,6 +6,7 @@ import cart.domain.Product;
 import cart.domain.User;
 import java.util.List;
 import java.util.Map;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,8 +16,8 @@ public class CartDbRepository implements CartRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public CartDbRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    public CartDbRepository(JdbcTemplate jdbcTemplate) {
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
     @Override
