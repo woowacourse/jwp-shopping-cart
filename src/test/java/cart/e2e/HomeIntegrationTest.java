@@ -5,7 +5,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.controller.dto.ModifyRequest;
+import cart.controller.dto.ProductSaveRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -39,9 +39,9 @@ public class HomeIntegrationTest {
     @Test
     public void getProducts() throws JsonProcessingException {
         // 3개의 상품 추가
-        ModifyRequest request1 = new ModifyRequest("사과", 100, "super.com");
-        ModifyRequest request2 = new ModifyRequest("당근", 1000, "super.com");
-        ModifyRequest request3 = new ModifyRequest("포도", 2000, "super.com");
+        ProductSaveRequest request1 = new ProductSaveRequest("사과", 100, "super.com");
+        ProductSaveRequest request2 = new ProductSaveRequest("당근", 1000, "super.com");
+        ProductSaveRequest request3 = new ProductSaveRequest("포도", 2000, "super.com");
         String jsonRequest1 = objectMapper.writeValueAsString(request1);
         String jsonRequest2 = objectMapper.writeValueAsString(request2);
         String jsonRequest3 = objectMapper.writeValueAsString(request3);
@@ -65,7 +65,7 @@ public class HomeIntegrationTest {
                 .post("/products");
 
         // 1개의 상품 수정
-        ModifyRequest request4 = new ModifyRequest("사과즙", 1000, "super.com");
+        ProductSaveRequest request4 = new ProductSaveRequest("사과즙", 1000, "super.com");
         String jsonRequest4 = objectMapper.writeValueAsString(request4);
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

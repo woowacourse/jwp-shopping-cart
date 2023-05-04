@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.ModifyRequest;
+import cart.controller.dto.ProductSaveRequest;
+import cart.controller.dto.ProductUpdateRequest;
 import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import javax.servlet.http.HttpServletResponse;
@@ -27,11 +28,11 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> saveProduct(@Valid @RequestBody final ModifyRequest modifyRequest) {
+    public ResponseEntity<Void> saveProduct(@Valid @RequestBody final ProductSaveRequest productSaveRequest) {
         Product product = Product.createWithoutId(
-                modifyRequest.getName(),
-                modifyRequest.getPrice(),
-                modifyRequest.getImageUrl()
+                productSaveRequest.getName(),
+                productSaveRequest.getPrice(),
+                productSaveRequest.getImageUrl()
         );
         productDao.save(product);
         return ResponseEntity.ok().build();
@@ -39,11 +40,11 @@ public class ProductController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@Valid @RequestBody final ModifyRequest modifyRequest,
+    public ResponseEntity<Void> updateProduct(@Valid @RequestBody final ProductUpdateRequest productUpdateRequest,
                                               @PathVariable Long id,
                                               final HttpServletResponse response) {
-        final Product product = Product.create(id, modifyRequest.getName(), modifyRequest.getPrice(),
-                modifyRequest.getImageUrl());
+        final Product product = Product.create(id, productUpdateRequest.getName(), productUpdateRequest.getPrice(),
+                productUpdateRequest.getImageUrl());
         productDao.update(product);
         response.setStatus(HttpServletResponse.SC_CREATED);
         return ResponseEntity.ok().build();

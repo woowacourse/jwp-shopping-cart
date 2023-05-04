@@ -5,7 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.controller.dto.ModifyRequest;
+import cart.controller.dto.ProductSaveRequest;
+import cart.controller.dto.ProductUpdateRequest;
 import cart.dao.ProductDao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +40,7 @@ class ProductControllerTest {
         @DisplayName("입력이 올바른 경우 Status OK를 반환한다.")
         @Test
         void shouldResponseStatusOkWhenRequestPostToProducts() throws Exception {
-            final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
+            final ProductSaveRequest request = new ProductSaveRequest("사과", 100, "domain.com");
             final String requestJson = objectMapper.writeValueAsString(request);
 
             mockMvc.perform(post("/products")
@@ -53,7 +54,7 @@ class ProductControllerTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         void shouldResponseStatusBadRequestWhenNameIsBlank(String inputName) throws Exception {
-            final ModifyRequest request = new ModifyRequest(inputName, 100, "domain.super.com");
+            final ProductSaveRequest request = new ProductSaveRequest(inputName, 100, "domain.super.com");
             String requestJson = objectMapper.writeValueAsString(request);
 
             mockMvc.perform(post("/products")
@@ -66,7 +67,7 @@ class ProductControllerTest {
         @ParameterizedTest(name = "가격 입력 : {0}")
         @ValueSource(longs = {-1, -10000, -1000000})
         void shouldResponseStatusBadRequestWhenPriceIsUnderZero(long inputPrice) throws Exception {
-            final ModifyRequest request = new ModifyRequest("사과", inputPrice, "domain.super.com");
+            final ProductSaveRequest request = new ProductSaveRequest("사과", inputPrice, "domain.super.com");
             String requestJson = objectMapper.writeValueAsString(request);
 
             mockMvc.perform(post("/products")
@@ -80,7 +81,7 @@ class ProductControllerTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         void shouldResponseStatusBadRequestWhenImageUrlIsBlank(String inputImageUrl) throws Exception {
-            final ModifyRequest request = new ModifyRequest("사과", 100, inputImageUrl);
+            final ProductSaveRequest request = new ProductSaveRequest("사과", 100, inputImageUrl);
             String requestJson = objectMapper.writeValueAsString(request);
 
             mockMvc.perform(post("/products")
@@ -97,7 +98,7 @@ class ProductControllerTest {
         @DisplayName("입력이 올바른 경우 Status OK를 반환한다.")
         @Test
         void shouldResponseStatusOkWhenRequestPutToProducts() throws Exception {
-            final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
+            final ProductUpdateRequest request = new ProductUpdateRequest("사과", 100, "domain.com");
             final String requestJson = objectMapper.writeValueAsString(request);
 
             mockMvc.perform(put("/products/1")
@@ -111,7 +112,7 @@ class ProductControllerTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         void shouldResponseStatusBadRequestWhenNameIsBlank(String inputName) throws Exception {
-            final ModifyRequest request = new ModifyRequest(inputName, 100, "domain.super.com");
+            final ProductUpdateRequest request = new ProductUpdateRequest(inputName, 100, "domain.super.com");
             String requestJson = objectMapper.writeValueAsString(request);
 
             mockMvc.perform(put("/products/1")
@@ -124,7 +125,7 @@ class ProductControllerTest {
         @ParameterizedTest(name = "가격 입력 : {0}")
         @ValueSource(longs = {-1, -10000, -1000000})
         void shouldResponseStatusBadRequestWhenPriceIsUnderZero(long inputPrice) throws Exception {
-            final ModifyRequest request = new ModifyRequest("사과", inputPrice, "domain.super.com");
+            final ProductUpdateRequest request = new ProductUpdateRequest("사과", inputPrice, "domain.super.com");
             String requestJson = objectMapper.writeValueAsString(request);
 
             mockMvc.perform(put("/products/1")
@@ -138,7 +139,7 @@ class ProductControllerTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         void shouldResponseStatusBadRequestWhenImageUrlIsBlank(String inputImageUrl) throws Exception {
-            final ModifyRequest request = new ModifyRequest("사과", 100, inputImageUrl);
+            final ProductUpdateRequest request = new ProductUpdateRequest("사과", 100, inputImageUrl);
             String requestJson = objectMapper.writeValueAsString(request);
 
             mockMvc.perform(put("/products/1")

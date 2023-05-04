@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
-public class ModifyRequest {
+public class ProductSaveRequest {
     @NotNull
     @NotBlank
     private final String name;
@@ -16,7 +16,7 @@ public class ModifyRequest {
     @NotBlank
     private final String imageUrl;
 
-    public ModifyRequest(String name, long price, String imageUrl) {
+    public ProductSaveRequest(String name, long price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
