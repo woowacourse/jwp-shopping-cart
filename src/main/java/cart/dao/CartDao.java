@@ -31,6 +31,7 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // TODO: 5/4/23 Long 반환 필요 있을지 
     public void save(final Cart cart) {
         final String sql = "INSERT INTO carts(user_id, item_id) VALUES(?, ?)";
         jdbcTemplate.update(sql, cart.getUser().getId(), cart.getItem().getId());
@@ -46,7 +47,7 @@ public class CartDao {
     }
 
     public void delete(final Long cartId) {
-        final String sql = "DELETE FROM carts WHERE cart_id = ? ";
+        final String sql = "DELETE FROM carts WHERE id = ? ";
         jdbcTemplate.update(sql, cartId);
     }
 }
