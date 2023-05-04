@@ -35,4 +35,9 @@ public class UserDao {
                 , email, password
         );
     }
+
+    public void create(UserEntity userEntity) {
+        String sql = "INSERT INTO `USER` (EMAIL, PASSWORD) VALUES (?, ?)";
+        jdbcTemplate.update(sql, userEntity.getEmail(), userEntity.getPassword());
+    }
 }
