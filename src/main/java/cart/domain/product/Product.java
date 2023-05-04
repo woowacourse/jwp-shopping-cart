@@ -15,7 +15,7 @@ public class Product {
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
-        this.productId = ProductId.getEmptyId();
+        this.productId = ProductId.getEmptyInstance();
     }
 
     public Product(final ProductName name, final ProductPrice price, final ProductCategory category,
