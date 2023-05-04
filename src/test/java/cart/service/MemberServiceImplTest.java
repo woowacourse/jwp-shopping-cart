@@ -77,5 +77,18 @@ class MemberServiceImplTest {
 
 	@Test
 	void findByEmail() {
+		// given
+		final String email = "email@email";
+		final Member member = new Member(MemberId.from(1L), "kiara", "email@email", "pw");
+
+		BDDMockito.given(memberRepository.findByEmail(email)).willReturn(member);
+
+		// when
+		final MemberResponse memberByEmail = memberService.findByEmail(email);
+
+		// then
+		Assertions.assertThat(memberByEmail)
+			.usingRecursiveComparison()
+			.isEqualTo(new MemberResponse(1L, "kiara", "email@email", "pw"));
 	}
 }

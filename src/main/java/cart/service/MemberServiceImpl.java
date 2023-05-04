@@ -40,7 +40,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Member findByEmail(final String email) {
-		return null;
+	public MemberResponse findByEmail(final String email) {
+		final Member member = memberRepository.findByEmail(email);
+		return new MemberResponse(member.getId().getId(), member.getName(), member.getEmail(), member.getPassword());
 	}
 }
