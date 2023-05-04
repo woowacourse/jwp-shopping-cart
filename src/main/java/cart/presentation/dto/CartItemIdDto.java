@@ -6,7 +6,7 @@ import javax.validation.constraints.Positive;
 
 public class CartItemIdDto {
 
-    @Positive(message = "상품 id는 0보다 커야 합니다.")
+    @Positive(message = "카트 상품 id는 0보다 커야 합니다.")
     private final Integer id;
 
     @JsonCreator
