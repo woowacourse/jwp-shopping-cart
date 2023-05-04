@@ -18,22 +18,14 @@ public class Email {
 
     private String validate(String email) {
         validateNotEmpty(email);
-        validateEmailFormat(email);
         validateLength(email);
+        validateEmailFormat(email);
         return email;
     }
 
     private void validateNotEmpty(String email) {
         if (email.isEmpty()) {
-            throw new IllegalArgumentException("이메일 주소를 입력하세요.");
-        }
-    }
-
-    private void validateEmailFormat(String email) {
-        Pattern pattern = Pattern.compile(EMAIL_REGEX);
-        Matcher matcher = pattern.matcher(email);
-        if (!matcher.matches()) {
-            throw new IllegalArgumentException("유효하지 않은 email 형식입니다.");
+            throw new InvalidMemberException("이메일 주소를 입력하세요.");
         }
     }
 
@@ -41,6 +33,14 @@ public class Email {
         int length = email.length();
         if (length > MAX_EMAIL_LENGTH) {
             throw new InvalidMemberException("email은 " + MAX_EMAIL_LENGTH + "자 이하여야 합니다. (현재 " + length + "자)");
+        }
+    }
+
+    private void validateEmailFormat(String email) {
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(email);
+        if (!matcher.matches()) {
+            throw new InvalidMemberException("유효하지 않은 email 형식입니다.");
         }
     }
 

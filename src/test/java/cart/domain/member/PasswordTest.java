@@ -16,7 +16,7 @@ class PasswordTest {
 
         // then
         assertThatThrownBy(() -> new Password(password))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidMemberException.class)
                 .hasMessage("비밀번호를 입력하세요.");
     }
 

@@ -1,8 +1,12 @@
 package cart.controller;
 
+import cart.dto.member.MemberDto;
+import cart.dto.member.MemberResponseDto;
 import cart.dto.product.ProductDto;
 import cart.dto.product.ProductResponseDto;
+import cart.entity.MemberEntity;
 import cart.entity.ProductEntity;
+import cart.service.MemberService;
 import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +30,9 @@ class JwpCartControllerTest {
 
     @MockBean
     ProductService productService;
+
+    @MockBean
+    MemberService memberService;
 
     @Test
     @DisplayName("상품 목록 페이지를 조회한다.")
@@ -65,5 +72,25 @@ class JwpCartControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin"))
                 .andExpect(model().attribute("products", expectResponses));
+    }
+
+    @Test
+    @DisplayName("사용자 설정 페이지를 조회한다.")
+    void settings() throws Exception {
+        List<MemberDto> expectDtos = List.of(
+                MemberDto.fromEntity(new MemberEntity(1L, "a@a.com", "password1")),
+                MemberDto.fromEntity(new MemberEntity(2L, "b@b.com", "password2"))
+        );
+
+        List<MemberResponseDto> expectResponses = expectDtos.stream()
+                .map(MemberResponseDto::fromDto)
+                .collect(toList());
+
+        when(memberService.findAll()).thenReturn(expectDtos);
+
+        mockMvc.perform(get("/settings"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings"))
+                .andExpect(model().attribute("members", expectResponses));
     }
 }

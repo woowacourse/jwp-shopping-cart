@@ -16,7 +16,7 @@ class EmailTest {
 
         // then
         assertThatThrownBy(() -> new Email(email))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidMemberException.class)
                 .hasMessage("이메일 주소를 입력하세요.");
     }
 
@@ -28,7 +28,7 @@ class EmailTest {
 
         // then
         assertThatThrownBy(() -> new Email(email))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidMemberException.class)
                 .hasMessage("유효하지 않은 email 형식입니다.");
     }
 

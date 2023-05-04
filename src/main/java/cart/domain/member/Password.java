@@ -21,7 +21,7 @@ public class Password {
 
     private void validateNotEmpty(String password) {
         if (password.isEmpty()) {
-            throw new IllegalArgumentException("비밀번호를 입력하세요.");
+            throw new InvalidMemberException("비밀번호를 입력하세요.");
         }
     }
 
