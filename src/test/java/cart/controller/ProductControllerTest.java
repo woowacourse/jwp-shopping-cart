@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.dto.ProductDto;
-import cart.service.ProductManagementService;
+import cart.service.ProductService;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -26,12 +26,12 @@ public class ProductControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ProductManagementService productManagementService;
+    private ProductService productService;
 
     @Test
     void 상품_목록_페이지를_조회한다() throws Exception {
         List<ProductDto> products = new ArrayList<>();
-        given(productManagementService.findAllProduct())
+        given(productService.findAllProduct())
                 .willReturn(products);
 
         mockMvc.perform(get("/"))

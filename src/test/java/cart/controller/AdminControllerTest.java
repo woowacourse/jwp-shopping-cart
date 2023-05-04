@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.dto.CreateProductRequest;
 import cart.dto.ProductDto;
 import cart.dto.UpdateProductRequest;
-import cart.service.ProductManagementService;
+import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +39,12 @@ public class AdminControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ProductManagementService productManagementService;
+    private ProductService productService;
 
     @Test
     void 어드민_페이지를_조회한다() throws Exception {
         List<ProductDto> products = new ArrayList<>();
-        given(productManagementService.findAllProduct())
+        given(productService.findAllProduct())
                 .willReturn(products);
 
         mockMvc.perform(get("/admin"))
@@ -58,7 +58,7 @@ public class AdminControllerTest {
         final CreateProductRequest request = new CreateProductRequest("하디", "imageUrl", 100000);
         final String requestBody = objectMapper.writeValueAsString(request);
         doNothing()
-                .when(productManagementService)
+                .when(productService)
                 .addProduct(any());
 
         mockMvc.perform(post("/admin/products")
@@ -73,7 +73,7 @@ public class AdminControllerTest {
         final UpdateProductRequest request = new UpdateProductRequest("코코닥", "imageUrl", 15000);
         final String requestBody = objectMapper.writeValueAsString(request);
         doNothing()
-                .when(productManagementService)
+                .when(productService)
                 .updateProduct(any(), any());
 
         mockMvc.perform(patch("/admin/products/{product_id}", id)
@@ -87,7 +87,7 @@ public class AdminControllerTest {
         final Long id = 1L;
 
         doNothing()
-                .when(productManagementService)
+                .when(productService)
                 .deleteProduct(anyLong());
 
         mockMvc.perform(delete("/admin/products/{product_id}", id))

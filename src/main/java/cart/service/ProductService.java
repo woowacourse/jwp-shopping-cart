@@ -13,11 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class ProductManagementService {
+public class ProductService {
 
     private final ProductDao productDao;
 
-    public ProductManagementService(final ProductDao productDao) {
+    public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
