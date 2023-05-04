@@ -140,6 +140,7 @@ class ProductDaoTest {
     @Test
     void 모든_데이터를_조회한다() {
         // given
+        final int previousSize = productDao.selectAll().size();
         productDao.insert(
                 new ProductEntity.Builder()
                         .name("치킨")
@@ -152,6 +153,6 @@ class ProductDaoTest {
         final List<ProductEntity> productEntities = productDao.selectAll();
 
         // then
-        assertThat(productEntities).hasSize(1);
+        assertThat(productEntities).hasSize(previousSize + 1);
     }
 }
