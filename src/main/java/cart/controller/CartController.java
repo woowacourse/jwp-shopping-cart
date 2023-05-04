@@ -42,8 +42,8 @@ public class CartController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteCart(@PathVariable(value = "id") final long productId, @Login final long memberId) {
+  @DeleteMapping("/{productId}")
+  public ResponseEntity<Void> deleteCart(@PathVariable final long productId, @Login final long memberId) {
     cartService.deleteByMemberIdAndProductId(memberId, productId);
     return ResponseEntity.ok().build();
   }
