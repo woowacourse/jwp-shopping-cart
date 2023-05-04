@@ -36,8 +36,9 @@ public class ProductService {
                 productRequestDto.getImgUrl(),
                 productRequestDto.getPrice()
         );
-        ProductEntity productEntity = productRepository.save(product);
-        return ProductDto.fromEntity(productEntity);
+        ProductEntity entity = new ProductEntity(null, product.getName(), product.getImgUrl(), product.getPrice());
+        ProductEntity savedProductentity = productRepository.save(entity);
+        return ProductDto.fromEntity(savedProductentity);
     }
 
     @Transactional

@@ -1,6 +1,5 @@
 package cart.repository;
 
-import cart.domain.Product;
 import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,19 +20,19 @@ public class DBProductRepository implements ProductRepository {
     }
 
     @Override
-    public ProductEntity save(Product product) {
+    public ProductEntity save(ProductEntity productEntity) {
         String sql = "INSERT INTO product (name, imgURL, price) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setString(2, product.getImgUrl());
-            preparedStatement.setInt(3, product.getPrice());
+            preparedStatement.setString(1, productEntity.getName());
+            preparedStatement.setString(2, productEntity.getImgUrl());
+            preparedStatement.setInt(3, productEntity.getPrice());
             return preparedStatement;
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        return new ProductEntity(id, product.getName(), product.getImgUrl(), product.getPrice());
+        return new ProductEntity(id, productEntity.getName(), productEntity.getImgUrl(), productEntity.getPrice());
     }
 
     @Override

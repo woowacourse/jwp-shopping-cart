@@ -1,6 +1,5 @@
 package cart.repository;
 
-import cart.domain.Product;
 import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,19 +29,19 @@ class DBProductRepositoryTest {
     void setUp() {
         productRepository = new DBProductRepository(jdbcTemplate);
 
-        Product product1 = new Product("name1", "url1.com", 1000);
-        Product product2 = new Product("name2", "url2.com", 2000);
+        ProductEntity ProductEntity1 = new ProductEntity(null, "name1", "url1.com", 1000);
+        ProductEntity ProductEntity2 = new ProductEntity(null, "name2", "url2.com", 2000);
 
-        this.entity1 = productRepository.save(product1);
-        this.entity2 = productRepository.save(product2);
+        this.entity1 = productRepository.save(ProductEntity1);
+        this.entity2 = productRepository.save(ProductEntity2);
     }
 
     @Test
     @DisplayName("상품 정보를 DB에 저장한다.")
     void save() {
-        Product product3 = new Product("name3", "url3.com", 3000);
+        ProductEntity productEntity3 = new ProductEntity(null, "name3", "url3.com", 3000);
 
-        productRepository.save(product3);
+        productRepository.save(productEntity3);
         List<ProductEntity> productEntities = productRepository.findAll();
         assertThat(productEntities).hasSize(3);
     }

@@ -1,6 +1,5 @@
 package cart.service;
 
-import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductRequestDto;
 import cart.entity.ProductEntity;
@@ -49,7 +48,7 @@ class ProductServiceTest {
         int price = 1000;
         ProductRequestDto request = new ProductRequestDto(name, imgUrl, price);
         ProductEntity entity = new ProductEntity(1L, name, imgUrl, price);
-        when(productRepository.save(any(Product.class))).thenReturn(entity);
+        when(productRepository.save(any(ProductEntity.class))).thenReturn(entity);
 
         ProductDto expectDto = ProductDto.fromEntity(entity);
         assertThat(productService.add(request)).isEqualTo(expectDto);
