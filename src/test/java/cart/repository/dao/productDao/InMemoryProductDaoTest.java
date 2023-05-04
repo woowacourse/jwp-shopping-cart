@@ -1,16 +1,15 @@
-package cart.repository.dao;
-
-import static org.assertj.core.api.Assertions.assertThat;
+package cart.repository.dao.productDao;
 
 import cart.entity.Product;
-import java.util.List;
-
-import cart.repository.dao.productDao.InMemoryProductDao;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
