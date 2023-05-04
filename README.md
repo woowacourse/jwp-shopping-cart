@@ -17,7 +17,7 @@
     - [x] 상품 목록 조회 API
     - [x] 상품 수정 API
     - [x] 상품 삭제 API
-      - [ ] 해당 상품을 참조하는 장바구니 아이템이 있을 경우 장바구니 아이템을 먼저 지워주기.
+      - [x] 해당 상품을 참조하는 장바구니 아이템이 있을 경우 장바구니 아이템을 먼저 지워주기.
 - [x] 사용자 관리 페이지
   - [x] 모든 사용자 정보 조회 기능
   - [x] 사용자 설정 페이지 연동
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS cart_products
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   user_id BIGINT NOT NULL,
   product_id BIGINT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (product_id) REFERENCES products(id)
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 ```

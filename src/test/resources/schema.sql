@@ -18,4 +18,4 @@ CREATE TABLE IF NOT EXISTS cart_products
     product_id BIGINT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
-    );
+);
