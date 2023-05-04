@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.domain.product.Product;
 import cart.domain.product.ProductEntity;
+import cart.domain.product.ProductId;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -52,16 +53,16 @@ public class ProductDao {
         );
     }
 
-    public void delete(final long id) {
+    public void delete(final ProductId id) {
         final String sql = "delete Product where id = ?";
 
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id.getValue());
     }
 
-    public boolean isExist(final long id) {
+    public boolean isExist(final ProductId id) {
         final String sql = "select count(*) from Product where id = ?";
 
-        return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
+        return jdbcTemplate.queryForObject(sql, Integer.class, id.getValue()) > 0;
     }
 
     private RowMapper<ProductEntity> productEntityRowMapper() {

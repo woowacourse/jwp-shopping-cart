@@ -5,8 +5,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.ProductDao;
-import cart.domain.product.Product;
 import cart.domain.product.ProductEntity;
+import cart.dto.application.ProductDto;
+import cart.dto.application.ProductEntityDto;
 import io.restassured.RestAssured;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,7 @@ class ProductServiceTest {
 
     @Test
     void 모든_상품_목록_조회() {
-        final List<ProductEntity> products = productService.findAll();
+        final List<ProductEntityDto> products = productService.findAll();
 
         assertThat(products.size()).isEqualTo(3);
     }
@@ -47,7 +48,7 @@ class ProductServiceTest {
         final String name = "name4";
         final int price = 4000;
         final String imageUrl = "https://image4.com";
-        final ProductEntity savedProduct = productService.register(new Product(name, price, imageUrl));
+        final ProductEntityDto savedProduct = productService.register(new ProductDto(name, price, imageUrl));
 
         assertThat(savedProduct.getId()).isEqualTo(expectedId);
     }
@@ -60,8 +61,8 @@ class ProductServiceTest {
         final String newName = "new name";
         final int newPrice = 1234;
         final String newImageUrl = "https://newimage.com";
-        final Product newProduct = new Product(newName, newPrice, newImageUrl);
-        productService.updateProduct(id, newProduct);
+        final ProductDto newProduct = new ProductDto(newName, newPrice, newImageUrl);
+        productService.updateProduct(new ProductEntityDto(id, newProduct));
 
         final ProductEntity updatedProduct = productDao.find(id);
         assertAll(
@@ -74,7 +75,7 @@ class ProductServiceTest {
     @Test
     void 존재하지_않는_상품_수정시_예외_발생() {
         assertThatIllegalArgumentException().isThrownBy(
-                () -> productService.updateProduct(10L, new Product("name", 1234, "https://newimage.com"))
+                () -> productService.updateProduct(new ProductEntityDto(10L, "name", 1234, "https://newimage.com"))
         ).withMessage("존재하지 않는 id 입니다.");
     }
 

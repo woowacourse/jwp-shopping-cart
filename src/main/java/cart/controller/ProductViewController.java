@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.product.ProductEntity;
+import cart.dto.application.ProductEntityDto;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,7 @@ public class ProductViewController {
 
     @GetMapping("/")
     public String indexPage(final Model model) {
-        final List<ProductEntity> products = productService.findAll();
+        final List<ProductEntityDto> products = productService.findAll();
 
         model.addAttribute("products", products);
 
@@ -27,7 +27,7 @@ public class ProductViewController {
 
     @GetMapping("/admin")
     public String adminPage(final Model model) {
-        final List<ProductEntity> products = productService.findAll();
+        final List<ProductEntityDto> products = productService.findAll();
 
         model.addAttribute("products", products);
 

@@ -1,5 +1,6 @@
 package cart.dto.response;
 
+import cart.dto.application.ProductEntityDto;
 import java.util.Objects;
 
 public class ProductResponse {
@@ -14,6 +15,15 @@ public class ProductResponse {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public ProductResponse(final ProductEntityDto productEntityDto) {
+        this(
+                productEntityDto.getId(),
+                productEntityDto.getName(),
+                productEntityDto.getPrice(),
+                productEntityDto.getImageUrl()
+        );
     }
 
     public long getId() {
