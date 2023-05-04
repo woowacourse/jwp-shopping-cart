@@ -29,7 +29,7 @@ public class CartProductController {
     public ResponseEntity<Void> save(@Auth final Credential credential,
                                      @RequestBody final CartProductSaveRequest request) {
         final Long id = cartProductService.save(credential.getId(), request);
-        return ResponseEntity.created(URI.create("/carts/" + id)).build();
+        return ResponseEntity.created(URI.create("/cart-products/" + id)).build();
     }
 
     @GetMapping
