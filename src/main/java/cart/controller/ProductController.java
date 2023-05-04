@@ -23,9 +23,9 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ProductResponseDto> addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
-        ProductDto productdto = productService.add(productRequestDto);
-        ProductResponseDto response = ProductResponseDto.fromProductDto(productdto);
+    public ResponseEntity<ProductResponseDto> addProduct(@RequestBody @Valid ProductRequestDto requestDto) {
+        ProductDto dto = productService.add(requestDto);
+        ProductResponseDto response = ProductResponseDto.fromDto(dto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(URI.create("/products/" + response.getId()))
                 .body(response);
@@ -33,9 +33,9 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") Long id,
-                                                            @RequestBody @Valid ProductRequestDto productRequestDto) {
-        ProductDto productDto = productService.updateById(productRequestDto, id);
-        ProductResponseDto response = ProductResponseDto.fromProductDto(productDto);
+                                                            @RequestBody @Valid ProductRequestDto requestDto) {
+        ProductDto dto = productService.updateById(requestDto, id);
+        ProductResponseDto response = ProductResponseDto.fromDto(dto);
         return ResponseEntity.ok().body(response);
     }
 

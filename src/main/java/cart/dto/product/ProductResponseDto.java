@@ -19,7 +19,7 @@ public class ProductResponseDto {
         return new ProductResponseDto(null, name, imgUrl, price);
     }
 
-    public static ProductResponseDto fromProductDto(ProductDto productDto) {
+    public static ProductResponseDto fromDto(ProductDto productDto) {
         return new ProductResponseDto(productDto.getId(), productDto.getName(), productDto.getImgUrl(), productDto.getPrice());
     }
 

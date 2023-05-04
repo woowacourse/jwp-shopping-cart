@@ -24,7 +24,7 @@ public class JwpCartController {
     public String index(Model model) {
         List<ProductDto> productDtos = productService.findAll();
         List<ProductResponseDto> response = productDtos.stream()
-                .map(ProductResponseDto::fromProductDto)
+                .map(ProductResponseDto::fromDto)
                 .collect(toList());
         model.addAttribute("products", response);
         return "index";
@@ -34,7 +34,7 @@ public class JwpCartController {
     public String admin(Model model) {
         List<ProductDto> productDtos = productService.findAll();
         List<ProductResponseDto> response = productDtos.stream()
-                .map(ProductResponseDto::fromProductDto)
+                .map(ProductResponseDto::fromDto)
                 .collect(toList());
         model.addAttribute("products", response);
         return "admin";

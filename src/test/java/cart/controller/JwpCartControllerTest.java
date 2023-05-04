@@ -36,7 +36,7 @@ class JwpCartControllerTest {
         );
 
         List<ProductResponseDto> expectResponses = expectDtos.stream()
-                .map(ProductResponseDto::fromProductDto)
+                .map(ProductResponseDto::fromDto)
                 .collect(toList());
 
         when(productService.findAll()).thenReturn(expectDtos);
