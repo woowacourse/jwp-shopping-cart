@@ -83,5 +83,5 @@ public class H2ProductRepository implements ProductRepository {
         Optional<Product> product = findById(productId);
         jdbcTemplate.update(sql, productId);
         return product.get();
-    } // TODO: 인터페이스에서 remove의 반환타입 Optional로 변경
+    }
 }

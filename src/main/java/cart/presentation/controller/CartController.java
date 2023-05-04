@@ -40,7 +40,6 @@ public class CartController {
     public void cartCreate(@ResolvedMember Member member, @RequestBody ProductIdDto productIdDto) {
         Integer memberId = memberService.findAndReturnId(member);
         cartService.addCartItem(DomainConverter.toCartItemWithoutId(productIdDto.getId(), memberId));
-        // TODO: URI CREATED 반환
     }
 
     @GetMapping

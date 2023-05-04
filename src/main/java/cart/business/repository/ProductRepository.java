@@ -5,7 +5,6 @@ import cart.business.domain.product.Product;
 import java.util.List;
 import java.util.Optional;
 
-// TODO: OPTIONAL 응용
 public interface ProductRepository {
 
     Integer insert(Product product);
