@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.auth.AuthorizationExtractor;
 import cart.auth.BasicAuthorizationExtractor;
-import cart.auth.exception.AuthorizationException;
+import cart.config.AuthenticationPrincipal;
 import cart.domain.cart.Item;
 import cart.domain.member.Member;
 import cart.dto.response.ProductResponse;
@@ -11,7 +11,6 @@ import cart.service.MemberService;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,12 +35,7 @@ public class CartResourceController {
     }
 
     @GetMapping
-    public List<ProductResponse> findAllProducts(final HttpServletRequest request) {
-        final Member member = extractor.extract(request);
-
-        if (!memberService.isMember(member)) {
-            throw new AuthorizationException("사용자 정보가 없습니다.");
-        }
+    public List<ProductResponse> findAllProducts(@AuthenticationPrincipal final Member member) {
         final long memberId = memberService.findMemberId(member);
 
         return cartService.findAll(memberId).stream()
@@ -56,11 +50,8 @@ public class CartResourceController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void createItem(@RequestBody final Map<String, Long> requestMap, final HttpServletRequest request) {
-        final Member member = extractor.extract(request);
-        if (!memberService.isMember(member)) {
-            throw new AuthorizationException("사용자 정보가 없습니다.");
-        }
+    public void createItem(@RequestBody final Map<String, Long> requestMap,
+                           @AuthenticationPrincipal final Member member) {
         final long memberId = memberService.findMemberId(member);
         final long productId = requestMap.get("productId");
         final Item item = new Item(memberId, productId);
@@ -69,7 +60,7 @@ public class CartResourceController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteItem(@PathVariable final long id) {
+    public void deleteItem(@PathVariable final long id, @AuthenticationPrincipal final Member member) {
         cartService.delete(id);
     }
 }
