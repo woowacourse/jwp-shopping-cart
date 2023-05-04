@@ -1,8 +1,11 @@
 package cart.presentation.controller;
 
-import cart.business.service.ProductService;
 import cart.business.domain.product.Product;
-import cart.presentation.controller.ProductController;
+import cart.business.service.ProductService;
+import cart.config.WebMvcConfiguration;
+import cart.presentation.adapter.AuthInterceptor;
+import cart.presentation.adapter.HeaderMemberIdResolver;
+import cart.presentation.adapter.LoggerInterceptor;
 import cart.presentation.dto.ProductDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,7 +28,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ProductController.class)
+@WebMvcTest(value = ProductController.class,
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {
+                        WebMvcConfiguration.class,
+                        AuthInterceptor.class,
+                        LoggerInterceptor.class,
+                        HeaderMemberIdResolver.class
+                }
+        ))
 class ProductControllerTest {
 
     @Autowired
@@ -75,12 +89,13 @@ class ProductControllerTest {
 
         // when
         mockMvc.perform(post("/product")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
 
                 // then
                 .andExpect(status().isOk());
     }
+
     @Test
     @DisplayName("/product 로 DELETE 요청을 보낼 수 있다")
     void test_delete_request() throws Exception {
@@ -93,8 +108,8 @@ class ProductControllerTest {
 
         // when
         mockMvc.perform(delete("/product")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
 
                 // then
                 .andExpect(status().isOk());
