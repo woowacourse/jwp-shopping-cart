@@ -1,12 +1,12 @@
 package cart.domain;
 
+import cart.exception.BusinessProductIdNullException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.*;
 
 class CartTest {
     protected static Cart cart;
@@ -16,20 +16,21 @@ class CartTest {
         cart = new Cart(1L);
     }
 
-    // TODO: 2023-05-02 generate 인자 null일 때 실패케이스 작성
-    // TODO: 2023-05-02 generate 인자 products 중 id없는 것이 있을 때 
-
     @Test
-    void generate_cart() {
-        assertThatNoException().isThrownBy(() -> new Cart(2L));
+    void generate_cart_fail() {
+        assertThatThrownBy(() -> new Cart(2L, null))
+                .isInstanceOf(BusinessProductIdNullException.class);
     }
 
-    // TODO: 2023-05-02 add 시 id가 null인 product일 경우
+    @Test
+    void generate_cart_success() {
+        assertThatNoException().isThrownBy(() -> new Cart(2L));
+    }
 
     @Test
     void add_product_to_cart_success() {
         //given
-        Product product = new Product("pd1", "image1", 3000L);
+        Product product = new Product(2L, "pd1", "image1", 3000L);
 
         //when
         cart.add(product);

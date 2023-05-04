@@ -15,4 +15,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(e.getErrorCode()));
     }
+
+    @ExceptionHandler(BusinessProductIdNullException.class)
+    public ResponseEntity<ErrorResponse> invalidProductException(BusinessProductIdNullException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(e.getErrorCode()));
+    }
 }

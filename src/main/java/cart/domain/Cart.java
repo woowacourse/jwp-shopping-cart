@@ -1,5 +1,8 @@
 package cart.domain;
 
+import cart.exception.BusinessProductIdNullException;
+import cart.exception.ErrorCode;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,10 +17,9 @@ public class Cart {
         this(memberId, Collections.emptyList());
     }
 
-    // TODO: 2023-05-02 프레임워크에 의존하지 않고 products nonNUll검사할 방법?
     public Cart(Long memberId, List<Product> products) {
-        if (products.stream().anyMatch(Product::isIdNull)) {
-            // TODO: 2023-05-02 예외처리
+        if (products == null || products.stream().anyMatch(Product::isIdNull)) {
+            throw new BusinessProductIdNullException(ErrorCode.NULL_PRODUCT_ID);
         }
         this.memberId = memberId;
         this.products = new ArrayList<>(products);
@@ -25,7 +27,7 @@ public class Cart {
 
     public void add(Product product) {
         if (product.isIdNull()) {
-            // TODO: 2023-05-02 예외처리
+            throw new BusinessProductIdNullException(ErrorCode.NULL_PRODUCT_ID);
         } 
         products.add(product);
     }
