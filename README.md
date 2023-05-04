@@ -37,7 +37,7 @@
 
 - [x] 유저 service
     - [x] 저장된 유저 전체를 조회
-    - [ ] 유효한 Member인지 인증
+    - [x] 유효한 Member인지 인증
 
 ### domain
 
@@ -54,17 +54,21 @@
 
 ### validate
 
-- [ ] validate
+- [x] validate
     - [x] Product
         - [x] 가격 : 0이상인 정수
         - [x] 이름 : 255자까지
         - [x] imageUrl : 확장자 종류 validation(regex)
-    - [x] User
+        - [x] notFound : 없는 상품으로 행위를 실행하는 경우에 대한 validation
+    - [x] Member
         - [x] email : 이메일 형식에 대한 validation
+        - [x] notFound : 없는 멤버를 행위를 실행하는 경우에 대한 validation
+    - [x] Auth
+        - [x] Auth : Basic Auth 값이 없는 경우에 대한 validation
+        - [x] certification : basic Auth의 값이 실제 유저 디비와 일치하지 않는 경우에 대한 validation
 
 ### 시간이 날 경우 추가로 적용하고 싶은 내용
 
-- [ ] handlerInterceptorAdaptor가 아닌 다른 방식을 이용해서 LoginInterceptor 구현
 - [ ] 회원가입 기능(+로그인) 만들기
 - [ ] 장바구니에서 상품의 수량 추가하기
 

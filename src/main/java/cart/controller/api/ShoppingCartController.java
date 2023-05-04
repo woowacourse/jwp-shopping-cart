@@ -1,6 +1,6 @@
 package cart.controller.api;
 
-import cart.controller.util.MemberInfoPrincipal;
+import cart.config.MemberInfoPrincipal;
 import cart.service.ShoppingCartService;
 import cart.service.dto.CartResponse;
 import cart.service.dto.MemberInfo;
