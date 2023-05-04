@@ -1,7 +1,7 @@
 package cart.config;
 
-import cart.auth.AuthenticateService;
 import cart.auth.AuthenticateUserArgumentResolver;
+import cart.auth.BasicAuthExtractor;
 import cart.service.UserService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -13,15 +13,15 @@ import java.util.List;
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     private final UserService userService;
-    private final AuthenticateService authenticateService;
+    private final BasicAuthExtractor basicAuthExtractor;
 
-    public WebMvcConfiguration(UserService userService, AuthenticateService authenticateService) {
+    public WebMvcConfiguration(UserService userService, BasicAuthExtractor basicAuthExtractor) {
         this.userService = userService;
-        this.authenticateService = authenticateService;
+        this.basicAuthExtractor = basicAuthExtractor;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthenticateUserArgumentResolver(authenticateService, userService));
+        resolvers.add(new AuthenticateUserArgumentResolver(basicAuthExtractor, userService));
     }
 }
