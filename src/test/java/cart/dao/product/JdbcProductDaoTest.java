@@ -1,25 +1,28 @@
 package cart.dao.product;
 
-import cart.domain.product.ProductEntity;
+import cart.domain.product.Product;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-import static cart.DummyData.dummyId;
-import static cart.DummyData.dummyImage;
-import static cart.DummyData.dummyName;
-import static cart.DummyData.dummyPrice;
+import static cart.DummyData.DUMMY_PRODUCT_ONE;
+import static cart.DummyData.INITIAL_PRODUCT_ONE;
+import static cart.DummyData.INITIAL_PRODUCT_TWO;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Import(JdbcProductDao.class)
+@Sql("/reset-product-data.sql")
 @JdbcTest
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 class JdbcProductDaoTest {
 
     @Autowired
@@ -28,62 +31,39 @@ class JdbcProductDaoTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    @BeforeEach
-    void setUp() {
-        resetTable();
-    }
-
-    @DisplayName("모든 상품 데이터를 반환하는지 확인한다")
     @Test
-    void selectAllTest() {
-        final List<ProductEntity> productEntities = productDao.findAll();
+    void 모든_상품_데이터를_반환하는지_확인한다() {
+        final List<Product> productEntities = productDao.findAll();
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(productEntities.size()).isEqualTo(2);
-            softAssertions.assertThat(productEntities.get(0).getId()).isEqualTo(1L);
-            softAssertions.assertThat(productEntities.get(0).getName()).isEqualTo("mouse");
-            softAssertions.assertThat(productEntities.get(0).getImageUrl()).isEqualTo("https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg");
-            softAssertions.assertThat(productEntities.get(0).getPrice()).isEqualTo(100_000);
-            softAssertions.assertThat(productEntities.get(1).getId()).isEqualTo(2L);
-            softAssertions.assertThat(productEntities.get(1).getName()).isEqualTo("keyboard");
-            softAssertions.assertThat(productEntities.get(1).getImageUrl()).isEqualTo("https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/2020/01/진혁.jpg?fit=770%2C418&ssl=1");
-            softAssertions.assertThat(productEntities.get(1).getPrice()).isEqualTo(250_000);
+            softAssertions.assertThat(productEntities.get(0).getId()).isEqualTo(INITIAL_PRODUCT_ONE.getId().intValue());
+            softAssertions.assertThat(productEntities.get(0).getName()).isEqualTo(INITIAL_PRODUCT_ONE.getName());
+            softAssertions.assertThat(productEntities.get(0).getImageUrl()).isEqualTo(INITIAL_PRODUCT_ONE.getImageUrl());
+            softAssertions.assertThat(productEntities.get(0).getPrice()).isEqualTo(INITIAL_PRODUCT_ONE.getPrice());
+            softAssertions.assertThat(productEntities.get(1).getId()).isEqualTo(INITIAL_PRODUCT_TWO.getId().intValue());
+            softAssertions.assertThat(productEntities.get(1).getName()).isEqualTo(INITIAL_PRODUCT_TWO.getName());
+            softAssertions.assertThat(productEntities.get(1).getImageUrl()).isEqualTo(INITIAL_PRODUCT_TWO.getImageUrl());
+            softAssertions.assertThat(productEntities.get(1).getPrice()).isEqualTo(INITIAL_PRODUCT_TWO.getPrice());
         });
     }
 
-    @DisplayName("상품 등록이 되는지 확인한다")
     @Test
-    void insertTest() {
-        final ProductEntity productEntity = ProductEntity.of(dummyName, dummyImage, dummyPrice);
-
-        assertDoesNotThrow(() -> productDao.insert(productEntity));
+    void 상품_등록이_되는지_확인한다() {
+        assertDoesNotThrow(() -> productDao.insert(DUMMY_PRODUCT_ONE));
     }
 
-    @DisplayName("상품 수정이 되는지 확인한다")
     @Test
-    void updateTest() {
+    void 상품_수정이_되는지_확인한다() {
         final Long id = 1L;
-        final ProductEntity productEntity = ProductEntity.of(dummyId, dummyName, dummyImage, dummyPrice);
 
-        assertDoesNotThrow(() -> productDao.updateById(id, productEntity));
+        assertDoesNotThrow(() -> productDao.updateById(id, DUMMY_PRODUCT_ONE));
     }
 
-    @DisplayName("상품 삭제가 되는지 확인한다")
     @Test
-    void deleteTest() {
+    void 상품_삭제가_되는지_확인한다() {
         final Long id = 1L;
 
         assertDoesNotThrow(() -> productDao.deleteById(id));
-    }
-
-    private void resetTable() {
-        final String deleteSql = "DELETE FROM product";
-        jdbcTemplate.update(deleteSql);
-
-        final String initializeIdSql = "ALTER TABLE product ALTER COLUMN ID RESTART WITH 1";
-        jdbcTemplate.update(initializeIdSql);
-
-        productDao.insert(ProductEntity.of("mouse", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 100000));
-        productDao.insert(ProductEntity.of("keyboard", "https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/2020/01/진혁.jpg?fit=770%2C418&ssl=1", 250000));
     }
 }

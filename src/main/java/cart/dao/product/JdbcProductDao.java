@@ -1,6 +1,6 @@
 package cart.dao.product;
 
-import cart.domain.product.ProductEntity;
+import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -17,7 +17,7 @@ public class JdbcProductDao implements ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) -> ProductEntity.of(
+    private final RowMapper<Product> productEntityRowMapper = (resultSet, rowNum) -> Product.of(
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("image_url"),
@@ -25,29 +25,29 @@ public class JdbcProductDao implements ProductDao {
     );
 
     @Override
-    public void insert(final ProductEntity productEntity) {
+    public void insert(final Product product) {
         final String sql = "INSERT INTO product(name, image_url, price) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImageUrl(), productEntity.getPrice());
+        jdbcTemplate.update(sql, product.getName(), product.getImageUrl(), product.getPrice());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ProductEntity findById(final Long id) {
+    public Product findById(final Long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductEntity> findAll() {
+    public List<Product> findAll() {
         final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
     @Override
-    public void updateById(final Long id, final ProductEntity productEntity) {
+    public void updateById(final Long id, final Product product) {
         final String sql = "UPDATE product SET name = ?, image_url = ?, price = ? WHERE id = ?";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImageUrl(), productEntity.getPrice(), id);
+        jdbcTemplate.update(sql, product.getName(), product.getImageUrl(), product.getPrice(), id);
     }
 
     @Override

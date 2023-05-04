@@ -10,15 +10,15 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final ProductService managementService;
+    private final ProductService productService;
 
-    public AdminController(final ProductService managementService) {
-        this.managementService = managementService;
+    public AdminController(final ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
     public ModelAndView admin(ModelAndView modelAndView) {
-        modelAndView.addObject("products", managementService.findAll());
+        modelAndView.addObject("products", productService.findAll());
         modelAndView.setViewName("admin");
         return modelAndView;
     }

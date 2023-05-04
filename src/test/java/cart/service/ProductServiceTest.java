@@ -1,9 +1,10 @@
 package cart.service;
 
 import cart.dao.product.JdbcProductDao;
+import cart.domain.product.Product;
 import cart.dto.ProductResponse;
-import cart.domain.product.ProductEntity;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,6 +13,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static cart.DummyData.DUMMY_PRODUCT_ONE;
+import static cart.DummyData.INITIAL_PRODUCT_ONE;
+import static cart.DummyData.INITIAL_PRODUCT_TWO;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.any;
@@ -21,66 +25,61 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 class ProductServiceTest {
 
     @InjectMocks
-    ProductService managementService;
+    ProductService productService;
 
     @Mock
     JdbcProductDao productDao;
 
-    @DisplayName("모든 상품 데이터를 가져와서 반환하는지 확인한다")
     @Test
-    void findAllTest() {
-        final List<ProductEntity> data = List.of(
-                ProductEntity.of(1L, "chicken", "https://image", 10_000),
-                ProductEntity.of(2L, "pizza", "https://image2", 20_000)
-        );
+    void 모든_상품_데이터를_가져와서_반환하는지_확인한다() {
+        final List<Product> data = List.of(INITIAL_PRODUCT_ONE, INITIAL_PRODUCT_TWO);
         when(productDao.findAll()).thenReturn(data);
 
-        final List<ProductResponse> productResponses = managementService.findAll();
+        final List<ProductResponse> productResponses = productService.findAll();
 
         assertAll(
                 () -> assertThat(productResponses.size()).isEqualTo(data.size()),
-                () -> assertThat(productResponses.get(0).getName()).isEqualTo("chicken"),
-                () -> assertThat(productResponses.get(0).getImage()).isEqualTo("https://image"),
-                () -> assertThat(productResponses.get(0).getPrice()).isEqualTo(10_000),
-                () -> assertThat(productResponses.get(1).getName()).isEqualTo("pizza"),
-                () -> assertThat(productResponses.get(1).getImage()).isEqualTo("https://image2"),
-                () -> assertThat(productResponses.get(1).getPrice()).isEqualTo(20_000)
+                () -> assertThat(productResponses.get(0).getId()).isEqualTo(INITIAL_PRODUCT_ONE.getId()),
+                () -> assertThat(productResponses.get(0).getName()).isEqualTo(INITIAL_PRODUCT_ONE.getName()),
+                () -> assertThat(productResponses.get(0).getImage()).isEqualTo(INITIAL_PRODUCT_ONE.getImageUrl()),
+                () -> assertThat(productResponses.get(0).getPrice()).isEqualTo(INITIAL_PRODUCT_ONE.getPrice()),
+                () -> assertThat(productResponses.get(1).getId()).isEqualTo(INITIAL_PRODUCT_TWO.getId()),
+                () -> assertThat(productResponses.get(1).getName()).isEqualTo(INITIAL_PRODUCT_TWO.getName()),
+                () -> assertThat(productResponses.get(1).getImage()).isEqualTo(INITIAL_PRODUCT_TWO.getImageUrl()),
+                () -> assertThat(productResponses.get(1).getPrice()).isEqualTo(INITIAL_PRODUCT_TWO.getPrice())
         );
     }
 
-    @DisplayName("상품 데이터가 등록되는지 확인한다")
     @Test
-    void saveTest() {
-        final ProductEntity productEntity = ProductEntity.of("pobi_doll", "https://image", 10_000_000);
+    void 상품_데이터가_등록되는지_확인한다() {
         doNothing().when(productDao).insert(any());
 
-        managementService.add(productEntity);
+        productService.add(DUMMY_PRODUCT_ONE);
 
         verify(productDao, times(1)).insert(any());
     }
 
-    @DisplayName("상품 데이터가 수정되는지 확인한다")
     @Test
-    void updateTest() {
+    void 상품_데이터가_수정되는지_확인한다() {
         final Long id = 1L;
-        final ProductEntity productEntity = ProductEntity.of(1L, "pobi_doll", "https://image", 10_000_000);
         doNothing().when(productDao).updateById(any(), any());
 
-        managementService.updateById(id, productEntity);
+        productService.updateById(id, DUMMY_PRODUCT_ONE);
 
         verify(productDao, times(1)).updateById(any(), any());
     }
 
-    @DisplayName("상품 데이터가 삭제되는지 확인한다")
     @Test
-    void deleteTest() {
+    void 상품_데이터가_삭제되는지_확인한다() {
         final Long id = 1L;
         doNothing().when(productDao).deleteById(any());
 
-        managementService.deleteById(id);
+        productService.deleteById(id);
 
         verify(productDao, times(1)).deleteById(any());
     }

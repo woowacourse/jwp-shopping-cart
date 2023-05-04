@@ -1,25 +1,26 @@
 package cart.domain.product;
 
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 class ImageUrlTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"http://", "https://"})
-    @DisplayName("상품 이미지를 정상적으로 등록할 수 있다")
-    void imageUrlTest(final String input) {
+    void 상품_이미지를_정상적으로_등록할_수_있다(final String input) {
         assertDoesNotThrow(() -> ImageUrl.from(input));
     }
 
-    @DisplayName("형식에 맞지 않는 경로가 들어오면 예외를 발생한다")
     @ValueSource(strings = {"http:", "https:", "http:/", "https:/"})
     @ParameterizedTest
-    void throwExceptionWhenInvalidImageUrl(final String input) {
+    void 형식에_맞지_않는_이미지_경로가_들어오면_예외를_발생한다(final String input) {
         assertThatThrownBy(() -> ImageUrl.from(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }

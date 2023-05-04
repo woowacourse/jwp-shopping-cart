@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.product.ProductDao;
-import cart.domain.product.ProductEntity;
+import cart.domain.product.Product;
 import cart.dto.ProductResponse;
 import cart.mapper.ProductResponseMapper;
 import org.springframework.stereotype.Service;
@@ -19,12 +19,12 @@ public class ProductService {
     }
 
     public List<ProductResponse> findAll() {
-        final List<ProductEntity> productEntities = productDao.findAll();
+        final List<Product> productEntities = productDao.findAll();
         return ProductResponseMapper.from(productEntities);
     }
 
     public List<ProductResponse> findByIds(final List<Long> productIds) {
-        final List<ProductEntity> productEntities = new ArrayList<>();
+        final List<Product> productEntities = new ArrayList<>();
         for (Long productId : productIds) {
             productEntities.add(productDao.findById(productId));
         }
@@ -32,12 +32,12 @@ public class ProductService {
         return ProductResponseMapper.from(productEntities);
     }
 
-    public void add(final ProductEntity productEntity) {
-        productDao.insert(productEntity);
+    public void add(final Product product) {
+        productDao.insert(product);
     }
 
-    public void updateById(final Long id, final ProductEntity productEntity) {
-        productDao.updateById(id, productEntity);
+    public void updateById(final Long id, final Product product) {
+        productDao.updateById(id, product);
     }
 
     public void deleteById(final Long id) {
