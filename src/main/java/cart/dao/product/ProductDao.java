@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -82,8 +83,11 @@ public class ProductDao {
     }
 
     public List<ProductEntity> findByIds(List<Long> ids) {
-        String findByIdQuery = "SELECT * FROM product WHERE product_id IN (%s)";
+        if (ids.isEmpty()) {
+            return new ArrayList<>();
+        }
 
+        String findByIdQuery = "SELECT * FROM product WHERE product_id IN (%s)";
         String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
 
         return jdbcTemplate.query(String.format(findByIdQuery, inSql),

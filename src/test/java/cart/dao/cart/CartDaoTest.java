@@ -4,10 +4,7 @@ import cart.dao.product.ProductDao;
 import cart.dao.product.ProductEntity;
 import cart.dao.user.UserDao;
 import cart.dao.user.UserEntity;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -42,6 +39,13 @@ class CartDaoTest {
         userId = userDao.insert(userEntity);
         chickenId = productDao.insert(chickenEntity);
         pizzaId = productDao.insert(pizzaEntity);
+    }
+
+    @AfterAll
+    void deleteData() {
+        userDao.deleteById(userId);
+        productDao.deleteById(chickenId);
+        productDao.deleteById(pizzaId);
     }
 
     @DisplayName("장바구니에 상품을 추가할 수 있다.")
