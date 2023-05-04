@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class JdbcCartDao implements Dao<CartEntity> {
+public class JdbcCartDao implements CartDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -55,10 +55,5 @@ public class JdbcCartDao implements Dao<CartEntity> {
     public int deleteById(long id) {
         final String sql = "DELETE FROM cart WHERE cart_id = ?";
         return jdbcTemplate.update(sql, id);
-    }
-
-    @Override
-    public List<CartEntity> findProductsByUser(String email) {
-        return null;
     }
 }

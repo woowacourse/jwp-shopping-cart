@@ -4,9 +4,9 @@ import cart.dto.CartProductResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.dto.UserResponse;
-import cart.persistence.dao.JdbcCartDao;
-import cart.persistence.dao.JdbcProductDao;
-import cart.persistence.dao.JdbcUserDao;
+import cart.persistence.dao.CartDao;
+import cart.persistence.dao.ProductDao;
+import cart.persistence.dao.UserDao;
 import cart.persistence.entity.CartEntity;
 import cart.persistence.entity.ProductEntity;
 import cart.persistence.entity.UserEntity;
@@ -19,12 +19,13 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
 
-    public static final int EXPECTED_SIZE = 1;
-    private final JdbcProductDao productDao;
-    private final JdbcUserDao userDao;
-    private final JdbcCartDao cartDao;
+    private static final int EXPECTED_SIZE = 1;
 
-    public CartService(JdbcProductDao productDao, JdbcUserDao userDao, JdbcCartDao cartDao) {
+    private final ProductDao productDao;
+    private final UserDao userDao;
+    private final CartDao cartDao;
+
+    public CartService(final ProductDao productDao, final UserDao userDao, final CartDao cartDao) {
         this.productDao = productDao;
         this.userDao = userDao;
         this.cartDao = cartDao;
@@ -84,6 +85,5 @@ public class CartService {
         if (cartDao.deleteById(id) != EXPECTED_SIZE) {
             throw new EmptyResultDataAccessException(EXPECTED_SIZE);
         }
-        ;
     }
 }

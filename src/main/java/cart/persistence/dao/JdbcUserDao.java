@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class JdbcUserDao implements Dao<UserEntity> {
+public class JdbcUserDao implements UserDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -53,10 +53,6 @@ public class JdbcUserDao implements Dao<UserEntity> {
     }
 
     @Override
-    public List<UserEntity> findProductsByUser(String email) {
-        return null;
-    }
-
     public Long findUserIdByEmail(final String email) {
         final String sql = "SELECT user_id FROM user_info WHERE email = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, email);

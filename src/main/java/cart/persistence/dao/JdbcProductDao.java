@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class JdbcProductDao implements Dao<ProductEntity> {
+public class JdbcProductDao implements ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -67,6 +67,7 @@ public class JdbcProductDao implements Dao<ProductEntity> {
         return jdbcTemplate.update(sql, id);
     }
 
+    @Override
     public List<ProductEntity> findProductsByUser(final String email) {
         final String sql = "SELECT c.cart_id, p.name, p.price, p.image_url\n" +
                 "FROM product AS p\n" +
@@ -76,10 +77,5 @@ public class JdbcProductDao implements Dao<ProductEntity> {
                 "    FROM user_info\n" +
                 "    WHERE email = ?)";
         return jdbcTemplate.query(sql, cartProductRowMapper, email);
-    }
-
-    public Long findProductIdByName(String name) {
-        final String sql = "SELECT product_id FROM user_info WHERE name = ?";
-        return jdbcTemplate.queryForObject(sql, Long.class, name);
     }
 }

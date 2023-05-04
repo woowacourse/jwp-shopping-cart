@@ -14,6 +14,4 @@ public interface Dao<T> {
     int update(T t);
 
     int deleteById(long id);
-
-    List<T> findProductsByUser(String email);
 }
