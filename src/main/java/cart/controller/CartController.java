@@ -3,8 +3,8 @@ package cart.controller;
 import cart.annotation.login.Login;
 import cart.dto.ResultResponse;
 import cart.dto.SuccessCode;
+import cart.dto.cart.CartResponse;
 import cart.dto.cart.CartSaveRequest;
-import cart.dto.item.ItemResponse;
 import cart.entity.MemberEntity;
 import cart.service.CartService;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class CartController {
     }
 
     @GetMapping("/carts")
-    public List<ItemResponse> getCarts(@Login MemberEntity member) {
+    public List<CartResponse> getCarts(@Login MemberEntity member) {
         return cartService.findAll(member.getEmail());
     }
 
