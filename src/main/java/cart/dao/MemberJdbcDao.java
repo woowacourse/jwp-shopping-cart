@@ -18,6 +18,7 @@ public class MemberJdbcDao implements MemberDao {
 
     private RowMapper<MemberEntity> getMemberEntityRowMapper() {
         return (rs, rowNum) -> new MemberEntity(
+                rs.getInt("id"),
                 rs.getString("email"),
                 rs.getString("password")
         );
