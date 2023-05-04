@@ -1,5 +1,6 @@
 package cart.exception;
 
+import cart.exception.customExceptions.AdminAccessException;
 import cart.exception.customExceptions.DataNotFoundException;
 import cart.exception.customExceptions.NotUniqueValueException;
 import cart.exception.customExceptions.PasswordNotMatchException;
@@ -14,6 +15,8 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    public static final String DEFAULT_MESSAGE = "알 수 없는 오류입니다.";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleInvalidException(final MethodArgumentNotValidException e) {
@@ -48,9 +51,15 @@ public class GlobalExceptionHandler {
                 new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
     }
 
+    @ExceptionHandler(AdminAccessException.class)
+    public ResponseEntity<ExceptionResponse> handleAdminAccessException(final AdminAccessException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ExceptionResponse(HttpStatus.FORBIDDEN.value(), e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleUnexpectedException(final Exception e) {
+    public ResponseEntity<ExceptionResponse> handleUnexpectedException() {
         return ResponseEntity.internalServerError().body(
-                new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()));
+                new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), DEFAULT_MESSAGE));
     }
 }
