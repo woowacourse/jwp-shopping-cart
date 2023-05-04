@@ -48,4 +48,10 @@ public class UserDao {
             return Optional.empty();
         }
     }
+
+    public void update(final User user) {
+        final String sql = "UPDATE users SET email = :email, password = :password WHERE id = :id";
+        BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(user);
+        namedParameterJdbcTemplate.update(sql, params);
+    }
 }
