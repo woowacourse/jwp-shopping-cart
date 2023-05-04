@@ -3,20 +3,20 @@ package cart.entity;
 public class CartItemEntity {
 
     private final Long id;
-    private final Long memberId;
-    private final Long productId;
+    private final long memberId;
+    private final long productId;
 
-    private CartItemEntity(final Long id, final Long memberId, final Long productId) {
+    private CartItemEntity(final Long id, final long memberId, final long productId) {
         this.id = id;
         this.memberId = memberId;
         this.productId = productId;
     }
 
-    public static CartItemEntity of(final Long memberId, final Long productId) {
+    public static CartItemEntity of(final long memberId, final long productId) {
         return new CartItemEntity(null, memberId, productId);
     }
 
-    public static CartItemEntity of(final Long id, final Long memberId, final Long productId) {
+    public static CartItemEntity of(final Long id, final long memberId, final long productId) {
         return new CartItemEntity(id, memberId, productId);
     }
 
@@ -24,11 +24,11 @@ public class CartItemEntity {
         return id;
     }
 
-    public Long getMemberId() {
+    public long getMemberId() {
         return memberId;
     }
 
-    public Long getProductId() {
+    public long getProductId() {
         return productId;
     }
 }

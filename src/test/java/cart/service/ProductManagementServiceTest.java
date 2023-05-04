@@ -17,6 +17,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -79,7 +80,7 @@ class ProductManagementServiceTest {
         @Test
         void successTest() {
             final ProductDto productDto = ProductDto.of(1L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
-            when(productDao.updateById(any())).thenReturn(1);
+            when(productDao.update(any())).thenReturn(1);
 
             assertDoesNotThrow(() -> managementService.update(productDto));
         }
@@ -88,7 +89,7 @@ class ProductManagementServiceTest {
         @Test
         void failTest() {
             final ProductDto productDto = ProductDto.of(3L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
-            when(productDao.updateById(any())).thenReturn(0);
+            when(productDao.update(any())).thenReturn(0);
 
             assertThatThrownBy(() -> managementService.update(productDto))
                     .isInstanceOf(IllegalArgumentException.class);
@@ -102,19 +103,17 @@ class ProductManagementServiceTest {
         @DisplayName("상품 데이터가 삭제되는지 확인한다")
         @Test
         void successTest() {
-            final ProductDto productDto = ProductDto.of(1L, null, null, null);
-            when(productDao.deleteById(any())).thenReturn(1);
+            when(productDao.deleteById(anyLong())).thenReturn(1);
 
-            assertDoesNotThrow(() -> managementService.delete(productDto));
+            assertDoesNotThrow(() -> managementService.delete(1L));
         }
 
         @DisplayName("상품 데이터가 삭제되지 않으면 예외가 발생하는지 확인한다")
         @Test
         void failTest() {
-            final ProductDto productDto = ProductDto.of(3L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
-            when(productDao.updateById(any())).thenReturn(0);
+            when(productDao.deleteById(anyLong())).thenReturn(0);
 
-            assertThatThrownBy(() -> managementService.update(productDto))
+            assertThatThrownBy(() -> managementService.delete(3L))
                     .isInstanceOf(IllegalArgumentException.class);
         }
     }

@@ -56,7 +56,7 @@ class JdbcProductDaoTest {
         @Test
         void returnOneWhenUpdatedTest() {
             final ProductEntity productEntity = ProductEntity.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
-            int updatedRow = productDao.updateById(productEntity);
+            int updatedRow = productDao.update(productEntity);
 
             assertThat(updatedRow).isEqualTo(1);
         }
@@ -65,7 +65,7 @@ class JdbcProductDaoTest {
         @Test
         void returnZeroWhenNothingHappenedTest() {
             final ProductEntity productEntity = ProductEntity.of(3L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
-            int updatedRow = productDao.updateById(productEntity);
+            int updatedRow = productDao.update(productEntity);
 
             assertThat(updatedRow).isEqualTo(0);
         }
@@ -78,8 +78,7 @@ class JdbcProductDaoTest {
         @DisplayName("상품 삭제가 되면 1을 반환하는지 확인한다")
         @Test
         void returnOneWhenDeletedTest() {
-            final ProductEntity productEntity = ProductEntity.of(1L, null, null, null);
-            int deletedRow = productDao.deleteById(productEntity);
+            int deletedRow = productDao.deleteById(1L);
 
             assertThat(deletedRow).isEqualTo(1);
         }
@@ -87,8 +86,7 @@ class JdbcProductDaoTest {
         @DisplayName("상품 삭제가 되지 않으면 0을 반환하는지 확인한다")
         @Test
         void returnZeroWhenNothingHappenedTest() {
-            final ProductEntity productEntity = ProductEntity.of(3L, null, null, null);
-            int deletedRow = productDao.deleteById(productEntity);
+            int deletedRow = productDao.deleteById(3L);
 
             assertThat(deletedRow).isEqualTo(0);
         }

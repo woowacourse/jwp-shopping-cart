@@ -10,17 +10,13 @@ public class ProductDto {
     private final Long id;
     private final String name;
     private final String image;
-    private final Integer price;
+    private final int price;
 
-    private ProductDto(final Long id, final String name, final String image, final Integer price) {
+    private ProductDto(final Long id, final String name, final String image, final int price) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
-    }
-
-    public static ProductDto from(final Long id) {
-        return new ProductDto(id, null, null, null);
     }
 
     public static ProductDto from(final ProductEntity productEntity) {

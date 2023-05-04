@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 
 public class CartItemResponse {
 
-    private final Long id;
+    private final long id;
     private final String name;
     private final String image;
-    private final Integer price;
+    private final int price;
 
-    public CartItemResponse(final Long id, final String name, final String image, final Integer price) {
+    public CartItemResponse(final long id, final String name, final String image, final int price) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -30,7 +30,7 @@ public class CartItemResponse {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -42,7 +42,7 @@ public class CartItemResponse {
         return image;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 }

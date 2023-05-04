@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 
 public class MemberResponse {
 
-    private final Long id;
+    private final long id;
     private final String email;
     private final String password;
 
-    public MemberResponse(final Long id, final String email, final String password) {
+    public MemberResponse(final long id, final String email, final String password) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -27,7 +27,7 @@ public class MemberResponse {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
