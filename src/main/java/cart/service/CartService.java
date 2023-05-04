@@ -37,4 +37,10 @@ public class CartService {
                 .map(cartEntity -> productDao.findById(cartEntity.getProductId()))
                 .collect(Collectors.toList());
     }
+
+    public void deleteProductByAuthInfo(final Long productId, final AuthInfo authInfo) {
+        final MemberEntity memberEntity = memberDao.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
+
+        cartDao.delete(memberEntity.getId(), productId);
+    }
 }
