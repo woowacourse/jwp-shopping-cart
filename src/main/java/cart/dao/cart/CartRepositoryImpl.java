@@ -83,4 +83,15 @@ public class CartRepositoryImpl implements CartRepository {
                 .map(CartUserProductEntity::getProductId)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteProductInCart(CartUser cartUser, Product product) {
+        CartUserEntity cartUserEntity = cartUserDao.findByEmail(cartUser.getUserEmail());
+
+        cartUserProductDao.deleteByCartUserIdAndProductId(
+                cartUserEntity.getId(),
+                product.getProductId()
+        );
+    }
+
 }

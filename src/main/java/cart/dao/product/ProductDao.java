@@ -3,6 +3,7 @@ package cart.dao.product;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -46,7 +47,7 @@ public class ProductDao {
     }
 
     public void deleteById(Long id) {
-        String deleteByIdQuery = "DELETE FROM product where product_id = ?";
+        String deleteByIdQuery = "DELETE FROM product WHERE product_id = ?";
 
         jdbcTemplate.update(deleteByIdQuery, id);
     }
@@ -75,6 +76,10 @@ public class ProductDao {
     }
 
     public List<ProductEntity> findById(List<Long> ids) {
+        if (ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         String findProducts = "SELECT * FROM product WHERE product_id IN (:productIds)";
         MapSqlParameterSource parameters = new MapSqlParameterSource("productIds", ids);
 

@@ -38,13 +38,17 @@ class CartRepositoryImplTest {
     @DisplayName("사용자 장바구니에 물건 추가 테스트")
     @Test
     void addProductInCart() {
+        //given
         CartUser cartUser = TestFixture.CART_USER_A;
         cartUserDao.insert(new CartUserEntity(cartUser.getUserEmail(), cartUser.getPassword()));
+
         Long pizzaProductId = productDao.insert(new ProductEntity(TestFixture.PIZZA));
         Product product = productDao.findById(pizzaProductId).toProduct();
 
+        //when
         cartRepository.addProductInCart(cartUser, product);
 
+        //then
         List<Cart> allCarts = cartRepository.findAll();
         assertThat(allCarts).hasSize(1);
         Cart findCart = allCarts.get(0);
@@ -54,16 +58,42 @@ class CartRepositoryImplTest {
     @DisplayName("사용자 장바구니 물건 조회 테스트")
     @Test
     void findCartByCartUser() {
+        //given
         CartUser cartUser = TestFixture.CART_USER_A;
         cartUserDao.insert(new CartUserEntity(cartUser.getUserEmail(), cartUser.getPassword()));
+
         Long pizzaProductId = productDao.insert(new ProductEntity(TestFixture.PIZZA));
         Product product = productDao.findById(pizzaProductId).toProduct();
         cartRepository.addProductInCart(cartUser, product);
 
+        //when
         Cart cartByCartUser = cartRepository.findCartByCartUser(cartUser);
 
+        //then
         List<Product> productsInCart = cartByCartUser.getProducts();
         assertThat(productsInCart).hasSize(1);
         assertThat(productsInCart.get(0).getName()).isEqualTo("Pizza");
+    }
+
+    @DisplayName("사용자 장바구니 물건 삭제 테스트")
+    @Test
+    void deleteProductInCart() {
+        //given
+        CartUser cartUser = TestFixture.CART_USER_A;
+        CartUserEntity cartUserEntity =
+                new CartUserEntity(TestFixture.CART_USER_A.getUserEmail(), TestFixture.CART_USER_A.getPassword());
+        cartUserDao.insert(cartUserEntity);
+
+        Long pizzaProductId = productDao.insert(new ProductEntity(TestFixture.PIZZA));
+        Product product = productDao.findById(pizzaProductId).toProduct();
+
+        cartRepository.addProductInCart(cartUser, product);
+        assertThat(cartRepository.findCartByCartUser(cartUser).getProducts()).hasSize(1);
+
+        //when
+        cartRepository.deleteProductInCart(cartUser, product);
+
+        //then
+        assertThat(cartRepository.findCartByCartUser(cartUser).getProducts()).hasSize(0);
     }
 }

@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @Import({CartUserProductDao.class, CartUserDao.class, ProductDao.class})
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -29,10 +28,7 @@ class CartUserProductDaoTest {
     @Autowired
     private ProductDao productDao;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @DisplayName("사용자가 상품을 추가할 수 있다.")
+    @DisplayName("장바구니 내 상품 추가 테스트")
     @Test
     void insertCartUserProduct() {
         Long userId = cartUserDao.insert(new CartUserEntity("a@a.com", "password"));
@@ -44,8 +40,27 @@ class CartUserProductDaoTest {
 
         cartUserProductDao.insert(cartUserProductEntity);
 
-        List<CartUserProductEntity> entities = jdbcTemplate.query("SELECT * FROM cart_user_product", (rs, rowNum) ->
-                new CartUserProductEntity(rs.getLong("cart_user_id"), rs.getLong("product_id")));
+        List<CartUserProductEntity> entities = cartUserProductDao.findAll();
         assertThat(entities).hasSize(1);
+    }
+
+    @DisplayName("장바구니 내 상품 제거 테스트")
+    @Test
+    void deleteByCartUserIdAndProductId() {
+        //given
+        Long userId = cartUserDao.insert(new CartUserEntity("a@a.com", "password"));
+        Long productId = productDao.insert(new ProductEntity("ProductA", 13_000, "ETC", "image.com"));
+
+        CartUserProductEntity cartUserProductEntity = new CartUserProductEntity(userId, productId);
+        cartUserProductDao.insert(cartUserProductEntity);
+        List<CartUserProductEntity> entities = cartUserProductDao.findAll();
+        assertThat(entities).hasSize(1);
+
+        //when
+        cartUserProductDao.deleteByCartUserIdAndProductId(userId, productId);
+
+        //then
+        List<CartUserProductEntity> afterDeleteEntities = cartUserProductDao.findAll();
+        assertThat(afterDeleteEntities).hasSize(0);
     }
 }

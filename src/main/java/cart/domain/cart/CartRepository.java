@@ -10,4 +10,6 @@ public interface CartRepository {
     Cart findCartByCartUser(CartUser cartUser);
 
     List<Cart> findAll();
+
+    void deleteProductInCart(CartUser cartUser, Product product);
 }

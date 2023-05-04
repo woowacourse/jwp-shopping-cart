@@ -1,5 +1,6 @@
 package cart.dao.user.userproduct;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -29,11 +30,11 @@ public class CartUserProductDao {
         return simpleInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<CartUserProductEntity> findProductByCartUserId(Long id) {
+    public List<CartUserProductEntity> findProductByCartUserId(Long cartUserId) {
         String findProductByCartUserIdQuery = "SELECT * FROM cart_user_product WHERE cart_user_id = ?";
 
         return jdbcTemplate.query(findProductByCartUserIdQuery,
-                (rs, rowNum) -> toCartUserProductEntity(rs), id);
+                (rs, rowNum) -> toCartUserProductEntity(rs), cartUserId);
     }
 
     private CartUserProductEntity toCartUserProductEntity(ResultSet rs) throws SQLException {
@@ -48,5 +49,18 @@ public class CartUserProductDao {
         String findProductByCartUserIdQuery = "SELECT * FROM cart_user_product";
 
         return jdbcTemplate.query(findProductByCartUserIdQuery, (rs, rowNum) -> toCartUserProductEntity(rs));
+    }
+
+    public void deleteByCartUserIdAndProductId(Long cartUserId, Long productId) {
+        String deleteByCartUserIdAndProductIdQuery =
+                "DELETE FROM cart_user_product WHERE cart_user_id = ? AND product_id = ?";
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(deleteByCartUserIdAndProductIdQuery);
+
+            preparedStatement.setLong(1, cartUserId);
+            preparedStatement.setLong(2, productId);
+            return preparedStatement;
+        });
     }
 }
