@@ -1,4 +1,4 @@
-package cart.util;
+package cart.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

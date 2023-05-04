@@ -1,4 +1,4 @@
-package cart.util;
+package cart.config;
 
 import cart.dto.MemberAuthDto;
 import java.util.Base64;

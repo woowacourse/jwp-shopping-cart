@@ -3,7 +3,7 @@ package cart.controller;
 import cart.dto.MemberAuthDto;
 import cart.dto.response.CartProductResponseDto;
 import cart.service.CartService;
-import cart.util.Member;
+import cart.config.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
