@@ -29,7 +29,7 @@
 - DB 관련
     - [x] [DB 생성 경로, gitignore 수정](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178018723)
     - [x] [DDL id에 정수값 unsigned 적용](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178024440)
-- [ ] [Model과 ModelAndView의 차이 학습 뒤 선택하기](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178008480)
+- [x] [뷰 컨트롤러 Model과 ModelAndView 사용 방식의 차이 학습 뒤 선택하기](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178008480)
 - 응답 상태 코드 검토
     - [x] [자원 생성 응답 코드는 무엇으로 해야 할까?](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178009514)
     - [x] [아무것도 반환하지 않는다면 어떤 응답 코드를 반환해야 할까?](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1178013053)

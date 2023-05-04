@@ -1,9 +1,10 @@
 package cart.controller;
 
 import cart.service.ProductService;
+import java.util.Map;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class CartController {
@@ -15,16 +16,16 @@ public class CartController {
     }
 
     @GetMapping(path = "/")
-    public String home(Model model) {
-        model.addAttribute("products", productService.findAll());
-
-        return "index";
+    public ModelAndView home() {
+        return new ModelAndView("index", Map.of(
+                "products", productService.findAll()
+        ));
     }
 
     @GetMapping(path = "/admin")
-    public String admin(Model model) {
-        model.addAttribute("products", productService.findAll());
-
-        return "admin";
+    public ModelAndView admin() {
+        return new ModelAndView("/admin", Map.of(
+                "products", productService.findAll()
+        ));
     }
 }
