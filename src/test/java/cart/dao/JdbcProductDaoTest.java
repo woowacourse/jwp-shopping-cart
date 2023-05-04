@@ -23,11 +23,11 @@ class JdbcProductDaoTest {
                     resultSet.getInt("price"),
                     resultSet.getString("image")
             );
-    private JdbcProductDao jdbcProductDao;
+    private final JdbcProductDao jdbcProductDao;
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    private JdbcProductDaoTest(@Autowired JdbcTemplate jdbcTemplate) {
+    private JdbcProductDaoTest(@Autowired final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcProductDao = new JdbcProductDao(jdbcTemplate);
     }
@@ -35,7 +35,7 @@ class JdbcProductDaoTest {
     @Test
     @DisplayName("Product 삽입 테스트")
     void insertTest() {
-        Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
+        final Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
         assertThat(id).isPositive();
     }
 
@@ -53,11 +53,11 @@ class JdbcProductDaoTest {
     @Test
     @DisplayName("Product 갱신 테스트")
     void updateTest() {
-        Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
-
+        final Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
+        
         jdbcProductDao.update(new Product(id, "ASH", 1000, "image"));
 
-        Product product = jdbcTemplate.queryForObject("SELECT * FROM product WHERE id = ?", productRowMapper, id);
+        final Product product = jdbcTemplate.queryForObject("SELECT * FROM product WHERE id = ?", productRowMapper, id);
 
         assertAll(
                 () -> assertThat(product).isNotNull(),
@@ -71,7 +71,7 @@ class JdbcProductDaoTest {
     @Test
     @DisplayName("Product 삭제 테스트")
     void deleteTest() {
-        Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
+        final Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
 
         jdbcProductDao.deleteById(id);
 

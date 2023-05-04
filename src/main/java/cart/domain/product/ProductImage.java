@@ -26,10 +26,10 @@ public class ProductImage {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProductImage that = (ProductImage) o;
+        final ProductImage that = (ProductImage) o;
         return Objects.equals(image, that.image);
     }
 

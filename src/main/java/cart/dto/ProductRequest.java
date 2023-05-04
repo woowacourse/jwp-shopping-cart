@@ -26,7 +26,7 @@ public class ProductRequest {
             message = ProductImage.IMAGE_URL_LENGTH_ERROR_MESSAGE)
     private final String image;
 
-    public ProductRequest(String name, int price, String image) {
+    public ProductRequest(final String name, final int price, final String image) {
         this.name = name;
         this.price = price;
         this.image = image;

@@ -8,11 +8,11 @@ public class Product {
     private final ProductImage image;
 
 
-    public Product(String name, int price, String image) {
+    public Product(final String name, final int price, final String image) {
         this(null, name, price, image);
     }
 
-    public Product(Long id, String name, int price, String image) {
+    public Product(final Long id, final String name, final int price, final String image) {
         this.id = new ProductId(id);
         this.name = new ProductName(name);
         this.price = new ProductPrice(price);

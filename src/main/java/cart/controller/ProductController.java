@@ -14,26 +14,26 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(final ProductService productService) {
         this.productService = productService;
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequest request) {
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductRequest request) {
         productService.save(request.getName(), request.getPrice(), request.getImage());
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(
-            @PathVariable @NotNull Long id,
-            @RequestBody @Valid ProductRequest request) {
+            @PathVariable @NotNull final Long id,
+            @RequestBody @Valid final ProductRequest request) {
         productService.update(id, request.getName(), request.getPrice(), request.getImage());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable @NotNull Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable @NotNull final Long id) {
         productService.delete(id);
         return ResponseEntity.ok().build();
     }

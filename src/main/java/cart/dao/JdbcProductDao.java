@@ -23,7 +23,7 @@ public class JdbcProductDao implements ProductDao {
                     resultSet.getString("image")
             );
 
-    public JdbcProductDao(JdbcTemplate jdbcTemplate) {
+    public JdbcProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
@@ -32,7 +32,7 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public Long insert(final Product product) {
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
+        final SqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
         return insertActor.executeAndReturnKey(parameters).longValue();
     }
 
@@ -43,23 +43,23 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public Product findById(long id) {
+    public Product findById(final long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, productRowMapper, id);
-        } catch (IncorrectResultSizeDataAccessException exception) {
+        } catch (final IncorrectResultSizeDataAccessException exception) {
             return null;
         }
     }
 
     @Override
-    public void update(Product product) {
+    public void update(final Product product) {
         final String sql = "UPDATE product SET name = ?, price = ?, image = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(), product.getId());
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteById(final long id) {
         final String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

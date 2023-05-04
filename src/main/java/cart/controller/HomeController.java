@@ -10,12 +10,12 @@ public class HomeController {
 
     private final ProductService productService;
 
-    public HomeController(ProductService productService) {
+    public HomeController(final ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping
-    public String showProductList(Model model) {
+    public String showProductList(final Model model) {
         model.addAttribute("products", productService.findAll());
         return "index";
     }

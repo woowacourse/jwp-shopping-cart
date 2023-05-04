@@ -13,12 +13,12 @@ public class SettingController {
 
     private final UserService userService;
 
-    public SettingController(UserService userService) {
+    public SettingController(final UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
-    public String showUserLIst(Model model) {
+    public String showUserLIst(final Model model) {
         model.addAttribute("users", userService.findAll());
         return "settings";
     }
