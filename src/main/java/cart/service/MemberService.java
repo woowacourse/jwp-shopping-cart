@@ -16,11 +16,11 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public List<MemberResponse> findAllMember() {
+    public List<MemberResponse> findAllMemberId() {
         List<MemberEntity> findMembers = memberDao.findAll();
 
         return findMembers.stream()
-                .map(entity -> new MemberResponse(entity.getEmail(), entity.getPassword()))
+                .map(entity -> new MemberResponse(entity.getId(), entity.getEmail(), entity.getPassword()))
                 .collect(Collectors.toList());
     }
 
