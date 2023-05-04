@@ -1,5 +1,6 @@
 package cart.domain.member;
 
+import cart.exception.InvalidMemberException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +41,7 @@ class EmailTest {
 
         // then
         assertThatThrownBy(() -> new Email(email))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidMemberException.class)
                 .hasMessage("email은 50자 이하여야 합니다. (현재 " + emailLength + "자)");
     }
 }

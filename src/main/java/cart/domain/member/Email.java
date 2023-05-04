@@ -1,5 +1,8 @@
 package cart.domain.member;
 
+import cart.exception.InvalidMemberException;
+
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,11 +40,35 @@ public class Email {
     private void validateLength(String email) {
         int length = email.length();
         if (length > MAX_EMAIL_LENGTH) {
-            throw new IllegalArgumentException("email은 " + MAX_EMAIL_LENGTH + "자 이하여야 합니다. (현재 " + length + "자)");
+            throw new InvalidMemberException("email은 " + MAX_EMAIL_LENGTH + "자 이하여야 합니다. (현재 " + length + "자)");
         }
     }
 
     public String getEmail() {
         return email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Email email1 = (Email) o;
+        return Objects.equals(email, email1.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
+    }
+
+    @Override
+    public String toString() {
+        return "Email{" +
+                "email='" + email + '\'' +
+                '}';
     }
 }
