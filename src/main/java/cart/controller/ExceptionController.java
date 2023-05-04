@@ -33,18 +33,6 @@ public class ExceptionController {
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ExceptionResponse> handleConstraintViolationException(ConstraintViolationException exception) {
-        log.error(exception.getMessage());
-
-        final String errorMessage = exception.getConstraintViolations()
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.joining(System.lineSeparator()));
-        final ExceptionResponse exceptionResponse = new ExceptionResponse(errorMessage);
-        return ResponseEntity.badRequest().body(exceptionResponse);
-    }
-
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
         log.error(exception.getMessage());
