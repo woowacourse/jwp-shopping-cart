@@ -28,13 +28,3 @@ CREATE TABLE IF NOT EXISTS cart_user_product
     FOREIGN KEY (cart_user_id) REFERENCES cart_user (cart_user_id),
     FOREIGN KEY (product_id) REFERENCES product (product_id)
 );
-
--- ALTER TABLE cart_user_product
---     ADD CONSTRAINT cart_user_id
---         FOREIGN KEY (cart_user_id)
---             REFERENCES cart_user (cart_user_id);
---
--- ALTER TABLE cart_user_product
---     ADD CONSTRAINT product_id
---         FOREIGN KEY (product_id)
---             REFERENCES product (product_id);
