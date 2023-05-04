@@ -9,4 +9,6 @@ public interface MemberDao {
 
     Optional<MemberEntity> findMemberByEmail(final String email);
 
+    Optional<MemberEntity> findMemberById(final int id);
+
 }

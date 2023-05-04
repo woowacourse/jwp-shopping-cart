@@ -19,6 +19,12 @@ public class Member {
         }
     }
 
+    public void checkEmail(final String email) {
+        if (!this.email.equals(email)) {
+            throw new IllegalArgumentException("이메일이 일치하지 않습니다.");
+        }
+    }
+
     public int getId() {
         return id;
     }

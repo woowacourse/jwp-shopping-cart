@@ -42,4 +42,15 @@ public class MemberJdbcDao implements MemberDao {
         }
     }
 
+    @Override
+    public Optional<MemberEntity> findMemberById(final int id) {
+        final String sql = "SELECT * FROM MEMBER WHERE id = ?";
+
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, getMemberEntityRowMapper(), id));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
 }
