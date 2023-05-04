@@ -1,6 +1,7 @@
 package cart.controller.api;
 
 import cart.dto.cart.CartProductDto;
+import cart.dto.common.Id;
 import cart.dto.response.Response;
 import cart.dto.response.ResultResponse;
 import cart.dto.response.SimpleResponse;
@@ -25,9 +26,9 @@ public class CartApiController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/{productId:[1-9]\\d*}")
-    public ResponseEntity<Response> addProductToCart(@PathVariable Long productId, @Principal User user) {
-        cartService.addToCart(user.getMemberId(), productId);
+    @PostMapping("/{productId}")
+    public ResponseEntity<Response> addProductToCart(@PathVariable Id productId, @Principal User user) {
+        cartService.addToCart(user.getMemberId(), productId.getId());
         return ResponseEntity.ok()
                 .body(SimpleResponse.ok("장바구니에 상품이 담겼습니다."));
     }
@@ -39,9 +40,9 @@ public class CartApiController {
                 .body(ResultResponse.ok(allProducts.size() + "개의 상품이 조회되었습니다.", allProducts));
     }
 
-    @DeleteMapping("/{cartId:[1-9]\\d*}")
-    public ResponseEntity<Response> deleteProductToCart(@PathVariable Long cartId, @Principal User user) {
-        cartService.deleteProduct(user.getMemberId(), cartId);
+    @DeleteMapping("/{cartId}")
+    public ResponseEntity<Response> deleteProductToCart(@PathVariable Id cartId, @Principal User user) {
+        cartService.deleteProduct(user.getMemberId(), cartId.getId());
         return ResponseEntity.ok()
                 .body(SimpleResponse.ok("장바구니에 상품이 삭제되었습니다."));
     }

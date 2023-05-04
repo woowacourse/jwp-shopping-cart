@@ -1,9 +1,11 @@
 package cart.config;
 
 import cart.infrastructure.BasicAuthInterceptor;
+import cart.infrastructure.IdConverter;
 import cart.infrastructure.PrincipalResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -27,5 +29,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(basicAuthInterceptor)
                 .addPathPatterns("/api/cart/**");
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new IdConverter());
     }
 }
