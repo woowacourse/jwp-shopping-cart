@@ -1,6 +1,5 @@
 package cart.auth;
 
-import cart.service.AuthService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 

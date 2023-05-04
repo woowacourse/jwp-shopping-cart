@@ -1,4 +1,4 @@
-package cart.service;
+package cart.auth;
 
 import cart.dao.MemberDao;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package cart;
+package cart.exception;
 
 public enum ErrorCode {
 

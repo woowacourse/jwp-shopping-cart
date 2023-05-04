@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.view;
 
 import cart.dto.ProductDto;
 import cart.service.ProductService;

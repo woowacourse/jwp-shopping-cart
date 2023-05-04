@@ -1,6 +1,6 @@
 package cart.dto.response;
 
-import cart.ErrorCode;
+import cart.exception.ErrorCode;
 
 public class ErrorResponse {
     private final int statusCode;

@@ -1,14 +1,10 @@
 package cart.controller;
 
-import cart.auth.LoginInterceptor;
-import cart.dao.MemberDao;
 import cart.dto.CartDto;
 import cart.dto.CartRequest;
 import cart.dto.ProductDto;
-import cart.service.AuthService;
+import cart.auth.AuthService;
 import cart.service.CartService;
-import cart.service.MemberService;
-import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
@@ -18,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.Base64Utils;
 
 import java.util.List;
 

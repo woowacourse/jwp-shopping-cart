@@ -1,4 +1,4 @@
-package cart;
+package cart.exception;
 
 import cart.dto.response.ErrorResponse;
 import cart.exception.BusinessIllegalArgumentException;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ProductControllerExceptionHandler {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessIllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> invalidArgumentException(BusinessIllegalArgumentException e) {

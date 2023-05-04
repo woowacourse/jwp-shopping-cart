@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.ErrorCode;
+import cart.exception.ErrorCode;
 import cart.domain.generic.Name;
 import cart.domain.generic.Price;
 import cart.exception.BusinessIllegalArgumentException;

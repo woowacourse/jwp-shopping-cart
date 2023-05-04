@@ -1,6 +1,6 @@
 package cart.domain.generic;
 
-import cart.ErrorCode;
+import cart.exception.ErrorCode;
 import cart.exception.BusinessIllegalArgumentException;
 
 import java.util.Objects;
