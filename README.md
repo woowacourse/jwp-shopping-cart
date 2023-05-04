@@ -23,8 +23,8 @@
 
 ### 2단계 기능 요구사항
 
-- [ ] 사용자 기능 구현
-    - [ ] 사용자 기본 정보 : email, password
+- [x] 사용자 기능 구현
+    - [x] 사용자 기본 정보 : email, password
 - [ ] 사용자 설정 페이지 연동
     - [ ] settings.html, settings.js 파일 내 TODO 주석을 참고하여 설계한 사용자 정보에 맞게 코드 변경
     - [ ] settings.html 파일을 이용해서 사용자를 선택하는 기능 구현
