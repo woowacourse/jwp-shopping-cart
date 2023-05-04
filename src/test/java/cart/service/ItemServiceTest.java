@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@Sql({"classpath:test_init.sql"})
 @SpringBootTest
+@Sql({"classpath:test_init.sql"})
 class ItemServiceTest {
 
     @Autowired
