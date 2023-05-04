@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.dao.entity.ProductEntity;
-import cart.domain.Member;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +9,7 @@ public interface CartDao {
 
     long add(Long memberId, Long productId);
 
-    List<ProductEntity> findByMember(Member member);
+    List<ProductEntity> findByMemberId(Long memberId);
 
     boolean isExistEntity(Long memberId, Long productId);
 

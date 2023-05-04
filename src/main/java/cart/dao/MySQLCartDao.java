@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.dao.entity.ProductEntity;
-import cart.domain.Member;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
@@ -32,18 +31,17 @@ public class MySQLCartDao implements CartDao {
     }
 
     @Override
-    public List<ProductEntity> findByMember(Member member) {
+    public List<ProductEntity> findByMemberId(Long memberId) {
         String query = "SELECT * FROM cart "
             + "LEFT OUTER JOIN product ON cart.product_id = product.id "
-            + "LEFT OUTER JOIN member ON cart.member_id = member.id "
-            + "WHERE member.email = ? AND member.password = ?";
+            + "WHERE cart.member_id = ?";
 
         return jdbcTemplate.query(query, (resultSet, rowNum) ->
             new ProductEntity(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getInt("price"),
-                resultSet.getString("image_url")), member.getEmail(), member.getPassword());
+                resultSet.getString("image_url")), memberId);
 
     }
 
