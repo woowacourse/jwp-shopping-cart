@@ -1,18 +1,22 @@
-package cart;
+package cart.integration;
 
+import cart.config.auth.Base64AuthInterceptor;
 import cart.dto.ProductDto;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.util.Base64Utils;
 
+import static cart.config.admin.Base64AdminAccessInterceptor.ADMIN_EMAIL;
+import static cart.config.admin.Base64AdminAccessInterceptor.ADMIN_NAME;
+import static cart.config.auth.Base64AuthInterceptor.AUTHORIZATION_HEADER;
 import static io.restassured.RestAssured.given;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -20,12 +24,24 @@ import static io.restassured.RestAssured.given;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProductIntegrationTest {
 
+    public static final String ADMIN = ADMIN_EMAIL + ":" + ADMIN_NAME;
+    public static final String ADMIN_CREDENTIALS = Base64AuthInterceptor.BASIC + " " + Base64Utils.encodeToString(ADMIN.getBytes());
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @LocalServerPort
     private int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+    }
+
+    @AfterEach
+    void clear() {
+        String sql = "TRUNCATE TABLE PRODUCT";
+        jdbcTemplate.execute(sql);
     }
 
     @Test
@@ -41,6 +57,7 @@ public class ProductIntegrationTest {
         final ProductDto productDto = new ProductDto("하디", "https://github.com/", 10000);
 
         given()
+                .header(AUTHORIZATION_HEADER, ADMIN_CREDENTIALS)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productDto)
                 .when().post("/admin/products")
@@ -53,6 +70,7 @@ public class ProductIntegrationTest {
         final ProductDto productDto = new ProductDto("하디", "https://github.com/", 100000);
 
         final ExtractableResponse<Response> response = given()
+                .header(AUTHORIZATION_HEADER, ADMIN_CREDENTIALS)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productDto)
                 .when().post("/admin/products")
@@ -66,6 +84,7 @@ public class ProductIntegrationTest {
         final ProductDto updatedProductDto = new ProductDto("코코닥", "https://github.com/", 10000);
 
         given()
+                .header(AUTHORIZATION_HEADER, ADMIN_CREDENTIALS)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(updatedProductDto)
                 .when().put("/admin/products/{product_id}", id)
@@ -78,6 +97,7 @@ public class ProductIntegrationTest {
         final ProductDto productDto = new ProductDto("하디", "https://github.com/", 100000);
 
         final ExtractableResponse<Response> response = given()
+                .header(AUTHORIZATION_HEADER, ADMIN_CREDENTIALS)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productDto)
                 .when().post("/admin/products")
@@ -90,6 +110,7 @@ public class ProductIntegrationTest {
         final Long id = Long.parseLong(parsedLocation[parsedLocation.length - 1]);
 
         given()
+                .header(AUTHORIZATION_HEADER, ADMIN_CREDENTIALS)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/admin/products/{product_id}", id)
                 .then()
