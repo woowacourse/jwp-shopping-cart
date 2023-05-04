@@ -3,6 +3,7 @@ package cart.domain;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import cart.controller.exception.MemberNotValidException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class MemberTest {
     void 이메일이_형식과_맞지_않으면_예외가_발생한다(final String nonEmail) {
         // expect
         assertThatThrownBy(() -> new Member(nonEmail, "qwerty1234"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(MemberNotValidException.class)
                 .hasMessage("이메일 형식과 일치하지 않습니다.");
     }
 
@@ -33,7 +34,7 @@ class MemberTest {
         final String shortPassword = "일이삼";
         // expect
         assertThatThrownBy(() -> new Member("a@b.com", shortPassword))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(MemberNotValidException.class)
                 .hasMessage("비밀번호의 길이는 4 이상이어야 합니다.");
     }
 }

@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.controller.exception.MemberNotFoundException;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.MemberDto;
@@ -37,7 +38,7 @@ public class MemberService {
     public Member findMember(final MemberDto memberDto) {
         final Optional<Member> memberOptional = memberDao.findByEmail(memberDto.toMember());
         if (memberOptional.isEmpty()) {
-            throw new IllegalArgumentException("회원 정보가 잘못되었습니다.");
+            throw new MemberNotFoundException();
         }
         return memberOptional.get();
     }

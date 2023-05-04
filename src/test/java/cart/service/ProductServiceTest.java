@@ -106,7 +106,7 @@ class ProductServiceTest {
         // expect
         assertThatThrownBy(() -> productService.update(1L, updateProductRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 데이터입니다.");
+                .hasMessage("존재하지 않는 상품입니다.");
     }
 
     @Test
@@ -130,6 +130,6 @@ class ProductServiceTest {
         // expect
         assertThatThrownBy(() -> productService.delete(1L))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 데이터입니다.");
+                .hasMessage("존재하지 않는 상품입니다.");
     }
 }

@@ -1,5 +1,7 @@
 package cart.service;
 
+import cart.controller.exception.ProductNotFoundException;
+import cart.controller.exception.ProductNotValidException;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.request.CreateProductRequest;
@@ -38,7 +40,7 @@ public class ProductService {
     public Product findById(final Long id) {
         final Optional<Product> product = productDao.findById(id);
         if (product.isEmpty()) {
-            throw new IllegalArgumentException("해당 id를 가진 상품이 존재하지 않습니다.");
+            throw new ProductNotValidException("해당 id를 가진 상품이 존재하지 않습니다.");
         }
         return product.get();
     }
@@ -53,7 +55,7 @@ public class ProductService {
     public int update(final Long id, final UpdateProductRequest updateProductRequest) {
         final Optional<Product> productOptional = productDao.findById(id);
         if (productOptional.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 데이터입니다.");
+            throw new ProductNotFoundException("존재하지 않는 상품입니다.");
         }
         final Product product = updateProductRequest.toProduct();
         return productDao.update(id, product);
@@ -63,7 +65,7 @@ public class ProductService {
     public int delete(final Long id) {
         final Optional<Product> productOptional = productDao.findById(id);
         if (productOptional.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 데이터입니다.");
+            throw new ProductNotFoundException("존재하지 않는 상품입니다.");
         }
         return productDao.delete(id);
     }

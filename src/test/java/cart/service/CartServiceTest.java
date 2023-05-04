@@ -4,6 +4,7 @@ import static cart.service.MemberServiceTest.MEMBER_FIXTURE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.controller.exception.CartException;
 import cart.dao.CartDao;
 import cart.domain.Cart;
 import cart.dto.MemberDto;
@@ -63,8 +64,8 @@ class CartServiceTest {
 
         // expect
         assertThatThrownBy(() -> cartService.insert(1L, MEMBER_DTO_FIXTURE))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 카트에 담겨진 제품입니다.");
+                .isInstanceOf(CartException.class)
+                .hasMessage("이미 장바구니에 존재하는 제품입니다.");
     }
 
     @Test
@@ -90,7 +91,7 @@ class CartServiceTest {
 
         // expect
         assertThatThrownBy(() -> cartService.delete(1L, MEMBER_DTO_FIXTURE))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 사용자입니다.");
+                .isInstanceOf(CartException.class)
+                .hasMessage("존재하지 않는 장바구니입니다.");
     }
 }

@@ -2,7 +2,7 @@ package cart.auth;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import cart.controller.exception.IllegalArgumentException;
+import cart.controller.exception.AuthException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,10 +29,10 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor {
 
     private void validate(final String authorization) {
         if (authorization == null) {
-            throw new IllegalArgumentException("사용자 인증이 필요합니다.");
+            throw new AuthException("사용자 인증이 필요합니다.");
         }
         if (authorization.matches(BASIC_REGEX)) {
-            throw new IllegalArgumentException("유효하지 않은 인증 형식입니다.");
+            throw new AuthException("유효하지 않은 인증 형식입니다.");
         }
     }
 
@@ -42,7 +42,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor {
         final List<String> member = Arrays.stream(decodedToken.split(DELIMITER))
                 .collect(Collectors.toUnmodifiableList());
         if (member.size() != AUTHENTICATION_INFO_SIZE) {
-            throw new IllegalArgumentException("유효하지 않은 인증 정보입니다.");
+            throw new AuthException("유효하지 않은 인증 정보입니다.");
         }
 
         final String email = member.get(0);

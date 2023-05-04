@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.controller.exception.CartException;
 import cart.dao.CartDao;
 import cart.domain.Cart;
 import cart.domain.Member;
@@ -33,7 +34,7 @@ public class CartService {
         final Member member = memberService.findMember(memberDto);
         final Optional<Cart> cart = cartDao.findCart(productId, member.getId());
         if (cart.isPresent()) {
-            throw new IllegalArgumentException("이미 카트에 담겨진 제품입니다.");
+            throw new CartException("이미 장바구니에 존재하는 제품입니다.");
         }
         return cartDao.insert(productId, member.getId());
     }
@@ -43,7 +44,7 @@ public class CartService {
         final Member member = memberService.findMember(memberDto);
         final Optional<Cart> cart = cartDao.findCart(productId, member.getId());
         if (cart.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
+            throw new CartException("존재하지 않는 장바구니입니다.");
         }
         return cartDao.delete(cart.get());
     }

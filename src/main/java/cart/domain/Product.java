@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.controller.exception.ProductNotValidException;
+
 public class Product {
     private static final int MAXIMUM_NAME_LENGTH = 50;
     private static final int MINIMUM_PRICE = 0;
@@ -24,13 +26,13 @@ public class Product {
 
     private void validate(final String name, final Integer price, final String image) {
         if (name.length() > MAXIMUM_NAME_LENGTH) {
-            throw new IllegalArgumentException("상품 이름은 " + MAXIMUM_NAME_LENGTH + "자를 넘길 수 없습니다.");
+            throw new ProductNotValidException("상품 이름은 " + MAXIMUM_NAME_LENGTH + "자를 넘길 수 없습니다.");
         }
         if (price < MINIMUM_PRICE || price > MAXIMUM_PRICE) {
-            throw new IllegalArgumentException("가격은 " + MINIMUM_PRICE + " 미만이거나, " + MAXIMUM_PRICE + " 초과일 수 없습니다.");
+            throw new ProductNotValidException("가격은 " + MINIMUM_PRICE + " 미만이거나, " + MAXIMUM_PRICE + " 초과일 수 없습니다.");
         }
         if (image.length() > MAXIMUM_IMAGE_LENGTH) {
-            throw new IllegalArgumentException("이미지 주소는 " + MAXIMUM_IMAGE_LENGTH + "자를 넘길 수 없습니다.");
+            throw new ProductNotValidException("이미지 주소는 " + MAXIMUM_IMAGE_LENGTH + "자를 넘길 수 없습니다.");
         }
     }
 

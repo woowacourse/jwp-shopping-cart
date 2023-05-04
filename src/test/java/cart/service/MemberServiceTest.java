@@ -3,6 +3,7 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import cart.controller.exception.MemberNotFoundException;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.MemberDto;
@@ -74,7 +75,7 @@ class MemberServiceTest {
 
         // then
         assertThatThrownBy(() -> memberService.findMember(memberDto))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(MemberNotFoundException.class)
                 .hasMessage("회원 정보가 잘못되었습니다.");
     }
 }

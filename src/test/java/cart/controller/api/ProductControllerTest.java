@@ -185,7 +185,7 @@ class ProductControllerTest {
                 .put("/products/" + 0L)
                 .then()
                 .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
@@ -209,6 +209,6 @@ class ProductControllerTest {
                 .delete("/products/" + 0)
                 .then()
                 .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }
