@@ -35,4 +35,13 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(items);
     }
+
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity<Void> deleteCart(@BasicAuthorization final LoginUser loginUser, @PathVariable final Long itemId) {
+        System.out.println("delete");
+        cartService.deleteCart(loginUser.getEmail(), itemId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .location(URI.create("/"))
+                .build();
+    }
 }
