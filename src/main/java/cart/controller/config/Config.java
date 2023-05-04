@@ -12,9 +12,24 @@ import java.util.List;
 
 @Configuration
 public class Config implements WebMvcConfigurer {
+
+    private final AuthInterceptor authInterceptor;
+
+    public Config(final AuthInterceptor authInterceptor) {
+        this.authInterceptor = authInterceptor;
+    }
+
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        //registry.addInterceptor(new AuthInterceptor()).addPathPatterns("/carts");
+        registry.addInterceptor(authInterceptor)
+                .excludePathPatterns(
+                        "/",
+                        "/settings",
+                        "/items/**",
+                        "/cart",
+                        "/css/**",
+                        "/js/**"
+                );
     }
 
     @Override
