@@ -5,6 +5,7 @@ import cart.exception.auth.UnauthenticatedException;
 import cart.service.MemberService;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -14,7 +15,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
@@ -32,7 +32,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String header = webRequest.getHeader(AUTHORIZATION);
+        String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         validateHeader(header);
         String[] credentials = extractCredentials(header);
 
