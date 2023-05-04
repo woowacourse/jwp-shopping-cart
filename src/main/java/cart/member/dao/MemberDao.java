@@ -9,4 +9,6 @@ public interface MemberDao {
     List<MemberEntity> selectAll();
 
     Optional<MemberEntity> findByEmail(String memberEmail);
+
+    MemberEntity insert(MemberEntity member);
 }
