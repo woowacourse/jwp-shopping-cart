@@ -36,7 +36,7 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public Optional<UserEntity> findById(Long id) {
-        return Optional.empty();
+        throw new UnsupportedOperationException("지원되지 않는 기능입니다");
     }
 
     @Override
@@ -47,12 +47,12 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public int update(UserEntity userEntity) {
-        return 0;
+        throw new UnsupportedOperationException("지원되지 않는 기능입니다");
     }
 
     @Override
     public int deleteById(long id) {
-        return 0;
+        throw new UnsupportedOperationException("지원되지 않는 기능입니다");
     }
 
     @Override

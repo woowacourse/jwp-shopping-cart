@@ -43,12 +43,12 @@ public class JdbcCartDao implements CartDao {
 
     @Override
     public List<CartEntity> findAll() {
-        return null;
+        throw new UnsupportedOperationException("지원되지 않는 기능입니다");
     }
 
     @Override
     public int update(CartEntity cartEntity) {
-        return 0;
+        throw new UnsupportedOperationException("지원되지 않는 기능입니다");
     }
 
     @Override
