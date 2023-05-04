@@ -20,7 +20,6 @@ public class JdbcProductDao implements ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertActor;
-
     private final RowMapper<Product> productRowMapper = (resultSet, rowNum) ->
             new Product(
                     resultSet.getLong("id"),

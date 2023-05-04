@@ -22,7 +22,6 @@ class JdbcProductDaoTest {
                     resultSet.getString("image_url")
             );
     private JdbcProductDao jdbcProductDao;
-
     private JdbcTemplate jdbcTemplate;
 
     private JdbcProductDaoTest(@Autowired JdbcTemplate jdbcTemplate) {
