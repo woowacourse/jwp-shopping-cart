@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
+import static cart.Pixture.CREATE_ITEM1;
+import static cart.Pixture.CREATE_ITEM2;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 @Sql({"classpath:test_init.sql"})
@@ -28,12 +30,12 @@ class AdminControllerTest {
     @BeforeEach
     void setUp(@LocalServerPort int port) {
         RestAssured.port = port;
-        itemDao.save(new CreateItem("치킨", "a", 10000));
-        itemDao.save(new CreateItem("피자", "b", 20000));
+        itemDao.save(CREATE_ITEM1);
+        itemDao.save(CREATE_ITEM2);
     }
 
-    @Test
     @DisplayName("상품 추가 테스트")
+    @Test
     void addItemTest() {
         //given
         ItemRequest itemRequest = new ItemRequest("국밥", "c", 30000);

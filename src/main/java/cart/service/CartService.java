@@ -17,6 +17,7 @@ public class CartService {
 
     private static final int ZERO_AFFECTED_ROW = 0;
     private static final String INVALID_ITEM_ID_MESSAGE = "상품 정보를 다시 입력해주세요.";
+    public static final String INVALID_MEMBER_MESSAGE = "email과 password를 다시 입력해주세요.";
 
     private final CartDao cartDao;
     private final MemberDao memberDao;
@@ -46,10 +47,10 @@ public class CartService {
 
     private void validatePutCart(Long itemId, AuthMember authMember) {
         if (!memberDao.isMemberExists(authMember)) {
-            throw new ServiceIllegalArgumentException("email과 password를 다시 입력해주세요.");
+            throw new ServiceIllegalArgumentException(INVALID_MEMBER_MESSAGE);
         }
         if (!itemDao.isItemExistsById(itemId)) {
-            throw new ServiceIllegalArgumentException("item을 다시 선택해주세요.");
+            throw new ServiceIllegalArgumentException(INVALID_ITEM_ID_MESSAGE);
         }
     }
 
@@ -64,7 +65,7 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteItemInCart(Long itemId, AuthorizationInformation authorizationInformation) {
+    public void deleteItemFromCart(Long itemId, AuthorizationInformation authorizationInformation) {
         AuthMember authMember = convertAuthInformationToMember(authorizationInformation);
         Member member = memberDao.findByAuthMember(authMember);
         PutCart putCart = new PutCart(member.getId(), itemId);

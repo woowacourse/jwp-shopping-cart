@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @RestController
@@ -27,5 +28,10 @@ public class MemberController {
     public String displayMember(Model model) {
         model.addAttribute("members", memberService.findAll());
         return "settings";
+    }
+
+    @PostConstruct
+    public void init() {
+//        memberService.
     }
 }

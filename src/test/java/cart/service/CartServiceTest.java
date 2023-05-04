@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.authorization.AuthorizationInformation;
-import cart.dao.JdbcItemDao;
-import cart.dao.JdbcMemberDao;
+import cart.dao.ItemDao;
+import cart.dao.MemberDao;
 import cart.dto.ItemResponse;
 import cart.exception.ServiceIllegalArgumentException;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,17 +27,17 @@ class CartServiceTest {
     private CartService cartService;
 
     @Autowired
-    private JdbcItemDao jdbcItemDao;
+    private ItemDao itemDao;
 
     @Autowired
-    private JdbcMemberDao jdbcMemberDao;
+    private MemberDao memberDao;
 
     @BeforeEach
     void setUp() {
-        jdbcItemDao.save(CREATE_ITEM1);
-        jdbcItemDao.save(CREATE_ITEM2);
+        itemDao.save(CREATE_ITEM1);
+        itemDao.save(CREATE_ITEM2);
 
-        jdbcMemberDao.save(AUTH_MEMBER1);
+        memberDao.save(AUTH_MEMBER1);
 
         AuthorizationInformation authorizationInformation = new AuthorizationInformation(AUTH_MEMBER1.getEmail(), AUTH_MEMBER1.getPassword());
         cartService.putItemIntoCart(1L, authorizationInformation);
@@ -51,14 +51,14 @@ class CartServiceTest {
         cartService.putItemIntoCart(2L, authorizationInformation);
     }
 
-    @DisplayName("장바구니에 없는 상품을 추가할 수 없다.")
+    @DisplayName("없는 상품을 장바구니에 추가할 수 없다.")
     @Test
     void putItemIntoCart_fail_invalidItem() {
         AuthorizationInformation authorizationInformation = new AuthorizationInformation(AUTH_MEMBER1.getEmail(), AUTH_MEMBER1.getPassword());
 
         assertThatThrownBy(() -> cartService.putItemIntoCart(3L, authorizationInformation))
                 .isInstanceOf(ServiceIllegalArgumentException.class)
-                .hasMessage("item을 다시 선택해주세요.");
+                .hasMessage("상품 정보를 다시 입력해주세요.");
     }
 
     @DisplayName("올바르지 않은 사람에 대한 장바구니에 상품을 추가할 수 없다.")
@@ -92,7 +92,7 @@ class CartServiceTest {
     void deleteItemByItemId_success() {
         AuthorizationInformation authorizationInformation = new AuthorizationInformation(AUTH_MEMBER1.getEmail(), AUTH_MEMBER1.getPassword());
 
-        cartService.deleteItemInCart(1L, authorizationInformation);
+        cartService.deleteItemFromCart(1L, authorizationInformation);
 
         List<ItemResponse> itemResponses = cartService.findAllItemByAuthInfo(authorizationInformation);
 
@@ -104,7 +104,7 @@ class CartServiceTest {
     void deleteItemByItemId_fail() {
         AuthorizationInformation authorizationInformation = new AuthorizationInformation(AUTH_MEMBER1.getEmail(), AUTH_MEMBER1.getPassword());
 
-        assertThatThrownBy(() -> cartService.deleteItemInCart(2L, authorizationInformation))
+        assertThatThrownBy(() -> cartService.deleteItemFromCart(2L, authorizationInformation))
                 .isInstanceOf(ServiceIllegalArgumentException.class)
                 .hasMessage("상품 정보를 다시 입력해주세요.");
     }

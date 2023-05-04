@@ -4,6 +4,7 @@ import cart.authorization.AuthorizationExtractor;
 import cart.authorization.AuthorizationInformation;
 import cart.dto.ItemResponse;
 import cart.service.CartService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,8 @@ public class CartController {
     }
 
     @PostMapping("/carts/new/{itemId}")
-    public String addItemIntoCart(@RequestHeader(value = "Authorization") String authorization, @PathVariable Long itemId) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public String addItem(@RequestHeader(value = "Authorization") String authorization, @PathVariable Long itemId) {
         AuthorizationInformation authorizationInformation = authorizationExtractor.extract(authorization);
         cartService.putItemIntoCart(itemId, authorizationInformation);
         return "ok";
@@ -41,7 +43,7 @@ public class CartController {
     @PostMapping("/carts/delete/{itemId}")
     public String deleteItem(@RequestHeader(value = "Authorization") String authorization, @PathVariable Long itemId) {
         AuthorizationInformation authorizationInformation = authorizationExtractor.extract(authorization);
-        cartService.deleteItemInCart(itemId, authorizationInformation);
+        cartService.deleteItemFromCart(itemId, authorizationInformation);
         return "ok";
     }
 }

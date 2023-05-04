@@ -1,6 +1,8 @@
 package cart.controller;
 
+import cart.exception.AuthenticationFailureException;
 import cart.exception.ServiceIllegalArgumentException;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -34,8 +36,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    @ExceptionHandler(ServiceIllegalArgumentException.class)
-    public ResponseEntity<Map<String, String>> handleServiceIllegalAccessException(ServiceIllegalArgumentException exception) {
+    @ExceptionHandler({ServiceIllegalArgumentException.class, AuthenticationFailureException.class})
+    public ResponseEntity<Map<String, String>> handleServiceIllegalAccessException(Exception exception) {
         Map<String, String> errors = new HashMap<>();
         errors.put("message", exception.getMessage());
 
