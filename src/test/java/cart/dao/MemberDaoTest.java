@@ -71,10 +71,10 @@ class MemberDaoTest {
         );
     }
 
-    @Sql("/member_truncate.sql")
     @Test
     @DisplayName("모든 회원을 조회한다.")
     void findAllSuccess() {
+        int initSize = memberDao.findAll().size();
         Member member1 = new Member("aaa@gmail.com", "password", "그레이");
         Member member2 = new Member("bbb@gmail.com", "helloWorld", "지토");
         Member member3 = new Member("ccc@gmail.com", "helloHello", "제이미");
@@ -84,6 +84,6 @@ class MemberDaoTest {
 
         List<MemberEntity> allMembers = memberDao.findAll();
 
-        assertThat(allMembers).hasSize(3);
+        assertThat(allMembers).hasSize(initSize + 3);
     }
 }

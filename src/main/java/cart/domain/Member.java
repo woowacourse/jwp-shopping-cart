@@ -5,7 +5,7 @@ import cart.exception.LengthException;
 public class Member {
 
     private static final int NAME_MIN_LENGTH = 1;
-    private static final int NAME_MAX_LENGTH = 1;
+    private static final int NAME_MAX_LENGTH = 5;
     private static final int PASSWORD_MIN_LENGTH = 4;
     private static final int PASSWORD_MAX_LENGTH = 12;
 
