@@ -1,7 +1,7 @@
 package cart.auth;
 
 import cart.auth.exception.AuthorizationException;
-import cart.domain.member.Member;
+import cart.dto.request.MemberRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -37,7 +37,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         }
     }
 
-    private Member extractMember(final String header) {
+    private MemberRequest extractMember(final String header) {
         final String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
         final byte[] decodeBytes = Base64.decodeBase64(authHeaderValue);
         final String decodedString = new String(decodeBytes);
@@ -46,6 +46,6 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         final String username = credentials[0];
         final String password = credentials[1];
 
-        return new Member(username, password);
+        return new MemberRequest(username, password);
     }
 }

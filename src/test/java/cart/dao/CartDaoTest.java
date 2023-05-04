@@ -1,16 +1,17 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cart.domain.cart.Item;
 import cart.domain.cart.ItemEntity;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @Sql("classpath:test.sql")
@@ -34,16 +35,20 @@ class CartDaoTest {
 
     @Test
     void 상품_삽입() {
-        final Item item = new Item(2, 1);
+        final int userId = 2;
+        final Item item = new Item(userId, 1);
 
-        final long insertedId = cartDao.insert(item);
+        cartDao.insert(item);
 
-        assertThat(insertedId).isEqualTo(4);
+        assertThat(cartDao.findAll(userId).size()).isEqualTo(1);
     }
 
     @Test
     void 상품_삭제() {
-        cartDao.delete(1);
+        final long memberId = 1;
+        final long itemId = 1;
+        cartDao.delete(itemId, memberId);
+
         final List<ItemEntity> userOneRemainItems = cartDao.findAll(1);
 
         assertThat(userOneRemainItems.size()).isEqualTo(2);

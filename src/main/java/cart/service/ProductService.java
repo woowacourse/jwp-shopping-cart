@@ -6,11 +6,12 @@ import cart.domain.product.ProductEntity;
 import cart.domain.product.ProductId;
 import cart.dto.application.ProductDto;
 import cart.dto.application.ProductEntityDto;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -32,6 +33,19 @@ public class ProductService {
         return productDao.findAll().stream()
                 .map(productEntityToProductEntityDto)
                 .collect(Collectors.toList());
+    }
+
+    public ProductEntityDto find(final long id) {
+        final ProductId productId = new ProductId(id);
+
+        final ProductEntity result = productDao.find(productId);
+
+        return new ProductEntityDto(
+                result.getId(),
+                result.getName(),
+                result.getPrice(),
+                result.getImageUrl()
+        );
     }
 
     @Transactional

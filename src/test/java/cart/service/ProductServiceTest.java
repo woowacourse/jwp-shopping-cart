@@ -1,15 +1,11 @@
 package cart.service;
 
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import cart.dao.ProductDao;
 import cart.domain.product.ProductEntity;
+import cart.domain.product.ProductId;
 import cart.dto.application.ProductDto;
 import cart.dto.application.ProductEntityDto;
 import io.restassured.RestAssured;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -18,6 +14,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql("classpath:test.sql")
@@ -64,7 +66,7 @@ class ProductServiceTest {
         final ProductDto newProduct = new ProductDto(newName, newPrice, newImageUrl);
         productService.updateProduct(new ProductEntityDto(id, newProduct));
 
-        final ProductEntity updatedProduct = productDao.find(id);
+        final ProductEntity updatedProduct = productDao.find(new ProductId(id));
         assertAll(
                 () -> assertThat(updatedProduct.getName()).isEqualTo(newName),
                 () -> assertThat(updatedProduct.getPrice()).isEqualTo(newPrice),

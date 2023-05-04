@@ -32,8 +32,4 @@ public class MemberService {
         final Member member = new Member(memberDto.getUsername(), memberDto.getPassword());
         return memberDao.findMemberId(member);
     }
-
-    public long findMemberId(final Member member) {
-        return memberDao.findMemberId(member);
-    }
 }

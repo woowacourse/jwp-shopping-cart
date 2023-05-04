@@ -37,4 +37,8 @@ public class ProductEntityDto {
     public String getImageUrl() {
         return product.getImageUrl();
     }
+
+    public ProductDto getProduct() {
+        return product;
+    }
 }

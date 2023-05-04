@@ -1,13 +1,8 @@
 package cart.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
-import cart.domain.cart.Item;
-import cart.domain.cart.ItemEntity;
-import cart.domain.product.ProductEntity;
+import cart.dto.application.ItemEntityDto;
+import cart.dto.application.MemberDto;
 import io.restassured.RestAssured;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql("classpath:test.sql")
@@ -32,37 +31,30 @@ class CartServiceTest {
 
     @Test
     void 상품_조회() {
-        final int userId = 1;
-        final List<ProductEntity> products = cartService.findAll(userId);
+        final MemberDto member = new MemberDto("user1@email.com", "password1");
+
+        final List<ItemEntityDto> products = cartService.findAll(member);
 
         assertThat(products.size()).isEqualTo(3);
     }
 
     @Test
     void 상품_등록() {
-        final int expectedId = 4;
-        final int userId = 2;
         final int productId = 1;
+        final MemberDto member = new MemberDto("user2@email.com", "password2");
 
-        final Item item = new Item(userId, productId);
-        final ItemEntity result = cartService.insert(item);
+        cartService.insert(member, productId);
 
-        assertAll(
-                () -> assertThat(result.getId()).isEqualTo(expectedId),
-                () -> assertThat(result.getUserId()).isEqualTo(userId),
-                () -> assertThat(result.getProductId()).isEqualTo(productId)
-        );
+        assertThat(cartService.findAll(member).size()).isEqualTo(1);
     }
 
     @Test
     void 상품_삭제() {
-        final int userId = 1;
         final int itemId = 1;
-        final int expectedSize = 2;
+        final MemberDto member = new MemberDto("user1@email.com", "password1");
 
-        cartService.delete(itemId);
+        cartService.delete(itemId, member);
 
-        final List<ProductEntity> remainProducts = cartService.findAll(userId);
-        assertThat(remainProducts.size()).isEqualTo(expectedSize);
+        assertThat(cartService.findAll(member).size()).isEqualTo(2);
     }
 }

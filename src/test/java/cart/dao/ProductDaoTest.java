@@ -1,17 +1,19 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import cart.domain.product.Product;
 import cart.domain.product.ProductEntity;
-import java.util.List;
+import cart.domain.product.ProductId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Sql("classpath:test.sql")
@@ -39,7 +41,7 @@ class ProductDaoTest {
     void 상품_데이터_조회() {
         final long id = 2L;
 
-        final ProductEntity foundProduct = productDao.find(id);
+        final ProductEntity foundProduct = productDao.find(new ProductId(id));
 
         assertAll(
                 () -> assertThat(foundProduct.getName()).isEqualTo("name2"),
@@ -60,7 +62,7 @@ class ProductDaoTest {
         final ProductEntity newProduct = new ProductEntity(id, "new salad", 3000, "https://salad.com");
 
         productDao.update(newProduct);
-        final ProductEntity foundProduct = productDao.find(id);
+        final ProductEntity foundProduct = productDao.find(new ProductId(id));
 
         assertAll(
                 () -> assertThat(foundProduct.getName()).isEqualTo(newProduct.getName()),

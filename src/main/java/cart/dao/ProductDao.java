@@ -3,13 +3,14 @@ package cart.dao;
 import cart.domain.product.Product;
 import cart.domain.product.ProductEntity;
 import cart.domain.product.ProductId;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class ProductDao {
@@ -30,10 +31,10 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
-    public ProductEntity find(final long id) {
+    public ProductEntity find(final ProductId id) {
         final String sql = "select id, name, price, image_url from Product where id = ?";
 
-        return jdbcTemplate.queryForObject(sql, productEntityRowMapper(), id);
+        return jdbcTemplate.queryForObject(sql, productEntityRowMapper(), id.getValue());
     }
 
     public List<ProductEntity> findAll() {

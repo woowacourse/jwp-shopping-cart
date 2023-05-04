@@ -2,13 +2,14 @@ package cart.dao;
 
 import cart.domain.cart.Item;
 import cart.domain.cart.ItemEntity;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class CartDao {
@@ -29,16 +30,16 @@ public class CartDao {
         return jdbcTemplate.query(sql, itemEntityRowMapper(), userId);
     }
 
-    public long insert(final Item item) {
+    public void insert(final Item item) {
         final SqlParameterSource source = new BeanPropertySqlParameterSource(item);
 
-        return simpleJdbcInsert.executeAndReturnKey(source).longValue();
+        simpleJdbcInsert.execute(source);
     }
 
-    public void delete(final long id) {
-        final String sql = "DELETE cart WHERE id = ?";
+    public void delete(final long itemId, final long memberId) {
+        final String sql = "DELETE cart WHERE id = ? AND user_id = ?";
 
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, itemId, memberId);
     }
 
     private RowMapper<ItemEntity> itemEntityRowMapper() {
