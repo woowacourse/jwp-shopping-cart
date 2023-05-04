@@ -1,17 +1,15 @@
 package cart.entity;
 
-import javax.validation.constraints.Max;
+import cart.domain.Price;
 
 public class ProductEntity {
 
     private final Long id;
     private final String name;
     private final String image;
+    private final Price price;
 
-    @Max(value = 10_000_000, message = "상품 등록은 최대 천만원까지 가능합니다.")
-    private final int price;
-
-    private ProductEntity(final Long id, final String name, final String image, final int price) {
+    private ProductEntity(final Long id, final String name, final String image, final Price price) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -19,11 +17,11 @@ public class ProductEntity {
     }
 
     public static ProductEntity of(final String name, final String image, final int price) {
-        return new ProductEntity(null, name, image, price);
+        return new ProductEntity(null, name, image, new Price(price));
     }
 
     public static ProductEntity of(final Long id, final String name, final String image, final int price) {
-        return new ProductEntity(id, name, image, price);
+        return new ProductEntity(id, name, image, new Price(price));
     }
 
     public Long getId() {
@@ -39,6 +37,6 @@ public class ProductEntity {
     }
 
     public int getPrice() {
-        return price;
+        return price.getPrice();
     }
 }
