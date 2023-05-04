@@ -1,10 +1,12 @@
-package cart.web.controller.product.dto;
+package cart.web.controller.cart.dto;
 
 import cart.domain.product.ProductCategory;
 
-public class ProductResponse {
+public class CartResponse {
 
-    private final Long id;
+    private final Long cartProductId;
+
+    private final Long productId;
 
     private final String name;
 
@@ -14,16 +16,21 @@ public class ProductResponse {
 
     private final ProductCategory category;
 
-    public ProductResponse(final Long id, final String name, final String imageUrl, final Integer price, final ProductCategory category) {
-        this.id = id;
+    public CartResponse(final Long cartProductId, final Long productId, final String name, final String imageUrl, final Integer price, final ProductCategory category) {
+        this.cartProductId = cartProductId;
+        this.productId = productId;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
         this.category = category;
     }
 
-    public Long getId() {
-        return id;
+    public Long getCartProductId() {
+        return cartProductId;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
     public String getName() {

@@ -26,6 +26,16 @@ public class ProductRequest {
         this.category = category;
     }
 
+    /*@JsonCreator
+    public ProductRequest(@JsonProperty("name") final String name,
+                          @JsonProperty("imageUrl") final String imageUrl,
+                          @JsonProperty("price") final Integer price,
+                          @JsonProperty("category") final ProductCategory category) {
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.price = price;
+        this.category = category;
+    }*/
 
     public String getName() {
         return name;
@@ -45,13 +55,5 @@ public class ProductRequest {
 
     public Product toEntity() {
         return new Product(name, imageUrl, price, category);
-    }
-
-    public Product toEntity(final ProductRequest productRequest) {
-        return new Product(
-                productRequest.getName(),
-                productRequest.getImageUrl(),
-                productRequest.getPrice(),
-                productRequest.getCategory());
     }
 }

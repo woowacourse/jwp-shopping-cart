@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.domain.cart.CartProduct;
 import cart.domain.cart.CartRepository;
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Component
@@ -45,23 +47,28 @@ public class CartDao implements CartRepository {
     }
 
     @Override
-    public List<Product> findAllByUser(final User user) {
-        final String query1 = "SELECT c.product_id FROM cart c WHERE c.user_id = ?";
-        final List<Long> productIds = jdbcTemplate.query(query1,
-                (result, count) -> result.getLong("product_id"), user.getId());
+    public List<CartProduct> findAllByUser(final User user) {
+        final String query1 = "SELECT c.id, c.product_id FROM cart c WHERE c.user_id = ?";
+        final List<Map<String, Long>> cartProducts = jdbcTemplate.query(query1,
+                (result, count) -> {
+                    final Long id = result.getLong("id");
+                    final Long productId = result.getLong("product_id");
+                    return Map.of("id", id, "productId", productId);
+                }, user.getId());
 
         final String query2 = "SELECT p.id, p.name, p.image_url, p.price, p.category FROM product p WHERE p.id = ?";
-        List<Product> products = new ArrayList<>();
-        for (Long productId : productIds) {
-            final Product product = jdbcTemplate.queryForObject(query2, productRowMapper, productId);
-            products.add(product);
+        List<CartProduct> result = new ArrayList<>();
+        for (Map<String, Long> cartProduct : cartProducts) {
+            final Product product = jdbcTemplate.queryForObject(query2, productRowMapper, cartProduct.get("productId"));
+            result.add(new CartProduct(cartProduct.get("id"), product));
         }
-        return products;
+
+        return result;
     }
 
     @Override
-    public void delete(final User user, final Long productId) {
-        final String query = "DELETE FROM cart c WHERE c.product_id = ?";
-        jdbcTemplate.update(query, productId);
+    public void delete(final User user, final Long cartProductId) {
+        final String query = "DELETE FROM cart c WHERE c.user_id = ? and c.id = ?";
+        jdbcTemplate.update(query, user.getId(), cartProductId);
     }
 }

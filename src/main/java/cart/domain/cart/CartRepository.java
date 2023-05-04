@@ -1,6 +1,5 @@
 package cart.domain.cart;
 
-import cart.domain.product.Product;
 import cart.domain.user.User;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +10,7 @@ public interface CartRepository {
 
     Long insert(User user, Long productId);
 
-    List<Product> findAllByUser(User user);
+    List<CartProduct> findAllByUser(User user);
 
-    void delete(User user, Long productId);
+    void delete(User user, Long cartProductId);
 }

@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.product.Product;
+import cart.domain.cart.CartProduct;
 import cart.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,14 +40,14 @@ class CartDaoTest {
     @Test
     void findAllByUser() {
         // given, when
-        final List<Product> products = cartDao.findAllByUser(user);
+        final List<CartProduct> cartProducts = cartDao.findAllByUser(user);
 
         // then
         assertAll(
-                () -> assertThat(products.get(0).getId()).isEqualTo(1L),
-                () -> assertThat(products.get(0).getProductNameValue()).isEqualTo("치킨"),
-                () -> assertThat(products.get(1).getId()).isEqualTo(2L),
-                () -> assertThat(products.get(1).getProductNameValue()).isEqualTo("초밥")
+                () -> assertThat(cartProducts.get(0).getProductId()).isEqualTo(1L),
+                () -> assertThat(cartProducts.get(0).getProductNameValue()).isEqualTo("치킨"),
+                () -> assertThat(cartProducts.get(1).getProductId()).isEqualTo(2L),
+                () -> assertThat(cartProducts.get(1).getProductNameValue()).isEqualTo("초밥")
         );
     }
 
@@ -55,8 +55,8 @@ class CartDaoTest {
     @Test
     void delete() {
         // given
-        final List<Product> products = cartDao.findAllByUser(user);
-        final int originalSize = products.size();
+        final List<CartProduct> cartProducts = cartDao.findAllByUser(user);
+        final int originalSize = cartProducts.size();
 
         // when
         cartDao.delete(user, 1L);

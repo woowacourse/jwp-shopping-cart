@@ -1,5 +1,6 @@
 package cart.web.controller.cart;
 
+import cart.domain.cart.CartProduct;
 import cart.domain.cart.CartService;
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
@@ -59,7 +60,12 @@ class CartRestControllerTest {
                 new Product(1L, "치킨", "chickenUrl", 30000, ProductCategory.KOREAN),
                 new Product(2L, "초밥", "chobobUrl", 20000, ProductCategory.JAPANESE)
         );
-        when(cartService.getProducts(any())).thenReturn(products);
+        final List<CartProduct> cartProducts = List.of(
+                new CartProduct(1L, products.get(0)),
+                new CartProduct(2L, products.get(1))
+        );
+
+        when(cartService.getCartProducts(any())).thenReturn(cartProducts);
 
         // when
         mockMvc.perform(get("/cart/all"))

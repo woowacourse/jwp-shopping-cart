@@ -1,6 +1,5 @@
 package cart.domain.cart;
 
-import cart.domain.product.Product;
 import cart.domain.user.User;
 import cart.domain.user.UserRepository;
 import cart.exception.ErrorCode;
@@ -32,17 +31,17 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> getProducts(final UserRequest userRequest) {
+    public List<CartProduct> getCartProducts(final UserRequest userRequest) {
         final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getEmail());
         final User user = userOptional.orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
 
         return cartRepository.findAllByUser(user);
     }
 
-    public void delete(final UserRequest userRequest, final Long productId) {
+    public void delete(final UserRequest userRequest, final Long cartProductId) {
         final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getEmail());
         final User user = userOptional.orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
 
-        cartRepository.delete(user, productId);
+        cartRepository.delete(user, cartProductId);
     }
 }

@@ -1,9 +1,9 @@
 package cart.web.controller.cart;
 
+import cart.domain.cart.CartProduct;
 import cart.domain.cart.CartService;
-import cart.domain.product.Product;
 import cart.web.controller.auth.BasicAuthorizationExtractor;
-import cart.web.controller.product.dto.ProductResponse;
+import cart.web.controller.cart.dto.CartResponse;
 import cart.web.controller.user.dto.UserRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,25 +39,25 @@ public class CartRestController {
         return ResponseEntity.created(URI.create("/cart/" + addedProductId)).build();
     }
 
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/{cartProductId}")
     public ResponseEntity<Void> deleteProduct(final HttpServletRequest request,
-                                              @PathVariable Long productId) {
+                                              @PathVariable Long cartProductId) {
         final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor();
         final UserRequest userRequest = extractor.extract(request);
 
-        cartService.delete(userRequest, productId);
+        cartService.delete(userRequest, cartProductId);
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ProductResponse>> getProducts(final HttpServletRequest request) {
+    public ResponseEntity<List<CartResponse>> getProducts(final HttpServletRequest request) {
         final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor();
         final UserRequest userRequest = extractor.extract(request);
 
-        final List<Product> products = cartService.getProducts(userRequest);
-        final List<ProductResponse> productResponses = products.stream()
-                .map(product -> new ProductResponse(product.getId(), product.getProductNameValue(),
+        final List<CartProduct> cartProducts = cartService.getCartProducts(userRequest);
+        final List<CartResponse> productResponses = cartProducts.stream()
+                .map(product -> new CartResponse(product.getCartProductId(), product.getProductId(), product.getProductNameValue(),
                         product.getImageUrlValue(), product.getPriceValue(), product.getCategory()))
                 .collect(Collectors.toList());
 

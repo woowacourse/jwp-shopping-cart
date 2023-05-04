@@ -49,7 +49,7 @@
                             <img src="${cartItem.imageUrl}" alt="imageUrl"/> <!-- 상품 이미지 -->
                             <div class="cart-item-name">${cartItem.name}</div> <!-- 상품 이름 -->
                             <div class="cart-item-price">${cartItem.price}원</div> <!-- 상품 가격 -->
-                            <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
+                            <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.cartProductId})">Delete</button>
                           </div>
                         </div>
                       `;
