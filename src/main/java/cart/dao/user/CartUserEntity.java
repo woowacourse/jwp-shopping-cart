@@ -1,5 +1,7 @@
 package cart.dao.user;
 
+import cart.domain.user.CartUser;
+import cart.domain.user.UserEmail;
 import java.util.Objects;
 
 public class CartUserEntity {
@@ -17,6 +19,13 @@ public class CartUserEntity {
         this.id = null;
         this.email = email;
         this.cartPassword = cartPassword;
+    }
+
+    public CartUser toCartUser() {
+        return new CartUser(
+                UserEmail.from(email),
+                cartPassword
+        );
     }
 
     @Override

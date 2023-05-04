@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
@@ -13,10 +15,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert simpleInsert;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    public ProductDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.simpleInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("product_id");
@@ -68,6 +72,13 @@ public class ProductDao {
         String findByProductQuery = "SELECT * FROM product WHERE product_id = ?";
 
         return jdbcTemplate.queryForObject(findByProductQuery, (rs, rowNum) -> toProductEntity(rs), id);
+    }
+
+    public List<ProductEntity> findById(List<Long> ids) {
+        String findProducts = "SELECT * FROM product WHERE product_id IN (:productIds)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource("productIds", ids);
+
+        return namedParameterJdbcTemplate.query(findProducts, parameters, (rs, rowNum) -> toProductEntity(rs));
     }
 
     private ProductEntity toProductEntity(ResultSet resultSet) throws SQLException {

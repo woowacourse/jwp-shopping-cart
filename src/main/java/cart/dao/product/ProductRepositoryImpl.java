@@ -1,11 +1,6 @@
 package cart.dao.product;
 
-import cart.domain.product.ImageUrl;
 import cart.domain.product.Product;
-import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductId;
-import cart.domain.product.ProductName;
-import cart.domain.product.ProductPrice;
 import cart.domain.product.ProductRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,18 +20,8 @@ public class ProductRepositoryImpl implements ProductRepository {
         List<ProductEntity> allProductEntities = productDao.findAll();
 
         return allProductEntities.stream()
-                .map(this::toProduct)
+                .map(ProductEntity::toProduct)
                 .collect(Collectors.toList());
-    }
-
-    private Product toProduct(ProductEntity entity) {
-        return new Product(
-                ProductName.from(entity.getName()),
-                ProductPrice.from(entity.getPrice()),
-                ProductCategory.valueOf(entity.getCategory()),
-                ImageUrl.from(entity.getImageUrl()),
-                ProductId.from(entity.getId())
-        );
     }
 
     @Override

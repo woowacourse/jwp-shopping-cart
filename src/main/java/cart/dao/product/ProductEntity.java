@@ -1,5 +1,11 @@
 package cart.dao.product;
 
+import cart.domain.product.ImageUrl;
+import cart.domain.product.Product;
+import cart.domain.product.ProductCategory;
+import cart.domain.product.ProductId;
+import cart.domain.product.ProductName;
+import cart.domain.product.ProductPrice;
 import java.util.Objects;
 
 public class ProductEntity {
@@ -24,6 +30,24 @@ public class ProductEntity {
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
+    }
+
+    public ProductEntity(Product product) {
+        this.id = null;
+        this.name = product.getName();
+        this.price = product.getPrice().intValue();
+        this.category = product.getCategory().name();
+        this.imageUrl = product.getImageUrl();
+    }
+
+    public Product toProduct() {
+        return new Product(
+                ProductName.from(this.name),
+                ProductPrice.from(this.price),
+                ProductCategory.valueOf(this.category),
+                ImageUrl.from(this.imageUrl),
+                ProductId.from(this.id)
+        );
     }
 
     @Override
