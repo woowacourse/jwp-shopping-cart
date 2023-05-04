@@ -1,9 +1,10 @@
 package cart.dao.user;
 
-import cart.domain.user.UserRepository;
 import cart.domain.user.Email;
 import cart.domain.user.Password;
 import cart.domain.user.User;
+import cart.domain.user.UserRepository;
+import cart.exception.GlobalException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -47,5 +48,18 @@ public class UserRepositoryImpl implements UserRepository {
                 Password.from(userEntity.getPassword()),
                 userEntity.getId()
         );
+    }
+
+    @Override
+    public User findById(Long id) {
+        UserEntity userEntity = userDao.findById(id)
+                .orElseThrow(() -> new GlobalException("존재하지 않는 회원입니다."));
+
+        return toUser(userEntity);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        userDao.deleteById(id);
     }
 }
