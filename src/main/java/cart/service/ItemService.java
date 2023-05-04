@@ -49,14 +49,14 @@ public class ItemService {
         validateItemId(updatedRow);
     }
 
-    private void validateItemId(int updatedRow) {
-        if (isInvalidItemId(updatedRow)) {
+    private void validateItemId(int changedRow) {
+        if (isInvalidItemId(changedRow)) {
             throw new ServiceIllegalArgumentException(INVALID_ITEM_ID_MESSAGE);
         }
     }
 
-    private boolean isInvalidItemId(int updatedRow) {
-        return updatedRow == ZERO_AFFECTED_ROW;
+    private boolean isInvalidItemId(int changedRow) {
+        return changedRow == ZERO_AFFECTED_ROW;
     }
 
     public void deleteItem(Long itemId) {

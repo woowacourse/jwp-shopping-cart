@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
 
+    private static final int ZERO_AFFECTED_ROW = 0;
+    private static final String INVALID_ITEM_ID_MESSAGE = "상품 정보를 다시 입력해주세요.";
+
     private final CartDao cartDao;
     private final MemberDao memberDao;
     private final ItemDao itemDao;
@@ -59,5 +62,21 @@ public class CartService {
                 .map(cart -> itemDao.findById(cart.getItemId()))
                 .map(item -> new ItemResponse(item.getId(), item.getName(), item.getImageUrl(), item.getPrice()))
                 .collect(Collectors.toList());
+    }
+
+    public void deleteItemByItemId(Long itemId) {
+        int deleteRow = cartDao.delete(itemId);
+        validateItemId(deleteRow);
+    }
+
+
+    private void validateItemId(int changedRow) {
+        if (isInvalidItemId(changedRow)) {
+            throw new ServiceIllegalArgumentException(INVALID_ITEM_ID_MESSAGE);
+        }
+    }
+
+    private boolean isInvalidItemId(int changedRow) {
+        return changedRow == ZERO_AFFECTED_ROW;
     }
 }
