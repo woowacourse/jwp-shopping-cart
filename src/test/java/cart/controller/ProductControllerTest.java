@@ -57,7 +57,7 @@ class ProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson).log().all()
                     .when()
-                    .post("/admin/products")
+                    .post("/products")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_CREATED)
                     .contentType(ContentType.HTML);
@@ -74,7 +74,7 @@ class ProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .post("/admin/products")
+                    .post("/products")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -89,7 +89,7 @@ class ProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .post("/admin/products")
+                    .post("/products")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -105,7 +105,7 @@ class ProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .post("/admin/products")
+                    .post("/products")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -124,7 +124,7 @@ class ProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put("/admin/products/1")
+                    .put("/products/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_CREATED)
                     .contentType(ContentType.HTML);
@@ -141,7 +141,7 @@ class ProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put("/admin/products/1")
+                    .put("/products/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -156,7 +156,7 @@ class ProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put("/admin/products/1")
+                    .put("/products/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -172,7 +172,7 @@ class ProductControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put("/admin/products/1")
+                    .put("/products/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -183,7 +183,7 @@ class ProductControllerTest {
     void shouldResponseHtmlWithStatusOkWhenRequestDeleteToAdminProductId() {
         given().log().all()
                 .when()
-                .delete("/admin/products/1")
+                .delete("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.HTML);
