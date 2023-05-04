@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.CartDao;
+import cart.dao.CartProductDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.domain.Cart;
+import cart.domain.CartProduct;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.CartSearchResponse;
+import cart.dto.CartProductSearchResponse;
 import cart.dto.ProductDto;
 import cart.exception.ProductNotFoundException;
 import java.util.List;
@@ -26,13 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @Transactional
 @SpringBootTest
-public class CartServiceTest {
+public class CartProductServiceTest {
 
     @Autowired
-    private CartService cartService;
+    private CartProductService cartProductService;
 
     @Autowired
-    private CartDao cartDao;
+    private CartProductDao cartProductDao;
 
     @Autowired
     private ProductDao productDao;
@@ -45,13 +45,13 @@ public class CartServiceTest {
         // given
         final Long productId = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
         final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        final Cart cart = new Cart(memberId, productId);
+        final CartProduct cartProduct = new CartProduct(memberId, productId);
 
         // when
-        final Long id = cartDao.saveAndGetId(cart);
+        final Long id = cartProductDao.saveAndGetId(cartProduct);
 
         // then
-        final List<Product> result = cartDao.findAllProductByMemberId(memberId);
+        final List<Product> result = cartProductDao.findAllProductByMemberId(memberId);
         assertAll(
                 () -> assertThat(result).hasSize(1),
                 () -> assertThat(id).isPositive()
@@ -64,11 +64,11 @@ public class CartServiceTest {
         final Long productId1 = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
         final Long productId2 = productDao.saveAndGetId(new Product("pizza2", "pizza2.jpg", 18900L));
         final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        cartDao.saveAndGetId(new Cart(memberId, productId1));
-        cartDao.saveAndGetId(new Cart(memberId, productId2));
+        cartProductDao.saveAndGetId(new CartProduct(memberId, productId1));
+        cartProductDao.saveAndGetId(new CartProduct(memberId, productId2));
 
         // when
-        final CartSearchResponse result = cartService.findAll(memberId);
+        final CartProductSearchResponse result = cartProductService.findAll(memberId);
 
         // then
         assertThat(result.getProducts()).usingRecursiveComparison().isEqualTo(List.of(
@@ -82,19 +82,19 @@ public class CartServiceTest {
         // given
         final Long productId = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
         final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        cartDao.saveAndGetId(new Cart(memberId, productId));
+        cartProductDao.saveAndGetId(new CartProduct(memberId, productId));
 
         // when
-        cartService.delete(productId, memberId);
+        cartProductService.delete(productId, memberId);
 
         // then
-        assertThat(cartDao.findAllProductByMemberId(memberId)).isEmpty();
+        assertThat(cartProductDao.findAllProductByMemberId(memberId)).isEmpty();
     }
 
     @Test
     void 삭제에_실패하는_경우_ProductNotFoundException_을_던진다() {
         // expect
-        assertThatThrownBy(() -> cartService.delete(MAX_VALUE, MAX_VALUE))
+        assertThatThrownBy(() -> cartProductService.delete(MAX_VALUE, MAX_VALUE))
                 .isInstanceOf(ProductNotFoundException.class)
                 .hasMessage("상품을 찾을 수 없습니다.");
     }

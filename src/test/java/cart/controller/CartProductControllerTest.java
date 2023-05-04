@@ -11,13 +11,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dao.CartDao;
+import cart.dao.CartProductDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.domain.Cart;
+import cart.domain.CartProduct;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.CartSaveRequest;
+import cart.dto.CartProductSaveRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Base64;
 import java.util.List;
@@ -35,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @Transactional
 @SpringBootTest
-public class CartControllerTest {
+public class CartProductControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,19 +50,19 @@ public class CartControllerTest {
     private MemberDao memberDao;
 
     @Autowired
-    private CartDao cartDao;
+    private CartProductDao cartProductDao;
 
     @Test
     void 장바구니에_상품을_추가한다() throws Exception {
         // given
         final Long productId = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
         final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        final CartSaveRequest cartSaveRequest = new CartSaveRequest(productId);
-        final String request = objectMapper.writeValueAsString(cartSaveRequest);
+        final CartProductSaveRequest cartProductSaveRequest = new CartProductSaveRequest(productId);
+        final String request = objectMapper.writeValueAsString(cartProductSaveRequest);
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // when
-        mockMvc.perform(post("/carts")
+        mockMvc.perform(post("/cart-products")
                         .header("Authorization", header)
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -71,7 +71,7 @@ public class CartControllerTest {
                 .andReturn();
 
         // then
-        final List<Product> result = cartDao.findAllProductByMemberId(memberId);
+        final List<Product> result = cartProductDao.findAllProductByMemberId(memberId);
         assertAll(
                 () -> assertThat(result).hasSize(1),
                 () -> assertThat(result.get(0).getName()).isEqualTo("pizza1"),
@@ -86,12 +86,12 @@ public class CartControllerTest {
         final Long productId1 = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
         final Long productId2 = productDao.saveAndGetId(new Product("pizza2", "pizza2.jpg", 18900L));
         final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        cartDao.saveAndGetId(new Cart(memberId, productId1));
-        cartDao.saveAndGetId(new Cart(memberId, productId2));
+        cartProductDao.saveAndGetId(new CartProduct(memberId, productId1));
+        cartProductDao.saveAndGetId(new CartProduct(memberId, productId2));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // expect
-        mockMvc.perform(get("/carts")
+        mockMvc.perform(get("/cart-products")
                         .header("Authorization", header)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -110,17 +110,17 @@ public class CartControllerTest {
         // given
         final Long productId = productDao.saveAndGetId(new Product("pizza1", "pizza1.jpg", 8900L));
         final Long memberId = memberDao.saveAndGetId(new Member("pizza@pizza.com", "password"));
-        cartDao.saveAndGetId(new Cart(memberId, productId));
+        cartProductDao.saveAndGetId(new CartProduct(memberId, productId));
         final String header = "Basic " + new String(Base64.getEncoder().encode("pizza@pizza.com:password".getBytes()));
 
         // when
-        mockMvc.perform(delete("/carts/" + productId)
+        mockMvc.perform(delete("/cart-products/" + productId)
                         .header("Authorization", header)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
         // then
-        assertThat(cartDao.findAllProductByMemberId(memberId)).isEmpty();
+        assertThat(cartProductDao.findAllProductByMemberId(memberId)).isEmpty();
     }
 }

@@ -2,7 +2,7 @@ package cart.domain;
 
 import java.time.LocalDateTime;
 
-public class Cart {
+public class CartProduct {
 
     private final Long id;
     private final Long memberId;
@@ -10,11 +10,11 @@ public class Cart {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public Cart(final Long memberId, final Long productId) {
+    public CartProduct(final Long memberId, final Long productId) {
         this(null, memberId, productId, null, null);
     }
 
-    public Cart(
+    public CartProduct(
             final Long id,
             final Long memberId,
             final Long productId,

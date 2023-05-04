@@ -3,7 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Cart;
+import cart.domain.CartProduct;
 import cart.domain.Member;
 import cart.domain.Product;
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @JdbcTest
-class CartDaoTest {
+class CartProductDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -30,11 +30,11 @@ class CartDaoTest {
 
     private SimpleJdbcInsert productJdbcInsert;
 
-    private CartDao cartDao;
+    private CartProductDao cartProductDao;
 
     @BeforeEach
     void setUp() {
-        cartDao = new CartDao(jdbcTemplate);
+        cartProductDao = new CartProductDao(jdbcTemplate);
         memberJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("member")
                 .usingColumns("email", "password")
@@ -50,13 +50,13 @@ class CartDaoTest {
         // given
         final Long memberId = insertMember("pizza@pizza.com", "password");
         final Long productId = insertProduct("치즈피자", "1.jpg", 8900L);
-        final Cart cart = new Cart(memberId, productId);
+        final CartProduct cartProduct = new CartProduct(memberId, productId);
 
         // when
-        final Long id = cartDao.saveAndGetId(cart);
+        final Long id = cartProductDao.saveAndGetId(cartProduct);
 
         // then
-        final List<Product> result = cartDao.findAllProductByMemberId(memberId);
+        final List<Product> result = cartProductDao.findAllProductByMemberId(memberId);
         assertAll(
                 () -> assertThat(result).hasSize(1),
                 () -> assertThat(id).isPositive()
@@ -83,12 +83,12 @@ class CartDaoTest {
         final Long productId1 = insertProduct("치즈피자", "1.jpg", 8900L);
         final Long productId2 = insertProduct("치즈피자2", "2.jpg", 18900L);
         final Long productId3 = insertProduct("치즈피자3", "3.jpg", 18900L);
-        cartDao.saveAndGetId(new Cart(memberId1, productId1));
-        cartDao.saveAndGetId(new Cart(memberId1, productId2));
-        cartDao.saveAndGetId(new Cart(memberId2, productId3));
+        cartProductDao.saveAndGetId(new CartProduct(memberId1, productId1));
+        cartProductDao.saveAndGetId(new CartProduct(memberId1, productId2));
+        cartProductDao.saveAndGetId(new CartProduct(memberId2, productId3));
 
         // when
-        final List<Product> result = cartDao.findAllProductByMemberId(memberId1);
+        final List<Product> result = cartProductDao.findAllProductByMemberId(memberId1);
 
         // then
         assertThat(result).usingRecursiveComparison().ignoringFieldsOfTypes(LocalDateTime.class).isEqualTo(List.of(
@@ -102,14 +102,14 @@ class CartDaoTest {
         // given
         final Long memberId = insertMember("pizza1@pizza.com", "password1");
         final Long productId = insertProduct("치즈피자", "1.jpg", 8900L);
-        cartDao.saveAndGetId(new Cart(memberId, productId));
+        cartProductDao.saveAndGetId(new CartProduct(memberId, productId));
 
         // when
-        final int result = cartDao.delete(productId, memberId);
+        final int result = cartProductDao.delete(productId, memberId);
 
         // then
         assertAll(
-                () -> assertThat(cartDao.findAllProductByMemberId(memberId)).isEmpty(),
+                () -> assertThat(cartProductDao.findAllProductByMemberId(memberId)).isEmpty(),
                 () -> assertThat(result).isOne()
         );
     }

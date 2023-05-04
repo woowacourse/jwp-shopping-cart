@@ -2,11 +2,11 @@ package cart.dto;
 
 import java.util.List;
 
-public class CartSearchResponse {
+public class CartProductSearchResponse {
 
     private final List<ProductDto> products;
 
-    public CartSearchResponse(final List<ProductDto> products) {
+    public CartProductSearchResponse(final List<ProductDto> products) {
         this.products = products;
     }
 
