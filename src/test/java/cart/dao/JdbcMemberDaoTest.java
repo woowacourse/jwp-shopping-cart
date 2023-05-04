@@ -91,8 +91,12 @@ class JdbcMemberDaoTest {
         List<Member> members = memberDao.findAll();
         assertAll(
                 () -> assertThat(members).hasSize(2),
-                () -> assertThat(members.get(0)).usingRecursiveComparison().isEqualTo(MEMBER1),
-                () -> assertThat(members.get(1)).usingRecursiveComparison().isEqualTo(MEMBER2)
+                () -> assertThat(members.get(0))
+                        .usingRecursiveComparison()
+                        .isEqualTo(MEMBER1),
+                () -> assertThat(members.get(1))
+                        .usingRecursiveComparison()
+                        .isEqualTo(MEMBER2)
         );
     }
 }

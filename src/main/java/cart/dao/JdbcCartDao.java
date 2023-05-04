@@ -26,10 +26,10 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
-    public List<Cart> findByMemberId(Long id) {
-        String sql = "select id, member_id, item_id where member_id = ?";
+    public List<Cart> findAllByMemberId(Long id) {
+        String sql = "select id, member_id, item_id from cart where member_id = ?";
 
-        return jdbcTemplate.query(sql, mapRow());
+        return jdbcTemplate.query(sql, mapRow(), id);
     }
 
     private RowMapper<Cart> mapRow() {

@@ -9,5 +9,5 @@ public interface CartDao {
 
     void save(PutCart putCart);
 
-    List<Cart> findByMemberId(Long id);
+    List<Cart> findAllByMemberId(Long id);
 }
