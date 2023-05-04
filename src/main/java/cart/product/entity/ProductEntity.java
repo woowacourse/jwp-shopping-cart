@@ -1,5 +1,7 @@
 package cart.product.entity;
 
+import java.util.Objects;
+
 public class ProductEntity {
     private final Integer id;
     private final String name;
@@ -34,5 +36,22 @@ public class ProductEntity {
 
     public String getImage() {
         return image;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final ProductEntity that = (ProductEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
