@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.dao.product;
 
 import cart.domain.product.ImageUrl;
 import cart.domain.product.Product;
