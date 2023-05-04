@@ -93,4 +93,12 @@ public class CartService {
                 .build();
         cartDao.add(cartEntity);
     }
+
+    public void deleteProductFromCart(final int memberId, final int productId) {
+        final CartEntity cartEntity = new CartEntity.Builder()
+                .memberId(memberId)
+                .productId(productId)
+                .build();
+        cartDao.deleteProduct(cartEntity);
+    }
 }

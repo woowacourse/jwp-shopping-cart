@@ -65,4 +65,12 @@ public class CartApiController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<Void> deleteProductFromCart(@PathVariable final int id, final HttpServletRequest request) {
+        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+        final int memberId = memberService.findIdByAuthInfo(authInfo);
+        cartService.deleteProductFromCart(memberId, id);
+        return ResponseEntity.ok().build();
+    }
+
 }

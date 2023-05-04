@@ -10,7 +10,8 @@ public class CartEntity {
         this.productId = productId;
     }
 
-    public int getProductId() {현
+    public int getProductId() {
+        return productId;
     }
 
     public int getMemberId() {

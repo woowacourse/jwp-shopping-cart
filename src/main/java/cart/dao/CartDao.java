@@ -20,17 +20,17 @@ public class CartDao {
     }
 
     public List<ProductEntity> findProductsByMemberId(final int memberId) {
-        final String query = "SELECT name, price, image " +
+        final String query = "SELECT product_id, name, price, image " +
                 "FROM cart " +
                 "JOIN product ON cart.product_id = product.id " +
                 "JOIN member ON cart.member_id = member.id " +
                 "WHERE member_id = ?";
-        List<ProductEntity> productEntities = jdbcTemplate.query(query, getProductRowMapper(), memberId);
-        return productEntities;
+        return jdbcTemplate.query(query, getProductRowMapper(), memberId);
     }
 
     private RowMapper<ProductEntity> getProductRowMapper() {
         return (resultSet, rowNum) -> new ProductEntity.Builder()
+                .id(resultSet.getLong("product_id"))
                 .name(resultSet.getString("name"))
                 .price(resultSet.getInt("price"))
                 .image(resultSet.getString("image"))
@@ -40,6 +40,11 @@ public class CartDao {
     public void add(final CartEntity cartEntity) {
         final String query = "INSERT INTO CART (member_id, product_id) VALUES (?, ?)";
         // TODO : 키홀더 추가해서 제대로 추가되었는지 검증
+        jdbcTemplate.update(query, cartEntity.getMemberId(), cartEntity.getProductId());
+    }
+
+    public void deleteProduct(final CartEntity cartEntity) {
+        final String query = "DELETE FROM CART WHERE member_id = ? AND product_id = ?";
         jdbcTemplate.update(query, cartEntity.getMemberId(), cartEntity.getProductId());
     }
 }
