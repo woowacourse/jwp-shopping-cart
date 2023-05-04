@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/admin/products")
 public class ProductResourceController {
 
     private final ProductService productService;
@@ -24,7 +26,7 @@ public class ProductResourceController {
         this.productService = productService;
     }
 
-    @PostMapping("/admin/products")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public ProductResponse createProduct(@RequestBody @Valid final ProductRequest productRequest) {
         final Product product = new Product(
@@ -36,7 +38,7 @@ public class ProductResourceController {
         return new ProductResponse(result.getId(), result.getName(), result.getPrice(), result.getImageUrl());
     }
 
-    @PutMapping("/admin/products/{id}")
+    @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public ProductResponse updateProduct(@PathVariable final long id,
                                          @RequestBody @Valid final ProductRequest productRequest) {
@@ -49,7 +51,7 @@ public class ProductResourceController {
         return new ProductResponse(result.getId(), result.getName(), result.getPrice(), result.getImageUrl());
     }
 
-    @DeleteMapping("/admin/products/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable final long id) {
         productService.deleteProduct(id);

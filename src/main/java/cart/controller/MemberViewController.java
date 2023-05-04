@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/settings")
 public class MemberViewController {
 
     private final MemberService memberService;
@@ -16,7 +18,7 @@ public class MemberViewController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/settings")
+    @GetMapping
     public String settingsPage(final Model model) {
         final List<MemberEntity> members = memberService.findAll();
 
