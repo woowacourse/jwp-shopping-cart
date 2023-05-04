@@ -33,17 +33,18 @@ class ProductsApiAcceptanceTest {
     @LocalServerPort
     private int port;
 
+    private final SimpleJdbcInsert simpleJdbcInsertProducts;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert simpleJdbcInsert;
+    public ProductsApiAcceptanceTest(final JdbcTemplate jdbcTemplate) {
+        this.simpleJdbcInsertProducts = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("products")
+                .usingGeneratedKeyColumns("id");
+    }
 
     @BeforeEach
     void setPort() {
         RestAssured.port = port;
-
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("products")
-                .usingGeneratedKeyColumns("id");
     }
 
     @Test
@@ -71,11 +72,11 @@ class ProductsApiAcceptanceTest {
 
     private static Stream<Arguments> invalidParameterProvider() {
         return Stream.of(
-                Arguments.of("이름 누락",new ProductRequest(null, PRICE, IMAGE), "name 필드가 있어야 합니다."),
-                Arguments.of("금액 누락",new ProductRequest(NAME, null, IMAGE), "price 필드가 있어야 합니다."),
-                Arguments.of("금액 음수",new ProductRequest(NAME, -1000, IMAGE), "price는 음수가 될 수 없습니다."),
-                Arguments.of("이미지 누락",new ProductRequest(NAME, PRICE, null), "imageUrl 필드가 있어야 합니다."),
-                Arguments.of("이미지 주소 형식 오류",new ProductRequest(NAME, PRICE, "wrongImageSource"), "imageUrl형식에 맞지 않습니다.")
+                Arguments.of("이름 누락", new ProductRequest(null, PRICE, IMAGE), "name 필드가 있어야 합니다."),
+                Arguments.of("금액 누락", new ProductRequest(NAME, null, IMAGE), "price 필드가 있어야 합니다."),
+                Arguments.of("금액 음수", new ProductRequest(NAME, -1000, IMAGE), "price는 음수가 될 수 없습니다."),
+                Arguments.of("이미지 누락", new ProductRequest(NAME, PRICE, null), "imageUrl 필드가 있어야 합니다."),
+                Arguments.of("이미지 주소 형식 오류", new ProductRequest(NAME, PRICE, "wrongImageSource"), "imageUrl형식에 맞지 않습니다.")
         );
     }
 
@@ -97,7 +98,7 @@ class ProductsApiAcceptanceTest {
                 .addValue("product_name", NAME)
                 .addValue("product_price", PRICE)
                 .addValue("product_image", IMAGE);
-        return simpleJdbcInsert.executeAndReturnKey(parameterMap).longValue();
+        return simpleJdbcInsertProducts.executeAndReturnKey(parameterMap).longValue();
     }
 
     @ParameterizedTest(name = "상품 정보 변경 시 {0} 실패 테스트")
@@ -116,7 +117,7 @@ class ProductsApiAcceptanceTest {
 
     @Test
     @DisplayName("없는 상품 정보 변경 시 실패 테스트")
-    void nonProductUpdateFail_test(){
+    void nonProductUpdateFail_test() {
         final long impossibleId = 0;
 
         RestAssured.given().log().all()
@@ -130,7 +131,7 @@ class ProductsApiAcceptanceTest {
 
     @Test
     @DisplayName("상품 제거 성공 테스트")
-    void deleteProductSuccess_test(){
+    void deleteProductSuccess_test() {
         final long id = insertTestData();
 
         RestAssured.given().log().all()
