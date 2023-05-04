@@ -36,7 +36,7 @@ class ProductRepositoryTest {
 		final Product product = new Product("사과", 10000, "사과.png");
 
 		// when
-		productRepository.save(product);
+		productRepository.insert(product);
 		final List<Product> allProducts = productRepository.findAll();
 
 		// then
@@ -51,7 +51,7 @@ class ProductRepositoryTest {
 		final Product product = new Product("사과", 10000, "사과.png");
 
 		// when
-		final ProductId productId = productRepository.save(product);
+		final ProductId productId = productRepository.insert(product);
 		final int count = productRepository.findAll().size();
 
 		// then
@@ -64,7 +64,7 @@ class ProductRepositoryTest {
 		// given
 		final Product product = new Product("사과", 10000, "사과.png");
 
-		productRepository.save(product);
+		productRepository.insert(product);
 
 		// when
 		final boolean isDelete = productRepository.deleteByProductId(ProductId.from(1L));
@@ -79,7 +79,7 @@ class ProductRepositoryTest {
 		// given
 		final Product product = new Product("사과", 10000, "사과.png");
 
-		productRepository.save(product);
+		productRepository.insert(product);
 
 		// when
 		final ProductId productId = productRepository.updateByProductId(ProductId.from(1L), product);

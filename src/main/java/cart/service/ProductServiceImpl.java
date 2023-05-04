@@ -24,7 +24,7 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional
 	@Override
 	public ProductId save(final ProductUpdateRequest request) {
-		return productRepository.save(new Product(request.getName(), request.getPrice(), request.getImage()));
+		return productRepository.insert(new Product(request.getName(), request.getPrice(), request.getImage()));
 	}
 
 	public List<ProductResponse> findAll() {

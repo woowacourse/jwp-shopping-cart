@@ -30,7 +30,7 @@ class ProductServiceImplTest {
 	@Test
 	void save() {
 		// given
-		given(productRepository.save(any())).willReturn(ProductId.from(1L));
+		given(productRepository.insert(any())).willReturn(ProductId.from(1L));
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("KIARA", 1000, "이미지");
@@ -46,7 +46,7 @@ class ProductServiceImplTest {
 		// given
 		final Product product = new Product(ProductId.from(1L), "사과", 1000, "사과이미지");
 
-		given(productRepository.save(product)).willReturn(ProductId.from(1L));
+		given(productRepository.insert(product)).willReturn(ProductId.from(1L));
 		given(productRepository.findAll()).willReturn(List.of(product));
 
 		final ProductUpdateRequest request = new ProductUpdateRequest("사과", 1000, "사과이미지");

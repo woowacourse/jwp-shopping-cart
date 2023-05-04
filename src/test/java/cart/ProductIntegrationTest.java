@@ -62,7 +62,7 @@ public class ProductIntegrationTest {
 	@Test
 	public void deleteProduct() {
 		final Product product = new Product("apple", 1000, "사과이미지");
-		final ProductId productId = repository.save(product);
+		final ProductId productId = repository.insert(product);
 
 		final ExtractableResponse<Response> result = given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -77,7 +77,7 @@ public class ProductIntegrationTest {
 
 	@Test
 	public void updateProduct() {
-		final ProductId oldProductId = repository.save(new Product("apple", 1000, "사과이미지"));
+		final ProductId oldProductId = repository.insert(new Product("apple", 1000, "사과이미지"));
 
 		final ProductUpdateRequest request = new ProductUpdateRequest("orange", 1500, "오렌지이미지");
 

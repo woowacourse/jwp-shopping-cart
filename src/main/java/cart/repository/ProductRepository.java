@@ -37,7 +37,7 @@ public class ProductRepository {
 			.usingGeneratedKeyColumns("id");
 	}
 
-	public ProductId save(final Product product) {
+	public ProductId insert(final Product product) {
 		SqlParameterSource params = new BeanPropertySqlParameterSource(product);
 		long id = jdbcInsert.executeAndReturnKey(params).longValue();
 		return ProductId.from(id);
