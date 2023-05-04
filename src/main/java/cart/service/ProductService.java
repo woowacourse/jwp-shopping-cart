@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.domain.Product;
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
+import cart.dto.ProductCreateRequest;
+import cart.dto.ProductEditRequest;
 import cart.dto.ProductsReadResponse;
 import cart.exception.ProductNotFoundException;
 import cart.repository.ProductRepository;
@@ -26,16 +26,16 @@ public class ProductService {
     }
 
     @Transactional
-    public void createProduct(final ProductCreateRequestDto productCreateRequestDto) {
-        Product product = Product.from(productCreateRequestDto.getName(), productCreateRequestDto.getImgUrl(), productCreateRequestDto.getPrice());
+    public void createProduct(final ProductCreateRequest productCreateRequest) {
+        Product product = Product.from(productCreateRequest.getName(), productCreateRequest.getImgUrl(), productCreateRequest.getPrice());
 
         productRepository.add(product);
     }
 
     @Transactional
-    public void editProduct(final Long id, final ProductEditRequestDto productEditRequestDto) {
+    public void editProduct(final Long id, final ProductEditRequest productEditRequest) {
         Product product = findProductById(id);
-        product.edit(productEditRequestDto.getName(), productEditRequestDto.getImgUrl(), productEditRequestDto.getPrice());
+        product.edit(productEditRequest.getName(), productEditRequest.getImgUrl(), productEditRequest.getPrice());
 
         productRepository.update(product);
     }

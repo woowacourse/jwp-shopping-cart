@@ -1,15 +1,15 @@
 package cart.factory;
 
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
+import cart.dto.ProductCreateRequest;
+import cart.dto.ProductEditRequest;
 
 public class ProductRequestDtoFactory {
 
-    public static ProductEditRequestDto createProductEditRequest() {
-        return new ProductEditRequestDto("치킨 수정", 10000, "urlEdit");
+    public static ProductEditRequest createProductEditRequest() {
+        return new ProductEditRequest("치킨 수정", 10000, "urlEdit");
     }
 
-    public static ProductCreateRequestDto createProductCreateRequest() {
-        return new ProductCreateRequestDto("치킨", 10000, "url");
+    public static ProductCreateRequest createProductCreateRequest() {
+        return new ProductCreateRequest("치킨", 10000, "url");
     }
 }

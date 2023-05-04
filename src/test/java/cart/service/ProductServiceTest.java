@@ -8,8 +8,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
+import cart.dto.ProductCreateRequest;
+import cart.dto.ProductEditRequest;
 import cart.dto.ProductsReadResponse;
 import cart.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -52,7 +52,7 @@ public class ProductServiceTest {
     @DisplayName("상품을 저장한다.")
     void crete_product_success() {
         // given
-        ProductCreateRequestDto req = createProductCreateRequest();
+        ProductCreateRequest req = createProductCreateRequest();
 
         // when
         productService.createProduct(req);
@@ -72,7 +72,7 @@ public class ProductServiceTest {
         // given
         Product product = createProduct();
         productRepository.add(product);
-        ProductEditRequestDto req = createProductEditRequest();
+        ProductEditRequest req = createProductEditRequest();
 
         // when
         productService.editProduct(product.getId(), req);

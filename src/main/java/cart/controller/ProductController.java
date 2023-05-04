@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.dto.ApiDataResponse;
 import cart.dto.ApiResponse;
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
+import cart.dto.ProductCreateRequest;
+import cart.dto.ProductEditRequest;
 import cart.dto.ProductsReadResponse;
 import cart.service.ProductService;
 import javax.validation.Valid;
@@ -36,16 +36,16 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ApiResponse createProduct(@RequestBody @Valid final ProductCreateRequestDto productCreateRequestDto) {
-        productService.createProduct(productCreateRequestDto);
+    public ApiResponse createProduct(@RequestBody @Valid final ProductCreateRequest productCreateRequest) {
+        productService.createProduct(productCreateRequest);
 
         return ApiResponse.from(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ApiResponse editProduct(@PathVariable final Long id, @RequestBody @Valid final ProductEditRequestDto productEditRequestDto) {
-        productService.editProduct(id, productEditRequestDto);
+    public ApiResponse editProduct(@PathVariable final Long id, @RequestBody @Valid final ProductEditRequest productEditRequest) {
+        productService.editProduct(id, productEditRequest);
 
         return ApiResponse.from(HttpStatus.OK);
     }

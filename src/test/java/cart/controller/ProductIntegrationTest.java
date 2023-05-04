@@ -8,8 +8,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
+import cart.dto.ProductCreateRequest;
+import cart.dto.ProductEditRequest;
 import cart.repository.ProductRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -79,7 +79,7 @@ public class ProductIntegrationTest {
     @DisplayName("상품을 저장한다.")
     void create_product_success() {
         // given
-        ProductCreateRequestDto req = createProductCreateRequest();
+        ProductCreateRequest req = createProductCreateRequest();
 
         // when
         ExtractableResponse<Response> response = given()
@@ -95,7 +95,7 @@ public class ProductIntegrationTest {
     @DisplayName("올바르지 않은 파라미터일 경우 400 응답을 반환한다.")
     void create_product_fail() {
         // given
-        ProductCreateRequestDto req = new ProductCreateRequestDto("안녕", -10000, "imgimg");
+        ProductCreateRequest req = new ProductCreateRequest("안녕", -10000, "imgimg");
 
         // when
         ExtractableResponse<Response> response = given()
@@ -114,7 +114,7 @@ public class ProductIntegrationTest {
         Product product = createProduct();
         productRepository.add(product);
 
-        ProductEditRequestDto req = createProductEditRequest();
+        ProductEditRequest req = createProductEditRequest();
 
         // when
         ExtractableResponse<Response> response = given()
@@ -141,7 +141,7 @@ public class ProductIntegrationTest {
         Product product = createProduct();
         productRepository.add(product);
 
-        ProductEditRequestDto req = new ProductEditRequestDto("수정", -100000, "imgimg");
+        ProductEditRequest req = new ProductEditRequest("수정", -100000, "imgimg");
 
         // when
         ExtractableResponse<Response> response = given()

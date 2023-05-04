@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
-public class ProductCreateRequestDto {
+public class ProductCreateRequest {
 
     @NotBlank(message = "상품명은 공백일 수 없습니다.")
     private final String name;
@@ -16,7 +16,7 @@ public class ProductCreateRequestDto {
     @NotNull(message = "상품 이미지 url을 넣어주세요.")
     private final String imgUrl;
 
-    public ProductCreateRequestDto(String name, Integer price, String imgUrl) {
+    public ProductCreateRequest(String name, Integer price, String imgUrl) {
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;

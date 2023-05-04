@@ -2,17 +2,17 @@ package cart.dto;
 
 import cart.domain.User;
 
-public class UserEmailPasswordDto {
+public class UserCredentialResponse {
     private String email;
     private String password;
 
-    public UserEmailPasswordDto(String email, String password) {
+    public UserCredentialResponse(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public static UserEmailPasswordDto from(User user) {
-        return new UserEmailPasswordDto(user.getEmail(), user.getPassword());
+    public static UserCredentialResponse from(User user) {
+        return new UserCredentialResponse(user.getEmail(), user.getPassword());
     }
 
     public String getEmail() {

@@ -12,8 +12,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import cart.domain.Product;
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
+import cart.dto.ProductCreateRequest;
+import cart.dto.ProductEditRequest;
 import cart.dto.ProductDto;
 import cart.dto.ProductsReadResponse;
 import cart.exception.ProductNotFoundException;
@@ -70,7 +70,7 @@ class ProductServiceMockTest {
     @DisplayName("상품을 추가한다.")
     void create_product_success() {
         // given
-        ProductCreateRequestDto req = createProductCreateRequest();
+        ProductCreateRequest req = createProductCreateRequest();
 
         // when
         productService.createProduct(req);
@@ -87,7 +87,7 @@ class ProductServiceMockTest {
         Product product = Product.from(id, "치킨", "imgUrl", 1000);
         given(productRepository.findById(id)).willReturn(Optional.of(product));
 
-        ProductEditRequestDto req = createProductEditRequest();
+        ProductEditRequest req = createProductEditRequest();
         // when
         productService.editProduct(id, req);
 

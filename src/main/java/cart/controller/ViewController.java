@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.UserEmailPasswordDto;
+import cart.dto.UserCredentialResponse;
 import cart.service.ProductService;
 import cart.service.UserService;
 import java.util.List;
@@ -34,9 +34,11 @@ public class ViewController {
 
     @GetMapping("/settings")
     public String getSettings(final Model model) {
-        List<UserEmailPasswordDto> userEmailPasswordDtos = userService.findAllUser().stream().map(UserEmailPasswordDto::from)
+        List<UserCredentialResponse> userCredentials = userService.findAllUser().stream()
+                .map(UserCredentialResponse::from)
                 .collect(Collectors.toList());
-        model.addAttribute("users", userEmailPasswordDtos);
+
+        model.addAttribute("users", userCredentials);
         return "settings";
     }
 
