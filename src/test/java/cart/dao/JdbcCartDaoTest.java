@@ -94,7 +94,32 @@ class JdbcCartDaoTest {
     }
 
     @Test
-    @DisplayName("Name")
-    void t() {
+    @DisplayName("Cart 조회시 멤버와 상품 id가 존재하지 않을 때 empty 객체 반환")
+    void findByMemberIdAndProductId_empty() {
+        // given
+        Long memberId = jdbcMemberDao.insert(new Member("test@test.com", "password1", "조개소년"));
+        Long productId = jdbcProductDao.insert(new Product("피자", 1000, null));
+
+        // when
+        Optional<Cart> cart = jdbcCartDao.findByMemberIdAndProductId(memberId, productId);
+
+        // then
+        assertThat(cart).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Cart 삭제")
+    void delete() {
+        // given
+        Long memberId = jdbcMemberDao.insert(new Member("test@test.com", "password1", "조개소년"));
+        Long productId = jdbcProductDao.insert(new Product("피자", 1000, null));
+        Long cartId = jdbcCartDao.insert(new Cart(memberId, productId));
+
+        // when
+        jdbcCartDao.delete(memberId, productId);
+
+        // then
+        Optional<Cart> cart = jdbcCartDao.findByMemberIdAndProductId(memberId, productId);
+        assertThat(cart).isEmpty();
     }
 }
