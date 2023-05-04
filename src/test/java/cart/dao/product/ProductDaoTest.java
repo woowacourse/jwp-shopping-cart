@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.dao.product;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -13,7 +13,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-import cart.dao.product.ProductDao;
 import cart.dao.product.dto.ProductCreateDTO;
 import cart.dao.product.dto.ProductUpdateDTO;
 import cart.domain.product.Product;
