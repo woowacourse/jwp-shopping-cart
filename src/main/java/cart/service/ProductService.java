@@ -22,7 +22,7 @@ public class ProductService {
     public List<ProductResponse> findAll() {
         List<ProductEntity> productEntities = productDao.findAll();
         return productEntities.stream()
-                .map(entity -> new ProductResponse(entity.getId(), entity.getName(), entity.getImage(),
+                .map(entity -> new ProductResponse(entity.getId(), entity.getName(), entity.getImageUrl(),
                         entity.getPrice()))
                 .collect(Collectors.toList());
     }

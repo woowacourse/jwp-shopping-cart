@@ -45,7 +45,7 @@ public class ProductJdbcDao implements ProductDao {
             PreparedStatement pstmt = con.prepareStatement(
                     sql, new String[]{"id"});
             pstmt.setString(1, productEntity.getName());
-            pstmt.setString(2, productEntity.getImage());
+            pstmt.setString(2, productEntity.getImageUrl());
             pstmt.setInt(3, productEntity.getPrice());
             return pstmt;
         }, keyHolder);
@@ -66,7 +66,7 @@ public class ProductJdbcDao implements ProductDao {
     public void update(final ProductEntity updatedEntity) {
         final String sql = "UPDATE PRODUCT SET name = ?, image = ?, price = ? WHERE id = ?";
 
-        jdbcTemplate.update(sql, updatedEntity.getName(), updatedEntity.getImage(), updatedEntity.getPrice(),
+        jdbcTemplate.update(sql, updatedEntity.getName(), updatedEntity.getImageUrl(), updatedEntity.getPrice(),
                 updatedEntity.getId());
     }
 
