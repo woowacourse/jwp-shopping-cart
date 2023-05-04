@@ -20,3 +20,17 @@ CREATE TABLE users (
 
 INSERT INTO users (email,password) VALUES('echo@wtc.com','#abcd1234');
 INSERT INTO users (email,password) VALUES('hello@test.com','#abcd1234');
+
+CREATE TABLE cart_items (
+    id          BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_id   BIGINT          NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES products (id)
+);
+
+CREATE TABLE carts (
+    id         BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_email VARCHAR(255)    NOT NULL,
+    cart_id   BIGINT          NOT NULL,
+    FOREIGN KEY (user_email) REFERENCES users (email),
+    FOREIGN KEY (cart_id) REFERENCES cart_items (id)
+);
