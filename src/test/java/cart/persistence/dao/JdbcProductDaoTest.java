@@ -52,7 +52,7 @@ class JdbcProductDaoTest {
 
         final List<ProductEntity> products = productDao.findAll();
 
-        assertThat(products.size()).isEqualTo(2);
+        assertThat(products.size()).isEqualTo(4);
     }
 
     @Test
