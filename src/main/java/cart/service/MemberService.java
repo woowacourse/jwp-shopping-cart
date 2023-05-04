@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.controller.dto.MemberResponse;
 import cart.dao.MemberDao;
-import cart.dto.MemberInfo;
+import cart.service.dto.MemberInfo;
 import cart.entity.MemberEntity;
 import cart.execption.AuthorizationException;
 import java.util.List;

@@ -34,4 +34,9 @@ public class MainController {
         model.addAttribute("members", memberService.findAll());
         return "settings";
     }
+
+    @GetMapping("/cart")
+    public String showCart() {
+        return "cart";
+    }
 }
