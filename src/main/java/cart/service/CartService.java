@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.dao.cart.CartDao;
-import cart.dao.item.ItemDao;
 import cart.dto.cart.CartResponse;
 import cart.dto.item.ItemResponse;
 import cart.entity.ItemEntity;
@@ -19,15 +18,9 @@ import java.util.stream.Collectors;
 public class CartService {
 
     private final CartDao cartDao;
-    private final ItemDao itemDao;
 
-    public CartService(final CartDao cartDao, final ItemDao itemDao) {
-        this.cartDao = cartDao;
-        this.itemDao = itemDao;
-    }
-
-    public ItemEntity save(String memberEmail, Long itemId) {
-        return cartDao.save(memberEmail, itemDao.findById(itemId));
+    public Long save(String memberEmail, Long itemId) {
+        return cartDao.save(memberEmail, itemId);
     }
 
     public List<CartResponse> findAll(String memberEmail) {
@@ -55,6 +48,6 @@ public class CartService {
     }
 
     public void delete(String memberEmail, Long itemId) {
-        cartDao.delete(memberEmail, itemDao.findById(itemId));
+        cartDao.delete(memberEmail, itemId);
     }
 }

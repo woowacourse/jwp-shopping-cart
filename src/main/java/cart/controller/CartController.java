@@ -27,8 +27,8 @@ public class CartController {
 
     @PostMapping("/cart")
     public ResponseEntity<ResultResponse> addCart(@Login MemberEntity member, @RequestBody CartSaveRequest cart) {
-        cartService.save(member.getEmail(), cart.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResultResponse(SuccessCode.CREATE_CART, cart));
+        Long save = cartService.save(member.getEmail(), cart.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResultResponse(SuccessCode.CREATE_CART, save));
     }
 
     @DeleteMapping("/cart/{itemId}")
