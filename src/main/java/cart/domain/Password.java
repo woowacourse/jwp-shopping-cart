@@ -4,10 +4,26 @@ import java.util.Objects;
 
 public class Password {
 
+    private static final int MAX_LENGTH = 100;
+
     private final String value;
 
     public Password(final String value) {
+        validateNotEmpty(value);
+        validateLength(value);
         this.value = value;
+    }
+
+    private static void validateNotEmpty(String value) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("비밀번호는 빈 값일 수 없습니다.");
+        }
+    }
+
+    private void validateLength(final String value) {
+        if(value.length() > MAX_LENGTH) {
+            throw new IllegalArgumentException("비밀번호는 100자 이하여야 합니다.");
+        }
     }
 
     public String getValue() {

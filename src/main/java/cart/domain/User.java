@@ -9,9 +9,23 @@ public class User {
     private final Password password;
 
     public User(final Long id, final Email email, final Password password) {
+        validateNotNull(email, password);
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public User(final Email email, final Password password) {
+        this(null, email, password);
+    }
+
+    private void validateNotNull(final Email email, final Password password) {
+        if (email == null) {
+            throw new IllegalArgumentException("이메일은 빈 값일 수 없습니다.");
+        }
+        if (password == null) {
+            throw new IllegalArgumentException("비밀번호는 빈 값일 수 없습니다.");
+        }
     }
 
     public Long getId() {
