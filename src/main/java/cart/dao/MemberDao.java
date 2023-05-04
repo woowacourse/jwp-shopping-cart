@@ -14,4 +14,6 @@ public interface MemberDao {
     boolean isMemberExists(AuthMember authMember);
 
     boolean isEmailExists(String email);
+
+    Member findByAuthMember(AuthMember authMember);
 }

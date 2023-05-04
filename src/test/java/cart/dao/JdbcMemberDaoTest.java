@@ -99,4 +99,21 @@ class JdbcMemberDaoTest {
                         .isEqualTo(MEMBER2)
         );
     }
+
+    @Test
+    @DisplayName("사용자 목록을 조회할 수 있다.")
+    void findByAuthMember_success() {
+        Member member = memberDao.findByAuthMember(AUTH_MEMBER1);
+        assertThat(member)
+                .usingRecursiveComparison()
+                .isEqualTo(MEMBER1);
+    }
+
+    @Test
+    @DisplayName("사용자 목록을 조회할 수 있다.")
+    void findByAuthMember_fail() {
+        assertThatThrownBy(() -> memberDao.findByAuthMember(AUTH_MEMBER3))
+                .isInstanceOf(ServiceIllegalArgumentException.class)
+                .hasMessage("email과 password를 확인해주세요.");
+    }
 }

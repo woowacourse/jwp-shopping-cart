@@ -52,6 +52,17 @@ public class JdbcMemberDao implements MemberDao{
     }
 
     @Override
+    public Member findByAuthMember(AuthMember authMember) {
+        if (!isMemberExists(authMember)) {
+            throw new ServiceIllegalArgumentException("email과 password를 확인해주세요.");
+        }
+
+        String sql = "select id, email, password from member where email = ? and password = ?";
+
+        return jdbcTemplate.queryForObject(sql, mapRow(), authMember.getEmail(), authMember.getPassword());
+    }
+
+    @Override
     public boolean isMemberExists(AuthMember authMember) {
         String sql = "select exists(select id from member where email = ? and password = ?)";
 
