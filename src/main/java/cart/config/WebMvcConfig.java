@@ -2,7 +2,7 @@ package cart.config;
 
 import cart.infrastructure.BasicAuthInterceptor;
 import cart.infrastructure.IdConverter;
-import cart.infrastructure.PrincipalResolver;
+import cart.infrastructure.PrincipalArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -12,17 +12,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private final PrincipalResolver principalResolver;
+    private final PrincipalArgumentResolver principalArgumentResolver;
     private final BasicAuthInterceptor basicAuthInterceptor;
 
-    public WebMvcConfig(PrincipalResolver principalResolver, BasicAuthInterceptor basicAuthInterceptor) {
-        this.principalResolver = principalResolver;
+    public WebMvcConfig(PrincipalArgumentResolver principalArgumentResolver, BasicAuthInterceptor basicAuthInterceptor) {
+        this.principalArgumentResolver = principalArgumentResolver;
         this.basicAuthInterceptor = basicAuthInterceptor;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(principalResolver);
+        resolvers.add(principalArgumentResolver);
     }
 
     @Override

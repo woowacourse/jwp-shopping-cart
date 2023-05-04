@@ -9,7 +9,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class PrincipalResolver implements HandlerMethodArgumentResolver {
+public class PrincipalArgumentResolver implements HandlerMethodArgumentResolver {
     private static final String USER_ATTRIBUTE = "user";
 
     @Override
