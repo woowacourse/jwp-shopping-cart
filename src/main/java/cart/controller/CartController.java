@@ -47,12 +47,12 @@ public class CartController {
     }
 
 
-    @PostMapping("/cart")
-    public ResponseEntity<Void> insertCartItem(HttpServletRequest request, @RequestBody ProductId productId) {
+    @PostMapping("/cart/{productId}")
+    public ResponseEntity<Void> insertCartItem(HttpServletRequest request, @PathVariable int productId) {
         AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
 
         int memberId = memberService.findMemberId(authInfo.getEmail(), authInfo.getPassword());
-        cartItemService.addCartItem(new CartItemEntity(memberId, productId.getProductId()));
+        cartItemService.addCartItem(new CartItemEntity(memberId, productId));
 
         return ResponseEntity.ok().build();
     }
