@@ -1,7 +1,6 @@
 package cart.controller;
 
-import cart.authorization.AuthorizationInformation;
-import cart.entity.Member;
+import cart.dto.AuthorizationInformation;
 import cart.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 
 @RestController
 @RequestMapping("/settings")

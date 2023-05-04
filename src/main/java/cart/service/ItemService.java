@@ -24,12 +24,9 @@ public class ItemService {
     }
 
     public void save(ItemRequest itemRequest) {
-        CreateItem createItem = convertItemRequestToCreateItem(itemRequest);
-        itemDao.save(createItem);
-    }
+        CreateItem createItem = itemRequest.toCreateItem();
 
-    private CreateItem convertItemRequestToCreateItem(final ItemRequest itemRequest) {
-        return new CreateItem(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
+        itemDao.save(createItem);
     }
 
     public List<ItemResponse> findAll() {
@@ -39,12 +36,13 @@ public class ItemService {
 
     private List<ItemResponse> convertItemsToItemResponses(final List<Item> items) {
         return items.stream()
-                .map(item -> new ItemResponse(item.getId(), item.getName(), item.getImageUrl(), item.getPrice()))
+                .map(Item::toItemResponse)
                 .collect(Collectors.toList());
     }
 
     public void updateItem(Long itemId, ItemRequest itemRequest) {
-        CreateItem createItem = convertItemRequestToCreateItem(itemRequest);
+        CreateItem createItem = itemRequest.toCreateItem();
+
         int updatedRow = itemDao.update(itemId, createItem);
         validateItemId(updatedRow);
     }

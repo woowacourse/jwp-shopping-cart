@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.authorization.AuthorizationInformation;
+import cart.dto.AuthorizationInformation;
 import cart.dao.ItemDao;
 import cart.dao.MemberDao;
 import cart.dto.ItemResponse;

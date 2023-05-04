@@ -1,5 +1,7 @@
 package cart.entity;
 
+import cart.dto.ItemResponse;
+
 import java.util.Objects;
 
 public class Item {
@@ -30,6 +32,10 @@ public class Item {
 
     public int getPrice() {
         return price;
+    }
+
+    public ItemResponse toItemResponse() {
+        return new ItemResponse(getId(), getName(), getImageUrl(), getPrice());
     }
 
     @Override

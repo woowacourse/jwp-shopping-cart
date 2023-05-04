@@ -1,4 +1,6 @@
-package cart.authorization;
+package cart.dto;
+
+import cart.entity.AuthMember;
 
 public class AuthorizationInformation {
 
@@ -16,5 +18,9 @@ public class AuthorizationInformation {
 
     public String getPassword() {
         return password;
+    }
+
+    public AuthMember toAuthMember() {
+        return new AuthMember(getEmail(), getPassword());
     }
 }

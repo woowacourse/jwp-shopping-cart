@@ -1,5 +1,6 @@
 package cart.authorization;
 
+import cart.dto.AuthorizationInformation;
 import cart.exception.AuthenticationFailureException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;

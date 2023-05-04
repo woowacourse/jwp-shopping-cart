@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.authorization.AuthorizationInformation;
+import cart.dto.AuthorizationInformation;
 import cart.dao.CartDao;
 import cart.dao.ItemDao;
 import cart.dao.MemberDao;
@@ -30,7 +30,7 @@ public class CartService {
     }
 
     public void putItemIntoCart(Long itemId, AuthorizationInformation authorizationInformation) {
-        AuthMember authMember = convertAuthInformationToMember(authorizationInformation);
+        AuthMember authMember = authorizationInformation.toAuthMember();
 
         validatePutCart(itemId, authMember);
 
@@ -38,11 +38,6 @@ public class CartService {
         PutCart putCart = new PutCart(member.getId(), itemId);
 
         cartDao.save(putCart);
-    }
-
-
-    private AuthMember convertAuthInformationToMember(AuthorizationInformation authorizationInformation) {
-        return new AuthMember(authorizationInformation.getEmail(), authorizationInformation.getPassword());
     }
 
     private void validatePutCart(Long itemId, AuthMember authMember) {
@@ -55,18 +50,18 @@ public class CartService {
     }
 
     public List<ItemResponse> findAllItemByAuthInfo(AuthorizationInformation authorizationInformation) {
-        AuthMember authMember = convertAuthInformationToMember(authorizationInformation);
+        AuthMember authMember = authorizationInformation.toAuthMember();
 
         Member member = memberDao.findByAuthMember(authMember);
         List<Cart> carts = cartDao.findAllByMemberId(member.getId());
         return carts.stream()
                 .map(cart -> itemDao.findById(cart.getItemId()))
-                .map(item -> new ItemResponse(item.getId(), item.getName(), item.getImageUrl(), item.getPrice()))
+                .map(Item::toItemResponse)
                 .collect(Collectors.toList());
     }
 
     public void deleteItemFromCart(Long itemId, AuthorizationInformation authorizationInformation) {
-        AuthMember authMember = convertAuthInformationToMember(authorizationInformation);
+        AuthMember authMember = authorizationInformation.toAuthMember();
         Member member = memberDao.findByAuthMember(authMember);
         PutCart putCart = new PutCart(member.getId(), itemId);
 

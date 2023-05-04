@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.authorization.AuthorizationInformation;
+import cart.dto.AuthorizationInformation;
 import cart.dao.MemberDao;
 import cart.entity.AuthMember;
 import cart.entity.Member;
@@ -17,23 +17,19 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
+    public void save(AuthorizationInformation authorizationInformation) {
+        AuthMember authMember = authorizationInformation.toAuthMember();
+
+        memberDao.save(authMember);
+    }
+
     public boolean isValidMember(AuthorizationInformation authorizationInformation) {
-        AuthMember authMember = convertAuthInformationToMember(authorizationInformation);
+        AuthMember authMember = authorizationInformation.toAuthMember();
 
         return memberDao.isMemberExists(authMember);
     }
 
     public List<Member> findAll() {
         return memberDao.findAll();
-    }
-
-    private AuthMember convertAuthInformationToMember(AuthorizationInformation authorizationInformation) {
-        return new AuthMember(authorizationInformation.getEmail(), authorizationInformation.getPassword());
-    }
-
-    public void save(AuthorizationInformation authorizationInformation) {
-        AuthMember authMember = convertAuthInformationToMember(authorizationInformation);
-
-        memberDao.save(authMember);
     }
 }

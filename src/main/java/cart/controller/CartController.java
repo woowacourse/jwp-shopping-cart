@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.authorization.AuthorizationExtractor;
-import cart.authorization.AuthorizationInformation;
+import cart.dto.AuthorizationInformation;
 import cart.dto.ItemResponse;
 import cart.service.CartService;
 import org.springframework.http.HttpStatus;

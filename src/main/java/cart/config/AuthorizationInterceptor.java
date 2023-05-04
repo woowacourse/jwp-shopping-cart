@@ -1,7 +1,7 @@
 package cart.config;
 
 import cart.authorization.AuthorizationExtractor;
-import cart.authorization.AuthorizationInformation;
+import cart.dto.AuthorizationInformation;
 import cart.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;

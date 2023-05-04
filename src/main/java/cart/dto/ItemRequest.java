@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.entity.CreateItem;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -37,6 +38,10 @@ public class ItemRequest {
 
     public Integer getPrice() {
         return price;
+    }
+
+    public CreateItem toCreateItem() {
+        return new CreateItem(getName(), getImageUrl(), getPrice());
     }
 
     @Override
