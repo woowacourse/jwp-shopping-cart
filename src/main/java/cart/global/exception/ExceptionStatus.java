@@ -6,6 +6,7 @@ public enum ExceptionStatus {
 
     BAD_INPUT_VALUE_EXCEPTION(400, "입력 값이 잘못 되었습니다.", HttpStatus.BAD_REQUEST),
     NOT_FOUND_PRODUCT(404, "상품을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    NOT_FOUND_CART(404, "카트를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     INTERNAL_SERVER_EXCEPTION(500, "서버가 응답할 수 없습니다", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final int status;
