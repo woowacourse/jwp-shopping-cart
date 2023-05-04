@@ -19,7 +19,7 @@ public class StubCartRepository implements CartRepository {
     @Override
     public Cart save(final Cart cart) {
         final User user = cart.getUser();
-        final CartId cartId = new CartId((long) maxId);
+        final CartId cartId = new CartId(maxId);
         final var CartProducts = cart.getCartProducts().getCartProducts();
         final ArrayList<CartProduct> cartProducts = new ArrayList<>();
         for (final CartProduct cartProduct : CartProducts) {
@@ -27,7 +27,9 @@ public class StubCartRepository implements CartRepository {
             maxCartProductId++;
         }
         maxId++;
-        return new Cart(cartId, user, cartProducts);
+        final Cart savedCart = new Cart(cartId, user, cartProducts);
+        carts.put(user, savedCart);
+        return savedCart;
     }
 
     @Override
