@@ -59,6 +59,13 @@ public class ProductRepositoryImpl implements ProductRepository {
         return product;
     }
 
+    @Override
+    public Product findById(Long productId) {
+        ProductEntity productEntity = productDao.findById(productId);
+
+        return productEntity.toProduct();
+    }
+
     private void validateExistProduct(Long id) {
         int count = productDao.countById(id);
 

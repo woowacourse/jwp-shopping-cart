@@ -12,7 +12,6 @@ import cart.domain.cart.CartRepository;
 import cart.domain.product.Product;
 import cart.domain.product.TestFixture;
 import cart.domain.user.CartUser;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,9 +42,8 @@ class CartRepositoryImplTest {
         cartUserDao.insert(new CartUserEntity(cartUser.getUserEmail(), cartUser.getPassword()));
         Long pizzaProductId = productDao.insert(new ProductEntity(TestFixture.PIZZA));
         Product product = productDao.findById(pizzaProductId).toProduct();
-        Cart cart = new Cart(cartUser, Collections.emptyList());
 
-        cartRepository.addProductInCart(cart, product);
+        cartRepository.addProductInCart(cartUser, product);
 
         List<Cart> allCarts = cartRepository.findAll();
         assertThat(allCarts).hasSize(1);
@@ -60,8 +58,7 @@ class CartRepositoryImplTest {
         cartUserDao.insert(new CartUserEntity(cartUser.getUserEmail(), cartUser.getPassword()));
         Long pizzaProductId = productDao.insert(new ProductEntity(TestFixture.PIZZA));
         Product product = productDao.findById(pizzaProductId).toProduct();
-        Cart cart = new Cart(cartUser, Collections.emptyList());
-        cartRepository.addProductInCart(cart, product);
+        cartRepository.addProductInCart(cartUser, product);
 
         Cart cartByCartUser = cartRepository.findCartByCartUser(cartUser);
 

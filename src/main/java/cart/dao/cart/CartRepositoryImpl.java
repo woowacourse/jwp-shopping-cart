@@ -29,8 +29,7 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public Long addProductInCart(Cart cart, Product product) {
-        CartUser cartUser = cart.getCartUser();
+    public Long addProductInCart(CartUser cartUser, Product product) {
         CartUserEntity cartEntity = cartUserDao.findByEmail(cartUser.getUserEmail());
 
         CartUserProductEntity cartUserProductEntity =

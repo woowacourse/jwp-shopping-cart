@@ -29,10 +29,10 @@ public class CartExceptionHandler {
                 .body(exception.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleRuntimeException() {
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("예기치 못한 오류가 발생했습니다.");
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<String> handleRuntimeException() {
+//        return ResponseEntity
+//                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body("예기치 못한 오류가 발생했습니다.");
+//    }
 }

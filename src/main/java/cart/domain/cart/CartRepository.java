@@ -5,7 +5,7 @@ import cart.domain.user.CartUser;
 import java.util.List;
 
 public interface CartRepository {
-    Long addProductInCart(Cart cart, Product product);
+    Long addProductInCart(CartUser cartUser, Product product);
 
     Cart findCartByCartUser(CartUser cartUser);
 
