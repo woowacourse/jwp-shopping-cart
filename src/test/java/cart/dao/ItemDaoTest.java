@@ -18,6 +18,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
+@Sql("classpath:initializeTestDb.sql")
 class ItemDaoTest {
 
     private final ItemDao itemDao;
@@ -37,7 +38,6 @@ class ItemDaoTest {
 
     @DisplayName("아이템의 전체 목록을 조회한다")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void findAll() {
         // when
         List<Item> items = itemDao.findAll();
@@ -47,7 +47,6 @@ class ItemDaoTest {
 
     @DisplayName("아이디를 통해 아이템을 조회한다")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void findBy() {
         //when
         Item findItem = itemDao.findBy(1L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이템 입니다."));
@@ -62,7 +61,6 @@ class ItemDaoTest {
 
     @DisplayName("없는 아이디를 조회하면 빈값을 반환한다")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void findByNotExistId() {
         //when
         Optional<Item> findItem = itemDao.findBy(100L);
@@ -72,7 +70,6 @@ class ItemDaoTest {
 
     @DisplayName("아이템을 저장한다.")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void save() {
         // given
         Item item = new Item.Builder()
@@ -98,7 +95,6 @@ class ItemDaoTest {
 
     @DisplayName("아에템을 수정한다")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void update() {
         //given
         Item editItem = new Item.Builder()
@@ -120,7 +116,6 @@ class ItemDaoTest {
 
     @DisplayName("아이템을 삭제한다")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void delete() {
         //given
         Item targetItem = jdbcTemplate.queryForObject(
