@@ -1,21 +1,24 @@
 package cart.dao;
 
 import cart.entity.Cart;
+import cart.entity.CartProduct;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class CartDao implements Dao<Cart>{
+public class CartDao {
 
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Cart> cartMapper
-            = (resultSet, rowNum) -> new Cart(
+    private final RowMapper<CartProduct> cartMapper
+            = (resultSet, rowNum) -> new CartProduct(
             resultSet.getInt("id"),
             resultSet.getString("name"),
             resultSet.getInt("price"),
@@ -29,28 +32,25 @@ public class CartDao implements Dao<Cart>{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
     public int insert(Cart cart) {
-        return 0;
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(cart);
+        Number id = simpleJdbcInsert.executeAndReturnKey(parameterSource);
+        return id.intValue();
     }
 
-    @Override
-    public List<Cart> selectAll() {
+    public List<CartProduct> selectAll() {
         return null;
     }
 
-    @Override
-    public int update(Cart cart) {
+    public int update(CartProduct cartProduct) {
         return 0;
     }
 
-    @Override
     public int delete(int id) {
         return 0;
     }
 
-    @Override
-    public List<Cart> selectById(Object email) {
+    public List<CartProduct> selectById(String email) {
         String sql = "select C.id, name, price, image\n" +
                 "from product P\n" +
                 "join \n" +

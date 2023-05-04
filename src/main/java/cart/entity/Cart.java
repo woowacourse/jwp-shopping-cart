@@ -1,32 +1,21 @@
 package cart.entity;
 
 public class Cart {
-    private final int id;
-    private final String name;
-    private final int price;
-    private final String image;
+    private int productId;
+
+    private String email;
 
 
-    public Cart(int id, String name, int price, String image) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.image = image;
+    public Cart(int productId, String email) {
+        this.productId = productId;
+        this.email = email;
     }
 
-    public int getId() {
-        return id;
+    public int getProductId() {
+        return productId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImage() {
-        return image;
+    public String getEmail() {
+        return email;
     }
 }
