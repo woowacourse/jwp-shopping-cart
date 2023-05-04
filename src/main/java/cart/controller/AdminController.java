@@ -33,7 +33,7 @@ public class AdminController {
         productService.create(request);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public String update(
             @PathVariable Long id,
