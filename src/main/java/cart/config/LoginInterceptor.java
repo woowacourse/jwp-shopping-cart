@@ -1,6 +1,6 @@
-package cart.auth;
+package cart.config;
 
-import cart.config.BasicAuthorizationExtractor;
+import cart.auth.BasicAuthorizationExtractor;
 import cart.controller.dto.AuthInfo;
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;

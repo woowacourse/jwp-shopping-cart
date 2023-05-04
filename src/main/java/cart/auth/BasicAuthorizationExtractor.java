@@ -1,6 +1,7 @@
-package cart.config;
+package cart.auth;
 
 import cart.controller.dto.AuthInfo;
+import cart.exception.AuthException;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
@@ -9,20 +10,22 @@ import org.springframework.stereotype.Component;
 public class BasicAuthorizationExtractor {
 
     private static final String AUTHORIZATION = "Authorization";
-    private static final int EMAIL_INDEX = 1;
-    private static final int PASSWORD_INDEX = 2;
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
+    private static final String HEADER_EMPTY_ERROR_MESSAGE = "인증 정보가 없습니다.";
+    private static final String HEADER_INVALID_ERROR_MESSAGE = "올바르지 않은 헤더입니다.";
+    private static final int EMAIL_INDEX = 1;
+    private static final int PASSWORD_INDEX = 2;
 
     public AuthInfo extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
         if (header == null) {
-            throw new IllegalArgumentException("인증 정보가 없습니다.");
+            throw new AuthException(HEADER_EMPTY_ERROR_MESSAGE);
         }
 
         if (isInvalidHeader(header)) {
-            throw new IllegalArgumentException("올바르지 않은 헤더입니다.");
+            throw new AuthException(HEADER_INVALID_ERROR_MESSAGE);
         }
 
         String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();

@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.NameRangeException;
+import cart.exception.LengthException;
 import cart.exception.PriceRangeException;
 
 public class Item {
@@ -29,7 +29,7 @@ public class Item {
         int length = name.length();
 
         if (length < MIN_LENGTH || length > MAX_LENGTH) {
-            throw new NameRangeException(NAME_ERROR_MESSAGE);
+            throw new LengthException(NAME_ERROR_MESSAGE);
         }
     }
 

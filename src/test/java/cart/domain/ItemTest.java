@@ -3,7 +3,7 @@ package cart.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.exception.NameRangeException;
+import cart.exception.LengthException;
 import cart.exception.PriceRangeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class ItemTest {
     @DisplayName("상품 이름의 길이가 1이상 50이하가 아니면 예외가 발생한다.")
     void createItemFailWithWrongName(String name) {
         assertThatThrownBy(() -> new Item(name, "http:image.url", 1_500_000))
-                .isInstanceOf(NameRangeException.class)
+                .isInstanceOf(LengthException.class)
                 .hasMessage("상품의 이름은 최소 1자, 최대 50자까지 가능합니다.");
     }
 
