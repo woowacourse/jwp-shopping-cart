@@ -1,7 +1,8 @@
 package cart.controller.api;
 
-import cart.controller.auth.AuthorizationExtractor;
-import cart.controller.auth.BasicAuthorizationExtractor;
+import cart.auth.AuthorizationExtractor;
+import cart.auth.BasicAuthorizationExtractor;
+import cart.domain.member.Member;
 import cart.dto.AuthInfo;
 import cart.dto.ProductResponse;
 import cart.service.CartProductService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,35 +38,23 @@ public class CartProductController {
 
     @PostMapping
     public ResponseEntity<Void> postCartProduct(@RequestBody final Long productId,
-                                                final HttpServletRequest request) {
-        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-
-        final String email = authInfo.getEmail();
-        final String password = authInfo.getPassword();
-        cartProductService.addCartProduct(productId, email, password);
+                                                @RequestAttribute("member") final Member member) {
+        cartProductService.addCartProduct(productId, member.getEmail(), member.getPassword());
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getCartProduct(final HttpServletRequest request) {
-        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-
-        final String email = authInfo.getEmail();
-        final String password = authInfo.getPassword();
-        final List<Long> productIds = cartProductService.findAllProductIds(email, password);
+    public ResponseEntity<List<ProductResponse>> getCartProduct(@RequestAttribute("member") final Member member) {
+        final List<Long> productIds = cartProductService.findAllProductIds(member.getEmail(), member.getPassword());
 
         return ResponseEntity.ok(productService.findByIds(productIds));
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteCartProduct(@PathVariable final Long productId,
-                                                  final HttpServletRequest request) {
-        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-
-        final String email = authInfo.getEmail();
-        final String password = authInfo.getPassword();
-        cartProductService.delete(productId, email, password);
+                                                  @RequestAttribute("member") final Member member) {
+        cartProductService.delete(productId, member.getEmail(), member.getPassword());
 
         return ResponseEntity.noContent().build();
     }

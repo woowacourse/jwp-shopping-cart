@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.auth.AuthenticationService;
 import cart.dto.ProductResponse;
 import cart.mapper.ProductResponseMapper;
 import cart.service.ProductService;
@@ -18,6 +19,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@MockBean(AuthenticationService.class)
 @WebMvcTest(AdminController.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")

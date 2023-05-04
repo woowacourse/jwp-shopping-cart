@@ -1,4 +1,4 @@
-package cart.controller.auth;
+package cart.auth;
 
 import cart.dto.AuthInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
