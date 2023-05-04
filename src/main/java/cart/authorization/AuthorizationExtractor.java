@@ -1,7 +1,5 @@
 package cart.authorization;
 
-import cart.exception.AuthenticationFailureException;
-
 import javax.servlet.http.HttpServletRequest;
 
 public interface AuthorizationExtractor<T> {

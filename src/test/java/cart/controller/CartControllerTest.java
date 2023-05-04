@@ -15,26 +15,22 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
 import static cart.Pixture.*;
-import static cart.Pixture.AUTH_MEMBER1;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 @Sql({"classpath:test_init.sql"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CartControllerTest {
 
-    @Autowired
-    private ItemDao itemDao;
-
-    @Autowired
-    private MemberDao memberDao;
-
-    @Autowired
-    private CartDao cartDao;
-
     private final static String EMAIL = AUTH_MEMBER1.getEmail();
     private final static String PASSWORD = AUTH_MEMBER1.getPassword();
     private final static String INVALID_EMAIL = "invalid@email.com";
     private final static String INVALID_PASSWORD = "invalidPassword";
+    @Autowired
+    private ItemDao itemDao;
+    @Autowired
+    private MemberDao memberDao;
+    @Autowired
+    private CartDao cartDao;
 
     @BeforeEach
     void setUp(@LocalServerPort int port) {

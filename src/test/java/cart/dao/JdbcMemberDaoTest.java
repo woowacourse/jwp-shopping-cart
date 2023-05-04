@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.Pixture;
 import cart.entity.AuthMember;
 import cart.entity.Member;
 import cart.exception.ServiceIllegalArgumentException;

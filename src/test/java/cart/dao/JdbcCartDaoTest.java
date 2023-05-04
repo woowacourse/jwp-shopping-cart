@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.entity.Cart;
-import cart.entity.Item;
 import cart.entity.PutCart;
 import cart.exception.ServiceIllegalArgumentException;
 import org.assertj.core.api.Assertions;

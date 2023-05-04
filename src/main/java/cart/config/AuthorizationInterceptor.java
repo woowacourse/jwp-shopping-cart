@@ -18,7 +18,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     private AuthorizationExtractor<AuthorizationInformation> authorizationExtractor;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         AuthorizationInformation authorizationInformation = authorizationExtractor.extract(request);
         return memberService.isValidMember(authorizationInformation);
     }

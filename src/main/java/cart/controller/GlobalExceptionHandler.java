@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.exception.AuthenticationFailureException;
 import cart.exception.ServiceIllegalArgumentException;
-import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;

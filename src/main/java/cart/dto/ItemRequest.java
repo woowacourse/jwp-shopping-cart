@@ -1,7 +1,6 @@
 package cart.dto;
 
 import cart.entity.CreateItem;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.*;

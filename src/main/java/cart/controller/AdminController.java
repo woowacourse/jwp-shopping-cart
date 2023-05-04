@@ -3,7 +3,6 @@ package cart.controller;
 import cart.dto.ItemRequest;
 import cart.service.ItemService;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
