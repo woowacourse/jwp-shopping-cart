@@ -13,16 +13,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class CartCommandService {
 
     private final CartInProductDao cartInProductDao;
-    private final AccountService accountService;
+    private final AccountQueryService accountQueryService;
 
-    public CartCommandService(final CartInProductDao cartInProductDao, final AccountService accountService) {
+    public CartCommandService(final CartInProductDao cartInProductDao, final AccountQueryService accountQueryService) {
         this.cartInProductDao = cartInProductDao;
-        this.accountService = accountService;
+        this.accountQueryService = accountQueryService;
     }
 
     public void registerProductInCart(final AuthAccount authAccount, final Long productId) {
 
-        final AccountEntity accountEntity = accountService.searchByEmailAndPassword(authAccount);
+        final AccountEntity accountEntity = accountQueryService.searchByEmailAndPassword(authAccount);
 
         final CartInProductEntity cartInProductEntity =
                 new CartInProductEntity(accountEntity.getCartId(), productId);
@@ -31,7 +31,7 @@ public class CartCommandService {
     }
 
     public void deleteProductInCart(final AuthAccount authAccount, final Long productId) {
-        final AccountEntity accountEntity = accountService.searchByEmailAndPassword(authAccount);
+        final AccountEntity accountEntity = accountQueryService.searchByEmailAndPassword(authAccount);
 
         final CartEntity cartEntity = new CartEntity(accountEntity.getCartId());
 

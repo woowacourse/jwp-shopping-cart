@@ -18,18 +18,18 @@ import java.util.stream.Collectors;
 public class CartQueryService {
 
     private final CartInProductDao cartInProductDao;
-    private final AccountService accountService;
+    private final AccountQueryService accountQueryService;
     private final ProductQueryService productQueryService;
 
-    public CartQueryService(final CartInProductDao cartInProductDao, final AccountService accountService,
+    public CartQueryService(final CartInProductDao cartInProductDao, final AccountQueryService accountQueryService,
                             final ProductQueryService productQueryService) {
         this.cartInProductDao = cartInProductDao;
-        this.accountService = accountService;
+        this.accountQueryService = accountQueryService;
         this.productQueryService = productQueryService;
     }
 
     public List<ProductSearchResponse> findAllProductsInCart(final AuthAccount authAccount) {
-        final AccountEntity accountEntity = accountService.searchByEmailAndPassword(authAccount);
+        final AccountEntity accountEntity = accountQueryService.searchByEmailAndPassword(authAccount);
 
         final CartEntity cartEntity = new CartEntity(accountEntity.getCartId());
 

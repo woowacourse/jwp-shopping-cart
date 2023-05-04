@@ -5,16 +5,18 @@ import cart.dao.AccountDao;
 import cart.dao.AccountEntity;
 import cart.service.dto.AccountSearchResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class AccountService {
+@Transactional(readOnly = true)
+public class AccountQueryService {
 
     private final AccountDao accountDao;
 
-    public AccountService(final AccountDao accountDao) {
+    public AccountQueryService(final AccountDao accountDao) {
         this.accountDao = accountDao;
     }
 
