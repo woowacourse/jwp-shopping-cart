@@ -60,6 +60,19 @@ class MemberServiceImplTest {
 
 	@Test
 	void findByMemberId() {
+		// given
+		final MemberId memberId = MemberId.from(1L);
+		final Member member = new Member(memberId, "kiara", "email@email", "pw");
+
+		BDDMockito.given(memberRepository.findByMemberId(memberId)).willReturn(member);
+
+		// when
+		final MemberResponse memberById = memberService.findByMemberId(memberId);
+
+		// then
+		Assertions.assertThat(memberById)
+			.usingRecursiveComparison()
+			.isEqualTo(new MemberResponse(1L, "kiara", "email@email", "pw"));
 	}
 
 	@Test

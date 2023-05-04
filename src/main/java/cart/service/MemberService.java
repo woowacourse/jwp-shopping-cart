@@ -10,6 +10,6 @@ import cart.service.request.MemberUpdateRequest;
 public interface MemberService {
 	MemberId insert(final MemberUpdateRequest request);
 	List<MemberResponse> findAll();
-	Member findByMemberId(final MemberId memberId);
+	MemberResponse findByMemberId(final MemberId memberId);
 	Member findByEmail(final String email);
 }

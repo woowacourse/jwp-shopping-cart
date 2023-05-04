@@ -34,8 +34,9 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Member findByMemberId(final MemberId memberId) {
-		return null;
+	public MemberResponse findByMemberId(final MemberId memberId) {
+		final Member member = memberRepository.findByMemberId(memberId);
+		return new MemberResponse(member.getId().getId(), member.getName(), member.getEmail(), member.getPassword());
 	}
 
 	@Override
