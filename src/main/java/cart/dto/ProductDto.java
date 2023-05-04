@@ -1,19 +1,22 @@
 package cart.dto;
 
+import cart.domain.ImgUrl;
+import cart.domain.Name;
+import cart.domain.Price;
 import cart.entity.ProductEntity;
 
 public class ProductDto {
 
     private final Long id;
-    private final String name;
-    private final String imgUrl;
-    private final int price;
+    private final Name name;
+    private final ImgUrl imgUrl;
+    private final Price price;
 
     private ProductDto(Long id, String name, String imgUrl, int price) {
         this.id = id;
-        this.name = name;
-        this.imgUrl = imgUrl;
-        this.price = price;
+        this.name = new Name(name);
+        this.imgUrl = new ImgUrl(imgUrl);
+        this.price = new Price(price);
     }
 
     public static ProductDto fromEntity(ProductEntity entity) {
@@ -21,15 +24,15 @@ public class ProductDto {
     }
 
     public String getName() {
-        return name;
+        return name.getName();
     }
 
     public String getImgUrl() {
-        return imgUrl;
+        return imgUrl.getImgUrl();
     }
 
     public int getPrice() {
-        return price;
+        return price.getPrice();
     }
 
     public Long getId() {

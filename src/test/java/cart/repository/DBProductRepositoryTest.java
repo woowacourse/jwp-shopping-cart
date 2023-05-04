@@ -30,8 +30,8 @@ class DBProductRepositoryTest {
     void setUp() {
         productRepository = new DBProductRepository(jdbcTemplate);
 
-        Product product1 = new Product("name1", "url1", 1000);
-        Product product2 = new Product("name2", "url2", 2000);
+        Product product1 = new Product("name1", "url1.com", 1000);
+        Product product2 = new Product("name2", "url2.com", 2000);
 
         this.entity1 = productRepository.save(product1);
         this.entity2 = productRepository.save(product2);
@@ -40,7 +40,7 @@ class DBProductRepositoryTest {
     @Test
     @DisplayName("상품 정보를 DB에 저장한다.")
     void save() {
-        Product product3 = new Product("name3", "url3", 3000);
+        Product product3 = new Product("name3", "url3.com", 3000);
 
         productRepository.save(product3);
         List<ProductEntity> productEntities = productRepository.findAll();
@@ -58,7 +58,7 @@ class DBProductRepositoryTest {
 
         assertAll(
                 () -> assertThat(response.getName()).isEqualTo("name1"),
-                () -> assertThat(response.getImgUrl()).isEqualTo("url1"),
+                () -> assertThat(response.getImgUrl()).isEqualTo("url1.com"),
                 () -> assertThat(response.getPrice()).isEqualTo(1000)
         );
     }
@@ -73,7 +73,7 @@ class DBProductRepositoryTest {
     @Test
     @DisplayName("ID에 해당하는 상품 정보를 수정한다.")
     void updateById() {
-        ProductEntity modifiedProductEntity = new ProductEntity(entity1.getId(), "newName", "newUrl", 4000);
+        ProductEntity modifiedProductEntity = new ProductEntity(entity1.getId(), entity1.getName(), entity1.getImgUrl(), 4000);
         productRepository.update(modifiedProductEntity);
 
         Optional<ProductEntity> nullableEntity = productRepository.findById(entity1.getId());

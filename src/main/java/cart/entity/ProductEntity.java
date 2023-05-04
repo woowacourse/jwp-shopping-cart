@@ -1,19 +1,23 @@
 package cart.entity;
 
+import cart.domain.ImgUrl;
+import cart.domain.Name;
+import cart.domain.Price;
+
 import java.util.Objects;
 
 public class ProductEntity {
 
     private final Long id;
-    private final String name;
-    private final String imgUrl;
-    private final int price;
+    private final Name name;
+    private final ImgUrl imgUrl;
+    private final Price price;
 
     public ProductEntity(Long id, String name, String imgUrl, int price) {
         this.id = id;
-        this.name = name;
-        this.imgUrl = imgUrl;
-        this.price = price;
+        this.name = new Name(name);
+        this.imgUrl = new ImgUrl(imgUrl);
+        this.price = new Price(price);
     }
 
     public Long getId() {
@@ -21,15 +25,15 @@ public class ProductEntity {
     }
 
     public String getName() {
-        return name;
+        return name.getName();
     }
 
     public String getImgUrl() {
-        return imgUrl;
+        return imgUrl.getImgUrl();
     }
 
     public int getPrice() {
-        return price;
+        return price.getPrice();
     }
 
     @Override
@@ -41,14 +45,11 @@ public class ProductEntity {
             return false;
         }
         ProductEntity that = (ProductEntity) o;
-        return price == that.price &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(imgUrl, that.imgUrl);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, imgUrl, price);
+        return Objects.hash(id);
     }
 }
