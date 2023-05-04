@@ -9,7 +9,7 @@ const addCartItem = (productId) => {
     // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
     axios.request({
         method: 'put',
-        url: '/products/' + productId,
+        url: '/cart/' + productId,
         headers: {
             'Authorization': `Basic ${credentials}`
         }
@@ -31,7 +31,7 @@ const removeCartItem = (id) => {
     // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
     axios.request({
         method: 'delete',
-        url: '/products/' + id,
+        url: '/cart/' + id,
         headers: {
             'Authorization': `Basic ${credentials}`
         }
