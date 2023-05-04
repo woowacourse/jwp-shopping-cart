@@ -14,3 +14,13 @@ CREATE TABLE IF NOT EXISTS member
     password VARCHAR(20) NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS cart
+(
+    id         INT NOT NULL AUTO_INCREMENT,
+    member_id  INT NOT NULL,
+    product_id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (member_id) REFERENCES member (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product (id) ON UPDATE CASCADE ON DELETE CASCADE
+);

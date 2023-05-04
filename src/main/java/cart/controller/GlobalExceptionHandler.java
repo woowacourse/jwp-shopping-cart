@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.excpetion.AuthException;
+import cart.excpetion.CartException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,5 +24,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({EmptyResultDataAccessException.class, IllegalStateException.class})
     public ResponseEntity<String> handle(Exception e) {
         return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler({CartException.class})
+    public ResponseEntity<String> handle(CartException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }
