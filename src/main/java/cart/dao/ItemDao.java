@@ -13,4 +13,6 @@ public interface ItemDao {
     int update(Long id, CreateItem createItem);
 
     int delete(Long id);
+
+    boolean isItemExists(Long itemId);
 }

@@ -55,4 +55,10 @@ public class JdbcItemDao implements ItemDao {
 
         return jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public boolean isItemExists(Long itemId) {
+        String sql = "select exists(select id from item where id = ?)";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, itemId);    }
 }

@@ -30,7 +30,7 @@ class JdbcItemDaoTest {
 
     @Test
     @DisplayName("상품을 저장할 수 있다.")
-    void saveSuccess() {
+    void save_success() {
         CreateItem item = CREATE_ITEM3;
 
         itemDao.save(item);
@@ -47,7 +47,7 @@ class JdbcItemDaoTest {
 
     @Test
     @DisplayName("상품 목록을 조회할 수 있다.")
-    void findAllSuccess() {
+    void findAll_success() {
         List<Item> items = itemDao.findAll();
 
         assertAll(
@@ -63,7 +63,7 @@ class JdbcItemDaoTest {
 
     @Test
     @DisplayName("상품 정보를 수정할 수 있다.")
-    void updateSuccess() {
+    void update_success() {
         CreateItem item = CREATE_ITEM3;
 
         int updateRow = itemDao.update(2L, item);
@@ -81,7 +81,7 @@ class JdbcItemDaoTest {
 
     @Test
     @DisplayName("없는 상품 정보를 수정하면 0이 반환된다.")
-    void updateFail() {
+    void update_fail() {
         CreateItem item = CREATE_ITEM3;
 
         assertThat(itemDao.update(3L, item)).isZero();
@@ -89,7 +89,7 @@ class JdbcItemDaoTest {
 
     @Test
     @DisplayName("상품 삭제 할 수 있다.")
-    void deleteSuccess() {
+    void delete_success() {
         int deleteRow = itemDao.delete(2L);
 
         List<Item> items = itemDao.findAll();
@@ -102,8 +102,23 @@ class JdbcItemDaoTest {
 
     @Test
     @DisplayName("없는 상품 삭제하면 0이 반환된다.")
-    void deleteFail() {
+    void delete_fail() {
 
         assertThat(itemDao.delete(3L)).isZero();
+    }
+
+
+    @Test
+    @DisplayName("상품이 있다면 true가 반환된다.")
+    void isItemExists_true() {
+
+        assertThat(itemDao.isItemExists(2L)).isTrue();
+    }
+
+    @Test
+    @DisplayName("상품이 없다면 false가 반환된다.")
+    void isItemExists_false() {
+
+        assertThat(itemDao.isItemExists(3L)).isFalse();
     }
 }
