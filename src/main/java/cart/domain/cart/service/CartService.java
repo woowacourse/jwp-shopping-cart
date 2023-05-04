@@ -11,7 +11,9 @@ import cart.domain.user.CartUserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 public class CartService {
     private final CartRepository cartRepository;
@@ -25,6 +27,7 @@ public class CartService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public void addProductInCart(final AuthorizedCartUserDto userDto, final Long productId) {
         final CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
         final Product product = productRepository.findById(productId);
@@ -42,6 +45,7 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteProductInCart(final AuthorizedCartUserDto userDto, final Long productId) {
         final CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
         final Product product = productRepository.findById(productId);

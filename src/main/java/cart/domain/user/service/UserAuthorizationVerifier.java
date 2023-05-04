@@ -4,7 +4,9 @@ import cart.domain.user.CartUser;
 import cart.domain.user.CartUserRepository;
 import javax.security.auth.login.LoginException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Component
 public class UserAuthorizationVerifier {
 
