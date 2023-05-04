@@ -18,5 +18,5 @@ CREATE TABLE Cart (
     product_id INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(member_email) REFERENCES Member(email),
-    FOREIGN KEY(product_id) REFERENCES Product(id)
+    FOREIGN KEY(product_id) REFERENCES Product(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
