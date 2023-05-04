@@ -3,11 +3,14 @@ package cart.dao;
 import cart.entity.AuthMember;
 import cart.entity.Member;
 import cart.exception.ServiceIllegalArgumentException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class JdbcMemberDao implements MemberDao{
@@ -53,13 +56,13 @@ public class JdbcMemberDao implements MemberDao{
 
     @Override
     public Member findByAuthMember(AuthMember authMember) {
-        if (!isMemberExists(authMember)) {
-            throw new ServiceIllegalArgumentException("email과 password를 확인해주세요.");
-        }
-
         String sql = "select id, email, password from member where email = ? and password = ?";
 
-        return jdbcTemplate.queryForObject(sql, mapRow(), authMember.getEmail(), authMember.getPassword());
+        try {
+            return jdbcTemplate.queryForObject(sql, mapRow(), authMember.getEmail(), authMember.getPassword());
+        } catch (EmptyResultDataAccessException exception) {
+            return null;
+        }
     }
 
     @Override
