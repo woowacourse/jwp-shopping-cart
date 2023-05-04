@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.domain.Member;
-import cart.domain.MemberRepository;
+import cart.domain.member.Member;
+import cart.domain.member.MemberRepository;
 import cart.dto.LoginDto;
 import cart.dto.response.MemberResponse;
 import org.springframework.stereotype.Service;

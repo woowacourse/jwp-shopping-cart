@@ -1,6 +1,6 @@
 package cart.persistence.dao;
 
-import cart.domain.Product;
+import cart.domain.cart.Product;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;

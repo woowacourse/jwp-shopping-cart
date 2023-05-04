@@ -17,6 +17,16 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public Long createCart(Long memberId) {
+        String sql = "INSERT INTO cart(member_id) VALUES(:member_id)";
+
+        var parameterSource = new MapSqlParameterSource("member_id", memberId);
+
+        var keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(sql, parameterSource, keyHolder);
+        return (Long) keyHolder.getKey().longValue();
+    }
+
     public boolean existsByCartId(Long cartId) {
         String sql = "SELECT COUNT(*) FROM cart WHERE cart_id = :cart_id";
         var parameterSource = new MapSqlParameterSource("cart_id", cartId);
@@ -35,15 +45,5 @@ public class CartDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-    }
-
-    public Long createCart(Long memberId) {
-        String sql = "INSERT INTO cart(member_id) VALUES(:member_id)";
-
-        var parameterSource = new MapSqlParameterSource("member_id", memberId);
-
-        var keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, parameterSource, keyHolder);
-        return (Long) keyHolder.getKey().longValue();
     }
 }

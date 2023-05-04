@@ -1,6 +1,6 @@
 package cart.dto.response;
 
-import cart.domain.Product;
+import cart.domain.cart.Product;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 

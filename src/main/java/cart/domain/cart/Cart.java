@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.cart;
 
 import java.util.List;
 
@@ -6,12 +6,20 @@ public class Cart {
 
     private final Long cartId;
     private final Long memberId;
-    private final List<CartItem> cartItems;
+    private final CartItems cartItems;
 
     public Cart(Long cartId, Long memberId, List<CartItem> cartItems) {
         this.cartId = cartId;
         this.memberId = memberId;
-        this.cartItems = cartItems;
+        this.cartItems = new CartItems(cartItems);
+    }
+
+    public void addItem(CartItem cartItem) {
+        cartItems.add(cartItem);
+    }
+
+    public void removeItem(int cartItemId) {
+        cartItems.remove(cartItemId);
     }
 
     public Long getCartId() {
@@ -23,14 +31,6 @@ public class Cart {
     }
 
     public List<CartItem> getCartItems() {
-        return cartItems;
-    }
-
-    public void addItem(CartItem cartItem) {
-        cartItems.add(cartItem);
-    }
-
-    public CartItem removeItem(int cartItemId) {
-        return cartItems.remove(cartItemId - 1);
+        return cartItems.getItems();
     }
 }

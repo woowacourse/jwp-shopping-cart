@@ -1,7 +1,7 @@
 package cart.persistence;
 
-import cart.domain.Member;
-import cart.domain.MemberRepository;
+import cart.domain.member.Member;
+import cart.domain.member.MemberRepository;
 import cart.dto.LoginDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;

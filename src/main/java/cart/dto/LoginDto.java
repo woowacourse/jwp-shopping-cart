@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.Member;
+import cart.domain.member.Member;
 
 public class LoginDto {
 
@@ -22,6 +22,10 @@ public class LoginDto {
         this(member.getMemberId(), member.getEmail(), member.getPassword());
     }
 
+    public Member toEntity() {
+        return new Member(email, password);
+    }
+
     public Long getMemberId() {
         return memberId;
     }
@@ -32,9 +36,5 @@ public class LoginDto {
 
     public String getPassword() {
         return password;
-    }
-
-    public Member toEntity() {
-        return new Member(email, password);
     }
 }

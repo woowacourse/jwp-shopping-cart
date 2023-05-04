@@ -1,32 +1,22 @@
-package cart.persistence;
+package cart.persistence.dao;
 
-import cart.domain.Product;
-import cart.persistence.dao.H2ProductDao;
-import cart.persistence.dao.ProductDao;
-import org.junit.jupiter.api.BeforeEach;
+import cart.domain.cart.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @JdbcTest
-@Sql({"/data.sql"})
+@ContextConfiguration(classes = H2ProductDao.class)
 class H2ProductDaoTest {
 
     @Autowired
-    NamedParameterJdbcTemplate jdbcTemplate;
-    ProductDao dao;
-
-    @BeforeEach
-    void setUp() {
-        dao = new H2ProductDao(jdbcTemplate);
-    }
+    H2ProductDao dao;
 
     @Test
     @DisplayName("id가 1인 Product를 조회한다")

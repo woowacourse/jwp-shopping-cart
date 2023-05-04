@@ -1,9 +1,9 @@
 package cart.service;
 
-import cart.domain.Cart;
-import cart.domain.CartItem;
-import cart.domain.CartRepository;
-import cart.domain.Product;
+import cart.domain.cart.Cart;
+import cart.domain.cart.CartItem;
+import cart.domain.cart.CartRepository;
+import cart.domain.cart.Product;
 import cart.dto.response.CartItemResponse;
 import cart.persistence.dao.ProductDao;
 import org.springframework.stereotype.Service;

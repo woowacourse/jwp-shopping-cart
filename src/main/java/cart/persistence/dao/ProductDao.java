@@ -1,6 +1,6 @@
 package cart.persistence.dao;
 
-import cart.domain.Product;
+import cart.domain.cart.Product;
 
 import java.util.List;
 import java.util.Optional;

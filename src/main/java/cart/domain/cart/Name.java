@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.cart;
 
 import java.util.Objects;
 

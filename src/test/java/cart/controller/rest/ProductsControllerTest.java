@@ -42,7 +42,7 @@ class ProductsControllerTest {
     BasicAuthInterceptor basicAuthInterceptor;
 
     @BeforeEach
-    void setUp() throws Exception{
+    void setUp() throws Exception {
         when(authenticationPrincipalArgumentResolver.resolveArgument(any(), any(), any(), any()))
                 .thenReturn(new LoginDto("1", "2"));
         when(basicAuthInterceptor.preHandle(any(), any(), any()))

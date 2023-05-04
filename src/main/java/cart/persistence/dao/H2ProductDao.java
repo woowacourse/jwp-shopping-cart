@@ -1,6 +1,6 @@
 package cart.persistence.dao;
 
-import cart.domain.Product;
+import cart.domain.cart.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
