@@ -1,5 +1,6 @@
 package cart.controller.config.interceptor;
 
+import cart.exception.UnauthorizedException;
 import cart.service.UserService;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     private final UserService userService;
 
-    // TODO: 5/3/23 엥...? 뭔가 이상하다...
     public AuthInterceptor(final UserService userService) {
         this.userService = userService;
     }
@@ -22,6 +22,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
         String authorization = request.getHeader("authorization");
+        if (authorization == null ||authorization.isBlank()) {
+            throw new UnauthorizedException("인증 정보가 없습니다.");
+        }
         if (authorization.toLowerCase().startsWith("basic")) {
             String credentials = authorization.split("\\s")[1];
             byte[] bytes = Base64.decodeBase64(credentials);
@@ -29,9 +32,10 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             String email = emailAndPassword[0];
             String password = emailAndPassword[1];
             if (userService.checkLogin(email, password)) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                return super.preHandle(request, response, handler);
             }
+            throw new UnauthorizedException("로그인 정보가 잘못되었습니다.");
         }
-        return super.preHandle(request, response, handler);
+        throw new UnauthorizedException("인증 정보가 잘못되었습니다.");
     }
 }

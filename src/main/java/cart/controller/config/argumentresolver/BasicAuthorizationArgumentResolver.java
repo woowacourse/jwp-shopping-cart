@@ -1,6 +1,7 @@
 package cart.controller.config.argumentresolver;
 
 import cart.controller.dto.LoginUser;
+import cart.exception.UnauthorizedException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -19,7 +20,7 @@ public class BasicAuthorizationArgumentResolver implements HandlerMethodArgument
         String authorizationHeader = webRequest.getHeader("authorization");
         assert authorizationHeader != null;
         if (!authorizationHeader.toLowerCase().startsWith("basic")) {
-            throw new IllegalArgumentException("잘못된 인증입니다.");
+            throw new UnauthorizedException("잘못된 인증입니다.");
         }
         String credentials = authorizationHeader.split("\\s")[1];
         byte[] bytes = Base64.decodeBase64(credentials);
