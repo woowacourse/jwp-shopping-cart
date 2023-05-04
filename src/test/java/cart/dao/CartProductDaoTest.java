@@ -22,7 +22,7 @@ class JdbcCartProductDaoTest {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    private CartDao cartDao;
+    private JdbcCartDao cartDao;
 
     @BeforeEach
     void init() {

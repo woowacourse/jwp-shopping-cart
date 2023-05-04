@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dao.UserResponses;
+import cart.dto.UserResponses;
 import cart.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

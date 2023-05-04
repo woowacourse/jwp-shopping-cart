@@ -1,16 +1,70 @@
 package cart.dao;
 
 import cart.dao.entity.Product;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-public interface ProductDao {
+@Repository
+public class JdbcProductDao {
 
-    Long save(final Product product);
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    List<Product> findAll();
+    public JdbcProductDao(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-    int delete(final Long id);
+    public Long save(final Product product) {
+        final String sql = "INSERT INTO product(name, price, img_url) VALUES (:name, :price, :imgUrl)";
+        final SqlParameterSource params = new BeanPropertySqlParameterSource(product);
 
-    int update(final Long id, final Product product);
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(sql, params, keyHolder);
+
+        return (long) keyHolder.getKeys().get("id");
+    }
+
+    public List<Product> findAll() {
+        final String sql = "SELECT id, name, price, img_url FROM product";
+
+        return jdbcTemplate.query(sql, createProductRowmapper());
+    }
+
+    private static RowMapper<Product> createProductRowmapper() {
+        return (rs, rowNum) -> new Product(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getInt("price"),
+                rs.getString("img_url")
+        );
+    }
+
+    public int delete(Long id) {
+        final String sql = "DELETE FROM product WHERE id = :id";
+
+        final Map<String, Long> params = Collections.singletonMap("id", id);
+        return jdbcTemplate.update(sql, params);
+    }
+
+    public int update(Long id, Product product) {
+        final String sql = "UPDATE product SET name = :name, price = :price, img_url = :imgUrl WHERE id = :id";
+
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id)
+                .addValue("name", product.getName())
+                .addValue("price", product.getPrice())
+                .addValue("imgUrl", product.getImgUrl());
+
+        return jdbcTemplate.update(sql, params);
+    }
 }

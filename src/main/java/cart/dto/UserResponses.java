@@ -1,6 +1,4 @@
-package cart.dao;
-
-import cart.dto.UserResponse;
+package cart.dto;
 
 import java.util.List;
 

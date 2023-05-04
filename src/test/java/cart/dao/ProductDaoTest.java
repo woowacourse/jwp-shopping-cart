@@ -20,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class JdbcProductDaoTest {
 
     @Autowired
-    NamedParameterJdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate jdbcTemplate;
 
-    ProductDao productDao;
+    private JdbcProductDao productDao;
 
     @BeforeEach
     void setup() {

@@ -2,9 +2,9 @@ package cart.service;
 
 import cart.JdbcSaveUser;
 import cart.dao.JdbcUserDao;
-import cart.dao.UserResponses;
 import cart.dao.entity.User;
 import cart.dto.UserResponse;
+import cart.dto.UserResponses;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.RowMapper;

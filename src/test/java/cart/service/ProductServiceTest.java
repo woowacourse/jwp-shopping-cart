@@ -1,10 +1,8 @@
 package cart.service;
 
 import cart.JdbcMySqlDialectTest;
-import cart.dao.CartDao;
 import cart.dao.JdbcCartDao;
 import cart.dao.JdbcProductDao;
-import cart.dao.ProductDao;
 import cart.dto.ProductResponse;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
@@ -29,8 +27,8 @@ class ProductServiceTest {
 
     private ProductService productService;
     private ProductRepository productRepository;
-    private ProductDao productDao;
-    private CartDao cartDao;
+    private JdbcProductDao productDao;
+    private JdbcCartDao cartDao;
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;

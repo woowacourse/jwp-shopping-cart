@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("NonAsciiCharacters")
 class JdbcCartDaoTest {
 
-    private CartDao cartDao;
+    private JdbcCartDao cartDao;
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
