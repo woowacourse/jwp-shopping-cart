@@ -11,8 +11,8 @@
 - [x] 관리자 도구 페이지 연동
 - [x] 사용자 기능 구현
 - [x] 사용자 설정 페이지 연동
-- [ ] 장바구니 기능 구현
-- [ ] 장바구니 페이지 연동
+- [x] 장바구니 기능 구현
+- [x] 장바구니 페이지 연동
 
 
 ## 도메인 요구사항
@@ -24,8 +24,12 @@
 - [x] 사용자
   - [x] 사용자는 이메일을 가진다.
   - [x] 사용자는 비밀번호를 가진다.
-- [ ] 장바구니
-  - [ ] 장바구니는 상품 목록을 가진다.
+- [x] 장바구니
+  - [x] 장바구니는 상품 목록을 가진다.
+
+## item api
+
+GET /
 
 ## admin api
 
@@ -33,3 +37,16 @@ POST admin/items/new
 POST admin/items/edit/{id}
 POST admin/items/delete/{id}
 GET  admin/
+
+
+## cart api
+
+GET cart/
+GET carts/
+POST carts/new/{itemId}
+POST carts/delete/{itemId}
+
+
+## setting api
+
+GET settings/
