@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.AuthInfo;
+import cart.dto.AuthInfoRequest;
 import cart.mvcconfig.annotation.AuthenticationPrincipal;
 import cart.repository.entity.ProductEntity;
 import cart.service.CartService;
@@ -27,22 +27,22 @@ public class CartController {
     }
 
     @GetMapping("/cart/items")
-    public ResponseEntity<List<ProductEntity>> readProductsInCart(@AuthenticationPrincipal final AuthInfo authInfo) {
-        final List<ProductEntity> cartItems = cartService.findCartItemsByAuthInfo(authInfo);
+    public ResponseEntity<List<ProductEntity>> readProductsInCart(@AuthenticationPrincipal final AuthInfoRequest authInfoRequest) {
+        final List<ProductEntity> cartItems = cartService.findCartItemsByAuthInfo(authInfoRequest);
         return ResponseEntity.ok().body(cartItems);
     }
 
     @PostMapping("/cart")
     public ResponseEntity<Void> addProductInCart(@RequestParam final Long productId,
-                                                 @AuthenticationPrincipal final AuthInfo authInfo) {
-        cartService.addProductByAuthInfo(productId, authInfo);
+                                                 @AuthenticationPrincipal final AuthInfoRequest authInfoRequest) {
+        cartService.addProductByAuthInfo(productId, authInfoRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/cart")
     public ResponseEntity<Void> deleteProductInCart(@RequestParam final Long productId,
-                                                    @AuthenticationPrincipal final AuthInfo authInfo) {
-        cartService.deleteProductByAuthInfo(productId, authInfo);
+                                                    @AuthenticationPrincipal final AuthInfoRequest authInfoRequest) {
+        cartService.deleteProductByAuthInfo(productId, authInfoRequest);
         return ResponseEntity.ok().build();
     }
 }

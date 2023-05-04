@@ -2,7 +2,7 @@ package cart.mvcconfig.argumentresolver;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import cart.dto.AuthInfo;
+import cart.dto.AuthInfoRequest;
 import cart.exception.AuthorizationException;
 import cart.mvcconfig.annotation.AuthenticationPrincipal;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.getParameterType().equals(AuthInfo.class) &&
+        return parameter.getParameterType().equals(AuthInfoRequest.class) &&
                 parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
     }
 
@@ -42,7 +42,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         String email = credentials[0];
         String password = credentials[1];
 
-        return new AuthInfo(email, password);
+        return new AuthInfoRequest(email, password);
     }
 
     private void validateHeader(final String header) {

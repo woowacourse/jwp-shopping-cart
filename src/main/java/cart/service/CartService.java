@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dto.AuthInfo;
+import cart.dto.AuthInfoRequest;
 import cart.repository.dao.CartDao;
 import cart.repository.dao.MemberDao;
 import cart.repository.dao.ProductDao;
@@ -24,22 +24,22 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    public void addProductByAuthInfo(final Long productId, final AuthInfo authInfo) {
-        final MemberEntity memberEntity = memberDao.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
+    public void addProductByAuthInfo(final Long productId, final AuthInfoRequest authInfoRequest) {
+        final MemberEntity memberEntity = memberDao.findByEmailAndPassword(authInfoRequest.getEmail(), authInfoRequest.getPassword());
 
         cartDao.save(new CartEntity(memberEntity.getId(), productId));
     }
 
-    public List<ProductEntity> findCartItemsByAuthInfo(final AuthInfo authInfo) {
-        final MemberEntity memberEntity = memberDao.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
+    public List<ProductEntity> findCartItemsByAuthInfo(final AuthInfoRequest authInfoRequest) {
+        final MemberEntity memberEntity = memberDao.findByEmailAndPassword(authInfoRequest.getEmail(), authInfoRequest.getPassword());
 
         return cartDao.findByMemberId(memberEntity.getId()).stream()
                 .map(cartEntity -> productDao.findById(cartEntity.getProductId()))
                 .collect(Collectors.toList());
     }
 
-    public void deleteProductByAuthInfo(final Long productId, final AuthInfo authInfo) {
-        final MemberEntity memberEntity = memberDao.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
+    public void deleteProductByAuthInfo(final Long productId, final AuthInfoRequest authInfoRequest) {
+        final MemberEntity memberEntity = memberDao.findByEmailAndPassword(authInfoRequest.getEmail(), authInfoRequest.getPassword());
 
         cartDao.delete(memberEntity.getId(), productId);
     }
