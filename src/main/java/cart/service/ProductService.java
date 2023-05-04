@@ -1,19 +1,21 @@
 package cart.service;
 
-import cart.dao.ProductDao;
 import cart.domain.product.Product;
+import cart.domain.product.ProductRepository;
 import cart.service.dto.ProductSaveDto;
 import cart.service.dto.ProductUpdateDto;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
+
 
     public void save(ProductSaveDto productSaveDto) {
         Product product = Product.createToSave(
@@ -21,7 +23,7 @@ public class ProductService {
                 productSaveDto.getPrice(),
                 productSaveDto.getImageUrl()
         );
-        this.productDao.save(product);
+        this.productRepository.save(product);
     }
 
     public void update(ProductUpdateDto productUpdateDto) {
@@ -31,10 +33,14 @@ public class ProductService {
                 productUpdateDto.getPrice(),
                 productUpdateDto.getImageUrl()
         );
-        this.productDao.update(product);
+        this.productRepository.update(product);
     }
 
     public void deleteById(Long id) {
-        this.productDao.deleteById(id);
+        this.productRepository.deleteById(id);
+    }
+
+    public List<Product> findAll() {
+        return this.productRepository.findAll();
     }
 }

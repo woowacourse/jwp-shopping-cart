@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import cart.dao.ProductDao;
+import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ class ViewControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ProductDao productDao;
+    private ProductService productService;
 
     @DisplayName("GET / - index.html 반환")
     @Test

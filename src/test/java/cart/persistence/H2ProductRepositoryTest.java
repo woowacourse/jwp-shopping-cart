@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -15,23 +15,23 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 @JdbcTest
-class ProductDaoTest {
+class H2ProductRepositoryTest {
 
-    private final ProductDao productDao;
+    private final H2ProductRepository h2ProductRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ProductDaoTest(JdbcTemplate jdbcTemplate) {
-        this.productDao = new ProductDao(jdbcTemplate);
+    public H2ProductRepositoryTest(JdbcTemplate jdbcTemplate) {
+        this.h2ProductRepository = new H2ProductRepository(jdbcTemplate);
     }
 
     @DisplayName("상품을 저장한다.")
     @Test
     void shouldSaveProductWhenRequest() {
         final Product productToSave = Product.createToSave("changer", 10, "domain.com");
-        final long productId = productDao.save(productToSave);
+        final long productId = h2ProductRepository.save(productToSave);
         final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
 
         final Product productFromDb = jdbcTemplate.queryForObject(sql,
@@ -55,7 +55,7 @@ class ProductDaoTest {
         jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)", "사과", 100, "domain.com");
         jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)", "당근", 100, "domain.com");
 
-        final List<Product> products = productDao.findAll();
+        final List<Product> products = h2ProductRepository.findAll();
 
         assertAll(
                 () -> assertThat(products).hasSize(2),
@@ -90,7 +90,7 @@ class ProductDaoTest {
         );
 
         //when
-        productDao.update(productToUpdate);
+        h2ProductRepository.update(productToUpdate);
 
         Product productAfterUpdate = jdbcTemplate.queryForObject(
                 "SELECT id, name, price, image_url FROM product WHERE id = ?",
@@ -129,7 +129,7 @@ class ProductDaoTest {
         long id = keyHolder.getKey().longValue();
 
         //when
-        productDao.deleteById(id);
+        h2ProductRepository.deleteById(id);
 
         List<Product> products = jdbcTemplate.query(
                 "SELECT id, name, price, image_url FROM product",
