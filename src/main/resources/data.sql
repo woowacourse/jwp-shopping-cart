@@ -20,4 +20,7 @@ CREATE TABLE IF NOT EXISTS CART (
     product_id LONG NOT NULL
 );
 
+insert into member (email, password) values ('mail1', 'pass1');
+
+insert into member (email, password) values ('user1', 'pass222');
 

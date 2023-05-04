@@ -1,6 +1,6 @@
 package cart.auth;
+
 import cart.service.AuthService;
-import cart.service.MemberService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -21,9 +21,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         AuthInfo authInfo = authorizationExtractor.extract(request);
-        System.out.println(authInfo.getEmail());
         authService.validateLogin(authInfo.getEmail(), authInfo.getPassword());
-        System.out.println("login success!!!!!");
 
         return super.preHandle(request, response, handler);
     }

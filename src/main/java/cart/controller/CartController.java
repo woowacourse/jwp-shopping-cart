@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.dto.ProductIdDto;
 import cart.dto.CartDto;
 import cart.dto.CartRequest;
 import cart.dto.ProductDto;
@@ -22,7 +23,6 @@ public class CartController {
     @GetMapping("/carts/{memberId}")
     public ResponseEntity<List<ProductDto>> cartProductList(@PathVariable long memberId) {
         CartDto cart = cartService.findById(memberId);
-        System.out.println(cart.getProducts() + "ddd");
         return ResponseEntity.ok().body(cart.getProducts());
     }
 
@@ -33,14 +33,15 @@ public class CartController {
     }
 
     @PostMapping("/carts/{member_id}")
-    public ResponseEntity<String> cartProductAdd(@PathVariable long member_id, @RequestParam long productId) {
-        cartService.addProduct(member_id, productId);
+    public ResponseEntity<String> cartProductAdd(@PathVariable long member_id, @RequestBody ProductIdDto productId) {
+        System.out.println(member_id + productId.getProductId() + "!!!!");
+        cartService.addProduct(member_id, productId.getProductId());
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/carts/{member_id}")
-    public ResponseEntity<String> cartProductRemove(@PathVariable long member_id, @RequestParam long productId) {
-        cartService.removeProduct(member_id, productId);
+    @DeleteMapping("/carts/{memberId}")
+    public ResponseEntity<String> cartProductRemove(@PathVariable long memberId, @RequestParam long productId) {
+        cartService.removeProduct(memberId, productId);
         return ResponseEntity.ok().build();
     }
 }
