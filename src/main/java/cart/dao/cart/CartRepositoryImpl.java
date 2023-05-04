@@ -41,12 +41,8 @@ public class CartRepositoryImpl implements CartRepository {
     @Override
     public Cart findCartByCartUser(CartUser cartUser) {
         CartUserEntity cartUserEntity = cartUserDao.findByEmail(cartUser.getUserEmail());
-        List<Long> productIds = cartUserProductDao.findProductByCartUserId(cartUserEntity.getId())
-                .stream()
-                .map(CartUserProductEntity::getProductId)
-                .collect(Collectors.toList());
+        List<ProductEntity> productEntities = cartUserProductDao.findProductByCartUserId(cartUserEntity.getId());
 
-        List<ProductEntity> productEntities = productDao.findById(productIds);
         List<Product> products = productEntities.stream()
                 .map(ProductEntity::toProduct)
                 .collect(Collectors.toList());

@@ -1,5 +1,6 @@
 package cart.dao.user.userproduct;
 
+import cart.dao.product.ProductEntity;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,11 +31,24 @@ public class CartUserProductDao {
         return simpleInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<CartUserProductEntity> findProductByCartUserId(Long cartUserId) {
-        String findProductByCartUserIdQuery = "SELECT * FROM cart_user_product WHERE cart_user_id = ?";
+    public List<ProductEntity> findProductByCartUserId(Long cartUserId) {
+        String findProductByCartUserIdQuery
+                = "SELECT * FROM cart_user_product "
+                + "INNER JOIN product "
+                + "ON cart_user_product.product_id = product.product_id "
+                + "WHERE cart_user_id = ?";
 
-        return jdbcTemplate.query(findProductByCartUserIdQuery,
-                (rs, rowNum) -> toCartUserProductEntity(rs), cartUserId);
+        return jdbcTemplate.query(findProductByCartUserIdQuery, (rs, rowNum) -> toProductEntity(rs), cartUserId);
+    }
+
+    private ProductEntity toProductEntity(ResultSet resultSet) throws SQLException {
+        return new ProductEntity(
+                resultSet.getLong("product_id"),
+                resultSet.getString("name"),
+                resultSet.getInt("price"),
+                resultSet.getString("category"),
+                resultSet.getString("image_url")
+        );
     }
 
     private CartUserProductEntity toCartUserProductEntity(ResultSet rs) throws SQLException {
