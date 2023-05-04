@@ -18,29 +18,29 @@ public class ProductService {
     private final ProductDao productDao;
     private final ProductEntityConvertor productEntityConvertor;
 
-    public ProductService (ProductDao productDao, final ProductEntityConvertor productEntityConvertor) {
+    public ProductService(ProductDao productDao, final ProductEntityConvertor productEntityConvertor) {
         this.productDao = productDao;
         this.productEntityConvertor = productEntityConvertor;
     }
 
     @Transactional
-    public void create (ProductCreateRequest request) {
+    public void create(ProductCreateRequest request) {
         productDao.create(productEntityConvertor.dtoToEntity(request));
     }
 
-    public List<ProductResponse> findAll () {
+    public List<ProductResponse> findAll() {
         return productDao.findAll().stream()
-                .map(ProductResponse::new)
+                .map(entity -> new ProductResponse(entity.getId(), entity.getName(), entity.getImageUrl(), entity.getPrice()))
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public void update (Long id, ProductUpdateRequest request) {
+    public void update(Long id, ProductUpdateRequest request) {
         productDao.updateById(id, productEntityConvertor.dtoToEntity(request));
     }
 
     @Transactional
-    public void delete (Long id) {
+    public void delete(Long id) {
         productDao.deleteById(id);
     }
 }
