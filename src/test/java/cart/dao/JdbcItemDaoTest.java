@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.CreateItem;
 import cart.entity.Item;
+import cart.exception.ServiceIllegalArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import static cart.Pixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
@@ -31,9 +33,7 @@ class JdbcItemDaoTest {
     @DisplayName("상품을 저장할 수 있다.")
     @Test
     void save_success() {
-        CreateItem item = CREATE_ITEM3;
-
-        itemDao.save(item);
+        itemDao.save(CREATE_ITEM3);
 
         List<Item> items = itemDao.findAll();
 
@@ -43,6 +43,14 @@ class JdbcItemDaoTest {
                         .usingRecursiveComparison()
                         .isEqualTo(ITEM3)
         );
+    }
+
+    @DisplayName("이미 상품이 있는 경우 상품을 저장할 수 없다.")
+    @Test
+    void save_fail() {
+        assertThatThrownBy(() -> itemDao.save(CREATE_ITEM1))
+                .isInstanceOf(ServiceIllegalArgumentException.class)
+                .hasMessage("이미 동일한 상품이 존재합니다.");
     }
 
     @DisplayName("상품 목록을 조회할 수 있다.")
@@ -124,14 +132,14 @@ class JdbcItemDaoTest {
     }
 
 
-    @DisplayName("Id를 기준으로 상품이 있다면 true가 반환된다.")
+    @DisplayName("id를 기준으로 상품이 있다면 true가 반환된다.")
     @Test
     void isItemExistsById_true() {
 
         assertThat(itemDao.isItemExistsById(2L)).isTrue();
     }
 
-    @DisplayName("Id를 기준으로 상품이 없다면 false가 반환된다.")
+    @DisplayName("id를 기준으로 상품이 없다면 false가 반환된다.")
     @Test
     void isItemExistsById_false() {
 
