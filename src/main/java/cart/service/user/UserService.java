@@ -11,7 +11,6 @@ import cart.domain.user.User;
 import cart.service.user.dto.UserDto;
 
 @Service
-@Transactional
 public class UserService {
 
 	private final UserDao userDao;

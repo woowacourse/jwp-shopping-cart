@@ -10,8 +10,8 @@ public class User {
 	private final LocalDateTime createdAt;
 	private final LocalDateTime updatedAt;
 
-	public User(final String email, final String password) {
-		this(null, email, password, null, null);
+	public User(final Long id, final String email, final String password) {
+		this(id, email, password, null, null);
 	}
 
 	public User(final Long id, final String email, final String password, final LocalDateTime createdAt,

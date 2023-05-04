@@ -17,13 +17,11 @@ public class UserDao {
 
 	private final JdbcTemplate jdbcTemplate;
 
-	private final RowMapper<User> userRowMapper = (rs, rowNum) -> {
-		User user = new User(
-			rs.getString("email"),
-			rs.getString("password")
-		);
-		return user;
-	};
+	private final RowMapper<User> userRowMapper = (rs, rowNum) -> new User(
+		rs.getLong("id"),
+		rs.getString("email"),
+		rs.getString("password")
+	);
 
 	@Autowired
 	public UserDao(JdbcTemplate jdbcTemplate) {
