@@ -3,12 +3,9 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.dto.AuthDto;
-import cart.dto.request.CreateMemberRequest;
 import cart.dto.response.MemberResponse;
 import java.util.List;
 import java.util.Optional;
@@ -52,35 +49,6 @@ class MemberServiceTest {
             softly.assertThat(memberResponse.getPassword()).isEqualTo("1234");
         });
     }
-    @Test
-    void 회원을_생성한다() {
-        //given
-        Mockito.when(memberDao.findMemberByEmail(Mockito.anyString()))
-                .thenReturn(Optional.empty());
-        Mockito.when(memberDao.insert(Mockito.any()))
-                .thenReturn(1);
-        final CreateMemberRequest createMemberRequest = new CreateMemberRequest("gavi@woowahan.com", "password");
-
-        //when
-        final int affectedRows = memberService.create(createMemberRequest);
-
-        //then
-        assertThat(affectedRows).isOne();
-    }
-
-    @Test
-    void 존재하는_이메일을_추가할_수_없다() {
-        // given
-        Mockito.when(memberDao.findMemberByEmail(Mockito.anyString()))
-                .thenReturn(Optional.ofNullable(MEMBER_ENTITY_FIXTURE));
-        final CreateMemberRequest createMemberRequest = new CreateMemberRequest("gavi@woowahan.com", "password");
-
-        // expect
-        assertThatThrownBy(() -> memberService.create(createMemberRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 존재하는 이메일입니다.");
-    }
-
 
     @Test
     void 아이디와_비밀번호로_회원을_조회한다() {

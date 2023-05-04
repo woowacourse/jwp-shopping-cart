@@ -55,20 +55,4 @@ class MemberDaoTest {
             softly.assertThat(memberEntity.getPassword()).isEqualTo("1234");
         });
     }
-
-    @Test
-    void 특정_이메일을_가진_회원을_조회할_수_있다() {
-        // given
-        memberDao.insert(MEMBER_FIXTURE);
-
-        // when
-        final Optional<MemberEntity> memberEntityOptional = memberDao.findMemberByEmail(MEMBER_FIXTURE.getEmail());
-
-        // then
-        assertSoftly(softly -> {
-            MemberEntity memberEntity = memberEntityOptional.get();
-            softly.assertThat(memberEntity.getEmail()).isEqualTo("gavi@wooteco.com");
-            softly.assertThat(memberEntity.getPassword()).isEqualTo("1234");
-        });
-    }
 }

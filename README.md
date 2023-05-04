@@ -8,7 +8,7 @@
   - [x] 이미지 : 2000자 초과일 경우 예외를 던진다.
 - User
   - [x] 이메일 : 이메일 형식이 아닐 경우 예외를 던진다.
-  - [x] 비밀번호: 영어와 숫자를 포함해야 한다.
+  - [x] 비밀번호: 4자 이상이여야 한다.
 
 - 엔티티
   - 상품
@@ -87,11 +87,6 @@
         - header : Basic 형식의 토큰
         - path variable : 카트 id 전송
       - [x] 응답 : 202
-  - 회원 추가
-    - URI : `/members`
-        - [x] 요청 : post
-          - body : `CreateMemberRequest`
-        - [x] 응답 : 201
 
 ----
 #### DB 테이블
@@ -105,7 +100,7 @@ CREATE TABLE PRODUCT (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE USER (
+CREATE TABLE MEMBER (
     id BIGINT NOT NULL AUTO_INCREMENT,
     email VARCHAR(20) NOT NULL,
     password VARCHAR(50) NOT NULL,
@@ -121,3 +116,5 @@ CREATE TABLE CART (
     FOREIGN KEY (member_id) REFERENCES MEMBER (id)
 );
 ```
+
+반환하려는 데이터가 없을 때 빈 리스트? 옵셔널 리스트?

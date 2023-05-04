@@ -4,7 +4,6 @@ import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
 import cart.dto.AuthDto;
-import cart.dto.request.CreateMemberRequest;
 import cart.dto.response.MemberResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,15 +42,5 @@ public class MemberService {
             throw new IllegalArgumentException("회원 정보가 잘못되었습니다.");
         }
         return memberResult.get();
-    }
-
-    @Transactional
-    public int create(final CreateMemberRequest createMemberRequest) {
-        final Member member = createMemberRequest.toMember();
-        final Optional<MemberEntity> memberResult = memberDao.findMemberByEmail(member.getEmail());
-        if (memberResult.isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
-        }
-        return memberDao.insert(member);
     }
 }

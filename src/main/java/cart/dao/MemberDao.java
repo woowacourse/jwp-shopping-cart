@@ -41,16 +41,7 @@ public class MemberDao {
     public Optional<MemberEntity> findMember(final Member member) {
         final String sql = "SELECT * FROM MEMBER WHERE email = ? and password = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper(), member.getEmail(), member.getPassword()));
-        } catch (EmptyResultDataAccessException error) {
-            return Optional.empty();
-        }
-    }
-
-    public Optional<MemberEntity> findMemberByEmail(final String email) {
-        final String sql = "SELECT * FROM MEMBER WHERE email = ?";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper(), email));
+            return Optional.ofNullable(jdbcTemplate.query(sql, memberRowMapper(), member.getEmail(), member.getPassword()).get(0));
         } catch (EmptyResultDataAccessException error) {
             return Optional.empty();
         }

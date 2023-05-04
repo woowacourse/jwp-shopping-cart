@@ -18,7 +18,6 @@ class MemberTest {
         assertDoesNotThrow(() -> new Member("aa@aa.com","qwerty1234"));
     }
 
-
     @ParameterizedTest
     @ValueSource(strings = {"손흥민닷컴", "코일", "example"})
     void 이메일이_형식과_맞지_않으면_예외가_발생한다(final String nonEmail) {
