@@ -7,9 +7,11 @@ CREATE TABLE PRODUCT (
 );
 
 CREATE TABLE MEMBER (
-    email       VARCHAR(255)   NOT NULL,
+    id          INT           NOT NULL AUTO_INCREMENT,
+    email       VARCHAR(255)  NOT NULL,
     password    VARCHAR(255)  NOT NULL,
-    PRIMARY KEY (email)
+    PRIMARY KEY (email),
+    UNIQUE KEY unique_email (email)
 );
 
 insert into PRODUCT(`name`, image, price) values ('item1', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5c6VkPCiNvUmomb-iGTLqP76uu9FOsJWRpg&usqp=CAU', 1000);
