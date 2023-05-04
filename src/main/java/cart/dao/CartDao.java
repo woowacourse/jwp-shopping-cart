@@ -28,6 +28,14 @@ public class CartDao {
         }
     }
 
+    private RowMapper<CartEntity> carEntityMapper() {
+        return (resultSet, rowNum) -> new CartEntity(
+                resultSet.getLong("id"),
+                resultSet.getLong("product_id"),
+                resultSet.getLong("member_id")
+        );
+    }
+
     public int insert(final Long productId, final Long memberId) {
         final String sql = "INSERT INTO CART (product_id, member_id) VALUES (?,?)";
         return jdbcTemplate.update(sql, productId, memberId);
@@ -45,14 +53,5 @@ public class CartDao {
         } catch (EmptyResultDataAccessException error) {
             return Optional.empty();
         }
-    }
-
-    private RowMapper<CartEntity> carEntityMapper() {
-        final RowMapper<CartEntity> cartEntityRowMapper = (resultSet, rowNum) -> new CartEntity(
-                resultSet.getLong("id"),
-                resultSet.getLong("product_id"),
-                resultSet.getLong("member_id")
-        );
-        return cartEntityRowMapper;
     }
 }

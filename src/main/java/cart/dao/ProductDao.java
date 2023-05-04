@@ -36,13 +36,12 @@ public class ProductDao {
     }
 
     private RowMapper<ProductEntity> getProductRowMapper() {
-        final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) -> new ProductEntity(
+        return (resultSet, rowNum) -> new ProductEntity(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getInt("price"),
                 resultSet.getString("image")
         );
-        return productEntityRowMapper;
     }
 
     public Long insert(final Product product) {

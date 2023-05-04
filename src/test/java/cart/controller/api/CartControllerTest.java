@@ -7,8 +7,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dto.request.CreateProductRequest;
+import cart.util.BasicAuthorizationExtractor;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -46,7 +48,7 @@ class CartControllerTest {
     }
 
     @Test
-    void 장바구니의_상품을_담을_수_있다() {
+    void 장바구니에_상품을_담을_수_있다() {
         given()
                 .log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Basic : " + ENCODED_TOKEN)
@@ -67,7 +69,6 @@ class CartControllerTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value());
-
         given()
                 .log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Basic : " + ENCODED_TOKEN)

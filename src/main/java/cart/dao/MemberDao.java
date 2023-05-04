@@ -5,6 +5,7 @@ import cart.domain.Member;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemberDao {
+    private static final Optional EMPTY = Optional.empty();
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -25,17 +27,16 @@ public class MemberDao {
         try {
             return Optional.ofNullable(jdbcTemplate.query(sql, memberRowMapper()));
         } catch (EmptyResultDataAccessException error) {
-            return Optional.empty();
+            return EMPTY;
         }
     }
 
     private RowMapper<MemberEntity> memberRowMapper() {
-        final RowMapper<MemberEntity> userEntityRowMapper = (resultSet, rowNum) -> new MemberEntity(
+        return (resultSet, rowNum) -> new MemberEntity(
                 resultSet.getLong("id"),
                 resultSet.getString("email"),
                 resultSet.getString("password")
         );
-        return userEntityRowMapper;
     }
 
     public Optional<MemberEntity> findMember(final Member member) {
@@ -43,7 +44,9 @@ public class MemberDao {
         try {
             return Optional.ofNullable(jdbcTemplate.query(sql, memberRowMapper(), member.getEmail(), member.getPassword()).get(0));
         } catch (EmptyResultDataAccessException error) {
-            return Optional.empty();
+            return EMPTY;
+        } catch (DuplicateKeyException error) {
+            return EMPTY;
         }
     }
 

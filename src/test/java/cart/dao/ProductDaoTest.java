@@ -20,7 +20,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
 class ProductDaoTest {
-    
+
     private ProductDao productDao;
 
     @Autowired
@@ -109,7 +109,7 @@ class ProductDaoTest {
         final Optional<List<ProductEntity>> productEntitiesOptional = productDao.findAll();
 
         // then
-        assertSoftly( softly -> {
+        assertSoftly(softly -> {
             List<ProductEntity> productEntities = productEntitiesOptional.get();
             softly.assertThat(productEntities).hasSize(1);
         });
