@@ -55,6 +55,7 @@ public class GlobalExceptionHandler {
                 "알 수 없는 서버 에러가 발생헀습니다."
         );
 
+        exception.printStackTrace();
         return ResponseEntity
                 .internalServerError()
                 .body(exceptionResponse);
