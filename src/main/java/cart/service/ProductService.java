@@ -4,7 +4,7 @@ import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
 import cart.controller.dto.response.ProductResponse;
 import cart.convertor.ProductEntityConvertor;
-import cart.dao.ProductDao;
+import cart.database.dao.ProductDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

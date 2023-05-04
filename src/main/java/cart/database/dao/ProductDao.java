@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.database.dao;
 
 import cart.entity.ProductEntity;
 import cart.validator.DefaultValidator;

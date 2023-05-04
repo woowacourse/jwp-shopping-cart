@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.controller.dto.response.UserResponse;
-import cart.dao.UserDao;
+import cart.database.dao.UserDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

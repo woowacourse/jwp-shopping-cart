@@ -1,10 +1,10 @@
 package cart.service;
 
-import cart.CartRepository;
+import cart.database.repository.CartRepository;
 import cart.controller.dto.response.CartItemResponse;
 import cart.controller.dto.response.UserResponse;
-import cart.dao.CartDao;
-import cart.dao.ProductDao;
+import cart.database.dao.CartDao;
+import cart.database.dao.ProductDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

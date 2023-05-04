@@ -1,4 +1,4 @@
-package cart;
+package cart.database.repository;
 
 import cart.controller.dto.response.CartItemResponse;
 import org.springframework.jdbc.core.JdbcTemplate;
