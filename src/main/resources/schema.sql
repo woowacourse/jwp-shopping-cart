@@ -20,6 +20,6 @@ CREATE TABLE IF NOT EXISTS CART
     email      VARCHAR(255) NOT NULL,
     product_id BIGINT       NOT NULL,
     PRIMARY KEY (cart_id),
-    FOREIGN KEY (email) REFERENCES MEMBER (email),
-    FOREIGN KEY (product_id) REFERENCES PRODUCT (product_id)
+    FOREIGN KEY (email) REFERENCES MEMBER (email) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES PRODUCT (product_id) ON DELETE CASCADE
 );
