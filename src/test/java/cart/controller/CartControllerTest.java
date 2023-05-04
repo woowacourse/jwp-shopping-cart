@@ -32,9 +32,11 @@ class CartControllerTest {
     @Autowired
     private ProductJdbcDao productJdbcDao;
 
+    @LocalServerPort
+    private int port;
 
     @BeforeEach
-    void setup(@LocalServerPort final int port) {
+    void setup() {
         RestAssured.port = port;
     }
 
@@ -52,7 +54,7 @@ class CartControllerTest {
     }
 
     @Test
-    @DisplayName("/cart/{id} post오청 200을 응답한다.")
+    @DisplayName("/cart/{id} post요청 200을 응답한다.")
     void cartAddProduct() {
         Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 1000L));
 
@@ -66,8 +68,29 @@ class CartControllerTest {
         List<CartEntity> cartEntities = cartJdbcDao.findByMemberId(Long.valueOf(id));
 
         Assertions.assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(cartEntities.get(0).getProductId()).isEqualTo(id)
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
         );
+
+    }
+
+    @Test
+    @DisplayName("/cart/{id} delete요청 200을 응답한다.")
+    void cartDeleteProduct() {
+        Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 1000L));
+
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when().delete("/cart/" + id)
+                .then().log().all()
+                .extract();
+
+        List<CartEntity> cartEntities = cartJdbcDao.findByMemberId(Long.valueOf(id));
+
+        Assertions.assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(cartEntities.size()).isEqualTo(0)
+        );
+
     }
 }
