@@ -47,11 +47,6 @@ public class CartDao {
         return jdbcTemplate.query(sql, cartRowMapper, memberId);
     }
 
-//    public void deleteCartByMemberIdAndProductId(Long memberId, Long productId) {
-//        String sql = "DELETE FROM cart WHERE member_id = ? and product_id = ?";
-//        jdbcTemplate.update(sql, memberId, productId);
-//    }
-
     public void deleteCartByCartId(Long cartId) {
         String sql = "DELETE FROM cart WHERE id = ?";
         jdbcTemplate.update(sql, cartId);
