@@ -17,7 +17,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartService {
+
     public static final String NOT_EXIST_USER = "존재하지 않는 회원입니다.";
+    public static final String NOT_EXIST_ITEM = "존재하지 않는 회원입니다.";
 
     private final CartDao cartDao;
     private final UserDao userDao;
@@ -32,40 +34,25 @@ public class CartService {
     @Transactional
     public void saveCart(final String email, final Long itemId) {
         User user = userDao.findBy(email).orElseThrow(() -> new IllegalArgumentException(NOT_EXIST_USER));
-        // TODO: 5/3/23 존재하는 상품인지 검증?
-        Cart cart = new Cart(user.getId(), itemId);
+        Item item = itemDao.findBy(itemId).orElseThrow(() -> new IllegalArgumentException(NOT_EXIST_ITEM));
+        Cart cart = new Cart(user, item);
         cartDao.save(cart);
     }
 
     @Transactional(readOnly = true)
     public List<ItemResponse> loadItemInsideCart(final String email) {
         User user = userDao.findBy(email).orElseThrow(() -> new IllegalArgumentException(NOT_EXIST_USER));
-        List<Item> allItem = itemDao.findAll();
-        Map<Long, Item> allItemById = convertListToMap(allItem);
         List<Cart> carts = cartDao.findBy(user.getId());
         return carts.stream()
-                .map(cart -> convertCartToItem(allItemById, cart))
+                .map(cart -> ItemResponse.from(cart.getItem()))
                 .collect(Collectors.toList());
-    }
-
-    private Map<Long, Item> convertListToMap(final List<Item> allItem) {
-        Map<Long, Item> allItemById = new LinkedHashMap<>();
-        for (Item item : allItem) {
-            allItemById.put(item.getId(), item);
-        }
-        return allItemById;
-    }
-
-    private ItemResponse convertCartToItem(final Map<Long, Item> allItemById, final Cart cart) {
-        Item item = allItemById.get(cart.getItemId());
-        return ItemResponse.from(item);
     }
 
     @Transactional
     public void deleteCart(final String email, final Long itemId) {
         User user = userDao.findBy(email).orElseThrow(() -> new IllegalArgumentException(NOT_EXIST_USER));
-        // TODO: 5/3/23 존재하는 상품인지 검증?
-        Cart cart = new Cart(user.getId(), itemId);
+        Item item = itemDao.findBy(itemId).orElseThrow(() -> new IllegalArgumentException(NOT_EXIST_ITEM));
+        Cart cart = new Cart(user, item);
         cartDao.delete(cart);
     }
 }

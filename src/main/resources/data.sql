@@ -17,9 +17,10 @@ CREATE TABLE IF NOT EXISTS ITEMS
 
 CREATE TABLE IF NOT EXISTS CARTS
 (
+    id          BIGINT          NOT NULL AUTO_INCREMENT,
     user_id     BIGINT          NOT NULL,
     item_id     BIGINT          NOT NULL,
-    PRIMARY KEY (user_id, item_id),
+    PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES USERS(id),
     FOREIGN KEY (item_id) REFERENCES ITEMS(id)
 );

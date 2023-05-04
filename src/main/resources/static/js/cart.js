@@ -34,7 +34,7 @@ const removeCartItem = (id) => {
             'Authorization': `Basic ${credentials}`
         }
     }).then((response) => {
-        //window.location.reload();
+        window.location.reload();
     }).catch((error) => {
         console.error(error);
     });
