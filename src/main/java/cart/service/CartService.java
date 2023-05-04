@@ -19,13 +19,12 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    public CartResponse findAllByMemberId(Long memberId) {
+    public List<ItemResponse> findAllByMemberId(Long memberId) {
         List<ItemEntity> itemEntities = cartDao.findAllByMemberId(memberId);
 
-        List<ItemResponse> itemResponses = itemEntities.stream()
+        return itemEntities.stream()
                 .map(ItemResponse::from)
                 .collect(Collectors.toList());
-        return new CartResponse(memberId, itemResponses);
     }
 
     @Transactional
