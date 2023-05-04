@@ -1,6 +1,7 @@
 package cart.business.service;
 
 import cart.business.domain.product.Product;
+import cart.business.domain.product.ProductId;
 import cart.business.domain.product.ProductImage;
 import cart.business.domain.product.ProductName;
 import cart.business.domain.product.ProductPrice;
@@ -18,7 +19,7 @@ class ProductServiceTest {
     @DisplayName("동일한 이름을 가진 상품을 create 할 시 예외를 던진다")
     void test_create() {
         //given
-        Product teo = new Product(null, new ProductName("teo"),
+        Product teo = new Product(new ProductId(null), new ProductName("teo"),
                 new ProductImage("https://"), new ProductPrice(10));
 
         Product sameNameTeo = new Product(null, new ProductName("teo"),
@@ -35,7 +36,7 @@ class ProductServiceTest {
     @DisplayName("존재하지 않는 상품에 대해 update 할 시 예외를 던진다")
     void test_update() {
         //given
-        Product teo = new Product(1, new ProductName("teo"),
+        Product teo = new Product(new ProductId(1), new ProductName("teo"),
                 new ProductImage("https://"), new ProductPrice(10));
 
         //when, then
@@ -47,7 +48,7 @@ class ProductServiceTest {
     @DisplayName("존재하지 않는 상품에 대해 delete 할 시 예외를 던진다")
     void test_delete() {
         //given
-        Product teo = new Product(1, new ProductName("teo"),
+        Product teo = new Product(new ProductId(1), new ProductName("teo"),
                 new ProductImage("https://"), new ProductPrice(10));
 
         //when, then

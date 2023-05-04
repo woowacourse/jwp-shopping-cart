@@ -4,12 +4,12 @@ import java.util.Objects;
 
 public class Product {
 
-    private final Integer id;
+    private final ProductId id;
     private final ProductName name;
     private final ProductImage url;
     private final ProductPrice price;
 
-    public Product(Integer id, ProductName name, ProductImage url, ProductPrice price) {
+    public Product(ProductId id, ProductName name, ProductImage url, ProductPrice price) {
         this.id = id;
         this.name = name;
         this.url = url;
@@ -17,7 +17,7 @@ public class Product {
     }
 
     public Integer getId() {
-        return id;
+        return id.getValue();
     }
 
     public String getName() {

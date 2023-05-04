@@ -1,5 +1,6 @@
 package cart.persistence;
 
+import cart.business.domain.product.ProductId;
 import cart.business.repository.ProductRepository;
 import cart.business.domain.product.Product;
 import cart.business.domain.product.ProductImage;
@@ -23,7 +24,8 @@ public class H2ProductRepository implements ProductRepository {
         String name = resultSet.getString("name");
         String image = resultSet.getString("url");
         Integer price = resultSet.getInt("price");
-        return new Product(id, new ProductName(name), new ProductImage(image), new ProductPrice(price));
+        return new Product(new ProductId(id), new ProductName(name),
+                new ProductImage(image), new ProductPrice(price));
     };
 
     private final JdbcTemplate jdbcTemplate;

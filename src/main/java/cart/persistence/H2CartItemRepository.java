@@ -1,5 +1,8 @@
 package cart.persistence;
 
+import cart.business.domain.cart.CartItemId;
+import cart.business.domain.member.MemberId;
+import cart.business.domain.product.ProductId;
 import cart.business.repository.CartItemRepository;
 import cart.business.domain.cart.CartItem;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,7 +22,7 @@ public class H2CartItemRepository implements CartItemRepository {
         Integer productId = resultSet.getInt("product_id");
         Integer memberId = resultSet.getInt("member_id");
 
-        return new CartItem(id, productId, memberId);
+        return new CartItem(new CartItemId(id), new ProductId(productId), new MemberId(memberId));
     };
 
     private final JdbcTemplate jdbcTemplate;

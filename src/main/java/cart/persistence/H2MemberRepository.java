@@ -1,5 +1,6 @@
 package cart.persistence;
 
+import cart.business.domain.member.MemberId;
 import cart.business.repository.MemberRepository;
 import cart.business.domain.member.Member;
 import cart.business.domain.member.MemberEmail;
@@ -19,7 +20,7 @@ public class H2MemberRepository implements MemberRepository {
         String email = resultSet.getString("email");
         String password = resultSet.getString("password");
 
-        return new Member(id, new MemberEmail(email), new MemberPassword(password));
+        return new Member(new MemberId(id), new MemberEmail(email), new MemberPassword(password));
     };
 
     private final JdbcTemplate jdbcTemplate;
