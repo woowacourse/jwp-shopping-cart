@@ -1,6 +1,8 @@
 package cart.dao.product;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -23,14 +25,7 @@ public class ProductDao {
     public List<ProductEntity> findAll() {
         String findAllQuery = "SELECT * FROM product";
 
-        return jdbcTemplate.query(findAllQuery, (rs, rowNum) ->
-                new ProductEntity(
-                        rs.getLong("product_id"),
-                        rs.getString("name"),
-                        rs.getInt("price"),
-                        rs.getString("category"),
-                        rs.getString("image_url")
-                ));
+        return jdbcTemplate.query(findAllQuery, (rs, rowNum) -> toProductEntity(rs));
     }
 
     public int countById(Long id) {
@@ -55,7 +50,7 @@ public class ProductDao {
     public ProductEntity update(ProductEntity productEntity) {
         String updateProductQuery = "UPDATE product SET name = ?, price = ?, category = ?, image_url =? WHERE product_id = ?";
 
-        int update = jdbcTemplate.update(con -> {
+        jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(updateProductQuery);
 
             preparedStatement.setString(1, productEntity.getName());
@@ -67,5 +62,21 @@ public class ProductDao {
         });
 
         return productEntity;
+    }
+
+    public ProductEntity findById(Long id) {
+        String findByProductQuery = "SELECT * FROM product WHERE product_id = ?";
+
+        return jdbcTemplate.queryForObject(findByProductQuery, (rs, rowNum) -> toProductEntity(rs), id);
+    }
+
+    private ProductEntity toProductEntity(ResultSet resultSet) throws SQLException {
+        return new ProductEntity(
+                resultSet.getLong("product_id"),
+                resultSet.getString("name"),
+                resultSet.getInt("price"),
+                resultSet.getString("category"),
+                resultSet.getString("image_url")
+        );
     }
 }

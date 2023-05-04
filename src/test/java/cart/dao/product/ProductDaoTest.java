@@ -103,4 +103,21 @@ class ProductDaoTest {
         assertThat(allProducts.get(0).getCategory()).isEqualTo("FOOD");
         assertThat(allProducts.get(0).getImageUrl()).isEqualTo("chicken.com");
     }
+
+    @DisplayName("상품 Id로 조회 테스트")
+    @Test
+    void findById() {
+        ProductEntity productEntity = new ProductEntity(
+                "Pizza",
+                10_000,
+                "FOOD",
+                "pizza.com"
+        );
+        Long savedId = productDao.insert(productEntity);
+
+        ProductEntity byId = productDao.findById(savedId);
+
+        assertThat(byId).isNotNull();
+        assertThat(byId.getName()).isEqualTo("Pizza");
+    }
 }
