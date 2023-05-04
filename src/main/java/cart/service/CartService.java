@@ -80,8 +80,7 @@ public class CartService {
         return cartDao.save(cartEntity);
     }
 
-    public void deleteCartItem(final String email, final Long id) {
-        final Long userId = userDao.findUserIdByEmail(email);
+    public void deleteCartItem(final Long id) {
         if (cartDao.deleteById(id) != EXPECTED_SIZE) {
             throw new EmptyResultDataAccessException(EXPECTED_SIZE);
         }
