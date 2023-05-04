@@ -15,6 +15,16 @@ CREATE TABLE IF NOT EXISTS USERS
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS CARTS
+(
+    id      BIGINT NOT NULL AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    item_id BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES USERS (id),
+    FOREIGN KEY (item_id) REFERENCES ITEMS (id)
+);
+
 INSERT INTO items (name, image_url, price)
 values ('위키드', 'https://image.yes24.com/themusical/upFiles/Themusical/Play/post_2013wicked.jpg',
         150000);
@@ -29,3 +39,11 @@ INSERT INTO users (email, password)
 values ('test2@naver.com', 'test2pw5678');
 INSERT INTO users (email, password)
 values ('test3@gmail.com', 'test3pw9090');
+
+
+INSERT INTO carts (user_id, item_id)
+values (1, 1);
+INSERT INTO carts (user_id, item_id)
+values (1, 2);
+INSERT INTO carts (user_id, item_id)
+values (2, 3);
