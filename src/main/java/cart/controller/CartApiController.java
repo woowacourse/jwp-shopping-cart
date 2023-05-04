@@ -5,6 +5,7 @@ import cart.domain.Member;
 import cart.dto.request.CartProductRequest;
 import cart.dto.response.CartProductResponse;
 import cart.service.CartProductService;
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,9 @@ public class CartApiController {
     public ResponseEntity<Void> addCartProduct(@Login Member member,
                                                @RequestBody CartProductRequest cartProductRequest) {
         cartProductService.save(member, cartProductRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .location(URI.create("/product/" + cartProductRequest.getProductId()))
+                .build();
     }
 
     @DeleteMapping("/{cartProductId}")

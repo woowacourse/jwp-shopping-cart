@@ -43,14 +43,18 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
             throw new UnauthorizedException("Authorization Header는 'BASIC ****'과 같은 값으로 전달되어야 합니다.");
         }
 
-        String value = authorization.replaceFirst(AUTHORIZATION_HEADER_PREFIX, "");
-        String[] authInfo = new String(Base64Utils.decodeFromString(value)).split(":");
+        String[] credentials = decodeByBase64(authorization);
 
-        String email = authInfo[0];
-        String password = authInfo[1];
+        String email = credentials[0];
+        String password = credentials[1];
         Member member = memberDao.findByEmail(email);
         member.validatePassword(password);
 
         return member;
+    }
+
+    private String[] decodeByBase64(String authorization) {
+        String encodedValue = authorization.replaceFirst(AUTHORIZATION_HEADER_PREFIX, "");
+        return new String(Base64Utils.decodeFromString(encodedValue)).split(":");
     }
 }
