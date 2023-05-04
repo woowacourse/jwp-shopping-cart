@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.auth.Auth;
 import cart.auth.AuthInfo;
+import cart.controller.dto.CartProductRequest;
 import cart.controller.dto.ProductResponse;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +30,12 @@ public class CartController {
                 .body(productByEmail);
     }
 
-    @PostMapping("/{productId}")
-    public ResponseEntity<Void> addProduct(@PathVariable final Long productId, @Auth final AuthInfo authInfo) {
-        cartService.save(authInfo.getEmail(), productId);
+    @PostMapping
+    public ResponseEntity<Void> addProduct(
+            @Auth final AuthInfo authInfo,
+            @RequestBody final CartProductRequest cartProductRequest
+    ) {
+        cartService.save(authInfo.getEmail(), cartProductRequest.getProductId());
 
         return ResponseEntity
                 .created(URI.create("/cart/products"))
