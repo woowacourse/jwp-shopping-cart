@@ -1,15 +1,15 @@
 package cart.presentation.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 import javax.validation.constraints.Positive;
 
 public class CartItemIdDto {
 
     @Positive(message = "카트 상품 id는 0보다 커야 합니다.")
-    private final Integer id;
+    private Integer id;
 
-    @JsonCreator
+    public CartItemIdDto() {
+    }
+
     public CartItemIdDto(Integer id) {
         this.id = id;
     }
