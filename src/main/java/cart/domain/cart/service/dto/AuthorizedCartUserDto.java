@@ -4,7 +4,7 @@ public class AuthorizedCartUserDto {
     private final String email;
     private final String password;
 
-    public AuthorizedCartUserDto(String email, String password) {
+    public AuthorizedCartUserDto(final String email, final String password) {
         this.email = email;
         this.password = password;
     }

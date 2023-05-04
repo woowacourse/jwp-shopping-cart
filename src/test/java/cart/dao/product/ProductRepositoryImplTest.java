@@ -36,7 +36,7 @@ class ProductRepositoryImplTest {
     void findAll() {
         jdbcTemplate.update("INSERT INTO product (name, price) VALUES ('Chicken', 18000), ('Pizza', 24000)");
 
-        List<Product> allProducts = productRepository.findAll();
+        final List<Product> allProducts = productRepository.findAll();
 
         assertThat(allProducts).hasSize(2);
         assertThat(allProducts).extractingResultOf("getName")
@@ -46,11 +46,11 @@ class ProductRepositoryImplTest {
     @DisplayName("상품 저장 테스트")
     @Test
     void insert() {
-        Product pizza = TestFixture.PIZZA;
+        final Product pizza = TestFixture.PIZZA;
 
         productRepository.save(pizza);
 
-        List<Product> allProducts = productRepository.findAll();
+        final List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(1);
         assertThat(allProducts).extractingResultOf("getName")
                 .contains("Pizza");
@@ -59,23 +59,23 @@ class ProductRepositoryImplTest {
     @DisplayName("단일 상품 삭제 테스트")
     @Test
     void deleteById() {
-        Product pizza = TestFixture.PIZZA;
-        Long savedId = productRepository.save(pizza);
+        final Product pizza = TestFixture.PIZZA;
+        final Long savedId = productRepository.save(pizza);
         assertThat(productRepository.findAll()).hasSize(1);
 
         productRepository.deleteById(savedId);
 
-        List<Product> allProducts = productRepository.findAll();
+        final List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(0);
     }
 
     @DisplayName("상품 수정 테스트")
     @Test
     void update() {
-        Product pizza = TestFixture.PIZZA;
-        Long savedId = productRepository.save(pizza);
+        final Product pizza = TestFixture.PIZZA;
+        final Long savedId = productRepository.save(pizza);
 
-        Product updatedProduct = new Product(
+        final Product updatedProduct = new Product(
                 ProductName.from("Chicken"),
                 ProductPrice.from(20_000),
                 ProductCategory.FOOD,
@@ -85,9 +85,9 @@ class ProductRepositoryImplTest {
 
         productRepository.update(updatedProduct);
 
-        List<Product> allProducts = productRepository.findAll();
+        final List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(1);
-        Product savedProduct = allProducts.get(0);
+        final Product savedProduct = allProducts.get(0);
         assertThat(savedProduct.getProductId()).isEqualTo(savedId);
         assertThat(savedProduct.getName()).isEqualTo("Chicken");
         assertThat(savedProduct.getPrice()).isEqualTo(BigDecimal.valueOf(20_000));

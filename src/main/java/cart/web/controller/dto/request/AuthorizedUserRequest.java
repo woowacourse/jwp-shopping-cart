@@ -7,7 +7,7 @@ public class AuthorizedUserRequest {
     public AuthorizedUserRequest() {
     }
 
-    public AuthorizedUserRequest(String email, String password) {
+    public AuthorizedUserRequest(final String email, final String password) {
         this.email = email;
         this.password = password;
     }

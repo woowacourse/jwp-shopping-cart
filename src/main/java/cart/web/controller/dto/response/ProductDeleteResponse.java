@@ -6,7 +6,7 @@ public class ProductDeleteResponse {
     public ProductDeleteResponse() {
     }
 
-    public ProductDeleteResponse(Long deletedId) {
+    public ProductDeleteResponse(final Long deletedId) {
         this.deletedId = deletedId;
     }
 

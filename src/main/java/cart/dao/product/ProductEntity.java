@@ -16,7 +16,8 @@ public class ProductEntity {
     private final String category;
     private final String imageUrl;
 
-    public ProductEntity(Long id, String name, Integer price, String category, String imageUrl) {
+    public ProductEntity(final Long id, final String name, final Integer price, final String category,
+                         final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -24,7 +25,7 @@ public class ProductEntity {
         this.imageUrl = imageUrl;
     }
 
-    public ProductEntity(String name, Integer price, String category, String imageUrl) {
+    public ProductEntity(final String name, final Integer price, final String category, final String imageUrl) {
         this.id = null;
         this.name = name;
         this.price = price;
@@ -32,7 +33,7 @@ public class ProductEntity {
         this.imageUrl = imageUrl;
     }
 
-    public ProductEntity(Product product) {
+    public ProductEntity(final Product product) {
         this.id = null;
         this.name = product.getName();
         this.price = product.getPrice().intValue();
@@ -51,14 +52,14 @@ public class ProductEntity {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ProductEntity that = (ProductEntity) o;
+        final ProductEntity that = (ProductEntity) o;
         return Objects.equals(getId(), that.getId());
     }
 

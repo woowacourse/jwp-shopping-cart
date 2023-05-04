@@ -22,16 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartRestController {
     private final CartService cartService;
 
-    public CartRestController(CartService cartService) {
+    public CartRestController(final CartService cartService) {
         this.cartService = cartService;
     }
 
     @PostMapping
     public ResponseEntity<Void> addProductInCart(
-            @AuthorizedUser AuthorizedUserRequest request,
-            @RequestBody ProductInCartAdditionRequest productId
+            @AuthorizedUser final AuthorizedUserRequest request,
+            @RequestBody final ProductInCartAdditionRequest productId
     ) {
-        AuthorizedCartUserDto authorizedCartUserDto = toAuthorizedCartUserDto(request);
+        final AuthorizedCartUserDto authorizedCartUserDto = toAuthorizedCartUserDto(request);
 
         cartService.addProductInCart(authorizedCartUserDto, productId.getProductId());
 
@@ -41,10 +41,10 @@ public class CartRestController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductDto>> getProductsInCart(@AuthorizedUser AuthorizedUserRequest request) {
-        AuthorizedCartUserDto authorizedCartUserDto = toAuthorizedCartUserDto(request);
+    public ResponseEntity<List<ProductDto>> getProductsInCart(@AuthorizedUser final AuthorizedUserRequest request) {
+        final AuthorizedCartUserDto authorizedCartUserDto = toAuthorizedCartUserDto(request);
 
-        List<ProductDto> allProductsInCart = cartService.findAllProductsInCart(authorizedCartUserDto);
+        final List<ProductDto> allProductsInCart = cartService.findAllProductsInCart(authorizedCartUserDto);
 
         return ResponseEntity
                 .ok(allProductsInCart);
@@ -52,10 +52,10 @@ public class CartRestController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProductInCart(
-            @AuthorizedUser AuthorizedUserRequest request,
-            @PathVariable Long productId
+            @AuthorizedUser final AuthorizedUserRequest request,
+            @PathVariable final Long productId
     ) {
-        AuthorizedCartUserDto authorizedCartUserDto = toAuthorizedCartUserDto(request);
+        final AuthorizedCartUserDto authorizedCartUserDto = toAuthorizedCartUserDto(request);
 
         cartService.deleteProductInCart(authorizedCartUserDto, productId);
 
@@ -64,7 +64,7 @@ public class CartRestController {
                 .build();
     }
 
-    private AuthorizedCartUserDto toAuthorizedCartUserDto(AuthorizedUserRequest request) {
+    private AuthorizedCartUserDto toAuthorizedCartUserDto(final AuthorizedUserRequest request) {
         return new AuthorizedCartUserDto(request.getEmail(), request.getPassword());
     }
 }

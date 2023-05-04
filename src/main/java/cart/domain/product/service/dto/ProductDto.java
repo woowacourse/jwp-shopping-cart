@@ -9,7 +9,7 @@ public class ProductDto {
     private final String category;
     private final String imageUrl;
 
-    public ProductDto(Long id, String name, int price, String category, String imageUrl) {
+    public ProductDto(final Long id, final String name, final int price, final String category, final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -17,7 +17,7 @@ public class ProductDto {
         this.imageUrl = imageUrl;
     }
 
-    public static ProductDto from(Product product) {
+    public static ProductDto from(final Product product) {
         return new ProductDto(
                 product.getProductId(),
                 product.getName(),

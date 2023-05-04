@@ -18,23 +18,23 @@ public class CartService {
     private final CartUserRepository cartUserRepository;
     private final ProductRepository productRepository;
 
-    public CartService(CartRepository cartRepository, CartUserRepository cartUserRepository,
-                       ProductRepository productRepository) {
+    public CartService(final CartRepository cartRepository, final CartUserRepository cartUserRepository,
+                       final ProductRepository productRepository) {
         this.cartRepository = cartRepository;
         this.cartUserRepository = cartUserRepository;
         this.productRepository = productRepository;
     }
 
-    public void addProductInCart(AuthorizedCartUserDto userDto, Long productId) {
-        CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
-        Product product = productRepository.findById(productId);
+    public void addProductInCart(final AuthorizedCartUserDto userDto, final Long productId) {
+        final CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
+        final Product product = productRepository.findById(productId);
 
         cartRepository.addProductInCart(cartUser, product);
     }
 
-    public List<ProductDto> findAllProductsInCart(AuthorizedCartUserDto userDto) {
-        CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
-        Cart cartByCartUser = cartRepository.findCartByCartUser(cartUser);
+    public List<ProductDto> findAllProductsInCart(final AuthorizedCartUserDto userDto) {
+        final CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
+        final Cart cartByCartUser = cartRepository.findCartByCartUser(cartUser);
 
         return cartByCartUser.getProducts()
                 .stream()
@@ -42,10 +42,10 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteProductInCart(AuthorizedCartUserDto userDto, Long productId) {
-        CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
-        Product product = productRepository.findById(productId);
-        
+    public void deleteProductInCart(final AuthorizedCartUserDto userDto, final Long productId) {
+        final CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
+        final Product product = productRepository.findById(productId);
+
         cartRepository.deleteProductInCart(cartUser, product);
     }
 }

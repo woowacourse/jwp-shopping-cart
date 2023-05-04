@@ -19,7 +19,7 @@ public class ProductDao {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert simpleInsert;
 
-    public ProductDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public ProductDao(final JdbcTemplate jdbcTemplate, final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.simpleInsert = new SimpleJdbcInsert(jdbcTemplate)
@@ -28,35 +28,35 @@ public class ProductDao {
     }
 
     public List<ProductEntity> findAll() {
-        String findAllQuery = "SELECT * FROM product";
+        final String findAllQuery = "SELECT * FROM product";
 
         return jdbcTemplate.query(findAllQuery, (rs, rowNum) -> toProductEntity(rs));
     }
 
-    public int countById(Long id) {
-        String findAllQuery = "SELECT count(*) FROM product WHERE product_id = ?";
+    public int countById(final Long id) {
+        final String findAllQuery = "SELECT count(*) FROM product WHERE product_id = ?";
 
         return jdbcTemplate.queryForObject(findAllQuery, Integer.class, id);
     }
 
 
-    public Long insert(ProductEntity productEntity) {
-        SqlParameterSource params = new BeanPropertySqlParameterSource(productEntity);
+    public Long insert(final ProductEntity productEntity) {
+        final SqlParameterSource params = new BeanPropertySqlParameterSource(productEntity);
 
         return simpleInsert.executeAndReturnKey(params).longValue();
     }
 
-    public void deleteById(Long id) {
-        String deleteByIdQuery = "DELETE FROM product WHERE product_id = ?";
+    public void deleteById(final Long id) {
+        final String deleteByIdQuery = "DELETE FROM product WHERE product_id = ?";
 
         jdbcTemplate.update(deleteByIdQuery, id);
     }
 
-    public ProductEntity update(ProductEntity productEntity) {
-        String updateProductQuery = "UPDATE product SET name = ?, price = ?, category = ?, image_url =? WHERE product_id = ?";
+    public ProductEntity update(final ProductEntity productEntity) {
+        final String updateProductQuery = "UPDATE product SET name = ?, price = ?, category = ?, image_url =? WHERE product_id = ?";
 
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(updateProductQuery);
+            final PreparedStatement preparedStatement = con.prepareStatement(updateProductQuery);
 
             preparedStatement.setString(1, productEntity.getName());
             preparedStatement.setInt(2, productEntity.getPrice());
@@ -69,24 +69,24 @@ public class ProductDao {
         return productEntity;
     }
 
-    public ProductEntity findById(Long id) {
-        String findByProductQuery = "SELECT * FROM product WHERE product_id = ?";
+    public ProductEntity findById(final Long id) {
+        final String findByProductQuery = "SELECT * FROM product WHERE product_id = ?";
 
         return jdbcTemplate.queryForObject(findByProductQuery, (rs, rowNum) -> toProductEntity(rs), id);
     }
 
-    public List<ProductEntity> findById(List<Long> ids) {
+    public List<ProductEntity> findById(final List<Long> ids) {
         if (ids.isEmpty()) {
             return Collections.emptyList();
         }
 
-        String findProducts = "SELECT * FROM product WHERE product_id IN (:productIds)";
-        MapSqlParameterSource parameters = new MapSqlParameterSource("productIds", ids);
+        final String findProducts = "SELECT * FROM product WHERE product_id IN (:productIds)";
+        final MapSqlParameterSource parameters = new MapSqlParameterSource("productIds", ids);
 
         return namedParameterJdbcTemplate.query(findProducts, parameters, (rs, rowNum) -> toProductEntity(rs));
     }
 
-    private ProductEntity toProductEntity(ResultSet resultSet) throws SQLException {
+    private ProductEntity toProductEntity(final ResultSet resultSet) throws SQLException {
         return new ProductEntity(
                 resultSet.getLong("product_id"),
                 resultSet.getString("name"),

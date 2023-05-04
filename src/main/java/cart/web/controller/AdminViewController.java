@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AdminViewController {
     private final ProductService productService;
 
-    public AdminViewController(ProductService productService) {
+    public AdminViewController(final ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping("/admin")
-    public String loadAdminPage(Model model) {
-        List<ProductDto> allProducts = productService.getAllProducts();
+    public String loadAdminPage(final Model model) {
+        final List<ProductDto> allProducts = productService.getAllProducts();
 
         model.addAttribute("products", allProducts);
 

@@ -14,7 +14,7 @@ class UserEmailTest {
             "1231emailcom",
             "@aa123123.com",
     })
-    void createUserEmailFailure(String email) {
+    void createUserEmailFailure(final String email) {
         assertThatThrownBy(() -> UserEmail.from(email))
                 .isInstanceOf(IllegalArgumentException.class);
     }
@@ -25,7 +25,7 @@ class UserEmailTest {
             "k123@gmail.com",
             "wawa@wowo.net",
     })
-    void createUserEmail(String email) {
+    void createUserEmail(final String email) {
         assertDoesNotThrow(() -> UserEmail.from(email));
     }
 }

@@ -12,7 +12,7 @@ public class ProductModificationResponse {
     public ProductModificationResponse() {
     }
 
-    public ProductModificationResponse(ProductModificationRequest request) {
+    public ProductModificationResponse(final ProductModificationRequest request) {
         this.id = request.getId();
         this.name = request.getName();
         this.price = request.getPrice();

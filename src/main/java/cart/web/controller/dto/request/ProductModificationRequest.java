@@ -10,7 +10,8 @@ public class ProductModificationRequest {
     public ProductModificationRequest() {
     }
 
-    public ProductModificationRequest(Long id, String name, Integer price, String category, String imageUrl) {
+    public ProductModificationRequest(final Long id, final String name, final Integer price, final String category,
+                                      final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;

@@ -8,7 +8,7 @@ public class Cart {
     private final CartUser cartUser;
     private final List<Product> products;
 
-    public Cart(CartUser cartUser, List<Product> products) {
+    public Cart(final CartUser cartUser, final List<Product> products) {
         this.cartUser = cartUser;
         this.products = products;
     }

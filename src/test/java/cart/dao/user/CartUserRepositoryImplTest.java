@@ -30,7 +30,7 @@ class CartUserRepositoryImplTest {
     @DisplayName("사용자 이메일로 사용자 조회시 존재하지 않으면 예외 발생")
     @Test
     void findByEmailFailureNotExist() {
-        String findTargetEmail = "a@a.com";
+        final String findTargetEmail = "a@a.com";
 
         assertThatThrownBy(() -> cartUserRepository.findByEmail(findTargetEmail))
                 .isInstanceOf(NoSuchElementException.class);
@@ -39,12 +39,12 @@ class CartUserRepositoryImplTest {
     @DisplayName("사용자 이메일로 사용자 조회 테스트")
     @Test
     void findByEmail() {
-        String findTargetEmail = "a@a.com";
+        final String findTargetEmail = "a@a.com";
         jdbcTemplate.update("INSERT INTO cart_user (email, cart_password)\n"
                 + "values ('a@a.com', 'password1'),\n"
                 + "       ('b@b.com', 'password2');");
 
-        CartUser user = cartUserRepository.findByEmail(findTargetEmail);
+        final CartUser user = cartUserRepository.findByEmail(findTargetEmail);
 
         assertThat(user).isNotNull();
         assertThat(user.getUserEmail()).isEqualTo(findTargetEmail);
@@ -53,15 +53,15 @@ class CartUserRepositoryImplTest {
     @DisplayName("사용자 저장 테스트")
     @Test
     void saveUser() {
-        String email = "a@a.com";
-        CartUser cartUser = new CartUser(
+        final String email = "a@a.com";
+        final CartUser cartUser = new CartUser(
                 UserEmail.from(email),
                 "password"
         );
 
         cartUserRepository.save(cartUser);
 
-        CartUser user = cartUserRepository.findByEmail(email);
+        final CartUser user = cartUserRepository.findByEmail(email);
 
         assertThat(user).isNotNull();
         assertThat(user.getUserEmail()).isEqualTo(email);
@@ -74,7 +74,7 @@ class CartUserRepositoryImplTest {
                 + "values ('a@a.com', 'password1'),\n"
                 + "       ('b@b.com', 'password2');");
 
-        List<CartUser> cartUsers = cartUserRepository.findAll();
+        final List<CartUser> cartUsers = cartUserRepository.findAll();
 
         assertThat(cartUsers).hasSize(2);
     }

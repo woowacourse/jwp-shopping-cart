@@ -6,7 +6,7 @@ public class ProductCreationDto {
     private final String category;
     private final String imageUrl;
 
-    public ProductCreationDto(String name, Integer price, String category, String imageUrl) {
+    public ProductCreationDto(final String name, final Integer price, final String category, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.category = category;

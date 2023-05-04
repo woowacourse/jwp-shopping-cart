@@ -31,29 +31,29 @@ class CartUserProductDaoTest {
     @DisplayName("장바구니 내 상품 추가 테스트")
     @Test
     void insertCartUserProduct() {
-        Long userId = cartUserDao.insert(new CartUserEntity("a@a.com", "password"));
-        Long productId = productDao.insert(new ProductEntity("ProductA", 13_000, "ETC", "image.com"));
-        CartUserProductEntity cartUserProductEntity = new CartUserProductEntity(
+        final Long userId = cartUserDao.insert(new CartUserEntity("a@a.com", "password"));
+        final Long productId = productDao.insert(new ProductEntity("ProductA", 13_000, "ETC", "image.com"));
+        final CartUserProductEntity cartUserProductEntity = new CartUserProductEntity(
                 userId,
                 productId
         );
 
         cartUserProductDao.insert(cartUserProductEntity);
 
-        List<CartUserProductEntity> entities = cartUserProductDao.findAll();
+        final List<CartUserProductEntity> entities = cartUserProductDao.findAll();
         assertThat(entities).hasSize(1);
     }
 
     @DisplayName("장바구니 내 상품 조회 테스트")
     @Test
     void findProductByCartUserId() {
-        Long userId = cartUserDao.insert(new CartUserEntity("a@a.com", "password"));
-        Long productId = productDao.insert(new ProductEntity("ProductA", 13_000, "ETC", "image.com"));
-        CartUserProductEntity cartUserProductEntity = new CartUserProductEntity(userId, productId);
+        final Long userId = cartUserDao.insert(new CartUserEntity("a@a.com", "password"));
+        final Long productId = productDao.insert(new ProductEntity("ProductA", 13_000, "ETC", "image.com"));
+        final CartUserProductEntity cartUserProductEntity = new CartUserProductEntity(userId, productId);
         cartUserProductDao.insert(cartUserProductEntity);
         cartUserProductDao.insert(cartUserProductEntity);
 
-        List<ProductEntity> productEntitiesInCart = cartUserProductDao.findProductByCartUserId(userId);
+        final List<ProductEntity> productEntitiesInCart = cartUserProductDao.findProductByCartUserId(userId);
 
         assertThat(productEntitiesInCart).hasSize(2);
     }
@@ -62,19 +62,19 @@ class CartUserProductDaoTest {
     @Test
     void deleteByCartUserIdAndProductId() {
         //given
-        Long userId = cartUserDao.insert(new CartUserEntity("a@a.com", "password"));
-        Long productId = productDao.insert(new ProductEntity("ProductA", 13_000, "ETC", "image.com"));
+        final Long userId = cartUserDao.insert(new CartUserEntity("a@a.com", "password"));
+        final Long productId = productDao.insert(new ProductEntity("ProductA", 13_000, "ETC", "image.com"));
 
-        CartUserProductEntity cartUserProductEntity = new CartUserProductEntity(userId, productId);
+        final CartUserProductEntity cartUserProductEntity = new CartUserProductEntity(userId, productId);
         cartUserProductDao.insert(cartUserProductEntity);
-        List<CartUserProductEntity> entities = cartUserProductDao.findAll();
+        final List<CartUserProductEntity> entities = cartUserProductDao.findAll();
         assertThat(entities).hasSize(1);
 
         //when
         cartUserProductDao.deleteByCartUserIdAndProductId(userId, productId);
 
         //then
-        List<CartUserProductEntity> afterDeleteEntities = cartUserProductDao.findAll();
+        final List<CartUserProductEntity> afterDeleteEntities = cartUserProductDao.findAll();
         assertThat(afterDeleteEntities).hasSize(0);
     }
 }

@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(final ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
     public List<ProductDto> getAllProducts() {
-        List<Product> allProducts = productRepository.findAll();
+        final List<Product> allProducts = productRepository.findAll();
 
         return allProducts.stream()
                 .map(ProductDto::from)

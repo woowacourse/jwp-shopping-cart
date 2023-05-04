@@ -17,13 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminService {
     private final ProductRepository productRepository;
 
-    public AdminService(ProductRepository productRepository) {
+    public AdminService(final ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
     @Transactional
-    public Long save(ProductCreationDto productDto) {
-        Product product = new Product(
+    public Long save(final ProductCreationDto productDto) {
+        final Product product = new Product(
                 ProductName.from(productDto.getName()),
                 ProductPrice.from(productDto.getPrice()),
                 ProductCategory.valueOf(productDto.getCategory()),
@@ -34,13 +34,13 @@ public class AdminService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(final Long id) {
         productRepository.deleteById(id);
     }
 
     @Transactional
-    public ProductDto update(ProductModificationDto productDto) {
-        Product product = productDto.toProduct();
+    public ProductDto update(final ProductModificationDto productDto) {
+        final Product product = productDto.toProduct();
         productRepository.update(product);
 
         return ProductDto.from(product);

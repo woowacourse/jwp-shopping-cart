@@ -13,32 +13,32 @@ public class CartUserDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleInsert;
 
-    public CartUserDao(JdbcTemplate jdbcTemplate) {
+    public CartUserDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_user")
                 .usingGeneratedKeyColumns("cart_user_id");
     }
 
-    public CartUserEntity findByEmail(String email) {
-        String findByEmailQuery = "SELECT * FROM cart_user WHERE email = ?";
+    public CartUserEntity findByEmail(final String email) {
+        final String findByEmailQuery = "SELECT * FROM cart_user WHERE email = ?";
 
         return jdbcTemplate.queryForObject(findByEmailQuery, (rs, rowNum) -> {
-            long cartUserId = rs.getLong("cart_user_id");
-            String cartUserEmail = rs.getString("email");
-            String cartUserPassword = rs.getString("cart_password");
+            final long cartUserId = rs.getLong("cart_user_id");
+            final String cartUserEmail = rs.getString("email");
+            final String cartUserPassword = rs.getString("cart_password");
             return new CartUserEntity(cartUserId, cartUserEmail, cartUserPassword);
         }, email);
     }
 
-    public Long insert(CartUserEntity cartUserEntity) {
-        SqlParameterSource params = new BeanPropertySqlParameterSource(cartUserEntity);
+    public Long insert(final CartUserEntity cartUserEntity) {
+        final SqlParameterSource params = new BeanPropertySqlParameterSource(cartUserEntity);
 
         return simpleInsert.executeAndReturnKey(params).longValue();
     }
 
     public List<CartUserEntity> findAll() {
-        String findAllQuery = "SELECT * FROM cart_user";
+        final String findAllQuery = "SELECT * FROM cart_user";
 
         return jdbcTemplate.query(findAllQuery, (rs, rowNum) ->
                 new CartUserEntity(

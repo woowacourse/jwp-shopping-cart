@@ -29,7 +29,7 @@ class AdminServiceTest {
 
     @Test
     void saveProduct() {
-        ProductCreationDto pizza = new ProductCreationDto(
+        final ProductCreationDto pizza = new ProductCreationDto(
                 "Pizza",
                 18_000,
                 "FOOD",
@@ -38,7 +38,7 @@ class AdminServiceTest {
 
         adminService.save(pizza);
 
-        List<Product> allProducts = productRepository.findAll();
+        final List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(1);
         assertThat(allProducts.get(0).getName()).isEqualTo("Pizza");
     }
@@ -46,22 +46,22 @@ class AdminServiceTest {
     @DisplayName("단일 상품 삭제 테스트")
     @Test
     void deleteProduct() {
-        Product pizza = TestFixture.PIZZA;
-        Long savedId = productRepository.save(pizza);
+        final Product pizza = TestFixture.PIZZA;
+        final Long savedId = productRepository.save(pizza);
         assertThat(productRepository.findAll()).hasSize(1);
 
         adminService.delete(savedId);
 
-        List<Product> allProducts = productRepository.findAll();
+        final List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(0);
     }
 
     @DisplayName("상품 수정 테스트")
     @Test
     void updateProduct() {
-        Product pizza = TestFixture.PIZZA;
-        Long savedId = productRepository.save(pizza);
-        ProductModificationDto updatedProduct = new ProductModificationDto(
+        final Product pizza = TestFixture.PIZZA;
+        final Long savedId = productRepository.save(pizza);
+        final ProductModificationDto updatedProduct = new ProductModificationDto(
                 savedId,
                 "Chicken",
                 20_000,
@@ -71,9 +71,9 @@ class AdminServiceTest {
 
         adminService.update(updatedProduct);
 
-        List<Product> allProducts = productRepository.findAll();
+        final List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(1);
-        Product savedProduct = allProducts.get(0);
+        final Product savedProduct = allProducts.get(0);
         assertThat(savedProduct.getProductId()).isEqualTo(savedId);
         assertThat(savedProduct.getName()).isEqualTo("Chicken");
         assertThat(savedProduct.getPrice()).isEqualTo(BigDecimal.valueOf(20_000));

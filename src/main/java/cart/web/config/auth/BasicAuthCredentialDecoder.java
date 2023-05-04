@@ -11,15 +11,15 @@ public class BasicAuthCredentialDecoder implements AuthCredentialDecoder<Authori
     private static final String DELIMITER = ":";
 
     @Override
-    public AuthorizedUserRequest decodeCredential(String value) {
+    public AuthorizedUserRequest decodeCredential(final String value) {
         if ((value.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
-            String authHeaderValue = value.substring(BASIC_TYPE.length()).trim();
-            byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
-            String decodedString = new String(decodedBytes);
+            final String authHeaderValue = value.substring(BASIC_TYPE.length()).trim();
+            final byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
+            final String decodedString = new String(decodedBytes);
 
-            String[] credentials = decodedString.split(DELIMITER);
-            String email = credentials[0];
-            String password = credentials[1];
+            final String[] credentials = decodedString.split(DELIMITER);
+            final String email = credentials[0];
+            final String password = credentials[1];
 
             return new AuthorizedUserRequest(email, password);
         }

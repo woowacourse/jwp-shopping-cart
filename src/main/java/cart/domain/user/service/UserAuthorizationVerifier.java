@@ -9,12 +9,12 @@ public class UserAuthorizationVerifier {
 
     private final CartUserRepository cartUserRepository;
 
-    public UserAuthorizationVerifier(CartUserRepository cartUserRepository) {
+    public UserAuthorizationVerifier(final CartUserRepository cartUserRepository) {
         this.cartUserRepository = cartUserRepository;
     }
 
-    public void verifyCartUser(String cartUserEmail, String password) {
-        CartUser cartUser = cartUserRepository.findByEmail(cartUserEmail);
+    public void verifyCartUser(final String cartUserEmail, final String password) {
+        final CartUser cartUser = cartUserRepository.findByEmail(cartUserEmail);
 
         if (cartUser.getPassword().equals(password)) {
             return;

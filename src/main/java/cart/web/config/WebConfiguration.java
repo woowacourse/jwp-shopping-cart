@@ -11,12 +11,12 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     private final BasicAuthorizedUserArgumentResolver basicAuthorizedUserArgumentResolver;
 
-    public WebConfiguration(BasicAuthorizedUserArgumentResolver basicAuthorizedUserArgumentResolver) {
+    public WebConfiguration(final BasicAuthorizedUserArgumentResolver basicAuthorizedUserArgumentResolver) {
         this.basicAuthorizedUserArgumentResolver = basicAuthorizedUserArgumentResolver;
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(basicAuthorizedUserArgumentResolver);
     }
 }

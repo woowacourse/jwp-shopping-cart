@@ -9,7 +9,8 @@ public class Product {
     private final ImageUrl imageUrl;
     private final ProductId productId;
 
-    public Product(ProductName name, ProductPrice price, ProductCategory category, ImageUrl imageUrl) {
+    public Product(final ProductName name, final ProductPrice price, final ProductCategory category,
+                   final ImageUrl imageUrl) {
         this.name = name;
         this.price = price;
         this.category = category;
@@ -17,8 +18,9 @@ public class Product {
         this.productId = ProductId.getEmptyId();
     }
 
-    public Product(ProductName name, ProductPrice price, ProductCategory category, ImageUrl imageUrl,
-                   ProductId productId) {
+    public Product(final ProductName name, final ProductPrice price, final ProductCategory category,
+                   final ImageUrl imageUrl,
+                   final ProductId productId) {
         this.name = name;
         this.price = price;
         this.category = category;

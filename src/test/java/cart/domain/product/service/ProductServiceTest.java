@@ -25,12 +25,12 @@ class ProductServiceTest {
 
     @Test
     void getAllProducts() {
-        Product pizza = TestFixture.PIZZA;
-        Product chicken = TestFixture.CHICKEN;
+        final Product pizza = TestFixture.PIZZA;
+        final Product chicken = TestFixture.CHICKEN;
         productRepository.save(pizza);
         productRepository.save(chicken);
 
-        List<ProductDto> allProducts = productService.getAllProducts();
+        final List<ProductDto> allProducts = productService.getAllProducts();
 
         assertThat(allProducts).hasSize(2);
         assertThat(allProducts).extractingResultOf("getName")

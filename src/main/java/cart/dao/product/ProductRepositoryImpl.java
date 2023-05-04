@@ -11,13 +11,13 @@ import org.springframework.stereotype.Repository;
 public class ProductRepositoryImpl implements ProductRepository {
     private final ProductDao productDao;
 
-    public ProductRepositoryImpl(ProductDao productDao) {
+    public ProductRepositoryImpl(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
     @Override
     public List<Product> findAll() {
-        List<ProductEntity> allProductEntities = productDao.findAll();
+        final List<ProductEntity> allProductEntities = productDao.findAll();
 
         return allProductEntities.stream()
                 .map(ProductEntity::toProduct)
@@ -25,8 +25,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Long save(Product product) {
-        ProductEntity productEntity = new ProductEntity(
+    public Long save(final Product product) {
+        final ProductEntity productEntity = new ProductEntity(
                 product.getName(),
                 product.getPrice().intValue(),
                 product.getCategory().name(),
@@ -37,15 +37,15 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(final Long id) {
         validateExistProduct(id);
 
         productDao.deleteById(id);
     }
 
     @Override
-    public Product update(Product product) {
-        ProductEntity productEntity = new ProductEntity(
+    public Product update(final Product product) {
+        final ProductEntity productEntity = new ProductEntity(
                 product.getProductId(),
                 product.getName(),
                 product.getPrice().intValue(),
@@ -60,14 +60,14 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Product findById(Long productId) {
-        ProductEntity productEntity = productDao.findById(productId);
+    public Product findById(final Long productId) {
+        final ProductEntity productEntity = productDao.findById(productId);
 
         return productEntity.toProduct();
     }
 
-    private void validateExistProduct(Long id) {
-        int count = productDao.countById(id);
+    private void validateExistProduct(final Long id) {
+        final int count = productDao.countById(id);
 
         if (count < 1) {
             throw new NoSuchElementException();

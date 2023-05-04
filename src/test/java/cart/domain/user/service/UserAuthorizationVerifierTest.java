@@ -25,10 +25,10 @@ class UserAuthorizationVerifierTest {
     @DisplayName("사용자의 비밀번호가 일치하는 지 검증한다.")
     @Test
     void verifyCartUser() {
-        String givenEmail = "a@a.com";
-        String password = "password";
-        String wrongPassword = "password12312312";
-        CartUser cartUser = new CartUser(UserEmail.from(givenEmail), password);
+        final String givenEmail = "a@a.com";
+        final String password = "password";
+        final String wrongPassword = "password12312312";
+        final CartUser cartUser = new CartUser(UserEmail.from(givenEmail), password);
         cartUserRepository.save(cartUser);
 
         assertThatThrownBy(() ->

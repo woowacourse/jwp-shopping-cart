@@ -44,7 +44,7 @@ class CartRestControllerTest {
     @Test
     void addProductInCart() throws JsonProcessingException {
         doNothing().when(cartService).addProductInCart(any(), anyLong());
-        ProductInCartAdditionRequest request = new ProductInCartAdditionRequest(1L);
+        final ProductInCartAdditionRequest request = new ProductInCartAdditionRequest(1L);
 
         given().log().all()
                 .auth().preemptive().basic("a@a.com", "password1")

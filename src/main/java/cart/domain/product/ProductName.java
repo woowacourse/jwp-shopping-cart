@@ -7,16 +7,16 @@ public class ProductName {
 
     private final String name;
 
-    private ProductName(String name) {
+    private ProductName(final String name) {
         validate(name);
         this.name = name;
     }
 
-    public static ProductName from(String name) {
+    public static ProductName from(final String name) {
         return new ProductName(name);
     }
 
-    private void validate(String name) {
+    private void validate(final String name) {
         if (name.isBlank()) {
             throw new IllegalArgumentException("상품 이름은 공백이 아닌 최소 1글자 이상이어야 합니다.");
         }
@@ -27,14 +27,14 @@ public class ProductName {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ProductName that = (ProductName) o;
+        final ProductName that = (ProductName) o;
         return Objects.equals(getName(), that.getName());
     }
 

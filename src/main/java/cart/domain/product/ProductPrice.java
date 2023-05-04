@@ -8,18 +8,18 @@ public class ProductPrice {
 
     private final BigDecimal price;
 
-    private ProductPrice(BigDecimal price) {
+    private ProductPrice(final BigDecimal price) {
         validate(price);
         this.price = price;
     }
 
-    public static ProductPrice from(int price) {
-        BigDecimal productPrice = BigDecimal.valueOf(price);
+    public static ProductPrice from(final int price) {
+        final BigDecimal productPrice = BigDecimal.valueOf(price);
 
         return new ProductPrice(productPrice);
     }
 
-    private void validate(BigDecimal price) {
+    private void validate(final BigDecimal price) {
         if (isLessThanMinimum(price)) {
             throw new IllegalArgumentException("삼품 가격은 100원 이상이어야 합니다.");
         }
@@ -29,23 +29,23 @@ public class ProductPrice {
         }
     }
 
-    private boolean isNotProductPriceUnit(BigDecimal price) {
+    private boolean isNotProductPriceUnit(final BigDecimal price) {
         return !price.remainder(MINIMUM_UNIT).equals(BigDecimal.ZERO);
     }
 
-    private boolean isLessThanMinimum(BigDecimal price) {
+    private boolean isLessThanMinimum(final BigDecimal price) {
         return price.compareTo(MINIMUM_UNIT) < 0;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ProductPrice that = (ProductPrice) o;
+        final ProductPrice that = (ProductPrice) o;
         return Objects.equals(getPrice(), that.getPrice());
     }
 

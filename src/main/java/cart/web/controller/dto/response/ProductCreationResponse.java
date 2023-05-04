@@ -12,7 +12,7 @@ public class ProductCreationResponse {
     public ProductCreationResponse() {
     }
 
-    public ProductCreationResponse(Long id, ProductCreationRequest request) {
+    public ProductCreationResponse(final Long id, final ProductCreationRequest request) {
         this.id = id;
         this.name = request.getName();
         this.price = request.getPrice();

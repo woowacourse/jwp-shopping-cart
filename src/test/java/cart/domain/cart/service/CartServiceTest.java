@@ -39,18 +39,18 @@ class CartServiceTest {
     @Test
     void addProductInCart() {
         //given
-        CartUser cartUserA = TestFixture.CART_USER_A;
-        Long savedId = productRepository.save(TestFixture.PIZZA);
+        final CartUser cartUserA = TestFixture.CART_USER_A;
+        final Long savedId = productRepository.save(TestFixture.PIZZA);
 
         cartUserRepository.save(cartUserA);
-        AuthorizedCartUserDto userDto =
+        final AuthorizedCartUserDto userDto =
                 new AuthorizedCartUserDto(cartUserA.getUserEmail(), cartUserA.getPassword());
 
         //when
         cartService.addProductInCart(userDto, savedId);
 
         //then
-        List<Cart> allCarts = cartRepository.findAll();
+        final List<Cart> allCarts = cartRepository.findAll();
         assertThat(allCarts).hasSize(1);
     }
 
@@ -58,19 +58,19 @@ class CartServiceTest {
     @Test
     void findAllProductsInCart() {
         //given
-        CartUser cartUserA = TestFixture.CART_USER_A;
+        final CartUser cartUserA = TestFixture.CART_USER_A;
         cartUserRepository.save(cartUserA);
 
-        Product pizza = saveProductAndGet(TestFixture.PIZZA);
-        Product chicken = saveProductAndGet(TestFixture.CHICKEN);
+        final Product pizza = saveProductAndGet(TestFixture.PIZZA);
+        final Product chicken = saveProductAndGet(TestFixture.CHICKEN);
 
         cartRepository.addProductInCart(cartUserA, pizza);
         cartRepository.addProductInCart(cartUserA, chicken);
-        AuthorizedCartUserDto userDto =
+        final AuthorizedCartUserDto userDto =
                 new AuthorizedCartUserDto(cartUserA.getUserEmail(), cartUserA.getPassword());
 
         //when
-        List<ProductDto> allProductsInCart = cartService.findAllProductsInCart(userDto);
+        final List<ProductDto> allProductsInCart = cartService.findAllProductsInCart(userDto);
 
         //then
         assertThat(allProductsInCart).hasSize(2);
@@ -80,16 +80,16 @@ class CartServiceTest {
     @Test
     void deleteProductInCart() {
         //given
-        CartUser cartUserA = TestFixture.CART_USER_A;
+        final CartUser cartUserA = TestFixture.CART_USER_A;
         cartUserRepository.save(cartUserA);
 
-        Product pizza = saveProductAndGet(TestFixture.PIZZA);
-        Product chicken = saveProductAndGet(TestFixture.CHICKEN);
+        final Product pizza = saveProductAndGet(TestFixture.PIZZA);
+        final Product chicken = saveProductAndGet(TestFixture.CHICKEN);
 
         cartRepository.addProductInCart(cartUserA, pizza);
         cartRepository.addProductInCart(cartUserA, chicken);
         assertThat(cartRepository.findCartByCartUser(cartUserA).getProducts()).hasSize(2);
-        AuthorizedCartUserDto userDto =
+        final AuthorizedCartUserDto userDto =
                 new AuthorizedCartUserDto(cartUserA.getUserEmail(), cartUserA.getPassword());
 
         //when
@@ -99,8 +99,8 @@ class CartServiceTest {
         assertThat(cartRepository.findCartByCartUser(cartUserA).getProducts()).hasSize(1);
     }
 
-    private Product saveProductAndGet(Product product) {
-        Long savedId = productRepository.save(product);
+    private Product saveProductAndGet(final Product product) {
+        final Long savedId = productRepository.save(product);
         return productRepository.findById(savedId);
     }
 }

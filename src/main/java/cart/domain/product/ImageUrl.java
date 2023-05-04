@@ -7,11 +7,11 @@ public class ImageUrl {
 
     private final String url;
 
-    private ImageUrl(String url) {
+    private ImageUrl(final String url) {
         this.url = url;
     }
 
-    public static ImageUrl from(String url) {
+    public static ImageUrl from(final String url) {
         if (url == null) {
             return EMPTY_IMAGE_URL;
         }
@@ -20,14 +20,14 @@ public class ImageUrl {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ImageUrl imageUrl = (ImageUrl) o;
+        final ImageUrl imageUrl = (ImageUrl) o;
         return Objects.equals(getUrl(), imageUrl.getUrl());
     }
 

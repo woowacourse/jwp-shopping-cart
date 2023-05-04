@@ -7,27 +7,27 @@ public class CartUserProductEntity {
     private final Long cartUserId;
     private final Long productId;
 
-    public CartUserProductEntity(Long id, Long cartUserId, Long productId) {
+    public CartUserProductEntity(final Long id, final Long cartUserId, final Long productId) {
         this.id = id;
         this.cartUserId = cartUserId;
         this.productId = productId;
     }
 
-    public CartUserProductEntity(Long cartUserId, Long productId) {
+    public CartUserProductEntity(final Long cartUserId, final Long productId) {
         this.id = null;
         this.cartUserId = cartUserId;
         this.productId = productId;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CartUserProductEntity that = (CartUserProductEntity) o;
+        final CartUserProductEntity that = (CartUserProductEntity) o;
         return Objects.equals(getId(), that.getId());
     }
 

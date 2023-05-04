@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SettingViewController {
     private final CartUserService cartUserService;
 
-    public SettingViewController(CartUserService cartUserService) {
+    public SettingViewController(final CartUserService cartUserService) {
         this.cartUserService = cartUserService;
     }
 
     @GetMapping("/settings")
-    public String loadSettingPage(Model model) {
-        List<CartUserDto> allCartUsers = cartUserService.getAllCartUsers();
+    public String loadSettingPage(final Model model) {
+        final List<CartUserDto> allCartUsers = cartUserService.getAllCartUsers();
 
         model.addAttribute("cartUsers", allCartUsers);
 

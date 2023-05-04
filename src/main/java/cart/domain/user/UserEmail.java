@@ -8,12 +8,12 @@ public class UserEmail {
 
     private final String email;
 
-    private UserEmail(String email) {
+    private UserEmail(final String email) {
         validate(email);
         this.email = email;
     }
 
-    private void validate(String email) {
+    private void validate(final String email) {
         if (PATTERN.matcher(email).matches()) {
             return;
         }
@@ -21,7 +21,7 @@ public class UserEmail {
         throw new IllegalArgumentException();
     }
 
-    public static UserEmail from(String email) {
+    public static UserEmail from(final String email) {
         return new UserEmail(email);
     }
 

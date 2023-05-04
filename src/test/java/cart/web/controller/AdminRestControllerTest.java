@@ -42,9 +42,9 @@ class AdminRestControllerTest {
     @DisplayName("POST 요청시, 상품을 등록할 수 있다.")
     @Test
     void postProduct() throws JsonProcessingException {
-        String productName = "ProductA";
-        int productPrice = 18_000;
-        ProductCreationRequest request =
+        final String productName = "ProductA";
+        final int productPrice = 18_000;
+        final ProductCreationRequest request =
                 new ProductCreationRequest(productName, productPrice, "FOOD", "image.com");
         when(adminService.save(any()))
                 .thenReturn(1L);
@@ -75,9 +75,9 @@ class AdminRestControllerTest {
     @DisplayName("Product를 수정할 수 있다.")
     @Test
     void updateProduct() {
-        ProductModificationRequest request =
+        final ProductModificationRequest request =
                 new ProductModificationRequest(1L, "Chicken", 18_000, "FOOD", "image.com");
-        ProductDto response =
+        final ProductDto response =
                 new ProductDto(1L, "Chicken", 18_000, "FOOD", "image.com");
         when(adminService.update(any())).thenReturn(response);
 

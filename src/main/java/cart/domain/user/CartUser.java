@@ -4,7 +4,7 @@ public class CartUser {
     private final UserEmail userEmail;
     private final String password;
 
-    public CartUser(UserEmail userEmail, String password) {
+    public CartUser(final UserEmail userEmail, final String password) {
         this.userEmail = userEmail;
         this.password = password;
     }

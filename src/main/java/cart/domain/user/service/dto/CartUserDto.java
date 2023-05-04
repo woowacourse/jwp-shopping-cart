@@ -6,12 +6,12 @@ public class CartUserDto {
     private final String email;
     private final String password;
 
-    private CartUserDto(String email, String password) {
+    private CartUserDto(final String email, final String password) {
         this.email = email;
         this.password = password;
     }
 
-    public static CartUserDto from(CartUser cartUser) {
+    public static CartUserDto from(final CartUser cartUser) {
         return new CartUserDto(
                 cartUser.getUserEmail(),
                 cartUser.getPassword()

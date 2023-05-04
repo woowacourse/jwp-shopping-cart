@@ -14,7 +14,8 @@ public class ProductModificationDto {
     private final String category;
     private final String imageUrl;
 
-    public ProductModificationDto(Long id, String name, Integer price, String category, String imageUrl) {
+    public ProductModificationDto(final Long id, final String name, final Integer price, final String category,
+                                  final String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;

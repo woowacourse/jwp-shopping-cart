@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 public class CartUserService {
     private final CartUserRepository cartUserRepository;
 
-    public CartUserService(CartUserRepository cartUserRepository) {
+    public CartUserService(final CartUserRepository cartUserRepository) {
         this.cartUserRepository = cartUserRepository;
     }
 
     public List<CartUserDto> getAllCartUsers() {
-        List<CartUser> allUsers = cartUserRepository.findAll();
+        final List<CartUser> allUsers = cartUserRepository.findAll();
 
         return allUsers.stream()
                 .map(CartUserDto::from)

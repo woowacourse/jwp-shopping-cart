@@ -9,13 +9,13 @@ public class CartUserEntity {
     private final String email;
     private final String cartPassword;
 
-    public CartUserEntity(Long id, String email, String cartPassword) {
+    public CartUserEntity(final Long id, final String email, final String cartPassword) {
         this.id = id;
         this.email = email;
         this.cartPassword = cartPassword;
     }
 
-    public CartUserEntity(String email, String cartPassword) {
+    public CartUserEntity(final String email, final String cartPassword) {
         this.id = null;
         this.email = email;
         this.cartPassword = cartPassword;
@@ -29,14 +29,14 @@ public class CartUserEntity {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CartUserEntity that = (CartUserEntity) o;
+        final CartUserEntity that = (CartUserEntity) o;
         return Objects.equals(id, that.id);
     }
 

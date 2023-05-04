@@ -15,15 +15,15 @@ public class CartUserProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleInsert;
 
-    public CartUserProductDao(JdbcTemplate jdbcTemplate) {
+    public CartUserProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_user_product")
                 .usingGeneratedKeyColumns("cart_user_product_id");
     }
 
-    public Long insert(CartUserProductEntity cartUserProductEntity) {
-        Map<String, Long> params = Map.of(
+    public Long insert(final CartUserProductEntity cartUserProductEntity) {
+        final Map<String, Long> params = Map.of(
                 "cart_user_id", cartUserProductEntity.getCartUserId(),
                 "product_id", cartUserProductEntity.getProductId()
         );
@@ -31,8 +31,8 @@ public class CartUserProductDao {
         return simpleInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<ProductEntity> findProductByCartUserId(Long cartUserId) {
-        String findProductByCartUserIdQuery
+    public List<ProductEntity> findProductByCartUserId(final Long cartUserId) {
+        final String findProductByCartUserIdQuery
                 = "SELECT * FROM cart_user_product "
                 + "INNER JOIN product "
                 + "ON cart_user_product.product_id = product.product_id "
@@ -41,7 +41,7 @@ public class CartUserProductDao {
         return jdbcTemplate.query(findProductByCartUserIdQuery, (rs, rowNum) -> toProductEntity(rs), cartUserId);
     }
 
-    private ProductEntity toProductEntity(ResultSet resultSet) throws SQLException {
+    private ProductEntity toProductEntity(final ResultSet resultSet) throws SQLException {
         return new ProductEntity(
                 resultSet.getLong("product_id"),
                 resultSet.getString("name"),
@@ -51,7 +51,7 @@ public class CartUserProductDao {
         );
     }
 
-    private CartUserProductEntity toCartUserProductEntity(ResultSet rs) throws SQLException {
+    private CartUserProductEntity toCartUserProductEntity(final ResultSet rs) throws SQLException {
         return new CartUserProductEntity(
                 rs.getLong("cart_user_product_id"),
                 rs.getLong("cart_user_id"),
@@ -60,17 +60,17 @@ public class CartUserProductDao {
     }
 
     public List<CartUserProductEntity> findAll() {
-        String findProductByCartUserIdQuery = "SELECT * FROM cart_user_product";
+        final String findProductByCartUserIdQuery = "SELECT * FROM cart_user_product";
 
         return jdbcTemplate.query(findProductByCartUserIdQuery, (rs, rowNum) -> toCartUserProductEntity(rs));
     }
 
-    public void deleteByCartUserIdAndProductId(Long cartUserId, Long productId) {
-        String deleteByCartUserIdAndProductIdQuery =
+    public void deleteByCartUserIdAndProductId(final Long cartUserId, final Long productId) {
+        final String deleteByCartUserIdAndProductIdQuery =
                 "DELETE FROM cart_user_product WHERE cart_user_id = ? AND product_id = ?";
 
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(deleteByCartUserIdAndProductIdQuery);
+            final PreparedStatement preparedStatement = con.prepareStatement(deleteByCartUserIdAndProductIdQuery);
 
             preparedStatement.setLong(1, cartUserId);
             preparedStatement.setLong(2, productId);

@@ -23,7 +23,7 @@ public class CartExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handleIllegalArgumentRequest(IllegalArgumentException exception) {
+    public ResponseEntity<String> handleIllegalArgumentRequest(final IllegalArgumentException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());

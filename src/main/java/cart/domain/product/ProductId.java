@@ -7,11 +7,11 @@ public class ProductId {
 
     private final Long id;
 
-    private ProductId(Long id) {
+    private ProductId(final Long id) {
         this.id = id;
     }
 
-    public static ProductId from(Long id) {
+    public static ProductId from(final Long id) {
         return new ProductId(id);
     }
 
@@ -20,14 +20,14 @@ public class ProductId {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ProductId productId = (ProductId) o;
+        final ProductId productId = (ProductId) o;
         return Objects.equals(getId(), productId.getId());
     }
 

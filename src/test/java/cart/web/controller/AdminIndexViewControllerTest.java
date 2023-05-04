@@ -48,7 +48,7 @@ class AdminIndexViewControllerTest {
     @DisplayName("/admin 요청시, admin.html을 반환한다.")
     @Test
     void loadAdminPage() throws Exception {
-        List<ProductDto> expectedProducts = List.of(
+        final List<ProductDto> expectedProducts = List.of(
                 ProductDto.from(TestFixture.PIZZA),
                 ProductDto.from(TestFixture.CHICKEN)
         );

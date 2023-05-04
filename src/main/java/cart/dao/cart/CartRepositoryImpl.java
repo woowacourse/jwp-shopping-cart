@@ -17,33 +17,33 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class CartRepositoryImpl implements CartRepository {
-
     private final CartUserProductDao cartUserProductDao;
     private final CartUserDao cartUserDao;
     private final ProductDao productDao;
 
-    public CartRepositoryImpl(CartUserProductDao cartUserProductDao, CartUserDao cartUserDao, ProductDao productDao) {
+    public CartRepositoryImpl(final CartUserProductDao cartUserProductDao, final CartUserDao cartUserDao,
+                              final ProductDao productDao) {
         this.cartUserProductDao = cartUserProductDao;
         this.cartUserDao = cartUserDao;
         this.productDao = productDao;
     }
 
     @Override
-    public Long addProductInCart(CartUser cartUser, Product product) {
-        CartUserEntity cartEntity = cartUserDao.findByEmail(cartUser.getUserEmail());
+    public Long addProductInCart(final CartUser cartUser, final Product product) {
+        final CartUserEntity cartEntity = cartUserDao.findByEmail(cartUser.getUserEmail());
 
-        CartUserProductEntity cartUserProductEntity =
+        final CartUserProductEntity cartUserProductEntity =
                 new CartUserProductEntity(cartEntity.getId(), product.getProductId());
 
         return cartUserProductDao.insert(cartUserProductEntity);
     }
 
     @Override
-    public Cart findCartByCartUser(CartUser cartUser) {
-        CartUserEntity cartUserEntity = cartUserDao.findByEmail(cartUser.getUserEmail());
-        List<ProductEntity> productEntities = cartUserProductDao.findProductByCartUserId(cartUserEntity.getId());
+    public Cart findCartByCartUser(final CartUser cartUser) {
+        final CartUserEntity cartUserEntity = cartUserDao.findByEmail(cartUser.getUserEmail());
+        final List<ProductEntity> productEntities = cartUserProductDao.findProductByCartUserId(cartUserEntity.getId());
 
-        List<Product> products = productEntities.stream()
+        final List<Product> products = productEntities.stream()
                 .map(ProductEntity::toProduct)
                 .collect(Collectors.toList());
 
@@ -52,14 +52,14 @@ public class CartRepositoryImpl implements CartRepository {
 
     @Override
     public List<Cart> findAll() {
-        List<CartUserEntity> allCartUsers = cartUserDao.findAll();
-        List<CartUserProductEntity> allCartUserProductEntities = cartUserProductDao.findAll();
+        final List<CartUserEntity> allCartUsers = cartUserDao.findAll();
+        final List<CartUserProductEntity> allCartUserProductEntities = cartUserProductDao.findAll();
 
-        List<Cart> results = new ArrayList<>();
-        for (CartUserEntity cartUser : allCartUsers) {
-            List<Long> productIds = filterUserProductsIds(allCartUserProductEntities, cartUser);
+        final List<Cart> results = new ArrayList<>();
+        for (final CartUserEntity cartUser : allCartUsers) {
+            final List<Long> productIds = filterUserProductsIds(allCartUserProductEntities, cartUser);
 
-            List<Product> products = productDao.findById(productIds)
+            final List<Product> products = productDao.findById(productIds)
                     .stream()
                     .map(ProductEntity::toProduct)
                     .collect(Collectors.toList());
@@ -71,8 +71,8 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     private List<Long> filterUserProductsIds(
-            List<CartUserProductEntity> allCartUserProductEntities,
-            CartUserEntity cartUser
+            final List<CartUserProductEntity> allCartUserProductEntities,
+            final CartUserEntity cartUser
     ) {
         return allCartUserProductEntities.stream()
                 .filter(it -> it.getCartUserId().equals(cartUser.getId()))
@@ -81,8 +81,8 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public void deleteProductInCart(CartUser cartUser, Product product) {
-        CartUserEntity cartUserEntity = cartUserDao.findByEmail(cartUser.getUserEmail());
+    public void deleteProductInCart(final CartUser cartUser, final Product product) {
+        final CartUserEntity cartUserEntity = cartUserDao.findByEmail(cartUser.getUserEmail());
 
         cartUserProductDao.deleteByCartUserIdAndProductId(
                 cartUserEntity.getId(),

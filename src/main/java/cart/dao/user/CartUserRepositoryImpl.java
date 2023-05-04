@@ -15,20 +15,20 @@ public class CartUserRepositoryImpl implements CartUserRepository {
 
     private final CartUserDao cartUserDao;
 
-    public CartUserRepositoryImpl(CartUserDao cartUserDao) {
+    public CartUserRepositoryImpl(final CartUserDao cartUserDao) {
         this.cartUserDao = cartUserDao;
     }
 
     @Override
-    public CartUser findByEmail(String email) {
-        CartUserEntity cartUserEntity = validateIsNotEmptyResult(() -> cartUserDao.findByEmail(email));
+    public CartUser findByEmail(final String email) {
+        final CartUserEntity cartUserEntity = validateIsNotEmptyResult(() -> cartUserDao.findByEmail(email));
 
         return toCartUser(cartUserEntity);
     }
 
     @Override
-    public Long save(CartUser cartUser) {
-        CartUserEntity cartUserEntity = new CartUserEntity(
+    public Long save(final CartUser cartUser) {
+        final CartUserEntity cartUserEntity = new CartUserEntity(
                 cartUser.getUserEmail(),
                 cartUser.getPassword()
         );
@@ -38,24 +38,24 @@ public class CartUserRepositoryImpl implements CartUserRepository {
 
     @Override
     public List<CartUser> findAll() {
-        List<CartUserEntity> allCartEntities = cartUserDao.findAll();
+        final List<CartUserEntity> allCartEntities = cartUserDao.findAll();
 
         return allCartEntities.stream()
                 .map(this::toCartUser)
                 .collect(Collectors.toList());
     }
 
-    private CartUser toCartUser(CartUserEntity cartUserEntity) {
+    private CartUser toCartUser(final CartUserEntity cartUserEntity) {
         return new CartUser(
                 UserEmail.from(cartUserEntity.getEmail()),
                 cartUserEntity.getCartPassword()
         );
     }
 
-    private <T> T validateIsNotEmptyResult(Supplier<T> findQuery) {
+    private <T> T validateIsNotEmptyResult(final Supplier<T> findQuery) {
         try {
             return findQuery.get();
-        } catch (EmptyResultDataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             throw new NoSuchElementException();
         }
     }

@@ -6,7 +6,7 @@ public class ProductInCartAdditionRequest {
     public ProductInCartAdditionRequest() {
     }
 
-    public ProductInCartAdditionRequest(Long productId) {
+    public ProductInCartAdditionRequest(final Long productId) {
         this.productId = productId;
     }
 

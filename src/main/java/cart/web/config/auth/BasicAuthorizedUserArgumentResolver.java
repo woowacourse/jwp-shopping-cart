@@ -17,27 +17,27 @@ public class BasicAuthorizedUserArgumentResolver implements HandlerMethodArgumen
     private final UserAuthorizationVerifier userAuthorizationVerifier;
 
     public BasicAuthorizedUserArgumentResolver(
-            AuthCredentialDecoder<AuthorizedUserRequest> authCredentialDecoder,
-            UserAuthorizationVerifier userAuthorizationVerifier
+            final AuthCredentialDecoder<AuthorizedUserRequest> authCredentialDecoder,
+            final UserAuthorizationVerifier userAuthorizationVerifier
     ) {
         this.authCredentialDecoder = authCredentialDecoder;
         this.userAuthorizationVerifier = userAuthorizationVerifier;
     }
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthorizedUser.class);
     }
 
     @Override
     public AuthorizedUserRequest resolveArgument(
-            MethodParameter parameter,
-            ModelAndViewContainer mavContainer,
-            NativeWebRequest webRequest,
-            WebDataBinderFactory binderFactory
+            final MethodParameter parameter,
+            final ModelAndViewContainer mavContainer,
+            final NativeWebRequest webRequest,
+            final WebDataBinderFactory binderFactory
     ) throws Exception {
-        String credentialValue = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        AuthorizedUserRequest authorizedUserRequest = authCredentialDecoder.decodeCredential(credentialValue);
+        final String credentialValue = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        final AuthorizedUserRequest authorizedUserRequest = authCredentialDecoder.decodeCredential(credentialValue);
 
         userAuthorizationVerifier.verifyCartUser(authorizedUserRequest.getEmail(),
                 authorizedUserRequest.getPassword());

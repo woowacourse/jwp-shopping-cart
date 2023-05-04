@@ -29,7 +29,7 @@ class ProductDaoTest {
     void findAll() {
         jdbcTemplate.update("INSERT INTO product (name, price) VALUES ('Chicken', 18000), ('Pizza', 24000)");
 
-        List<ProductEntity> all = productDao.findAll();
+        final List<ProductEntity> all = productDao.findAll();
 
         assertThat(all).hasSize(2);
         assertThat(all).extracting("name")
@@ -41,8 +41,8 @@ class ProductDaoTest {
     @DisplayName("상품 저장 테스트")
     @Test
     void saveProduct() {
-        String productName = "ProductA";
-        ProductEntity productEntity = new ProductEntity(
+        final String productName = "ProductA";
+        final ProductEntity productEntity = new ProductEntity(
                 productName,
                 10_000,
                 "ETC",
@@ -51,7 +51,7 @@ class ProductDaoTest {
 
         productDao.insert(productEntity);
 
-        List<ProductEntity> allEntities = productDao.findAll();
+        final List<ProductEntity> allEntities = productDao.findAll();
         assertThat(allEntities).hasSize(1);
         assertThat(allEntities.get(0).getName()).isEqualTo(productName);
     }
@@ -59,34 +59,34 @@ class ProductDaoTest {
     @DisplayName("단일 상품 삭제 테스트")
     @Test
     void deleteProduct() {
-        String productName = "ProductA";
-        ProductEntity productEntity = new ProductEntity(
+        final String productName = "ProductA";
+        final ProductEntity productEntity = new ProductEntity(
                 productName,
                 10_000,
                 "ETC",
                 "naver.com"
         );
-        Long savedId = productDao.insert(productEntity);
+        final Long savedId = productDao.insert(productEntity);
         assertThat(productDao.findAll()).hasSize(1);
 
         productDao.deleteById(savedId);
 
-        List<ProductEntity> allEntities = productDao.findAll();
+        final List<ProductEntity> allEntities = productDao.findAll();
         assertThat(allEntities).hasSize(0);
     }
 
     @DisplayName("상품 수정 테스트")
     @Test
     void updateProduct() {
-        ProductEntity productEntity = new ProductEntity(
+        final ProductEntity productEntity = new ProductEntity(
                 "Pizza",
                 10_000,
                 "FOOD",
                 "pizza.com"
         );
-        Long savedId = productDao.insert(productEntity);
+        final Long savedId = productDao.insert(productEntity);
 
-        ProductEntity updatedProductEntity = new ProductEntity(
+        final ProductEntity updatedProductEntity = new ProductEntity(
                 savedId,
                 "Chicken",
                 20_000,
@@ -95,7 +95,7 @@ class ProductDaoTest {
         );
         productDao.update(updatedProductEntity);
 
-        List<ProductEntity> allProducts = productDao.findAll();
+        final List<ProductEntity> allProducts = productDao.findAll();
         assertThat(allProducts).hasSize(1);
         assertThat(allProducts.get(0).getId()).isEqualTo(savedId);
         assertThat(allProducts.get(0).getName()).isEqualTo("Chicken");
@@ -107,15 +107,15 @@ class ProductDaoTest {
     @DisplayName("상품 Id로 조회 테스트")
     @Test
     void findById() {
-        ProductEntity productEntity = new ProductEntity(
+        final ProductEntity productEntity = new ProductEntity(
                 "Pizza",
                 10_000,
                 "FOOD",
                 "pizza.com"
         );
-        Long savedId = productDao.insert(productEntity);
+        final Long savedId = productDao.insert(productEntity);
 
-        ProductEntity byId = productDao.findById(savedId);
+        final ProductEntity byId = productDao.findById(savedId);
 
         assertThat(byId).isNotNull();
         assertThat(byId.getName()).isEqualTo("Pizza");
