@@ -33,7 +33,7 @@ public class StubProductRepository implements ProductRepository {
     }
 
     @Override
-    public List<Product> find() {
+    public List<Product> findAll() {
         return new ArrayList<>(productMap.values());
     }
 

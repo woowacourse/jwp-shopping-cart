@@ -19,7 +19,7 @@ public class ProductViewController {
 
     @GetMapping("/")
     public String getIndexPage(final Model model) {
-        final List<ProductResponse> productResponses = productSearchService.find()
+        final List<ProductResponse> productResponses = productSearchService.findAll()
                 .stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
@@ -29,7 +29,7 @@ public class ProductViewController {
 
     @GetMapping("/admin")
     public String getAdminPage(final Model model) {
-        final List<ProductResponse> productResponses = productSearchService.find()
+        final List<ProductResponse> productResponses = productSearchService.findAll()
                 .stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());

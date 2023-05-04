@@ -25,7 +25,7 @@ class ViewControllerTest extends AbstractControllerTest {
     void 상품_조회_테스트() throws Exception {
         //given
         final List<Product> products = List.of(NUNU_ID_PRODUCT, ODO_ID_PRODUCT);
-        given(productQueryService.find()).willReturn(products);
+        given(productQueryService.findAll()).willReturn(products);
         final List<ProductResponse> expected = List.of(NUNU_RESPONSE, ODO_RESPONSE);
 
         //when
@@ -41,7 +41,7 @@ class ViewControllerTest extends AbstractControllerTest {
     void 어드민_페이지_조회_테스트() throws Exception {
         //given
         final List<Product> products = List.of(NUNU_ID_PRODUCT, ODO_ID_PRODUCT);
-        given(productQueryService.find()).willReturn(products);
+        given(productQueryService.findAll()).willReturn(products);
         final List<ProductResponse> expected = List.of(NUNU_RESPONSE, ODO_RESPONSE);
 
         //when

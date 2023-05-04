@@ -25,7 +25,7 @@ class ProductQueryServiceTest {
     void 조회_테스트() {
         stubProductRepository.save(ODO_PRODUCT);
 
-        final List<Product> result = productSearchService.find();
+        final List<Product> result = productSearchService.findAll();
 
         assertThat(result).hasSize(1);
     }

@@ -17,8 +17,8 @@ public class ProductQueryService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> find() {
-        return productRepository.find();
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
 
     public Optional<Product> findById(final Long id) {

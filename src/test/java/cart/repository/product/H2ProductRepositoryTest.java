@@ -55,8 +55,8 @@ class H2ProductRepositoryTest {
         }
 
         @Test
-        void find() {
-            final List<Product> result = h2ProductRepository.find();
+        void findAll() {
+            final List<Product> result = h2ProductRepository.findAll();
             assertThat(result).hasSize(1);
         }
 

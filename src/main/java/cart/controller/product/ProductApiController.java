@@ -44,7 +44,7 @@ public class ProductApiController {
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        final List<ProductResponse> productResponses = productQueryService.find()
+        final List<ProductResponse> productResponses = productQueryService.findAll()
                 .stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());

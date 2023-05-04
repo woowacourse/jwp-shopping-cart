@@ -78,7 +78,7 @@ public class H2CartRepository implements CartRepository {
     private Cart findCart(final User user, final CartEntity cartEntity) {
         final List<CartProductEntity> updatedCartProductEntities = cartProductDao.findAllByCartId(
                 cartEntity.getCartId());
-        final List<Product> products = productRepository.find();
+        final List<Product> products = productRepository.findAll();
         final List<CartProduct> cartProducts = updatedCartProductEntities.stream()
                 .map(cartProductEntity -> findCartProduct(cartProductEntity, products))
                 .collect(Collectors.toList());

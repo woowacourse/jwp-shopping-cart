@@ -58,7 +58,7 @@ public class H2ProductRepository implements ProductRepository {
     }
 
     @Override
-    public List<Product> find() {
+    public List<Product> findAll() {
         final String sql = "SELECT product_id, name, image, price FROM PRODUCT";
         return jdbcTemplate.query(sql, productEntityRowMapper)
                 .stream()
