@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.Pixture;
+import cart.authorization.AuthorizationInformation;
 import cart.dao.JdbcItemDao;
 import cart.dao.JdbcMemberDao;
 import cart.exception.ServiceIllegalArgumentException;
@@ -39,13 +40,16 @@ class CartServiceTest {
     @DisplayName("장바구니에 상품을 추가할 수 있다.")
     @Test
     void putItemIntoCart_success() {
-        cartService.putItemIntoCart(1L, AUTH_MEMBER1);
+        AuthorizationInformation authorizationInformation = new AuthorizationInformation(AUTH_MEMBER1.getEmail(), AUTH_MEMBER1.getPassword());
+        cartService.putItemIntoCart(1L, authorizationInformation);
     }
 
     @DisplayName("장바구니에 없는 상품을 추가할 수 없다.")
     @Test
     void putItemIntoCart_fail_invalidItem() {
-        Assertions.assertThatThrownBy(() -> cartService.putItemIntoCart(3L, AUTH_MEMBER1))
+        AuthorizationInformation authorizationInformation = new AuthorizationInformation(AUTH_MEMBER1.getEmail(), AUTH_MEMBER1.getPassword());
+
+        Assertions.assertThatThrownBy(() -> cartService.putItemIntoCart(3L, authorizationInformation))
                 .isInstanceOf(ServiceIllegalArgumentException.class)
                 .hasMessage("item을 다시 선택해주세요.");
     }
@@ -53,7 +57,9 @@ class CartServiceTest {
     @DisplayName("올바르지 않은 사람에 대한 장바구니에 상품을 추가할 수 없다.")
     @Test
     void putItemIntoCart_fail_invalidMember() {
-        Assertions.assertThatThrownBy(() -> cartService.putItemIntoCart(1L, AUTH_MEMBER2))
+        AuthorizationInformation authorizationInformation = new AuthorizationInformation(AUTH_MEMBER2.getEmail(), AUTH_MEMBER2.getPassword());
+
+        Assertions.assertThatThrownBy(() -> cartService.putItemIntoCart(1L, authorizationInformation))
                 .isInstanceOf(ServiceIllegalArgumentException.class)
                 .hasMessage("email과 password를 다시 입력해주세요.");
     }

@@ -27,7 +27,7 @@ public class MemberService {
         return memberDao.findAll();
     }
 
-    private static AuthMember convertAuthInformationToMember(AuthorizationInformation authorizationInformation) {
+    private AuthMember convertAuthInformationToMember(AuthorizationInformation authorizationInformation) {
         return new AuthMember(authorizationInformation.getEmail(), authorizationInformation.getPassword());
     }
 }

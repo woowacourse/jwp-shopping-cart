@@ -8,5 +8,5 @@ public interface AuthorizationExtractor<T> {
 
     String AUTHORIZATION = "Authorization";
 
-    T extract(HttpServletRequest request) throws AuthenticationFailureException;
+    T extract(HttpServletRequest request);
 }

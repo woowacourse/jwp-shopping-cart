@@ -14,7 +14,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<Autho
     private static final String INVALID_MEMBER_MESSAGE = "사용자 정보가 올바르지 않습니다.";
 
     @Override
-    public AuthorizationInformation extract(HttpServletRequest request) throws AuthenticationFailureException {
+    public AuthorizationInformation extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
         validateHeader(header);

@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.authorization.AuthorizationInformation;
 import cart.dao.CartDao;
 import cart.dao.ItemDao;
 import cart.dao.MemberDao;
@@ -22,12 +23,20 @@ public class CartService {
         this.itemDao = itemDao;
     }
 
-    public void putItemIntoCart(Long itemId, AuthMember authMember) {
+    public void putItemIntoCart(Long itemId, AuthorizationInformation authorizationInformation) {
+        AuthMember authMember = convertAuthInformationToMember(authorizationInformation);
+
         validatePutCart(itemId, authMember);
+
         Member member = memberDao.findByAuthMember(authMember);
         PutCart putCart = new PutCart(member.getId(), itemId);
 
         cartDao.save(putCart);
+    }
+
+
+    private AuthMember convertAuthInformationToMember(AuthorizationInformation authorizationInformation) {
+        return new AuthMember(authorizationInformation.getEmail(), authorizationInformation.getPassword());
     }
 
     private void validatePutCart(Long itemId, AuthMember authMember) {
