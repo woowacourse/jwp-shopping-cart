@@ -72,7 +72,7 @@ class ProductDaoTest {
         // then
         assertSoftly(softly -> {
             softly.assertThat(updatedRows).isEqualTo(1);
-            ProductEntity productEntity = productDao.findById(id);
+            ProductEntity productEntity = productDao.findById(id).get();
             softly.assertThat(productEntity.getName()).isEqualTo("치킨");
             softly.assertThat(productEntity.getPrice()).isEqualTo(1_000);
             softly.assertThat(productEntity.getImage()).isEqualTo("치킨 이미지 주소");
@@ -107,7 +107,7 @@ class ProductDaoTest {
         );
 
         // when
-        final ProductEntity productEntity = productDao.findById(id);
+        final ProductEntity productEntity = productDao.findById(id).get();
 
         // then
         assertSoftly(softly -> {

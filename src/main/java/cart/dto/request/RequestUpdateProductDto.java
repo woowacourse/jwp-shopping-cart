@@ -1,15 +1,11 @@
 package cart.dto.request;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 public class RequestUpdateProductDto {
 
-    @NotEmpty(message = "상품 이름이 입력되지 않았습니다.")
     private final String name;
-    @NotNull(message = "가격이 입력되지 않았습니다.")
     private final Integer price;
-    @NotEmpty(message = "상품 이미지 주소가 입력되지 않았습니다.")
     private final String image;
 
     public RequestUpdateProductDto(final String name, final Integer price, final String image) {
@@ -18,15 +14,15 @@ public class RequestUpdateProductDto {
         this.image = image;
     }
 
-    public String getName() {
-        return name;
+    public Optional<String> getName() {
+        return Optional.ofNullable(name);
     }
 
-    public Integer getPrice() {
-        return price;
+    public Optional<Integer> getPrice() {
+        return Optional.ofNullable(price);
     }
 
-    public String getImage() {
-        return image;
+    public Optional<String> getImage() {
+        return Optional.ofNullable(image);
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,11 +57,13 @@ public class CartService {
 
     @Transactional
     public void update(final Long id, final RequestUpdateProductDto requestUpdateProductDto) {
+        ProductEntity oldProductEntity = productDao.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("찾는 상품이 없습니다."));
         final ProductEntity productEntity = new ProductEntity.Builder()
                 .id(id)
-                .name(requestUpdateProductDto.getName())
-                .price(requestUpdateProductDto.getPrice())
-                .image(requestUpdateProductDto.getImage())
+                .name(requestUpdateProductDto.getName().orElse(oldProductEntity.getName()))
+                .price(requestUpdateProductDto.getPrice().orElse(oldProductEntity.getPrice()))
+                .image(requestUpdateProductDto.getImage().orElse(oldProductEntity.getImage()))
                 .build();
         final int updatedRows = productDao.update(productEntity);
         validateAffectedRowsCount(updatedRows);

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class ProductDao {
@@ -46,7 +48,7 @@ public class ProductDao {
             preparedStatement.setString(3, newProductEntity.getImage());
             return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey().longValue());
     }
 
     public int update(final ProductEntity productEntity) {
@@ -65,8 +67,8 @@ public class ProductDao {
         return jdbcTemplate.update(sql, id);
     }
 
-    public ProductEntity findById(final Long id) {
+    public Optional<ProductEntity> findById(final Long id) {
         final String sql = "SELECT * from product where id = ?";
-        return jdbcTemplate.queryForObject(sql, getProductRowMapper(), id);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, getProductRowMapper(), id));
     }
 }
