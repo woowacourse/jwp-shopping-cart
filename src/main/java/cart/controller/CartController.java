@@ -45,7 +45,7 @@ public class CartController {
                 memberRequest.getPassword());
 
         CartResponse cartResponse = cartService.save(findMember.getId(), itemId);
-        return ResponseEntity.created(URI.create("/carts/members/" + findMember.getId()))
+        return ResponseEntity.created(URI.create("/carts"))
                 .body(cartResponse);
     }
 
