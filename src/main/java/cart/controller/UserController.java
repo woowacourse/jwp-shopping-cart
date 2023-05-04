@@ -45,4 +45,13 @@ public class UserController {
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(user);
     }
+
+    @PutMapping("{userId}")
+    public ResponseEntity<Void> updateUser(@PathVariable final Long userId,
+                                           @RequestBody @Valid final UserRequest userRequest) {
+        userService.updateItem(userId, userRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .location(URI.create("/"))
+                             .build();
+    }
 }
