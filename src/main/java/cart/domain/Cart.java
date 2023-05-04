@@ -1,12 +1,16 @@
-package cart.dao.entity;
+package cart.domain;
 
-public class CartEntity {
+public class Cart {
 
     private final Long id;
     private final Long productId;
     private final Long memberId;
 
-    public CartEntity(final Long id, final Long productId, final Long memberId) {
+    public Cart(final Long productId, final Long memberId) {
+        this(null, productId, memberId);
+    }
+
+    public Cart(final Long id, final Long productId, final Long memberId) {
         this.id = id;
         this.productId = productId;
         this.memberId = memberId;

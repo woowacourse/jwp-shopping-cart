@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cart.dao.MemberDao;
-import cart.dao.entity.MemberEntity;
+import cart.domain.Member;
 import cart.dto.AuthDto;
 import cart.dto.response.MemberResponse;
 import java.util.List;
@@ -23,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 
-    public static final MemberEntity MEMBER_ENTITY_FIXTURE = new MemberEntity(1L, "gavi@woowahan.com", "1234");
+    public static final Member MEMBER_FIXTURE = new Member(1L, "gavi@woowahan.com", "1234");
 
     @Mock
     private MemberDao memberDao;
@@ -35,7 +35,7 @@ class MemberServiceTest {
     void 모든_회원을_조회한다() {
         //given
         Mockito.when(memberDao.findAll())
-                .thenReturn(Optional.ofNullable(List.of(MEMBER_ENTITY_FIXTURE)));
+                .thenReturn(Optional.ofNullable(List.of(MEMBER_FIXTURE)));
 
         //when
         final List<MemberResponse> memberResponses = memberService.findAll();
@@ -54,16 +54,16 @@ class MemberServiceTest {
     void 아이디와_비밀번호로_회원을_조회한다() {
         // given
         Mockito.when(memberDao.findMember(Mockito.any()))
-                .thenReturn(Optional.ofNullable(MEMBER_ENTITY_FIXTURE));
+                .thenReturn(Optional.ofNullable(MEMBER_FIXTURE));
         final AuthDto authDto = new AuthDto("gavi@woowahan.com", "1234");
 
         // when
-        final MemberEntity memberEntity = memberService.findMember(authDto);
+        final Member member = memberService.findMember(authDto);
 
         // then
         assertSoftly(softly -> {
-            softly.assertThat(memberEntity.getEmail()).isEqualTo("gavi@woowahan.com");
-            softly.assertThat(memberEntity.getPassword()).isEqualTo("1234");
+            softly.assertThat(member.getEmail()).isEqualTo("gavi@woowahan.com");
+            softly.assertThat(member.getPassword()).isEqualTo("1234");
         });
     }
 

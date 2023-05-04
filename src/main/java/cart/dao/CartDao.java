@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dao.entity.CartEntity;
+import cart.domain.Cart;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +19,17 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<List<CartEntity>> findAllByMemberId(final Long memberId) {
+    public Optional<List<Cart>> findAllByMemberId(final Long memberId) {
         final String sql = "SELECT * FROM CART WHERE member_id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, carEntityMapper(), memberId));
+            return Optional.ofNullable(jdbcTemplate.query(sql, cartMapper(), memberId));
         } catch (EmptyResultDataAccessException error) {
             return Optional.empty();
         }
     }
 
-    private RowMapper<CartEntity> carEntityMapper() {
-        return (resultSet, rowNum) -> new CartEntity(
+    private RowMapper<Cart> cartMapper() {
+        return (resultSet, rowNum) -> new Cart(
                 resultSet.getLong("id"),
                 resultSet.getLong("product_id"),
                 resultSet.getLong("member_id")
@@ -41,15 +41,15 @@ public class CartDao {
         return jdbcTemplate.update(sql, productId, memberId);
     }
 
-    public int delete(final CartEntity cartEntity) {
+    public int delete(final Cart cart) {
         final String sql = "DELETE FROM CART WHERE id = ?";
-        return jdbcTemplate.update(sql, cartEntity.getId());
+        return jdbcTemplate.update(sql, cart.getId());
     }
 
-    public Optional<CartEntity> findCart(final Long productId, Long memberId) {
+    public Optional<Cart> findCart(final Long productId, Long memberId) {
         final String sql = "SELECT * FROM CART WHERE product_id = ? and member_id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, carEntityMapper(), productId, memberId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartMapper(), productId, memberId));
         } catch (EmptyResultDataAccessException error) {
             return Optional.empty();
         }

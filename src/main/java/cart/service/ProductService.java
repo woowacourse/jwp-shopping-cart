@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.dao.entity.ProductEntity;
 import cart.domain.Product;
 import cart.dto.request.CreateProductRequest;
 import cart.dto.request.UpdateProductRequest;
@@ -26,22 +25,22 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
-        final Optional<List<ProductEntity>> productEntitiesOptional = productDao.findAll();
-        if (productEntitiesOptional.isEmpty()) {
+        final Optional<List<Product>> productsOptional = productDao.findAll();
+        if (productsOptional.isEmpty()) {
             return new ArrayList<>();
         }
-        return productEntitiesOptional.get().stream()
+        return productsOptional.get().stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional(readOnly = true)
-    public ProductEntity findById(final Long id) {
-        final Optional<ProductEntity> productEntity = productDao.findById(id);
-        if (productEntity.isEmpty()) {
+    public Product findById(final Long id) {
+        final Optional<Product> product = productDao.findById(id);
+        if (product.isEmpty()) {
             throw new IllegalArgumentException("해당 id를 가진 상품이 존재하지 않습니다.");
         }
-        return productEntity.get();
+        return product.get();
     }
 
     @Transactional
@@ -52,8 +51,8 @@ public class ProductService {
 
     @Transactional
     public int update(final Long id, final UpdateProductRequest updateProductRequest) {
-        final Optional<ProductEntity> productEntityOptional = productDao.findById(id);
-        if (productEntityOptional.isEmpty()) {
+        final Optional<Product> productOptional = productDao.findById(id);
+        if (productOptional.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 데이터입니다.");
         }
         final Product product = updateProductRequest.toProduct();
@@ -62,8 +61,8 @@ public class ProductService {
 
     @Transactional
     public int delete(final Long id) {
-        final Optional<ProductEntity> productEntityOptional = productDao.findById(id);
-        if (productEntityOptional.isEmpty()) {
+        final Optional<Product> productOptional = productDao.findById(id);
+        if (productOptional.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 데이터입니다.");
         }
         return productDao.delete(id);

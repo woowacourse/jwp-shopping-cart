@@ -1,11 +1,11 @@
 package cart.service;
 
-import static cart.service.MemberServiceTest.MEMBER_ENTITY_FIXTURE;
+import static cart.service.MemberServiceTest.MEMBER_FIXTURE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.dao.CartDao;
-import cart.dao.entity.CartEntity;
+import cart.domain.Cart;
 import cart.dto.AuthDto;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class CartServiceTest {
 
-    public static final CartEntity CART_ENTITY_FIXTURE = new CartEntity(1L, 1L, 1L);
+    public static final Cart CART_FIXTURE = new Cart(1L, 1L, 1L);
 
     @Mock
     private CartDao cartDao;
@@ -36,7 +36,7 @@ class CartServiceTest {
     @BeforeEach
     void setUp() {
         Mockito.when(memberService.findMember(Mockito.any()))
-                .thenReturn(MEMBER_ENTITY_FIXTURE);
+                .thenReturn(MEMBER_FIXTURE);
     }
 
     @Test
@@ -60,7 +60,7 @@ class CartServiceTest {
     void 장바구니_물품은_중복될_수_없다() {
         // given
         Mockito.when(cartDao.findCart(Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.ofNullable(CART_ENTITY_FIXTURE));
+                .thenReturn(Optional.ofNullable(CART_FIXTURE));
         final AuthDto authDto = new AuthDto("gavi@woowahan.com", "1234");
 
         // expect
@@ -73,7 +73,7 @@ class CartServiceTest {
     void 장바구니를_삭제할_수_있다() {
         // given
         Mockito.when(cartDao.findCart(Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.ofNullable(CART_ENTITY_FIXTURE));
+                .thenReturn(Optional.ofNullable(CART_FIXTURE));
         Mockito.when(cartDao.delete(Mockito.any()))
                 .thenReturn(1);
         final AuthDto authDto = new AuthDto("gavi@woowahan.com", "1234");

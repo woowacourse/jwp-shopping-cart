@@ -1,25 +1,18 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.*;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import cart.dao.entity.CartEntity;
+import cart.domain.Cart;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -78,7 +71,7 @@ class CartDaoTest {
         final Long memberId = simpleMemberInsert.executeAndReturnKey(MEMBER_FIXTURE).longValue();
 
         // when
-        cartDao.delete(new CartEntity(1L, productId, memberId));
+        cartDao.delete(new Cart(1L, productId, memberId));
 
         // then
         assertThat(cartDao.findAllByMemberId(memberId)).isEqualTo(Optional.ofNullable(List.of()));
@@ -92,13 +85,13 @@ class CartDaoTest {
         cartDao.insert(productId, memberId);
 
         // when
-        final Optional<CartEntity> cartEntityOptional = cartDao.findCart(productId, memberId);
+        final Optional<Cart> cartOptional = cartDao.findCart(productId, memberId);
 
         // then
         assertSoftly(softly -> {
-            CartEntity cartEntity = cartEntityOptional.get();
-            softly.assertThat(cartEntity.getMemberId()).isEqualTo(memberId);
-            softly.assertThat(cartEntity.getProductId()).isEqualTo(productId);
+            Cart cart = cartOptional.get();
+            softly.assertThat(cart.getMemberId()).isEqualTo(memberId);
+            softly.assertThat(cart.getProductId()).isEqualTo(productId);
         });
     }
 
@@ -115,9 +108,9 @@ class CartDaoTest {
 
         // then
         assertSoftly(softly -> {
-            final Optional<List<CartEntity>> cartEntitiesOptional = cartDao.findAllByMemberId(memberId);
-            List<CartEntity> cartEntities = cartEntitiesOptional.get();
-            assertThat(cartEntities).hasSize(3);
+            final Optional<List<Cart>> cartsOptional = cartDao.findAllByMemberId(memberId);
+            List<Cart> carts = cartsOptional.get();
+            assertThat(carts).hasSize(3);
         });
     }
 }

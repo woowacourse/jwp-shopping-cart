@@ -1,10 +1,8 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import cart.dao.entity.ProductEntity;
 import cart.domain.Product;
 import java.util.List;
 import java.util.Optional;
@@ -54,10 +52,10 @@ class ProductDaoTest {
         // then
         assertSoftly(softly -> {
             softly.assertThat(updatedRows).isEqualTo(1);
-            ProductEntity productEntity = productDao.findById(id).get();
-            softly.assertThat(productEntity.getName()).isEqualTo("치킨");
-            softly.assertThat(productEntity.getPrice()).isEqualTo(1_000);
-            softly.assertThat(productEntity.getImage()).isEqualTo("치킨 이미지 주소");
+            Product product = productDao.findById(id).get();
+            softly.assertThat(product.getName()).isEqualTo("치킨");
+            softly.assertThat(product.getPrice()).isEqualTo(1_000);
+            softly.assertThat(product.getImage()).isEqualTo("치킨 이미지 주소");
         });
     }
 
@@ -76,15 +74,15 @@ class ProductDaoTest {
         final Long id = productDao.insert(new Product("돈까스", 10_000, "돈까스 이미지 주소"));
 
         // when
-        Optional<ProductEntity> entity = productDao.findById(id);
+        Optional<Product> productOptional = productDao.findById(id);
 
         // then
         assertSoftly(softly -> {
-            ProductEntity productEntity = entity.get();
-            softly.assertThat(productEntity.getId()).isEqualTo(id);
-            softly.assertThat(productEntity.getName()).isEqualTo("돈까스");
-            softly.assertThat(productEntity.getPrice()).isEqualTo(10_000);
-            softly.assertThat(productEntity.getImage()).isEqualTo("돈까스 이미지 주소");
+            Product product = productOptional.get();
+            softly.assertThat(product.getId()).isEqualTo(id);
+            softly.assertThat(product.getName()).isEqualTo("돈까스");
+            softly.assertThat(product.getPrice()).isEqualTo(10_000);
+            softly.assertThat(product.getImage()).isEqualTo("돈까스 이미지 주소");
         });
     }
 
@@ -106,11 +104,11 @@ class ProductDaoTest {
         productDao.insert(new Product("치킨", 1_000, "치킨 이미지 주소"));
 
         // when
-        final Optional<List<ProductEntity>> productEntitiesOptional = productDao.findAll();
+        final Optional<List<Product>> productsOptional = productDao.findAll();
 
         // then
         assertSoftly(softly -> {
-            List<ProductEntity> productEntities = productEntitiesOptional.get();
+            List<Product> productEntities = productsOptional.get();
             softly.assertThat(productEntities).hasSize(1);
         });
     }

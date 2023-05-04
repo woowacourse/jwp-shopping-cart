@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cart.dao.ProductDao;
-import cart.dao.entity.ProductEntity;
 import cart.domain.Product;
 import cart.dto.request.CreateProductRequest;
 import cart.dto.request.UpdateProductRequest;
@@ -26,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
 
-    private static final ProductEntity ENTITY_FIXTURE = new ProductEntity(1L, "피자", 1000, "피자 사진");
+    private static final Product PRODUCT_FIXTURE = new Product(1L, "피자", 1000, "피자 사진");
 
     @Mock
     private ProductDao productDao;
@@ -38,7 +37,7 @@ class ProductServiceTest {
     void 상품을_조회한다() {
         //given
         Mockito.when(productDao.findAll())
-                .thenReturn(Optional.ofNullable(List.of(ENTITY_FIXTURE)));
+                .thenReturn(Optional.ofNullable(List.of(PRODUCT_FIXTURE)));
 
         //when
         final List<ProductResponse> productResponses = productService.findAll();
@@ -58,14 +57,14 @@ class ProductServiceTest {
     void id를_가진_상품을_조회한다() {
         // given
         Mockito.when(productDao.findById(Mockito.any()))
-                .thenReturn(Optional.ofNullable(ENTITY_FIXTURE));
+                .thenReturn(Optional.ofNullable(PRODUCT_FIXTURE));
         final Long insertedId = 1L;
 
         // when
-        final ProductEntity productEntity = productService.findById(insertedId);
+        final Product product = productService.findById(insertedId);
 
         // then
-        assertThat(productEntity.getId()).isEqualTo(1L);
+        assertThat(product.getId()).isEqualTo(1L);
     }
 
     @Test
@@ -86,7 +85,7 @@ class ProductServiceTest {
     void 상품을_수정한다() {
         // given
         Mockito.when(productDao.findById(Mockito.any(Long.class)))
-                .thenReturn(Optional.ofNullable(ENTITY_FIXTURE));
+                .thenReturn(Optional.ofNullable(PRODUCT_FIXTURE));
         Mockito.when(productDao.update(Mockito.any(Long.class), Mockito.any(Product.class)))
                 .thenReturn(1);
         final Long id = 1L;
@@ -114,7 +113,7 @@ class ProductServiceTest {
     void 상품을_삭제한다() {
         // given
         Mockito.when(productDao.findById(Mockito.any(Long.class)))
-                .thenReturn(Optional.ofNullable(ENTITY_FIXTURE));
+                .thenReturn(Optional.ofNullable(PRODUCT_FIXTURE));
         Mockito.when(productDao.delete(Mockito.any(Long.class)))
                 .thenReturn(1);
         final Long id = 1L;

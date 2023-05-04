@@ -1,9 +1,8 @@
 package cart.dao;
 
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,11 +45,11 @@ class MemberDaoTest {
         memberDao.insert(MEMBER_FIXTURE);
 
         // when
-        final Optional<MemberEntity> memberEntityOptional = memberDao.findMember(MEMBER_FIXTURE);
+        final Optional<Member> MemberOptional = memberDao.findMember(MEMBER_FIXTURE);
 
         // then
         assertSoftly(softly -> {
-            MemberEntity memberEntity = memberEntityOptional.get();
+            Member memberEntity = MemberOptional.get();
             softly.assertThat(memberEntity.getEmail()).isEqualTo("gavi@wooteco.com");
             softly.assertThat(memberEntity.getPassword()).isEqualTo("1234");
         });

@@ -1,9 +1,9 @@
 package cart.service;
 
 import cart.dao.CartDao;
-import cart.dao.entity.CartEntity;
-import cart.dao.entity.MemberEntity;
-import cart.dao.entity.ProductEntity;
+import cart.domain.Cart;
+import cart.domain.Member;
+import cart.domain.Product;
 import cart.dto.AuthDto;
 import cart.dto.response.CartResponse;
 import java.util.ArrayList;
@@ -30,36 +30,36 @@ public class CartService {
 
     @Transactional
     public int insert(final Long productId, final AuthDto authDto) {
-        final MemberEntity memberEntity = memberService.findMember(authDto);
-        final Optional<CartEntity> cartEntity = cartDao.findCart(productId, memberEntity.getId());
-        if (cartEntity.isPresent()) {
+        final Member member = memberService.findMember(authDto);
+        final Optional<Cart> cart = cartDao.findCart(productId, member.getId());
+        if (cart.isPresent()) {
             throw new IllegalArgumentException("이미 카트에 담겨진 제품입니다.");
         }
-        return cartDao.insert(productId, memberEntity.getId());
+        return cartDao.insert(productId, member.getId());
     }
 
     @Transactional
     public int delete(final Long productId, final AuthDto authDto) {
-        final MemberEntity memberEntity = memberService.findMember(authDto);
-        final Optional<CartEntity> cartEntity = cartDao.findCart(productId, memberEntity.getId());
-        if (cartEntity.isEmpty()) {
+        final Member member = memberService.findMember(authDto);
+        final Optional<Cart> cart = cartDao.findCart(productId, member.getId());
+        if (cart.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 데이터입니다.");
         }
-        return cartDao.delete(cartEntity.get());
+        return cartDao.delete(cart.get());
     }
 
     @Transactional(readOnly = true)
     public List<CartResponse> selectCart(final AuthDto authDto) {
-        final MemberEntity memberEntity = memberService.findMember(authDto);
-        final Long memberId = memberEntity.getId();
-        final Optional<List<CartEntity>> cartEntitiesOptional = cartDao.findAllByMemberId(memberId);
-        if (cartEntitiesOptional.isEmpty()) {
+        final Member member = memberService.findMember(authDto);
+        final Long memberId = member.getId();
+        final Optional<List<Cart>> cartsOptional = cartDao.findAllByMemberId(memberId);
+        if (cartsOptional.isEmpty()) {
             return new ArrayList<>();
         }
-        final List<ProductEntity> productEntities = cartEntitiesOptional.get().stream()
-                .map(cartEntity -> productService.findById(cartEntity.getProductId()))
+        final List<Product> products = cartsOptional.get().stream()
+                .map(cart -> productService.findById(cart.getProductId()))
                 .collect(Collectors.toUnmodifiableList());
-        return productEntities.stream()
+        return products.stream()
                 .map(CartResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }

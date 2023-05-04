@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.dao.MemberDao;
-import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
 import cart.dto.AuthDto;
 import cart.dto.response.MemberResponse;
@@ -25,22 +24,22 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public List<MemberResponse> findAll() {
-        final Optional<List<MemberEntity>> memberEntitiesOptional = memberDao.findAll();
-        if (memberEntitiesOptional.isEmpty()) {
+        final Optional<List<Member>> membersOptional = memberDao.findAll();
+        if (membersOptional.isEmpty()) {
             return new ArrayList<>();
         }
-        return memberEntitiesOptional.get().stream()
+        return membersOptional.get().stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional(readOnly = true)
-    public MemberEntity findMember(final AuthDto authDto) {
+    public Member findMember(final AuthDto authDto) {
         final Member member = new Member(authDto.getEmail(), authDto.getPassword());
-        final Optional<MemberEntity> memberResult = memberDao.findMember(member);
-        if (memberResult.isEmpty()) {
+        final Optional<Member> memberOptional = memberDao.findMember(member);
+        if (memberOptional.isEmpty()) {
             throw new IllegalArgumentException("회원 정보가 잘못되었습니다.");
         }
-        return memberResult.get();
+        return memberOptional.get();
     }
 }

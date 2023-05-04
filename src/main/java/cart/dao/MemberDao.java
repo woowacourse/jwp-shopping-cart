@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.dao.entity.MemberEntity;
 import cart.domain.Member;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +21,7 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<List<MemberEntity>> findAll() {
+    public Optional<List<Member>> findAll() {
         final String sql = "SELECT * FROM MEMBER";
         try {
             return Optional.ofNullable(jdbcTemplate.query(sql, memberRowMapper()));
@@ -31,21 +30,19 @@ public class MemberDao {
         }
     }
 
-    private RowMapper<MemberEntity> memberRowMapper() {
-        return (resultSet, rowNum) -> new MemberEntity(
+    private RowMapper<Member> memberRowMapper() {
+        return (resultSet, rowNum) -> new Member(
                 resultSet.getLong("id"),
                 resultSet.getString("email"),
                 resultSet.getString("password")
         );
     }
 
-    public Optional<MemberEntity> findMember(final Member member) {
+    public Optional<Member> findMember(final Member member) {
         final String sql = "SELECT * FROM MEMBER WHERE email = ? and password = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.query(sql, memberRowMapper(), member.getEmail(), member.getPassword()).get(0));
-        } catch (EmptyResultDataAccessException error) {
-            return EMPTY;
-        } catch (DuplicateKeyException error) {
+        } catch (EmptyResultDataAccessException | DuplicateKeyException err) {
             return EMPTY;
         }
     }

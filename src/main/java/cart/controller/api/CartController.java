@@ -1,11 +1,8 @@
 package cart.controller.api;
 
-import cart.dao.entity.MemberEntity;
 import cart.dto.AuthDto;
 import cart.dto.response.CartResponse;
-import cart.dto.response.ProductResponse;
 import cart.service.CartService;
-import cart.service.MemberService;
 import cart.util.AuthorizationExtractor;
 import cart.util.BasicAuthorizationExtractor;
 import java.net.URI;

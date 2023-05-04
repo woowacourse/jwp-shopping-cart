@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.dao.entity.ProductEntity;
 import cart.domain.Product;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +25,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<List<ProductEntity>> findAll() {
+    public Optional<List<Product>> findAll() {
         final String sql = "SELECT * FROM PRODUCT";
         try {
             return Optional.ofNullable(jdbcTemplate.query(sql, getProductRowMapper()));
@@ -35,8 +34,8 @@ public class ProductDao {
         }
     }
 
-    private RowMapper<ProductEntity> getProductRowMapper() {
-        return (resultSet, rowNum) -> new ProductEntity(
+    private RowMapper<Product> getProductRowMapper() {
+        return (resultSet, rowNum) -> new Product(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getInt("price"),
@@ -79,7 +78,7 @@ public class ProductDao {
         return jdbcTemplate.update(sql, id);
     }
 
-    public Optional<ProductEntity> findById(final Long id) {
+    public Optional<Product> findById(final Long id) {
         final String sql = "SELECT * from product where id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, getProductRowMapper(), id));
