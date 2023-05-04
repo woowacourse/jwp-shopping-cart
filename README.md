@@ -50,7 +50,7 @@
 - [ ]  그 외
     - [ ]  Entity 내 필드에 VO 설정
     - [ ]  `@Valid`
-    - [ ]  `@ControllerAdvice`와 `@RestControllerAdvice` 분리
+    - [x]  `@RestControllerAdvice` 분리
 
 ### ProductAPI
 

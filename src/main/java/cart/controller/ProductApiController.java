@@ -1,15 +1,10 @@
 package cart.controller;
 
-import java.util.Objects;
-
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cart.controller.dto.ExceptionResponse;
 import cart.controller.dto.ProductRequest;
 import cart.controller.dto.ProductResponse;
 import cart.service.product.ProductService;
@@ -64,14 +58,4 @@ public class ProductApiController {
 			.build();
 	}
 
-	@ExceptionHandler
-	public ResponseEntity<ExceptionResponse> handleBindException(final MethodArgumentNotValidException exception) {
-		final FieldError fieldError = exception.getBindingResult()
-			.getFieldError();
-		final String exceptionMessage = Objects.requireNonNull(fieldError)
-			.getDefaultMessage();
-
-		return ResponseEntity.badRequest()
-			.body(new ExceptionResponse(exceptionMessage));
-	}
 }
