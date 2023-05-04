@@ -2,17 +2,15 @@ package cart.controller;
 
 import cart.authorization.AuthorizationExtractor;
 import cart.authorization.AuthorizationInformation;
+import cart.dto.ItemResponse;
 import cart.service.CartService;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
-@RequestMapping("/cart")
 public class CartController {
 
     private final CartService cartService;
@@ -23,11 +21,15 @@ public class CartController {
         this.authorizationExtractor = authorizationExtractor;
     }
 
-    @GetMapping
+    @GetMapping("/cart")
     @ModelAttribute
-    public String displayCart(HttpServletRequest request, Model model) {
-        AuthorizationInformation authorizationInformation = authorizationExtractor.extract(request);
-//        model.addAttribute("cart", cartService.putItemIntoCart());
+    public String displayCartMainPage() {
         return "cart";
+    }
+
+    @GetMapping("/carts")
+    public List<ItemResponse> displayCart(@RequestHeader(value = "Authorization") String authorization) {
+        AuthorizationInformation authorizationInformation = authorizationExtractor.extract(authorization);
+        return cartService.findAllItemByAuthInfo(authorizationInformation);
     }
 }

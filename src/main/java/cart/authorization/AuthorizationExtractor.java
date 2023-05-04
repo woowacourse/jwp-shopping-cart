@@ -9,4 +9,6 @@ public interface AuthorizationExtractor<T> {
     String AUTHORIZATION = "Authorization";
 
     T extract(HttpServletRequest request);
+
+    T extract(String header);
 }

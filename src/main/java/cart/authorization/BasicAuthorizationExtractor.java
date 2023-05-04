@@ -25,7 +25,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<Autho
         return new AuthorizationInformation(credentials[0], credentials[1]);
     }
 
-    private void validateHeader(String header) throws AuthenticationFailureException {
+    private void validateHeader(String header) {
         if (NotContainsAuthorizationHeader(header) || isNotBasicAuthorization(header)) {
             throw new AuthenticationFailureException(INVALID_MEMBER_MESSAGE);
         }
@@ -36,6 +36,16 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<Autho
     }
 
     private boolean isNotBasicAuthorization(String header) {
-        return header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase());
+        return !header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase());
+    }
+
+    @Override
+    public AuthorizationInformation extract(String header) {
+        validateHeader(header);
+
+        String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
+        String decoded = new String(Base64.decodeBase64(authHeaderValue));
+        String[] credentials = decoded.split(DELIMITER);
+        return new AuthorizationInformation(credentials[0], credentials[1]);
     }
 }

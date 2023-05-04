@@ -9,11 +9,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Repository
-public class JdbcMemberDao implements MemberDao{
+public class JdbcMemberDao implements MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
 
