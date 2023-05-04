@@ -55,7 +55,8 @@ class CartControllerTest {
         RestAssured.given().log().all()
                 .when().get("/cart")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.TEXT_HTML_VALUE);
     }
 
     @DisplayName("상품을 장바구니에 추가")

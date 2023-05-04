@@ -28,7 +28,8 @@ class AdminControllerTest {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.TEXT_HTML_VALUE);
     }
 
     @DisplayName("상품 추가")
