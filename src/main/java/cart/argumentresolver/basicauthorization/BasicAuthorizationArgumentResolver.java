@@ -28,8 +28,8 @@ public final class BasicAuthorizationArgumentResolver implements HandlerMethodAr
         if (httpServletRequest == null) {
             throw new RuntimeException("httpServletRequest 가 존재하지 않습니다.");
         }
-        final String authorization = httpServletRequest.getHeader("Authorization");
-        final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor(authorization);
-        return new BasicAuthInfo(extractor.extractEmail(), extractor.extractPassword());
+        final String authInfo = (String) httpServletRequest.getAttribute("AuthInfo");
+        final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor(authInfo);
+        return new BasicAuthInfo(extractor.extractUsername(), extractor.extractPassword());
     }
 }

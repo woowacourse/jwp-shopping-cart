@@ -1,45 +1,30 @@
 package cart.argumentresolver.basicauthorization;
 
-import java.util.Base64;
+public final class BasicAuthorizationExtractor {
 
-final class BasicAuthorizationExtractor {
-
-    private static final String BASIC_TYPE = "Basic";
     private static final String CREDENTIAL_DELIMITER = ":";
-    private static final String AUTHORIZATION_DELIMITER = " ";
+    private static final int USERNAME_INDEX = 0;
+    private static final int PASSWORD_INDEX = 1;
+    private static final int VALID_AUTH_INFO_LENGHTH = 2;
 
-    private final String authorization;
+    private final String credential;
 
-    public BasicAuthorizationExtractor(final String authorization) {
-        validateBasicAuthorization(authorization);
-        this.authorization = authorization;
+    public BasicAuthorizationExtractor(final String credential) {
+        validateCredential(credential);
+        this.credential = credential;
     }
 
-    private void validateBasicAuthorization(final String authorization) {
-        if (!authorization.startsWith(BASIC_TYPE)) {
-            throw new IllegalArgumentException("Basic 인증의 Authorization 헤더값이 아닙니다.");
-        }
-    }
-
-    private String decodeCredential(final String authorization) {
-        final String encodedCredential = authorization.split(AUTHORIZATION_DELIMITER)[1];
-        final byte[] decodedByteArray = Base64.getDecoder().decode(encodedCredential);
-        final String decodedCredential = new String(decodedByteArray);
-        validateCredential(decodedCredential);
-        return decodedCredential;
-    }
-
-    private void validateCredential(String decodedCredential) {
-        if (decodedCredential.split(CREDENTIAL_DELIMITER, -1).length != 2) {
+    private void validateCredential(String credential) {
+        if (credential.split(CREDENTIAL_DELIMITER, -1).length != VALID_AUTH_INFO_LENGHTH) {
             throw new IllegalArgumentException("잘못된 형식의 인증 정보 입니다.");
         }
     }
 
-    public String extractEmail() {
-        return decodeCredential(authorization).split(CREDENTIAL_DELIMITER, -1)[0];
+    public String extractUsername() {
+        return credential.split(CREDENTIAL_DELIMITER, -1)[USERNAME_INDEX];
     }
 
     public String extractPassword() {
-        return decodeCredential(authorization).split(CREDENTIAL_DELIMITER, -1)[1];
+        return credential.split(CREDENTIAL_DELIMITER, -1)[PASSWORD_INDEX];
     }
 }
