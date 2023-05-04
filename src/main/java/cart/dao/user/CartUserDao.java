@@ -1,5 +1,6 @@
 package cart.dao.user;
 
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -34,5 +35,16 @@ public class CartUserDao {
         SqlParameterSource params = new BeanPropertySqlParameterSource(cartUserEntity);
 
         return simpleInsert.executeAndReturnKey(params).longValue();
+    }
+
+    public List<CartUserEntity> findAll() {
+        String findAllQuery = "SELECT * FROM cart_user";
+
+        return jdbcTemplate.query(findAllQuery, (rs, rowNum) ->
+                new CartUserEntity(
+                        rs.getLong("cart_user_id"),
+                        rs.getString("email"),
+                        rs.getString("cart_password")
+                ));
     }
 }

@@ -3,8 +3,10 @@ package cart.dao.user;
 import cart.domain.user.CartUser;
 import cart.domain.user.CartUserRepository;
 import cart.domain.user.UserEmail;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +23,7 @@ public class CartCartUserRepositoryImpl implements CartUserRepository {
     public CartUser findByEmail(String email) {
         CartUserEntity cartUserEntity = validateIsNotEmptyResult(() -> cartUserDao.findByEmail(email));
 
-        return toCarUser(cartUserEntity);
+        return toCartUser(cartUserEntity);
     }
 
     @Override
@@ -35,7 +37,16 @@ public class CartCartUserRepositoryImpl implements CartUserRepository {
         return cartUserDao.insert(cartUserEntity);
     }
 
-    private CartUser toCarUser(CartUserEntity cartUserEntity) {
+    @Override
+    public List<CartUser> findAll() {
+        List<CartUserEntity> allCartEntities = cartUserDao.findAll();
+
+        return allCartEntities.stream()
+                .map(this::toCartUser)
+                .collect(Collectors.toList());
+    }
+
+    private CartUser toCartUser(CartUserEntity cartUserEntity) {
         return new CartUser(
                 UserEmail.from(cartUserEntity.getEmail()),
                 cartUserEntity.getCartPassword()

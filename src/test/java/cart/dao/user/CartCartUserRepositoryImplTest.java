@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.domain.user.CartUser;
 import cart.domain.user.UserEmail;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,5 +65,17 @@ class CartCartUserRepositoryImplTest {
 
         assertThat(user).isNotNull();
         assertThat(user.getUserEmail()).isEqualTo(email);
+    }
+
+    @DisplayName("사용자 전체 조회 테스트")
+    @Test
+    void findAllCartUser() {
+        jdbcTemplate.update("INSERT INTO cart_user (email, cart_password)\n"
+                + "values ('a@a.com', 'password1'),\n"
+                + "       ('b@b.com', 'password2');");
+
+        List<CartUser> cartUsers = cartUserRepository.findAll();
+
+        assertThat(cartUsers).hasSize(2);
     }
 }
