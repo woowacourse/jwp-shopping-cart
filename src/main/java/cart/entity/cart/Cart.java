@@ -7,11 +7,15 @@ public class Cart {
     private final Long productId;
     private final int count;
 
-    public Cart(final Long memberId, final Long productId, final int count) {
-        this.id = null;
+    public Cart(final Long id, final Long memberId, final Long productId, final int count) {
+        this.id = id;
         this.memberId = memberId;
         this.productId = productId;
         this.count = count;
+    }
+
+    public Cart(final Long memberId, final Long productId, final int count) {
+        this(null, memberId, productId, count);
     }
 
     public Long getId() {
