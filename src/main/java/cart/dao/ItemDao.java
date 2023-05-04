@@ -4,7 +4,6 @@ import cart.domain.ImageUrl;
 import cart.domain.Item;
 import cart.domain.Name;
 import cart.domain.Price;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,7 +20,6 @@ public class ItemDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public ItemDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

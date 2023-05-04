@@ -1,14 +1,13 @@
 package cart.service;
 
-import cart.domain.ImageUrl;
-import cart.domain.Name;
-import cart.domain.Price;
 import cart.controller.dto.ItemRequest;
 import cart.controller.dto.ItemResponse;
 import cart.dao.ItemDao;
+import cart.domain.ImageUrl;
 import cart.domain.Item;
+import cart.domain.Name;
+import cart.domain.Price;
 import cart.exception.NotFoundResultException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +19,6 @@ public class ItemService {
 
     private final ItemDao itemDao;
 
-    @Autowired
     public ItemService(ItemDao itemDao) {
         this.itemDao = itemDao;
     }
