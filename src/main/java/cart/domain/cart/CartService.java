@@ -34,18 +34,18 @@ public class CartService {
     }
 
     @Transactional
-    public void addProduct(CartAdditionProductDto cartAdditionProductDto) {
-        Long cartId = cartAdditionProductDto.getCartId();
+    public Long addProduct(CartAdditionProductDto cartAdditionProductDto) {
+        Long productId = cartAdditionProductDto.getProductId();
         Long userId = cartAdditionProductDto.getUserId();
 
         User user = userRepository.findById(userId);
-        Product product = productRepository.findById(cartId);
+        Product product = productRepository.findById(productId);
 
-        cartRepository.save(new Cart(user, product));
+        return cartRepository.save(new Cart(user, product));
     }
 
     @Transactional
-    public void deleteProduct(Long cartId){
+    public void deleteProduct(Long cartId) {
         cartRepository.deleteById(cartId);
     }
 }
