@@ -9,7 +9,9 @@ import cart.web.controller.dto.request.ProductInCartAdditionRequest;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +31,7 @@ public class CartRestController {
             @AuthorizedUser AuthorizedUserRequest request,
             @RequestBody ProductInCartAdditionRequest productId
     ) {
-        AuthorizedCartUserDto authorizedCartUserDto =
-                new AuthorizedCartUserDto(request.getEmail(), request.getPassword());
+        AuthorizedCartUserDto authorizedCartUserDto = toAuthorizedCartUserDto(request);
 
         cartService.addProductInCart(authorizedCartUserDto, productId.getProductId());
 
@@ -41,12 +42,29 @@ public class CartRestController {
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductDto>> getProductsInCart(@AuthorizedUser AuthorizedUserRequest request) {
-        AuthorizedCartUserDto authorizedCartUserDto =
-                new AuthorizedCartUserDto(request.getEmail(), request.getPassword());
+        AuthorizedCartUserDto authorizedCartUserDto = toAuthorizedCartUserDto(request);
 
         List<ProductDto> allProductsInCart = cartService.findAllProductsInCart(authorizedCartUserDto);
 
         return ResponseEntity
                 .ok(allProductsInCart);
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProductInCart(
+            @AuthorizedUser AuthorizedUserRequest request,
+            @PathVariable Long productId
+    ) {
+        AuthorizedCartUserDto authorizedCartUserDto = toAuthorizedCartUserDto(request);
+
+        cartService.deleteProductInCart(authorizedCartUserDto, productId);
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
+    private AuthorizedCartUserDto toAuthorizedCartUserDto(AuthorizedUserRequest request) {
+        return new AuthorizedCartUserDto(request.getEmail(), request.getPassword());
     }
 }

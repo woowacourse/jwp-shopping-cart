@@ -38,14 +38,18 @@ class CartServiceTest {
     @DisplayName("장바구니 상품 추가 테스트")
     @Test
     void addProductInCart() {
+        //given
         CartUser cartUserA = TestFixture.CART_USER_A;
         Long savedId = productRepository.save(TestFixture.PIZZA);
+
         cartUserRepository.save(cartUserA);
-        AuthorizedCartUserDto request =
+        AuthorizedCartUserDto userDto =
                 new AuthorizedCartUserDto(cartUserA.getUserEmail(), cartUserA.getPassword());
 
-        cartService.addProductInCart(request, savedId);
+        //when
+        cartService.addProductInCart(userDto, savedId);
 
+        //then
         List<Cart> allCarts = cartRepository.findAll();
         assertThat(allCarts).hasSize(1);
     }
@@ -53,18 +57,46 @@ class CartServiceTest {
     @DisplayName("사용자 장바구니 상품 조회 테스트")
     @Test
     void findAllProductsInCart() {
+        //given
         CartUser cartUserA = TestFixture.CART_USER_A;
         cartUserRepository.save(cartUserA);
+
         Product pizza = saveProductAndGet(TestFixture.PIZZA);
         Product chicken = saveProductAndGet(TestFixture.CHICKEN);
+
         cartRepository.addProductInCart(cartUserA, pizza);
         cartRepository.addProductInCart(cartUserA, chicken);
-        AuthorizedCartUserDto request =
+        AuthorizedCartUserDto userDto =
                 new AuthorizedCartUserDto(cartUserA.getUserEmail(), cartUserA.getPassword());
 
-        List<ProductDto> allProductsInCart = cartService.findAllProductsInCart(request);
+        //when
+        List<ProductDto> allProductsInCart = cartService.findAllProductsInCart(userDto);
 
+        //then
         assertThat(allProductsInCart).hasSize(2);
+    }
+
+    @DisplayName("사용자 장바구니 삭제 테스트")
+    @Test
+    void deleteProductInCart() {
+        //given
+        CartUser cartUserA = TestFixture.CART_USER_A;
+        cartUserRepository.save(cartUserA);
+
+        Product pizza = saveProductAndGet(TestFixture.PIZZA);
+        Product chicken = saveProductAndGet(TestFixture.CHICKEN);
+
+        cartRepository.addProductInCart(cartUserA, pizza);
+        cartRepository.addProductInCart(cartUserA, chicken);
+        assertThat(cartRepository.findCartByCartUser(cartUserA).getProducts()).hasSize(2);
+        AuthorizedCartUserDto userDto =
+                new AuthorizedCartUserDto(cartUserA.getUserEmail(), cartUserA.getPassword());
+
+        //when
+        cartService.deleteProductInCart(userDto, pizza.getProductId());
+
+        //then
+        assertThat(cartRepository.findCartByCartUser(cartUserA).getProducts()).hasSize(1);
     }
 
     private Product saveProductAndGet(Product product) {

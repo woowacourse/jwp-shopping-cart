@@ -69,4 +69,16 @@ class CartRestControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(2));
     }
+
+    @DisplayName("사용자 장바구니 내 상품 삭제 테스트")
+    @Test
+    void deleteProductInCart() {
+        doNothing().when(cartService).deleteProductInCart(any(), anyLong());
+
+        given().log().all()
+                .auth().preemptive().basic("a@a.com", "password1")
+                .when().delete("/cart/{productId}", 1L)
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
 }

@@ -25,20 +25,27 @@ public class CartService {
         this.productRepository = productRepository;
     }
 
-    public void addProductInCart(AuthorizedCartUserDto request, Long productId) {
-        CartUser cartUser = cartUserRepository.findByEmail(request.getEmail());
+    public void addProductInCart(AuthorizedCartUserDto userDto, Long productId) {
+        CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
         Product product = productRepository.findById(productId);
 
         cartRepository.addProductInCart(cartUser, product);
     }
 
-    public List<ProductDto> findAllProductsInCart(AuthorizedCartUserDto request) {
-        CartUser cartUser = cartUserRepository.findByEmail(request.getEmail());
+    public List<ProductDto> findAllProductsInCart(AuthorizedCartUserDto userDto) {
+        CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
         Cart cartByCartUser = cartRepository.findCartByCartUser(cartUser);
 
         return cartByCartUser.getProducts()
                 .stream()
                 .map(ProductDto::from)
                 .collect(Collectors.toList());
+    }
+
+    public void deleteProductInCart(AuthorizedCartUserDto userDto, Long productId) {
+        CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
+        Product product = productRepository.findById(productId);
+        
+        cartRepository.deleteProductInCart(cartUser, product);
     }
 }
