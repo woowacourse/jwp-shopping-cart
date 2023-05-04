@@ -13,6 +13,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MemberDao {
     private static final Optional EMPTY = Optional.empty();
+    private static final RowMapper<Member> MAPPER = (resultSet, rowNum) -> new Member(
+            resultSet.getLong("id"),
+            resultSet.getString("email"),
+            resultSet.getString("password")
+    );
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -24,24 +29,16 @@ public class MemberDao {
     public Optional<List<Member>> findAll() {
         final String sql = "SELECT * FROM MEMBER";
         try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, memberRowMapper()));
+            return Optional.ofNullable(jdbcTemplate.query(sql, MAPPER));
         } catch (EmptyResultDataAccessException error) {
             return EMPTY;
         }
     }
 
-    private RowMapper<Member> memberRowMapper() {
-        return (resultSet, rowNum) -> new Member(
-                resultSet.getLong("id"),
-                resultSet.getString("email"),
-                resultSet.getString("password")
-        );
-    }
-
-    public Optional<Member> findMember(final Member member) {
+    public Optional<Member> find(final Member member) {
         final String sql = "SELECT * FROM MEMBER WHERE email = ? and password = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, memberRowMapper(), member.getEmail(), member.getPassword()).get(0));
+            return Optional.ofNullable(jdbcTemplate.query(sql, MAPPER, member.getEmail(), member.getPassword()).get(0));
         } catch (EmptyResultDataAccessException | DuplicateKeyException error) {
             return EMPTY;
         }
@@ -50,7 +47,7 @@ public class MemberDao {
     public Optional<Member> findByEmail(final Member member) {
         final String sql = "SELECT * FROM MEMBER WHERE email = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, memberRowMapper(), member.getEmail()).get(0));
+            return Optional.ofNullable(jdbcTemplate.query(sql, MAPPER, member.getEmail()).get(0));
         } catch (EmptyResultDataAccessException | DuplicateKeyException error) {
             return EMPTY;
         }

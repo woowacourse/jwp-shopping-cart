@@ -17,7 +17,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
 class MemberDaoTest {
-
     private static final Member MEMBER_FIXTURE = new Member("gavi@wooteco.com", "1234");
 
     private MemberDao memberDao;

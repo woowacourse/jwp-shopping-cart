@@ -1,8 +1,7 @@
 package cart.controller.exception;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -49,21 +48,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
-//    @ExceptionHandler(IllegalArgumentException.class)
-//    public ResponseEntity<String> handleIllegalArgumentException(final IllegalArgumentException exception) {
-//        return ResponseEntity.badRequest().body(exception.getMessage());
-//    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
-        final Map<String, String> errorMessageByFields = new HashMap<>();
-        final List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
-
-        allErrors.forEach(error -> {
-            String fieldName = ((FieldError) error).getField();
-            String message = error.getDefaultMessage();
-            errorMessageByFields.put(fieldName, message);
-        });
+        final Map<String, String> errorMessageByFields = e.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(FieldError.class::cast)
+                .collect(Collectors.toUnmodifiableMap(FieldError::getField, ObjectError::getDefaultMessage));
 
         return ResponseEntity.badRequest().body(errorMessageByFields);
     }

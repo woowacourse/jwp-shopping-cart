@@ -26,7 +26,7 @@ public class CartController {
 
     @GetMapping("/carts")
     public ResponseEntity<List<CartResponse>> getCarts(@AuthPrincipal final MemberDto memberDto) {
-        final List<CartResponse> productResponses = cartService.selectCart(memberDto);
+        final List<CartResponse> productResponses = cartService.find(memberDto);
         return ResponseEntity.ok(productResponses);
     }
 

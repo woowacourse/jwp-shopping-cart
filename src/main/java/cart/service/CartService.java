@@ -31,8 +31,8 @@ public class CartService {
 
     @Transactional
     public int insert(final Long productId, final MemberDto memberDto) {
-        final Member member = memberService.findMember(memberDto);
-        final Optional<Cart> cart = cartDao.findCart(productId, member.getId());
+        final Member member = memberService.find(memberDto);
+        final Optional<Cart> cart = cartDao.find(productId, member.getId());
         if (cart.isPresent()) {
             throw new CartException("이미 장바구니에 존재하는 제품입니다.");
         }
@@ -41,8 +41,8 @@ public class CartService {
 
     @Transactional
     public int delete(final Long productId, final MemberDto memberDto) {
-        final Member member = memberService.findMember(memberDto);
-        final Optional<Cart> cart = cartDao.findCart(productId, member.getId());
+        final Member member = memberService.find(memberDto);
+        final Optional<Cart> cart = cartDao.find(productId, member.getId());
         if (cart.isEmpty()) {
             throw new CartException("존재하지 않는 장바구니입니다.");
         }
@@ -50,8 +50,8 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartResponse> selectCart(final MemberDto memberDto) {
-        final Member member = memberService.findMember(memberDto);
+    public List<CartResponse> find(final MemberDto memberDto) {
+        final Member member = memberService.find(memberDto);
         final Long memberId = member.getId();
         final Optional<List<Cart>> cartsOptional = cartDao.findAllByMemberId(memberId);
         if (cartsOptional.isEmpty()) {

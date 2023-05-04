@@ -24,7 +24,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
-
     private static final Product PRODUCT_FIXTURE = new Product(1L, "피자", 1000, "피자 사진");
 
     @Mock

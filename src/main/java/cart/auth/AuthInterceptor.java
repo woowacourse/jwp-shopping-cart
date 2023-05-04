@@ -23,7 +23,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         final AuthDto authDto = authorizationExtractor.extract(request);
 
         if (AuthService.isInvalidAuth(authDto)) {
-            throw new IllegalArgumentException("회원 정보가 잘못됐습니다.");
+            throw new IllegalArgumentException("회원 정보가 일치하지 않습니다.");
         }
 
         return true;

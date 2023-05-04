@@ -23,28 +23,28 @@ public class PageController {
     }
 
     @GetMapping("/")
-    public String readMainPage(final Model model) {
+    public String renderMain(final Model model) {
         final List<ProductResponse> productResponses = productService.findAll();
         model.addAttribute("products", productResponses);
         return "index";
     }
 
     @GetMapping("/admin")
-    public String readAdminPage(final Model model) {
+    public String renderAdmin(final Model model) {
         final List<ProductResponse> productResponses = productService.findAll();
         model.addAttribute("products", productResponses);
         return "admin";
     }
 
     @GetMapping("/settings")
-    public String readSettingPage(final Model model) {
+    public String renderSetting(final Model model) {
         final List<MemberResponse> memberResponse = memberService.findAll();
         model.addAttribute("members", memberResponse);
         return "settings";
     }
 
     @GetMapping("/cart")
-    public String readCartPage() {
+    public String renderCart() {
         return "cart";
     }
 }

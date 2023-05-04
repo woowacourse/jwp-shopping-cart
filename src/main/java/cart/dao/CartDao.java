@@ -46,7 +46,7 @@ public class CartDao {
         return jdbcTemplate.update(sql, cart.getId());
     }
 
-    public Optional<Cart> findCart(final Long productId, Long memberId) {
+    public Optional<Cart> find(final Long productId, Long memberId) {
         final String sql = "SELECT * FROM CART WHERE product_id = ? and member_id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartMapper(), productId, memberId));

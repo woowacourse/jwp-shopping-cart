@@ -26,7 +26,7 @@ public class Member {
             throw new MemberNotValidException("이메일 형식과 일치하지 않습니다.");
         }
         if (password.length() < PASSWORD_MIN_LENGTH) {
-            throw new MemberNotValidException("비밀번호의 길이는 4 이상이어야 합니다.");
+            throw new MemberNotValidException("비밀번호의 길이는 "+PASSWORD_MIN_LENGTH+" 이상이어야 합니다.");
         }
     }
 

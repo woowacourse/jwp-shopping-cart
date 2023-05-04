@@ -21,7 +21,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class CartControllerTest {
-
     private static final String ENCODED_TOKEN = "Z2F2aUB3b293YWhhbi5jb206MTIzNA==";
 
     @LocalServerPort
@@ -34,15 +33,13 @@ class CartControllerTest {
     void setUp() {
         RestAssured.port = port;
         jdbcTemplate.execute("INSERT INTO MEMBER(email, password) VALUES ('gavi@woowahan.com', '1234')");
-        jdbcTemplate.execute("INSERT INTO PRODUCT(name, price, image) VALUES ('치킨', 1000, '치킨 사진')");
-        jdbcTemplate.execute("INSERT INTO PRODUCT(name, price, image) VALUES ('피자', 1000, '피자 사진')");
     }
 
     @Test
     void 장바구니에_상품을_담을_수_있다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .header("Authorization", "Basic : " + ENCODED_TOKEN)
+                .header("Authorization", "Basic " + ENCODED_TOKEN)
                 .when()
                 .post("/carts/" + 1)
                 .then()
@@ -54,7 +51,7 @@ class CartControllerTest {
     void 장바구니의_상품을_삭제할_수_있다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .header("Authorization", "Basic : " + ENCODED_TOKEN)
+                .header("Authorization", "Basic " + ENCODED_TOKEN)
                 .when()
                 .post("/carts/" + 2)
                 .then()
@@ -62,7 +59,7 @@ class CartControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
         given()
                 .log().all().contentType(ContentType.JSON)
-                .header("Authorization", "Basic : " + ENCODED_TOKEN)
+                .header("Authorization", "Basic " + ENCODED_TOKEN)
                 .when()
                 .delete("/carts/" + 2)
                 .then()
@@ -74,7 +71,7 @@ class CartControllerTest {
     void 장바구니_목록을_가져올_수_있다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .header("Authorization", "Basic : " + ENCODED_TOKEN)
+                .header("Authorization", "Basic " + ENCODED_TOKEN)
                 .when()
                 .get("/carts")
                 .then()

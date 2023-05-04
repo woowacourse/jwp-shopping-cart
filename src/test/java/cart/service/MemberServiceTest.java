@@ -23,7 +23,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
-
     public static final Member MEMBER_FIXTURE = new Member(1L, "gavi@woowahan.com", "1234");
 
     @Mock
@@ -59,7 +58,7 @@ class MemberServiceTest {
         final cart.dto.MemberDto memberDto = new cart.dto.MemberDto("gavi@woowahan.com", "1234");
 
         // when
-        final Member member = memberService.findMember(memberDto);
+        final Member member = memberService.find(memberDto);
 
         // then
         assertSoftly(softly -> {
@@ -74,7 +73,7 @@ class MemberServiceTest {
         final MemberDto memberDto = new MemberDto("gavi@woowahan.com", "1234");
 
         // then
-        assertThatThrownBy(() -> memberService.findMember(memberDto))
+        assertThatThrownBy(() -> memberService.find(memberDto))
                 .isInstanceOf(MemberNotFoundException.class)
                 .hasMessage("회원 정보가 잘못되었습니다.");
     }

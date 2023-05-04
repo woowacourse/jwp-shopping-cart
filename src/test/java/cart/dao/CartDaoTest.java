@@ -85,7 +85,7 @@ class CartDaoTest {
         cartDao.insert(productId, memberId);
 
         // when
-        final Optional<Cart> cartOptional = cartDao.findCart(productId, memberId);
+        final Optional<Cart> cartOptional = cartDao.find(productId, memberId);
 
         // then
         assertSoftly(softly -> {
