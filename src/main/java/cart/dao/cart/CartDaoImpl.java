@@ -1,10 +1,12 @@
 package cart.dao.cart;
 
+import cart.dto.cartitem.CartItem;
 import cart.entity.cart.Cart;
 import cart.entity.cart.Count;
 import cart.entity.member.Member;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,6 +23,15 @@ public class CartDaoImpl implements CartDao {
         resultSet.getLong("member_id"),
         resultSet.getLong("product_id"),
         new Count(resultSet.getInt("count"))
+    );
+    private final RowMapper<CartItem> cartItemRowMapper = (resultSet, rowNum) -> new CartItem(
+        resultSet.getLong("id"),
+        resultSet.getLong("member_id"),
+        resultSet.getLong("product_id"),
+        resultSet.getInt("price"),
+        resultSet.getString("name"),
+        resultSet.getString("image_url"),
+        resultSet.getInt("price")
     );
 
     public CartDaoImpl(final JdbcTemplate jdbcTemplate) {
@@ -51,6 +62,15 @@ public class CartDaoImpl implements CartDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<CartItem> findByMemberId(final Member member) {
+        String sql = "SELECT c.id, c.member_id, c.product_id, c.count, p.name, p.image_url, p.price FROM cart as c "
+            + "JOIN product as p "
+            + "ON p.id = c.product_id "
+            + "WHERE member_id = ?";
+        return jdbcTemplate.query(sql, cartItemRowMapper, member.getId());
     }
 
     @Override

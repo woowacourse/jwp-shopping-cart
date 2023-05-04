@@ -4,14 +4,15 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import cart.dao.product.ProductDao;
 import cart.dao.product.ProductDaoImpl;
+import cart.dto.cartitem.CartItem;
 import cart.entity.cart.Cart;
 import cart.entity.cart.Count;
 import cart.entity.member.Email;
 import cart.entity.member.Member;
 import cart.entity.member.Password;
 import cart.entity.product.Product;
+import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,11 +34,6 @@ class CartDaoImplTest {
         cartDao = new CartDaoImpl(jdbcTemplate);
         productDao = new ProductDaoImpl(jdbcTemplate);
         jdbcTemplate.execute("INSERT INTO member(email, password) values ('ako@naver.com', 'ako')");
-    }
-
-    @AfterEach
-    void clear_database() {
-        jdbcTemplate.execute("TRUNCATE TABLE cart");
     }
 
     @Test
@@ -78,6 +74,25 @@ class CartDaoImplTest {
     }
 
     @Test
+    @DisplayName("각 사용자의 장바구니 상품을 가져온다.")
+    void find_cart_by_member() {
+        // given
+        Long productId1 = productDao.insertProduct(new Product("밥", "이미지", 1000));
+        Long productId2 = productDao.insertProduct(new Product("고기", "이미지", 2000));
+        Member member = new Member(1L, new Email("ako@naver.com"), new Password("ako"));
+        Cart cart1 = new Cart(member.getId(), productId1, 1);
+        Cart cart2 = new Cart(member.getId(), productId2, 1);
+        cartDao.insertCart(cart1);
+        cartDao.insertCart(cart2);
+
+        // when
+        List<CartItem> result = cartDao.findByMemberId(member);
+
+        // then
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Test
     @DisplayName("장바구니의 데이터를 업데이트한다.")
     void update_cart_count() {
         // given
@@ -95,7 +110,6 @@ class CartDaoImplTest {
         assertThat(result.get().getMemberId()).isEqualTo(updateCart.getMemberId());
         assertThat(result.get().getProductId()).isEqualTo(updateCart.getProductId());
         assertThat(result.get().getCount()).isEqualTo(updateCart.getCount());
-
     }
 
 }
