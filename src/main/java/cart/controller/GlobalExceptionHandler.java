@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.exception.AlreadyAddedProductException;
 import cart.exception.CartNotFoundException;
 import cart.exception.ProductNotFoundException;
 import cart.exception.UserNotFoundException;
@@ -38,6 +39,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<String> handleNotFoundException(final Exception exception) {
         log.warn("존재하지 않는 리소스에 접근했습니다.", exception);
         return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<String> handleAlreadyAddedProduct(final AlreadyAddedProductException e) {
+        log.warn("이미 장바구니에 담긴 상품입니다.", e);
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @Override
