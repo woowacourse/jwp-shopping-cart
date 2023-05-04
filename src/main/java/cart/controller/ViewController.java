@@ -10,18 +10,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Transactional
 @Controller
-public class HomeController {
+public class ViewController {
 
     private final ProductDao productDao;
 
-    public HomeController(ProductDao productDao) {
+    public ViewController(ProductDao productDao) {
         this.productDao = productDao;
     }
 
     @GetMapping
-    public String productList(final Model model) {
+    public String viewHome(final Model model) {
         List<Product> products = productDao.findAll();
         model.addAttribute("products", products);
         return "index";
+    }
+
+    @GetMapping("/admin")
+    public String viewAdmin(final Model model) {
+        final List<Product> products = productDao.findAll();
+        model.addAttribute("products", products);
+        return "admin";
     }
 }

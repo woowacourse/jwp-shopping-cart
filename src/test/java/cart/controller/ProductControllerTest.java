@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+class ProductControllerTest {
 
     @LocalServerPort
     private int port;
@@ -57,7 +57,7 @@ class AdminControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson).log().all()
                     .when()
-                    .post("/admin/product")
+                    .post("/admin/products")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_CREATED)
                     .contentType(ContentType.HTML);
@@ -74,7 +74,7 @@ class AdminControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .post("/admin/product")
+                    .post("/admin/products")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -89,7 +89,7 @@ class AdminControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .post("/admin/product")
+                    .post("/admin/products")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -105,7 +105,7 @@ class AdminControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .post("/admin/product")
+                    .post("/admin/products")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -124,7 +124,7 @@ class AdminControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put("/admin/product/1")
+                    .put("/admin/products/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_CREATED)
                     .contentType(ContentType.HTML);
@@ -141,7 +141,7 @@ class AdminControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put("/admin/product/1")
+                    .put("/admin/products/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -156,7 +156,7 @@ class AdminControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put("/admin/product/1")
+                    .put("/admin/products/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -172,7 +172,7 @@ class AdminControllerTest {
                     .contentType(ContentType.JSON)
                     .body(requestJson)
                     .when()
-                    .put("/admin/product/1")
+                    .put("/admin/products/1")
                     .then().log().all()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
         }
@@ -183,7 +183,7 @@ class AdminControllerTest {
     void shouldResponseHtmlWithStatusOkWhenRequestDeleteToAdminProductId() {
         given().log().all()
                 .when()
-                .delete("/admin/product/1")
+                .delete("/admin/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.HTML);

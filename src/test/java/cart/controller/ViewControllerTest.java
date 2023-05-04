@@ -7,7 +7,7 @@ import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class HomeControllerTest {
+class ViewControllerTest {
 
     @DisplayName("GET / 요청 시 Status OK 및 HTML 반환")
     @Test
