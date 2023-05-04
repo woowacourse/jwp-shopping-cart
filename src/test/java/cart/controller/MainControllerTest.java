@@ -3,7 +3,7 @@ package cart.controller;
 import cart.auth.AuthArgumentResolver;
 import cart.entity.ProductEntity;
 import cart.entity.UserEntity;
-import cart.dto.CartItemResponseDto;
+import cart.dto.response.CartItemResponseDto;
 import cart.service.CartService;
 import cart.service.ProductService;
 import cart.service.UserService;

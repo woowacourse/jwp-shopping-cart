@@ -1,6 +1,6 @@
 package cart;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.request.ProductRequestDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;

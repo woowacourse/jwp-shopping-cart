@@ -1,7 +1,7 @@
 package cart.repository;
 
 import cart.entity.CartEntity;
-import cart.dto.CartItemResponseDto;
+import cart.dto.response.CartItemResponseDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;

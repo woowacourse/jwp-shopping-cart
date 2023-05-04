@@ -3,7 +3,7 @@ package cart.controller;
 import cart.BasicAuthorizationEncoder;
 import cart.auth.dto.AuthenticationDto;
 import cart.auth.service.AuthService;
-import cart.dto.CartRequestDto;
+import cart.dto.request.CartRequestDto;
 import cart.service.CartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

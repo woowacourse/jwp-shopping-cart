@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

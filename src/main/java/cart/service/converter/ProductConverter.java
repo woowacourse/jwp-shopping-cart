@@ -1,6 +1,6 @@
 package cart.service.converter;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.request.ProductRequestDto;
 import cart.entity.ProductEntity;
 
 public class ProductConverter {

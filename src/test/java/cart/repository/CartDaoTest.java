@@ -1,7 +1,7 @@
 package cart.repository;
 
 import cart.entity.CartEntity;
-import cart.dto.CartItemResponseDto;
+import cart.dto.response.CartItemResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

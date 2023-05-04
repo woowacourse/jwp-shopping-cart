@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.request.ProductRequestDto;
 import cart.entity.ProductEntity;
 import cart.repository.ProductDao;
 import cart.service.converter.ProductConverter;

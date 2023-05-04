@@ -1,7 +1,7 @@
 package cart.controller;
 
 
-import cart.dto.UserResponseDto;
+import cart.dto.response.UserResponseDto;
 import cart.entity.ProductEntity;
 import cart.entity.UserEntity;
 import cart.service.CartService;

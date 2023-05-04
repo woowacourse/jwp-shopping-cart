@@ -1,8 +1,8 @@
 package cart.controller;
 
 import cart.auth.Auth;
-import cart.dto.CartRequestDto;
-import cart.dto.CartItemResponseDto;
+import cart.dto.request.CartRequestDto;
+import cart.dto.response.CartItemResponseDto;
 import cart.service.CartService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

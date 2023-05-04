@@ -1,6 +1,6 @@
 package cart.repository;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.request.ProductRequestDto;
 import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

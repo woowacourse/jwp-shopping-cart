@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.auth.AuthArgumentResolver;
-import cart.dto.ProductRequestDto;
+import cart.dto.request.ProductRequestDto;
 import cart.exception.ProductNotFoundException;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
