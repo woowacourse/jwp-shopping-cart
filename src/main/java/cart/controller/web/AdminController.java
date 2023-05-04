@@ -22,7 +22,6 @@ public class AdminController {
     @GetMapping
     public String renderAdminPage(Model model) {
         List<Product> products = productService.findAll();
-        System.out.println("[products]" + products);
         model.addAttribute("products", ProductsResponse.of(products));
         return "admin";
     }
