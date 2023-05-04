@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.URL;
 
 public class ProductRequestDto {
 
-    @Length(max = 255, message = "상품명은 영문기준 255자 이하입니다.")
+    @Length(max = 255,message = "상품명은 영문기준 255자 이하입니다.")
     private String name;
     @Length(max = 8000, message = "URL은 영문기준 8000자 이하입니다.")
     @URL
