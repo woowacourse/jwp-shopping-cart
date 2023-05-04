@@ -12,18 +12,15 @@ public class ProductResponse {
 	public ProductResponse() {
 	}
 
+	public ProductResponse(ProductDto productDto) {
+		this(productDto.getId(), productDto.getName(), productDto.getImage(), productDto.getPrice());
+	}
+
 	public ProductResponse(Long id, String name, String image, Integer price) {
 		this.id = id;
 		this.name = name;
 		this.image = image;
 		this.price = price;
-	}
-
-	public ProductResponse(ProductDto productDto) {
-		this.id = productDto.getId();
-		this.name = productDto.getName();
-		this.image = productDto.getImage();
-		this.price = productDto.getPrice();
 	}
 
 	public Long getId() {

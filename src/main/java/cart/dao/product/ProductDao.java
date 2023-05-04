@@ -58,7 +58,7 @@ public class ProductDao {
 		return (long)Objects.requireNonNull(keyHolder.getKeys()).get("id");
 	}
 
-	public Optional<Product> findById(Long id) {
+	public Optional<Product> findById(final Long id) {
 		final String sql = "SELECT * FROM PRODUCT WHERE id = ?";
 
 		try {
@@ -69,10 +69,10 @@ public class ProductDao {
 		}
 	}
 
-	public long updateById(final ProductUpdateDTO productUpdateDTO) {
+	public void updateById(final ProductUpdateDTO productUpdateDTO) {
 		final String sql = "UPDATE product SET name = ?, price = ?, image = ? WHERE id = ?";
 
-		return jdbcTemplate.update(sql, productUpdateDTO.getName(), productUpdateDTO.getPrice(),
+		jdbcTemplate.update(sql, productUpdateDTO.getName(), productUpdateDTO.getPrice(),
 			productUpdateDTO.getImage(), productUpdateDTO.getId());
 	}
 
