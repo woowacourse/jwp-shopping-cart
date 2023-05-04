@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
         final String header = request.getHeader("Authorization");
 
         if (header == null) {
-            throw new IllegalArgumentException("로그인되지 않았습니다");
+            throw new AuthenticationException("로그인되지 않았습니다");
         }
 
         return true;

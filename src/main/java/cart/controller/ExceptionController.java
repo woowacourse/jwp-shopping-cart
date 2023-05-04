@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.auth.AuthenticationException;
 import cart.dto.ExceptionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,15 @@ public class ExceptionController {
         final ExceptionResponse exceptionResponse = new ExceptionResponse("잠시 후 다시 시도해주세요");
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponse);
+    }
+
+    @ExceptionHandler({AuthenticationException.class})
+    public ResponseEntity<ExceptionResponse> handleAuthenticationException(final AuthenticationException exception) {
+        log.error(exception.getMessage());
+
+        final ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exceptionResponse);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
