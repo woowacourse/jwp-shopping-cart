@@ -70,7 +70,7 @@
   - [ ] 장바구니 목록에서 상품을 제거할 수 있다.
 
 ### 추가할 DB 테이블
-- [ ] users
+- [x] users
   - id, email, password를 가진다.
-- [ ] carts
+- [x] carts
   - num, userid, productid, quantity를 가진다.
