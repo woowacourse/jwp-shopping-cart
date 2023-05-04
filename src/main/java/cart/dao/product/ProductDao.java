@@ -70,7 +70,7 @@ public class ProductDao {
     }
 
     public Optional<ProductEntity> findById(Long id) {
-        String findByIdQuery = "SELECT * FROM product WHERE id = ?";
+        String findByIdQuery = "SELECT * FROM product WHERE product_id = ?";
 
         try {
             ProductEntity productEntity = jdbcTemplate.queryForObject(findByIdQuery, rowMapper, id);
@@ -82,7 +82,7 @@ public class ProductDao {
     }
 
     public List<ProductEntity> findByIds(List<Long> ids) {
-        String findByIdQuery = "SELECT * FROM product WHERE id IN (%s)";
+        String findByIdQuery = "SELECT * FROM product WHERE product_id IN (%s)";
 
         String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
 
