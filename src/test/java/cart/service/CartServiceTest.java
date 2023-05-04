@@ -76,7 +76,7 @@ class CartServiceTest {
                 .willReturn(false);
 
         //when,then
-        assertThatThrownBy(() -> cartService.deleteProduct(MEMBER_INFO, PRODUCT_DTO))
+        assertThatThrownBy(() -> cartService.deleteProduct(MEMBER_INFO, 1))
                 .isInstanceOf(CartException.class);
     }
 
@@ -88,7 +88,7 @@ class CartServiceTest {
                 .willReturn(true);
 
         //when
-        cartService.deleteProduct(MEMBER_INFO, PRODUCT_DTO);
+        cartService.deleteProduct(MEMBER_INFO, 1);
 
         //then
         verify(cartDao, times(1)).existingCartItem(anyInt(), anyInt());

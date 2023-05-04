@@ -1,5 +1,6 @@
 package cart.repository;
 
+import cart.repository.joinrequest.CartWithProduct;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -7,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class CartDao {
@@ -38,5 +40,22 @@ public class CartDao {
         final String sql = "select * from cart where member_id = ? and product_id = ?";
         final int size = jdbcTemplate.query(sql, (ig, ig2) -> null, memberId, productId).size();
         return size >= EXITING_CART_ITEM;
+    }
+
+    public List<CartWithProduct> cartWithProducts(final int memberId) {
+        final String sql = "select cart.member_id, product.id, product.name, product.image, product.price" +
+                " from cart inner join product"
+                + " on cart.product_id = product.id"
+                + " where cart.member_id = ?";
+
+        return jdbcTemplate.query(sql,
+                (rs, cn) -> new CartWithProduct(
+                        rs.getInt("cart.member_id"),
+                        rs.getInt("product.id"),
+                        rs.getString("product.name"),
+                        rs.getString("product.image"),
+                        rs.getInt("product.price")
+                ), memberId
+        );
     }
 }

@@ -2,10 +2,15 @@ package cart.service;
 
 import cart.auth.MemberInfo;
 import cart.dto.request.ProductRequestDto;
+import cart.dto.response.ProductDto;
 import cart.excpetion.CartException;
 import cart.repository.CartDao;
+import cart.repository.joinrequest.CartWithProduct;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class CartService {
@@ -27,11 +32,25 @@ public class CartService {
         }
     }
 
-    public void deleteProduct(final MemberInfo memberInfo, final ProductRequestDto productRequestDto) {
-        if (!cartDao.existingCartItem(memberInfo.getId(), productRequestDto.getProductId())) {
+    public void deleteProduct(final MemberInfo memberInfo, final Integer productId) {
+        if (!cartDao.existingCartItem(memberInfo.getId(), productId)) {
             throw new CartException("존재하지 않는 항목에 대한 삭제 요청입니다");
         }
-        cartDao.deleteProduct(memberInfo.getId(), productRequestDto.getProductId());
+        cartDao.deleteProduct(memberInfo.getId(), productId);
     }
 
+    public List<ProductDto> getProductsOf(MemberInfo memberInfo) {
+        final List<CartWithProduct> cartWithProducts = cartDao.cartWithProducts(memberInfo.getId());
+        final ArrayList<ProductDto> productDtos = new ArrayList<>();
+        for (CartWithProduct cartWithProduct : cartWithProducts) {
+            productDtos.add(new ProductDto(
+                            cartWithProduct.getId(),
+                            cartWithProduct.getName(),
+                            cartWithProduct.getImage(),
+                            cartWithProduct.getPrice()
+                    )
+            );
+        }
+        return productDtos;
+    }
 }
