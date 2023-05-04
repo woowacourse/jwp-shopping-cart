@@ -12,7 +12,8 @@ CREATE TABLE member
     id       BIGINT       NOT NULL AUTO_INCREMENT,
     email    VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (email)
 );
 
 CREATE TABLE cart
@@ -22,5 +23,6 @@ CREATE TABLE cart
     product_id BIGINT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (member_id) references member (id),
-    FOREIGN KEY (product_id) references product (id)
+    FOREIGN KEY (product_id) references product (id),
+    UNIQUE (member_id, product_id)
 );

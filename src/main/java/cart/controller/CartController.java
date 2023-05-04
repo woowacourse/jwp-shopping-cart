@@ -1,11 +1,12 @@
 package cart.controller;
 
+import cart.auth.Auth;
+import cart.auth.AuthInfo;
 import cart.controller.dto.ProductResponse;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
 
@@ -20,18 +21,17 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getProducts(final HttpServletRequest request) {
-        String email = (String) request.getAttribute("email");
-        List<ProductResponse> productByEmail = cartService.findByEmail(email);
+    public ResponseEntity<List<ProductResponse>> getProducts(@Auth final AuthInfo authInfo) {
+        List<ProductResponse> productByEmail = cartService.findByEmail(authInfo.getEmail());
+
         return ResponseEntity
                 .ok()
                 .body(productByEmail);
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<Void> addProduct(@PathVariable final Long productId, final HttpServletRequest request) {
-        String email = (String) request.getAttribute("email");
-        cartService.save(email, productId);
+    public ResponseEntity<Void> addProduct(@PathVariable final Long productId, @Auth final AuthInfo authInfo) {
+        cartService.save(authInfo.getEmail(), productId);
 
         return ResponseEntity
                 .created(URI.create("/cart/products"))
@@ -39,9 +39,9 @@ public class CartController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId, final HttpServletRequest request) {
-        String email = (String) request.getAttribute("email");
-        cartService.delete(email, productId);
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId, @Auth final AuthInfo authInfo) {
+        cartService.delete(authInfo.getEmail(), productId);
+
         return ResponseEntity
                 .noContent()
                 .build();
