@@ -12,8 +12,8 @@ public class Price {
         this.price = price;
     }
 
-    private void validateRange(final int price){
-        if(price < MIN_PRICE || MAX_PRICE < price){
+    private void validateRange(final int price) {
+        if (price < MIN_PRICE || MAX_PRICE < price) {
             throw new IllegalArgumentException("상품 등록을 등록하기 위해서는 1원 이상 천만원 이하의 가격을 설정해야 합니다.");
         }
     }

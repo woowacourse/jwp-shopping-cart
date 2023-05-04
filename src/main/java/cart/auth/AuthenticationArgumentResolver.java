@@ -2,7 +2,6 @@ package cart.auth;
 
 import cart.dao.MemberDao;
 import cart.domain.entity.MemberEntity;
-import cart.dto.MemberDto;
 import cart.exception.AuthenticationException;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -38,13 +37,13 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
         return AuthenticatedMember.from(selectedMember);
     }
 
-    private void validateExtraction(MemberEntity extractedMember){
-        if(extractedMember == null){
+    private void validateExtraction(MemberEntity extractedMember) {
+        if (extractedMember == null) {
             throw new AuthenticationException("사용자 인증이 필요합니다.");
         }
     }
 
-    private void validateMember(MemberEntity selectedMember){
+    private void validateMember(MemberEntity selectedMember) {
         if (selectedMember == null) {
             throw new AuthenticationException("사용자 인증에 실패하였습니다.");
         }

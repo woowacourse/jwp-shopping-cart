@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.dao.JdbcMemberDao;
-import cart.dto.MemberDto;
 import cart.domain.entity.MemberEntity;
+import cart.dto.MemberDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ class MemberManagementServiceTest {
                     () -> assertThat(memberDtos.get(1).getId()).isEqualTo(2L),
                     () -> assertThat(memberDtos.get(1).getEmail()).isEqualTo("hihi@email.com"),
                     () -> assertThat(memberDtos.get(1).getPassword()).isEqualTo("password2")
-                    );
+            );
         }
     }
 }

@@ -3,7 +3,6 @@ package cart.controller;
 import cart.auth.AuthenticatedMember;
 import cart.auth.AuthenticationPrincipal;
 import cart.dto.CartItemCreationDto;
-import cart.dto.MemberDto;
 import cart.dto.request.CartItemCreationRequest;
 import cart.dto.response.CartItemResponse;
 import cart.service.CartItemManagementService;

@@ -6,7 +6,6 @@ import cart.domain.entity.CartItemEntity;
 import cart.domain.entity.ProductEntity;
 import cart.dto.CartItemCreationDto;
 import cart.dto.CartItemDetailsDto;
-import cart.dto.ProductDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

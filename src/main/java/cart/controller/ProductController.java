@@ -1,6 +1,5 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
 import cart.dto.request.ProductCreationRequest;
 import cart.dto.request.ProductModificationRequest;
 import cart.service.ProductManagementService;
