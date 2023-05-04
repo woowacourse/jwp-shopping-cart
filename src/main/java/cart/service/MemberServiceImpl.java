@@ -1,6 +1,7 @@
 package cart.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,11 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public List<MemberResponse> findAll() {
-		return null;
+		return memberRepository.findAll()
+			.stream()
+			.map(member -> new MemberResponse(member.getId().getId(), member.getName(), member.getEmail(),
+				member.getPassword()))
+			.collect(Collectors.toList());
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package cart.service;
 
 import static org.mockito.ArgumentMatchers.*;
 
+import java.util.List;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import cart.controller.response.MemberResponse;
+import cart.domain.member.Member;
 import cart.domain.member.MemberId;
 import cart.repository.MemberRepository;
 import cart.service.dto.MemberUpdateRequest;
@@ -40,6 +44,18 @@ class MemberServiceImplTest {
 
 	@Test
 	void findAll() {
+		// given
+		final List<Member> members = List.of(new Member(MemberId.from(1L), "kiara", "email@email", "pw"));
+
+		BDDMockito.given(memberRepository.findAll()).willReturn(members);
+
+		// when
+		final List<MemberResponse> findAll = memberService.findAll();
+
+		// then
+		Assertions.assertThat(findAll)
+			.usingRecursiveComparison()
+			.isEqualTo(List.of(new MemberResponse(1L, "kiara", "email@email", "pw")));
 	}
 
 	@Test
