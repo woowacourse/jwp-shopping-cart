@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 public class ProductMapper {
 
     public static Product from(final ProductCreationRequest request) {
-        return Product.of(request.getName(), request.getImageUrl(), request.getPrice());
+        return Product.of(request.getName(), request.getImage(), request.getPrice());
     }
 
     public static Product from(final ProductModificationRequest request) {
-        return Product.of(request.getId(), request.getName(), request.getImageUrl(), request.getPrice());
+        return Product.of(request.getId(), request.getName(), request.getImage(), request.getPrice());
     }
 }

@@ -9,6 +9,6 @@ public class ProductModificationRequest {
 
     private final Long id;
     private final String name;
-    private final String imageUrl;
+    private final String image;
     private final Integer price;
 }

@@ -20,8 +20,6 @@ public class ExceptionController {
 
         final ExceptionResponse exceptionResponse = new ExceptionResponse("잠시 후 다시 시도해주세요");
 
-        exception.printStackTrace();
-
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponse);
     }
 

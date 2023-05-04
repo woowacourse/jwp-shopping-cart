@@ -8,6 +8,6 @@ import lombok.Getter;
 public class ProductCreationRequest {
 
     private final String name;
-    private final String imageUrl;
+    private final String image;
     private final Integer price;
 }
