@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.common.AuthInfoHandlerMethodArgumentResolver;
+import cart.common.auth.AuthInfoHandlerMethodArgumentResolver;
 import cart.domain.auth.service.AuthService;
 import cart.domain.cart.service.CartService;
 import cart.dto.MemberInformation;

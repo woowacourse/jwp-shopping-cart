@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
-import cart.common.AuthenticationException;
+import cart.common.auth.AuthenticationException;
 import cart.domain.member.dao.MemberDao;
 import cart.domain.member.entity.Member;
 import cart.dto.MemberInformation;

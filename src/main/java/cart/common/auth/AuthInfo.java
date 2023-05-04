@@ -1,4 +1,4 @@
-package cart.common;
+package cart.common.auth;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

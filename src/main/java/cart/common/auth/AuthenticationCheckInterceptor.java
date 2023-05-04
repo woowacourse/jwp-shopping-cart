@@ -1,4 +1,4 @@
-package cart.common;
+package cart.common.auth;
 
 import cart.domain.auth.service.AuthService;
 import javax.servlet.http.HttpServletRequest;
