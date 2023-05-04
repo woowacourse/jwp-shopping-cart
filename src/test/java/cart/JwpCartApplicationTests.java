@@ -130,7 +130,7 @@ class JwpCartApplicationTests {
     }
 
     @Test
-    @DisplayName("회원이 장바구니에 담은 상품을 장바구니에 저장한다.")
+    @DisplayName("회원이 상품을 장바구니에 담는다.")
     void createCartSuccess() {
         Long savedId = itemDao.insert(new Item("치킨", "chiken@naver.com", 15000));
 
