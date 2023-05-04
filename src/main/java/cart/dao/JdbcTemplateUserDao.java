@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.dto.AuthInfo;
 import cart.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,6 +33,13 @@ public class JdbcTemplateUserDao implements UserDao {
         parameters.put("email", user.getEmail());
         parameters.put("password", user.getPassword());
         return insertUsers.executeAndReturnKey(parameters).intValue();
+    }
+
+    @Override
+    public int selectByAuth(final AuthInfo authInfo) {
+        String sql = "select id from users where email = ? and password = ?";
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, authInfo.getEmail(), authInfo.getPaasword());
     }
 
     @Override

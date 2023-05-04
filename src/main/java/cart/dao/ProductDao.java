@@ -7,6 +7,8 @@ import java.util.List;
 public interface ProductDao {
     int insert(ProductEntity product);
 
+    ProductEntity selectById(int productId);
+
     List<ProductEntity> selectAll();
 
     int update(ProductEntity product);

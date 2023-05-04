@@ -1,11 +1,14 @@
 package cart.controller;
 
+import cart.dto.AuthInfo;
 import cart.dto.InsertRequestDto;
 import cart.dto.ProductResponseDto;
 import cart.dto.UpdateRequestDto;
+import cart.infrastructure.BasicAuthorizationExtractor;
 import cart.service.CartService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -37,6 +40,12 @@ public class CartApiController {
     @DeleteMapping("/product/{id}")
     public void deleteProduct(@PathVariable int id) {
         cartService.deleteProduct(id);
+    }
+
+    @GetMapping(value="/cart-products", produces="application/json")
+    public List<ProductResponseDto> getCartProduct(HttpServletRequest request) {
+        AuthInfo authInfo = new BasicAuthorizationExtractor().extract(request);
+        return cartService.getCartItems(authInfo);
     }
 
     private void validatePrice(int price) {

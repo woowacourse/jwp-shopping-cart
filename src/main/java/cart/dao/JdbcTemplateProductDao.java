@@ -36,6 +36,13 @@ public class JdbcTemplateProductDao implements ProductDao {
     }
 
     @Override
+    public ProductEntity selectById(final int productId) {
+        String sql = "select * from products where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, productEntityRowMapper, productId);
+    }
+
+    @Override
     public List<ProductEntity> selectAll() {
         String sql = "select * from products";
 

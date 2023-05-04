@@ -1,11 +1,10 @@
 package cart.service;
 
+import cart.dao.CartDao;
 import cart.dao.ProductDao;
 import cart.dao.UserDao;
-import cart.dto.InsertRequestDto;
-import cart.dto.ProductResponseDto;
-import cart.dto.UpdateRequestDto;
-import cart.dto.UserResponseDto;
+import cart.dto.*;
+import cart.entity.CartEntity;
 import cart.entity.ProductEntity;
 import cart.entity.UserEntity;
 import org.springframework.stereotype.Service;
@@ -19,10 +18,12 @@ public class CartService {
 
     private final ProductDao productDao;
     private final UserDao userDao;
+    private final CartDao cartDao;
 
-    public CartService(ProductDao productDao, UserDao userDao) {
+    public CartService(ProductDao productDao, UserDao userDao, CartDao cartDao) {
         this.productDao = productDao;
         this.userDao = userDao;
+        this.cartDao = cartDao;
     }
 
     public void addProduct(final InsertRequestDto insertRequestDto) {
@@ -63,6 +64,24 @@ public class CartService {
                 .map(user -> new UserResponseDto(
                         user.getEmail(),
                         user.getPassword()
+                ))
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    public List<ProductResponseDto> getCartItems(final AuthInfo authInfo) {
+        int userId = userDao.selectByAuth(authInfo);
+        List<CartEntity> carts = cartDao.selectByUserId(userId);
+
+        List<ProductEntity> cartItems = carts.stream()
+                .map(cartEntity -> productDao.selectById(cartEntity.getProductId()))
+                .collect(Collectors.toList());
+
+        return cartItems.stream()
+                .map(product -> new ProductResponseDto(
+                        product.getId(),
+                        product.getImage(),
+                        product.getName(),
+                        product.getPrice()
                 ))
                 .collect(Collectors.toUnmodifiableList());
     }
