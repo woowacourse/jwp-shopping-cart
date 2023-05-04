@@ -2,8 +2,8 @@ package cart.utils;
 
 public class CaesarCipher {
 
-    private static int KEY = 3;
-    private static int LENGTH = 26;
+    private static final int KEY = 3;
+    private static final int LENGTH = 26;
 
     public static String encrypt(final String password) {
         final char[] letters = password.toCharArray();
