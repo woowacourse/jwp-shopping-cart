@@ -26,7 +26,7 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/cart.js}"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const credentials = localStorage.getItem('credentials');
         if (!credentials) {
             alert('사용자 정보가 없습니다.');
@@ -35,26 +35,27 @@
         }
 
         axios.request({
-            url: '',
+            url: 'http://localhost:8080/carts',
             headers: {
                 'Authorization': `Basic ${credentials}`
-            }
+            },
+            method: 'GET',
         }).then((response) => {
-            const cartItems = response.data;
+            const cartItems = response.data.products;
 
             let productElement = '';
             // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
             cartItems.forEach(cartItem => {
                 productElement += `
-                        <div class="cart-item">
-                          <div class="cart-item-info">
-                            <img src="" alt=""/> <!-- 상품 이미지 -->
-                            <div class="cart-item-name"></div> <!-- 상품 이름 -->
-                            <div class="cart-item-price"></div> <!-- 상품 가격 -->
-                            <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
-                          </div>
-                        </div>
-                      `;
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <img src="${cartItem.imgUrl}" alt="${cartItem.name}"/>
+                        <div class="cart-item-name">${cartItem.name}</div>
+                        <div class="cart-item-price">${cartItem.price}원</div>
+                        <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
+                    </div>
+                </div>
+            `;
             });
 
             document.querySelector('.cart-items').innerHTML = productElement;

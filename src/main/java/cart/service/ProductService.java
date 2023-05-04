@@ -1,11 +1,11 @@
 package cart.service;
 
-import cart.domain.Product;
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
-import cart.dto.ProductsResponseDto;
+import cart.domain.product.Product;
+import cart.dto.product.ProductCreateRequestDto;
+import cart.dto.product.ProductEditRequestDto;
+import cart.dto.product.ProductsResponseDto;
 import cart.exception.ProductNotFoundException;
-import cart.repository.ProductRepository;
+import cart.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +16,14 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(final ProductRepository productRepository) {
         this.productRepository = productRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public Product findById(final Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
@@ -27,18 +33,18 @@ public class ProductService {
     }
 
     @Transactional
-    public void createProduct(final ProductCreateRequestDto productCreateRequestDto) {
+    public Long createProduct(final ProductCreateRequestDto productCreateRequestDto) {
         Product product = Product.from(productCreateRequestDto.getName(), productCreateRequestDto.getImgUrl(), productCreateRequestDto.getPrice());
 
-        productRepository.add(product);
+        return productRepository.add(product);
     }
 
     @Transactional
-    public void editProduct(final ProductEditRequestDto productEditRequestDto) {
-        Product product = findProductById(productEditRequestDto.getId());
+    public Long editProduct(final Long id, final ProductEditRequestDto productEditRequestDto) {
+        Product product = findProductById(id);
         product.edit(productEditRequestDto.getName(), productEditRequestDto.getImgUrl(), productEditRequestDto.getPrice());
 
-        productRepository.update(product);
+        return productRepository.update(product);
     }
 
     @Transactional

@@ -68,9 +68,8 @@ const createProduct = (product) => {
 const updateProduct = (product) => {
     const {id} = product;
 
-    axios.put(url,
+    axios.put(url + "/" + id,
         JSON.stringify({
-            id: product.id,
             name: product.name,
             price: product.price,
             imgUrl: product.imgUrl
