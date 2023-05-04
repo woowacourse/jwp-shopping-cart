@@ -45,9 +45,9 @@ public class CartDao {
         return jdbcTemplate.query(sql, cartItemRowMapper, userId);
     }
 
-    public void delete(final int id) {
-        final String sql = "delete from cart where id = ?";
-        final int changeRowCount = jdbcTemplate.update(sql, id);
+    public void deleteByIdAndUserId(final int id, final int userId) {
+        final String sql = "delete from cart where id = ? and user_id = ?";
+        final int changeRowCount = jdbcTemplate.update(sql, id, userId);
         validCartItemExist(changeRowCount);
     }
 

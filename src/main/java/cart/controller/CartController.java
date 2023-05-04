@@ -6,7 +6,9 @@ import cart.dto.response.CartItemResponseDto;
 import cart.service.CartService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,5 +41,11 @@ public class CartController {
     public ResponseEntity<List<CartItemResponseDto>> read(@Auth final Integer userId) {
         final List<CartItemResponseDto> response = cartService.getProductsInCart(userId);
         return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@Auth final Integer userId, @PathVariable final int id) {
+        cartService.delete(id, userId);
+        return ResponseEntity.ok().build();
     }
 }

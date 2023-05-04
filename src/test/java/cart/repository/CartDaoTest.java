@@ -90,13 +90,14 @@ class CartDaoTest {
     void delete_success() {
         // given
         final int cartId = 1;
+        final int userId = 1;
 
         // when
-        cartDao.delete(cartId);
+        cartDao.deleteByIdAndUserId(cartId, userId);
 
         // then
-        String sql = "select * from cart where id = ?";
-        assertThatThrownBy(() -> jdbcTemplate.queryForObject(sql, Integer.class, cartId))
+        String sql = "select * from cart where id = ? and user_id = ?";
+        assertThatThrownBy(() -> jdbcTemplate.queryForObject(sql, Integer.class, cartId, userId))
                 .isInstanceOf(DataAccessException.class);
     }
 
@@ -106,9 +107,10 @@ class CartDaoTest {
     void delete_fail() {
         // given
         final int invalidId = 0;
+        final int userId = 1;
 
         // expect
-        assertThatThrownBy(() -> cartDao.delete(invalidId))
+        assertThatThrownBy(() -> cartDao.deleteByIdAndUserId(invalidId, userId))
                 .isInstanceOf(DataAccessException.class);
     }
 }

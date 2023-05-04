@@ -5,6 +5,7 @@ import cart.auth.dto.AuthenticationDto;
 import cart.auth.repository.AuthDao;
 import cart.dto.request.CartRequestDto;
 import cart.dto.response.CartItemResponseDto;
+import cart.exception.CartItemNotFoundException;
 import cart.service.CartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,8 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CartController.class)
@@ -91,5 +92,27 @@ class CartControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().json(responseBody))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 삭제 성공")
+    void delete_success() throws Exception {
+        //expect
+        mockMvc.perform(delete("/cart/1")
+                        .header("Authorization", authenticationHeader))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("상품 삭제 실패 - 없는 상품 id")
+    void delete_fail_product_not_found() throws Exception {
+        //given
+        doThrow(CartItemNotFoundException.class)
+                .when(cartService)
+                .delete(0, userId);
+
+        //expect
+        mockMvc.perform(delete("/products/0"))
+                .andExpect(status().isNotFound());
     }
 }

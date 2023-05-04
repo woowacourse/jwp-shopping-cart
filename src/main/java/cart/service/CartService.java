@@ -25,4 +25,8 @@ public class CartService {
     public List<CartItemResponseDto> getProductsInCart(final int userId) {
         return cartDao.findByUserId(userId);
     }
+
+    public void delete(final int id, final int userId) {
+        cartDao.deleteByIdAndUserId(id, userId);
+    }
 }
