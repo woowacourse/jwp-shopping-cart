@@ -14,7 +14,7 @@ public class MemberDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public MemberDao(JdbcTemplate jdbcTemplate) {
+    public MemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

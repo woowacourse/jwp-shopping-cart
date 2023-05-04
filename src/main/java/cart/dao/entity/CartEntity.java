@@ -5,7 +5,7 @@ public class CartEntity {
     private final int productId;
     private final int memberId;
 
-    private CartEntity(int memberId, int productId) {
+    private CartEntity(final int memberId, final int productId) {
         this.memberId = memberId;
         this.productId = productId;
     }

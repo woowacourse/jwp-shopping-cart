@@ -6,7 +6,7 @@ public class MemberEntity {
     private final String email;
     private final String password;
 
-    private MemberEntity(int id, String email, String password) {
+    private MemberEntity(final int id, final String email, final String password) {
         this.id = id;
         this.email = email;
         this.password = password;

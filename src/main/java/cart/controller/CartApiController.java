@@ -24,7 +24,7 @@ public class CartApiController {
     private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
 
     @Autowired
-    public CartApiController(final CartService cartService, MemberService memberService) {
+    public CartApiController(final CartService cartService, final MemberService memberService) {
         this.cartService = cartService;
         this.memberService = memberService;
     }
@@ -49,16 +49,15 @@ public class CartApiController {
 
     @GetMapping("/carts")
     public ResponseEntity<List<ResponseProductDto>> getProducts(final HttpServletRequest request) {
-        AuthInfo authIfo = basicAuthorizationExtractor.extract(request);
-        List<ResponseProductDto> cartProductsByMember = cartService.findCartProductsByMember(authIfo);
+        final AuthInfo authIfo = basicAuthorizationExtractor.extract(request);
+        final List<ResponseProductDto> cartProductsByMember = cartService.findCartProductsByMember(authIfo);
         return ResponseEntity.ok().body(cartProductsByMember);
     }
 
     @PutMapping("/products/{id}")
     public ResponseEntity<Void> addProductToCart(@PathVariable final int id, final HttpServletRequest request) {
-        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-        // TODO : 컨트롤러의 역할인가?
-        int memberId = memberService.findIdByAuthInfo(authInfo);
+        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+        final int memberId = memberService.findIdByAuthInfo(authInfo);
         cartService.addProduct(memberId, id);
         return ResponseEntity.ok().build();
     }

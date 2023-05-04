@@ -59,22 +59,22 @@ public class ProductEntity {
             return new ProductEntity(id, name, price, image);
         }
 
-        public Builder id(Long id) {
+        public Builder id(final Long id) {
             this.id = id;
             return this;
         }
 
-        public Builder name(String name) {
+        public Builder name(final String name) {
             this.name = name;
             return this;
         }
 
-        public Builder price(Integer price) {
+        public Builder price(final Integer price) {
             this.price = price;
             return this;
         }
 
-        public Builder image(String image) {
+        public Builder image(final String image) {
             this.image = image;
             return this;
         }

@@ -16,18 +16,18 @@ public class MemberService {
     private final MemberDao memberDao;
 
     @Autowired
-    public MemberService(MemberDao memberDao) {
+    public MemberService(final MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
     public List<ResponseMemberDto> findAll() {
-        List<MemberEntity> memberEntities = memberDao.findAll();
+        final List<MemberEntity> memberEntities = memberDao.findAll();
         return memberEntities.stream()
                 .map(memberEntity -> ResponseMemberDto.transferEntityToDto(memberEntity))
                 .collect(Collectors.toList());
     }
 
-    public int findIdByAuthInfo(AuthInfo authInfo) {
+    public int findIdByAuthInfo(final AuthInfo authInfo) {
         return memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
     }
 }

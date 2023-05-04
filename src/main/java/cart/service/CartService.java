@@ -26,7 +26,7 @@ public class CartService {
     private final CartDao cartDao;
 
     @Autowired
-    public CartService(final ProductDao productDao, MemberDao memberDao, final CartDao cartDao) {
+    public CartService(final ProductDao productDao, final MemberDao memberDao, final CartDao cartDao) {
         this.productDao = productDao;
         this.memberDao = memberDao;
         this.cartDao = cartDao;
@@ -79,15 +79,15 @@ public class CartService {
     }
 
     public List<ResponseProductDto> findCartProductsByMember(final AuthInfo authInfo) {
-        int memberId = memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
-        List<ProductEntity> productEntities = cartDao.findProductsByMemberId(memberId);
+        final int memberId = memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
+        final List<ProductEntity> productEntities = cartDao.findProductsByMemberId(memberId);
         return productEntities.stream()
                 .map(ResponseProductDto::transferEntityToDto)
                 .collect(Collectors.toList());
     }
 
     public void addProduct(final int memberId, final int productId) {
-        CartEntity cartEntity = new CartEntity.Builder()
+        final CartEntity cartEntity = new CartEntity.Builder()
                 .memberId(memberId)
                 .productId(productId)
                 .build();

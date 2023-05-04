@@ -8,7 +8,7 @@ public class ResponseMemberDto {
     private String email;
     private String password;
 
-    public ResponseMemberDto(int id, String email, String password) {
+    public ResponseMemberDto(final int id, String email, final String password) {
         this.id = id;
         this.email = email;
         this.password = password;
