@@ -35,4 +35,18 @@ class CartUserDaoTest {
         assertThat(user).isNotNull();
         assertThat(user.getEmail()).isEqualTo(findTargetEmail);
     }
+
+    @DisplayName("사용자 저장 테스트")
+    @Test
+    void insertCartUser() {
+        String email = "email.com";
+        CartUserEntity cartUserEntity
+                = new CartUserEntity(null, email, "password");
+
+        cartUserDao.insert(cartUserEntity);
+
+        CartUserEntity findCartUser = cartUserDao.findByEmail(email);
+        assertThat(findCartUser).isNotNull();
+        assertThat(findCartUser.getEmail()).isEqualTo(email);
+    }
 }

@@ -24,10 +24,21 @@ public class CartCartUserRepositoryImpl implements CartUserRepository {
         return toCarUser(cartUserEntity);
     }
 
+    @Override
+    public Long save(CartUser cartUser) {
+        CartUserEntity cartUserEntity = new CartUserEntity(
+                null, //FIXME
+                cartUser.getUserEmail(),
+                cartUser.getPassword()
+        );
+
+        return cartUserDao.insert(cartUserEntity);
+    }
+
     private CartUser toCarUser(CartUserEntity cartUserEntity) {
         return new CartUser(
                 UserEmail.from(cartUserEntity.getEmail()),
-                cartUserEntity.getPassword()
+                cartUserEntity.getCartPassword()
         );
     }
 

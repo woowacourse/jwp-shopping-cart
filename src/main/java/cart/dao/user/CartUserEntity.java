@@ -5,12 +5,12 @@ import java.util.Objects;
 public class CartUserEntity {
     private final Long id;
     private final String email;
-    private final String password;
+    private final String cartPassword;
 
-    public CartUserEntity(Long id, String email, String password) {
+    public CartUserEntity(Long id, String email, String cartPassword) {
         this.id = id;
         this.email = email;
-        this.password = password;
+        this.cartPassword = cartPassword;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CartUserEntity {
         return email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getCartPassword() {
+        return cartPassword;
     }
 }
