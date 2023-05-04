@@ -1,7 +1,7 @@
 package cart.service;
 
 import static cart.CartFixture.TEST_CART_RECORD;
-import static cart.MemberFixture.TEST_MEMBER;
+import static cart.MemberFixture.TEST_MEMBER1;
 import static cart.ProductFixture.PRODUCT_ENTITY3;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Import({JdbcMemberRepository.class, JdbcShoppingCartRepository.class, ShoppingCartService.class})
 class ShoppingCartServiceTest {
 
-    private static final MemberInfo MEMBER_INFO = new MemberInfo(TEST_MEMBER.getEmail(), TEST_MEMBER.getPassword());
+    private static final MemberInfo MEMBER_INFO = new MemberInfo(TEST_MEMBER1.getEmail(), TEST_MEMBER1.getPassword());
     @Autowired
     private ShoppingCartService shoppingCartService;
 

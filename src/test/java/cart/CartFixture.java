@@ -1,11 +1,11 @@
 package cart;
 
-import static cart.MemberFixture.TEST_MEMBER;
+import static cart.MemberFixture.TEST_MEMBER1;
 import static cart.ProductFixture.PRODUCT_ENTITY1;
 
 public class CartFixture {
 
-    public static final CartRecordData TEST_CART_RECORD = new CartRecordData(1L, TEST_MEMBER.getId(),
+    public static final CartRecordData TEST_CART_RECORD = new CartRecordData(1L, TEST_MEMBER1.getId(),
             PRODUCT_ENTITY1.getId());
 
     public static class CartRecordData {
