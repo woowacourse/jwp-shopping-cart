@@ -15,7 +15,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public LoginInterceptor getLoginInterceptor() {
-        return new LoginInterceptor();
+    public AuthorizationInterceptor getLoginInterceptor() {
+        return new AuthorizationInterceptor();
     }
 }

@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.authorization.AuthorizationInformation;
 import cart.entity.Member;
 import cart.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class MemberController {
 
     @PostConstruct
     public void init() {
-//        memberService.
+        memberService.save(new AuthorizationInformation("kong123@gmail.com", "password"));
+        memberService.save(new AuthorizationInformation("kong@gmail.com", "123"));
     }
 }

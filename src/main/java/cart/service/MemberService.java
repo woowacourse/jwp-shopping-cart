@@ -30,4 +30,10 @@ public class MemberService {
     private AuthMember convertAuthInformationToMember(AuthorizationInformation authorizationInformation) {
         return new AuthMember(authorizationInformation.getEmail(), authorizationInformation.getPassword());
     }
+
+    public void save(AuthorizationInformation authorizationInformation) {
+        AuthMember authMember = convertAuthInformationToMember(authorizationInformation);
+
+        memberDao.save(authMember);
+    }
 }
