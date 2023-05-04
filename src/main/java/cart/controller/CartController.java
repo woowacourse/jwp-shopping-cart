@@ -4,12 +4,10 @@ import cart.common.Member;
 import cart.domain.cart.CartService;
 import cart.domain.cart.dto.ProductResponse;
 import cart.domain.member.dto.MemberRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
@@ -40,6 +38,13 @@ public class CartController {
     public ResponseEntity<List<ProductResponse>> showCartItems(@Member MemberRequest memberRequest) {
         List<ProductResponse> cartItems = cartService.findProductsByUserIdOnCart(memberRequest.getEmail());
         return ResponseEntity.ok(cartItems);
+    }
+
+    @DeleteMapping("/carts/{productId}")
+    @ResponseBody
+    public ResponseEntity<Object> deleteCartItem(@Member MemberRequest memberRequest, @PathVariable int productId) {
+        cartService.deleteCartItem(memberRequest.getEmail(), (long) productId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

@@ -69,7 +69,7 @@ public class CartServiceIntegrationTest {
         Long chickenId = productDao.save(products.get(0));
         Long pizzaId = productDao.save(products.get(1));
 
-        cartService.addProductToCart(email, chickenId);
+        Long chickenCartItemId = cartService.addProductToCart(email, chickenId);
         cartService.addProductToCart(email, pizzaId);
 
         Assertions.assertDoesNotThrow(() -> cartService.deleteCartItem(email, pizzaId));

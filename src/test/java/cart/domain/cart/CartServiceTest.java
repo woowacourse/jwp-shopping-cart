@@ -77,11 +77,9 @@ class CartServiceTest {
         given(memberDao.findByEmail(any()))
                 .willReturn(Optional.of(new Member(1L, "aa@aa.com", "qwer1234")));
 
-        given(cartDao.deleteCartItem(any(), any()))
-                .willReturn(0);
 
         assertThatThrownBy(() -> cartService.deleteCartItem("cyh6099@gmail.com", 1L))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("잘못된 삭제 요청입니다.");
+                .hasMessage("존재하지 않는 상품은 삭제할 수 없습니다.");
     }
 }

@@ -5,7 +5,6 @@ import cart.domain.Product;
 import cart.domain.cart.dto.ProductResponse;
 import cart.domain.member.Member;
 import cart.domain.member.MemberDao;
-import cart.entity.ProductEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,11 +28,11 @@ public class CartService {
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
 
-        ProductEntity productEntity = productDao.findById(productId).orElseThrow(
+        productDao.findById(productId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 상품입니다.")
         );
 
-        Cart cart = new Cart(productEntity.getId(), member.getId());
+        Cart cart = new Cart(productId, member.getId());
         return cartDao.addProduct(cart);
     }
 
@@ -43,7 +42,7 @@ public class CartService {
         );
         List<Product> products = cartDao.findProductsByUserId(member.getId());
         return products.stream()
-                .map(p -> new ProductResponse(p.getName(), p.getImageUrl(), p.getPrice()))
+                .map(p -> new ProductResponse(p.getId(), p.getName(), p.getImageUrl(), p.getPrice()))
                 .collect(Collectors.toList());
     }
 
@@ -51,9 +50,10 @@ public class CartService {
         Member member = memberDao.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
-        int affectedRow = cartDao.deleteCartItem(member, productId);
-        if (affectedRow != 1) {
-            throw new IllegalArgumentException("잘못된 삭제 요청입니다.");
-        }
+
+        Long cartId = cartDao.findOneCartItem(member, productId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 상품은 삭제할 수 없습니다.")
+        );
+        cartDao.deleteCartItem(cartId);
     }
 }
