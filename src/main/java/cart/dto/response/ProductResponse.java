@@ -29,7 +29,7 @@ public class ProductResponse {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public static ProductResponse of(final Long id, final String name, final String image, final Integer price) {
+    public static ProductResponse of(final long id, final String name, final String image, final int price) {
         return new ProductResponse(id, name, image, price);
     }
 
