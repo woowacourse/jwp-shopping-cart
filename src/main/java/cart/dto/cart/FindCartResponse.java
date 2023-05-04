@@ -20,6 +20,7 @@ public class FindCartResponse {
                 .getCartProducts().stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
+
         return new FindCartResponse(cart.getCartId().getValue(), productResponses);
     }
 

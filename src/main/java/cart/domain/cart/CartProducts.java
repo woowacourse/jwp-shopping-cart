@@ -17,10 +17,6 @@ public class CartProducts {
         this.cartProducts = cartProducts;
     }
 
-    public List<CartProduct> getCartProducts() {
-        return cartProducts;
-    }
-
     public void add(final Product product) {
         if (cartProducts.stream().anyMatch(cartProduct -> cartProduct.getProduct().equals(product))) {
             throw new AlreadyAddedProductException("이미 장바구니에 담긴 상품입니다.");
@@ -30,5 +26,9 @@ public class CartProducts {
 
     public void delete(final Long cartProductId) {
         cartProducts.removeIf(cartProduct -> cartProduct.getCartProductId().getValue().equals(cartProductId));
+    }
+
+    public List<CartProduct> getCartProducts() {
+        return cartProducts;
     }
 }

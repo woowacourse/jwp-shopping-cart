@@ -11,18 +11,18 @@ public class Cart {
     private final User user;
     private final CartProducts cartProducts;
 
-    public Cart(final CartId cartId, final User user, final CartProducts cartProducts) {
-        this.cartId = cartId;
-        this.user = user;
-        this.cartProducts = cartProducts;
-    }
-
     public Cart(final CartId cartId, final User user, final List<CartProduct> cartProducts) {
         this(cartId, user, new CartProducts(cartProducts));
     }
 
     public Cart(final User user) {
         this(new CartId(), user, new CartProducts());
+    }
+
+    public Cart(final CartId cartId, final User user, final CartProducts cartProducts) {
+        this.cartId = cartId;
+        this.user = user;
+        this.cartProducts = cartProducts;
     }
 
     public void addProduct(final Product product) {

@@ -23,6 +23,7 @@ public class SettingViewController {
                 .stream()
                 .map(UserResponse::from)
                 .collect(Collectors.toList());
+
         model.addAttribute("members", userResponses);
         return "settings";
     }

@@ -23,6 +23,7 @@ public class ProductViewController {
                 .stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
+
         model.addAttribute("products", productResponses);
         return "index";
     }
@@ -33,6 +34,7 @@ public class ProductViewController {
                 .stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
+
         model.addAttribute("products", productResponses);
         return "admin";
     }

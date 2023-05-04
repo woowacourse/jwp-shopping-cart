@@ -16,6 +16,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
+
     private final UserRepository userRepository;
 
     public AuthenticationFilter(final UserRepository userRepository) {

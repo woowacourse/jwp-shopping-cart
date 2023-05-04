@@ -44,6 +44,22 @@ public class Product {
         }
     }
 
+    public ProductId getProductId() {
+        return productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public Image getProductImage() {
+        return image;
+    }
+
+    public Price getProductPrice() {
+        return price;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -59,21 +75,5 @@ public class Product {
     @Override
     public int hashCode() {
         return Objects.hash(productId);
-    }
-
-    public ProductId getProductId() {
-        return productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public Image getProductImage() {
-        return image;
-    }
-
-    public Price getProductPrice() {
-        return price;
     }
 }

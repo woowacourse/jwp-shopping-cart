@@ -9,7 +9,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,10 +32,12 @@ public class ProductApiController {
 
     @PostMapping("/products")
     public ResponseEntity<ProductResponse> createProduct(@RequestBody @Valid final ProductRequest productRequest) {
-        final Product product = productCommandService.create(productRequest.getName(), productRequest.getImage(),
+        final Product product = productCommandService.create(
+                productRequest.getName(),
+                productRequest.getImage(),
                 productRequest.getPrice());
-        final ProductResponse productResponse = ProductResponse.from(product);
 
+        final ProductResponse productResponse = ProductResponse.from(product);
         return ResponseEntity.created(URI.create("/products/" + product.getProductId()))
                 .body(productResponse);
     }
@@ -48,22 +48,26 @@ public class ProductApiController {
                 .stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(productResponses);
     }
 
     @PutMapping("/products/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable final long id,
             @RequestBody @Valid final ProductRequest productRequest) {
-        final Product product = productCommandService.update(id, productRequest.getName(), productRequest.getImage(),
+        final Product product = productCommandService.update(
+                id,
+                productRequest.getName(),
+                productRequest.getImage(),
                 productRequest.getPrice());
-        final ProductResponse productResponse = ProductResponse.from(product);
 
+        final ProductResponse productResponse = ProductResponse.from(product);
         return ResponseEntity.ok(productResponse);
     }
 
     @DeleteMapping("/products/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteProduct(@PathVariable final long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable final long id) {
         productCommandService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

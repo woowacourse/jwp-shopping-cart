@@ -6,13 +6,14 @@ public class CartProductId {
 
     private final Long value;
 
+    public CartProductId() {
+        this(null);
+    }
+
     public CartProductId(final Long value) {
         this.value = value;
     }
 
-    public CartProductId() {
-        this(null);
-    }
 
     public Long getValue() {
         return value;

@@ -9,19 +9,19 @@ public class ProductEntity {
     private final String image;
     private final int price;
 
+    public ProductEntity(final Long id, final String name, final String image, final int price) {
+        this.id = new ProductEntityId(id);
+        this.name = name;
+        this.image = image;
+        this.price = price;
+    }
+
     public ProductEntity(final String name, final String image, final int price) {
         this(null, name, image, price);
     }
 
     public ProductEntity(final Long id, final ProductEntity other) {
         this(id, other.name, other.image, other.price);
-    }
-
-    public ProductEntity(final Long id, final String name, final String image, final int price) {
-        this.id = new ProductEntityId(id);
-        this.name = name;
-        this.image = image;
-        this.price = price;
     }
 
     public static ProductEntity from(final Product product) {

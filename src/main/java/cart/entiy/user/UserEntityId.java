@@ -6,12 +6,12 @@ public class UserEntityId {
 
     private final Long id;
 
-    public UserEntityId(final Long id) {
-        this.id = id;
-    }
-
     public UserEntityId(final UserId userId) {
         this(userId.getValue());
+    }
+
+    public UserEntityId(final Long id) {
+        this.id = id;
     }
 
     public static UserEntityId from(final UserId userId) {
