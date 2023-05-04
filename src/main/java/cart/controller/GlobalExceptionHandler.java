@@ -3,6 +3,7 @@ package cart.controller;
 import cart.dto.ErrorResponse;
 import cart.exception.AlreadyAddedProductException;
 import cart.exception.CartNotFoundException;
+import cart.exception.ProductInCartDeleteException;
 import cart.exception.ProductNotFoundException;
 import cart.exception.UserNotFoundException;
 import java.util.Map;
@@ -45,6 +46,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     private ResponseEntity<ErrorResponse> handleAlreadyAddedProduct(final AlreadyAddedProductException e) {
         log.warn("이미 장바구니에 담긴 상품입니다.", e);
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleProductInCartDelete(final ProductInCartDeleteException e) {
+        log.warn("장바구니에 담긴 상품을 삭제할 수 없습니다.", e);
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 

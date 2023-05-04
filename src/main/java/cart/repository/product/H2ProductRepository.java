@@ -2,11 +2,13 @@ package cart.repository.product;
 
 import cart.domain.product.Product;
 import cart.entiy.product.ProductEntity;
+import cart.exception.ProductInCartDeleteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -80,6 +82,10 @@ public class H2ProductRepository implements ProductRepository {
     @Override
     public void deleteById(final Long id) {
         final String sql = "DELETE FROM PRODUCT WHERE product_id=?";
-        jdbcTemplate.update(sql, id);
+        try {
+            jdbcTemplate.update(sql, id);
+        } catch (final DataIntegrityViolationException e) {
+            throw new ProductInCartDeleteException("상품이 장바구니에 존재합니다. 장바구니에서 먼저 삭제해주세요.");
+        }
     }
 }
