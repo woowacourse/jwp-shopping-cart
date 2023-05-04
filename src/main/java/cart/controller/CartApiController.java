@@ -54,6 +54,12 @@ public class CartApiController {
         cartService.addCartItem(authInfo, productId);
     }
 
+    @DeleteMapping("/cart/{productId}")
+    public void deleteProductInCart(@PathVariable int productId, HttpServletRequest request) {
+        AuthInfo authInfo = new BasicAuthorizationExtractor().extract(request);
+        cartService.deleteCartItem(authInfo, productId);
+    }
+
     private void validatePrice(int price) {
         if (price < 0) {
             throw new IllegalArgumentException("가격은 음수일 수 없습니다.");

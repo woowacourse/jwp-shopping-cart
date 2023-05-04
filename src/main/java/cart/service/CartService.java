@@ -90,4 +90,9 @@ public class CartService {
         int userId = userDao.selectByAuth(authInfo);
         return cartDao.insert(new CartEntity(userId, productId, 1));
     }
+
+    public int deleteCartItem(final AuthInfo authInfo, final int productId) {
+        int userId = userDao.selectByAuth(authInfo);
+        return cartDao.delete(userId, productId);
+    }
 }

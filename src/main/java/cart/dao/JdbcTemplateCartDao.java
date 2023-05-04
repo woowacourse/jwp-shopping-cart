@@ -60,6 +60,6 @@ public class JdbcTemplateCartDao implements CartDao {
     @Override
     public int delete(int userId, int productId) {
         String sql = "delete from carts where user_id = ? and product_id = ?";
-        return jdbcTemplate.update(sql, productId);
+        return jdbcTemplate.update(sql, userId, productId);
     }
 }
