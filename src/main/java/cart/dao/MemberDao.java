@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberDao {
 
-    long add(MemberRequest request);
+    long add(Member member);
 
     List<MemberEntity> findAll();
 
-    Optional<Long> findIdByMember(MemberRequest request);
+    Optional<Long> findIdByMember(Member member);
 }

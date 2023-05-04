@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.controller.dto.ProductRequest;
+import cart.domain.Product;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Repository;
 
@@ -17,11 +17,11 @@ public class ProductRepository {
         this.mySQLProductDao = mySQLProductDao;
     }
 
-    public long add(ProductRequest product) {
+    public long add(Product product) {
         return mySQLProductDao.add(product);
     }
 
-    public int update(Long id, ProductRequest product) {
+    public int update(Long id, Product product) {
         final int updateCount = mySQLProductDao.updateById(id, product);
         validateIfProductExist(updateCount);
         return updateCount;

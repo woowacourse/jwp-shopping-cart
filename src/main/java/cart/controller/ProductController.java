@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.controller.dto.ProductRequest;
 import cart.dao.ProductRepository;
+import cart.domain.Product;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,14 +24,16 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody ProductRequest product) {
+    public ResponseEntity create(@Valid @RequestBody ProductRequest request) {
+        Product product=Product.from(request);
         productRepository.add(product);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity update(@PathVariable Long id,
-        @Valid @RequestBody ProductRequest product) {
+        @Valid @RequestBody ProductRequest request) {
+        Product product=Product.from(request);
         productRepository.update(id, product);
         return ResponseEntity.ok().build();
     }

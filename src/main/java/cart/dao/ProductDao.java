@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.controller.dto.ProductRequest;
 import cart.dao.entity.ProductEntity;
+import cart.domain.Product;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductDao {
 
-    long add(ProductRequest request);
+    long add(Product product);
 
     List<ProductEntity> findAll();
 
     Optional<ProductEntity> findById(Long id);
 
-    int updateById(Long id, ProductRequest request);
+    int updateById(Long id, Product product);
 
     int deleteById(Long id);
 }

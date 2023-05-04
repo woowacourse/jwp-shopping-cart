@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.controller.dto.ProductRequest;
 import cart.dao.entity.ProductEntity;
+import cart.domain.Product;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -39,11 +39,11 @@ public class MySQLProductDaoTest {
     @DisplayName("add() 메서드를 호출하면 하나의 데이터가 product에 추가된다")
     void add() {
         //given
-        final ProductRequest request = new ProductRequest("test", 15_000, "test/image/url");
+        final Product product = new Product("test", 15_000, "test/image/url");
 
         //when
         final int beforeSize = mySQLProductDao.findAll().size();
-        mySQLProductDao.add(request);
+        mySQLProductDao.add(product);
         final int afterSize = mySQLProductDao.findAll().size();
 
         //then
@@ -77,11 +77,11 @@ public class MySQLProductDaoTest {
         final String requestName = "소주";
         final int requestPrice = 4_000;
         final String requestUrl = "none";
-        final ProductRequest updateRequest = new ProductRequest(requestName, requestPrice,
+        final Product newProduct = new Product(requestName, requestPrice,
             requestUrl);
 
         // when
-        final int updateCount = mySQLProductDao.updateById(firstRecordId, updateRequest);
+        final int updateCount = mySQLProductDao.updateById(firstRecordId, newProduct);
 
         // then
         final ProductEntity actual = mySQLProductDao.findById(firstRecordId).get();

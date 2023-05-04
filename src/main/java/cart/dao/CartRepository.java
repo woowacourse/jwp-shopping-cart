@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.controller.dto.MemberRequest;
 import cart.dao.entity.ProductEntity;
+import cart.domain.Member;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,12 +25,12 @@ public class CartRepository {
         this.mySQLProductDao = mySQLProductDao;
     }
 
-    public List<ProductEntity> getProducts(MemberRequest request) {
-        return mySQLCartDao.findByMember(request);
+    public List<ProductEntity> getProducts(Member member) {
+        return mySQLCartDao.findByMember(member);
     }
 
-    public long add(Long productId, MemberRequest request) {
-        Long memberId = mySQLMemberDao.findIdByMember(request)
+    public long add(Long productId, Member member) {
+        Long memberId = mySQLMemberDao.findIdByMember(member)
             .orElseThrow(() -> new NoSuchElementException(MEMBER_NOT_FOUND_MESSAGE));
         validateIfCartAleadyExist(productId, memberId);
         validateIfProductExist(productId);
@@ -49,8 +49,8 @@ public class CartRepository {
         }
     }
 
-    public int remove(Long productId, MemberRequest request) {
-        Long memberId = mySQLMemberDao.findIdByMember(request).orElseThrow(() -> new
+    public int remove(Long productId, Member member) {
+        Long memberId = mySQLMemberDao.findIdByMember(member).orElseThrow(() -> new
             NoSuchElementException(MEMBER_NOT_FOUND_MESSAGE));
         validateIfProductExist(productId);
         return mySQLCartDao.deleteById(memberId, productId);

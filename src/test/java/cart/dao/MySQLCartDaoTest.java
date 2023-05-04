@@ -3,7 +3,6 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import cart.controller.dto.MemberRequest;
 import cart.dao.entity.ProductEntity;
 import cart.domain.Member;
 import java.util.List;
@@ -20,7 +19,7 @@ import org.springframework.test.context.jdbc.Sql;
 public class MySQLCartDaoTest {
 
     private CartDao mySQLCartDao;
-    private MemberRequest memberRequest;
+    private Member member;
     private Long memberId;
 
     @Autowired
@@ -30,7 +29,7 @@ public class MySQLCartDaoTest {
     void setUp() {
         mySQLCartDao = new MySQLCartDao(jdbcTemplate);
 
-        memberRequest = new MemberRequest("songsy405@naver.com", "abcd");
+        member = new Member("songsy405@naver.com", "abcd");
         memberId = 1L;
     }
 
@@ -38,9 +37,9 @@ public class MySQLCartDaoTest {
     @DisplayName("add() 메서드를 호출하면 하나의 데이터가 cart에 추가된다")
     void add() {
         // given, when
-        final int beforeSize = mySQLCartDao.findByMember(memberRequest).size();
+        final int beforeSize = mySQLCartDao.findByMember(member).size();
         mySQLCartDao.add(memberId, 3L);
-        final int afterSize = mySQLCartDao.findByMember(memberRequest).size();
+        final int afterSize = mySQLCartDao.findByMember(member).size();
 
         // then
         assertThat(afterSize).isEqualTo(beforeSize + 1);
@@ -50,7 +49,7 @@ public class MySQLCartDaoTest {
     @DisplayName("findByMember() 메서드를 호출하면 2개의 초기 cart 데이터를 반환한다")
     void findByMember() {
         // given, when
-        final List<ProductEntity> productEntities = mySQLCartDao.findByMember(memberRequest);
+        final List<ProductEntity> productEntities = mySQLCartDao.findByMember(member);
 
         // then
         assertThat(productEntities.size()).isEqualTo(2);
@@ -71,7 +70,7 @@ public class MySQLCartDaoTest {
     void deleteById() {
         // given, when
         final int deleteCount = mySQLCartDao.deleteById(memberId, 1L);
-        final int afterSize = mySQLCartDao.findByMember(memberRequest).size();
+        final int afterSize = mySQLCartDao.findByMember(member).size();
 
         // then
         assertAll(
