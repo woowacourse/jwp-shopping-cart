@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.JdbcSaveUser;
-import cart.dao.entity.Users;
+import cart.dao.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ class JdbcUserDaoTest extends JdbcSaveUser {
         final long saveId = 사용자를_저장한다("test@test.com", "test");
 
         // when
-        final Users user = userDao.findByEmail("test@test.com").get();
+        final User user = userDao.findByEmail("test@test.com").get();
 
         // then
         사용자_정보를_비교한다(user, saveId, "test@test.com", "test");
@@ -39,7 +39,7 @@ class JdbcUserDaoTest extends JdbcSaveUser {
         final long secondUser = 사용자를_저장한다("user@user.com", "user");
 
         // when
-        final List<Users> users = userDao.findAll();
+        final List<User> users = userDao.findAll();
 
         // then
         assertAll(
@@ -50,7 +50,7 @@ class JdbcUserDaoTest extends JdbcSaveUser {
     }
 
 
-    private void 사용자_정보를_비교한다(final Users target, final long id, final String email, final String password) {
+    private void 사용자_정보를_비교한다(final User target, final long id, final String email, final String password) {
         assertAll(
                 () -> assertThat(target.getId()).isEqualTo(id),
                 () -> assertThat(target.getEmail()).isEqualTo(email),

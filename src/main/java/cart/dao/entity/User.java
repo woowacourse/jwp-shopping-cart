@@ -2,14 +2,14 @@ package cart.dao.entity;
 
 import java.time.LocalDateTime;
 
-public class Users {
+public class User {
 
     private final Long id;
     private final String email;
     private final String password;
     private final LocalDateTime createdAt;
 
-    public Users(final Long id, final String email, final String password, final LocalDateTime createdAt) {
+    public User(final Long id, final String email, final String password, final LocalDateTime createdAt) {
         this.id = id;
         this.email = email;
         this.password = password;

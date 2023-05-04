@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.dao.entity.Users;
+import cart.dao.entity.User;
 
 public class AuthUser {
 
@@ -14,7 +14,7 @@ public class AuthUser {
         this.password = password;
     }
 
-    public AuthUser(final Users user) {
+    public AuthUser(final User user) {
         this(user.getId(), user.getEmail(), user.getPassword());
     }
 

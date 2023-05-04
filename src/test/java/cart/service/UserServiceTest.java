@@ -3,7 +3,7 @@ package cart.service;
 import cart.JdbcSaveUser;
 import cart.dao.JdbcUserDao;
 import cart.dao.UserResponses;
-import cart.dao.entity.Users;
+import cart.dao.entity.User;
 import cart.dto.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,17 +49,17 @@ class UserServiceTest extends JdbcSaveUser {
         final String sql = "SELECT id, email, password, created_at FROM users WHERE id = :id";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        final Users users = jdbcTemplate.queryForObject(
+        final User user = jdbcTemplate.queryForObject(
                 sql,
                 Collections.singletonMap("id", id),
                 createUsersRowMapper()
         );
 
-        return new UserResponse(users);
+        return new UserResponse(user);
     }
 
-    private static RowMapper<Users> createUsersRowMapper() {
-        return (rs, rowNum) -> new Users(
+    private static RowMapper<User> createUsersRowMapper() {
+        return (rs, rowNum) -> new User(
                 rs.getLong("id"),
                 rs.getString("email"),
                 rs.getString("password"),

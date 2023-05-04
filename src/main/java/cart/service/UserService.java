@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.dao.JdbcUserDao;
 import cart.dao.UserResponses;
-import cart.dao.entity.Users;
+import cart.dao.entity.User;
 import cart.dto.AuthUser;
 import cart.dto.UserResponse;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class UserService {
     }
 
     public UserResponses findAll() {
-        final List<Users> users = userDao.findAll();
+        final List<User> users = userDao.findAll();
 
         final List<UserResponse> userResponses = users.stream()
                 .map(UserResponse::new)
@@ -31,7 +31,7 @@ public class UserService {
     }
 
     public AuthUser findByAuthPrincipal(final String email, final String password) {
-        final Users findUser = userDao.findByEmail(email)
+        final User findUser = userDao.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다."));
 
         findUser.validatePassword(password);
