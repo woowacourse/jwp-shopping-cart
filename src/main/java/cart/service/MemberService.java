@@ -27,7 +27,7 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
-    public int findIdByAuthInfo(final AuthInfo authInfo) {
+    public Long findIdByAuthInfo(final AuthInfo authInfo) {
         return memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
     }
 }

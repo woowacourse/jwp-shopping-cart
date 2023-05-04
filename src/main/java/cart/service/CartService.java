@@ -79,14 +79,14 @@ public class CartService {
     }
 
     public List<ResponseProductDto> findCartProductsByMember(final AuthInfo authInfo) {
-        final int memberId = memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
+        final Long memberId = memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
         final List<ProductEntity> productEntities = cartDao.findProductsByMemberId(memberId);
         return productEntities.stream()
                 .map(ResponseProductDto::transferEntityToDto)
                 .collect(Collectors.toList());
     }
 
-    public void addProduct(final int memberId, final int productId) {
+    public void addProduct(final Long memberId, final Long productId) {
         final CartEntity cartEntity = new CartEntity.Builder()
                 .memberId(memberId)
                 .productId(productId)
@@ -94,7 +94,7 @@ public class CartService {
         cartDao.add(cartEntity);
     }
 
-    public void deleteProductFromCart(final int memberId, final int productId) {
+    public void deleteProductFromCart(final Long memberId, final Long productId) {
         final CartEntity cartEntity = new CartEntity.Builder()
                 .memberId(memberId)
                 .productId(productId)

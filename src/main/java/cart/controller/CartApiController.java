@@ -42,7 +42,7 @@ public class CartApiController {
     }
 
     @DeleteMapping("/product/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable @Valid final Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long id) {
         cartService.delete(id);
         return ResponseEntity.ok().build();
     }
@@ -55,17 +55,17 @@ public class CartApiController {
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<Void> addProductToCart(@PathVariable final int id, final HttpServletRequest request) {
+    public ResponseEntity<Void> addProductToCart(@PathVariable final Long id, final HttpServletRequest request) {
         final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-        final int memberId = memberService.findIdByAuthInfo(authInfo);
+        final Long memberId = memberService.findIdByAuthInfo(authInfo);
         cartService.addProduct(memberId, id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<Void> deleteProductFromCart(@PathVariable final int id, final HttpServletRequest request) {
+    public ResponseEntity<Void> deleteProductFromCart(@PathVariable final Long id, final HttpServletRequest request) {
         final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-        final int memberId = memberService.findIdByAuthInfo(authInfo);
+        final Long memberId = memberService.findIdByAuthInfo(authInfo);
         cartService.deleteProductFromCart(memberId, id);
         return ResponseEntity.ok().build();
     }

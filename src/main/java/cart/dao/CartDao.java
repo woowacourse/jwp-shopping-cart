@@ -19,7 +19,7 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ProductEntity> findProductsByMemberId(final int memberId) {
+    public List<ProductEntity> findProductsByMemberId(final Long memberId) {
         final String query = "SELECT product_id, name, price, image " +
                 "FROM cart " +
                 "JOIN product ON cart.product_id = product.id " +
