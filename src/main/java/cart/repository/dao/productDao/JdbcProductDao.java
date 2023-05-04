@@ -43,7 +43,7 @@ public class JdbcProductDao implements ProductDao {
         try {
             final Product product = template.queryForObject(sql, source, rowMapper());
             return Optional.of(product);
-        } catch (IncorrectResultSizeDataAccessException e) {
+        } catch (final IncorrectResultSizeDataAccessException e) {
             return Optional.empty();
         }
     }

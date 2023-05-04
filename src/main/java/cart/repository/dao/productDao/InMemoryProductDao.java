@@ -32,7 +32,7 @@ public class InMemoryProductDao implements ProductDao {
     }
 
     @Override
-    public Optional<Product> findById(Long id) {
+    public Optional<Product> findById(final Long id) {
         for (Product product : products) {
             if (product.getId().equals(id)) {
                 return Optional.of(product);
