@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import cart.domain.Product;
 import cart.domain.ProductRepository;
 import cart.dto.ProductDto;
 
@@ -21,14 +22,14 @@ public class DBProductRepository implements ProductRepository {
     }
 
     @Override
-    public Long save(ProductDto productDto) {
+    public Long save(Product product) {
         String sql = "INSERT INTO product (name, imgURL, price) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[] {"id"});
-            preparedStatement.setString(1, productDto.getName());
-            preparedStatement.setString(2, productDto.getImgUrl());
-            preparedStatement.setInt(3, productDto.getPrice());
+            preparedStatement.setString(1, product.getName());
+            preparedStatement.setString(2, product.getImgUrl());
+            preparedStatement.setInt(3, product.getPrice());
             return preparedStatement;
         }, keyHolder);
 
@@ -36,11 +37,11 @@ public class DBProductRepository implements ProductRepository {
     }
 
     @Override
-    public ProductDto findById(Long id) {
+    public Product findById(Long id) {
         String sql = "SELECT name, imgURL, price FROM product WHERE id = ?";
 
         return jdbcTemplate.queryForObject(sql,
-            (resultSet, rowNum) -> new ProductDto(
+            (resultSet, rowNum) -> Product.createWithId(
                 id,
                 resultSet.getString("name"),
                 resultSet.getString("imgURL"),
@@ -49,11 +50,11 @@ public class DBProductRepository implements ProductRepository {
     }
 
     @Override
-    public List<ProductDto> findAll() {
+    public List<Product> findAll() {
         String sql = "SELECT id, name, imgUrl, price FROM product";
 
         return jdbcTemplate.query(sql,
-            (resultSet, rowNum) -> new ProductDto(
+            (resultSet, rowNum) -> Product.createWithId(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getString("imgURL"),
@@ -61,12 +62,12 @@ public class DBProductRepository implements ProductRepository {
     }
 
     @Override
-    public void updateById(ProductDto productDto, Long id) {
+    public void updateById(Product product, Long id) {
         String sql = "UPDATE product SET name = ?, imgUrl = ?, price = ? WHERE id = ?";
         jdbcTemplate.update(sql,
-            productDto.getName(),
-            productDto.getImgUrl(),
-            productDto.getPrice(),
+            product.getName(),
+            product.getImgUrl(),
+            product.getPrice(),
             id);
     }
 

@@ -97,7 +97,7 @@ class JwpCartControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productRequestDto)
-            .when().put("/admin/products")
+            .when().put("/admin/products/1")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }

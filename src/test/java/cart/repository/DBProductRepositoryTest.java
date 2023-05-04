@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
+import cart.domain.Product;
 import cart.domain.ProductRepository;
 import cart.dto.ProductDto;
 import cart.dto.ProductRequestDto;
@@ -63,7 +64,7 @@ class DBProductRepositoryTest {
     @Test
     @DisplayName("상품 정보를 DB에 저장한다.")
     void save() {
-        ProductDto product3 = new ProductDto(null, "name3", "url3", 3000);
+        Product product3 = Product.createWithId(null, "name3", "url3", 3000);
         Long id3 = productRepository.save(product3);
 
         String sql = "SELECT * FROM product";
@@ -74,7 +75,7 @@ class DBProductRepositoryTest {
     @Test
     @DisplayName("ID로 상품 정보를 조회한다.")
     void findById() {
-        ProductDto response = productRepository.findById(id1);
+        Product response = productRepository.findById(id1);
         assertAll(
             () -> assertThat(response.getName()).isEqualTo("name1"),
             () -> assertThat(response.getImgUrl()).isEqualTo("url1"),
@@ -92,12 +93,12 @@ class DBProductRepositoryTest {
     @Test
     @DisplayName("ID에 해당하는 상품 정보를 수정한다.")
     void updateById() {
-        ProductDto product = new ProductDto(id2, "name4", "url4", 4000);
-        productRepository.updateById(product, id2);
+        Product product1 = Product.createWithId(id2, "name4", "url4", 4000);
+        productRepository.updateById(product1, id2);
 
         String sql = "SELECT id, name, imgurl, price FROM product WHERE id = ?";
-        ProductDto productDto = jdbcTemplate.queryForObject(sql,
-            (rs, rn) -> new ProductDto(
+        Product product2 = jdbcTemplate.queryForObject(sql,
+            (rs, rn) -> Product.createWithId(
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getString("imgurl"),
@@ -105,9 +106,9 @@ class DBProductRepositoryTest {
             id2);
 
         assertAll(
-            () -> assertThat(productDto.getName()).isEqualTo(product.getName()),
-            () -> assertThat(productDto.getImgUrl()).isEqualTo(product.getImgUrl()),
-            () -> assertThat(productDto.getPrice()).isEqualTo(product.getPrice())
+            () -> assertThat(product2.getName()).isEqualTo(product1.getName()),
+            () -> assertThat(product2.getImgUrl()).isEqualTo(product1.getImgUrl()),
+            () -> assertThat(product2.getPrice()).isEqualTo(product1.getPrice())
         );
     }
 

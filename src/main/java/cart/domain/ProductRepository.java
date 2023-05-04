@@ -5,13 +5,13 @@ import java.util.List;
 import cart.dto.ProductDto;
 
 public interface ProductRepository {
-    Long save(ProductDto productDto);
+    Long save(Product product);
 
-    ProductDto findById(Long id);
+    Product findById(Long id);
 
-    List<ProductDto> findAll();
+    List<Product> findAll();
 
-    void updateById(ProductDto productRequestDto, Long id);
+    void updateById(Product product, Long id);
 
     void deleteById(Long id);
 }

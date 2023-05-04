@@ -23,16 +23,15 @@ public class JwpCartService {
     }
 
     public List<ProductResponseDto> findAll() {
-        List<Product> products = productRepository.findAll()
+        return productRepository.findAll()
             .stream()
             .map(productDto -> Product.createWithId(
                 productDto.getId(),
                 productDto.getName(),
                 productDto.getImgUrl(),
                 productDto.getPrice()))
+            .map(ProductResponseDto::new)
             .collect(Collectors.toList());
-
-        return products.stream().map(ProductResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional
@@ -42,7 +41,7 @@ public class JwpCartService {
             productRequestDto.getImgUrl(),
             productRequestDto.getPrice()
         );
-        productRepository.save(new ProductDto(product));
+        productRepository.save(product);
     }
 
     @Transactional
@@ -52,7 +51,7 @@ public class JwpCartService {
             productRequestDto.getImgUrl(),
             productRequestDto.getPrice()
         );
-        productRepository.updateById(new ProductDto(product), id);
+        productRepository.updateById(product, id);
     }
 
     @Transactional

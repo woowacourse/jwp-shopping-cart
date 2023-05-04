@@ -8,6 +8,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import cart.exception.DomainException;
+
 class ProductTest {
 
     @ParameterizedTest
@@ -15,7 +17,7 @@ class ProductTest {
     @DisplayName("잘못된 값을 검증한다")
     void invalidProductTest(String name, String imgUrl, int price) {
         Assertions.assertThatThrownBy(() -> Product.createWithoutId(name, imgUrl, price))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(DomainException.class);
 
     }
 
