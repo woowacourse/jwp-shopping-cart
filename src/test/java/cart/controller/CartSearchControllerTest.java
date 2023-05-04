@@ -1,5 +1,6 @@
 package cart.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -10,6 +11,7 @@ import java.util.List;
 
 import cart.domain.cart.Cart;
 import cart.domain.product.Product;
+import cart.domain.user.User;
 import cart.dto.ProductResponse;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +19,7 @@ class CartSearchControllerTest extends AbstractProductControllerTest {
 
     @Test
     void 장바구니_조회_테스트() throws Exception {
-        given(authService.isValidLogin(anyString(), anyString())).willReturn(true);
+        given(authService.getUser(any())).willReturn(new User("a@a.com", "password1"));
         final List<Cart> products = List.of(
                 new Cart(1L, new Product(1L, "odo", "url", 1)),
                 new Cart(2L, new Product(2L, "nunu", "url", 1))
@@ -28,8 +30,7 @@ class CartSearchControllerTest extends AbstractProductControllerTest {
                 new ProductResponse(2L, "nunu", "url", 1)
         );
         final String result = objectMapper.writeValueAsString(productResponses);
-        mockMvc.perform(get("/carts")
-                        .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
+        mockMvc.perform(get("/carts"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(result));
     }

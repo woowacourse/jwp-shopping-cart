@@ -2,7 +2,7 @@ package cart.infrastructure;
 
 import javax.servlet.http.HttpServletRequest;
 
-import cart.dto.UserResponse;
+import cart.domain.user.User;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 public class BasicAuthorizationExtractor {
@@ -11,7 +11,7 @@ public class BasicAuthorizationExtractor {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
-    public UserResponse extract(final HttpServletRequest request) {
+    public User extract(final HttpServletRequest request) {
         final String header = request.getHeader(AUTHORIZATION);
 
         if (header == null) {
@@ -27,7 +27,7 @@ public class BasicAuthorizationExtractor {
             final String email = credentials[0];
             final String password = credentials[1];
 
-            return new UserResponse(email, password);
+            return new User(email, password);
         }
 
         return null;
