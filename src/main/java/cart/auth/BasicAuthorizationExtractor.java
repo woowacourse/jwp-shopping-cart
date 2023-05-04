@@ -31,7 +31,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor {
         if (authorization == null) {
             throw new AuthException("사용자 인증이 필요합니다.");
         }
-        if (authorization.matches(BASIC_REGEX)) {
+        if (!authorization.matches(BASIC_REGEX)) {
             throw new AuthException("유효하지 않은 인증 형식입니다.");
         }
     }
