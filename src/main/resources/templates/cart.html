@@ -37,7 +37,9 @@
         axios.request({
             url: '/cart/products',
             headers: {
-                'Authorization': `Basic ${credentials}`
+                'Authorization': `Basic ${credentials}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             method: 'get'
         }).then((response) => {

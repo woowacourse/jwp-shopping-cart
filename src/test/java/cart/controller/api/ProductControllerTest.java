@@ -57,6 +57,7 @@ class ProductControllerTest {
         );
 
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when().post(path)
@@ -74,6 +75,7 @@ class ProductControllerTest {
         );
 
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when().post(path)
@@ -91,6 +93,7 @@ class ProductControllerTest {
         );
 
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when().post(path)
@@ -108,6 +111,7 @@ class ProductControllerTest {
         );
 
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when().post(path)
@@ -118,6 +122,7 @@ class ProductControllerTest {
     @Test
     void 상품_전체_목록을_조회하면_상태코드_200을_반환하는지_확인한다() {
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -142,6 +147,7 @@ class ProductControllerTest {
         );
 
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when().patch(path + "/" + request.getId())
@@ -160,6 +166,7 @@ class ProductControllerTest {
         );
 
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when().patch(path + "/" + request.getId())
@@ -178,6 +185,7 @@ class ProductControllerTest {
         );
 
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when().patch(path + "/" + request.getId())
@@ -196,6 +204,7 @@ class ProductControllerTest {
         );
 
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when().patch(path + "/" + request.getId())
@@ -206,6 +215,7 @@ class ProductControllerTest {
     @Test
     void 상품을_삭제하면_상태코드_204를_반환하는지_확인한다() {
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete(path + "/" + DUMMY_PRODUCT_ONE.getId())
                 .then().log().all()
@@ -215,6 +225,8 @@ class ProductControllerTest {
     @Test
     void 예상하지_못한_에러가_일어난다면_상태코드_500을_반환하는지_확인한다() {
         RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("{\"error\":\"error\"}")
                 .when().post()
                 .then().statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
