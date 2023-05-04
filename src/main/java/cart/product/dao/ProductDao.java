@@ -15,6 +15,10 @@ import java.util.List;
 public class ProductDao {
 	private final JdbcTemplate jdbcTemplate;
 
+	public ProductDao(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+
 	private final RowMapper<Product> productRowMapper = (resultSet, rowNum) -> {
 		Product product = new Product(
 			resultSet.getLong("id"),
@@ -27,9 +31,6 @@ public class ProductDao {
 		return product;
 	};
 
-	public ProductDao(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
 
 	@Transactional
 	public List<Product> findAll() {
