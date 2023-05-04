@@ -10,4 +10,6 @@ public interface CartDao {
     void save(PutCart putCart);
 
     List<Cart> findAllByMemberId(Long id);
+
+    boolean isCartExists(PutCart putCart);
 }

@@ -13,6 +13,8 @@ public class Pixture {
 
     public static final PutCart PUT_CART1 = new PutCart(1L, 1L);
     public static final PutCart PUT_CART2 = new PutCart(1L, 2L);
+    public static final PutCart PUT_CART3 = new PutCart(1L, 3L);
+
 
     /*
         CREATE_ITEM을 순서대로 DB에 저장했을 때 각각 이에 대응되는 ITEM
@@ -35,7 +37,7 @@ public class Pixture {
         PUT_CART를 순서대로 DB에 저장했을 때 각각 이에 대응되는 CART
      */
 
-
     public static final Cart CART1 = new Cart(1L, 1L, 1L);
     public static final Cart CART2 = new Cart(2L, 1L, 2L);
+    public static final Cart CART3 = new Cart(3L, 1L, 3L);
 }

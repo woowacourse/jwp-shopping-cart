@@ -32,6 +32,13 @@ public class JdbcCartDao implements CartDao {
         return jdbcTemplate.query(sql, mapRow(), id);
     }
 
+    @Override
+    public boolean isCartExists(PutCart putCart) {
+        String sql = "select exists(select id from cart where member_id = ? and item_id = ?)";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, putCart.getMemberId(), putCart.getProductId());
+    }
+
     private RowMapper<Cart> mapRow() {
         return (rs, rowNum) -> {
             Long id = rs.getLong(1);

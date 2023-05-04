@@ -1,10 +1,7 @@
 package cart.dao;
 
-import cart.entity.AuthMember;
 import cart.entity.Cart;
-import cart.entity.CreateItem;
 import cart.entity.PutCart;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,5 +60,17 @@ class JdbcCartDaoTest {
                         .usingRecursiveComparison()
                         .isEqualTo(CART2)
         );
+    }
+
+    @DisplayName("cart에 이미 상품이 담겨져있다면 true를 반환한다.")
+    @Test
+    void findAllByMemberId_true() {
+        assertThat(cartDao.isCartExists(PUT_CART1)).isTrue();
+    }
+
+    @DisplayName("cart에 상품이 담겨져있지않다면 false를 반환한다.")
+    @Test
+    void findAllByMemberId_false() {
+        assertThat(cartDao.isCartExists(PUT_CART3)).isFalse();
     }
 }
