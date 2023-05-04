@@ -1,6 +1,7 @@
 package cart.auth;
 
-import org.apache.tomcat.util.codec.binary.Base64;
+import cart.dto.AuthInfo;
+import cart.service.MemberService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -12,13 +13,13 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String AUTHORIZATION = "authorization";
-    private static final String BASIC_TYPE = "Basic";
-    private static final String DELIMITER = ":";
 
     private final AuthenticationService authenticationService;
+    private final MemberService memberService;
 
-    public AuthenticationArgumentResolver(final AuthenticationService authenticationService) {
+    public AuthenticationArgumentResolver(final AuthenticationService authenticationService, final MemberService memberService) {
         this.authenticationService = authenticationService;
+        this.memberService = memberService;
     }
 
     @Override
@@ -29,15 +30,12 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
     @Override
     public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) throws Exception {
         final String header = webRequest.getHeader(AUTHORIZATION);
+        final AuthInfo authInfo = authenticationService.decryptBasic(header);
 
-        String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
-        byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
-        String decodedString = new String(decodedBytes);
+        if (authenticationService.canLogin(authInfo.getEmail(), authInfo.getPassword())) {
+            return memberService.find(authInfo.getEmail(), authInfo.getPassword());
+        }
 
-        String[] credentials = decodedString.split(DELIMITER);
-        String email = credentials[0];
-        String password = credentials[1];
-
-        return authenticationService.login(email, password);
+       throw new UnAuthenticationException();
     }
 }

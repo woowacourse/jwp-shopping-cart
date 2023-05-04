@@ -14,7 +14,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         final String header = request.getHeader("Authorization");
 
         if (header == null) {
-            throw new AuthenticationException("로그인되지 않았습니다");
+            throw new UnAuthenticationException();
         }
 
         return true;

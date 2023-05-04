@@ -91,6 +91,6 @@ class CartProductControllerTest {
                 .when().get(path)
                 .then().log().all()
                 .statusCode(HttpStatus.FORBIDDEN.value())
-                .body("message", is("로그인되지 않았습니다"));
+                .body("message", is("로그인이 필요합니다"));
     }
 }

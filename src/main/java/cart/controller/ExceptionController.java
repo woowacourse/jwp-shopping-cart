@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.auth.AuthenticationException;
+import cart.auth.UnAuthenticationException;
 import cart.dto.ExceptionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,8 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponse);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ExceptionResponse> handleAuthenticationException(final AuthenticationException exception) {
+    @ExceptionHandler(UnAuthenticationException.class)
+    public ResponseEntity<ExceptionResponse> handleAuthenticationException(final UnAuthenticationException exception) {
         log.error(exception.getMessage());
 
         final ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());

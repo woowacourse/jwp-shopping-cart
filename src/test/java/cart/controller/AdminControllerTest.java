@@ -3,6 +3,7 @@ package cart.controller;
 import cart.auth.AuthenticationService;
 import cart.dto.ProductResponse;
 import cart.mapper.ProductResponseMapper;
+import cart.service.MemberService;
 import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@MockBean(AuthenticationService.class)
+@MockBean({AuthenticationService.class, MemberService.class})
 @WebMvcTest(AdminController.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
