@@ -1,8 +1,8 @@
 package cart.web.controller.product;
 
 import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductService;
 import cart.web.controller.product.dto.ProductRequest;
+import cart.web.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,7 +73,7 @@ class ProductRestControllerTest {
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", Matchers.containsString("상품 이름은 비어있을 수 없습니다.")))
-                .andExpect(jsonPath("$.message", Matchers.containsString( "상품 가격은 비어있을 수 없습니다.")))
+                .andExpect(jsonPath("$.message", Matchers.containsString( "상품 가격이 입력되지 않았습니다. 상품 가격을 입력해주세요")))
                 .andExpect(jsonPath("$.message", Matchers.containsString("상품 카테고리는 비어있을 수 없습니다.")));
     }
 
@@ -107,7 +107,7 @@ class ProductRestControllerTest {
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", Matchers.containsString("상품 이름은 비어있을 수 없습니다.")))
-                .andExpect(jsonPath("$.message", Matchers.containsString( "상품 가격은 비어있을 수 없습니다.")))
+                .andExpect(jsonPath("$.message", Matchers.containsString( "상품 가격이 입력되지 않았습니다. 상품 가격을 입력해주세요")))
                 .andExpect(jsonPath("$.message", Matchers.containsString("상품 카테고리는 비어있을 수 없습니다.")));
     }
 

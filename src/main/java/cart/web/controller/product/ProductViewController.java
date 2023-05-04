@@ -1,8 +1,8 @@
 package cart.web.controller.product;
 
 import cart.domain.product.Product;
-import cart.domain.product.ProductService;
 import cart.web.controller.product.dto.ProductResponse;
+import cart.web.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,10 +1,10 @@
 package cart.web.controller.cart;
 
 import cart.domain.cart.CartProduct;
-import cart.domain.cart.CartService;
 import cart.web.controller.auth.BasicAuthorizationExtractor;
 import cart.web.controller.cart.dto.CartResponse;
 import cart.web.controller.user.dto.UserRequest;
+import cart.web.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

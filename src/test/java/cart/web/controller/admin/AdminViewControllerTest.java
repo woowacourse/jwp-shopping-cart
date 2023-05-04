@@ -2,7 +2,7 @@ package cart.web.controller.admin;
 
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductService;
+import cart.web.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

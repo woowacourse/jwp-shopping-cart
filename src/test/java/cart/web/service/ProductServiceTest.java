@@ -1,9 +1,8 @@
-package cart.service;
+package cart.web.service;
 
 import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductService;
 import cart.exception.GlobalException;
 import cart.web.controller.product.dto.ProductRequest;
 import org.junit.jupiter.api.BeforeEach;

@@ -14,6 +14,7 @@ public class ProductRequest {
 
     private final String imageUrl;
 
+    @NotNull(message = "상품 가격이 입력되지 않았습니다. 상품 가격을 입력해주세요")
     @Range(min = 0, max = 1000000, message = "올바르지 않은 입력입니다. 입력 가능한 범위 : 0 ~ 999999")
     private final Integer price;
 

@@ -1,5 +1,7 @@
-package cart.domain.product;
+package cart.web.service;
 
+import cart.domain.product.Product;
+import cart.domain.product.ProductRepository;
 import cart.exception.ProductNotFoundException;
 import cart.exception.UnexpectedException;
 import cart.web.controller.product.dto.ProductRequest;

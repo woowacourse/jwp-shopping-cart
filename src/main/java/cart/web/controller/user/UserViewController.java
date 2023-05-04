@@ -1,9 +1,9 @@
 package cart.web.controller.user;
 
-import cart.domain.product.ProductService;
-import cart.domain.user.UserService;
 import cart.web.controller.product.dto.ProductResponse;
 import cart.web.controller.user.dto.UserResponse;
+import cart.web.service.ProductService;
+import cart.web.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
