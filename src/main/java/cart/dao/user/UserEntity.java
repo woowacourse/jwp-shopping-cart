@@ -22,5 +22,4 @@ public class UserEntity {
     public String getPassword() {
         return password;
     }
-
 }

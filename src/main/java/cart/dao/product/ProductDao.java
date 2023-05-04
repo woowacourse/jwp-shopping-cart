@@ -9,8 +9,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +52,8 @@ public class ProductDao {
     }
 
     public int update(ProductEntity productEntity) {
-        String updateProductQuery = "UPDATE product SET name = ?, price = ?, category = ?, image_url =? WHERE product_id = ?";
+        String updateProductQuery =
+                "UPDATE product SET name = ?, price = ?, category = ?, image_url =? WHERE product_id = ?";
 
         int countOfUpdate = jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(updateProductQuery);
@@ -80,17 +79,5 @@ public class ProductDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-    }
-
-    public List<ProductEntity> findByIds(List<Long> ids) {
-        if (ids.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        String findByIdQuery = "SELECT * FROM product WHERE product_id IN (%s)";
-        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
-
-        return jdbcTemplate.query(String.format(findByIdQuery, inSql),
-                ids.toArray(), rowMapper);
     }
 }

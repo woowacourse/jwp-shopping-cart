@@ -6,7 +6,6 @@ import cart.domain.product.dto.ProductModificationDto;
 import cart.exception.GlobalException;
 import cart.web.controller.admin.dto.request.ProductModificationRequest;
 import cart.web.controller.admin.dto.response.ProductCreationResponse;
-import cart.web.controller.admin.dto.response.ProductDeleteResponse;
 import cart.web.controller.admin.dto.response.ProductModificationResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,11 +43,10 @@ public class AdminRestController {
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<ProductDeleteResponse> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         adminService.delete(id);
 
-        return ResponseEntity
-                .ok(new ProductDeleteResponse(id));
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/products/{id}")

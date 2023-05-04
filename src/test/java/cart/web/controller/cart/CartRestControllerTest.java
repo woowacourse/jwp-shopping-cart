@@ -91,7 +91,7 @@ class CartRestControllerTest {
                 .auth().preemptive().basic(email, password)
                 .when().delete("/carts/{cartId}",1L)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     static class Data {

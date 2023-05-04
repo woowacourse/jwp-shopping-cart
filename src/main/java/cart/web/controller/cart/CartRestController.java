@@ -68,7 +68,6 @@ public class CartRestController {
 
         cartService.deleteProduct(cartId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
-
 }

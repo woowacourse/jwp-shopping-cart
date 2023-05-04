@@ -66,8 +66,7 @@ class AdminRestControllerTest {
                 .when().accept(MediaType.APPLICATION_JSON_VALUE)
                 .delete("/admin/products/{id}", 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("deletedId", is(1));
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("Product를 수정할 수 있다.")
