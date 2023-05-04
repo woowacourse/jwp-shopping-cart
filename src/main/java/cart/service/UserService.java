@@ -4,9 +4,11 @@ import cart.controller.dto.UserRequest;
 import cart.controller.dto.UserResponse;
 import cart.dao.UserDao;
 import cart.domain.User;
+import cart.exception.NotFoundResultException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +36,8 @@ public class UserService {
     }
 
     public UserResponse loadUser(final Long userId) {
-        User user = userDao.findBy(userId);
+        Optional<User> findUser = userDao.findBy(userId);
+        User user = findUser.orElseThrow(() -> new NotFoundResultException("존재하지 않는 사용자 입니다."));
         return UserResponse.from(user);
     }
 }

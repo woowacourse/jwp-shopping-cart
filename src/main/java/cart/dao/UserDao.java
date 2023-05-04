@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserDao {
@@ -37,9 +39,13 @@ public class UserDao {
         return namedParameterJdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public User findBy(final Long userId) {
+    public Optional<User> findBy(final Long userId) {
         final String sql = "SELECT id, email, password FROM users WHERE id = :id";
         MapSqlParameterSource param = new MapSqlParameterSource("id", userId);
-        return namedParameterJdbcTemplate.queryForObject(sql, param, actorRowMapper);
+        try {
+            return Optional.of(namedParameterJdbcTemplate.queryForObject(sql, param, actorRowMapper));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 }
