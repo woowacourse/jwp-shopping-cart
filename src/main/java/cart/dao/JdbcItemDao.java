@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public class JdbcItemDao implements ItemDao {
 
+    private static final String EXISTS_ITEM_MESSAGE = "이미 동일한 상품이 존재합니다.";
+
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcItemDao(final JdbcTemplate jdbcTemplate) {
@@ -22,7 +24,7 @@ public class JdbcItemDao implements ItemDao {
     @Override
     public void save(final CreateItem createItem) {
         if (isItemExistsByCreateItem(createItem)) {
-            throw new ServiceIllegalArgumentException("이미 동일한 상품이 존재합니다.");
+            throw new ServiceIllegalArgumentException(EXISTS_ITEM_MESSAGE);
         }
         String sql = "insert into item(name, item_url, price) values (?, ?, ?)";
 

@@ -17,7 +17,7 @@ public class CartService {
 
     private static final int ZERO_AFFECTED_ROW = 0;
     private static final String INVALID_ITEM_ID_MESSAGE = "상품 정보를 다시 입력해주세요.";
-    public static final String INVALID_MEMBER_MESSAGE = "email과 password를 다시 입력해주세요.";
+    private static final String INVALID_MEMBER_MESSAGE = "email과 password를 다시 입력해주세요.";
 
     private final CartDao cartDao;
     private final MemberDao memberDao;

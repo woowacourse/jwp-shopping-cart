@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.entity.Cart;
-import cart.entity.Item;
 import cart.entity.PutCart;
 import cart.exception.ServiceIllegalArgumentException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +12,8 @@ import java.util.List;
 @Repository
 public class JdbcCartDao implements CartDao {
 
+    private static final String EXISTS_ITEM_IN_CART_MESSAGE = "이미 장바구니에 담은 상품입니다.";
+
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcCartDao(JdbcTemplate jdbcTemplate) {
@@ -22,7 +23,7 @@ public class JdbcCartDao implements CartDao {
     @Override
     public void save(PutCart putCart) {
         if (isCartExists(putCart)) {
-            throw new ServiceIllegalArgumentException("이미 장바구니에 담은 상품입니다.");
+            throw new ServiceIllegalArgumentException(EXISTS_ITEM_IN_CART_MESSAGE);
         }
         String sql = "insert into cart(member_id, item_id) values(?, ?)";
 

@@ -24,16 +24,16 @@ public class MemberController {
         this.memberService = memberService;
     }
 
+    @PostConstruct
+    public void init() {
+        memberService.save(new AuthorizationInformation("kong123@gmail.com", "password"));
+        memberService.save(new AuthorizationInformation("kong@gmail.com", "123"));
+    }
+
     @GetMapping
     @ModelAttribute
     public String displayMember(Model model) {
         model.addAttribute("members", memberService.findAll());
         return "settings";
-    }
-
-    @PostConstruct
-    public void init() {
-        memberService.save(new AuthorizationInformation("kong123@gmail.com", "password"));
-        memberService.save(new AuthorizationInformation("kong@gmail.com", "123"));
     }
 }
