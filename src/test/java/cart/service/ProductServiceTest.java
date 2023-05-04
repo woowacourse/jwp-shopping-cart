@@ -33,7 +33,6 @@ class ProductServiceTest {
     private ProductService productService;
 
 
-    // 더미데이터 2개가 존재한다.
     @Test
     void 상품을_저장한다() {
         ProductRequest productRequest = new ProductRequest("image", "name", 1000);
