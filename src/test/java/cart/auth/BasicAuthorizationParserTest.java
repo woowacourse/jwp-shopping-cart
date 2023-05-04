@@ -38,11 +38,12 @@ class BasicAuthorizationParserTest {
     @Test
     void 헤더를_입력받아_Credential을_반환한다() {
         // given
-        final String header = "Basic pizza@pizza.com:password";
-        final String encodedHeader = new String(Base64.getEncoder().encode((header.getBytes())));
+        final String credential = "pizza@pizza.com:password";
+        final String encodedCredential = new String(Base64.getEncoder().encode((credential.getBytes())));
+        final String header = "Basic " + encodedCredential;
 
         // when
-        final Credential result = basicAuthorizationParser.parse(encodedHeader);
+        final Credential result = basicAuthorizationParser.parse(header);
 
         // then
         assertAll(
