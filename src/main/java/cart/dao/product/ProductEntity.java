@@ -1,6 +1,5 @@
 package cart.dao.product;
 
-import cart.domain.product.Product;
 import java.util.Objects;
 
 public class ProductEntity {
@@ -17,14 +16,6 @@ public class ProductEntity {
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
-    }
-
-    public ProductEntity(Product product) {
-        this.id = product.getProductId();
-        this.name = product.getName();
-        this.price = product.getPrice().intValue();
-        this.category = product.getCategory().name();
-        this.imageUrl = product.getImageUrl();
     }
 
     @Override

@@ -41,7 +41,13 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Long save(Product product) {
-        ProductEntity productEntity = new ProductEntity(product);
+        ProductEntity productEntity = new ProductEntity(
+                null, //FIXME
+                product.getName(),
+                product.getPrice().intValue(),
+                product.getCategory().name(),
+                product.getImageUrl()
+        );
 
         return productDao.insert(productEntity);
     }
@@ -55,7 +61,13 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product update(Product product) {
-        ProductEntity productEntity = new ProductEntity(product);
+        ProductEntity productEntity = new ProductEntity(
+                product.getProductId(),
+                product.getName(),
+                product.getPrice().intValue(),
+                product.getCategory().name(),
+                product.getImageUrl()
+        );
 
         validateExistProduct(product.getProductId());
         productDao.update(productEntity);
