@@ -17,9 +17,7 @@ CREATE TABLE IF NOT EXISTS PRODUCT (
 
 CREATE TABLE IF NOT EXISTS CART (
     member_id LONG NOT NULL,
-    product_id LONG NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (member_id),
-    FOREIGN KEY (product_id) REFERENCES product (product_id)
+    product_id LONG NOT NULL
 );
 
 
