@@ -30,7 +30,7 @@ class ProductDaoTest {
     @DisplayName("상품을 저장한다.")
     @Test
     void shouldSaveProductWhenRequest() {
-        final Product productToSave = Product.createWithoutId("changer", 10, "domain.com");
+        final Product productToSave = Product.createToSave("changer", 10, "domain.com");
         final long productId = productDao.save(productToSave);
         final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
 

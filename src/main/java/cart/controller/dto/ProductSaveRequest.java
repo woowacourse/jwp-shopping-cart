@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
 public class ProductSaveRequest {
+
     @NotNull
     @NotBlank
     private final String name;

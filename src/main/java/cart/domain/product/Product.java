@@ -22,7 +22,7 @@ public class Product {
                 new ProductImageUrl(imageUrl));
     }
 
-    public static Product createWithoutId(String name, long price, String imageUrl) {
+    public static Product createToSave(String name, long price, String imageUrl) {
         return create(null, name, price, imageUrl);
     }
 

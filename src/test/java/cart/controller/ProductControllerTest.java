@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.controller.dto.ProductSaveRequest;
 import cart.controller.dto.ProductUpdateRequest;
-import cart.dao.ProductDao;
+import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +31,7 @@ class ProductControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ProductDao productDao;
+    private ProductService productService;
 
     @DisplayName("POST /admin/product 요청 시")
     @Nested
