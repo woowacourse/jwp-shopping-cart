@@ -1,5 +1,6 @@
 package cart.domain.user;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class UserEmail {
@@ -23,6 +24,23 @@ public class UserEmail {
 
     public static UserEmail from(final String email) {
         return new UserEmail(email);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final UserEmail userEmail = (UserEmail) o;
+        return Objects.equals(getEmail(), userEmail.getEmail());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getEmail());
     }
 
     public String getEmail() {
