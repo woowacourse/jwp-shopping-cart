@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.admin;
 
 import cart.dto.ProductDto;
 import cart.service.ProductManagementService;
@@ -11,7 +11,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.Base64Utils;
 
+import static cart.config.admin.Base64AdminAccessInterceptor.ADMIN_EMAIL;
+import static cart.config.admin.Base64AdminAccessInterceptor.ADMIN_NAME;
+import static cart.config.auth.Base64AuthInterceptor.AUTHORIZATION_HEADER;
+import static cart.config.auth.Base64AuthInterceptor.BASIC;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -23,6 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @WebMvcTest(AdminController.class)
 public class AdminControllerTest {
+
+    public static final String ADMIN = ADMIN_EMAIL + ":" + ADMIN_NAME;
+    public static final String ADMIN_CREDENTIALS = BASIC + " " + Base64Utils.encodeToString(ADMIN.getBytes());
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,6 +49,7 @@ public class AdminControllerTest {
                 .willReturn(anyLong());
 
         mockMvc.perform(post("/admin/products")
+                        .header(AUTHORIZATION_HEADER, ADMIN_CREDENTIALS)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isCreated());
@@ -56,6 +65,7 @@ public class AdminControllerTest {
                 .updateProduct(any());
 
         mockMvc.perform(put("/admin/products/{product_id}", id)
+                        .header(AUTHORIZATION_HEADER, ADMIN_CREDENTIALS)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNoContent());
@@ -69,7 +79,8 @@ public class AdminControllerTest {
                 .when(productManagementService)
                 .deleteProduct(anyLong());
 
-        mockMvc.perform(delete("/admin/products/{product_id}", id))
+        mockMvc.perform(delete("/admin/products/{product_id}", id)
+                        .header(AUTHORIZATION_HEADER, ADMIN_CREDENTIALS))
                 .andExpect(status().isNoContent());
     }
 }
