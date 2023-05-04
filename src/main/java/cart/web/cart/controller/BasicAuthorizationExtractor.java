@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
-import cart.domain.exception.AuthorizationNotIncludedException;
+import cart.domain.exception.AuthorizationFormatException;
 import cart.web.cart.dto.AuthInfo;
 
 @Component
@@ -16,24 +16,37 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
 
     @Override
     public AuthInfo extract(final HttpServletRequest request) {
-        final String header = request.getHeader(AUTHORIZATION);
+        final String authHeader = request.getHeader(AUTHORIZATION);
+        checkAuthHeaderIsNotNull(authHeader);
+        checkDecodedType(authHeader);
+        String[] credentials = extractValidSingleKeyValuePair(authHeader);
 
-        if (header == null) {
-            throw new AuthorizationNotIncludedException("인증 정보가 필요합니다.");
+        final String email = credentials[0];
+        final String password = credentials[1];
+        return new AuthInfo(email, password);
+    }
+
+    private void checkAuthHeaderIsNotNull(final String authHeader) {
+        if (authHeader == null) {
+            throw new AuthorizationFormatException("올바른 인증 정보가 필요합니다.");
         }
+    }
 
-        if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
-            final String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
-            final byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
-            final String decodedString = new String(decodedBytes);
-
-            final String[] credentials = decodedString.split(DELIMITER);
-            final String email = credentials[0];
-            final String password = credentials[1];
-
-            return new AuthInfo(email, password);
+    private void checkDecodedType(final String authHeader) {
+        if (!authHeader.startsWith(BASIC_TYPE)) {
+            throw new AuthorizationFormatException("올바른 인증 정보가 필요합니다.");
         }
+    }
 
-        throw new AuthorizationNotIncludedException("인증 정보가 필요합니다.");
+    private String[] extractValidSingleKeyValuePair(final String authHeader) {
+        final String authHeaderValue = authHeader.substring(BASIC_TYPE.length()).trim();
+        final byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
+        final String decodedString = new String(decodedBytes);
+
+        final String[] credentials = decodedString.split(DELIMITER);
+        if (credentials.length != 2) {
+            throw new AuthorizationFormatException("올바른 인증 정보가 필요합니다.");
+        }
+        return credentials;
     }
 }

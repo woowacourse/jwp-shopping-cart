@@ -12,7 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import cart.domain.exception.AuthorizationNotIncludedException;
+import cart.domain.exception.AuthorizationFormatException;
 import cart.domain.exception.DbNotAffectedException;
 import cart.domain.exception.EntityMappingException;
 import cart.domain.exception.EntityNotFoundException;
@@ -36,7 +36,7 @@ public class ExceptionAdvice {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 
-    @ExceptionHandler({AuthorizationNotIncludedException.class, EntityMappingException.class, EntityNotFoundException.class})
+    @ExceptionHandler({AuthorizationFormatException.class, EntityMappingException.class, EntityNotFoundException.class})
     public ResponseEntity<String> handleEntityMappingException(final Exception exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }

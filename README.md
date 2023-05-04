@@ -25,7 +25,8 @@
     - [x] authentication 정보가 존재하지 않을 때: `BAD_REQUEST` 
     - [x] 헤더의 authentication 정보가 유효하지 않을 때: `BAD_REQUEST`
     - [x] URI에 잘못된 cartId가 포함되었을 때: `BAD_REQUEST`
-
+      
+(Basic 인증된 email - password 쌍 외에는 `BAD_REQUEST` 반환)
 
 - [x] 사용자 설정 페이지
   - [x] 전체 사용자 이메일, 비밀번호 조회(/settings GET)
