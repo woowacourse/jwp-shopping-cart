@@ -13,15 +13,15 @@ import java.util.List;
 @RestController
 public final class ProductController {
 
-	private final ProductService productService;
+    private final ProductService productService;
 
-	public ProductController (final ProductService productService) {
-		this.productService = productService;
-	}
+    public ProductController(final ProductService productService) {
+        this.productService = productService;
+    }
 
-	@GetMapping("/products")
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<ProductResponse>> requestProducts() {
-		return ResponseEntity.ok(productService.findAll());
-	}
+    @GetMapping("/products")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ProductResponse>> requestProducts() {
+        return ResponseEntity.ok(productService.findAll());
+    }
 }

@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductEntityConvertor {
-	public ProductEntity dtoToEntity (ProductCreateRequest request) {
-		return new ProductEntity(null, request.getName(), request.getImageUrl(), request.getPrice());
-	}
+    public ProductEntity dtoToEntity(ProductCreateRequest request) {
+        return new ProductEntity(null, request.getName(), request.getImageUrl(), request.getPrice());
+    }
 
-	public ProductEntity dtoToEntity(ProductUpdateRequest request) {
-		return new ProductEntity(null, request.getName(), request.getImageUrl(), request.getPrice());
-	}
+    public ProductEntity dtoToEntity(ProductUpdateRequest request) {
+        return new ProductEntity(null, request.getName(), request.getImageUrl(), request.getPrice());
+    }
 }
