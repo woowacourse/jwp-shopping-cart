@@ -96,4 +96,21 @@ class CartDaoTest {
                 new Product(productId2, "치즈피자2", "2.jpg", 18900L)
         ));
     }
+
+    @Test
+    void 사용자_아이디와_삭제할_장바구니_아이디를_받아_장바구니_항목을_제거한다() {
+        // given
+        final Long memberId = insertMember("pizza1@pizza.com", "password1");
+        final Long productId = insertProduct("치즈피자", "1.jpg", 8900L);
+        cartDao.saveAndGetId(new Cart(memberId, productId));
+
+        // when
+        final int result = cartDao.delete(productId, memberId);
+
+        // then
+        assertAll(
+                () -> assertThat(cartDao.findAllProductByMemberId(memberId)).isEmpty(),
+                () -> assertThat(result).isOne()
+        );
+    }
 }

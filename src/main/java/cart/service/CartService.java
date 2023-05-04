@@ -7,6 +7,7 @@ import cart.domain.Cart;
 import cart.dto.CartSaveRequest;
 import cart.dto.CartSearchResponse;
 import cart.dto.ProductDto;
+import cart.exception.ProductNotFoundException;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,5 +32,12 @@ public class CartService {
         return cartDao.findAllProductByMemberId(memberId).stream()
                 .map(ProductDto::from)
                 .collect(Collectors.collectingAndThen(toList(), CartSearchResponse::new));
+    }
+
+    public void delete(final Long productId, final Long memberId) {
+        final int affectedCount = cartDao.delete(productId, memberId);
+        if (affectedCount == 0) {
+            throw new ProductNotFoundException();
+        }
     }
 }
