@@ -27,7 +27,7 @@ public class MemberService {
     public List<MemberDto> findAll() {
         List<Member> members = memberDao.findAll();
         return members.stream()
-                .map(m -> new MemberDto(m.getEmail(), m.getPassword()))
+                .map(m -> new MemberDto(m.getId(), m.getEmail(), m.getPassword()))
                 .collect(Collectors.toList());
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +45,7 @@ class CartDaoTest {
         Cart cart = new Cart(1L, List.of());
 
         //when
-        cartDao.save(cart);
+        cartDao.save(cart.getMemberId(), Collections.emptyList());
 
         //then
         assertThat(cartDao.findByMemberId(cart.getMemberId())).isEqualTo(cart);
@@ -57,7 +58,7 @@ class CartDaoTest {
     void insertProduct_success() {
         //given
         Cart cart = new Cart(1L, List.of());
-        cartDao.save(cart);
+        cartDao.save(cart.getMemberId(), Collections.emptyList());
         long savedId1 = productDao.save(new Product("product2", "image222", 200L));
         long savedId2 = productDao.save(new Product("product3", "image333", 200L));
 
@@ -73,11 +74,11 @@ class CartDaoTest {
     @Sql("/truncate.sql")
     void delete_success() {
         //given
-        Cart cart = new Cart(1L, List.of(new Product(3L, "name1", "image2", 1000L)));
-        cartDao.save(cart);
+        long savedId = productDao.save(new Product(3L, "name1", "image2", 1000L));
+        cartDao.save(1L, List.of(savedId));
 
         //when
-        cartDao.deleteProduct(1L, 3L);
+        cartDao.deleteProduct(1L, savedId);
 
         //then
         assertThat(cartDao.findByMemberId(1L).getProducts()).isEmpty();

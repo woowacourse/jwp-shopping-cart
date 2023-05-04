@@ -27,4 +27,11 @@ public class MemberDao {
                 rs.getString("email"),
                 rs.getString("password")));
     }
+
+    public Long findByEmailAndPassword(String email, String password) {
+        String sql = "select member_id from MEMBER where email = (?) AND password = (?)";
+        System.out.println(email + password);
+
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Long(rs.getLong("member_id")), email, password);
+    }
 }

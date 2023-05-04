@@ -17,11 +17,11 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Cart cart) {
+    public void save(long memberId, List<Long> productIds) {
         String cartProductsSql = "insert into CART (member_id, product_id) values (?, ?)";
 
-        List<Object[]> products = cart.getProducts().stream()
-                .map(product -> new Object[]{cart.getMemberId(), product.getId()})
+        List<Object[]> products = productIds.stream()
+                .map(id -> new Object[]{memberId, id})
                 .collect(Collectors.toList());
 
         jdbcTemplate.batchUpdate(cartProductsSql, products);
@@ -41,13 +41,13 @@ public class CartDao {
         return new Cart(memberId, products);
     }
 
-    void insertProduct(long memberId, long productId) {
+    public void insertProduct(long memberId, long productId) {
         String sql = "insert into CART (member_id, product_id) values (?,?)";
 
         jdbcTemplate.update(sql, memberId, productId);
     }
 
-    void deleteProduct(long memberId, long productId) {
+    public void deleteProduct(long memberId, long productId) {
         String sql = "delete from CART where member_id = ? AND product_id = ?";
 
         jdbcTemplate.update(sql, memberId, productId);

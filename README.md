@@ -35,11 +35,15 @@
 | 조회 | GET    | /members |
 
 ### 장바구니 API
-- [ ] 장바구니 목록을 확인하는 기능
-- [ ] 장바구니에 상품을 추가하는 기능
-- [ ] 장바구니에서 상품을 제거하는 기능
+| 기능        | Method | URL                             |
+|-----------|--------|---------------------------------|
+| 상품 여러개 추가 | POST   | /carts                          |
+| 상품 하나 추가  | POST   | /carts/{member_id}?{product_id} |
+| 상품 조회     | GET    | /carts/{member_id}              |
+| 상품 제거     | PATCH  | /carts/{member_id}?{product_id} |
+
 #### 인증
-- [ ] Basic 인증 방식으로 인증한다.
+- [x] Basic 인증 방식으로 인증한다.
 
 
 ## UI
