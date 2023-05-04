@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import cart.domain.product.service.AdminService;
 import cart.domain.product.service.dto.ProductDto;
+import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
 import cart.web.controller.dto.request.ProductCreationRequest;
 import cart.web.controller.dto.request.ProductModificationRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,6 +24,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+@MockBean(BasicAuthorizedUserArgumentResolver.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AdminRestControllerTest {
 

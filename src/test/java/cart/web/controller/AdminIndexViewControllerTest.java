@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.domain.product.TestFixture;
 import cart.domain.product.service.ProductService;
 import cart.domain.product.service.dto.ProductDto;
+import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+@MockBean(BasicAuthorizedUserArgumentResolver.class)
 @WebMvcTest({AdminViewController.class, IndexViewController.class})
 class AdminIndexViewControllerTest {
 
@@ -28,6 +30,7 @@ class AdminIndexViewControllerTest {
 
     @MockBean
     private ProductService productService;
+
 
     @DisplayName("루트 경로 요청시, index.html을 반환한다.")
     @Test
