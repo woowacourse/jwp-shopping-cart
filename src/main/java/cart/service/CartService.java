@@ -22,30 +22,30 @@ public class CartService {
     private final CartDao cartDao;
 
     @Autowired
-    public CartService(final MemberService memberService, final CartDao cartDao, final ProductService productService) {
+    public CartService(final MemberService memberService, final ProductService productService, final CartDao cartDao) {
         this.memberService = memberService;
-        this.cartDao = cartDao;
         this.productService = productService;
+        this.cartDao = cartDao;
     }
 
     @Transactional
-    public void insert(final Long productId, final AuthDto authDto) {
+    public int insert(final Long productId, final AuthDto authDto) {
         final MemberEntity memberEntity = memberService.findMember(authDto);
         final Optional<CartEntity> cartEntity = cartDao.findCart(productId, memberEntity.getId());
         if (cartEntity.isPresent()) {
             throw new IllegalArgumentException("이미 카트에 담겨진 제품입니다.");
         }
-        cartDao.insert(productId, memberEntity.getId());
+        return cartDao.insert(productId, memberEntity.getId());
     }
 
     @Transactional
-    public void delete(final Long productId, final AuthDto authDto) {
+    public int delete(final Long productId, final AuthDto authDto) {
         final MemberEntity memberEntity = memberService.findMember(authDto);
         final Optional<CartEntity> cartEntity = cartDao.findCart(productId, memberEntity.getId());
         if (cartEntity.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 데이터입니다.");
         }
-        cartDao.delete(cartEntity.get());
+        return cartDao.delete(cartEntity.get());
     }
 
     @Transactional(readOnly = true)

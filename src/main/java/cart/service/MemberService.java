@@ -40,18 +40,18 @@ public class MemberService {
         final Member member = new Member(authDto.getEmail(), authDto.getPassword());
         final Optional<MemberEntity> memberResult = memberDao.findMember(member);
         if (memberResult.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 회원 토큰입니다.");
+            throw new IllegalArgumentException("회원 정보가 잘못되었습니다.");
         }
         return memberResult.get();
     }
 
     @Transactional
-    public void create(final CreateMemberRequest createMemberRequest) {
+    public int create(final CreateMemberRequest createMemberRequest) {
         final Member member = createMemberRequest.toMember();
         final Optional<MemberEntity> memberResult = memberDao.findMemberByEmail(member.getEmail());
         if (memberResult.isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
-        memberDao.insert(member);
+        return memberDao.insert(member);
     }
 }
