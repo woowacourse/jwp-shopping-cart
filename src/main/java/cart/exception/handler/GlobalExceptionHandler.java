@@ -2,6 +2,7 @@ package cart.exception.handler;
 
 import cart.controller.dto.ExceptionResponse;
 import cart.exception.AuthException;
+import cart.exception.CartDuplicateException;
 import cart.exception.DataBaseSearchException;
 import cart.exception.ItemException;
 import cart.exception.ItemNotFoundException;
@@ -85,6 +86,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<ExceptionResponse> handlePasswordException(PasswordException ex) {
         logger.warn(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(CartDuplicateException.class)
+    private ResponseEntity<ExceptionResponse> handleCartDuplicateException(CartDuplicateException ex) {
+        logger.warn(ex.getMessage());
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
