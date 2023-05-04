@@ -1,5 +1,6 @@
 package cart.web.config.auth;
 
+import cart.web.config.auth.exception.IllegalCredentialException;
 import cart.web.controller.dto.request.AuthorizedUserRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,6 @@ public class BasicAuthCredentialDecoder implements AuthCredentialDecoder<Authori
             return new AuthorizedUserRequest(email, password);
         }
 
-        throw new IllegalArgumentException(); //TODO: 모호한 exception
+        throw new IllegalCredentialException();
     }
 }
