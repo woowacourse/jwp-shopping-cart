@@ -21,6 +21,16 @@ public class Product {
         this.imageUrl = imageUrl;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        validate(name, price);
+    }
+
+    private void validate(final String name, final int price) {
+        if (name.length() < 1 || name.length() > 20) {
+            throw new IllegalArgumentException("상품의 이름은 1자 이상 20자 이하입니다.");
+        }
+        if (price > 100_000_000) {
+            throw new IllegalArgumentException("가격은 1억 이하만 가능합니다.");
+        }
     }
 
     public Long getId() {

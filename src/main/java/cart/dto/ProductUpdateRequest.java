@@ -1,10 +1,8 @@
 package cart.dto;
 
 import cart.domain.product.entity.Product;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.PositiveOrZero;
 
 public class ProductUpdateRequest {
 
@@ -12,13 +10,9 @@ public class ProductUpdateRequest {
     private Long id;
 
     @NotBlank
-    @Max(value = 20, message = "상품의 이름은 20글자를 넘을 수 없습니다.")
-    @Min(value = 1, message = "상품의 이름은 1글자를 넘어야합니다.")
-    @Size(min = 1, max = 20, message = "상품의 이름은 1자 이상 20자 이하입니다.")
     private String name;
 
-    @Max(value = 100_000_000, message = "가격은 1억 이하만 가능합니다.")
-    @Min(value = 0, message = "가격은 음수가 될 수 없습니다.")
+    @PositiveOrZero(message = "가격은 음수가 될 수 없습니다.")
     private int price;
 
     @NotBlank
