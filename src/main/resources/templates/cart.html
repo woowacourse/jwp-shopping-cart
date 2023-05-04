@@ -49,10 +49,11 @@
                 productElement += `
                         <div class="cart-item">
                           <div class="cart-item-info">
-                            <img src="${cartItem['image-url']}" alt=""/> <!-- 상품 이미지 -->
-                            <div class="cart-item-name">${cartItem['name']}</div> <!-- 상품 이름 -->
-                            <div class="cart-item-price">${cartItem['price']}</div> <!-- 상품 가격 -->
-                            <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem['id']})">Delete</button>
+                            <img src="${cartItem['item']['image-url']}" alt=""/> <!-- 상품 이미지 -->
+                            <div class="cart-item-name">${cartItem['item']['name']}</div> <!-- 상품 이름 -->
+                            <div class="cart-item-price">${cartItem['item']['price']}</div> <!-- 상품 가격 -->
+                            <div class="cart-item-price">${cartItem['count']}</div> <!-- 상품 개수 -->
+                            <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem['item']['id']})">Delete</button>
                           </div>
                         </div>
                       `;
