@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.product;
 
 import java.util.Objects;
 

@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
-import cart.dto.ProductResponseDto;
+import cart.dto.product.ProductDto;
+import cart.dto.product.ProductResponseDto;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
