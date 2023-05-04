@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.auth.AuthArgumentResolver;
 import cart.dto.response.CartItemResponseDto;
+import cart.dto.response.ProductResponseDto;
 import cart.dto.response.UserResponseDto;
-import cart.entity.ProductEntity;
 import cart.service.CartService;
 import cart.service.ProductService;
 import cart.service.UserService;
@@ -44,7 +44,7 @@ class MainControllerTest {
     @DisplayName("root directory 로 요청을 보내면 홈 html 화면을 보내준다")
     void rootPage() throws Exception {
         // given
-        List<ProductEntity> allProducts = new ArrayList<>();
+        List<ProductResponseDto> allProducts = new ArrayList<>();
         given(productService.findAll())
                 .willReturn(allProducts);
 
@@ -91,7 +91,7 @@ class MainControllerTest {
     @DisplayName("'/admin' directory 로 요청을 보내면 admin html 화면을 보내준다")
     void admin() throws Exception {
         // given
-        List<ProductEntity> allProducts = new ArrayList<>();
+        List<ProductResponseDto> allProducts = new ArrayList<>();
         given(productService.findAll())
                 .willReturn(allProducts);
 

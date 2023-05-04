@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.dto.request.ProductRequestDto;
+import cart.dto.response.ProductResponseDto;
 import cart.entity.ProductEntity;
 import cart.repository.ProductDao;
 import cart.service.converter.ProductConverter;
@@ -21,8 +22,9 @@ public class ProductService {
         return productDao.create(productEntity);
     }
 
-    public List<ProductEntity> findAll() {
-        return productDao.findAll();
+    public List<ProductResponseDto> findAll() {
+        List<ProductEntity> entities = productDao.findAll();
+        return ProductConverter.entitiesToResponseDtos(entities);
     }
 
     public void update(final ProductRequestDto productRequestDto, final int id) {

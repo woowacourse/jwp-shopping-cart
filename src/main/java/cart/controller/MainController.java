@@ -1,8 +1,8 @@
 package cart.controller;
 
 
+import cart.dto.response.ProductResponseDto;
 import cart.dto.response.UserResponseDto;
-import cart.entity.ProductEntity;
 import cart.service.ProductService;
 import cart.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,7 @@ public class MainController {
 
     @GetMapping
     public String rootPage(final Model model) {
-        final List<ProductEntity> allProducts = productService.findAll();
+        final List<ProductResponseDto> allProducts = productService.findAll();
         model.addAttribute("products", allProducts);
         return "index";
     }
@@ -43,7 +43,7 @@ public class MainController {
 
     @GetMapping("/admin")
     public String adminPage(final Model model) {
-        final List<ProductEntity> allProducts = productService.findAll();
+        final List<ProductResponseDto> allProducts = productService.findAll();
         model.addAttribute("products", allProducts);
         return "admin";
     }
