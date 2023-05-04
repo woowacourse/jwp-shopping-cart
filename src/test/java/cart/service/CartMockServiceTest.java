@@ -1,6 +1,5 @@
 package cart.service;
 
-import cart.dao.CartDao;
 import cart.dao.JdbcCartProductDao;
 import cart.dao.dto.CartProductResultMap;
 import cart.dto.CartResponse;
@@ -25,9 +24,6 @@ class CartMockServiceTest {
 
     @Mock
     private JdbcCartProductDao jdbcCartProductDao;
-
-    @Mock
-    private CartDao cartDao;
 
     @Test
     void 사용자의_id가_주어지면_해당_사용자의_장바구니_목록을_전체_조회한다() {

@@ -37,7 +37,7 @@ public class CartUserController {
     public ResponseEntity<URI> addProduct(@AuthenticateUser AuthUser user, @PathVariable Long productId) {
         final CartSaveRequest saveRequest = new CartSaveRequest(user.getId(), productId);
 
-        final Long id = cartService.save(saveRequest);
+        cartService.save(saveRequest);
 
         final String createdUri = format("/carts/users/%s/products/%s", user.getId(), productId);
         return ResponseEntity.created(URI.create(createdUri)).build();

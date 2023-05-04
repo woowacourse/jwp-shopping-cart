@@ -4,8 +4,6 @@ import cart.dao.entity.Users;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
@@ -23,7 +21,6 @@ public class JdbcUserDao {
 
     public Optional<Users> findByEmail(final String email) {
         final String sql = "SELECT id, email, password, created_at FROM users WHERE email = :email";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         try {
             final Users users = jdbcTemplate.queryForObject(sql, Collections.singletonMap("email", email), createUsersRowMapper());

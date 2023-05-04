@@ -18,8 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("NonAsciiCharacters")
 class CartControllerTest {
 
-    private int port;
-
     @BeforeEach
     void init(@LocalServerPort int port) {
         RestAssured.port = port;
@@ -60,7 +58,7 @@ class CartControllerTest {
     @Sql(value = {"classpath:dataTruncator.sql", "classpath:jdbcTestInitializer.sql"})
     void 장바구니를_삭제한다() {
         // when, then
-        final ExtractableResponse<Response> response = givenWithAuth()
+        givenWithAuth()
                 .when()
                 .delete("/carts/users/products/{productId}", 1L)
                 .then().log().all()
