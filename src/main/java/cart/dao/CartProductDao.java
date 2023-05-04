@@ -32,7 +32,6 @@ public class CartProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    //TODO unique
     public Long save(Long memberId,
                      Long productId) {
         Map<String, Object> cartValues = new HashMap<>();
