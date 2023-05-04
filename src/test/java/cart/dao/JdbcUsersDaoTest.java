@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.User;
+import cart.entity.vo.Email;
 import cart.exception.UserAuthorizationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ class JdbcUsersDaoTest {
     @DisplayName("이메일로 사용자 검색 테스트")
     void find_by_email_test() {
         // given
-        final String email = "test@email.com";
+        final Email email = new Email("test@email.com");
         final String expectedPassword = "12345";
 
         // when
@@ -51,7 +52,7 @@ class JdbcUsersDaoTest {
     @DisplayName("등록되지 않은 사용자로 조회시 예외 발생")
     void unregistered_user_find_exception_test() {
         // given
-        final String unregisteredEmail = "unRegistered@eamil.com";
+        final Email unregisteredEmail = new Email("unRegistered@eamil.com");
 
         // when & then
         assertThatThrownBy(() -> usersDao.findByEmail(unregisteredEmail))

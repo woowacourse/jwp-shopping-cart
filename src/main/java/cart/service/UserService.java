@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.dao.UsersDao;
 import cart.entity.User;
+import cart.entity.vo.Email;
 import cart.exception.UserAuthorizationException;
 import cart.service.dto.UserDto;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class UserService {
     }
 
     public void validateUser(final String email, final String password) {
-        final User user = usersDao.findByEmail(email);
+        final User user = usersDao.findByEmail(new Email(email));
         if (!user.getPassword().equals(password)) {
             throw new UserAuthorizationException("사용자의 비밀번호가 일치하지 않습니다.");
         }

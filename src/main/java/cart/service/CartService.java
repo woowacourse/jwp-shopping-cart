@@ -23,14 +23,14 @@ public class CartService {
         this.productsDao = productsDao;
     }
 
-    public long addProductToUser(final Email userEmail, final long productId) {
+    public long addProductToUser(final String userEmail, final long productId) {
         final Product product = productsDao.findById(productId);
-        return cartAddedProductDao.insert(userEmail, product);
+        return cartAddedProductDao.insert(new Email(userEmail), product);
     }
 
 
-    public List<ProductInCart> findAllProductsInCartByUser(final Email userEmail) {
-        final List<CartAddedProduct> cartAddedProducts = cartAddedProductDao.findProductsByUserEmail(userEmail);
+    public List<ProductInCart> findAllProductsInCartByUser(final String userEmail) {
+        final List<CartAddedProduct> cartAddedProducts = cartAddedProductDao.findProductsByUserEmail(new Email(userEmail));
         return cartAddedProducts.stream()
                 .map(cartAddedProduct -> new ProductInCart(
                         cartAddedProduct.getId(),
@@ -41,10 +41,10 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public void deleteCartItem(final Email userEmail, final Long id) {
+    public void deleteCartItem(final String userEmail, final Long id) {
         final CartAddedProduct cartAddedProduct = cartAddedProductDao.findById(id);
 
-        if (!cartAddedProduct.getUserEmail().equals(userEmail)) {
+        if (!cartAddedProduct.getUserEmail().equals(new Email(userEmail))) {
             throw new UserForbiddenException("해당 장바구니의 사용자가 아닙니다.");
         }
 

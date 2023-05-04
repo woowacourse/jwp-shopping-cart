@@ -4,7 +4,6 @@ import cart.auth.Auth;
 import cart.auth.AuthUserInfo;
 import cart.controller.dto.CartProductsRequest;
 import cart.controller.dto.ProductInCartResponse;
-import cart.entity.vo.Email;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,16 +34,14 @@ public class CartApiController {
             @Valid @RequestBody final CartProductsRequest requestBody,
             @Auth final AuthUserInfo authUserInfo
     ) {
-        final Email userEmail = new Email(authUserInfo.getEmail());
-        final long generatedCartItemId = cartService.addProductToUser(userEmail, requestBody.getProductId());
+        final long generatedCartItemId = cartService.addProductToUser(authUserInfo.getEmail(), requestBody.getProductId());
 
         return ResponseEntity.created(URI.create("/cart/" + generatedCartItemId)).build();
     }
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductInCartResponse>> getProductsByUser(@Auth final AuthUserInfo authUserInfo) {
-        final Email userEmail = new Email(authUserInfo.getEmail());
-        final List<ProductInCartResponse> responseBody = cartService.findAllProductsInCartByUser(userEmail).stream()
+        final List<ProductInCartResponse> responseBody = cartService.findAllProductsInCartByUser(authUserInfo.getEmail()).stream()
                 .map(ProductInCartResponse::new)
                 .collect(Collectors.toUnmodifiableList());
 
@@ -56,8 +53,7 @@ public class CartApiController {
             @PathVariable final Long id,
             @Auth AuthUserInfo authUserInfo
     ) {
-        final Email userEmail = new Email(authUserInfo.getEmail());
-        cartService.deleteCartItem(userEmail, id);
+        cartService.deleteCartItem(authUserInfo.getEmail(), id);
 
         return ResponseEntity.noContent().build();
     }
