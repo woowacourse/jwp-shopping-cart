@@ -36,13 +36,13 @@ public class MemberService {
     }
 
     public MemberDto loginMember(final String email, final String password) {
-        Optional<Member> findMember = memberDao.findByEmail(email);
+        final Optional<Member> findMember = memberDao.findByEmail(email);
         if (findMember.isEmpty()) {
             throw new DataNotFoundException("해당 사용자가 존재하지 않습니다.");
         }
 
-        Member member = findMember.get();
-        String encryptedPassword = member.getPassword();
+        final Member member = findMember.get();
+        final String encryptedPassword = member.getPassword();
         if (!encryptedPassword.equals(CaesarCipher.encrypt(password))) {
             throw new PasswordNotMatchException("비밀번호가 일치하지 않습니다.");
         }
