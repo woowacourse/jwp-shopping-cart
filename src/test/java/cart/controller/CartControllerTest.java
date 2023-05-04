@@ -5,6 +5,7 @@ import cart.auth.dto.AuthenticationDto;
 import cart.auth.repository.AuthDao;
 import cart.dto.request.CartRequestDto;
 import cart.dto.response.CartItemResponseDto;
+import cart.exception.AuthorizationException;
 import cart.exception.CartItemNotFoundException;
 import cart.service.CartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,12 +40,16 @@ class CartControllerTest {
     @MockBean
     private AuthDao authDao;
 
+    private String email;
+    private String password;
     private String authenticationHeader;
     private int userId;
 
     @BeforeEach
     void setUp() {
-        final AuthenticationDto authenticationDto = new AuthenticationDto("ditoo@wooteco.com", "ditoo1234");
+        email = "ditoo@wooteco.com";
+        password = "ditoo1234";
+        final AuthenticationDto authenticationDto = new AuthenticationDto(email, password);
         authenticationHeader = BasicAuthorizationEncoder.encode(
                 authenticationDto.getEmail(), authenticationDto.getPassword());
         userId = 1;
@@ -61,11 +66,44 @@ class CartControllerTest {
 
         //expect
         mockMvc.perform(post("/cart")
+                        .header("Authorization", authenticationHeader)
                         .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", authenticationHeader))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(header().string("Location", "/"))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    @DisplayName("장바구니에 추가 실패 - 모든 값 입력 안함")
+    void create_fail_not_all_argument_input() throws Exception {
+        //given
+        final CartRequestDto requestDto = new CartRequestDto(null);
+        final String requestBody = objectMapper.writeValueAsString(requestDto);
+
+        //expect
+        mockMvc.perform(post("/cart")
+                        .header("Authorization", authenticationHeader)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("장바구니에 추가 실패 - 잘못된 유저")
+    void create_fail_unauthorized() throws Exception {
+        // given
+        final CartRequestDto requestDto = new CartRequestDto(1);
+        final String requestBody = objectMapper.writeValueAsString(requestDto);
+        given(authDao.findIdByEmailAndPassword(email, password))
+                .willThrow(AuthorizationException.class);
+
+
+        // expect
+        mockMvc.perform(post("/cart")
+                        .header("Authorization", authenticationHeader)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -76,7 +114,7 @@ class CartControllerTest {
                 new CartItemResponseDto(1, "삼겹살", "3-hierarchy-fat.jpg", 16000),
                 new CartItemResponseDto(1, "목살", "neck-fat.jpg", 15000)
         );
-        given(authDao.findIdByEmailAndPassword("ditoo@wooteco.com", "ditoo1234"))
+        given(authDao.findIdByEmailAndPassword(email, password))
                 .willReturn(1);
         given(cartService.getProductsInCart(userId))
                 .willReturn(response);
@@ -92,6 +130,19 @@ class CartControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().json(responseBody))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("장바구니 조회 실패 - 잘못된 유저")
+    void read_fail_unauthorized() throws Exception {
+        // given
+        given(authDao.findIdByEmailAndPassword(email, password))
+                .willThrow(AuthorizationException.class);
+
+        // expect
+        mockMvc.perform(get("/cart")
+                        .header("Authorization", authenticationHeader))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -112,7 +163,21 @@ class CartControllerTest {
                 .delete(0, userId);
 
         //expect
-        mockMvc.perform(delete("/products/0"))
+        mockMvc.perform(delete("/products/0")
+                        .header("Authorization", authenticationHeader))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("상품 삭제 실패 - 잘못된 유저")
+    void delete_fail_unauthorized() throws Exception {
+        // given
+        given(authDao.findIdByEmailAndPassword(email, password))
+                .willThrow(AuthorizationException.class);
+
+        // expect
+        mockMvc.perform(delete("/cart/1")
+                        .header("Authorization", authenticationHeader))
+                .andExpect(status().isUnauthorized());
     }
 }
