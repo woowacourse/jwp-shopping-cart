@@ -40,11 +40,6 @@ public class CartController {
         return cartService.findAllProductsInCart(account);
     }
 
-    @GetMapping("/cart")
-    public String showCartForm() {
-        return "cart";
-    }
-
     @DeleteMapping("/carts/products/{product-id}")
     public String deleteProductInCart(@LogIn AuthAccount account,
                                       @PathVariable("product-id") final Long productId) {
