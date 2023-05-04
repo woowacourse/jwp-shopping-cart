@@ -33,13 +33,13 @@ public class CartDao {
         return jdbcTemplate.queryForObject(sqlForFindById, cartRowMapper, id);
     }
 
-    public List<Cart> selectAll(String email) {
+    public List<Cart> selectAll(Email email) {
         String sqlForFindAll = "SELECT * FROM Cart WHERE member_email = ?";
 
         return jdbcTemplate.query(
                 sqlForFindAll,
                 cartRowMapper,
-                email);
+                email.getValue());
     }
 
     public void deleteById(Long id) {

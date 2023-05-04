@@ -40,7 +40,7 @@ public class CartService {
     }
 
     public List<CartResponseDto> findAll(Email email) {
-        return cartDao.selectAll(email.getValue())
+        return cartDao.selectAll(email)
                 .stream()
                 .map(this::toResponseDto)
                 .collect(Collectors.toList());
