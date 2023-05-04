@@ -5,6 +5,7 @@ import cart.dao.ProductDao;
 import cart.domain.cart.Cart;
 import cart.domain.member.Member;
 import cart.domain.product.Product;
+import cart.exception.notfound.CartProductNotFoundException;
 import cart.exception.notfound.ProductNotFoundException;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +32,7 @@ public class CartService {
 
         cartDao.findByMemberIdAndProductId(member.getId(), productId)
                 .ifPresent((cart) -> {
+                    // TODO: 커스텀 에러
                     throw new IllegalArgumentException("이미 장바구니에 담은 상품입니다.");
                 });
 
@@ -53,14 +55,10 @@ public class CartService {
     }
 
     public void delete(final Member member, final long productId) {
-        checkExistProductId(productId);
-        cartDao.delete(member.getId(), productId);
-    }
-
-    private void checkExistProductId(final long productId) {
-        Optional<Product> product = productDao.findById(productId);
-        if (product.isEmpty()) {
-            throw new ProductNotFoundException();
+        Optional<Cart> cart = cartDao.findByMemberIdAndProductId(member.getId(), productId);
+        if (cart.isEmpty()) {
+            throw new CartProductNotFoundException();
         }
+        cartDao.delete(member.getId(), productId);
     }
 }
