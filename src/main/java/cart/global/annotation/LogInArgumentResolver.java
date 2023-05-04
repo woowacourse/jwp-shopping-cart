@@ -1,7 +1,7 @@
 package cart.global.annotation;
 
 import cart.auth.AuthAccount;
-import cart.global.exception.auth.CanNotFountHeaderException;
+import cart.global.exception.auth.CanNotFoundHeaderException;
 import cart.global.exception.auth.InvalidAuthorizationTypeException;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -35,7 +35,7 @@ public class LogInArgumentResolver implements HandlerMethodArgumentResolver {
         final String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (hasNotHeader(header)) {
-            throw new CanNotFountHeaderException();
+            throw new CanNotFoundHeaderException();
         }
 
         if (isBasicAuthFrom(header)) {

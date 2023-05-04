@@ -3,9 +3,9 @@ package cart.global.exception.auth;
 import cart.global.exception.common.BusinessException;
 import cart.global.exception.common.ExceptionStatus;
 
-public class CanNotFountHeaderException extends BusinessException {
+public class CanNotFoundHeaderException extends BusinessException {
 
-    public CanNotFountHeaderException() {
+    public CanNotFoundHeaderException() {
         super(ExceptionStatus.CAN_NOT_FOUNT_HEADER_EXCEPTION);
     }
 }
