@@ -4,11 +4,13 @@ import cart.authorization.AuthorizationInformation;
 import cart.dao.CartDao;
 import cart.dao.ItemDao;
 import cart.dao.MemberDao;
-import cart.entity.AuthMember;
-import cart.entity.Member;
-import cart.entity.PutCart;
+import cart.dto.ItemResponse;
+import cart.entity.*;
 import cart.exception.ServiceIllegalArgumentException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -46,5 +48,16 @@ public class CartService {
         if (!itemDao.isItemExists(itemId)) {
             throw new ServiceIllegalArgumentException("item을 다시 선택해주세요.");
         }
+    }
+
+    public List<ItemResponse> findAllItemByAuthInfo(AuthorizationInformation authorizationInformation) {
+        AuthMember authMember = convertAuthInformationToMember(authorizationInformation);
+
+        Member member = memberDao.findByAuthMember(authMember);
+        List<Cart> carts = cartDao.findAllByMemberId(member.getId());
+        return carts.stream()
+                .map(cart -> itemDao.findById(cart.getItemId()))
+                .map(item -> new ItemResponse(item.getId(), item.getName(), item.getImageUrl(), item.getPrice()))
+                .collect(Collectors.toList());
     }
 }
