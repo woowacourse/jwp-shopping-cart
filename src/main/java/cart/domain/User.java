@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class User {
 
     private final Integer id;
@@ -10,6 +12,23 @@ public class User {
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        User user = (User)o;
+
+        return Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return email != null ? email.hashCode() : 0;
     }
 
     public Integer getId() {
