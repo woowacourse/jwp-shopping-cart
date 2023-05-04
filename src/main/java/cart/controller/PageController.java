@@ -22,7 +22,7 @@ public class PageController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/products")
     public String renderMain(final Model model) {
         final List<ProductResponse> productResponses = productService.findAll();
         model.addAttribute("products", productResponses);

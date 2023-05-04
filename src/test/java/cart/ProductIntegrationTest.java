@@ -42,7 +42,7 @@ class ProductIntegrationTest {
         final Response response = given()
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
-                .get("/")
+                .get("/products")
                 .then()
                 .log().all()
                 .extract().response();
@@ -79,7 +79,7 @@ class ProductIntegrationTest {
         final Response userResponse = given()
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
-                .get("/")
+                .get("/products")
                 .then()
                 .log().all()
                 .extract().response();
@@ -119,7 +119,7 @@ class ProductIntegrationTest {
         final Response userResponse = given()
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
-                .get("/")
+                .get("/products")
                 .then()
                 .log().all()
                 .extract().response();
@@ -160,7 +160,7 @@ class ProductIntegrationTest {
         final Response userResponse = given()
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
-                .get("/")
+                .get("/products")
                 .then()
                 .log().all()
                 .extract().response();
