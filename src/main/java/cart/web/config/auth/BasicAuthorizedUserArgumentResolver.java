@@ -44,5 +44,4 @@ public class BasicAuthorizedUserArgumentResolver implements HandlerMethodArgumen
 
         return authorizedUserRequest;
     }
-    //TODO: 얜 테스트 어떻게 하지
 }
