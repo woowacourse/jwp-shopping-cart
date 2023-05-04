@@ -1,9 +1,9 @@
 package cart.controller;
 
 import cart.auth.AuthArgumentResolver;
-import cart.entity.ProductEntity;
-import cart.entity.UserEntity;
 import cart.dto.response.CartItemResponseDto;
+import cart.dto.response.UserResponseDto;
+import cart.entity.ProductEntity;
 import cart.service.CartService;
 import cart.service.ProductService;
 import cart.service.UserService;
@@ -75,7 +75,7 @@ class MainControllerTest {
     @DisplayName("'/settings' directory 로 요청을 보내면 settings html 화면을 보내준다")
     void settings() throws Exception {
         // given
-        List<UserEntity> allUsers = new ArrayList<>();
+        List<UserResponseDto> allUsers = new ArrayList<>();
         given(userService.findAll())
                 .willReturn(allUsers);
 

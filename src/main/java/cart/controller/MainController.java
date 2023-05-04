@@ -43,16 +43,9 @@ public class MainController {
 
     @GetMapping("/settings")
     public String settingsPage(final Model model) {
-        final List<UserResponseDto> userResponseDto = convertUsersToDto(userService.findAll());
+        final List<UserResponseDto> userResponseDto = userService.findAll();
         model.addAttribute("members", userResponseDto);
         return "settings";
-    }
-
-    private List<UserResponseDto> convertUsersToDto(final List<UserEntity> users) {
-        return users.stream()
-                .map(userEntity ->
-                        new UserResponseDto(userEntity.getEmail(), userEntity.getPassword(), userEntity.getName()))
-                .collect(Collectors.toUnmodifiableList());
     }
 
     @GetMapping("/admin")

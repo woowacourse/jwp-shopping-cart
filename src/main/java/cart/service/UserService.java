@@ -1,7 +1,9 @@
 package cart.service;
 
+import cart.dto.response.UserResponseDto;
 import cart.entity.UserEntity;
 import cart.repository.UserDao;
+import cart.service.converter.UserConverter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +17,8 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public List<UserEntity> findAll() {
-        return userDao.findAll();
+    public List<UserResponseDto> findAll() {
+        final List<UserEntity> entities = userDao.findAll();
+        return UserConverter.entitiesToResponseDtos(entities);
     }
 }
