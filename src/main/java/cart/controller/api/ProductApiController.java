@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import cart.domain.product.ProductId;
 import cart.service.request.ProductUpdateRequest;
 import cart.service.response.ProductResponse;
 import cart.service.ProductService;
@@ -34,14 +35,14 @@ public class ProductApiController {
 
 	@PostMapping("/products")
 	public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductUpdateRequest request) {
-		final long save = productService.save(request);
+		final long save = productService.save(request).getId();
 		final URI uri = URI.create("/products/" + save);
 		return ResponseEntity.created(uri).build();
 	}
 
 	@DeleteMapping("/products/{id}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") long productId) {
-		productService.deleteByProductId(productId);
+		productService.deleteByProductId(ProductId.from(productId));
 		return ResponseEntity.noContent().build();
 	}
 
@@ -50,7 +51,7 @@ public class ProductApiController {
 		@PathVariable(value = "id") long productId,
 		@RequestBody @Valid ProductUpdateRequest request
 	) {
-		final ProductResponse productResponse = productService.update(productId, request);
+		final ProductResponse productResponse = productService.update(ProductId.from(productId), request);
 		return ResponseEntity.ok(productResponse);
 	}
 }

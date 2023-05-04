@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,10 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import cart.service.request.ProductUpdateRequest;
-import cart.domain.Product;
-import cart.service.response.ProductResponse;
+import cart.domain.product.Product;
+import cart.domain.product.ProductId;
 import cart.repository.ProductRepository;
+import cart.service.request.ProductUpdateRequest;
+import cart.service.response.ProductResponse;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
@@ -24,66 +24,70 @@ class ProductServiceImplTest {
 	ProductRepository productRepository;
 
 	@InjectMocks
-	ProductServiceImpl productServiceImpl;
-
-	@DisplayName("전체 상품 조회 테스트")
-	@Test
-	void findAll() {
-		// given
-		final List<Product> products = List.of(new Product(1L, "KIARA", 1000, "이미지"));
-
-		given(productRepository.findAll()).willReturn(products);
-
-		// when
-		final List<ProductResponse> findAll = productServiceImpl.findAll();
-
-		// then
-		assertThat(findAll)
-			.usingRecursiveComparison()
-			.isEqualTo(List.of(new ProductResponse(1L, "KIARA", 1000, "이미지")));
-	}
+	ProductServiceImpl productService;
 
 	@DisplayName("상품 저장 테스트")
 	@Test
 	void save() {
 		// given
-		given(productRepository.save(any())).willReturn(1L);
+		given(productRepository.save(any())).willReturn(ProductId.from(1L));
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("KIARA", 1000, "이미지");
-		final long saveId = productServiceImpl.save(request);
+		final ProductId productId = productService.save(request);
 
 		// then
-		assertThat(saveId).isEqualTo(1L);
+		assertThat(ProductId.from(1L)).isEqualTo(productId);
+	}
+
+	@DisplayName("전체 상품 조회 테스트")
+	@Test
+	void findAll() {
+		// given
+		final Product product = new Product(ProductId.from(1L), "사과", 1000, "사과이미지");
+
+		given(productRepository.save(product)).willReturn(ProductId.from(1L));
+		given(productRepository.findAll()).willReturn(List.of(product));
+
+		final ProductUpdateRequest request = new ProductUpdateRequest("사과", 1000, "사과이미지");
+		productService.save(request);
+
+		// when
+		final List<ProductResponse> findAll = productService.findAll();
+
+		// then
+		assertThat(findAll)
+			.usingRecursiveComparison()
+			.isEqualTo(List.of(new ProductResponse(1L, "사과", 1000, "사과이미지")));
 	}
 
 	@DisplayName("상품 삭제 테스트")
 	@Test
 	void deleteByProductId() {
 		// given
-		given(productRepository.deleteByProductId(anyLong())).willReturn(true);
+		given(productRepository.deleteByProductId(any())).willReturn(true);
 
 		// when
-		final long deleteProductId = productServiceImpl.deleteByProductId(1L);
+		final ProductId deleteProductId = productService.deleteByProductId(ProductId.from(1L));
 
 		// then
-		assertThat(deleteProductId).isEqualTo(1L);
+		assertThat(deleteProductId).isEqualTo(ProductId.from(1L));
 	}
 
 	@DisplayName("상품 갱신 후 조회 테스트")
 	@Test
-	void updateProduct() {
+	void update() {
 		// given
-		given(productRepository.updateByProductId(anyLong(), any())).willReturn(1L);
-		given(productRepository.findByProductId(anyLong()))
-			.willReturn(Optional.ofNullable(new Product(1L, "hyena", 400, "이미지")));
+		given(productRepository.updateByProductId(any(), any())).willReturn(ProductId.from(1L));
+		given(productRepository.findByProductId(any()))
+			.willReturn(new Product(ProductId.from(1L), "hyena", 400, "이미지"));
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("hyena", 400, "이미지");
-		final ProductResponse updateProduct = productServiceImpl.update(1L, request);
+		final ProductResponse response = productService.update(ProductId.from(1L), request);
 
 		// then
-		assertThat(updateProduct)
+		assertThat(response)
 			.hasFieldOrPropertyWithValue("id", 1L)
 			.hasFieldOrPropertyWithValue("name", "hyena")
 			.hasFieldOrPropertyWithValue("price", 400.0)

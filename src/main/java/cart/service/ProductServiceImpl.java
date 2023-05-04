@@ -6,9 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cart.domain.product.ProductId;
 import cart.service.request.ProductUpdateRequest;
 import cart.service.response.ProductResponse;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.repository.ProductRepository;
 
 @Transactional(readOnly = true)
@@ -20,23 +21,23 @@ public class ProductServiceImpl implements ProductService {
 		this.productRepository = productRepository;
 	}
 
+	@Transactional
+	@Override
+	public ProductId save(final ProductUpdateRequest request) {
+		return productRepository.save(new Product(request.getName(), request.getPrice(), request.getImage()));
+	}
+
 	public List<ProductResponse> findAll() {
 		return productRepository.findAll()
 			.stream()
-			.map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(),
+			.map(product -> new ProductResponse(product.getId().getId(), product.getName(), product.getPrice(),
 				product.getImage()))
 			.collect(Collectors.toList());
 	}
 
 	@Transactional
 	@Override
-	public long save(final ProductUpdateRequest request) {
-		return productRepository.save(request);
-	}
-
-	@Transactional
-	@Override
-	public long deleteByProductId(final long productId) {
+	public ProductId deleteByProductId(final ProductId productId) {
 		final boolean isDelete = productRepository.deleteByProductId(productId);
 
 		if (!isDelete) {
@@ -48,12 +49,12 @@ public class ProductServiceImpl implements ProductService {
 
 	@Transactional
 	@Override
-	public ProductResponse update(final long productId, final ProductUpdateRequest request) {
-		final long updateProductId = productRepository.updateByProductId(productId, request);
-		final Product findProduct = productRepository.findByProductId(updateProductId)
-			.orElseThrow(() -> new IllegalStateException("갱신된 상품 조회에 실패했습니다."));
+	public ProductResponse update(final ProductId productId, final ProductUpdateRequest request) {
+		final Product product = productRepository.findByProductId(productId);
+		productRepository.updateByProductId(productId,
+			new Product(request.getName(), request.getPrice(), request.getImage()));
 
-		return new ProductResponse(findProduct.getId(), findProduct.getName(), findProduct.getPrice(),
-			findProduct.getImage());
+		return new ProductResponse(product.getId().getId(), product.getName(), product.getPrice(),
+			product.getImage());
 	}
 }

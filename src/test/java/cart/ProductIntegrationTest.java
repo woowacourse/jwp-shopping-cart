@@ -11,6 +11,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import cart.domain.product.Product;
+import cart.domain.product.ProductId;
 import cart.service.request.ProductUpdateRequest;
 import cart.repository.ProductRepository;
 import io.restassured.RestAssured;
@@ -59,11 +61,12 @@ public class ProductIntegrationTest {
 
 	@Test
 	public void deleteProduct() {
-		final long saveId = repository.save(new ProductUpdateRequest("KIARA", 10000, "이미지"));
+		final Product product = new Product("apple", 1000, "사과이미지");
+		final ProductId productId = repository.save(product);
 
 		final ExtractableResponse<Response> result = given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.pathParam("id", saveId)
+			.pathParam("id", productId.getId())
 			.when().log().all()
 			.delete("/products/{id}")
 			.then().log().all()
@@ -74,12 +77,13 @@ public class ProductIntegrationTest {
 
 	@Test
 	public void updateProduct() {
-		final long saveId = repository.save(new ProductUpdateRequest("KIARA", 10000, "이미지"));
-		final ProductUpdateRequest request = new ProductUpdateRequest("HYENA", 3000,"이미지2");
+		final ProductId oldProductId = repository.save(new Product("apple", 1000, "사과이미지"));
+
+		final ProductUpdateRequest request = new ProductUpdateRequest("orange", 1500, "오렌지이미지");
 
 		final ExtractableResponse<Response> result = given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.pathParam("id", saveId)
+			.pathParam("id", oldProductId.getId())
 			.body(request)
 			.when().log().all()
 			.patch("/products/{id}")
