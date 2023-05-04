@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.BasicAuthorizationEncoder;
 import cart.auth.dto.AuthenticationDto;
-import cart.auth.service.AuthService;
+import cart.auth.repository.AuthDao;
 import cart.dto.request.CartRequestDto;
 import cart.service.CartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,8 +31,9 @@ class CartControllerTest {
 
     @MockBean
     private CartService cartService;
+
     @MockBean
-    private AuthService authService;
+    private AuthDao authDao;
 
     private String authenticationHeader;
     private int userId;

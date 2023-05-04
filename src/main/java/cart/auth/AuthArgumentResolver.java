@@ -1,7 +1,7 @@
 package cart.auth;
 
 import cart.auth.dto.AuthenticationDto;
-import cart.auth.service.AuthService;
+import cart.auth.repository.AuthDao;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -16,10 +16,10 @@ import static cart.auth.AuthConstant.AUTHORIZATION;
 @Component
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final AuthService authService;
+    private final AuthDao authDao;
 
-    public AuthArgumentResolver(final AuthService authService) {
-        this.authService = authService;
+    public AuthArgumentResolver(final AuthDao authDao) {
+        this.authDao = authDao;
     }
 
     @Override
@@ -34,6 +34,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         final HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
         final String authorizationHeader = httpServletRequest.getHeader(AUTHORIZATION);
         final AuthenticationDto authenticationDto = BasicAuthorizationExtractor.extract(authorizationHeader);
-        return authService.getUserId(authenticationDto);
+        return authDao.findIdByEmailAndPassword(authenticationDto.getEmail(), authenticationDto.getPassword());
     }
 }
