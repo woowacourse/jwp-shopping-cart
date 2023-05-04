@@ -40,4 +40,21 @@ public class UserService {
         User user = findUser.orElseThrow(() -> new NotFoundResultException("존재하지 않는 사용자 입니다."));
         return UserResponse.from(user);
     }
+
+    public void updateItem(final Long userId, final UserRequest userRequest) {
+        validateExistUser(userId);
+        User user = new User.Builder()
+                .id(userId)
+                .email(userRequest.getEmail())
+                .password(userRequest.getPassword())
+                .build();
+        userDao.update(user);
+    }
+
+    private void validateExistUser(Long userId) {
+        Optional<User> findUser = userDao.findBy(userId);
+        if (findUser.isEmpty()) {
+            throw new NotFoundResultException("존재하지 않는 사용자 입니다.");
+        }
+    }
 }
