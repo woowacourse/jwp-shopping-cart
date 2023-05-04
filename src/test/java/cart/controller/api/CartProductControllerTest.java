@@ -79,4 +79,15 @@ class CartProductControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
+
+    //TODO: 커스텀 예외를 통해 403 에러로 변경 예정
+    @Test
+    void 로그인_정보가_없는_경우_상태코드_404를_반환하는지_확인한다() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get(path)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", is("로그인되지 않았습니다"));
+    }
 }
