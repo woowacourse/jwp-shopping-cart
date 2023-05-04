@@ -2,8 +2,8 @@ package cart.service;
 
 import java.util.List;
 
-import cart.service.dto.ProductUpdateRequest;
-import cart.controller.response.ProductResponse;
+import cart.service.request.ProductUpdateRequest;
+import cart.service.response.ProductResponse;
 
 public interface ProductService {
 	List<ProductResponse> findAll();

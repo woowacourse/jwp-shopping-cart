@@ -12,13 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
-import cart.service.dto.ProductUpdateRequest;
+import cart.service.request.ProductUpdateRequest;
 import cart.domain.Product;
-import cart.controller.response.ProductResponse;
+import cart.service.response.ProductResponse;
 import cart.repository.ProductRepository;
 
 @ExtendWith(MockitoExtension.class)

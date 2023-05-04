@@ -11,7 +11,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import cart.service.dto.ProductUpdateRequest;
+import cart.service.request.ProductUpdateRequest;
 import cart.repository.ProductRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;

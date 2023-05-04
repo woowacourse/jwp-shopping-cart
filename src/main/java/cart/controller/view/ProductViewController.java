@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import cart.controller.response.ProductResponse;
+import cart.service.response.ProductResponse;
 import cart.service.ProductService;
 import cart.service.ProductServiceImpl;
 

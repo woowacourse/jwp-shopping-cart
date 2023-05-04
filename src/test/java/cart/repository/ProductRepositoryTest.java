@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cart.domain.Product;
-import cart.service.dto.ProductUpdateRequest;
+import cart.service.request.ProductUpdateRequest;
 
 @SpringBootTest
 class ProductRepositoryTest {

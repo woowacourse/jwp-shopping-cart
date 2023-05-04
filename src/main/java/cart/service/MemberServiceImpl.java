@@ -5,11 +5,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import cart.controller.response.MemberResponse;
+import cart.service.response.MemberResponse;
 import cart.domain.member.Member;
 import cart.domain.member.MemberId;
 import cart.repository.MemberRepository;
-import cart.service.dto.MemberUpdateRequest;
+import cart.service.request.MemberUpdateRequest;
 
 @Service
 public class MemberServiceImpl implements MemberService {

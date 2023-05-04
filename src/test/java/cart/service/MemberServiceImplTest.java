@@ -13,11 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import cart.controller.response.MemberResponse;
+import cart.service.response.MemberResponse;
 import cart.domain.member.Member;
 import cart.domain.member.MemberId;
 import cart.repository.MemberRepository;
-import cart.service.dto.MemberUpdateRequest;
+import cart.service.request.MemberUpdateRequest;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceImplTest {

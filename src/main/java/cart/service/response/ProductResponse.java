@@ -1,4 +1,4 @@
-package cart.controller.response;
+package cart.service.response;
 
 public class ProductResponse {
 	private long id;
