@@ -40,7 +40,6 @@ public class UserDbRepository implements UserRepository {
         String sql = "SELECT * FROM users WHERE email = :email";
         RowMapper<User> userRowMapper = getUserRowMapper();
 
-        User foundUser = namedParameterJdbcTemplate.queryForObject(sql, Map.of("email", email), userRowMapper);
-        return Optional.ofNullable(foundUser);
+        return namedParameterJdbcTemplate.query(sql, Map.of("email", email), userRowMapper).stream().findAny();
     }
 }

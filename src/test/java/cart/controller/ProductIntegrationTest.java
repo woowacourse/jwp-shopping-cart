@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
 import cart.dto.ProductCreateRequest;
+import cart.dto.ProductDto;
 import cart.dto.ProductEditRequest;
 import cart.repository.ProductRepository;
 import io.restassured.RestAssured;
@@ -64,7 +65,8 @@ public class ProductIntegrationTest {
                 .extract();
 
         // then
-        List<Product> responseProducts = response.jsonPath().getList("data.products", Product.class);
+        List<ProductDto
+                > responseProducts = response.jsonPath().getList("data.products", ProductDto.class);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(responseProducts).asList().hasSize(1);
         assertAll(
