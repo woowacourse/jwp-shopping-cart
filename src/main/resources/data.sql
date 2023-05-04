@@ -17,7 +17,9 @@ CREATE TABLE IF NOT EXISTS cart
 (
     id      BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     member_id BIGINT NOT NULL,
-    item_id BIGINT NOT NULL
+    item_id BIGINT NOT NULL,
+    CONSTRAINT member_fk FOREIGN KEY (member_id) REFERENCES member (id),
+    CONSTRAINT item_fk FOREIGN KEY (item_id) REFERENCES item (id)
 );
 
 INSERT INTO MEMBER values (1, 'gksqlsl11@khu.ac.kr', 'qlalfqjsgh');
