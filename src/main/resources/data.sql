@@ -8,4 +8,4 @@ VALUES ('서오릉 치즈피자', 'https://blog.kakaocdn.net/dn/bLtveJ/btqTJT1U7
 INSERT INTO MEMBER (email, password)
 VALUES ('pizza1@pizza.com', 'pizza');
 INSERT INTO MEMBER (email, password)
-VALUES ('pizza2@pizza.com', 'pizza')
+VALUES ('pizza2@pizza.com', 'pizza');

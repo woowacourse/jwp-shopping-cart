@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `PRODUCT`
 CREATE TABLE IF NOT EXISTS `MEMBER`
 (
     `id`         long PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    `email`      varchar(255)     NOT NULL,
+    `email`      varchar(255)     NOT NULL UNIQUE,
     `password`   varchar(255)     NOT NULL,
     `created_at` timestamp        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
