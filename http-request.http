@@ -26,7 +26,7 @@ DELETE http://localhost:8080/products/1
 
 ### 장바구니 추가
 
-POST http://localhost:8080/carts/
+POST http://localhost:8080/cart-products/
 Authorization: Basic cGl6emExQHBpenphLmNvbTpwaXp6YQ==
 Content-Type: application/json
 
@@ -36,6 +36,6 @@ Content-Type: application/json
 
 ### 장바구니 조회
 
-GET http://localhost:8080/carts/
+GET http://localhost:8080/cart-products/
 Authorization: Basic cGl6emExQHBpenphLmNvbTpwaXp6YQ==
 Content-Type: application/json

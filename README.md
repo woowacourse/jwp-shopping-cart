@@ -30,7 +30,7 @@
 ### ✔️ 장바구니 CRUD API 작성
 
 - [x] 장바구니에 상품 추가
-- [ ] 장바구니에 담긴 상품 제거
+- [x] 장바구니에 담긴 상품 제거
 - [x] 장바구니 목록 조회
 
 ### 📚 상품 API
@@ -43,11 +43,11 @@
 
 ### 📚 장바구니 API
 
-| 기능  | Method | URL         |
-|-----|--------|-------------|
-| 생성  | POST   | /carts      |
-| 삭제  | DELETE | /carts/{id} |
-| 조회  | GET    | /carts      |
+| 기능  | Method | URL                 |
+|-----|--------|---------------------|
+| 생성  | POST   | /cart-products      |
+| 삭제  | DELETE | /cart-products/{id} |
+| 조회  | GET    | /cart-products      |
 
 ### ✔️ 페이지 연동
 
