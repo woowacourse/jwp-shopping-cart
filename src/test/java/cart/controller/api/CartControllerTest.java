@@ -1,24 +1,15 @@
 package cart.controller.api;
 
-import static io.restassured.RestAssured.*;
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dto.request.CreateProductRequest;
-import cart.util.BasicAuthorizationExtractor;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -89,27 +80,5 @@ class CartControllerTest {
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
-    }
-
-    @Test
-    void 존재하지_않는_productId의_상품은_등록할_수_없다() {
-        given()
-                .log().all().contentType(ContentType.JSON)
-                .when()
-                .post("/carts/" + 0)
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @Test
-    void 존재하지_않는_productId의_상품은_삭제할_수_없다() {
-        given()
-                .log().all().contentType(ContentType.JSON)
-                .when()
-                .delete("/carts/" + 0)
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

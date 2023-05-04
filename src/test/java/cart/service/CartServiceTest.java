@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.dao.CartDao;
 import cart.domain.Cart;
-import cart.dto.AuthDto;
+import cart.dto.MemberDto;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -24,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class CartServiceTest {
 
     public static final Cart CART_FIXTURE = new Cart(1L, 1L, 1L);
+    public static final MemberDto MEMBER_DTO_FIXTURE = new MemberDto("gavi@woowahan.com", "1234");
 
     @Mock
     private CartDao cartDao;
@@ -47,10 +48,8 @@ class CartServiceTest {
         Mockito.when(cartDao.insert(Mockito.any(), Mockito.any()))
                 .thenReturn(1);
 
-        final AuthDto authDto = new AuthDto("gavi@woowahan.com", "1234");
-
         // when
-        final int affectedRows = cartService.insert(1L, authDto);
+        final int affectedRows = cartService.insert(1L, MEMBER_DTO_FIXTURE);
 
         // then
         assertThat(affectedRows).isOne();
@@ -61,10 +60,9 @@ class CartServiceTest {
         // given
         Mockito.when(cartDao.findCart(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.ofNullable(CART_FIXTURE));
-        final AuthDto authDto = new AuthDto("gavi@woowahan.com", "1234");
 
         // expect
-        assertThatThrownBy(() -> cartService.insert(1L, authDto))
+        assertThatThrownBy(() -> cartService.insert(1L, MEMBER_DTO_FIXTURE))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 카트에 담겨진 제품입니다.");
     }
@@ -76,10 +74,9 @@ class CartServiceTest {
                 .thenReturn(Optional.ofNullable(CART_FIXTURE));
         Mockito.when(cartDao.delete(Mockito.any()))
                 .thenReturn(1);
-        final AuthDto authDto = new AuthDto("gavi@woowahan.com", "1234");
 
         // when
-        final int affectedRows = cartService.delete(1L, authDto);
+        final int affectedRows = cartService.delete(1L, MEMBER_DTO_FIXTURE);
 
         // then
         assertThat(affectedRows).isOne();
@@ -90,11 +87,10 @@ class CartServiceTest {
         // given
         Mockito.when(cartDao.findCart(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.empty());
-        final AuthDto authDto = new AuthDto("gavi@woowahan.com", "1234");
 
         // expect
-        assertThatThrownBy(() -> cartService.delete(1L, authDto))
+        assertThatThrownBy(() -> cartService.delete(1L, MEMBER_DTO_FIXTURE))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 데이터입니다.");
+                .hasMessage("존재하지 않는 사용자입니다.");
     }
 }

@@ -1,18 +1,21 @@
 package cart.dto;
 
-import javax.validation.constraints.NotEmpty;
+import cart.domain.Member;
 
-public class AuthDto {
-
+public class MemberDto {
     private String email;
     private String password;
 
-    public AuthDto() {
+    public MemberDto() {
     }
 
-    public AuthDto(final String email, final String password) {
+    public MemberDto(final String email, final String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public Member toMember() {
+        return new Member(email, password);
     }
 
     public String getEmail() {

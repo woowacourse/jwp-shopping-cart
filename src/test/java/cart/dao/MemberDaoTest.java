@@ -45,7 +45,7 @@ class MemberDaoTest {
         memberDao.insert(MEMBER_FIXTURE);
 
         // when
-        final Optional<Member> MemberOptional = memberDao.findMember(MEMBER_FIXTURE);
+        final Optional<Member> MemberOptional = memberDao.findByEmail(MEMBER_FIXTURE);
 
         // then
         assertSoftly(softly -> {

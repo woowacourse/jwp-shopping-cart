@@ -42,7 +42,16 @@ public class MemberDao {
         final String sql = "SELECT * FROM MEMBER WHERE email = ? and password = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.query(sql, memberRowMapper(), member.getEmail(), member.getPassword()).get(0));
-        } catch (EmptyResultDataAccessException | DuplicateKeyException err) {
+        } catch (EmptyResultDataAccessException | DuplicateKeyException error) {
+            return EMPTY;
+        }
+    }
+
+    public Optional<Member> findByEmail(final Member member) {
+        final String sql = "SELECT * FROM MEMBER WHERE email = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.query(sql, memberRowMapper(), member.getEmail()).get(0));
+        } catch (EmptyResultDataAccessException | DuplicateKeyException error) {
             return EMPTY;
         }
     }

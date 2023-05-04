@@ -4,7 +4,7 @@ import cart.dao.CartDao;
 import cart.domain.Cart;
 import cart.domain.Member;
 import cart.domain.Product;
-import cart.dto.AuthDto;
+import cart.dto.MemberDto;
 import cart.dto.response.CartResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,8 @@ public class CartService {
     }
 
     @Transactional
-    public int insert(final Long productId, final AuthDto authDto) {
-        final Member member = memberService.findMember(authDto);
+    public int insert(final Long productId, final MemberDto memberDto) {
+        final Member member = memberService.findMember(memberDto);
         final Optional<Cart> cart = cartDao.findCart(productId, member.getId());
         if (cart.isPresent()) {
             throw new IllegalArgumentException("이미 카트에 담겨진 제품입니다.");
@@ -39,18 +39,18 @@ public class CartService {
     }
 
     @Transactional
-    public int delete(final Long productId, final AuthDto authDto) {
-        final Member member = memberService.findMember(authDto);
+    public int delete(final Long productId, final MemberDto memberDto) {
+        final Member member = memberService.findMember(memberDto);
         final Optional<Cart> cart = cartDao.findCart(productId, member.getId());
         if (cart.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 데이터입니다.");
+            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }
         return cartDao.delete(cart.get());
     }
 
     @Transactional(readOnly = true)
-    public List<CartResponse> selectCart(final AuthDto authDto) {
-        final Member member = memberService.findMember(authDto);
+    public List<CartResponse> selectCart(final MemberDto memberDto) {
+        final Member member = memberService.findMember(memberDto);
         final Long memberId = member.getId();
         final Optional<List<Cart>> cartsOptional = cartDao.findAllByMemberId(memberId);
         if (cartsOptional.isEmpty()) {

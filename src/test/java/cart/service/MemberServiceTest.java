@@ -5,7 +5,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.AuthDto;
+import cart.dto.MemberDto;
 import cart.dto.response.MemberResponse;
 import java.util.List;
 import java.util.Optional;
@@ -53,12 +53,12 @@ class MemberServiceTest {
     @Test
     void 아이디와_비밀번호로_회원을_조회한다() {
         // given
-        Mockito.when(memberDao.findMember(Mockito.any()))
+        Mockito.when(memberDao.findByEmail(Mockito.any()))
                 .thenReturn(Optional.ofNullable(MEMBER_FIXTURE));
-        final AuthDto authDto = new AuthDto("gavi@woowahan.com", "1234");
+        final cart.dto.MemberDto memberDto = new cart.dto.MemberDto("gavi@woowahan.com", "1234");
 
         // when
-        final Member member = memberService.findMember(authDto);
+        final Member member = memberService.findMember(memberDto);
 
         // then
         assertSoftly(softly -> {
@@ -70,10 +70,10 @@ class MemberServiceTest {
     @Test
     void 존재하지_않는_회원_조회시_예외가_발생한다() {
         // given
-        final AuthDto authDto = new AuthDto("gavi@woowahan.com", "1234");
+        final MemberDto memberDto = new MemberDto("gavi@woowahan.com", "1234");
 
         // then
-        assertThatThrownBy(() -> memberService.findMember(authDto))
+        assertThatThrownBy(() -> memberService.findMember(memberDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("회원 정보가 잘못되었습니다.");
     }

@@ -1,20 +1,18 @@
-package cart.util;
+package cart.auth;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import cart.dto.AuthDto;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class BasicAuthorizationExtractor implements AuthorizationExtractor {
 
     private static final String BASIC_TYPE = "Basic";
-    private static final String EMPTY = "";
     private static final String DELIMITER = ":";
 
     @Override
@@ -23,10 +21,9 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor {
         if (header == null) {
             throw new IllegalArgumentException("사용자 인증이 필요합니다");
         }
-        final String token = header.replace(BASIC_TYPE, EMPTY).trim();
+        final String token = header.replace(BASIC_TYPE, "").trim();
 
-        final AuthDto authDto = decode(token);
-        return authDto;
+        return decode(token);
     }
 
     private AuthDto decode(final String token) {

@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.AuthDto;
+import cart.dto.MemberDto;
 import cart.dto.response.MemberResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +34,8 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public Member findMember(final AuthDto authDto) {
-        final Member member = new Member(authDto.getEmail(), authDto.getPassword());
-        final Optional<Member> memberOptional = memberDao.findMember(member);
+    public Member findMember(final MemberDto memberDto) {
+        final Optional<Member> memberOptional = memberDao.findByEmail(memberDto.toMember());
         if (memberOptional.isEmpty()) {
             throw new IllegalArgumentException("회원 정보가 잘못되었습니다.");
         }
