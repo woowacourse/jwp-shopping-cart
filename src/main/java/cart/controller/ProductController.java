@@ -52,7 +52,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productDao.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
 
     }
 }

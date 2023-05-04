@@ -148,11 +148,11 @@ class ProductControllerTest {
         }
     }
 
-    @DisplayName("DELETE /admin/product/{id} 요청 시 Status OK를 반환한다.")
+    @DisplayName("DELETE /admin/product/{id} 요청 시 Status No Content를 반환한다.")
     @Test
     void shouldResponseStatusOkWhenRequestDeleteToProductId() throws Exception {
         mockMvc.perform(delete("/products/1")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 }
