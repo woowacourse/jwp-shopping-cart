@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class CartService {
 
     private final UserRepository userRepository;
@@ -23,6 +23,7 @@ public class CartService {
         this.cartRepository = cartRepository;
     }
 
+    @Transactional
     public Long add(final User userRequest, final Long productId) {
         final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getUserEmailValue());
         final User user = userOptional.orElseThrow(() -> new UserNotFoundException(userRequest.getUserEmailValue()));
@@ -30,7 +31,6 @@ public class CartService {
         return cartRepository.insert(user, productId);
     }
 
-    @Transactional(readOnly = true)
     public List<CartProduct> getCartProducts(final User userRequest) {
         final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getUserEmailValue());
         final User user = userOptional.orElseThrow(() -> new UserNotFoundException(userRequest.getUserEmailValue()));
@@ -38,6 +38,7 @@ public class CartService {
         return cartRepository.findAllByUser(user);
     }
 
+    @Transactional
     public void delete(final User userRequest, final Long cartProductId) {
         final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getUserEmailValue());
         final User user = userOptional.orElseThrow(() -> new UserNotFoundException(userRequest.getUserEmailValue()));

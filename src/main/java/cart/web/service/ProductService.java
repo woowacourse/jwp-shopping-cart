@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ProductService {
 
     public final Logger log = LoggerFactory.getLogger(getClass());
@@ -29,11 +29,13 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    @Transactional
     public Long save(final ProductRequest productRequest) {
         final Product product = productRequest.toEntity();
         return productRepository.insert(product);
     }
 
+    @Transactional
     public void update(final Long id, final ProductRequest productRequest) {
         final Product product = productRequest.toEntity();
         int updatedCount = productRepository.update(id, product);
@@ -42,6 +44,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public void delete(final Long id) {
         int deletedCount = productRepository.deleteById(id);
         if (deletedCount == 0) {
@@ -53,7 +56,6 @@ public class ProductService {
         }
     }
 
-    @Transactional(readOnly = true)
     public Product getById(final Long id) {
         final Optional<Product> productOptional = productRepository.findById(id);
         return productOptional.orElseThrow(() -> new ProductNotFoundException(id));
