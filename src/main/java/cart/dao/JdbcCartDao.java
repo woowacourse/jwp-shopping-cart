@@ -4,7 +4,9 @@ import cart.entity.Item;
 import cart.entity.PutCart;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JdbcCartDao implements CartDao {
 
     private final JdbcTemplate jdbcTemplate;

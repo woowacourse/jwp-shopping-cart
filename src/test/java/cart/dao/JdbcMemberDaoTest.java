@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.Pixture;
 import cart.entity.AuthMember;
 import cart.entity.Member;
 import cart.exception.ServiceIllegalArgumentException;
@@ -15,6 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
+import static cart.Pixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -28,8 +30,8 @@ class JdbcMemberDaoTest {
 
     @BeforeEach
     void setUp() {
-        memberDao.save(new AuthMember("gksqlsl11@khu.ac.kr", "qlalfqjsgh"));
-        memberDao.save(new AuthMember("kong@google.com", "pw"));
+        memberDao.save(AUTH_MEMBER1);
+        memberDao.save(AUTH_MEMBER2);
     }
 
     @DisplayName("사용자가 저장되어있다면 true를 반환한다.")
@@ -65,7 +67,7 @@ class JdbcMemberDaoTest {
     @DisplayName("중복되지 않은 사용자 정보를 저장할 수 있다.")
     @Test
     void save_success() {
-        AuthMember authMember = new AuthMember("power@google.com", "power");
+        AuthMember authMember = AUTH_MEMBER3;
 
         memberDao.save(authMember);
 
@@ -75,7 +77,7 @@ class JdbcMemberDaoTest {
     @DisplayName("중복된 사용자는 저장할 수 없다.")
     @Test
     void save_fail() {
-        AuthMember authMember = new AuthMember("power@google.com", "power");
+        AuthMember authMember = AUTH_MEMBER3;
 
         memberDao.save(authMember);
         assertThatThrownBy(() -> memberDao.save(authMember))
@@ -87,12 +89,10 @@ class JdbcMemberDaoTest {
     @DisplayName("사용자 목록을 조회할 수 있다.")
     void findAll_success() {
         List<Member> members = memberDao.findAll();
-        Member member1 = new Member(1L, "gksqlsl11@khu.ac.kr", "qlalfqjsgh");
-        Member member2 = new Member(2L, "kong@google.com", "pw");
         assertAll(
                 () -> assertThat(members).hasSize(2),
-                () -> assertThat(members.get(0)).usingRecursiveComparison().isEqualTo(member1),
-                () -> assertThat(members.get(1)).usingRecursiveComparison().isEqualTo(member2)
+                () -> assertThat(members.get(0)).usingRecursiveComparison().isEqualTo(MEMBER1),
+                () -> assertThat(members.get(1)).usingRecursiveComparison().isEqualTo(MEMBER2)
         );
     }
 }
