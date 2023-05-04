@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.member;
 
 import cart.dto.MemberDto;
 import cart.service.MemberService;
@@ -29,7 +29,7 @@ public class MemberController {
     ResponseEntity<MemberDto> login(@Valid @RequestBody final MemberDto memberDto) {
         final String email = memberDto.getEmail();
         final String password = memberDto.getPassword();
-        MemberDto member = memberService.loginMember(email, password);
+        final MemberDto member = memberService.loginMember(email, password);
         return ResponseEntity.ok().body(member);
     }
 }
