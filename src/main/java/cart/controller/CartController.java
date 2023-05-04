@@ -47,10 +47,10 @@ public class CartController {
         return ResponseEntity.ok(cartItemsByUser);
     }
 
-    @DeleteMapping("/carts/{productId}")
+    @DeleteMapping("/carts/{cartId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCartItem(HttpServletRequest request, @PathVariable(value = "productId") Long productId) {
+    public void deleteCartItem(HttpServletRequest request, @PathVariable(value = "cartId") Long cartId) {
         LoginRequest loginRequest = basicAuthExtractor.extract(request);
-        cartService.deleteCartByUserAndProductId(authService.basicLogin(loginRequest), productId);
+        cartService.deleteCartByUserAndProductId(authService.basicLogin(loginRequest), cartId);
     }
 }

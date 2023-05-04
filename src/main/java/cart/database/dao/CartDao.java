@@ -33,8 +33,8 @@ public class CartDao {
         );
     }
 
-    public void deleteByUserIdAndProductId(Long userId, Long productId) {
-        String sql = "DELETE FROM CART C WHERE C.USER_ID=? AND C.PRODUCT_ID=?";
-        jdbcTemplate.update(sql, userId, productId);
+    public void deleteByUserIdAndCartId(Long userId, Long cartId) {
+        String sql = "DELETE FROM CART C WHERE C.USER_ID=? AND ID=?";
+        jdbcTemplate.update(sql, userId, cartId);
     }
 }

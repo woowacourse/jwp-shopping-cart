@@ -37,7 +37,7 @@ public class CartService {
         return cartRepository.findCartsWithProductByUserId(userResponse.getId());
     }
 
-    public void deleteCartByUserAndProductId(UserResponse userResponse, Long productId) {
-        cartDao.deleteByUserIdAndProductId(userResponse.getId(), productId);
+    public void deleteCartByUserAndProductId(UserResponse userResponse, Long cartId) {
+        cartDao.deleteByUserIdAndCartId(userResponse.getId(), cartId);
     }
 }
