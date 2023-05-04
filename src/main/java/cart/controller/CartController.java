@@ -13,13 +13,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
 import java.util.List;
 
 @Controller
 public class CartController {
 
-    private BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
+    private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
 
     private final CartItemService cartItemService;
     private final MemberService memberService;
@@ -46,7 +45,6 @@ public class CartController {
         return ResponseEntity.ok().body(cartItems);
     }
 
-
     @PostMapping("/cart/{productId}")
     public ResponseEntity<Void> insertCartItem(HttpServletRequest request, @PathVariable int productId) {
         AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
@@ -57,23 +55,10 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-
-    @DeleteMapping("/cart")
-    public ResponseEntity<Void> deleteCartItem() {
+    @DeleteMapping("/cart/{cartId}")
+    public ResponseEntity<Void> deleteCartItem(@PathVariable int cartId) {
+        cartItemService.deleteCartItem(cartId);
         return ResponseEntity.ok().build();
     }
 
-    class ProductId {
-
-        private final int productId;
-
-        @JsonCreator
-        public ProductId(int productId) {
-            this.productId = productId;
-        }
-
-        public int getProductId() {
-            return productId;
-        }
-    }
 }
