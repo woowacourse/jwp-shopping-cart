@@ -30,4 +30,14 @@ public class MemberService {
         List<Product> productByEmail = memberDao.findProductByEmail(email);
         return productByEmail.stream().map(ProductResponse::from).collect(Collectors.toList());
     }
+
+    public void save(final String email, final Long productId) {
+        Long memberId = memberDao.findByEmail(email);
+        memberDao.save(memberId, productId);
+    }
+
+    public void delete(final String email, final Long productId) {
+        Long memberId = memberDao.findByEmail(email);
+        memberDao.delete(memberId, productId);
+    }
 }

@@ -37,4 +37,23 @@ public class MemberDao {
                         rs.getInt("price")
                 ));
     }
+
+    public Long findByEmail(final String email) {
+        String sql = "SELECT id FROM member WHERE email LIKE ? ";
+
+        return jdbcTemplate.queryForObject(sql, Long.class, email);
+    }
+
+
+    public void save(final Long memberId, final Long productId) {
+        String sql = "INSERT INTO cart (member_id, product_id) VALUES (?, ?)";
+
+        jdbcTemplate.update(sql, memberId, productId);
+    }
+
+    public void delete(final Long memberId, final Long productId) {
+        String sql = "DELETE FROM cart WHERE member_id = ? and product_id = ?";
+
+        jdbcTemplate.update(sql, memberId, productId);
+    }
 }

@@ -4,9 +4,7 @@ import cart.controller.dto.ProductResponse;
 import cart.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -30,8 +28,24 @@ public class CartController {
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getProducts(final HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
-        System.out.println(email);
         List<ProductResponse> productByEmail = memberService.findProductByEmail(email);
         return ResponseEntity.ok().body(productByEmail);
+    }
+
+
+    @ResponseBody
+    @PostMapping("/products/{productId}")
+    public ResponseEntity<Void> addProduct(@PathVariable final Long productId, final HttpServletRequest request) {
+        String email = (String) request.getAttribute("email");
+        memberService.save(email, productId);
+        return ResponseEntity.ok().build();
+    }
+
+    @ResponseBody
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId, final HttpServletRequest request) {
+        String email = (String) request.getAttribute("email");
+        memberService.delete(email, productId);
+        return ResponseEntity.ok().build();
     }
 }
