@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import cart.auth.LoginArgumentResolver;
-import cart.controller.web.HomeController;
 import cart.domain.product.Product;
 import cart.dto.ProductsResponse;
 import cart.service.ProductService;

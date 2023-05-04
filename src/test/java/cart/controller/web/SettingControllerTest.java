@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -7,11 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import cart.auth.LoginArgumentResolver;
-import cart.controller.web.AdminController;
-import cart.domain.product.Product;
-import cart.dto.ProductsResponse;
-import cart.service.ProductService;
+import cart.domain.member.Member;
+import cart.dto.MembersResponse;
+import cart.service.MemberService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,36 +20,34 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-@WebMvcTest(AdminController.class)
-class AdminControllerTest {
+@WebMvcTest(SettingController.class)
+class SettingControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private LoginArgumentResolver loginArgumentResolver;
+    private MemberService memberService;
 
-    @MockBean
-    private ProductService productService;
-
-    @DisplayName("GET /admin")
+    @DisplayName("GET /settings")
     @Test
-    void getAdmin() throws Exception {
-        List<Product> products = List.of(
-                new Product((long) 1, "피자", 1000, "http://pizza"),
-                new Product((long) 2, "햄버거", 2000, "http://hamburger"));
-        given(productService.findAll()).willReturn(products);
+    void getSettings() throws Exception {
+        List<Member> members = List.of(
+                new Member((long) 1, "a@a.com", "abc1", "이오"),
+                new Member((long) 2, "b@b.com", "abc2", "애쉬")
+        );
+        given(memberService.findAll()).willReturn(members);
 
-        MvcResult result = mockMvc.perform(get("/admin"))
+        MvcResult result = mockMvc.perform(get("/settings"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML_VALUE))
-                .andExpect(view().name("admin"))
+                .andExpect(view().name("settings"))
                 .andReturn();
 
-        Object response = result.getModelAndView().getModel().get("products");
+        Object response = result.getModelAndView().getModel().get("members");
         assertThat(response)
-                .isInstanceOf(ProductsResponse.class)
+                .isInstanceOf(MembersResponse.class)
                 .usingRecursiveComparison()
-                .isEqualTo(ProductsResponse.of(products));
+                .isEqualTo(MembersResponse.of(members));
     }
 }
