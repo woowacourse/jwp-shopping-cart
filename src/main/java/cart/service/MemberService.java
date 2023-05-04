@@ -8,11 +8,13 @@ import cart.exception.customExceptions.PasswordNotMatchException;
 import cart.repository.dao.memberDao.MemberDao;
 import cart.utils.CaesarCipher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class MemberService {
 
@@ -35,6 +37,7 @@ public class MemberService {
         return id.get();
     }
 
+    @Transactional(readOnly = true)
     public MemberDto loginMember(final String email, final String password) {
         final Optional<Member> findMember = memberDao.findByEmail(email);
         if (findMember.isEmpty()) {
@@ -54,6 +57,7 @@ public class MemberService {
                 member.getPassword());
     }
 
+    @Transactional(readOnly = true)
     public List<MemberDto> findAllMember() {
         final List<Member> members = memberDao.findAll();
         return members.stream()

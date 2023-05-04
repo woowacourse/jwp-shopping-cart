@@ -5,10 +5,12 @@ import cart.entity.Product;
 import cart.exception.customExceptions.DataNotFoundException;
 import cart.repository.dao.productDao.ProductDao;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class ProductManagementService {
 
@@ -26,6 +28,7 @@ public class ProductManagementService {
         return productDao.save(new Product(name, imageUrl, price));
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findAllProduct() {
         return productDao.findAll().stream()
                 .map(product -> {

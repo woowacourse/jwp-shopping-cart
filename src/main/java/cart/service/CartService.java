@@ -9,12 +9,14 @@ import cart.repository.dao.cartDao.CartDao;
 import cart.repository.dao.memberDao.MemberDao;
 import cart.repository.dao.productDao.ProductDao;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class CartService {
 
@@ -28,6 +30,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findAllCartProductByEmail(final String email) {
         final Optional<Member> findMember = memberDao.findByEmail(email);
         if (findMember.isEmpty()) {
