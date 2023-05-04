@@ -1,18 +1,12 @@
-package cart.entity;
+package cart.dto;
 
-public class MemberEntity {
-    private final Long id;
+public class MemberInfo {
     private final String email;
     private final String password;
 
-    public MemberEntity(final Long id, final String email, final String password) {
-        this.id = id;
+    public MemberInfo(final String email, final String password) {
         this.email = email;
         this.password = password;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getEmail() {
