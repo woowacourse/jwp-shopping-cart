@@ -14,8 +14,8 @@ public class Price {
         if (price <= MIN_PRICE) {
             throw new IllegalArgumentException("가격은 " + MIN_PRICE + "원 이하 일 수 없습니다.");
         }
-        if (price >= MAX_PRICE) {
-            throw new IllegalArgumentException("가격은 " + MAX_PRICE + "원 이상 일 수 없습니다.");
+        if (price > MAX_PRICE) {
+            throw new IllegalArgumentException("가격은 " + MAX_PRICE + "원을 초과할 수 없습니다.");
         }
     }
 

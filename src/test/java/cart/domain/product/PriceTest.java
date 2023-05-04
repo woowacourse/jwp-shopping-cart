@@ -21,22 +21,23 @@ class PriceTest {
     }
 
     @Test
-    @DisplayName("가격이 10,000,000원 이상이면 예외가 발생해야 한다.")
+    @DisplayName("가격이 10,000,000원을 초과하면 예외가 발생해야 한다.")
     void create_priceIsOverThan10_000_000() {
         // given
-        assertThatThrownBy(() -> new Price(10_000_000))
+        assertThatThrownBy(() -> new Price(10_000_001))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("가격은 10000000원 이상 일 수 없습니다.");
+                .hasMessage("가격은 10000000원을 초과할 수 없습니다.");
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(ints = {1, 1000, 10_000_000})
     @DisplayName("가격이 정상적으로 생성되어야 한다.")
-    void create_success() {
+    void create_success(int input) {
         // given
-        Price price = new Price(10000);
+        Price price = new Price(input);
 
         // expect
         assertThat(price.getPrice())
-                .isEqualTo(10000);
+                .isEqualTo(input);
     }
 }
