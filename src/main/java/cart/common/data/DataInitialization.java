@@ -8,11 +8,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SqlInitialization implements CommandLineRunner {
+public class DataInitialization implements CommandLineRunner {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
-    public SqlInitialization(final MemberRepository memberRepository, final ProductRepository productRepository) {
+    public DataInitialization(final MemberRepository memberRepository, final ProductRepository productRepository) {
         this.memberRepository = memberRepository;
         this.productRepository = productRepository;
     }
