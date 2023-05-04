@@ -35,7 +35,7 @@ public class JdbcCartItemDao implements CartItemDao {
         try {
             return jdbcTemplate.update(sql, cartItemEntity.getMemberId(), cartItemEntity.getProductId());
         } catch (DataAccessException exception) {
-            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
+            throw new IllegalArgumentException("장바구니에 담을 수 없습니다");
         }
     }
 

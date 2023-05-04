@@ -4,7 +4,7 @@ import cart.auth.AuthenticationPrincipal;
 import cart.auth.AuthenticationExtractor;
 import cart.auth.AuthenticationService;
 import cart.auth.MemberAuthentication;
-import cart.dto.CartAdditionDto;
+import cart.dto.CartItemCreationDto;
 import cart.dto.MemberDto;
 import cart.dto.request.CartItemCreationRequest;
 import cart.dto.response.CartItemResponse;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -40,9 +41,10 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> postCartItems(@AuthenticationPrincipal MemberDto memberDto, @RequestBody CartItemCreationRequest cartItemCreationRequest) {
+    public ResponseEntity<Void> postCartItems(@AuthenticationPrincipal MemberDto memberDto,
+                                              @Valid @RequestBody CartItemCreationRequest cartItemCreationRequest) {
         final Long productId = cartItemCreationRequest.getProductId();
-        final long id = cartItemManagementService.save(CartAdditionDto.of(memberDto.getId(), productId));
+        final long id = cartItemManagementService.save(CartItemCreationDto.of(memberDto.getId(), productId));
         return ResponseEntity.created(URI.create("/cart/cart-items/" + id)).build();
     }
 
@@ -53,7 +55,8 @@ public class CartItemController {
     }
 
     @DeleteMapping("/{cartItemId}")
-    public ResponseEntity<Void> deleteCartItems(@AuthenticationPrincipal MemberDto memberDto, @PathVariable Long cartItemId) {
+    public ResponseEntity<Void> deleteCartItems(@AuthenticationPrincipal MemberDto memberDto,
+                                                @PathVariable Long cartItemId) {
         cartItemManagementService.deleteById(cartItemId);
         return ResponseEntity.noContent().build();
     }

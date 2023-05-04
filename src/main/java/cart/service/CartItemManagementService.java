@@ -2,9 +2,8 @@ package cart.service;
 
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
-import cart.dto.CartAdditionDto;
-import cart.dto.CartItemDto;
-import cart.dto.ProductDto;
+import cart.dto.CartItemCreationDto;
+import cart.dto.CartItemDetailsDto;
 import cart.entity.CartItemEntity;
 import cart.entity.ProductEntity;
 import org.springframework.stereotype.Service;
@@ -23,18 +22,18 @@ public class CartItemManagementService {
         this.productDao = productDao;
     }
 
-    public List<CartItemDto> findAllByMemberId(final Long memberId) {
+    public List<CartItemDetailsDto> findAllByMemberId(final Long memberId) {
         List<CartItemEntity> cartItemEntities = cartItemDao.selectAllByMemberId(memberId);
-        List<CartItemDto> cartItemDtos = new ArrayList<>();
+        List<CartItemDetailsDto> cartItemDetailsDtos = new ArrayList<>();
         for (CartItemEntity cartItemEntity : cartItemEntities) {
             ProductEntity productEntity = productDao.selectById(cartItemEntity.getProductId());
-            cartItemDtos.add(CartItemDto.from(cartItemEntity.getId(), productEntity));
+            cartItemDetailsDtos.add(CartItemDetailsDto.from(cartItemEntity.getId(), productEntity));
         }
-        return cartItemDtos;
+        return cartItemDetailsDtos;
     }
 
-    public long save(final CartAdditionDto cartAdditionDto) {
-        return cartItemDao.insert(CartAdditionDto.toEntity(cartAdditionDto));
+    public long save(final CartItemCreationDto cartItemCreationDto) {
+        return cartItemDao.insert(CartItemCreationDto.toEntity(cartItemCreationDto));
     }
 
     public void deleteById(final Long id){

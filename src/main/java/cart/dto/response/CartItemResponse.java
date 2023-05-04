@@ -1,6 +1,6 @@
 package cart.dto.response;
 
-import cart.dto.CartItemDto;
+import cart.dto.CartItemDetailsDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,12 +20,12 @@ public class CartItemResponse {
         this.price = price;
     }
 
-    public static CartItemResponse from(final CartItemDto cartItemDto) {
-        return new CartItemResponse(cartItemDto.getId(), cartItemDto.getName(), cartItemDto.getImage(), cartItemDto.getPrice());
+    public static CartItemResponse from(final CartItemDetailsDto cartItemDetailsDto) {
+        return new CartItemResponse(cartItemDetailsDto.getId(), cartItemDetailsDto.getName(), cartItemDetailsDto.getImage(), cartItemDetailsDto.getPrice());
     }
 
-    public static List<CartItemResponse> from(final List<CartItemDto> cartItemDtos) {
-        return cartItemDtos.stream()
+    public static List<CartItemResponse> from(final List<CartItemDetailsDto> cartItemDetailsDtos) {
+        return cartItemDetailsDtos.stream()
                 .map(CartItemResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
