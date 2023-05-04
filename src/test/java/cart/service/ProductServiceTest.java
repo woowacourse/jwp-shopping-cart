@@ -1,94 +1,75 @@
 package cart.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.BDDMockito.given;
 
+import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import cart.exception.notfound.ProductNotFoundException;
-import java.util.List;
-import org.junit.jupiter.api.AfterEach;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.mockito.Mockito;
 
-@SpringBootTest
 class ProductServiceTest {
 
-    @Autowired
+    private ProductDao productDao;
     private ProductService productService;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
-    @Test
-    @DisplayName("상품을 저장한다")
-    void save() {
-        assertDoesNotThrow(() -> productService.save("이오", 1000, null));
-    }
-
-    @AfterEach
-    void clear() {
-        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
-        jdbcTemplate.execute("TRUNCATE TABLE product");
-        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
+    @BeforeEach
+    void setUp() {
+        productDao = Mockito.mock(ProductDao.class);
+        productService = new ProductService(productDao);
     }
 
     @Test
-    @DisplayName("상품 리스트를 조회한다")
-    void findAll() {
-        productService.save("이오", 1000, null);
-        productService.save("애쉬", 1000, null);
-
-        List<Product> actual = productService.findAll();
-
-        assertThat(actual).extracting("name")
-                .containsExactly("이오", "애쉬");
-    }
-
-    @Test
-    @DisplayName("상품을 갱신시 id가 유효하지 않으면 예외 발생")
+    @DisplayName("상품 갱신시 id가 유효하지 않으면 예외 발생")
     void updateInvalidId() {
-        assertThatThrownBy(() -> productService.update((long) 9999, "애쉬", 1000, null))
+        // given
+        long id = 1;
+        given(productDao.findById(id)).willReturn(Optional.empty());
+
+        // when then
+        assertThatThrownBy(() -> productService.update(id, "피자", 1000, "image"))
                 .isInstanceOf(ProductNotFoundException.class);
     }
 
     @Test
-    @DisplayName("상품을 갱신한다")
+    @DisplayName("상품 갱신시 id가 유효하면 예외가 발생하지 않는다")
     void update() {
+        // given
         long id = 1;
-        productService.save("이오", 1000, null);
+        given(productDao.findById(id)).willReturn(Optional.of(new Product(id, "피자", 1000, "image")));
 
-        productService.update(id, "애쉬", 2000, "image");
-
-        Product product = productService.findAll().stream()
-                .filter(p -> p.getId() == id)
-                .findFirst()
-                .orElse(null);
-        assertAll(
-                () -> assertThat(product).isNotNull(),
-                () -> assertThat(product.getId()).isEqualTo(id),
-                () -> assertThat(product.getName()).isEqualTo("애쉬"),
-                () -> assertThat(product.getPrice()).isEqualTo(2000),
-                () -> assertThat(product.getImageUrl()).isEqualTo("image")
-        );
+        // when then
+        assertThatNoException().isThrownBy(() -> productService.update(id, "햄버거", 3000, null));
     }
 
     @Test
-    @DisplayName("상품을 삭제한다")
-    void delete() {
+    @DisplayName("상품 삭제시 id가 유효하지 않으면 예외 발생")
+    void deleteInvalidId() {
+        // given
         long id = 1;
-        productService.save("이오", 1000, null);
+        given(productDao.findById(id))
+                .willReturn(Optional.empty());
 
-        productService.delete(id);
+        // when then
+        assertThatThrownBy(() -> productService.delete(id))
+                .isInstanceOf(ProductNotFoundException.class);
+    }
 
-        Product product = productService.findAll().stream()
-                .filter(p -> p.getId() == id)
-                .findFirst()
-                .orElse(null);
-        assertThat(product).isNull();
+    @Test
+    @DisplayName("상품 삭제시 id가 유효하면 예외가 발생하지 않는다")
+    void delete() {
+        // given
+        long id = 1;
+        given(productDao.findById(id))
+                .willReturn(Optional.of(new Product(id, "피자", 1000, "image")));
+
+        // when then
+        assertThatNoException().isThrownBy(() -> productService.delete(id));
     }
 }
