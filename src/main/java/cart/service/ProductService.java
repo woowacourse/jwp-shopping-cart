@@ -27,19 +27,19 @@ public class ProductService {
         return productDao.findAll();
     }
 
-    public void update(final Long id, final String name, final int price, final String imageUrl) {
+    public void update(final long id, final String name, final int price, final String imageUrl) {
         checkExistProductId(id);
         Product product = new Product(id, name, price, imageUrl);
         productDao.update(product);
     }
 
-    private void checkExistProductId(Long id) {
+    private void checkExistProductId(long id) {
         if (productDao.findById(id).isEmpty()) {
             throw new ProductNotFoundException();
         }
     }
 
-    public void delete(final Long id) {
+    public void delete(final long id) {
         checkExistProductId(id);
         productDao.deleteById(id);
     }
