@@ -37,6 +37,6 @@ class JdbcCartDaoTest {
     @DisplayName("장바구니에 상품을 추가할 수 있다.")
     @Test
     void save_success() {
-        cartDao.save(new PutCart(MEMBER1, ITEM1));
+        cartDao.save(new PutCart(1L, 1L));
     }
 }
