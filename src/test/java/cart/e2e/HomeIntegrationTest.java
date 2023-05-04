@@ -1,5 +1,6 @@
-package cart;
+package cart.e2e;
 
+import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -21,7 +22,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductIntegrationTest {
+public class HomeIntegrationTest {
 
     @LocalServerPort
     private int port;
@@ -37,7 +38,7 @@ public class ProductIntegrationTest {
     @DisplayName("2개의 상품 추가 후 1개 수정, 1개 삭제하는 시나리오 검증")
     @Test
     public void getProducts() throws JsonProcessingException {
-        // 2개의 상품 추가
+        // 3개의 상품 추가
         ModifyRequest request1 = new ModifyRequest("사과", 100, "super.com");
         ModifyRequest request2 = new ModifyRequest("당근", 1000, "super.com");
         ModifyRequest request3 = new ModifyRequest("포도", 2000, "super.com");
@@ -49,19 +50,19 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonRequest1)
                 .when()
-                .post("/admin/product");
+                .post("/admin/products");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonRequest2)
                 .when()
-                .post("/admin/product");
+                .post("/admin/products");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonRequest3)
                 .when()
-                .post("/admin/product");
+                .post("/admin/products");
 
         // 1개의 상품 수정
         ModifyRequest request4 = new ModifyRequest("사과즙", 1000, "super.com");
@@ -70,32 +71,59 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonRequest4)
                 .when()
-                .put("admin/product/1");
+                .put("admin/products/1");
 
         // 1개의 상품 삭제
         given()
                 .when()
-                .delete("admin/product/2");
+                .delete("admin/products/2");
 
         // 상품 리스트 조회
-        ExtractableResponse<Response> result = given().log().all()
-                .when()
-                .get("/admin")
+        ExtractableResponse<Response> result2 = get("/")
                 .then().log().all()
                 .extract();
-
+        Response response = given().log().all()
+                .when()
+                .get("/");
         // XmlPath로 HTML 내부 정보 Parsing
-        String resultString = result.asString();
-        XmlPath xmlPath = new XmlPath(CompatibilityMode.HTML, resultString);
+//        String resultString2 = result2.asString();
+        String resultString2 = response.asString();
+        XmlPath xmlPath2 = new XmlPath(CompatibilityMode.HTML, resultString2);
+        System.out.println(">>>>>>>>>>>>>>");
+        System.out.println(xmlPath2.getString(
+                "html.body.div"
+                        + ".ul.find { it.@class == 'product-grid' }"
+                        + ".li[1]"
+                        + ".div.find { it.@class == 'product-info' }"
+                        + ".div.find { it.@class == 'product-desc' }."
+                        + "p.find { it.@class == 'product-name' }"));
         assertAll(
                 () -> assertThat(
-                        xmlPath.getString("html.body.div.table.tbody.tr[0].td[1]")
+                        xmlPath2.getString(
+                                "html.body.div"
+                                        + ".ul.find { it.@class == 'product-grid' }"
+                                        + ".li[0]"
+                                        + ".div.find { it.@class == 'product-info' }"
+                                        + ".div.find { it.@class == 'product-desc' }."
+                                        + "p.find { it.@class == 'product-name' }")
                 ).contains("사과즙"),
                 () -> assertThat(
-                        xmlPath.getString("html.body.div.table.tbody.tr[0].td[2]")
+                        xmlPath2.getString(
+                                "html.body.div"
+                                        + ".ul.find { it.@class == 'product-grid' }"
+                                        + ".li[0]"
+                                        + ".div.find { it.@class == 'product-info' }"
+                                        + ".div.find { it.@class == 'product-desc' }."
+                                        + "p.find { it.@class == 'product-price' }")
                 ).contains("1000"),
                 () -> assertThat(
-                        xmlPath.getString("html.body.div.table.tbody.tr[1].td[1]")
+                        xmlPath2.getString(
+                                "html.body.div"
+                                        + ".ul.find { it.@class == 'product-grid' }"
+                                        + ".li[1]"
+                                        + ".div.find { it.@class == 'product-info' }"
+                                        + ".div.find { it.@class == 'product-desc' }."
+                                        + "p.find { it.@class == 'product-name' }")
                 ).contains("포도")
         );
     }
