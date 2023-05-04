@@ -66,4 +66,11 @@ class MainControllerTest {
                 .andExpect(view().name("settings"))
                 .andExpect(model().attributeExists("members"));
     }
+
+    @Test
+    void showCart() throws Exception {
+        mockMvc.perform(get("/cart"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("cart"));
+    }
 }

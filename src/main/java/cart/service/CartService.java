@@ -1,10 +1,9 @@
 package cart.service;
 
-import cart.controller.dto.ProductResponse;
+import cart.controller.dto.CartResponse;
 import cart.dao.CartDao;
 import cart.entity.CartEntity;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,10 +19,11 @@ public class CartService {
         return cartDao.save(new CartEntity(memberId, productId));
     }
 
-    public List<ProductResponse> findProductsByMemberId(Long id) {
-        return cartDao.findProductsByMemberId(id)
-                .stream()
-                .map(ProductResponse::from)
-                .collect(Collectors.toUnmodifiableList());
+    public List<CartResponse> findProductsByMemberId(Long id) {
+        return cartDao.findProductsByMemberId(id);
+    }
+
+    public void deleteById(final Long cartId) {
+        cartDao.deleteById(cartId);
     }
 }

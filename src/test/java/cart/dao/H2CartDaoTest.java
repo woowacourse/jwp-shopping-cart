@@ -4,8 +4,8 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.controller.dto.CartResponse;
 import cart.entity.CartEntity;
-import cart.entity.ProductEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,19 +56,38 @@ class H2CartDaoTest {
     @Test
     void findProductsByMemberId() {
         //given
-        final String sql = "insert into cart (member_id, product_id) values (1, 1)";
+        final String sql = "insert into cart (id, member_id, product_id) values (50, 60, 20)";
         jdbcTemplate.update(sql);
 
         //when
-        final List<ProductEntity> productsByMemberId = cartDao.findProductsByMemberId(1L);
-        final ProductEntity productEntity = productsByMemberId.get(0);
+        final List<CartResponse> productsByMemberId = cartDao.findProductsByMemberId(60L);
+        final CartResponse cartResponse = productsByMemberId.get(0);
 
         //then
         assertAll(
                 () -> assertThat(productsByMemberId).hasSize(1),
-                () -> assertThat(productEntity.getName()).isEqualTo("피자"),
-                () -> assertThat(productEntity.getImageUrl()).isEqualTo("url1"),
-                () -> assertThat(productEntity.getPrice()).isEqualTo(20000)
+                () -> assertThat(cartResponse.getName()).isEqualTo("피자"),
+                () -> assertThat(cartResponse.getImageUrl()).isEqualTo("url1"),
+                () -> assertThat(cartResponse.getPrice()).isEqualTo(20000)
         );
+    }
+
+    @Test
+    void deleteById() {
+        //given
+        final String sql = "insert into cart (id, member_id, product_id) values (4, 1, 20)";
+        jdbcTemplate.update(sql);
+
+        //when
+        cartDao.deleteById(4L);
+
+        //then
+        final String sql2 = "select * from cart where id = 4";
+        final List<CartEntity> cartEntities = jdbcTemplate.query(sql2, (rs, rowNum) -> new CartEntity(
+                rs.getLong("id"),
+                rs.getLong("member_id"),
+                rs.getLong("product_id")));
+        assertThat(cartEntities).isEmpty();
+
     }
 }
