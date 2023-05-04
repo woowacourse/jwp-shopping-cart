@@ -12,8 +12,8 @@ import java.util.Objects;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(InvalidProductException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidProductException(InvalidProductException exception) {
+    @ExceptionHandler({InvalidProductException.class, InvalidMemberException.class})
+    public ResponseEntity<ExceptionResponse> handleInvalidDomainException(Exception exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 LocalDateTime.now(),
                 exception.getMessage()
