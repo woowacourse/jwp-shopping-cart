@@ -8,6 +8,8 @@ import cart.domain.user.User;
 
 public interface UserRepository {
 
+    User save(User user);
+
     List<User> findAll();
 
     Optional<User> findByEmail(final Email email);

@@ -20,6 +20,12 @@ public class RdsUserRepository implements UserRepository {
     }
 
     @Override
+    public User save(final User user) {
+        final UserEntity userEntity = userDao.insert(UserEntity.from(user));
+        return userEntity.toDomain();
+    }
+
+    @Override
     public List<User> findAll() {
         return userDao.findAll()
                 .stream()

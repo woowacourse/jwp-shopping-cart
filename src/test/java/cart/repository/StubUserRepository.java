@@ -9,6 +9,11 @@ import cart.domain.user.User;
 public class StubUserRepository implements UserRepository {
 
     @Override
+    public User save(final User user) {
+        return null;
+    }
+
+    @Override
     public List<User> findAll() {
         return null;
     }
