@@ -1,13 +1,12 @@
 package cart.service;
 
 import cart.dao.CartDao;
-import cart.dao.MemberDao;
-import cart.dao.ProductDao;
 import cart.dao.entity.CartEntity;
 import cart.dao.entity.MemberEntity;
 import cart.dao.entity.ProductEntity;
 import cart.dto.AuthDto;
 import cart.dto.response.CartResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,11 +52,11 @@ public class CartService {
     public List<CartResponse> selectCart(final AuthDto authDto) {
         final MemberEntity memberEntity = memberService.findMember(authDto);
         final Long memberId = memberEntity.getId();
-        final Optional<List<CartEntity>> cartEntities = cartDao.findAllByMemberId(memberId);
-        if (cartEntities.isEmpty()) {
-            return List.of();
+        final Optional<List<CartEntity>> cartEntitiesOptional = cartDao.findAllByMemberId(memberId);
+        if (cartEntitiesOptional.isEmpty()) {
+            return new ArrayList<>();
         }
-        final List<ProductEntity> productEntities = cartEntities.get().stream()
+        final List<ProductEntity> productEntities = cartEntitiesOptional.get().stream()
                 .map(cartEntity -> productService.findById(cartEntity.getProductId()))
                 .collect(Collectors.toUnmodifiableList());
         return productEntities.stream()

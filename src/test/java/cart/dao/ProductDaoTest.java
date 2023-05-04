@@ -14,7 +14,6 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -107,9 +106,12 @@ class ProductDaoTest {
         productDao.insert(new Product("치킨", 1_000, "치킨 이미지 주소"));
 
         // when
-        final List<ProductEntity> productEntities = productDao.selectAll();
+        final Optional<List<ProductEntity>> productEntitiesOptional = productDao.findAll();
 
         // then
-        assertThat(productEntities).hasSize(1);
+        assertSoftly( softly -> {
+            List<ProductEntity> productEntities = productEntitiesOptional.get();
+            softly.assertThat(productEntities).hasSize(1);
+        });
     }
 }

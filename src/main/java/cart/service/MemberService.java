@@ -6,6 +6,7 @@ import cart.domain.Member;
 import cart.dto.AuthDto;
 import cart.dto.request.CreateMemberRequest;
 import cart.dto.response.MemberResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,8 +26,11 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public List<MemberResponse> findAll() {
-        final List<MemberEntity> memberEntities = memberDao.findAll();
-        return memberEntities.stream()
+        final Optional<List<MemberEntity>> memberEntitiesOptional = memberDao.findAll();
+        if (memberEntitiesOptional.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return memberEntitiesOptional.get().stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }

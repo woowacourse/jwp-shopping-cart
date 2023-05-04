@@ -81,7 +81,7 @@ class CartDaoTest {
         cartDao.delete(new CartEntity(1L, productId, memberId));
 
         // then
-        assertThat(cartDao.findAllByMemberId(memberId)).isEqualTo(Optional.of(List.of()));
+        assertThat(cartDao.findAllByMemberId(memberId)).isEqualTo(Optional.ofNullable(List.of()));
     }
 
     @Test
@@ -115,7 +115,8 @@ class CartDaoTest {
 
         // then
         assertSoftly(softly -> {
-            List<CartEntity> cartEntities = cartDao.findAllByMemberId(memberId).get();
+            final Optional<List<CartEntity>> cartEntitiesOptional = cartDao.findAllByMemberId(memberId);
+            List<CartEntity> cartEntities = cartEntitiesOptional.get();
             assertThat(cartEntities).hasSize(3);
         });
     }

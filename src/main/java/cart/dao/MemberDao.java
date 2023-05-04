@@ -20,9 +20,13 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<MemberEntity> findAll() {
+    public Optional<List<MemberEntity>> findAll() {
         final String sql = "SELECT * FROM MEMBER";
-        return jdbcTemplate.query(sql, memberRowMapper());
+        try {
+            return Optional.ofNullable(jdbcTemplate.query(sql, memberRowMapper()));
+        } catch (EmptyResultDataAccessException error) {
+            return Optional.empty();
+        }
     }
 
     private RowMapper<MemberEntity> memberRowMapper() {

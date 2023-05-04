@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -19,17 +20,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProductDao {
 
-    private static final int MINIMUM_AFFECTED_ROWS = 1;
-
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ProductEntity> selectAll() {
+    public Optional<List<ProductEntity>> findAll() {
         final String sql = "SELECT * FROM PRODUCT";
-        return jdbcTemplate.query(sql, getProductRowMapper());
+        try {
+            return Optional.ofNullable(jdbcTemplate.query(sql, getProductRowMapper()));
+        } catch (DataAccessException err) {
+            return Optional.empty();
+        }
     }
 
     private RowMapper<ProductEntity> getProductRowMapper() {

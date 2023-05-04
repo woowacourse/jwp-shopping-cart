@@ -19,6 +19,15 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public Optional<List<CartEntity>> findAllByMemberId(final Long memberId) {
+        final String sql = "SELECT * FROM CART WHERE member_id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.query(sql, carEntityMapper(), memberId));
+        } catch (EmptyResultDataAccessException error) {
+            return Optional.empty();
+        }
+    }
+
     public int insert(final Long productId, final Long memberId) {
         final String sql = "INSERT INTO CART (product_id, member_id) VALUES (?,?)";
         return jdbcTemplate.update(sql, productId, memberId);
@@ -45,14 +54,5 @@ public class CartDao {
                 resultSet.getLong("member_id")
         );
         return cartEntityRowMapper;
-    }
-
-    public Optional<List<CartEntity>> findAllByMemberId(final Long memberId) {
-        final String sql = "SELECT * FROM CART WHERE member_id = ?";
-        try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, carEntityMapper(), memberId));
-        } catch (EmptyResultDataAccessException error) {
-            return Optional.empty();
-        }
     }
 }
