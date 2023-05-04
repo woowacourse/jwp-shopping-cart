@@ -1,11 +1,10 @@
 package cart.controller.api;
 
-import cart.controller.util.BasicAuthExtractor;
+import cart.controller.util.MemberInfoPrincipal;
 import cart.service.ShoppingCartService;
 import cart.service.dto.CartResponse;
 import cart.service.dto.MemberInfo;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,16 +27,14 @@ public class ShoppingCartController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CartResponse>> shoppingList(final HttpServletRequest httpServletRequest) {
-        final MemberInfo info = BasicAuthExtractor.extract(httpServletRequest);
+    public ResponseEntity<List<CartResponse>> shoppingList(@MemberInfoPrincipal final MemberInfo info) {
         final List<CartResponse> cartResponses = shoppingCartService.findAllProduct(info);
         return ResponseEntity.ok().body(cartResponses);
     }
 
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody final Long productId,
-                                           final HttpServletRequest httpServletRequest) {
-        final MemberInfo info = BasicAuthExtractor.extract(httpServletRequest);
+                                           @MemberInfoPrincipal final MemberInfo info) {
         shoppingCartService.addCartProduct(info, productId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
