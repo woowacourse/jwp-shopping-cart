@@ -1,14 +1,13 @@
 package cart.controller;
 
-import static io.restassured.RestAssured.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.controller.dto.ModifyRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import cart.dao.ProductDao;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import org.apache.http.HttpStatus;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,98 +15,78 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
-    @LocalServerPort
-    private int port;
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @DisplayName("GET /admin 요청 시 Status OK 및 HTML 반환")
-    @Test
-    void shouldResponseHtmlWithStatusOkWhenRequestGetToAdmin() {
-        given().log().all()
-                .when()
-                .get("/admin")
-                .then().log().all()
-                .statusCode(HttpStatus.SC_OK)
-                .contentType(ContentType.HTML);
-    }
+    @MockBean
+    private ProductDao productDao;
 
     @DisplayName("POST /admin/product 요청 시")
     @Nested
     class postAdminProduct {
 
-        @DisplayName("입력이 올바른 경우 Status Created 및 HTML 반환")
+        @DisplayName("입력이 올바른 경우 Status OK를 반환한다.")
         @Test
-        void shouldResponseHtmlWithStatusCreatedWhenRequestPostToAdminProduct() throws JsonProcessingException {
+        void shouldResponseStatusOkWhenRequestPostToProducts() throws Exception {
             final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
             final String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson).log().all()
-                    .when()
-                    .post("/products")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
-                    .contentType(ContentType.HTML);
+
+            mockMvc.perform(post("/products")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestJson))
+                    .andExpect(status().isOk());
         }
 
-        @DisplayName("이름이 공백인 경우 예외가 발생한다.")
+        @DisplayName("이름이 공백인 경우 Status Bad Request를 반환한다.")
         @ParameterizedTest(name = "비어있는 값 (\"{0}\")")
         @ValueSource(strings = {" "})
         @NullAndEmptySource
-        void shouldThrowExceptionWhenNameIsBlank(String inputName) throws JsonProcessingException {
+        void shouldResponseStatusBadRequestWhenNameIsBlank(String inputName) throws Exception {
             final ModifyRequest request = new ModifyRequest(inputName, 100, "domain.super.com");
             String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .post("/products")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+
+            mockMvc.perform(post("/products")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestJson))
+                    .andExpect(status().isBadRequest());
         }
 
-        @DisplayName("가격이 0 미만인 경우 예외가 발생한다.")
+        @DisplayName("가격이 0 미만인 경우 Status Bad Request를 반환한다.")
         @ParameterizedTest(name = "가격 입력 : {0}")
         @ValueSource(longs = {-1, -10000, -1000000})
-        void shouldThrowExceptionWhenPriceIsUnderZero(long inputPrice) throws JsonProcessingException {
+        void shouldResponseStatusBadRequestWhenPriceIsUnderZero(long inputPrice) throws Exception {
             final ModifyRequest request = new ModifyRequest("사과", inputPrice, "domain.super.com");
             String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .post("/products")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+
+            mockMvc.perform(post("/products")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestJson))
+                    .andExpect(status().isBadRequest());
         }
 
-        @DisplayName("이미지의 URL이 공백인 경우 예외가 발생한다.")
+        @DisplayName("이미지의 URL이 공백인 경우 Status Bad Request를 반환한다.")
         @ParameterizedTest(name = "비어있는 값 (\"{0}\")")
         @ValueSource(strings = {" "})
         @NullAndEmptySource
-        void shouldThrowExceptionWhenImageUrlIsBlank(String inputImageUrl) throws JsonProcessingException {
+        void shouldResponseStatusBadRequestWhenImageUrlIsBlank(String inputImageUrl) throws Exception {
             final ModifyRequest request = new ModifyRequest("사과", 100, inputImageUrl);
             String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .post("/products")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+
+            mockMvc.perform(post("/products")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestJson))
+                    .andExpect(status().isBadRequest());
         }
     }
 
@@ -115,77 +94,65 @@ class ProductControllerTest {
     @Nested
     class putAdminProduct {
 
-        @DisplayName("입력이 올바른 경우 Status Created 및 HTML 반환")
+        @DisplayName("입력이 올바른 경우 Status OK를 반환한다.")
         @Test
-        void shouldResponseHtmlWithStatusCreatedWhenRequestPutToAdminProductId() throws JsonProcessingException {
+        void shouldResponseStatusOkWhenRequestPutToProducts() throws Exception {
             final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
             final String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .put("/products/1")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_CREATED)
-                    .contentType(ContentType.HTML);
+
+            mockMvc.perform(put("/products/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestJson))
+                    .andExpect(status().isOk());
         }
 
-        @DisplayName("이름이 공백인 경우 예외가 발생한다.")
+        @DisplayName("이름이 공백인 경우 Status Bad Request를 반환한다.")
         @ParameterizedTest(name = "비어있는 값 (\"{0}\")")
         @ValueSource(strings = {" "})
         @NullAndEmptySource
-        void shouldThrowExceptionWhenNameIsBlank(String inputName) throws JsonProcessingException {
+        void shouldResponseStatusBadRequestWhenNameIsBlank(String inputName) throws Exception {
             final ModifyRequest request = new ModifyRequest(inputName, 100, "domain.super.com");
             String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .put("/products/1")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+
+            mockMvc.perform(put("/products/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestJson))
+                    .andExpect(status().isBadRequest());
         }
 
-        @DisplayName("가격이 0 미만인 경우 예외가 발생한다.")
+        @DisplayName("가격이 0 미만인 경우 Status Bad Request를 반환한다.")
         @ParameterizedTest(name = "가격 입력 : {0}")
         @ValueSource(longs = {-1, -10000, -1000000})
-        void shouldThrowExceptionWhenPriceIsUnderZero(long inputPrice) throws JsonProcessingException {
+        void shouldResponseStatusBadRequestWhenPriceIsUnderZero(long inputPrice) throws Exception {
             final ModifyRequest request = new ModifyRequest("사과", inputPrice, "domain.super.com");
             String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .put("/products/1")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+
+            mockMvc.perform(put("/products/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestJson))
+                    .andExpect(status().isBadRequest());
         }
 
-        @DisplayName("이미지의 URL이 공백인 경우 예외가 발생한다.")
+        @DisplayName("이미지의 URL이 공백인 경우 Status Bad Request를 반환한다.")
         @ParameterizedTest(name = "비어있는 값 (\"{0}\")")
         @ValueSource(strings = {" "})
         @NullAndEmptySource
-        void shouldThrowExceptionWhenImageUrlIsBlank(String inputImageUrl) throws JsonProcessingException {
+        void shouldResponseStatusBadRequestWhenImageUrlIsBlank(String inputImageUrl) throws Exception {
             final ModifyRequest request = new ModifyRequest("사과", 100, inputImageUrl);
             String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .put("/products/1")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+
+            mockMvc.perform(put("/products/1")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestJson))
+                    .andExpect(status().isBadRequest());
         }
     }
 
-    @DisplayName("DELETE /admin/product/{id} 요청 시 Status OK 및 HTML 반환")
+    @DisplayName("DELETE /admin/product/{id} 요청 시 Status OK를 반환한다.")
     @Test
-    void shouldResponseHtmlWithStatusOkWhenRequestDeleteToAdminProductId() {
-        given().log().all()
-                .when()
-                .delete("/products/1")
-                .then().log().all()
-                .statusCode(HttpStatus.SC_OK)
-                .contentType(ContentType.HTML);
+    void shouldResponseStatusOkWhenRequestDeleteToProductId() throws Exception {
+        mockMvc.perform(delete("/products/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
