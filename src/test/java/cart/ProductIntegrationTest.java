@@ -51,7 +51,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productAddRequest.toString())
                 .when()
-                .post("/product")
+                .post("/products")
                 .then()
                 .extract();
 
@@ -72,7 +72,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productAddRequest.toString())
                 .when()
-                .post("/product")
+                .post("/products")
                 .then()
                 .extract();
 
@@ -92,7 +92,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productAddRequest.toString())
                 .when()
-                .post("/product")
+                .post("/products")
                 .then()
                 .extract();
 
@@ -113,7 +113,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productAddRequest.toString())
                 .when()
-                .post("/product")
+                .post("/products")
                 .then()
                 .extract();
 
@@ -138,7 +138,7 @@ public class ProductIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productUpdateRequest.toString())
                 .when()
-                .put("/product")
+                .put("/products")
                 .then()
                 .extract();
 
@@ -154,7 +154,7 @@ public class ProductIntegrationTest {
 
         ExtractableResponse<Response> response = given()
                 .when()
-                .delete("/product/1")
+                .delete("/products/1")
                 .then()
                 .extract();
 
