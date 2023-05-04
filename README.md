@@ -4,6 +4,8 @@
 
 ### API 명세
 
+#### 상품 API
+
 - [x] 상품 단일 조회
     - GET "/products/{id}"
     - Response: 200 OK
@@ -22,6 +24,26 @@
 - [x] 상품 삭제
   - DELETE "/products/{id}"
   - Response: 200 No Content
+
+#### 장바구니 상품 API
+
+- [x] 장바구니 전체 상품 
+    - GET "/cart/{id}"
+    - Response: 200 OK
+        - List : id, name, price, image_url
+
+- [x] 장바구니 상품 추가
+    - POST "/cart"
+    - HEADER: Basic Auth
+    - Request: productId
+    - Response: 201 Created
+        - header
+            - location: "/products/{id}"
+- [x] 상품 삭제
+    - HEADER: Basic Auth
+    - DELETE "/cart/{id}"
+    - Response: 200 No Content
+
 
 ### View
 
