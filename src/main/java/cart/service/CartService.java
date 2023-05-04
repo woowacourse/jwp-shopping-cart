@@ -4,6 +4,7 @@ import cart.dao.CartDao;
 import cart.dto.CartItemResponseDto;
 import cart.exception.ExistProductException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +12,11 @@ import org.springframework.stereotype.Service;
 public class CartService {
 
     private final CartDao cartDao;
+    private final ProductService productService;
 
-    public CartService(CartDao cartDao) {
+    public CartService(CartDao cartDao, ProductService productService) {
         this.cartDao = cartDao;
+        this.productService = productService;
     }
 
     public List<CartItemResponseDto> findAll(String memberEmail) {
@@ -23,6 +26,7 @@ public class CartService {
     }
 
     public int add(int productId, String memberEmail) {
+        validateExistProduct(productId);
         List<Integer> cartIdByProductId = cartDao.findCartIdByProductId(productId, memberEmail);
 
         if (!cartIdByProductId.isEmpty()) {
@@ -33,7 +37,17 @@ public class CartService {
     }
 
     public void remove(int cartId) {
+        validateExistCartItem(cartId);
         cartDao.deleteById(cartId);
+    }
+
+    private void validateExistProduct(int productId) {
+        productService.validateExistProduct(productId);
+    }
+
+    private void validateExistCartItem(int cartId) {
+        cartDao.findById(cartId)
+                        .orElseThrow(() -> new NoSuchElementException("존재하지 않는 cart id 입니다."));
     }
 
 }
