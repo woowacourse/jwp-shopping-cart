@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.CreateItem;
 import cart.entity.Item;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -29,6 +30,17 @@ public class JdbcItemDao implements ItemDao {
         String sql = "select * from item";
 
         return jdbcTemplate.query(sql, mapRow());
+    }
+
+    @Override
+    public Item findById(Long itemId) {
+        String sql = "select * from item where id = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sql, mapRow(), itemId);
+        } catch (EmptyResultDataAccessException exception) {
+            return null;
+        }
     }
 
     private RowMapper<Item> mapRow() {

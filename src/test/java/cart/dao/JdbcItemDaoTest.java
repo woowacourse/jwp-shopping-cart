@@ -62,6 +62,22 @@ class JdbcItemDaoTest {
     }
 
     @Test
+    @DisplayName("상품을 조회할 수 있다.")
+    void findById_success() {
+        Item item = itemDao.findById(1L);
+
+        assertThat(item)
+                .usingRecursiveComparison()
+                .isEqualTo(ITEM1);
+    }
+
+    @Test
+    @DisplayName("상품 번호가 없는 경우 조회할 수 없다.")
+    void findById_fail() {
+        assertThat(itemDao.findById(3L)).isNull();
+    }
+
+    @Test
     @DisplayName("상품 정보를 수정할 수 있다.")
     void update_success() {
         CreateItem item = CREATE_ITEM3;

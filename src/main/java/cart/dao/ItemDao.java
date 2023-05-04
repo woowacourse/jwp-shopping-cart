@@ -10,6 +10,8 @@ public interface ItemDao {
 
     List<Item> findAll();
 
+    Item findById(Long itemId);
+
     int update(Long id, CreateItem createItem);
 
     int delete(Long id);
