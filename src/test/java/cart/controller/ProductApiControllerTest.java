@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 
 import cart.controller.dto.ExceptionResponse;
 import cart.controller.dto.ProductRequest;
@@ -51,14 +50,15 @@ class ProductApiControllerTest {
 			ProductRequest productRequest = new ProductRequest("name", 1000, "image");
 			ProductRequest updatedRequest = new ProductRequest("name", 10, "image");
 
-			saveProducts(productRequest, HttpStatus.CREATED.value());
+			final ProductResponse productResponse = saveProducts(productRequest, HttpStatus.CREATED.value()).as(
+				ProductResponse.class);
 
 			ProductResponse response = given()
 				.log().all()
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.body(updatedRequest)
 				.when()
-				.put("/products/1")
+				.put(String.format("/products/%d", productResponse.getId()))
 				.then()
 				.log().all()
 				.statusCode(HttpStatus.OK.value())
@@ -75,10 +75,11 @@ class ProductApiControllerTest {
 		void deleteProductsTest() {
 			ProductRequest productRequest = new ProductRequest("name", 1000, "image");
 
-			saveProducts(productRequest, HttpStatus.CREATED.value());
+			final ProductResponse productResponse = saveProducts(productRequest, HttpStatus.CREATED.value()).as(
+				ProductResponse.class);
 
 			when()
-				.delete("/products/1")
+				.delete(String.format("/products/%d", productResponse.getId()))
 				.then()
 				.log().all()
 				.statusCode(HttpStatus.NO_CONTENT.value());
@@ -136,12 +137,12 @@ class ProductApiControllerTest {
 	private ExtractableResponse<Response> saveProducts(ProductRequest productRequest, int httpStatusCode) {
 
 		//given
-		return given()
+		return given().log().all()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.body(productRequest)
 			.when()
 			.post("/products")
-			.then()
+			.then().log().all()
 			.statusCode(httpStatusCode)
 			.extract();
 	}
