@@ -7,6 +7,8 @@ import cart.cart.dto.CartInsertRequestDto;
 import cart.cart.dto.CartInsertResponseDto;
 import cart.cart.dto.CartSelectResponseDto;
 import cart.cart.service.CartService;
+import cart.exception.PasswordMismatchException;
+import cart.exception.UnauthenticatedException;
 import cart.member.entity.MemberEntity;
 import cart.member.service.MemberService;
 import java.net.URI;
@@ -55,13 +57,13 @@ public class CartApiController {
 
     private void checkAuth(final AuthInfo authInfo) {
         if (authInfo == null) {
-            throw new IllegalArgumentException("사용자가 선택되지 않았습니다.");
+            throw new UnauthenticatedException("사용자가 선택되지 않았습니다.");
         }
     }
 
     private void validatePassword(final String memberPassword, final String authPassword) {
         if (!memberPassword.equals(authPassword)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new PasswordMismatchException("비밀번호가 일치하지 않습니다.");
         }
     }
 

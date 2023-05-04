@@ -30,8 +30,21 @@ public class ApiExceptionHandler {
         return ResponseEntity.badRequest().body("데이터를 찾아오는 과정에서 문제가 발생했습니다.");
     }
 
+    @ExceptionHandler(UnauthenticatedException.class)
+    public ResponseEntity<String> handleUnauthenticated(UnauthenticatedException e) {
+        return ResponseEntity.status(e.getHttpStatus())
+                .body("사용자를 선택한 뒤에 이용할 수 있는 기능입니다. 사용자를 선택해주세요.");
+    }
+
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<String> handlePasswordMismatch(PasswordMismatchException e) {
+        return ResponseEntity.status(e.getHttpStatus())
+                .body("비밀번호가 일치하지 않습니다.");
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
+
         return ResponseEntity.badRequest().body("잘못된 형식의 값이 입력됐습니다.");
     }
 
