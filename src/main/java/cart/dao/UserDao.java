@@ -15,10 +15,10 @@ import java.util.List;
 public class UserDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final RowMapper<User> actorRowMapper = (resultSet, rowNumber) -> new User(
-            resultSet.getString("email"),
-            resultSet.getString("password")
-    );
+    private final RowMapper<User> actorRowMapper = (resultSet, rowNumber) -> new User.Builder()
+            .email(resultSet.getString("email"))
+            .password(resultSet.getString("password"))
+            .build();
 
     public UserDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;

@@ -19,7 +19,10 @@ public class UserService {
     }
 
     public Long saveUser(final UserRequest userRequest) {
-        User user = new User(userRequest.getEmail(), userRequest.getPassword());
+        User user = new User.Builder()
+                .email(userRequest.getEmail())
+                .password(userRequest.getPassword())
+                .build();
         return userDao.save(user);
     }
 
