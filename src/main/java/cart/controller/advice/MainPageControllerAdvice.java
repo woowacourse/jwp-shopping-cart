@@ -1,5 +1,6 @@
-package cart.controller;
+package cart.controller.advice;
 
+import cart.controller.MainPageController;
 import cart.controller.dto.ExceptionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
