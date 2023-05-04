@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public class CartDao {
 
-    private static final int DEFAULT_COUNT = 0;
+    private static final int DEFAULT_COUNT = 1;
 
     private final JdbcTemplate jdbcTemplate;
 
