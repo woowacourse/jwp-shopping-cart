@@ -46,8 +46,9 @@ public class CartDao {
         return 0;
     }
 
-    public int delete(int id) {
-        return 0;
+    public int delete(int cartId, String email) {
+        String sql = "delete from cart where id = ? and email = ? ";
+        return jdbcTemplate.update(sql, cartId, email);
     }
 
     public List<CartProduct> selectById(String email) {

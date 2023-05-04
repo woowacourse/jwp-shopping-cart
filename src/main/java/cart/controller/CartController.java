@@ -6,10 +6,7 @@ import cart.dto.CartRequestDto;
 import cart.entity.Member;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -40,5 +37,13 @@ public class CartController {
         String email = member.getEmail();
         int cartId = cartService.addCart(cartRequestDto.getProductId(), email);
         return ResponseEntity.created(URI.create("/carts/" + cartId)).build();
+    }
+
+    @DeleteMapping("/carts/{cartId}")
+    public ResponseEntity<Void> deleteCart(HttpServletRequest request,@PathVariable int cartId) {
+        Member member = basicAuthorizationExtractor.extract(request);
+        String email = member.getEmail();
+        cartService.deleteCart(cartId, email);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -28,4 +28,11 @@ public class CartService {
         Cart cart = new Cart(productId, email);
         return cartDao.insert(cart);
     }
+
+    public void deleteCart(int cartId, String email) {
+        int deleteResult = cartDao.delete(cartId, email);
+        if(deleteResult == 0){
+            throw new IllegalStateException("존재하지 않는 장바구니 입니다.");
+        }
+    }
 }
