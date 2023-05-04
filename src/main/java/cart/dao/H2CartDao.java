@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.Product;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartDao;
+import cart.domain.member.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -37,5 +38,11 @@ public class H2CartDao implements CartDao {
     public List<Product> findProductsByUserId(Long memberId) {
         String sql = "SELECT * FROM cart c JOIN product p ON c.product_id = p.id WHERE c.member_id = ?";
         return jdbcTemplate.query(sql, rowMapper, memberId);
+    }
+
+    @Override
+    public int deleteCartItem(Member member, Long productId) {
+        String sql = "DELETE FROM cart WHERE product_id = ? AND member_id = ?";
+        return jdbcTemplate.update(sql, productId, member.getId());
     }
 }

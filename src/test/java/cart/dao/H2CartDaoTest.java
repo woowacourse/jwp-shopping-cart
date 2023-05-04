@@ -61,4 +61,22 @@ class H2CartDaoTest {
                 () -> assertThat(cartDao.findProductsByUserId(memberNoHaveCartId)).hasSize(0)
         );
     }
+
+    @Test
+    void 장바구니에_있는_아이템을_삭제한다() {
+        Member member = memberDao.save(new Member("cyh6099@gmail.com", "qwer1234"));
+
+        Long chickenId = productDao.save(new Product("chicken", "image", 1000));
+        Long pizzaId = productDao.save(new Product("pizza", "image", 2000));
+
+        cartDao.addProduct(new Cart(chickenId, member.getId()));
+        cartDao.addProduct(new Cart(pizzaId, member.getId()));
+
+        Assertions.assertAll(
+                () -> assertThat(cartDao.deleteCartItem(member, chickenId)).isEqualTo(1),
+                () -> assertThat(cartDao.findProductsByUserId(member.getId())).hasSize(1),
+                () -> assertThat(cartDao.findProductsByUserId(member.getId()).get(0).getName()).isEqualTo("pizza")
+        );
+        
+    }
 }
