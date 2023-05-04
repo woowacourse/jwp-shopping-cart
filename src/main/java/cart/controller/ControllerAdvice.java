@@ -1,8 +1,7 @@
 package cart.controller;
 
-import cart.exception.AuthenticationException;
+import cart.exception.CartException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,7 +25,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handleAuthenticationException(final AuthenticationException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
+    public ResponseEntity<String> handleAuthenticationException(final CartException exception) {
+        return ResponseEntity.status(exception.getStatus()).body(exception.getMessage());
     }
 }
