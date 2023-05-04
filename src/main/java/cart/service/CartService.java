@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.controller.dto.CartResponse;
 import cart.controller.dto.ItemResponse;
 import cart.dao.CartDao;
 import cart.dao.ItemDao;
@@ -40,19 +41,16 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<ItemResponse> loadItemInsideCart(final String email) {
+    public List<CartResponse> loadItemInsideCart(final String email) {
         User user = userDao.findBy(email).orElseThrow(() -> new IllegalArgumentException(NOT_EXIST_USER));
         List<Cart> carts = cartDao.findBy(user.getId());
         return carts.stream()
-                .map(cart -> ItemResponse.from(cart.getItem()))
+                .map(CartResponse::from)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public void deleteCart(final String email, final Long itemId) {
-        User user = userDao.findBy(email).orElseThrow(() -> new IllegalArgumentException(NOT_EXIST_USER));
-        Item item = itemDao.findBy(itemId).orElseThrow(() -> new IllegalArgumentException(NOT_EXIST_ITEM));
-        Cart cart = new Cart(user, item);
-        cartDao.delete(cart);
+    public void deleteCart(final Long cartId) {
+        cartDao.delete(cartId);
     }
 }

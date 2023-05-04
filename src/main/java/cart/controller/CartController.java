@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.controller.argumentresolver.BasicAuthorization;
+import cart.controller.dto.CartResponse;
 import cart.controller.dto.ItemResponse;
 import cart.controller.dto.LoginUser;
 import cart.service.CartService;
@@ -30,16 +31,15 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemResponse>> readCart(@BasicAuthorization LoginUser loginUser) {
-        List<ItemResponse> items = cartService.loadItemInsideCart(loginUser.getEmail());
+    public ResponseEntity<List<CartResponse>> readCart(@BasicAuthorization LoginUser loginUser) {
+        List<CartResponse> carts = cartService.loadItemInsideCart(loginUser.getEmail());
         return ResponseEntity.status(HttpStatus.OK)
-                .body(items);
+                .body(carts);
     }
 
-    @DeleteMapping("/{itemId}")
-    public ResponseEntity<Void> deleteCart(@BasicAuthorization final LoginUser loginUser, @PathVariable final Long itemId) {
-        System.out.println("delete");
-        cartService.deleteCart(loginUser.getEmail(), itemId);
+    @DeleteMapping("/{cartId}")
+    public ResponseEntity<Void> deleteCart(@PathVariable final Long cartId) {
+        cartService.deleteCart(cartId);
         return ResponseEntity.status(HttpStatus.OK)
                 .location(URI.create("/"))
                 .build();

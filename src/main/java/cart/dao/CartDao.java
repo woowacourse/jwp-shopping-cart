@@ -31,12 +31,12 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Cart cart) {
+    public void save(final Cart cart) {
         final String sql = "INSERT INTO carts(user_id, item_id) VALUES(?, ?)";
         jdbcTemplate.update(sql, cart.getUser().getId(), cart.getItem().getId());
     }
 
-    public List<Cart> findBy(Long userId) {
+    public List<Cart> findBy(final Long userId) {
         final String sql = "SELECT c.id, u.id as users_id, u.email, u.password, i.id as items_id, i.name, i.image_url, i.price " +
                 "FROM carts c " +
                 "JOIN users u ON c.user_id = u.id " +
@@ -45,8 +45,8 @@ public class CartDao {
         return jdbcTemplate.query(sql, cartRowMapper, userId);
     }
 
-    public void delete(Cart cart) {
-        final String sql = "DELETE FROM carts WHERE user_id = ? AND item_id = ?";
-        jdbcTemplate.update(sql, cart.getUser().getId(), cart.getItem().getId());
+    public void delete(final Long cartId) {
+        final String sql = "DELETE FROM carts WHERE cart_id = ? ";
+        jdbcTemplate.update(sql, cartId);
     }
 }
