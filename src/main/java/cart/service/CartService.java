@@ -1,9 +1,9 @@
 package cart.service;
 
 import cart.auth.MemberInfo;
+import cart.dto.request.ProductDto;
 import cart.excpetion.CartException;
 import cart.repository.CartDao;
-import cart.request.ProductDto;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
@@ -33,4 +33,5 @@ public class CartService {
         }
         cartDao.deleteProduct(memberInfo.getId(), productDto.getProductId());
     }
+
 }

@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.request.ProductCreateDto;
+import cart.dto.request.ProductCreateDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

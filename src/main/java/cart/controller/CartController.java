@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.auth.MemberInfo;
 import cart.auth.Principal;
-import cart.request.ProductDto;
+import cart.dto.request.ProductDto;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

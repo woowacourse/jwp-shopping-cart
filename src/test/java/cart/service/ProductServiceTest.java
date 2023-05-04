@@ -1,7 +1,7 @@
 package cart.service;
 
+import cart.dto.request.ProductCreateDto;
 import cart.repository.ProductDao;
-import cart.request.ProductCreateDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
