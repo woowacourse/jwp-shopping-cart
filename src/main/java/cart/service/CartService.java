@@ -8,7 +8,6 @@ import cart.domain.product.Product;
 import cart.exception.notfound.ProductNotFoundException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -30,6 +29,11 @@ public class CartService {
         Product product = productDao.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
 
+        cartDao.findByMemberIdAndProductId(member.getId(), productId)
+                .ifPresent((cart) -> {
+                    throw new IllegalArgumentException("이미 장바구니에 담은 상품입니다.");
+                });
+
         cartDao.insert(Cart.of(member, product));
     }
 
@@ -45,13 +49,7 @@ public class CartService {
                 .map(Cart::getProductId)
                 .collect(Collectors.toList());
 
-        List<Product> products = productDao.findAllByIds(productIds);
-        Map<Long, Product> productIdToProduct = products.stream()
-                .collect(Collectors.toMap(Product::getId, product -> product));
-
-        return productIds.stream()
-                .map(productIdToProduct::get)
-                .collect(Collectors.toList());
+        return productDao.findAllByIds(productIds);
     }
 
     public void delete(final Member member, final long productId) {

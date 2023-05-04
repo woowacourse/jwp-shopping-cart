@@ -6,7 +6,6 @@ const addCartItem = (productId) => {
     return;
   }
 
-  console.log(productId)
   axios.request({
     method: 'post',
     url: `/api/cart/${productId}`,
@@ -16,6 +15,7 @@ const addCartItem = (productId) => {
   }).then((response) => {
     alert('장바구니에 담았습니다.');
   }).catch((error) => {
+    alert(error.response?.data?.message)
     console.error(error);
   });
 }
