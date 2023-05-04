@@ -4,10 +4,11 @@ import cart.dao.entity.CartEntity;
 import cart.dao.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import static cart.dao.ObjectMapper.getProductRowMapper;
 
 @Repository
 public class CartDao {
@@ -20,21 +21,12 @@ public class CartDao {
     }
 
     public List<ProductEntity> findProductsByMemberId(final Long memberId) {
-        final String query = "SELECT product_id, name, price, image " +
+        final String query = "SELECT product_id as id, name, price, image " +
                 "FROM cart " +
                 "JOIN product ON cart.product_id = product.id " +
                 "JOIN member ON cart.member_id = member.id " +
                 "WHERE member_id = ?";
         return jdbcTemplate.query(query, getProductRowMapper(), memberId);
-    }
-
-    private RowMapper<ProductEntity> getProductRowMapper() {
-        return (resultSet, rowNum) -> new ProductEntity.Builder()
-                .id(resultSet.getLong("product_id"))
-                .name(resultSet.getString("name"))
-                .price(resultSet.getInt("price"))
-                .image(resultSet.getString("image"))
-                .build();
     }
 
     public void add(final CartEntity cartEntity) {

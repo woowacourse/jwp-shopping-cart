@@ -2,7 +2,6 @@ package cart.dao;
 
 import cart.dao.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -11,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static cart.dao.ObjectMapper.getProductRowMapper;
 
 @Repository
 public class ProductDao {
@@ -24,15 +25,6 @@ public class ProductDao {
     public List<ProductEntity> selectAll() {
         final String sql = "SELECT * FROM PRODUCT";
         return jdbcTemplate.query(sql, getProductRowMapper());
-    }
-
-    private RowMapper<ProductEntity> getProductRowMapper() {
-        return (resultSet, rowNum) -> new ProductEntity.Builder()
-                .id(resultSet.getLong("id"))
-                .name(resultSet.getString("name"))
-                .price(resultSet.getInt("price"))
-                .image(resultSet.getString("image"))
-                .build();
     }
 
     public Long insert(final ProductEntity newProductEntity) {

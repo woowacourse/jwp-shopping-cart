@@ -3,10 +3,11 @@ package cart.dao;
 import cart.dao.entity.MemberEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import static cart.dao.ObjectMapper.getMemberRowMapper;
 
 @Repository
 public class MemberDao {
@@ -21,14 +22,6 @@ public class MemberDao {
     public List<MemberEntity> findAll() {
         final String query = "SELECT * FROM MEMBER";
         return jdbcTemplate.query(query, getMemberRowMapper());
-    }
-
-    private RowMapper<MemberEntity> getMemberRowMapper() {
-        return (resultSet, rowNum) -> new MemberEntity.Builder()
-                .id(resultSet.getInt("id"))
-                .email(resultSet.getString("email"))
-                .password(resultSet.getString("password"))
-                .build();
     }
 
     public Long findIdByAuthInfo(final String email, final String password) {
