@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class UserServiceTest {
@@ -54,5 +55,7 @@ public class UserServiceTest {
             Assertions.assertEquals(userEntity.getEmail(), userResponse.getEmail());
             Assertions.assertEquals(userEntity.getPassword(), userResponse.getPassword());
         }
+
+        verify(userDao).findAll();
     }
 }
