@@ -7,20 +7,18 @@ import cart.dto.item.ItemSaveRequest;
 import cart.dto.item.ItemUpdateRequest;
 import cart.entity.ItemEntity;
 import cart.service.ItemService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/admin/item")
 public class ItemController {
 
     private final ItemService itemService;
-
-    public ItemController(final ItemService itemService) {
-        this.itemService = itemService;
-    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

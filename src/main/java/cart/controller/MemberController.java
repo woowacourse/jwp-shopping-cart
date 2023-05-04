@@ -5,19 +5,17 @@ import cart.dto.ResultResponse;
 import cart.dto.SuccessCode;
 import cart.dto.member.MemberRequest;
 import cart.entity.MemberEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/member")
 public class MemberController {
 
     private final MemberDao memberDao;
-
-    public MemberController(final MemberDao memberDao) {
-        this.memberDao = memberDao;
-    }
 
     @PostMapping
     public ResultResponse addMember(@Valid @RequestBody MemberRequest memberRequest) {

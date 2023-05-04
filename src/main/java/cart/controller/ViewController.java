@@ -2,20 +2,17 @@ package cart.controller;
 
 import cart.service.ItemService;
 import cart.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@RequiredArgsConstructor
 public class ViewController {
 
     private final ItemService itemService;
     private final MemberService memberService;
-
-    public ViewController(final ItemService itemService, final MemberService memberService) {
-        this.itemService = itemService;
-        this.memberService = memberService;
-    }
 
     @GetMapping("/")
     public String displayUserItemList(Model model) {

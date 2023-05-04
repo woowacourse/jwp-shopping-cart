@@ -5,6 +5,7 @@ import cart.dao.item.ItemDao;
 import cart.dto.cart.CartResponse;
 import cart.dto.item.ItemResponse;
 import cart.entity.ItemEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CartService {
 
     private final CartDao cartDao;

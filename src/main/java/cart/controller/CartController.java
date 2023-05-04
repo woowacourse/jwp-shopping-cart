@@ -7,6 +7,7 @@ import cart.dto.cart.CartResponse;
 import cart.dto.cart.CartSaveRequest;
 import cart.entity.MemberEntity;
 import cart.service.CartService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,13 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class CartController {
 
     private final CartService cartService;
-
-    public CartController(final CartService cartService) {
-        this.cartService = cartService;
-    }
 
     @GetMapping("/carts")
     public List<CartResponse> getCarts(@Login MemberEntity member) {
