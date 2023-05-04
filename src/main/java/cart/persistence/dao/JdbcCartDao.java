@@ -61,9 +61,4 @@ public class JdbcCartDao implements Dao<CartEntity> {
     public List<CartEntity> findProductsByUser(String email) {
         return null;
     }
-
-    public int deleteByUserAndProductId(Long userId, Long id) {
-        final String sql = "DELETE FROM cart WHERE user_id = ? AND product_id = ?";
-        return jdbcTemplate.update(sql, userId, id);
-    }
 }

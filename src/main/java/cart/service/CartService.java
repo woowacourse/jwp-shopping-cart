@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.dto.CartProductResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.dto.UserResponse;
@@ -63,10 +64,11 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public List<ProductResponse> readCart(final String email) {
+    public List<CartProductResponse> readCart(final String email) {
         final List<ProductEntity> products = productDao.findProductsByUser(email);
+
         return products.stream()
-                .map(ProductResponse::from)
+                .map(CartProductResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -77,10 +79,8 @@ public class CartService {
         return cartDao.save(cartEntity);
     }
 
-    public void deleteCartItem(final String email, final Long productId) {
+    public void deleteCartItem(final String email, final Long id) {
         final Long userId = userDao.findUserIdByEmail(email);
-        if (cartDao.deleteByUserAndProductId(userId, productId) != EXPECTED_SIZE) {
-            throw new EmptyResultDataAccessException(EXPECTED_SIZE);
-        }
+        cartDao.deleteById(id);
     }
 }

@@ -1,8 +1,8 @@
 package cart.controller;
 
 import cart.auth.infrastructure.BasicAuthorizationExtractor;
+import cart.dto.CartProductResponse;
 import cart.dto.ProductId;
-import cart.dto.ProductResponse;
 import cart.dto.UserAuthInfo;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +22,12 @@ public class CartController {
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<ProductResponse>> getCartView(final HttpServletRequest request) {
+    public ResponseEntity<List<CartProductResponse>> getCartView(final HttpServletRequest request) {
         BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
         UserAuthInfo userAuthInfo = basicAuthorizationExtractor.extract(request);
         String email = userAuthInfo.getEmail();
 
-        List<ProductResponse> products = cartService.readCart(email);
+        List<CartProductResponse> products = cartService.readCart(email);
 
         return ResponseEntity.ok(products);
     }
