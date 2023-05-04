@@ -21,8 +21,7 @@ const addCartItem = (productId) => {
     alert('장바구니에 담았습니다.');
   }).catch((error) => {
     console.error(error);
-    alert('사용자 정보가 없습니다.');
-    window.location.href = '/settings';
+    alert(error.response?.data?.message || "예상치 못한 예외가 발생했습니다");
   });
 }
 
