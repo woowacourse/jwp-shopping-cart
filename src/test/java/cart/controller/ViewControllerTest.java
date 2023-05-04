@@ -19,7 +19,7 @@ class ViewControllerTest {
 
     @Nested
     @DisplayName("상품 목록 페이지를 조회하는 home 메서드 테스트")
-    class homeTest {
+    class HomeTest {
 
         @BeforeEach
         void setUp() {
@@ -38,7 +38,7 @@ class ViewControllerTest {
 
     @Nested
     @DisplayName("관리자 페이지를 조회하는 admin 메서드 테스트")
-    class adminTest {
+    class AdminTest {
 
         @BeforeEach
         void setUp() {
@@ -57,7 +57,7 @@ class ViewControllerTest {
 
     @Nested
     @DisplayName("설정 페이지를 조회하는 settings 메서드 테스트")
-    class settingsTest {
+    class SettingsTest {
 
         @BeforeEach
         void setUp() {
@@ -69,6 +69,25 @@ class ViewControllerTest {
         void successTest() {
             RestAssured.given().log().all()
                     .when().get("/settings")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value());
+        }
+    }
+
+    @Nested
+    @DisplayName("장바구니 페이지를 조회하는 cart 메서드 테스트")
+    class CartTest {
+
+        @BeforeEach
+        void setUp() {
+            RestAssured.port = port;
+        }
+
+        @DisplayName("정상 조회가 되었다면 상태코드 200을 반환하는지 확인한다")
+        @Test
+        void successTest() {
+            RestAssured.given().log().all()
+                    .when().get("/cart")
                     .then().log().all()
                     .statusCode(HttpStatus.OK.value());
         }
