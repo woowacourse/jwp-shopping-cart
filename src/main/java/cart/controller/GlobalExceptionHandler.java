@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.dto.ErrorResponse;
 import cart.exception.AlreadyAddedProductException;
 import cart.exception.CartNotFoundException;
 import cart.exception.ProductNotFoundException;
@@ -24,27 +25,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler
-    private ResponseEntity<String> handleException(final Exception exception) {
+    private ResponseEntity<ErrorResponse> handleException(final Exception exception) {
         log.error("예상치 못한 예외가 발생했습니다.", exception);
-        return ResponseEntity.internalServerError().body("예상치 못한 예외가 발생했습니다.");
+        return ResponseEntity.internalServerError().body(new ErrorResponse("예상치 못한 예외가 발생했습니다."));
     }
 
     @ExceptionHandler
-    private ResponseEntity<String> handleIllegalArgumentException(final IllegalArgumentException exception) {
+    private ResponseEntity<ErrorResponse> handleIllegalArgumentException(final IllegalArgumentException exception) {
         log.warn("잘못된 인자가 들어왔습니다", exception);
-        return ResponseEntity.badRequest().body(exception.getMessage());
+        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
     }
 
     @ExceptionHandler({CartNotFoundException.class, ProductNotFoundException.class, UserNotFoundException.class})
-    private ResponseEntity<String> handleNotFoundException(final Exception exception) {
+    private ResponseEntity<ErrorResponse> handleNotFoundException(final Exception exception) {
         log.warn("존재하지 않는 리소스에 접근했습니다.", exception);
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(exception.getMessage()));
     }
 
     @ExceptionHandler
-    private ResponseEntity<String> handleAlreadyAddedProduct(final AlreadyAddedProductException e) {
+    private ResponseEntity<ErrorResponse> handleAlreadyAddedProduct(final AlreadyAddedProductException e) {
         log.warn("이미 장바구니에 담긴 상품입니다.", e);
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
     @Override
