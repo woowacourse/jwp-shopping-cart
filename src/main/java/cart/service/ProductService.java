@@ -13,11 +13,11 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Service
-public class JwpCartService {
+public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public JwpCartService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

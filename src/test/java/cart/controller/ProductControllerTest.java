@@ -3,7 +3,7 @@ package cart.controller;
 import cart.dto.ProductDto;
 import cart.dto.ProductRequestDto;
 import cart.entity.ProductEntity;
-import cart.service.JwpCartService;
+import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class ProductControllerTest {
     ObjectMapper objectMapper;
 
     @MockBean
-    JwpCartService jwpCartService;
+    ProductService productService;
 
     @Test
     @DisplayName("상품을 추가한다.")
@@ -47,7 +47,7 @@ class ProductControllerTest {
         ProductRequestDto productRequestDto = new ProductRequestDto(name, imgUrl, price);
         ProductDto expectDto = ProductDto.fromEntity(new ProductEntity(1L, name, imgUrl, price));
 
-        when(jwpCartService.add(any(ProductRequestDto.class))).thenReturn(expectDto);
+        when(productService.add(any(ProductRequestDto.class))).thenReturn(expectDto);
 
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -80,7 +80,7 @@ class ProductControllerTest {
         ProductRequestDto modifiedProductRequestDto = new ProductRequestDto(name, imgUrl, modifiedPrice);
         ProductDto expectDto = ProductDto.fromEntity(new ProductEntity(1L, name, imgUrl, modifiedPrice));
 
-        when(jwpCartService.updateById(any(ProductRequestDto.class), any(Long.class))).thenReturn(expectDto);
+        when(productService.updateById(any(ProductRequestDto.class), any(Long.class))).thenReturn(expectDto);
 
         mockMvc.perform(post("/products")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -107,7 +107,7 @@ class ProductControllerTest {
         ProductRequestDto productRequestDto = new ProductRequestDto(name, imgUrl, price);
         ProductDto expectDto = ProductDto.fromEntity(new ProductEntity(1L, name, imgUrl, modifiedPrice));
 
-        when(jwpCartService.updateById(any(ProductRequestDto.class), any(Long.class))).thenReturn(expectDto);
+        when(productService.updateById(any(ProductRequestDto.class), any(Long.class))).thenReturn(expectDto);
 
         mockMvc.perform(post("/products")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -122,7 +122,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("상품을 삭제한다.")
     void deleteProduct() throws Exception {
-        doNothing().when(jwpCartService).deleteById(any(Long.class));
+        doNothing().when(productService).deleteById(any(Long.class));
         mockMvc.perform(delete("/products/{id}", any(Long.class)))
                 .andExpect(status().isOk());
     }

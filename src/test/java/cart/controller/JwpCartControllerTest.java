@@ -3,7 +3,7 @@ package cart.controller;
 import cart.dto.ProductDto;
 import cart.dto.ProductResponseDto;
 import cart.entity.ProductEntity;
-import cart.service.JwpCartService;
+import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ class JwpCartControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    JwpCartService jwpCartService;
+    ProductService productService;
 
     @Test
     @DisplayName("상품 목록 페이지를 조회한다.")
@@ -39,7 +39,7 @@ class JwpCartControllerTest {
                 .map(ProductResponseDto::fromProductDto)
                 .collect(toList());
 
-        when(jwpCartService.findAll()).thenReturn(expectDtos);
+        when(productService.findAll()).thenReturn(expectDtos);
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())

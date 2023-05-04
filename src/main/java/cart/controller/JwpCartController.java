@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.dto.ProductDto;
 import cart.dto.ProductResponseDto;
-import cart.service.JwpCartService;
+import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +14,15 @@ import static java.util.stream.Collectors.toList;
 @Controller
 public class JwpCartController {
 
-    private final JwpCartService jwpCartService;
+    private final ProductService productService;
 
-    public JwpCartController(JwpCartService jwpCartService) {
-        this.jwpCartService = jwpCartService;
+    public JwpCartController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        List<ProductDto> productDtos = jwpCartService.findAll();
+        List<ProductDto> productDtos = productService.findAll();
         List<ProductResponseDto> response = productDtos.stream()
                 .map(ProductResponseDto::fromProductDto)
                 .collect(toList());
@@ -32,7 +32,7 @@ public class JwpCartController {
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        List<ProductDto> productDtos = jwpCartService.findAll();
+        List<ProductDto> productDtos = productService.findAll();
         List<ProductResponseDto> response = productDtos.stream()
                 .map(ProductResponseDto::fromProductDto)
                 .collect(toList());
