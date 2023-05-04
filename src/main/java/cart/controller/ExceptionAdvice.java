@@ -38,4 +38,11 @@ public class ExceptionAdvice {
         log.error("IllegalArgumentException message={}", exception.getMessage());
         return new ErrorDto(exception.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public ErrorDto handleException(Exception exception) {
+        log.error(exception.getClass().getName() + " message={}", exception.getMessage());
+        return new ErrorDto("internal server error");
+    }
 }
