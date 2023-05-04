@@ -1,9 +1,9 @@
 package cart.config;
 
 import cart.annotation.Login;
-import cart.dto.request.LoginRequest;
+import cart.dao.MemberDao;
+import cart.domain.Member;
 import cart.exception.custom.UnauthorizedException;
-import cart.service.MemberService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
@@ -18,21 +18,21 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_HEADER_PREFIX = "Basic ";
 
-    private final MemberService memberService;
+    private final MemberDao memberDao;
 
-    public LoginArgumentResolver(MemberService memberService) {
-        this.memberService = memberService;
+    public LoginArgumentResolver(MemberDao memberDao) {
+        this.memberDao = memberDao;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(Login.class);
+        return parameter.hasParameterAnnotation(Login.class) &&
+                parameter.getParameterType().equals(Member.class);
     }
 
-    //TODO 예외처리
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authorization = webRequest.getHeader(AUTHORIZATION_HEADER);
 
         if (authorization == null) {
@@ -46,12 +46,11 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         String value = authorization.replaceFirst(AUTHORIZATION_HEADER_PREFIX, "");
         String[] authInfo = new String(Base64Utils.decodeFromString(value)).split(":");
 
-        //TODO 이 객체가 Service를 의존해야하나?, 아니라면 어디서 수행해야 할까?
         String email = authInfo[0];
         String password = authInfo[1];
-        memberService.isMatch(email, password);
+        Member member = memberDao.findByEmail(email);
+        member.validatePassword(password);
 
-        //TODO: EMAIL과 PASSWORD가 모두 필요한가? (현재 로직상에는 EMAI만 사용)
-        return new LoginRequest(email, password);
+        return member;
     }
 }

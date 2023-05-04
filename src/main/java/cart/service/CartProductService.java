@@ -3,7 +3,6 @@ package cart.service;
 import static java.util.stream.Collectors.toList;
 
 import cart.dao.CartProductDao;
-import cart.dao.MemberDao;
 import cart.domain.CartProduct;
 import cart.domain.Member;
 import cart.dto.request.CartProductRequest;
@@ -16,22 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class CartProductService {
 
     private final CartProductDao cartProductDao;
-    private final MemberDao memberDao;
 
-    public CartProductService(CartProductDao cartProductDao, MemberDao memberDao) {
+    public CartProductService(CartProductDao cartProductDao) {
         this.cartProductDao = cartProductDao;
-        this.memberDao = memberDao;
     }
 
     @Transactional
-    public void save(String email, CartProductRequest productIdRequest) {
-        Member member = memberDao.findByEmail(email);
+    public void save(Member member, CartProductRequest productIdRequest) {
         cartProductDao.save(member.getId(), productIdRequest.getProductId());
     }
 
     @Transactional(readOnly = true)
-    public List<CartProductResponse> findAllByMemberEmail(String email) {
-        Member member = memberDao.findByEmail(email);
+    public List<CartProductResponse> findAllByMember(Member member) {
         List<CartProduct> cartProducts = cartProductDao.findAllByMemberId(member.getId());
         return cartProducts.stream()
                 .map(CartProductResponse::new)

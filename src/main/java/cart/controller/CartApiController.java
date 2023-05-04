@@ -1,8 +1,8 @@
 package cart.controller;
 
 import cart.annotation.Login;
+import cart.domain.Member;
 import cart.dto.request.CartProductRequest;
-import cart.dto.request.LoginRequest;
 import cart.dto.response.CartProductResponse;
 import cart.service.CartProductService;
 import java.util.List;
@@ -27,20 +27,20 @@ public class CartApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartProductResponse>> findCartProductsByMember(@Login LoginRequest loginRequest) {
-        List<CartProductResponse> cartProducts = cartProductService.findAllByMemberEmail(loginRequest.getEmail());
+    public ResponseEntity<List<CartProductResponse>> findCartProductsByMember(@Login Member member) {
+        List<CartProductResponse> cartProducts = cartProductService.findAllByMember(member);
         return ResponseEntity.status(HttpStatus.OK).body(cartProducts);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCartProduct(@Login LoginRequest loginRequest,
+    public ResponseEntity<Void> addCartProduct(@Login Member member,
                                                @RequestBody CartProductRequest cartProductRequest) {
-        cartProductService.save(loginRequest.getEmail(), cartProductRequest);
+        cartProductService.save(member, cartProductRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/{cartProductId}")
-    public ResponseEntity<Void> deleteCartProduct(@Login LoginRequest loginRequest,
+    public ResponseEntity<Void> deleteCartProduct(@Login Member member,
                                                   @PathVariable Long cartProductId) {
         cartProductService.deleteById(cartProductId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

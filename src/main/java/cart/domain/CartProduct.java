@@ -1,7 +1,6 @@
 package cart.domain;
 
 
-//MEMBER를 가져야한다.
 public class CartProduct {
 
     private final Long id;

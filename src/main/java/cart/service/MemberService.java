@@ -21,7 +21,7 @@ public class MemberService {
         return memberDao.findAll();
     }
 
-    //TODO naming && 로직 고민
+    //TODO naming && 로직 고민 테스트 추가
     public void isMatch(String email, String password) {
         Member member = memberDao.findByEmail(email);
         if (!member.getPassword().equals(password)) {
