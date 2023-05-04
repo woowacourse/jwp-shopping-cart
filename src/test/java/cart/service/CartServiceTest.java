@@ -10,7 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
@@ -28,9 +28,9 @@ class CartServiceTest {
     @Test
     @DisplayName("모든 장바구니 아이템 조회 테스트")
     void findAll() {
-        given(cartDao.findAll("admin@naver.com")).willReturn(Optional.of(List.of(
-                new ItemEntity(1L, "치킨", "url", 10000),
-                new ItemEntity(2L, "치킨", "url", 10000)
+        given(cartDao.findAll("admin@naver.com")).willReturn(Optional.of(Map.of(
+                new ItemEntity(1L, "치킨", "url", 10000), 1L,
+                new ItemEntity(2L, "치킨", "url", 10000), 10L
         )));
 
         Assertions.assertThat(cartService.findAll("admin@naver.com")).hasSize(2);

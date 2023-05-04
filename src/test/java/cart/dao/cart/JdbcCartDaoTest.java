@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @SpringBootTest
@@ -30,35 +30,38 @@ class JdbcCartDaoTest {
     void setUp() {
         ItemEntity item1 = itemDao.save(new ItemEntity("치킨", "a", 10000));
         ItemEntity item2 = itemDao.save(new ItemEntity("피자", "b", 20000));
-        itemDao.save(new ItemEntity("국밥", "c", 10000));
+        itemDao.save(item1);
+        itemDao.save(item2);
 
         MemberEntity member = memberDao.save(new MemberEntity("test@naver.com", "test", "01012345678", "qwer1234"));
 
-        cartDao.save(member.getEmail(), item1.getId());
-        cartDao.save(member.getEmail(), item2.getId());
+        cartDao.save(member.getEmail(), itemDao.findById(item1.getId()).get());
+        cartDao.save(member.getEmail(), itemDao.findById(item2.getId()).get());
     }
 
     @Test
     @DisplayName("장바구니 저장 테스트")
     void save() {
-        Long saveItemId = cartDao.save("test@naver.com", 3L);
-        Assertions.assertThat(saveItemId).isEqualTo(3L);
+        ItemEntity item = itemDao.save(new ItemEntity("피자1", "b", 20000));
+        ItemEntity save = cartDao.save("test@naver.com", item);
+        Assertions.assertThat(save).isEqualTo(item);
     }
 
     @Test
     @DisplayName("모든 장바구니 조회 테스트")
     void findAll() {
-        Optional<List<ItemEntity>> carts = cartDao.findAll("test@naver.com");
-        List<ItemEntity> retrievedCarts = carts.get();
+        Optional<Map<ItemEntity, Long>> carts = cartDao.findAll("test@naver.com");
+        Map<ItemEntity, Long> retrievedCarts = carts.get();
         Assertions.assertThat(retrievedCarts).hasSize(2);
     }
 
     @Test
     @DisplayName("장바구니 삭제 테스트")
     void delete() {
-        cartDao.delete("test@naver.com", 1L);
-        Optional<List<ItemEntity>> carts = cartDao.findAll("test@naver.com");
-        List<ItemEntity> retrievedCarts = carts.get();
+        ItemEntity item = new ItemEntity(2L, "피자", "b", 20000);
+        cartDao.delete("test@naver.com", item);
+        Optional<Map<ItemEntity, Long>> carts = cartDao.findAll("test@naver.com");
+        Map<ItemEntity, Long> retrievedCarts = carts.get();
         Assertions.assertThat(retrievedCarts).hasSize(1);
     }
 }

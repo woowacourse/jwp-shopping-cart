@@ -43,7 +43,7 @@ class CartControllerTest {
 
         MemberEntity member1 = memberDao.save(new MemberEntity("email@email.com", "hello", "01012345678", "password"));
 
-        cartDao.save(member1.getEmail(), item1.getId());
+        cartDao.save(member1.getEmail(), itemDao.findById(item1.getId()).get());
 
         authorization = Base64Utils.encodeToString((member1.getEmail() + ":" + member1.getPassword()).getBytes());
         invalidAuthorization = Base64Utils.encodeToString((member1.getEmail() + ":" + "abc").getBytes());
