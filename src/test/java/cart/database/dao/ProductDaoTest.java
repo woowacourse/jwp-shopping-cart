@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.database.dao;
 
 import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
