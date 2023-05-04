@@ -2,20 +2,22 @@ package cart.persistence;
 
 import cart.domain.Member;
 import cart.domain.MemberRepository;
-import org.springframework.jdbc.core.JdbcTemplate;
+import cart.dto.LoginDto;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberRepositoryImpl implements MemberRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public MemberRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public MemberRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -27,32 +29,6 @@ public class MemberRepositoryImpl implements MemberRepository {
     };
 
     @Override
-    public Member save(Member member) {
-        String sql = "INSERT INTO member(email, password) VALUES(?, ?)";
-
-        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update((con -> {
-            var psmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            psmt.setString(1, member.getEmail());
-            psmt.setString(2, member.getPassword());
-            return psmt;
-        }), keyHolder);
-
-        Long memberId = keyHolder.getKey().longValue();
-
-        return new Member(memberId, member.getEmail(), member.getPassword());
-    }
-
-    @Override
-    public Member findById(Long id) {
-        String sql = "SELECT member_id, email, password FROM member WHERE member_id = ?";
-
-
-        return jdbcTemplate.queryForObject(sql, memberRowMapper);
-    }
-
-    @Override
     public List<Member> findAll() {
         String sql = "SELECT member_id, email, password FROM member";
 
@@ -60,9 +36,27 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Member findByEmail(String email) {
-        String sql = "SELECT member_id, email, password FROM member WHERE email = ?";
+    public boolean contains(Member member) {
+        String sql = "SELECT COUNT(*) FROM member WHERE email = :email AND password = :password";
 
-        return jdbcTemplate.queryForObject(sql, memberRowMapper, email);
+        var parameterSource = new MapSqlParameterSource("email", member.getEmail())
+                .addValue("password", member.getPassword());
+
+        Integer count = jdbcTemplate.queryForObject(sql, parameterSource, int.class);
+        return count > 0;
+    }
+
+    @Override
+    public Optional<Member> findByEmailAndPassword(LoginDto loginDto) {
+        String sql = "SELECT member_id, email, password FROM member WHERE email = :email AND password = :password";
+
+        var parameterSource = new MapSqlParameterSource("email", loginDto.getEmail())
+                .addValue("password", loginDto.getPassword());
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameterSource, memberRowMapper));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

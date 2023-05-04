@@ -1,13 +1,14 @@
 ### Request
 
-GET localhost:8080/cart-items
+POST http://localhost:8080/cart/1
 Authorization: Basic dGVzdDE6cGFzczE=
 
 ### Response
 
 HTTP/1.1 200
-Content-Type: application/json
+Content-Type: text/html;charset=UTF-8
+Content-Language: ko-KR
 Transfer-Encoding: chunked
-Date: Thu, 04 May 2023 02:34:35 GMT
+Date: Thu, 04 May 2023 02:38:00 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive

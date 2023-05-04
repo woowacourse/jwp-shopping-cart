@@ -1,4 +1,2 @@
 DELETE localhost:8080/cart-items/1
 Authorization: Basic dGVzdDE6cGFzczE=
-
-

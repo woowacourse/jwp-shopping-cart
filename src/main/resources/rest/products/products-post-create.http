@@ -1,3 +1,5 @@
+### Request
+
 POST localhost:8080/products
 Content-Type: application/json
 
@@ -6,3 +8,13 @@ Content-Type: application/json
   "price": "5000",
   "image-url": "testimage"
 }
+
+### Response
+
+HTTP/1.1 201
+Location: /products/8
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Thu, 04 May 2023 02:47:25 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive

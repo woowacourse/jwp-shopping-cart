@@ -1,14 +1,15 @@
 package cart.domain;
 
+import cart.dto.LoginDto;
+
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberRepository {
 
-    Member save(Member member);
-
-    Member findById(Long id);
-
     List<Member> findAll();
 
-    Member findByEmail(String email);
+    boolean contains(Member member);
+
+    Optional<Member> findByEmailAndPassword(LoginDto loginDto);
 }

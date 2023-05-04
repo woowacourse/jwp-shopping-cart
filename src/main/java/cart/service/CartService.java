@@ -37,7 +37,8 @@ public class CartService {
 
     public void addCartItem(Long productId, Long memberId) {
         Cart cart = cartRepository.getCartByMemberId(memberId);
-        Product product = productDao.findById(productId);
+        Product product = productDao.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 경로입니다"));
         CartItem cartItem = new CartItem(product);
         cart.addItem(cartItem);
         cartRepository.save(cart);

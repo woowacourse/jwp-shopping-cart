@@ -1,21 +1,23 @@
 package cart.persistence.dao;
 
 import cart.domain.Product;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class H2ProductDao implements ProductDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public H2ProductDao(JdbcTemplate jdbcTemplate) {
+    public H2ProductDao(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -28,25 +30,29 @@ public class H2ProductDao implements ProductDao {
     };
 
     @Override
-    public Product findById(Long id) {
-        String sql = "SELECT id, name, image_url, price FROM product WHERE id = ?";
+    public Optional<Product> findById(Long id) {
+        String sql = "SELECT id, name, image_url, price FROM product WHERE id = :id";
 
-        return jdbcTemplate.queryForObject(sql, productRowMapper, id);
+        var parameterSource = new MapSqlParameterSource("id", id);
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, parameterSource, productRowMapper));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public Long insertAndGetKeyHolder(Product product) {
-        String sql = "INSERT INTO PRODUCT(name, image_url, price) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO PRODUCT(name, image_url, price) VALUES(:name, :image_url, :price)";
 
         var keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(con -> {
-            var ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, product.getName());
-            ps.setString(2, product.getImageUrl());
-            ps.setBigDecimal(3, product.getPrice());
-            return ps;
-        }, keyHolder);
+        var parameterSource = new MapSqlParameterSource("name", product.getName())
+                .addValue("image_url", product.getImageUrl())
+                .addValue("price", product.getPrice());
+
+        jdbcTemplate.update(sql, parameterSource, keyHolder);
 
         return Long.valueOf(keyHolder.getKeys().get("id").toString());
     }
@@ -54,29 +60,28 @@ public class H2ProductDao implements ProductDao {
     @Override
     public List<Product> findAll() {
         String sql = "SELECT id, name, image_url, price FROM PRODUCT";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new Product(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("image_url"),
-                rs.getBigDecimal("price")
-        ));
+
+        return jdbcTemplate.query(sql, productRowMapper);
     }
 
     @Override
     public void update(Product product) {
-        String sql = "UPDATE PRODUCT SET id=?, name=?, image_url=?, price=? WHERE id=?";
-        jdbcTemplate.update(sql,
-                product.getId(),
-                product.getName(),
-                product.getImageUrl(),
-                product.getPrice(),
-                product.getId()
-        );
+        String sql = "UPDATE PRODUCT SET id=:id, name=:name, image_url=:image_url, price=:price WHERE id=:id";
+
+        var parameterSource = new MapSqlParameterSource("id", product.getId())
+                .addValue("name", product.getName())
+                .addValue("image_url", product.getImageUrl())
+                .addValue("price", product.getPrice());
+
+        jdbcTemplate.update(sql, parameterSource);
     }
 
     @Override
     public void delete(Long id) {
-        String sql = "DELETE FROM PRODUCT WHERE id=?";
-        jdbcTemplate.update(sql, id);
+        String sql = "DELETE FROM PRODUCT WHERE id=:id";
+
+        var parameterSource = new MapSqlParameterSource("id", id);
+
+        jdbcTemplate.update(sql, parameterSource);
     }
 }

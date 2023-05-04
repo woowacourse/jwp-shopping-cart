@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.math.BigDecimal;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class H2ProductDaoTest {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    NamedParameterJdbcTemplate jdbcTemplate;
     ProductDao dao;
 
     @BeforeEach
@@ -31,7 +31,7 @@ class H2ProductDaoTest {
     @Test
     @DisplayName("id가 1인 Product를 조회한다")
     void findByIdTest() {
-        Product product1 = dao.findById(1L);
+        Product product1 = dao.findById(1L).get();
 
         assertThat(product1.getId()).isEqualTo(1L);
     }
@@ -44,7 +44,7 @@ class H2ProductDaoTest {
         Long keyHolder = dao.insertAndGetKeyHolder(dummy6);
         Product inserted = new Product(keyHolder, dummy6.getName(), dummy6.getImageUrl(), dummy6.getPrice());
 
-        Product found = dao.findById(keyHolder);
+        Product found = dao.findById(keyHolder).get();
 
         assertThat(found).isEqualTo(inserted);
     }
@@ -66,7 +66,7 @@ class H2ProductDaoTest {
         Product updated = new Product(id, name, imageUrl, price);
 
         dao.update(updated);
-        Product fined = dao.findById(id);
+        Product fined = dao.findById(id).get();
 
         assertThat(fined).isEqualTo(updated);
     }

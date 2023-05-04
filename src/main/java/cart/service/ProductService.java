@@ -36,7 +36,8 @@ public class ProductService {
     }
 
     public ProductResponse getProduct(Long id) {
-        Product product = productDao.findById(id);
+        Product product = productDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 경로입니다"));
 
         return new ProductResponse(product);
     }

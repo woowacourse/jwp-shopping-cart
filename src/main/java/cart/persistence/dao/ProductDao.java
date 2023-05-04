@@ -3,6 +3,7 @@ package cart.persistence.dao;
 import cart.domain.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductDao {
 
@@ -14,5 +15,5 @@ public interface ProductDao {
 
     void delete(Long id);
 
-    Product findById(Long id);
+    Optional<Product> findById(Long id);
 }

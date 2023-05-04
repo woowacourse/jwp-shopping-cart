@@ -4,7 +4,6 @@ import cart.auth.AuthenticationPrincipal;
 import cart.dto.LoginDto;
 import cart.service.CartService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +16,6 @@ public class CartController {
 
     public CartController(CartService cartService) {
         this.cartService = cartService;
-    }
-
-    @GetMapping
-    public String getCartView() {
-        return "cart";
     }
 
     @PostMapping("/{id}")

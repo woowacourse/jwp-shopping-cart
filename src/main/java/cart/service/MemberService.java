@@ -7,6 +7,7 @@ import cart.dto.response.MemberResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,12 +19,6 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public void saveMembers(List<Member> members) {
-        for (Member member : members) {
-            memberRepository.save(member);
-        }
-    }
-
     public List<MemberResponse> findAllMembers() {
         List<Member> members = memberRepository.findAll();
 
@@ -32,10 +27,13 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
+    public boolean login(LoginDto loginDto) {
+        Member loginInfo = loginDto.toEntity();
+        return memberRepository.contains(loginInfo);
+    }
 
-    public LoginDto login(LoginDto loginDto) {
-        Member loginMember = loginDto.toEntity();
-        Member member = memberRepository.findByEmail(loginMember.getEmail());
-        return new LoginDto(member);
+    public Optional<LoginDto> findMemberByLoginDto(LoginDto loginDto) {
+        return memberRepository.findByEmailAndPassword(loginDto)
+                .map(LoginDto::new);
     }
 }

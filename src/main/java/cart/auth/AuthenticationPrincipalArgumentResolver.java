@@ -10,14 +10,17 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.util.Base64;
+import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
+    private final BasicAuthorizationExtractor extractor;
     private final MemberService memberService;
 
-    public AuthenticationPrincipalArgumentResolver(MemberService memberService) {
+
+    public AuthenticationPrincipalArgumentResolver(BasicAuthorizationExtractor extractor, MemberService memberService) {
+        this.extractor = extractor;
         this.memberService = memberService;
     }
 
@@ -28,12 +31,14 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public LoginDto resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        // TODO extractor 사용하도록 변경
-        String authorization = webRequest.getHeader("Authorization");
-        String substring = authorization.substring("Basic ".length());
-        String decode = new String(Base64.getDecoder().decode(substring));
-        String[] split = decode.split(":");
+        HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
+        LoginDto extract = extractor.extract(httpServletRequest);
 
-        return memberService.login(new LoginDto(split[0], split[1]));
+        if (extract == null) {
+            throw new AuthorizationException();
+        }
+
+        return memberService.findMemberByLoginDto(extract)
+                .orElseThrow(AuthorizationException::new);
     }
 }

@@ -1,1 +1,10 @@
+### Request
+
 DELETE localhost:8080/products/1
+
+### Response
+
+HTTP/1.1 204
+Date: Thu, 04 May 2023 02:47:59 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
