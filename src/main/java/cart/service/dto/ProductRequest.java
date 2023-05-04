@@ -6,7 +6,6 @@ import javax.validation.constraints.NotNull;
 
 public class ProductRequest {
 
-    private final Long id;
     @NotBlank(message = "이름이 비어있을 수는 없습니다.")
     private final String name;
     @NotBlank(message = "imageUrl이 비어있을 수 없습니다.")
@@ -15,26 +14,21 @@ public class ProductRequest {
     private final Integer price;
 
     private ProductRequest() {
-        this(null, null, null, null);
+        this(null, null, null);
     }
 
-    public ProductRequest(final Long id, final String name, final String imageUrl, final Integer price) {
-        this.id = id;
+    public ProductRequest(final String name, final String imageUrl, final Integer price) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
     }
 
-    public ProductRequest(final String name, final String imageUrl, final Integer price) {
-        this(null, name, imageUrl, price);
-    }
-
-    public Product toProduct() {
+    public Product toProduct(final long id) {
         return new Product(id, name, imageUrl, price);
     }
 
-    public Long getId() {
-        return id;
+    public Product toProduct() {
+        return new Product(name, imageUrl, price);
     }
 
     public String getName() {

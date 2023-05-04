@@ -29,8 +29,8 @@ public class ProductService {
         return savedProduct.getId();
     }
 
-    public void updateProduct(final ProductRequest productRequest) {
-        final int updatedCount = productRepository.update(productRequest.toProduct());
+    public void updateProduct(final Long id, final ProductRequest productRequest) {
+        final int updatedCount = productRepository.update(productRequest.toProduct(id));
         validateProductNotFound(updatedCount);
     }
 

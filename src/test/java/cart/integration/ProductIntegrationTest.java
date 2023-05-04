@@ -66,7 +66,7 @@ class ProductIntegrationTest {
     @Test
     @DisplayName("상품 수정 테스트")
     void editProduct() {
-        final ProductRequest productRequest = new ProductRequest(1L, "TEST787",
+        final ProductRequest productRequest = new ProductRequest("TEST787",
                 "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", 4000);
 
         given()
