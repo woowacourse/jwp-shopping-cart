@@ -1,9 +1,7 @@
 package cart.controller;
 
+import cart.auth.AuthenticatedMember;
 import cart.auth.AuthenticationPrincipal;
-import cart.auth.AuthenticationExtractor;
-import cart.auth.AuthenticationService;
-import cart.auth.MemberAuthentication;
 import cart.dto.CartItemCreationDto;
 import cart.dto.MemberDto;
 import cart.dto.request.CartItemCreationRequest;
@@ -33,21 +31,21 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> postCartItems(@AuthenticationPrincipal MemberDto memberDto,
+    public ResponseEntity<Void> postCartItems(@AuthenticationPrincipal AuthenticatedMember authenticatedMember,
                                               @Valid @RequestBody CartItemCreationRequest cartItemCreationRequest) {
         final Long productId = cartItemCreationRequest.getProductId();
-        final long id = cartItemManagementService.save(CartItemCreationDto.of(memberDto.getId(), productId));
+        final long id = cartItemManagementService.save(CartItemCreationDto.of(authenticatedMember.getId(), productId));
         return ResponseEntity.created(URI.create("/cart/cart-items/" + id)).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> getCartItems(@AuthenticationPrincipal MemberDto memberDto) {
-        List<CartItemResponse> response = CartItemResponse.from(cartItemManagementService.findAllByMemberId(memberDto.getId()));
+    public ResponseEntity<List<CartItemResponse>> getCartItems(@AuthenticationPrincipal AuthenticatedMember authenticatedMember) {
+        List<CartItemResponse> response = CartItemResponse.from(cartItemManagementService.findAllByMemberId(authenticatedMember.getId()));
         return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/{cartItemId}")
-    public ResponseEntity<Void> deleteCartItems(@AuthenticationPrincipal MemberDto memberDto,
+    public ResponseEntity<Void> deleteCartItems(@AuthenticationPrincipal AuthenticatedMember authenticatedMember,
                                                 @PathVariable Long cartItemId) {
         cartItemManagementService.deleteById(cartItemId);
         return ResponseEntity.noContent().build();
