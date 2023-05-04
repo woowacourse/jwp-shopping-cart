@@ -1,7 +1,5 @@
 package cart.entity;
 
-import cart.dto.request.CartRequest;
-
 import java.sql.Timestamp;
 
 public class CartEntity {
@@ -45,7 +43,7 @@ public class CartEntity {
         return updatedAt;
     }
 
-    public void replace(CartRequest cartRequest) {
-        this.count = cartRequest.getCount();
+    public void replace(int count) {
+        this.count = count;
     }
 }

@@ -42,7 +42,7 @@
             }
         }).then((response) => {
             const cartItems = response.data;
-
+            console.log(response);
             let productElement = '';
             cartItems.forEach(cartItem => {
                 productElement += `
@@ -51,6 +51,7 @@
                             <img src="${cartItem.product.image}" alt=""/> <!-- 상품 이미지 -->
                             <div class="cart-item-name">${cartItem.product.name}</div> <!-- 상품 이름 -->
                             <div class="cart-item-price">${cartItem.product.price}</div> <!-- 상품 가격 -->
+                            <div class="cart-item-price">${cartItem.count}개</div> <!-- 상품 개수 -->
                             <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
                           </div>
                         </div>

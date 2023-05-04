@@ -7,7 +7,7 @@ public class CartRequest {
     @NotNull(message = "상품 아이디가 필요합니다.")
     private long productId;
 
-    private int count;
+    private int count = 1;
 
     public CartRequest() {
     }

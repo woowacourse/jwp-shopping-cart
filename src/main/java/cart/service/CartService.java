@@ -25,8 +25,10 @@ public class CartService {
 
     public CartResponse create(CartRequest cartRequest, long memberId) {
         Cart cart = cartMapper.requestToCart(cartRequest);
+
         CartEntity save = cartDao.save(cart, cartRequest.getProductId(), memberId)
                 .orElseThrow(() -> new ResourceNotFoundException("데이터가 정상적으로 저장되지 않았습니다."));
+
         return cartMapper.entityToResponse(save);
     }
 
@@ -44,10 +46,16 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public CartResponse update(CartRequest cartRequest, Long id) {
-        CartEntity cart = cartDao.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 장바구니를 찾을 수 없습니다." + System.lineSeparator() + "id : " + id));
-        cart.replace(cartRequest);
+    public CartResponse update(CartRequest cartRequest, Long cartId) {
+        CartEntity cart = cartDao.findById(cartId)
+                .orElseThrow(() -> new NoSuchElementException("해당 장바구니를 찾을 수 없습니다." + System.lineSeparator() + "cartId : " + cartId));
+        cart.replace(cartRequest.getCount());
+        cartDao.update(cart);
+        return cartMapper.entityToResponse(cart);
+    }
+
+    public CartResponse increaseCount(CartEntity cart) {
+        cart.replace(cart.getCount() + 1);
         cartDao.update(cart);
         return cartMapper.entityToResponse(cart);
     }

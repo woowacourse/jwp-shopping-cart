@@ -20,7 +20,11 @@ public class CartMapper {
         return new Cart(request.getProductId(), request.getCount());
     }
 
+    public Cart entityToCart(CartEntity entity) {
+        return new Cart(entity.getProduct().getId(), entity.getCount());
+    }
+
     public CartResponse entityToResponse(CartEntity entity) {
-        return new CartResponse(entity.getId(), memberMapper.entityToResponse(entity.getMember()), productMapper.entityToResponse(entity.getProduct()));
+        return new CartResponse(entity.getId(), memberMapper.entityToResponse(entity.getMember()), productMapper.entityToResponse(entity.getProduct()), entity.getCount());
     }
 }

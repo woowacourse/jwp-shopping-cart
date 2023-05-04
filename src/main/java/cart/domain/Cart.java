@@ -16,4 +16,8 @@ public class Cart {
     public int getCount() {
         return count;
     }
+
+    public void increaseCount() {
+        this.count++;
+    }
 }

@@ -7,8 +7,7 @@ const addCartItem = (productId) => {
     }
     // TODO: 장바구니 담을 때 개수 포함하도록 요청 수정하기.
     var requestData = {
-        'productId': productId,
-        'count': 1
+        'productId': productId
     }
     axios.request({
         url: '/carts',
