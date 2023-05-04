@@ -3,10 +3,13 @@ package cart.controller;
 import cart.auth.Auth;
 import cart.dto.request.CartRequestDto;
 import cart.dto.response.CartItemResponseDto;
+import cart.exception.CartItemNotFoundException;
+import cart.exception.ProductNotFoundException;
 import cart.service.CartService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +22,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/carts")
 public class CartController {
 
     private static final String REDIRECT_URL = "/";
@@ -37,7 +40,7 @@ public class CartController {
         return ResponseEntity.created(URI.create(REDIRECT_URL)).build();
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public ResponseEntity<List<CartItemResponseDto>> read(@Auth final Integer userId) {
         final List<CartItemResponseDto> response = cartService.getProductsInCart(userId);
         return ResponseEntity.ok().body(response);
@@ -47,5 +50,10 @@ public class CartController {
     public ResponseEntity<Void> delete(@Auth final Integer userId, @PathVariable final int id) {
         cartService.delete(id, userId);
         return ResponseEntity.ok().build();
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<String> handle() {
+        return ResponseEntity.notFound().build();
     }
 }

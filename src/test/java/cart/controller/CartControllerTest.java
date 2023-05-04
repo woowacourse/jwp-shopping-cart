@@ -65,7 +65,7 @@ class CartControllerTest {
                 .willReturn(1);
 
         //expect
-        mockMvc.perform(post("/cart")
+        mockMvc.perform(post("/carts")
                         .header("Authorization", authenticationHeader)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -81,7 +81,7 @@ class CartControllerTest {
         final String requestBody = objectMapper.writeValueAsString(requestDto);
 
         //expect
-        mockMvc.perform(post("/cart")
+        mockMvc.perform(post("/carts")
                         .header("Authorization", authenticationHeader)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -99,7 +99,7 @@ class CartControllerTest {
 
 
         // expect
-        mockMvc.perform(post("/cart")
+        mockMvc.perform(post("/carts")
                         .header("Authorization", authenticationHeader)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -111,8 +111,8 @@ class CartControllerTest {
     void read_success() throws Exception {
         // given
         final List<CartItemResponseDto> response = List.of(
-                new CartItemResponseDto(1, "삼겹살", "3-hierarchy-fat.jpg", 16000),
-                new CartItemResponseDto(1, "목살", "neck-fat.jpg", 15000)
+                new CartItemResponseDto(1, "삼겹살", "3-hierarchy-meat.jpg", 16000),
+                new CartItemResponseDto(2, "목살", "neck-meat.jpg", 15000)
         );
         given(authDao.findIdByEmailAndPassword(email, password))
                 .willReturn(1);
@@ -122,10 +122,10 @@ class CartControllerTest {
         // expect
         final String responseBody =
                 "[" +
-                        "{\"id\":1,\"name\":\"삼겹살\",\"image\":\"3-hierarchy-fat.jpg\",\"price\":16000}," +
-                        "{\"id\":1,\"name\":\"목살\",\"image\":\"neck-fat.jpg\",\"price\":15000}" +
+                        "{\"id\":1,\"name\":\"삼겹살\",\"image\":\"3-hierarchy-meat.jpg\",\"price\":16000}," +
+                        "{\"id\":2,\"name\":\"목살\",\"image\":\"neck-meat.jpg\",\"price\":15000}" +
                 "]";
-        mockMvc.perform(get("/cart")
+        mockMvc.perform(get("/carts")
                         .header("Authorization", authenticationHeader))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().json(responseBody))
@@ -140,7 +140,7 @@ class CartControllerTest {
                 .willThrow(AuthorizationException.class);
 
         // expect
-        mockMvc.perform(get("/cart")
+        mockMvc.perform(get("/carts")
                         .header("Authorization", authenticationHeader))
                 .andExpect(status().isUnauthorized());
     }
@@ -149,7 +149,7 @@ class CartControllerTest {
     @DisplayName("장바구니 상품 삭제 성공")
     void delete_success() throws Exception {
         //expect
-        mockMvc.perform(delete("/cart/1")
+        mockMvc.perform(delete("/carts/1")
                         .header("Authorization", authenticationHeader))
                 .andExpect(status().isOk());
     }
@@ -176,7 +176,7 @@ class CartControllerTest {
                 .willThrow(AuthorizationException.class);
 
         // expect
-        mockMvc.perform(delete("/cart/1")
+        mockMvc.perform(delete("/carts/1")
                         .header("Authorization", authenticationHeader))
                 .andExpect(status().isUnauthorized());
     }

@@ -78,9 +78,9 @@ class CartDaoTest {
         // then
         assertAll(
                 () -> assertThat(productsInCart).hasSize(2),
-                () -> assertThat(productsInCart.get(0).getName()).isEqualTo("pooh"),
-                () -> assertThat(productsInCart.get(0).getImage()).isEqualTo("pooh.jpg"),
-                () -> assertThat(productsInCart.get(0).getPrice()).isEqualTo(1000000)
+                () -> assertThat(productsInCart.get(0).getName()).isEqualTo("삼겹살"),
+                () -> assertThat(productsInCart.get(0).getImage()).isEqualTo("3-hierarchy-meat.jpg"),
+                () -> assertThat(productsInCart.get(0).getPrice()).isEqualTo(16000)
         );
     }
 

@@ -3,30 +3,23 @@ package cart.controller;
 
 import cart.dto.response.UserResponseDto;
 import cart.entity.ProductEntity;
-import cart.entity.UserEntity;
-import cart.service.CartService;
 import cart.service.ProductService;
 import cart.service.UserService;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
 
     private final ProductService productService;
     private final UserService userService;
-    private final CartService cartService;
 
-    public MainController(final ProductService productService,
-                          final UserService userService, final CartService cartService) {
+    public MainController(final ProductService productService, final UserService userService) {
         this.productService = productService;
         this.userService = userService;
-        this.cartService = cartService;
     }
 
     @GetMapping
@@ -36,7 +29,7 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping(value = "/cart", produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping("/cart")
     public String cartPage() {
         return "cart";
     }
