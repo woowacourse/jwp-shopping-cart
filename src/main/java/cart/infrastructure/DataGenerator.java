@@ -5,8 +5,10 @@ import cart.domain.user.User;
 import cart.repository.ProductRepository;
 import cart.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+@Profile("!test")
 @Component
 public class DataGenerator implements CommandLineRunner {
 
