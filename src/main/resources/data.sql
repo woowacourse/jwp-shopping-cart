@@ -4,3 +4,5 @@ INSERT INTO Product (id, name, price, image_url) VALUES (4, '피자', 10000, 'ht
 
 INSERT INTO Member (email, password) VALUES ('email1@email.com', 'member1');
 INSERT INTO Member (email, password) VALUES ('email2@email.com', 'member2');
+
+INSERT INTO Cart (member_email, product_id) VALUES ('email1@email.com', 2);

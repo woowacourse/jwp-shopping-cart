@@ -52,7 +52,7 @@ public class ProductDaoTest {
     @Test
     @DisplayName("상품을 데이터베이스에서 삭제한다.")
     void deleteById() {
-        productDao.deleteById(2);
+        productDao.deleteById(4);
 
         List<Product> products = productDao.selectAll();
 
