@@ -35,8 +35,12 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<Membe
     }
     
     private void validateBasic(final String header) {
-        if (!header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
+        if (!isHeaderBasicType(header)) {
             throw new IllegalArgumentException("[ERROR] Basic 형식이 아닙니다.");
         }
+    }
+    
+    private boolean isHeaderBasicType(final String header) {
+        return header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase());
     }
 }

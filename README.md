@@ -45,3 +45,23 @@ CREATE TABLE PRODUCT
   - [x] /cart로 이동 시, 해당 계정의 장바구니 목록 조회
 
 - [x] 관리자 페이지에서 상품 삭제 시 장바구니에 있는 해당 상품 정보도 같이 삭제
+
+```sql
+CREATE TABLE IF NOT EXISTS MEMBER
+(
+    id          INT        UNSIGNED NOT NULL AUTO_INCREMENT,
+    email       VARCHAR(255)        NOT NULL,
+    password    VARCHAR(255)        NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS CART
+(
+    id          INT        UNSIGNED NOT NULL AUTO_INCREMENT,
+    member_id   INT        UNSIGNED NOT NULL,
+    product_id  INT        UNSIGNED NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (product_id) REFERENCES product (id)
+);
+```

@@ -23,4 +23,4 @@ CREATE TABLE IF NOT EXISTS CART
     PRIMARY KEY (id),
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
-    );
+);
