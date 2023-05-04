@@ -1,14 +1,14 @@
 package cart.dao;
 
-import cart.domain.cart.CardDao;
 import cart.domain.cart.Cart;
+import cart.domain.cart.CartDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class H2CartDao implements CardDao {
+public class H2CartDao implements CartDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;

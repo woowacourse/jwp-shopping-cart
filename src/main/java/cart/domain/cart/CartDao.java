@@ -1,5 +1,5 @@
 package cart.domain.cart;
 
-public interface CardDao {
+public interface CartDao {
     Long addProduct(Cart cart);
 }
