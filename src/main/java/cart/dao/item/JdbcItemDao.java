@@ -41,7 +41,7 @@ public class JdbcItemDao implements ItemDao {
 
         long itemId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        return new ItemEntity(itemId,item.getName(),item.getImageUrl(), item.getPrice());
+        return new ItemEntity(itemId, item.getName(), item.getImageUrl(), item.getPrice());
     }
 
     @Override
@@ -64,6 +64,15 @@ public class JdbcItemDao implements ItemDao {
 
             return new ItemEntity(id, name, itemUrl, price);
         };
+    }
+
+    public Optional<ItemEntity> findById(Long id) {
+        String sql = "select * from item where id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, mapRow(), id));
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new IllegalArgumentException("요청하신 상품을 찾을 수 없습니다. 올바른 상품 ID를 입력해주세요.");
+        }
     }
 
     @Override
