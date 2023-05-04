@@ -1,6 +1,7 @@
 package cart.domain;
 
-//TODO : 테이블 명 변경
+
+//MEMBER를 가져야한다.
 public class CartProduct {
 
     private final Long id;

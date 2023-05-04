@@ -54,7 +54,7 @@ class CartProductDaoTest {
         saveProductAndMember(MEMBER_ID, PRODUCT_ID);
         cartProductDao.save(MEMBER_ID, PRODUCT_ID);
         //when
-        List<CartProduct> actual = cartProductDao.findAllCartProductsByMemberId(MEMBER_ID);
+        List<CartProduct> actual = cartProductDao.findAllByMemberId(MEMBER_ID);
         //then
         assertThat(actual.size()).isEqualTo(1);
     }

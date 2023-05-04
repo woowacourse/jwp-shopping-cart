@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Member;
+import cart.exception.custom.ResourceNotFoundException;
 import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 
@@ -68,7 +68,8 @@ class MemberDaoTest {
     void find_by_email_fail_by_wrong_email() {
         //when && then
         assertThatThrownBy(() -> memberDao.findByEmail(EMAIL))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("해당하는 email의 member가 존재하지 않습니다.");
     }
 
     private void saveMember(Member member) {

@@ -1,6 +1,5 @@
 package cart.domain;
 
-//TODO: PASSWORD 타입 변경(DB 포함)
 public class Member {
 
     private Long id;

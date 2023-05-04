@@ -1,6 +1,7 @@
 package cart.controller;
 
 import static cart.fixture.ProductRequestFixture.PRODUCT_REQUEST_A;
+import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.ProductDao;
@@ -45,10 +46,11 @@ class MainControllerTest {
         int countOfProduct = 3;
         createProductsByCount(countOfProduct);
         //when
-        Response response = RestAssured.given().log().all()
+        Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(PRODUCT_REQUEST_A)
-                .when().get("/admin");
+                .when()
+                .get("/admin");
         //then
         Document doc = Jsoup.parse(response.getBody().asString());
         int actual = doc.select(ADMIN_PAGE_PRODUCT_LIST_HTML_TAG).size();
@@ -63,10 +65,11 @@ class MainControllerTest {
         int countOfProduct = 3;
         createProductsByCount(countOfProduct);
         //when
-        Response response = RestAssured.given().log().all()
+        Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(PRODUCT_REQUEST_A)
-                .when().get("/");
+                .when()
+                .get("/");
         //then
         Document doc = Jsoup.parse(response.getBody().asString());
         int actual = doc.select(INDEX_PAGE_PRODUCT_LIST_HTML_TAG).size();

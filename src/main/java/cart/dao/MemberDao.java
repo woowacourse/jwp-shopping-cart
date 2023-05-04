@@ -1,8 +1,10 @@
 package cart.dao;
 
 import cart.domain.Member;
+import cart.exception.custom.ResourceNotFoundException;
 import java.util.List;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -28,6 +30,10 @@ public class MemberDao {
 
     public Member findByEmail(String email) {
         String sql = "select * from member where email = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, email);
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, email);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new ResourceNotFoundException("해당하는 email의 member가 존재하지 않습니다.");
+        }
     }
 }

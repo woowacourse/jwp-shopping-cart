@@ -32,6 +32,7 @@ public class CartProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    //TODO unique
     public Long save(Long memberId,
                      Long productId) {
         Map<String, Object> cartValues = new HashMap<>();
@@ -40,7 +41,7 @@ public class CartProductDao {
         return insertActor.executeAndReturnKey(new MapSqlParameterSource(cartValues)).longValue();
     }
 
-    public List<CartProduct> findAllCartProductsByMemberId(Long memberId) {
+    public List<CartProduct> findAllByMemberId(Long memberId) {
         String sql = "SELECT c.id, c.product_id, p.name, p.price, p.image_url " +
                 "FROM CART_PRODUCT c " +
                 "join product p on c.product_id = p.id " +

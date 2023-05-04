@@ -4,6 +4,10 @@ import org.springframework.http.HttpStatus;
 
 public class ResourceNotFoundException extends ApplicationException {
 
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+
     public ResourceNotFoundException() {
         super("존재하지 않는 리소스입니다.");
     }

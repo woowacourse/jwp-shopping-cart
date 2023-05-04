@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.domain.Member;
 import cart.dto.response.ProductResponse;
-import cart.service.ProductService;
 import cart.service.MemberService;
+import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +41,12 @@ public class MainController {
         List<Member> members = memberService.findAll();
         mav.addObject("members", members);
         mav.setViewName("settings");
+        return mav;
+    }
+
+    @GetMapping("/myCart")
+    public ModelAndView cart(ModelAndView mav) {
+        mav.setViewName("myCart");
         return mav;
     }
 }
