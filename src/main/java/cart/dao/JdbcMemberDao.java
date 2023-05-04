@@ -24,7 +24,7 @@ public class JdbcMemberDao implements MemberDao{
         return jdbcTemplate.query(sql, mapRow());
     }
 
-    public RowMapper<Member> mapRow() {
+    private RowMapper<Member> mapRow() {
         return (rs, rowNum) -> {
             Long id = rs.getLong(1);
             String email = rs.getString(2);

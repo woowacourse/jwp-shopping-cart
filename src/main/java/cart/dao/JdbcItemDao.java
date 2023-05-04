@@ -31,7 +31,7 @@ public class JdbcItemDao implements ItemDao {
         return jdbcTemplate.query(sql, mapRow());
     }
 
-    public RowMapper<Item> mapRow() {
+    private RowMapper<Item> mapRow() {
         return (rs, rowNum) -> {
             Long id = rs.getLong(1);
             String name = rs.getString(2);
