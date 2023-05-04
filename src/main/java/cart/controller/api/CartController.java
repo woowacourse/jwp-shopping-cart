@@ -24,12 +24,10 @@ public class CartController {
 
     private final AuthorizationExtractor<AuthDto> basicAuthorizationExtractor = new BasicAuthorizationExtractor();
     private final CartService cartService;
-    private final MemberService memberService;
 
     @Autowired
-    public CartController(final CartService cartService, final MemberService memberService) {
+    public CartController(final CartService cartService) {
         this.cartService = cartService;
-        this.memberService = memberService;
     }
 
     @GetMapping("/carts")
