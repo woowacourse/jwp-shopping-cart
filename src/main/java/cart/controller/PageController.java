@@ -40,4 +40,9 @@ public class PageController {
         model.addAttribute("members", members);
         return "settings";
     }
+
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
+    }
 }

@@ -28,7 +28,7 @@ public class CartDaoImpl implements CartDao {
         resultSet.getLong("id"),
         resultSet.getLong("member_id"),
         resultSet.getLong("product_id"),
-        resultSet.getInt("price"),
+        resultSet.getInt("count"),
         resultSet.getString("name"),
         resultSet.getString("image_url"),
         resultSet.getInt("price")

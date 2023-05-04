@@ -3,12 +3,16 @@ package cart.service.cart;
 import cart.dao.cart.CartDao;
 import cart.dao.member.MemberDao;
 import cart.dto.cart.CartRequest;
+import cart.dto.cartitem.CartItem;
+import cart.dto.cartitem.CartItemResponse;
 import cart.dto.member.MemberRequest;
 import cart.entity.cart.Cart;
 import cart.entity.cart.Count;
 import cart.entity.member.Member;
 import cart.exception.notfound.MemberNotFoundException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +39,18 @@ public class CartService {
         }
 
         return update(cart.get());
+    }
+
+    @Transactional
+    public List<CartItemResponse> findCartByMember(final MemberRequest memberRequest) {
+        Member member = memberDao.findByEmail(memberRequest.getEmail())
+            .orElseThrow(MemberNotFoundException::new);
+
+        List<CartItem> cartItems = cartDao.findByMemberId(member);
+
+        return cartItems.stream()
+            .map(CartItemResponse::new)
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private Long update(final Cart cart) {
