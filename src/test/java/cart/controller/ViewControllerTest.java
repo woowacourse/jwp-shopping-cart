@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.controller.dto.ProductResponse;
 import cart.domain.Product;
+import cart.service.MemberService;
 import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,20 +18,41 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AdminController.class)
-class AdminControllerTest {
+@WebMvcTest(ViewController.class)
+class ViewControllerTest {
 
     @MockBean
     private ProductService productService;
 
+    @MockBean
+    private MemberService memberService;
+
     @Autowired
     private MockMvc mockMvc;
+
+    @DisplayName("'/'로 GET 요청을 했을 때 index template을 반환한다.")
+    @Test
+    void getIndexPage() throws Exception {
+        // given
+        Product product = new Product(1L, "치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
+        given(productService.findAll()).willReturn(List.of(ProductResponse.from(product)));
+
+        // when, then
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("products"))
+                .andExpect(model().attribute("products", hasItem(hasProperty("id", is(1L)))))
+                .andExpect(model().attribute("products", hasItem(hasProperty("name", is("치킨")))))
+                .andExpect(model().attribute("products", hasItem(hasProperty("imageUrl", is("https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg")))))
+                .andExpect(model().attribute("products", hasItem(hasProperty("price", is(10000)))))
+                .andExpect(view().name("index"));
+    }
 
     @DisplayName("/admin으로 GET 요청을 했을 때 admin template을 반환한다.")
     @Test
     void findAllProducts() throws Exception {
         // given
-        Product product = new Product(1L, "치킨", "image.url", 10000);
+        Product product = new Product(1L, "치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
         given(productService.findAll()).willReturn(List.of(ProductResponse.from(product)));
 
         // when, then
@@ -39,7 +61,7 @@ class AdminControllerTest {
                 .andExpect(model().attributeExists("products"))
                 .andExpect(model().attribute("products", hasItem(hasProperty("id", is(1L)))))
                 .andExpect(model().attribute("products", hasItem(hasProperty("name", is("치킨")))))
-                .andExpect(model().attribute("products", hasItem(hasProperty("imageUrl", is("image.url")))))
+                .andExpect(model().attribute("products", hasItem(hasProperty("imageUrl", is("https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg")))))
                 .andExpect(model().attribute("products", hasItem(hasProperty("price", is(10000)))))
                 .andExpect(view().name("admin"));
     }
