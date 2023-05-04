@@ -1,7 +1,9 @@
 package cart.controller;
 
 import cart.controller.dto.ItemResponse;
+import cart.controller.dto.UserResponse;
 import cart.service.ItemService;
+import cart.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +14,11 @@ import java.util.List;
 public class ItemViewController {
 
     private final ItemService itemService;
+    private final UserService userService;
 
-    public ItemViewController(ItemService itemService) {
+    public ItemViewController(ItemService itemService, UserService userService) {
         this.itemService = itemService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -29,5 +33,12 @@ public class ItemViewController {
         List<ItemResponse> items = itemService.loadAllItem();
         model.addAttribute("products", items);
         return "admin";
+    }
+
+    @GetMapping("/settings")
+    public String showUserList(final Model model) {
+        List<UserResponse> users = userService.loadAllUser();
+        model.addAttribute("members", users);
+        return "settings";
     }
 }

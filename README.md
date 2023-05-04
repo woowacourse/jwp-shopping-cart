@@ -52,9 +52,9 @@
     - [x] 사용자 삭제
       - [x] DELETE /user 요청과 매핑
       - [x] 특정 user를 삭제한다
-- [ ] 사용자 설정 페이지 연동
-  - [ ] settings.html 파일이 /settings url을 통해 접근되도록 설정
-  - [ ] 사용자 목록을 담고 있는 Html을 응답한다
+- [x] 사용자 설정 페이지 연동
+  - [x] settings.html 파일이 /settings url을 통해 접근되도록 설정
+  - [x] 사용자 목록을 담고 있는 Html을 응답한다
     - 사용자 기본 정보
       - 사용자 이메일
       - 사용자 비밀번호
