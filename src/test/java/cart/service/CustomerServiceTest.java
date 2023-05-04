@@ -1,43 +1,48 @@
 package cart.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import cart.argumentresolver.basicauthorization.BasicAuthInfo;
+import cart.dao.CustomerDao;
 import cart.entity.customer.CustomerEntity;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@SpringBootTest
-@Transactional
+@ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
 
-
-    @Autowired
+    @Mock
+    private CustomerDao customerDao;
+    @InjectMocks
     private CustomerService customerService;
 
-    @DisplayName("모든 유저를 조회하여 반환한다 ( 어플리케이션 실행시 존재하는 2명의 더미 유저를 조회한다.)")
+    @DisplayName("모든 유저를 조회하여 반환한다.")
     @Test
     void findAll() {
         //given
+        when(customerDao.findAll())
+            .thenReturn(List.of(new CustomerEntity(1L, "email@email.com", "password")));
+
         //when
-        final List<CustomerEntity> customers = customerService.findAll();
+        final List<CustomerEntity> savedCustomer = customerService.findAll();
 
         //then
+        verify(customerDao).findAll();
         assertAll(
-            () -> assertThat(customers).hasSize(2),
-            () -> assertThat(customers.get(0).getId()).isEqualTo(1L),
-            () -> assertThat(customers.get(0).getEmail()).isEqualTo("split@wooteco.com"),
-            () -> assertThat(customers.get(0).getPassword()).isEqualTo("dazzle"),
-            () -> assertThat(customers.get(1).getId()).isEqualTo(2L),
-            () -> assertThat(customers.get(1).getEmail()).isEqualTo("dazzle@wooteco.com"),
-            () -> assertThat(customers.get(1).getPassword()).isEqualTo("split")
+            () -> Assertions.assertThat(savedCustomer).hasSize(1),
+            () -> Assertions.assertThat(savedCustomer.get(0).getId()).isEqualTo(1L),
+            () -> Assertions.assertThat(savedCustomer.get(0).getEmail()).isEqualTo("email@email.com"),
+            () -> Assertions.assertThat(savedCustomer.get(0).getPassword()).isEqualTo("password")
         );
     }
 
@@ -45,19 +50,19 @@ class CustomerServiceTest {
     @Test
     void findByEmailAndPassword() {
         //given
+        when(customerDao.findIdByEmailAndPassword(any(), any()))
+            .thenReturn(Optional.of(1L));
+
         //when
-        final Long firstCustomerId = customerService.findCustomerIdByBasicAuthInfo(
-            new BasicAuthInfo("split@wooteco.com", "dazzle")
-        );
-        final Long secondCustomerId = customerService.findCustomerIdByBasicAuthInfo(
-            new BasicAuthInfo("dazzle@wooteco.com", "split")
+        final Long customerId = customerService.findCustomerIdByBasicAuthInfo(
+            new BasicAuthInfo(
+                "email@email.com",
+                "password"
+            )
         );
 
         //then
-        final List<CustomerEntity> customerEntities = customerService.findAll();
-        final List<Long> customerIds = customerEntities.stream()
-            .map(CustomerEntity::getId)
-            .collect(Collectors.toList());
-        Assertions.assertThat(customerIds).containsExactly(firstCustomerId, secondCustomerId);
+        verify(customerDao).findIdByEmailAndPassword(any(), any());
+        Assertions.assertThat(customerId).isEqualTo(1L);
     }
 }

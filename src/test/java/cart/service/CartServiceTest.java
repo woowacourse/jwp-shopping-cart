@@ -2,106 +2,84 @@ package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import cart.dto.request.ProductRequestDto;
+import cart.dao.CartDao;
 import cart.entity.CartEntity;
-import cart.entity.customer.CustomerEntity;
-import cart.entity.product.ProductEntity;
 import java.util.List;
-import java.util.Objects;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@SpringBootTest
-@Transactional
+@ExtendWith(MockitoExtension.class)
 class CartServiceTest {
 
-    @Autowired
+    @Mock
+    private CartDao cartDao;
+
+    @InjectMocks
     private CartService cartService;
 
-    @Autowired
-    private CustomerService customerService;
 
-    @Autowired
-    private ProductService productService;
-
-    @DisplayName("상품과 고객의 Id를 통해 카트에 상품을 추가한다.")
+    @DisplayName("상품과 고객의 Id를 전달하여 DAO에서 데이터를 생성한다.")
     @Test
     void add() {
         //given
-        final Long registeredProductID = productService.register(
-            new ProductRequestDto(
-                "name",
-                "imageUrl",
-                1000,
-                "description",
-                List.of(1L)
-            )
-        );
-        final List<CustomerEntity> customers = customerService.findAll();
-        final Long firstCustomerId = customers.get(0).getId();
+        final CartEntity cartEntity = new CartEntity(1L, 1L);
+        final ArgumentCaptor<CartEntity> cartEntityArgumentCaptor = ArgumentCaptor.forClass(CartEntity.class);
+        when(cartDao.save(any()))
+            .thenReturn(1L);
 
         //when
-        cartService.save(new CartEntity(firstCustomerId, registeredProductID));
+        final Long savedId = cartService.save(cartEntity);
 
         //then
-        final List<ProductEntity> products = cartService.findAllProductsByCustomerId(firstCustomerId);
+        verify(cartDao).save(cartEntityArgumentCaptor.capture());
+        final CartEntity captorValue = cartEntityArgumentCaptor.getValue();
+
         assertAll(
-            () -> assertThat(products).hasSize(1),
-            () -> assertThat(Objects.requireNonNull(products).get(0).getId()).isEqualTo(registeredProductID)
+            () -> assertThat(savedId).isEqualTo(1L),
+            () -> assertThat(captorValue.getCustomerId()).isEqualTo(1L),
+            () -> assertThat(captorValue.getProductId()).isEqualTo(1L)
         );
     }
 
-    @DisplayName("카트의 Id로 카트 데이터를 삭제한다.")
+    @DisplayName("카트의 Id를 전달하여 DAO에서 데이터를 삭제한다.")
     @Test
     void delete() {
         //given
-        final Long registeredProductID = productService.register(
-            new ProductRequestDto(
-                "name",
-                "imageUrl",
-                1000,
-                "description",
-                List.of(1L)
-            )
-        );
-        final List<CustomerEntity> customers = customerService.findAll();
-        final Long firstCustomerId = customers.get(0).getId();
-        final Long cartId = cartService.save(new CartEntity(firstCustomerId, registeredProductID));
+        final ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+        doNothing().when(cartDao).delete(any());
 
         //when
-        cartService.delete(cartId);
+        cartService.delete(1L);
 
         //then
-        final List<ProductEntity> products = cartService.findAllProductsByCustomerId(firstCustomerId);
-        assertThat(products).hasSize(0);
+        verify(cartDao).delete(longArgumentCaptor.capture());
+        assertThat(longArgumentCaptor.getValue()).isEqualTo(1L);
     }
 
-    @DisplayName("고객 Id와 상품 Id로 카트 데이터를 삭제한다.")
+    @DisplayName("상품과 고객의 Id를 전달하여 DAO에서 데이터를 삭제한다.")
     @Test
     void deleteByCustomerIdAndProductId() {
         //given
-        final Long registeredProductID = productService.register(
-            new ProductRequestDto(
-                "name",
-                "imageUrl",
-                1000,
-                "description",
-                List.of(1L)
-            )
-        );
-        final List<CustomerEntity> customers = customerService.findAll();
-        final Long firstCustomerId = customers.get(0).getId();
-        cartService.save(new CartEntity(firstCustomerId, registeredProductID));
+        final ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+        doNothing()
+            .when(cartDao).deleteByCustomerIdAndProductId(any(), any());
 
         //when
-        cartService.deleteByCustomerIdAndProductId(firstCustomerId, registeredProductID);
+        cartService.deleteByCustomerIdAndProductId(1L, 1L);
 
         //then
-        final List<ProductEntity> products = cartService.findAllProductsByCustomerId(firstCustomerId);
-        assertThat(products).hasSize(0);
+        verify(cartDao).deleteByCustomerIdAndProductId(longArgumentCaptor.capture(), longArgumentCaptor.capture());
+        final List<Long> captorAllValues = longArgumentCaptor.getAllValues();
+        assertThat(captorAllValues).containsExactly(1L, 1L);
     }
 }
