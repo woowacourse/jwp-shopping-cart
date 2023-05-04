@@ -1,11 +1,11 @@
 package cart.authorization;
 
-public class AuthInformation {
+public class AuthorizationInformation {
 
     private final String email;
     private final String password;
 
-    public AuthInformation(String email, String password) {
+    public AuthorizationInformation(String email, String password) {
         this.email = email;
         this.password = password;
     }
