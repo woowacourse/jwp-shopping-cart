@@ -6,10 +6,12 @@ import cart.cart.entity.Cart;
 import cart.member.entity.Member;
 import cart.member.service.MemberService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional(readOnly = true)
 @Service
 public class CartService {
 
@@ -21,6 +23,7 @@ public class CartService {
         this.memberService = memberService;
     }
 
+    @Transactional
     public void addCart(Long productId, String email, String password) {
         Member member = memberService.selectMemberByEmailAndPassword(email, password);
         cartDao.insertCart(productId, member.getId());
@@ -34,6 +37,7 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteCartById(Long cartId) {
         cartDao.deleteCartByCartId(cartId);
     }
