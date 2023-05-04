@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.dto.CartProductResponse;
 import cart.dto.ProductId;
-import cart.dto.UserAuthInfo;
 import cart.mvcconfig.AuthenticationPrincipal;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;

@@ -4,7 +4,7 @@ public class ProductId {
 
     private Long id;
 
-    public ProductId() {
+    private ProductId() {
 
     }
 

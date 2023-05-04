@@ -65,7 +65,7 @@ class CartServiceMockTest {
         //given
         long productId = 1L;
         ProductRequest productRequest = new ProductRequest("bingbong", 100, "http://naver.com");
-        ProductEntity productEntity = new ProductEntity(productId, productRequest.getName(),productRequest.getPrice(), productRequest.getImageUrl());
+        ProductEntity productEntity = new ProductEntity(productId, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         given(productDao.update(productEntity)).willReturn(1);
 
         //when
