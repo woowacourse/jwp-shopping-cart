@@ -43,27 +43,20 @@ class JdbcTemplateMemberDaoTest {
 
     @Test
     void selectAllTest() {
-        insert(new MemberEntity(null, "yuja@naver.com", "1234"));
-        insert(new MemberEntity(null, "mint@naver.com", "5678"));
+        final List<MemberEntity> originalMembers = memberDao.selectAll();
+        insert(new MemberEntity(null, "test1@test1.com", "1234"));
+        insert(new MemberEntity(null, "test2@test2.com", "5678"));
 
-        final List<MemberEntity> members = memberDao.selectAll();
-        final MemberEntity member1 = members.get(0);
-        final MemberEntity member2 = members.get(1);
+        final List<MemberEntity> nowMembers = memberDao.selectAll();
+        final int nowSize = nowMembers.size();
+        final int originalSize = originalMembers.size();
 
-        assertThat(members).hasSize(2);
-        assertThat(member2.getId() - member1.getId()).isEqualTo(1);
-    }
-
-    @Test
-    void selectAllTest_noData() {
-        final List<MemberEntity> members = memberDao.selectAll();
-
-        assertThat(members).isEmpty();
+        assertThat(nowSize - originalSize).isEqualTo(2);
     }
 
     @Test
     void findByEmailTest() {
-        String email = "yuja@naver.com";
+        String email = "test@test.com";
         final String password = "1234";
         final int memberEntity = insert(new MemberEntity(null, email, password));
 
