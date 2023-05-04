@@ -2,6 +2,7 @@ package cart.member.service;
 
 import cart.member.dao.MemberDao;
 import cart.member.dto.MemberResponse;
+import cart.member.entity.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,5 +23,9 @@ public class MemberService {
         return memberDao.selectAllMembers().stream()
                 .map(member -> new MemberResponse(member.getEmail(), member.getPassword()))
                 .collect(Collectors.toList());
+    }
+
+    public Member selectMemberByEmailAndPassword(String email, String password){
+        return memberDao.selectMemberByEmailAndPassword(email, password);
     }
 }

@@ -29,4 +29,12 @@ public class MemberDao {
         String sql = "SELECT * FROM MEMBER";
         return jdbcTemplate.query(sql, memberRowMapper);
     }
+
+    public Member selectMemberByEmailAndPassword(String email, String password) {
+        String sql = "SELECT * FROM member WHERE email = ? and password = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Member(
+                rs.getLong("id"),
+                rs.getString("email"),
+                rs.getString("password")), email, password);
+    }
 }
