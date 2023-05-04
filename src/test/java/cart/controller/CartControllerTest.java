@@ -73,7 +73,7 @@ class CartControllerTest {
                 .contentType(ContentType.JSON)
                 .when().post("/cart")
                 .then()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
 }
