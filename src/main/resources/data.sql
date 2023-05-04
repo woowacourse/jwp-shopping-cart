@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS PRODUCT;
+DROP TABLE IF EXISTS product;
 
-CREATE TABLE PRODUCT
+CREATE TABLE product
 (
     id        BIGINT       NOT NULL AUTO_INCREMENT,
     name      VARCHAR(50)  NOT NULL,
@@ -9,4 +9,10 @@ CREATE TABLE PRODUCT
     PRIMARY KEY (id)
 );
 
-
+CREATE TABLE member
+(
+    id        BIGINT       NOT NULL AUTO_INCREMENT,
+    email      VARCHAR(100)  NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
+);
