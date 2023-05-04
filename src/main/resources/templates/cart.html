@@ -26,7 +26,7 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/cart.js}"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const credentials = localStorage.getItem('credentials');
         if (!credentials) {
             alert('사용자 정보가 없습니다.');
@@ -35,12 +35,14 @@
         }
 
         axios.request({
-            url: '',
+            url: '/api/cart/items',
             headers: {
                 'Authorization': `Basic ${credentials}`
-            }
+            },
+            method: 'GET'
         }).then((response) => {
-            const cartItems = response.data;
+            const cart = response.data;
+            const cartItems = cart.items;
 
             let productElement = '';
             // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
@@ -48,9 +50,9 @@
                 productElement += `
                         <div class="cart-item">
                           <div class="cart-item-info">
-                            <img src="" alt=""/> <!-- 상품 이미지 -->
-                            <div class="cart-item-name"></div> <!-- 상품 이름 -->
-                            <div class="cart-item-price"></div> <!-- 상품 가격 -->
+                            <img src="${cartItem.image_url}" alt="상품 이미지"/> <!-- 상품 이미지 -->
+                            <div class="cart-item-name"><p>${cartItem.name}</p></div> <!-- 상품 이름 -->
+                            <div class="cart-item-price"><p>${cartItem.price}원</p></div> <!-- 상품 가격 -->
                             <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
                           </div>
                         </div>

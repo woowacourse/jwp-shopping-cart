@@ -3,10 +3,12 @@ package cart.controller.rest;
 import cart.auth.BasicAuthorizationExtractor;
 import cart.controller.Exception.UncertifiedMemberException;
 import cart.dto.auth.AuthInfo;
+import cart.dto.response.CartResponse;
 import cart.dto.response.ItemResponse;
 import cart.service.CartService;
 import cart.service.MembersService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,5 +48,20 @@ public class CartsController {
                 .toUri();
 
         return ResponseEntity.created(createdUri).body(itemResponse);
+    }
+
+    @GetMapping("/items")
+    public ResponseEntity<CartResponse> readItemsByMember(HttpServletRequest request) {
+        BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
+        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+
+        if (!membersService.isMemberCertified(authInfo)) {
+            throw new UncertifiedMemberException();
+        }
+
+        Long memberId = membersService.readIdByEmail(authInfo.getEmail());
+
+        CartResponse cartResponse = cartService.readAllItemsByMemberId(memberId);
+        return ResponseEntity.ok().body(cartResponse);
     }
 }

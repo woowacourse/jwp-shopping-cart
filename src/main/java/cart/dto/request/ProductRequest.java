@@ -7,15 +7,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-@JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProductRequest {
 
     @NotEmpty
-    private String name;
+    private final String name;
     @NotNull
-    private Integer price;
+    private final Integer price;
     @NotBlank
-    private String imageUrl;
+    private final String imageUrl;
 
     public ProductRequest(String name, Integer price, String imageUrl) {
         this.name = name;

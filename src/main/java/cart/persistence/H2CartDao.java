@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -40,5 +41,11 @@ public class H2CartDao implements CartDao {
                 resultSet.getLong("member_id"),
                 resultSet.getLong("product_id")
         ), id);
+    }
+
+    @Override
+    public List<Long> findAllItems(Long memberId) {
+        String sql = "SELECT product_id FROM CART WHERE member_id=?";
+        return jdbcTemplate.queryForList(sql, Long.class, memberId);
     }
 }

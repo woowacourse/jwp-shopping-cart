@@ -3,13 +3,13 @@ package cart.dto.response;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-@JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProductResponse {
 
-    private Long id;
-    private String name;
-    private Integer price;
-    private String imageUrl;
+    private final Long id;
+    private final String name;
+    private final Integer price;
+    private final String imageUrl;
 
     public ProductResponse(Long id, String name, Integer price, String imageUrl) {
         this.id = id;
