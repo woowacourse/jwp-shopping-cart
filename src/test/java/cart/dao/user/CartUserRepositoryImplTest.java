@@ -16,13 +16,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@Import({CartCartUserRepositoryImpl.class, CartUserDao.class})
+@Import({CartUserRepositoryImpl.class, CartUserDao.class})
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @JdbcTest
-class CartCartUserRepositoryImplTest {
+class CartUserRepositoryImplTest {
 
     @Autowired
-    private CartCartUserRepositoryImpl cartUserRepository;
+    private CartUserRepositoryImpl cartUserRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -36,7 +36,7 @@ class CartCartUserRepositoryImplTest {
                 .isInstanceOf(NoSuchElementException.class);
     }
 
-    @DisplayName("사용자 이메일로 사용자 조회시 존재하지 않으면 예외 발생")
+    @DisplayName("사용자 이메일로 사용자 조회 테스트")
     @Test
     void findByEmail() {
         String findTargetEmail = "a@a.com";

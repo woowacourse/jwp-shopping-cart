@@ -13,6 +13,12 @@ public class CartUserEntity {
         this.cartPassword = cartPassword;
     }
 
+    public CartUserEntity(String email, String cartPassword) {
+        this.id = null;
+        this.email = email;
+        this.cartPassword = cartPassword;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

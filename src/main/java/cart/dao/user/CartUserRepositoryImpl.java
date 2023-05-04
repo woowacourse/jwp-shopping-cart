@@ -11,11 +11,11 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CartCartUserRepositoryImpl implements CartUserRepository {
+public class CartUserRepositoryImpl implements CartUserRepository {
 
     private final CartUserDao cartUserDao;
 
-    public CartCartUserRepositoryImpl(CartUserDao cartUserDao) {
+    public CartUserRepositoryImpl(CartUserDao cartUserDao) {
         this.cartUserDao = cartUserDao;
     }
 
@@ -29,7 +29,6 @@ public class CartCartUserRepositoryImpl implements CartUserRepository {
     @Override
     public Long save(CartUser cartUser) {
         CartUserEntity cartUserEntity = new CartUserEntity(
-                null, //FIXME
                 cartUser.getUserEmail(),
                 cartUser.getPassword()
         );

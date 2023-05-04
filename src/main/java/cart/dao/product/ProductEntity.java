@@ -18,6 +18,14 @@ public class ProductEntity {
         this.imageUrl = imageUrl;
     }
 
+    public ProductEntity(String name, Integer price, String category, String imageUrl) {
+        this.id = null;
+        this.name = name;
+        this.price = price;
+        this.category = category;
+        this.imageUrl = imageUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

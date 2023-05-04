@@ -42,7 +42,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Long save(Product product) {
         ProductEntity productEntity = new ProductEntity(
-                null, //FIXME
                 product.getName(),
                 product.getPrice().intValue(),
                 product.getCategory().name(),

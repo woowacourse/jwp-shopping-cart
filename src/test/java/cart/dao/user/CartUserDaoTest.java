@@ -42,7 +42,7 @@ class CartUserDaoTest {
     void insertCartUser() {
         String email = "email.com";
         CartUserEntity cartUserEntity
-                = new CartUserEntity(null, email, "password");
+                = new CartUserEntity(email, "password");
 
         cartUserDao.insert(cartUserEntity);
 

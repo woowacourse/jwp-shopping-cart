@@ -43,7 +43,6 @@ class ProductDaoTest {
     void saveProduct() {
         String productName = "ProductA";
         ProductEntity productEntity = new ProductEntity(
-                null,
                 productName,
                 10_000,
                 "ETC",
@@ -62,7 +61,6 @@ class ProductDaoTest {
     void deleteProduct() {
         String productName = "ProductA";
         ProductEntity productEntity = new ProductEntity(
-                null,
                 productName,
                 10_000,
                 "ETC",
@@ -81,7 +79,6 @@ class ProductDaoTest {
     @Test
     void updateProduct() {
         ProductEntity productEntity = new ProductEntity(
-                null,
                 "Pizza",
                 10_000,
                 "FOOD",
