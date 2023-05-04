@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.auth.MemberInfo;
 import cart.auth.Principal;
-import cart.dto.request.ProductDto;
+import cart.dto.request.ProductRequestDto;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,16 +27,16 @@ public class CartController {
     @PostMapping
     public ResponseEntity<Void> addProduct(
             @Principal MemberInfo memberInfo,
-            @Valid @RequestBody ProductDto productDto) {
-        cartService.addProduct(memberInfo, productDto);
+            @Valid @RequestBody ProductRequestDto productRequestDto) {
+        cartService.addProduct(memberInfo, productRequestDto);
         return ResponseEntity.created(URI.create("/carts")).build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteProduct(
             @Principal MemberInfo memberInfo,
-            @Valid @RequestBody ProductDto productDto) {
-        cartService.deleteProduct(memberInfo, productDto);
+            @Valid @RequestBody ProductRequestDto productRequestDto) {
+        cartService.deleteProduct(memberInfo, productRequestDto);
         return ResponseEntity.noContent().build();
     }
 }

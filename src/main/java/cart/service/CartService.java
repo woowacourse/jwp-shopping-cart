@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.auth.MemberInfo;
-import cart.dto.request.ProductDto;
+import cart.dto.request.ProductRequestDto;
 import cart.excpetion.CartException;
 import cart.repository.CartDao;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,22 +16,22 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    public void addProduct(final MemberInfo memberInfo, final ProductDto productDto) {
-        if (cartDao.existingCartItem(memberInfo.getId(), productDto.getProductId())) {
+    public void addProduct(final MemberInfo memberInfo, final ProductRequestDto productRequestDto) {
+        if (cartDao.existingCartItem(memberInfo.getId(), productRequestDto.getProductId())) {
             throw new CartException("이미 등록된 상품은 다시 등록할 수 없습니다.");
         }
         try {
-            cartDao.addProduct(memberInfo.getId(), productDto.getProductId());
+            cartDao.addProduct(memberInfo.getId(), productRequestDto.getProductId());
         } catch (DataIntegrityViolationException e) {
             throw new CartException("존재 하지 않는 상품 혹은 유저의 요청입니다.");
         }
     }
 
-    public void deleteProduct(final MemberInfo memberInfo, final ProductDto productDto) {
-        if (!cartDao.existingCartItem(memberInfo.getId(), productDto.getProductId())) {
+    public void deleteProduct(final MemberInfo memberInfo, final ProductRequestDto productRequestDto) {
+        if (!cartDao.existingCartItem(memberInfo.getId(), productRequestDto.getProductId())) {
             throw new CartException("존재하지 않는 항목에 대한 삭제 요청입니다");
         }
-        cartDao.deleteProduct(memberInfo.getId(), productDto.getProductId());
+        cartDao.deleteProduct(memberInfo.getId(), productRequestDto.getProductId());
     }
 
 }

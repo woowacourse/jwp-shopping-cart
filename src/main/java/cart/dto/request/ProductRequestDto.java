@@ -2,14 +2,14 @@ package cart.dto.request;
 
 import javax.validation.constraints.NotNull;
 
-public class ProductDto {
+public class ProductRequestDto {
     @NotNull
     private Integer productId;
 
-    public ProductDto() {
+    public ProductRequestDto() {
     }
 
-    public ProductDto(final Integer productId) {
+    public ProductRequestDto(final Integer productId) {
         this.productId = productId;
     }
 

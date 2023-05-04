@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.request.ProductDto;
+import cart.dto.request.ProductRequestDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,14 +65,14 @@ class CartControllerTest {
     @Test
     void addProduct_valid() {
         //given
-        final ProductDto productDto = new ProductDto(1);
+        final ProductRequestDto productRequestDto = new ProductRequestDto(1);
 
         //when,then
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EXITING_USER_EMAIL, USER_PASSWORD)
                 .contentType(ContentType.JSON)
-                .body(productDto)
+                .body(productRequestDto)
                 .when().post("/cart")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
@@ -82,14 +82,14 @@ class CartControllerTest {
     @Test
     void deleteProduct_invalid_nonexistenceProduct() {
         //given
-        final ProductDto productDto = new ProductDto(1);
+        final ProductRequestDto productRequestDto = new ProductRequestDto(1);
 
         //when, then
         RestAssured
                 .given()
                 .auth().preemptive().basic(EXITING_USER_EMAIL, USER_PASSWORD)
                 .contentType(ContentType.JSON)
-                .body(productDto)
+                .body(productRequestDto)
                 .when().delete("/cart")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -99,12 +99,12 @@ class CartControllerTest {
     @Test
     void deleteProduct() {
         //given
-        final ProductDto productDto = new ProductDto(1);
+        final ProductRequestDto productRequestDto = new ProductRequestDto(1);
         RestAssured
                 .given()
                 .auth().preemptive().basic(EXITING_USER_EMAIL, USER_PASSWORD)
                 .contentType(ContentType.JSON)
-                .body(productDto)
+                .body(productRequestDto)
                 .when().post("/cart")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
@@ -115,7 +115,7 @@ class CartControllerTest {
                 .given()
                 .auth().preemptive().basic(EXITING_USER_EMAIL, USER_PASSWORD)
                 .contentType(ContentType.JSON)
-                .body(productDto)
+                .body(productRequestDto)
                 .when().delete("/cart")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());

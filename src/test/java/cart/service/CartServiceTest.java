@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.auth.MemberInfo;
-import cart.dto.request.ProductDto;
+import cart.dto.request.ProductRequestDto;
 import cart.excpetion.CartException;
 import cart.repository.CartDao;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class CartServiceTest {
 
-    private static final ProductDto PRODUCT_DTO = new ProductDto(1);
+    private static final ProductRequestDto PRODUCT_DTO = new ProductRequestDto(1);
     private static final MemberInfo MEMBER_INFO = new MemberInfo(1, "email");
     @InjectMocks
     private CartService cartService;
