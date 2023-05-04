@@ -4,12 +4,17 @@ public class Cart {
 
     private final Long productId;
     private final Long memberId;
-    private final Quantity quantity;
+    private Quantity quantity;
 
     public Cart(final Long productId, final Long memberId, final Quantity quantity) {
         this.productId = productId;
         this.memberId = memberId;
         this.quantity = quantity;
+    }
+
+    public Cart(final Long productId, final Long memberId) {
+        this.productId = productId;
+        this.memberId = memberId;
     }
 
     public Long getProductId() {
