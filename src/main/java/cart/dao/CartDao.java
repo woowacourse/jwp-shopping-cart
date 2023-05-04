@@ -13,5 +13,5 @@ public interface CartDao {
 
     boolean isCartExists(PutCart putCart);
 
-    int delete(Long itemId);
+    int delete(PutCart putCart);
 }

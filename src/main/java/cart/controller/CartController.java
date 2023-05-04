@@ -4,10 +4,8 @@ import cart.authorization.AuthorizationExtractor;
 import cart.authorization.AuthorizationInformation;
 import cart.dto.ItemResponse;
 import cart.service.CartService;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -37,6 +35,13 @@ public class CartController {
     public String addItemIntoCart(@RequestHeader(value = "Authorization") String authorization, @PathVariable Long itemId) {
         AuthorizationInformation authorizationInformation = authorizationExtractor.extract(authorization);
         cartService.putItemIntoCart(itemId, authorizationInformation);
+        return "ok";
+    }
+
+    @GetMapping("/carts/delete/{itemId}")
+    public String deleteItem(@RequestHeader(value = "Authorization") String authorization, @PathVariable Long itemId) {
+        AuthorizationInformation authorizationInformation = authorizationExtractor.extract(authorization);
+        cartService.deleteItemInCart(itemId, authorizationInformation);
         return "ok";
     }
 }

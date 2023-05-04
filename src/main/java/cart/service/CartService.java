@@ -64,8 +64,12 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteItemByItemId(Long itemId) {
-        int deleteRow = cartDao.delete(itemId);
+    public void deleteItemInCart(Long itemId, AuthorizationInformation authorizationInformation) {
+        AuthMember authMember = convertAuthInformationToMember(authorizationInformation);
+        Member member = memberDao.findByAuthMember(authMember);
+        PutCart putCart = new PutCart(member.getId(), itemId);
+
+        int deleteRow = cartDao.delete(putCart);
         validateItemId(deleteRow);
     }
 

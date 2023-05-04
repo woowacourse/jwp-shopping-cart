@@ -88,7 +88,7 @@ class JdbcCartDaoTest {
     @DisplayName("카드에 있는 상품 삭제 할 수 있다.")
     @Test
     void delete_success() {
-        int deleteRow = cartDao.delete(2L);
+        int deleteRow = cartDao.delete(PUT_CART1);
 
         List<Cart> carts = cartDao.findAllByMemberId(1L);
 
@@ -102,6 +102,6 @@ class JdbcCartDaoTest {
     @Test
     void delete_fail() {
 
-        assertThat(cartDao.delete(3L)).isZero();
+        assertThat(cartDao.delete(PUT_CART3)).isZero();
     }
 }

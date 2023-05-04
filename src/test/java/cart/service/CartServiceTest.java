@@ -90,9 +90,9 @@ class CartServiceTest {
     @DisplayName("장바구니에 있는 상품을 삭제할 수 있다.")
     @Test
     void deleteItemByItemId_success() {
-        cartService.deleteItemByItemId(1L);
-
         AuthorizationInformation authorizationInformation = new AuthorizationInformation(AUTH_MEMBER1.getEmail(), AUTH_MEMBER1.getPassword());
+
+        cartService.deleteItemInCart(1L, authorizationInformation);
 
         List<ItemResponse> itemResponses = cartService.findAllItemByAuthInfo(authorizationInformation);
 
@@ -102,8 +102,9 @@ class CartServiceTest {
     @DisplayName("장바구니에 없는 상품을 삭제하면 예외가 발생한다.")
     @Test
     void deleteItemByItemId_fail() {
+        AuthorizationInformation authorizationInformation = new AuthorizationInformation(AUTH_MEMBER1.getEmail(), AUTH_MEMBER1.getPassword());
 
-        assertThatThrownBy(() -> cartService.deleteItemByItemId(2L))
+        assertThatThrownBy(() -> cartService.deleteItemInCart(2L, authorizationInformation))
                 .isInstanceOf(ServiceIllegalArgumentException.class)
                 .hasMessage("상품 정보를 다시 입력해주세요.");
     }
