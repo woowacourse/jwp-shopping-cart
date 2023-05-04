@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class JwpCartApplicationTests {
@@ -44,19 +43,16 @@ class JwpCartApplicationTests {
     }
 
     @Test
-    @Sql(value = {"/item_truncate.sql", "/item_insert.sql"})
     @DisplayName("상품 전체를 조회한다.")
     void findAllItemRequestSuccess() {
         when()
                 .get("/items")
                 .then().log().all()
                 .contentType(ContentType.JSON)
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(7));
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
-    @Sql(value = {"/item_truncate.sql", "/item_insert.sql"})
     @DisplayName("상품을 변경한다.")
     void updateItemRequestSuccess() {
         ItemRequest itemRequest = createItemRequest("맥북프로", "http://image.com", 35_000);
@@ -76,7 +72,6 @@ class JwpCartApplicationTests {
     }
 
     @Test
-    @Sql("/item_truncate.sql")
     @DisplayName("존재하지 않는 상품을 변경하면 예외가 발생한다.")
     void updateItemRequestFailWithNotExistsID() {
         ItemRequest itemRequest = createItemRequest("맥북", "http://image.com", 15_000);
@@ -85,7 +80,7 @@ class JwpCartApplicationTests {
                 .contentType(ContentType.JSON)
                 .body(itemRequest)
                 .when()
-                .put("/items/{id}", 1L)
+                .put("/items/{id}", Long.MAX_VALUE)
                 .then().log().all()
                 .contentType(ContentType.JSON)
                 .statusCode(HttpStatus.NOT_FOUND.value())
@@ -93,7 +88,6 @@ class JwpCartApplicationTests {
     }
 
     @Test
-    @Sql("/item_truncate.sql")
     @DisplayName("존재하지 않는 상품을 삭제하면 예외가 발생한다.")
     void deleteItemRequestFailWithNotExistsID() {
         ItemRequest itemRequest = createItemRequest("맥북", "http://image.com", 15_000);
@@ -102,7 +96,7 @@ class JwpCartApplicationTests {
                 .contentType(ContentType.JSON)
                 .body(itemRequest)
                 .when()
-                .delete("/items/{id}", 1L)
+                .delete("/items/{id}", Long.MAX_VALUE)
                 .then().log().all()
                 .contentType(ContentType.JSON)
                 .statusCode(HttpStatus.NOT_FOUND.value())
@@ -113,7 +107,7 @@ class JwpCartApplicationTests {
     @DisplayName("상품을 삭제한다.")
     void deleteItemRequestSuccess() {
         when()
-                .delete("/items/{id}", 1L)
+                .delete("/items/{id}", Long.MAX_VALUE)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

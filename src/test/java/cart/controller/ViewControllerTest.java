@@ -9,7 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.auth.BasicAuthorizationExtractor;
+import cart.dao.MemberDao;
 import cart.service.ItemService;
+import cart.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +23,20 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = ViewController.class)
 class ViewControllerTest {
 
+    @Autowired
+    MockMvc mockMvc;
+
     @MockBean
     ItemService itemService;
 
-    @Autowired
-    MockMvc mockMvc;
+    @MockBean
+    MemberService memberService;
+
+    @MockBean
+    BasicAuthorizationExtractor basicAuthorizationExtractor;
+
+    @MockBean
+    MemberDao memberDao;
 
     @Test
     @DisplayName("/을 요청하면 메인 페이지 이름을 반환한다.")

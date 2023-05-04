@@ -10,8 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.auth.BasicAuthorizationExtractor;
 import cart.controller.dto.ItemRequest;
 import cart.controller.dto.ItemResponse;
+import cart.dao.MemberDao;
 import cart.dao.entity.ItemEntity;
 import cart.service.ItemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +29,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(controllers = ItemController.class)
+@WebMvcTest(ItemController.class)
 class ItemControllerTest {
 
     @Autowired
@@ -36,8 +38,13 @@ class ItemControllerTest {
     @MockBean
     ItemService itemService;
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    @MockBean
+    BasicAuthorizationExtractor basicAuthorizationExtractor;
 
+    @MockBean
+    MemberDao memberDao;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
@@ -116,9 +123,9 @@ class ItemControllerTest {
         when(itemService.update(any(), any())).thenReturn(itemResponse);
 
         mockMvc.perform(put("/items/{id}", 1)
-                .content(objectMapper.writeValueAsString(itemRequest))
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8))
+                        .content(objectMapper.writeValueAsString(itemRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(itemResponse.getId()))
                 .andExpect(jsonPath("$.name").value(itemResponse.getName()))
@@ -129,7 +136,7 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("상품을 삭제한다.")
-    void deleteItemRequestSuccess() throws Exception{
+    void deleteItemRequestSuccess() throws Exception {
         mockMvc.perform(delete("/items/{id}", 1L))
                 .andExpect(status().isNoContent())
                 .andDo(print());
