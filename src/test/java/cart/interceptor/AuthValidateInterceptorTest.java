@@ -3,18 +3,28 @@ package cart.interceptor;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql({"/schema.sql", "/data.sql"})
 class AuthValidateInterceptorTest {
 
     private static final String URI = "/cart/products";
+
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
+    }
 
     @Test
     void 인증_정보가_존재하지_않으면_예외_발생() {
@@ -51,7 +61,7 @@ class AuthValidateInterceptorTest {
     @Test
     void 인증_타입이_BASIC_이고_저장된_멤버가_값으로_들어오면_정상_실행() {
         RestAssured.given()
-                .auth().preemptive().basic("userB@woowahan.com", "passwordB")
+                .auth().preemptive().basic("userA@woowahan.com", "passwordA")
                 .when()
                 .get(URI)
                 .then()
