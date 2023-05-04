@@ -11,10 +11,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static cart.auth.AuthConstant.AUTHORIZATION;
-
 @Component
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private static final String AUTHORIZATION = "Authorization";
 
     private final AuthDao authDao;
 
