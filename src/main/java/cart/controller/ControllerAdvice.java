@@ -26,7 +26,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handleNotValidInput(final AuthenticationException exception) {
+    public ResponseEntity<String> handleAuthenticationException(final AuthenticationException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 }
