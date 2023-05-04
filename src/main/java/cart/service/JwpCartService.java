@@ -35,6 +35,7 @@ public class JwpCartService {
         return products.stream().map(ProductResponseDto::new).collect(Collectors.toList());
     }
 
+    @Transactional
     public void add(ProductRequestDto productRequestDto) {
         Product product = Product.createWithoutId(
             productRequestDto.getName(),
@@ -44,6 +45,7 @@ public class JwpCartService {
         productRepository.save(new ProductDto(product));
     }
 
+    @Transactional
     public void updateById(ProductRequestDto productRequestDto, Long id) {
         Product product = Product.createWithoutId(
             productRequestDto.getName(),
@@ -53,6 +55,7 @@ public class JwpCartService {
         productRepository.updateById(new ProductDto(product), id);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         productRepository.deleteById(id);
     }
