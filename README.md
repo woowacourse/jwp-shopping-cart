@@ -105,10 +105,6 @@
 
 ## DB 테이블
 
-### 특이사항
-
-- h2 데이터베이스 예약어 member로 인해 사용자 테이블을 members로 설정함
-
 ```sql
 CREATE TABLE product
 (
@@ -153,17 +149,17 @@ CREATE TABLE cart
 
 ### Controller
 
-- [ ] @SpringBootTest
-    - [ ] 통합 테스트
+- [x] @SpringBootTest
+    - [x] 통합 테스트
 
-- [ ] @WebMvcTest
-    - [ ] Mock 을 활용한 단위 테스트
-    - [ ] 실제 Service 와 연결되지 않는 테스트
+- [x] @WebMvcTest
+    - [x] Mock 을 활용한 단위 테스트
+    - [x] 실제 Service 와 연결되지 않는 테스트
 
 ### 인수 테스트
 
-- [ ] @SpringBootTest
-    - [ ] 시나리오 기반 테스트
+- [x] @SpringBootTest
+    - [x] 시나리오 기반 테스트
 
 ## 기록
 
