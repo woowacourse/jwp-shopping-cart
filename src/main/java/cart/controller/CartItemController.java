@@ -26,17 +26,9 @@ import java.util.List;
 @RequestMapping("/cart/cart-items")
 public class CartItemController {
 
-    private final AuthenticationExtractor<MemberAuthentication> authenticationExtractor;
-    private final AuthenticationService authenticationService;
     private final CartItemManagementService cartItemManagementService;
 
-    public CartItemController(
-            final AuthenticationExtractor<MemberAuthentication> authenticationExtractor,
-            final AuthenticationService authenticationService,
-            final CartItemManagementService cartItemManagementService
-    ) {
-        this.authenticationExtractor = authenticationExtractor;
-        this.authenticationService = authenticationService;
+    public CartItemController(final CartItemManagementService cartItemManagementService) {
         this.cartItemManagementService = cartItemManagementService;
     }
 
