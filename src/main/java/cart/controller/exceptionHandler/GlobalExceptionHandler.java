@@ -1,4 +1,4 @@
-package cart.exceptionHandler;
+package cart.controller.exceptionHandler;
 
 import cart.auth.exception.AuthorizationException;
 import java.util.stream.Collectors;
