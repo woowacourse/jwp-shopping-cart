@@ -1,5 +1,7 @@
 package cart.controller;
 
+import cart.exception.AuthorizationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -31,5 +33,10 @@ public class GlobalExceptionHandler {
         });
 
         return ResponseEntity.badRequest().body(errorMessageByFields);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<String> handleAuthorizationException(final AuthorizationException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 }
