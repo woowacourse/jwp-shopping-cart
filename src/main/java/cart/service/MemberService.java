@@ -27,12 +27,8 @@ public class MemberService {
     public List<MemberResponse> findAll() {
         final List<MemberEntity> memberEntities = memberDao.findAll();
         return memberEntities.stream()
-                .map(entity -> new MemberResponse(
-                        entity.getId(),
-                        entity.getEmail(),
-                        entity.getPassword()
-                        )
-                ).collect(Collectors.toUnmodifiableList());
+                .map(MemberResponse::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional(readOnly = true)
@@ -42,13 +38,12 @@ public class MemberService {
         if (memberResult.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 회원 토큰입니다.");
         }
-
         return memberResult.get();
     }
 
     @Transactional
     public void create(final CreateMemberRequest createMemberRequest) {
-        final Member member = new Member(createMemberRequest.getEmail(), createMemberRequest.getPassword());
+        final Member member = createMemberRequest.toMember();
         final Optional<MemberEntity> memberResult = memberDao.findMemberByEmail(member.getEmail());
         if (memberResult.isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");

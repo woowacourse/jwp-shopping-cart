@@ -61,11 +61,7 @@ public class CartService {
                 .map(cartEntity -> productService.findById(cartEntity.getProductId()))
                 .collect(Collectors.toUnmodifiableList());
         return productEntities.stream()
-                .map(productEntity -> new CartResponse(
-                        productEntity.getId(),
-                        productEntity.getName(),
-                        productEntity.getPrice(),
-                        productEntity.getImage()
-                )).collect(Collectors.toUnmodifiableList());
+                .map(CartResponse::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 }

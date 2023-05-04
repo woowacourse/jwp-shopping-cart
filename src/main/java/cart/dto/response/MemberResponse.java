@@ -1,5 +1,7 @@
 package cart.dto.response;
 
+import cart.dao.entity.MemberEntity;
+
 public class MemberResponse {
 
     private Long id;
@@ -13,6 +15,10 @@ public class MemberResponse {
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public static MemberResponse from(final MemberEntity memberEntity) {
+        return new MemberResponse(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
     }
 
     public Long getId() {

@@ -27,12 +27,8 @@ public class ProductService {
     public List<ProductResponse> findAll() {
         final List<ProductEntity> productEntities = productDao.selectAll();
         return productEntities.stream()
-                .map(entity -> new ProductResponse(
-                        entity.getId(),
-                        entity.getName(),
-                        entity.getPrice(),
-                        entity.getImage())
-                ).collect(Collectors.toUnmodifiableList());
+                .map(ProductResponse::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional(readOnly = true)
@@ -46,12 +42,8 @@ public class ProductService {
 
     @Transactional
     public void insert(final CreateProductRequest createProductRequest) {
-        final Product newProduct = new Product(
-                createProductRequest.getName(),
-                createProductRequest.getPrice(),
-                createProductRequest.getImage()
-        );
-        productDao.insert(newProduct);
+        final Product product = createProductRequest.toProduct();
+        productDao.insert(product);
     }
 
     @Transactional
@@ -60,11 +52,7 @@ public class ProductService {
         if (productEntityOptional.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 데이터입니다.");
         }
-        final Product product = new Product(
-                updateProductRequest.getName(),
-                updateProductRequest.getPrice(),
-                updateProductRequest.getImage()
-        );
+        final Product product = updateProductRequest.toProduct();
         productDao.update(id, product);
     }
 
