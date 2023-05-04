@@ -15,6 +15,9 @@ public class MemberService {
 
     public long createMember(String email, String password) {
         Member member = new Member(email, password);
+        memberDao.findByEmail(email).ifPresent((e) -> {
+            throw new IllegalArgumentException("해당 이메일은 이미 존재합니다.");
+        });
         member = memberDao.save(member);
         return member.getId();
     }
