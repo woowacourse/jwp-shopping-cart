@@ -12,10 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
-@Sql(scripts = {"classpath:sql/initProducts.sql"})
 public class ProductDaoTest {
 
     @Autowired

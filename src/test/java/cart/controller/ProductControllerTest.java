@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.is;
 import cart.dto.ProductAddRequestDto;
 import cart.dto.ProductModifyRequestDto;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,10 +15,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:sql/initProducts.sql"})
 public class ProductControllerTest {
 
     @LocalServerPort
@@ -95,11 +92,6 @@ public class ProductControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is("존재하지 않는 id 입니다."));
-    }
-
-    @AfterEach
-    void afterEach() {
-        jdbcTemplate.update("TRUNCATE TABLE product");
     }
 
 }
