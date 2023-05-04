@@ -37,7 +37,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         memberService.deleteById(id);
         return ResponseEntity.ok().build();
     }
