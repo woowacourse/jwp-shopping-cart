@@ -1,4 +1,4 @@
-package cart.controller.config.argumentresolver;
+package cart.controller.argumentresolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

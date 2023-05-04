@@ -1,4 +1,4 @@
-package cart.controller.config.interceptor;
+package cart.controller.interceptor;
 
 import cart.exception.UnauthorizedException;
 import cart.service.UserService;

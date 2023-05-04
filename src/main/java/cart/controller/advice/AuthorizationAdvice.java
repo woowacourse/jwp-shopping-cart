@@ -1,8 +1,5 @@
 package cart.controller.advice;
 
-import cart.controller.CartController;
-import cart.controller.ItemController;
-import cart.controller.config.argumentresolver.BasicAuthorizationArgumentResolver;
 import cart.controller.dto.ExceptionResponse;
 import cart.exception.UnauthorizedException;
 import org.slf4j.Logger;

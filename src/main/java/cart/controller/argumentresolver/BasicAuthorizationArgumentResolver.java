@@ -1,4 +1,4 @@
-package cart.controller.config.argumentresolver;
+package cart.controller.argumentresolver;
 
 import cart.controller.dto.LoginUser;
 import cart.exception.UnauthorizedException;
