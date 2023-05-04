@@ -40,7 +40,7 @@ class CartControllerTest {
     @DisplayName("/cart로 POST 요청을 보낼 수 있다")
     void test_create_request() throws Exception {
         // given
-        willDoNothing().given(cartService).addCartItem(any(), any());
+        willDoNothing().given(cartService).addCartItem(any());
 
         String content = objectMapper.writeValueAsString(new ProductIdDto(1));
 
@@ -71,7 +71,7 @@ class CartControllerTest {
     @DisplayName("/cart로 DELETE 요청을 보낼 수 있다")
     void test_delete_request() throws Exception {
         // given
-        willDoNothing().given(cartService).removeCartItem(any(), any());
+        willDoNothing().given(cartService).removeCartItem(any());
         String content = objectMapper.writeValueAsString(new CartItemIdDto(1));
 
         // when

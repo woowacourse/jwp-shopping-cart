@@ -3,6 +3,7 @@ package cart.business.domain.product;
 public class ProductName {
 
     private static final int MAX_LENGTH = 10;
+
     private final String name;
 
     public ProductName(String name) {

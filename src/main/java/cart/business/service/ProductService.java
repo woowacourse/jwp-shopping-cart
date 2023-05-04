@@ -19,7 +19,9 @@ public class ProductService {
     @Transactional
     public void create(Product product) {
         productRepository.findByName(product.getName())
-                .ifPresent(ignored -> {throw new IllegalArgumentException("이미 동일한 이름을 가진 상품이 존재합니다.");});
+                .ifPresent(ignored -> {
+                    throw new IllegalArgumentException("이미 동일한 이름을 가진 상품이 존재합니다.");
+                });
 
         productRepository.insert(product);
     }

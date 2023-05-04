@@ -4,6 +4,7 @@ public class ProductPrice {
 
     private static final int MIN_PRICE = 0;
     private static final int MAX_PRICE = 1_000_000;
+
     private final int price;
 
     public ProductPrice(int price) {
