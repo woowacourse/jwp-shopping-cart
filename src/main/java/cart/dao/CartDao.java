@@ -8,4 +8,6 @@ public interface CartDao {
     Long insert(final Cart cart);
 
     List<Cart> findAllByMemberId(long memberId);
+
+    void delete(final long memberId, final long productId);
 }

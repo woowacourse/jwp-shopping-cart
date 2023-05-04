@@ -9,11 +9,11 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,7 +27,6 @@ public class CartApiController {
     }
 
     @PostMapping("/{productId}")
-    @ResponseBody
     public ResponseEntity<Void> addProduct(
             @Login Member member,
             @PathVariable @NotNull Long productId
@@ -37,9 +36,17 @@ public class CartApiController {
     }
 
     @GetMapping
-    @ResponseBody
     public ResponseEntity<CartProductsResponse> getCartProducts(@Login Member member) {
         List<Product> products = cartService.findCartProducts(member);
         return ResponseEntity.ok(CartProductsResponse.of(products));
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProductFromCart(
+            @Login Member member,
+            @PathVariable @NotNull Long productId
+    ) {
+        cartService.delete(member, productId);
+        return ResponseEntity.ok().build();
     }
 }

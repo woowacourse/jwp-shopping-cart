@@ -9,6 +9,7 @@ import cart.exception.notfound.ProductNotFoundException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,5 +52,17 @@ public class CartService {
         return productIds.stream()
                 .map(productIdToProduct::get)
                 .collect(Collectors.toList());
+    }
+
+    public void delete(final Member member, final long productId) {
+        checkExistProductId(productId);
+        cartDao.delete(member.getId(), productId);
+    }
+
+    private void checkExistProductId(final long productId) {
+        Optional<Product> product = productDao.findById(productId);
+        if (product.isEmpty()) {
+            throw new ProductNotFoundException();
+        }
     }
 }

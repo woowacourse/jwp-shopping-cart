@@ -39,4 +39,10 @@ public class JdbcCartDao implements CartDao {
         final String sql = "SELECT * FROM cart WHERE member_id = ?";
         return jdbcTemplate.query(sql, cartRowMapper, memberId);
     }
+
+    @Override
+    public void delete(final long memberId, final long productId) {
+        final String sql = "DELETE FROM cart WHERE member_id = ? AND product_id = ?";
+        jdbcTemplate.update(sql, memberId, productId);
+    }
 }
