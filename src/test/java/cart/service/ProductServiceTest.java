@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.dto.ProductRequestDto;
 import cart.repository.ProductDao;
+import cart.request.ProductCreateDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class ProductServiceTest {
         //given
         when(productDao.create(any()))
                 .thenReturn(1);
-        final ProductRequestDto request = new ProductRequestDto("name", "image.jpg", 1000);
+        final ProductCreateDto request = new ProductCreateDto("name", "image.jpg", 1000);
 
         //when
         productService.create(request);
@@ -44,7 +44,7 @@ class ProductServiceTest {
     @DisplayName("product 생성 시 null 로 인한 예외가 발생한다")
     void invalid_create() {
         //given
-        final ProductRequestDto request = new ProductRequestDto(null, "image.jpg", 1000);
+        final ProductCreateDto request = new ProductCreateDto(null, "image.jpg", 1000);
 
         //expect
         Assertions.assertThatThrownBy(() -> productService.create(request))

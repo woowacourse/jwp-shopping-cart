@@ -1,8 +1,8 @@
 package cart.service;
 
-import cart.dto.ProductRequestDto;
 import cart.entity.ProductEntity;
 import cart.repository.ProductDao;
+import cart.request.ProductCreateDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,25 +16,25 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public int create(final ProductRequestDto productRequestDto) {
-        return productDao.create(dtoToEntity(productRequestDto));
+    public int create(final ProductCreateDto productCreateDto) {
+        return productDao.create(dtoToEntity(productCreateDto));
     }
 
     public List<ProductEntity> findAll() {
         return productDao.findAll();
     }
 
-    public void update(final ProductRequestDto productRequestDto, final int id) {
-        productDao.update(productRequestDto, id);
+    public void update(final ProductCreateDto productCreateDto, final int id) {
+        productDao.update(productCreateDto, id);
     }
 
     public void delete(final int id) {
         productDao.delete(id);
     }
 
-    private ProductEntity dtoToEntity(final ProductRequestDto productRequestDto) {
-        return new ProductEntity(productRequestDto.getName(),
-                productRequestDto.getImage(),
-                productRequestDto.getPrice());
+    private ProductEntity dtoToEntity(final ProductCreateDto productCreateDto) {
+        return new ProductEntity(productCreateDto.getName(),
+                productCreateDto.getImage(),
+                productCreateDto.getPrice());
     }
 }

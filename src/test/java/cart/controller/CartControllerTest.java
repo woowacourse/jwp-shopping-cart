@@ -1,6 +1,8 @@
 package cart.controller;
 
+import cart.request.ProductDto;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,10 +49,28 @@ class CartControllerTest {
     @DisplayName("로그인 정보가 유효하다면 상품 추가 요청을 완료한다")
     @Test
     void addProduct_valid() {
+        //given
+        final ProductDto productDto = new ProductDto(1);
+
+        //when,then
+        RestAssured
+                .given().log().all()
+                .auth().preemptive().basic(EXITING_USER_EMAIL, USER_PASSWORD)
+                .contentType(ContentType.JSON)
+                .body(productDto)
+                .when().post("/cart")
+                .then()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("로그인 정보가 유효하지만 body에 값이 없다면 예외가 발생한다")
+    @Test
+    void addProduct_invalid_productInfoNotExist() {
         //given,when,then
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EXITING_USER_EMAIL, USER_PASSWORD)
+                .contentType(ContentType.JSON)
                 .when().post("/cart")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());

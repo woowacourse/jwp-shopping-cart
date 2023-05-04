@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.ProductRequestDto;
+import cart.request.ProductCreateDto;
 import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,16 +24,16 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid ProductRequestDto productRequestDto) {
-        productService.create(productRequestDto);
+    public ResponseEntity<Void> create(@RequestBody @Valid ProductCreateDto productCreateDto) {
+        productService.create(productCreateDto);
         return ResponseEntity.created(URI.create("/admin")).build();
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> update(
-            @RequestBody @Valid final ProductRequestDto productRequestDto,
+            @RequestBody @Valid final ProductCreateDto productCreateDto,
             @PathVariable final int id) {
-        productService.update(productRequestDto, id);
+        productService.update(productCreateDto, id);
         return ResponseEntity.created(URI.create("/admin")).build();
     }
 

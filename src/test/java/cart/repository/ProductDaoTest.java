@@ -1,7 +1,7 @@
 package cart.repository;
 
-import cart.dto.ProductRequestDto;
 import cart.entity.ProductEntity;
+import cart.request.ProductCreateDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -42,7 +41,7 @@ class ProductDaoTest {
 
         //when
         final int id = productDao.create(request);
-        final String sql = "select * from product";
+        final String sql = "select * from product where ";
         final ProductEntity result = jdbcTemplate.queryForObject(sql,
                 (rs, rowNum) -> new ProductEntity(
                         rs.getInt("id"),
@@ -63,7 +62,6 @@ class ProductDaoTest {
 
     @Test
     @DisplayName("상품 전체 조회 테스트")
-    @Sql(scripts = "/dummy_data.sql")
     void findALl() {
         //given,when
         final List<ProductEntity> allProducts = productDao.findAll();
@@ -80,10 +78,9 @@ class ProductDaoTest {
 
     @Test
     @DisplayName("수정 테스트")
-    @Sql(scripts = "/dummy_data.sql")
     void update() {
         //given
-        final ProductRequestDto requestDto = new ProductRequestDto("푸우", "pooh.png", 1_000_001);
+        final ProductCreateDto requestDto = new ProductCreateDto("푸우", "pooh.png", 1_000_001);
         final Integer targetId = findPoohId();
 
         //when
@@ -107,7 +104,6 @@ class ProductDaoTest {
 
     @Test
     @DisplayName("유저의 정보를 삭제한다")
-    @Sql(scripts = "/dummy_data.sql")
     void delete() {
         //given
         final Integer poohId = findPoohId();

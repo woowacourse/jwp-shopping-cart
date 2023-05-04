@@ -1,7 +1,7 @@
 package cart.repository;
 
-import cart.dto.ProductRequestDto;
 import cart.entity.ProductEntity;
+import cart.request.ProductCreateDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -42,13 +42,13 @@ public class ProductDao {
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
-    public void update(final ProductRequestDto productRequestDto, final int id) {
+    public void update(final ProductCreateDto productCreateDto, final int id) {
         validId(id);
         final String updateSql = "update product set name = ?, image = ?, price = ? where id = ?";
         jdbcTemplate.update(updateSql,
-                productRequestDto.getName(),
-                productRequestDto.getImage(),
-                productRequestDto.getPrice(),
+                productCreateDto.getName(),
+                productCreateDto.getImage(),
+                productCreateDto.getPrice(),
                 id
         );
     }
