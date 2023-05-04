@@ -11,7 +11,7 @@ public class AuthValidateInterceptor implements HandlerInterceptor {
 
     private static final String AUTH_EXCEPTION_MESSAGE = "인증 정보가 필요합니다.";
     private static final String BASIC_AUTH_TYPE = "BASIC";
-    private static final int ONLY_AUTH_TYPE_SIZE = 1;
+    private static final int VALID_BASIC_AUTHORIZATION_SIZE = 1;
     private static final int AUTH_TYPE_INDEX = 0;
 
     @Override
@@ -37,7 +37,7 @@ public class AuthValidateInterceptor implements HandlerInterceptor {
     }
 
     private void validateIncludeValue(final List<String> split, final String realm) {
-        if (split.size() == ONLY_AUTH_TYPE_SIZE) {
+        if (split.size() == VALID_BASIC_AUTHORIZATION_SIZE) {
             throw new AuthException(AUTH_EXCEPTION_MESSAGE, realm);
         }
     }
