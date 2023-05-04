@@ -15,7 +15,7 @@ public class AuthValidateInterceptor implements HandlerInterceptor {
     private static final int AUTH_TYPE_INDEX = 0;
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
         final String credentials = request.getHeader("Authorization");
         final String realm = request.getRequestURI();
 

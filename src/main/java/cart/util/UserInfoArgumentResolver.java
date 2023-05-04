@@ -24,7 +24,7 @@ public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public AuthInfo resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) throws Exception {
+    public AuthInfo resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
         final String credentials = request.getHeader("Authorization");
