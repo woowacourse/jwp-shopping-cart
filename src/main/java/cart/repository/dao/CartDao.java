@@ -8,4 +8,6 @@ public interface CartDao {
     Long save(final CartEntity cartEntity);
 
     List<CartEntity> findByMemberId(final Long memberId);
+
+    int delete(final Long memberId, final Long productId);
 }
