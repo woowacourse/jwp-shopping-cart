@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -65,6 +66,8 @@ class CartServiceTest {
         //given
         long productId = 1L;
         ProductRequest productRequest = new ProductRequest("bingbong", 100, "http://naver.com");
+        ProductEntity productEntity = new ProductEntity(productId, productRequest.getName(),productRequest.getPrice(), productRequest.getImageUrl());
+        given(productDao.update(productEntity)).willReturn(1);
 
         //when
         cartService.updateProduct(productId, productRequest);
@@ -77,6 +80,7 @@ class CartServiceTest {
     void 상품_정보를_삭제한다() {
         //given
         long productId = 1L;
+        given(productDao.deleteById(productId)).willReturn(1);
 
         //when
         cartService.deleteProduct(productId);
