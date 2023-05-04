@@ -17,7 +17,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(final Exception exception) {
+    public ResponseEntity<String> handleIllegalArgumentException(final IllegalArgumentException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
@@ -38,5 +38,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthorizationException.class)
     public ResponseEntity<String> handleAuthorizationException(final AuthorizationException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(final Exception exception) {
+        return ResponseEntity.internalServerError().body("예기치 못한 예외가 발생했습니다.");
     }
 }
