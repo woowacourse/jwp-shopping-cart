@@ -7,10 +7,10 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -133,8 +133,8 @@ class ProductDaoTest {
         productDao.delete(id);
 
         // then
-        assertThatThrownBy(() -> productDao.findById(id))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+        assertThatThrownBy(() -> productDao.findById(id).get())
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
