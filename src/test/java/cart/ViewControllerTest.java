@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.auth.BasicAuthorizationExtractor;
 import cart.cart.service.CartService;
 import cart.member.service.MemberService;
-import cart.product.dto.ProductResponseDto;
+import cart.product.entity.ProductEntity;
 import cart.product.service.ProductService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -35,8 +35,8 @@ public class ViewControllerTest {
     @Test
     void indexTest() throws Exception {
         when(productService.getProducts()).thenReturn(List.of(
-                new ProductResponseDto(1, "image1", "name1", 1000),
-                new ProductResponseDto(2, "image2", "name2", 2000)
+                new ProductEntity(1, "name1", 1000,"image1"),
+                new ProductEntity(2, "name2", 2000,"image2")
         ));
 
         this.mockMvc.perform(get("/"))
@@ -48,8 +48,8 @@ public class ViewControllerTest {
     @Test
     void adminTest() throws Exception {
         when(productService.getProducts()).thenReturn(List.of(
-                new ProductResponseDto(1, "image1", "name1", 1000),
-                new ProductResponseDto(2, "image2", "name2", 2000)
+                new ProductEntity(1, "name1", 1000,"image1"),
+                new ProductEntity(2, "name2", 2000,"image2")
         ));
 
         this.mockMvc.perform(get("/admin"))

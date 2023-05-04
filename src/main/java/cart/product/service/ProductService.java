@@ -2,11 +2,9 @@ package cart.product.service;
 
 import cart.product.dao.ProductDao;
 import cart.product.dto.ProductInsertRequestDto;
-import cart.product.dto.ProductResponseDto;
 import cart.product.dto.ProductUpdateRequestDto;
 import cart.product.entity.ProductEntity;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,12 +21,8 @@ public class ProductService {
         return productDao.insert(product);
     }
 
-    public List<ProductResponseDto> getProducts() {
-        final List<ProductEntity> products = productDao.selectAll();
-
-        return products.stream()
-                .map(ProductMapper::toDto)
-                .collect(Collectors.toUnmodifiableList());
+    public List<ProductEntity> getProducts() {
+        return productDao.selectAll();
     }
 
     public int updateProduct(final ProductUpdateRequestDto productUpdateRequestDto) {

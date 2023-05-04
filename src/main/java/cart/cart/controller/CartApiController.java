@@ -4,8 +4,8 @@ import cart.auth.AuthInfo;
 import cart.auth.BasicAuthorizationExtractor;
 import cart.cart.dto.CartDeleteResponseDto;
 import cart.cart.dto.CartInsertRequestDto;
-import cart.cart.dto.CartInsertResponseDto;
 import cart.cart.dto.CartSelectResponseDto;
+import cart.cart.entity.CartEntity;
 import cart.cart.service.CartService;
 import cart.exception.PasswordMismatchException;
 import cart.exception.UnauthenticatedException;
@@ -39,8 +39,8 @@ public class CartApiController {
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<CartInsertResponseDto> addProduct(HttpServletRequest request,
-                                                            @RequestBody CartInsertRequestDto insertRequestDto) {
+    public ResponseEntity<CartEntity> addProduct(HttpServletRequest request,
+                                                 @RequestBody CartInsertRequestDto insertRequestDto) {
 
         final AuthInfo authInfo = authorizationExtractor.extract(request);
         checkAuth(authInfo);
@@ -48,11 +48,11 @@ public class CartApiController {
         validatePassword(member.getPassword(), authInfo.getPassword());
 
         final int productId = insertRequestDto.getProductId();
-        final CartInsertResponseDto cartInsertResponseDto = cartService.addCart(member, productId);
-        final int savedId = cartInsertResponseDto.getId();
+        final CartEntity cart = cartService.addCart(member, productId);
+        final int savedId = cart.getId();
 
         return ResponseEntity.created(URI.create("/cart/" + savedId))
-                .body(cartInsertResponseDto);
+                .body(cart);
     }
 
     private void checkAuth(final AuthInfo authInfo) {

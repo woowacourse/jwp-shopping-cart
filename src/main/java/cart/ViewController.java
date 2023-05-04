@@ -1,9 +1,9 @@
 package cart;
 
-import cart.member.dto.MemberDto;
-import cart.product.dto.ProductResponseDto;
-import cart.product.service.ProductService;
+import cart.member.entity.MemberEntity;
 import cart.member.service.MemberService;
+import cart.product.entity.ProductEntity;
+import cart.product.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,21 +22,21 @@ public class ViewController {
 
     @GetMapping("/")
     public String index(Model model) {
-        final List<ProductResponseDto> products = productService.getProducts();
+        final List<ProductEntity> products = productService.getProducts();
         model.addAttribute("products", products);
         return "index";
     }
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        final List<ProductResponseDto> products = productService.getProducts();
+        final List<ProductEntity> products = productService.getProducts();
         model.addAttribute("products", products);
         return "admin";
     }
 
     @GetMapping("/settings")
     public String settings(Model model) {
-        final List<MemberDto> members = memberService.getMembers();
+        final List<MemberEntity> members = memberService.getMembers();
         model.addAttribute("members", members);
         return "settings";
     }

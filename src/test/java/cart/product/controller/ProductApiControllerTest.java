@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.auth.BasicAuthorizationExtractor;
 import cart.cart.service.CartService;
 import cart.member.service.MemberService;
-import cart.product.dto.ProductResponseDto;
 import cart.product.entity.ProductEntity;
 import cart.product.service.ProductService;
 import java.util.List;
@@ -72,8 +71,8 @@ public class ProductApiControllerTest {
     @Test
     void getTest() throws Exception {
         when(productService.getProducts()).thenReturn(List.of(
-                new ProductResponseDto(1, "image1", "name1", 1000),
-                new ProductResponseDto(2, "image2", "name2", 2000)));
+                new ProductEntity(1, "name1", 1000,"image1"),
+                new ProductEntity(2, "name2", 2000,"image2")));
 
         this.mockMvc.perform(get("/products"))
                 .andExpect(status().isOk())

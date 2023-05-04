@@ -1,7 +1,6 @@
 package cart.product.controller;
 
 import cart.product.dto.ProductInsertRequestDto;
-import cart.product.dto.ProductResponseDto;
 import cart.product.dto.ProductUpdateRequestDto;
 import cart.product.dto.ProductUpdateResponseDto;
 import cart.product.entity.ProductEntity;
@@ -42,7 +41,7 @@ public class ProductApiController {
     }
 
     @GetMapping("/products")
-    public List<ProductResponseDto> getProducts() {
+    public List<ProductEntity> getProducts() {
         return productService.getProducts();
     }
 

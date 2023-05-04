@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.cart.dao.CartDao;
 import cart.cart.dto.CartDeleteResponseDto;
-import cart.cart.dto.CartInsertResponseDto;
 import cart.cart.dto.CartSelectResponseDto;
 import cart.cart.entity.CartEntity;
 import io.restassured.RestAssured;
@@ -46,7 +45,7 @@ class CartApiControllerTest {
         Map<String, Object> params = new HashMap<>();
         params.put("productId", 1);
 
-        final CartInsertResponseDto response = RestAssured
+        final CartEntity response = RestAssured
                 .given().log().all()
                 .contentType("application/json")
                 .body(params)
@@ -55,7 +54,7 @@ class CartApiControllerTest {
                 .when().post("/cart")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .extract().as(CartInsertResponseDto.class);
+                .extract().as(CartEntity.class);
 
         assertThat(response).isNotNull();
     }

@@ -2,7 +2,6 @@ package cart.cart.service;
 
 import cart.cart.dao.CartDao;
 import cart.cart.dto.CartDeleteResponseDto;
-import cart.cart.dto.CartInsertResponseDto;
 import cart.cart.dto.CartSelectResponseDto;
 import cart.cart.entity.CartEntity;
 import cart.cart.entity.CartProductEntity;
@@ -20,9 +19,8 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    public CartInsertResponseDto addCart(MemberEntity member, int productId) {
-        final CartEntity savedCart = cartDao.insert(member.getId(), productId);
-        return CartMapper.toDto(savedCart);
+    public CartEntity addCart(MemberEntity member, int productId) {
+        return cartDao.insert(member.getId(), productId);
     }
 
     public List<CartSelectResponseDto> getCartByMemberID(final int memberId) {

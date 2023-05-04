@@ -1,7 +1,6 @@
 package cart.product.service;
 
 import cart.product.dto.ProductInsertRequestDto;
-import cart.product.dto.ProductResponseDto;
 import cart.product.dto.ProductUpdateRequestDto;
 import cart.product.entity.ProductEntity;
 
@@ -17,10 +16,6 @@ public class ProductMapper {
                 productUpdateRequestDto.getName(),
                 productUpdateRequestDto.getPrice(),
                 productUpdateRequestDto.getImage());
-    }
-
-    public static ProductResponseDto toDto(ProductEntity product) {
-        return new ProductResponseDto(product.getId(), product.getImage(), product.getName(), product.getPrice());
     }
 
 }
