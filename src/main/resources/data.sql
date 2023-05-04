@@ -23,7 +23,7 @@ CREATE TABLE CART(
     FOREIGN KEY (product_id) REFERENCES PRODUCT(id)
 );
 
-INSERT INTO PRODUCT(name, price, image_url) values('맨유', 9999909, 'man united');
+-- INSERT INTO PRODUCT(name, price, image_url) values('맨유', 9999909, 'man united');
 
-INSERT INTO MEMBER(email, password) values('a@a.com', 'password1');
-INSERT INTO MEMBER(email, password) values('b@b.com', 'password2');
+-- INSERT INTO MEMBER(email, password) values('a@a.com', 'password1');
+-- INSERT INTO MEMBER(email, password) values('b@b.com', 'password2');
