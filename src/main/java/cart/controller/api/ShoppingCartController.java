@@ -1,6 +1,6 @@
 package cart.controller.api;
 
-import cart.config.MemberInfoPrincipal;
+import cart.config.AuthMemberInfoPrincipal;
 import cart.service.ShoppingCartService;
 import cart.service.dto.CartResponse;
 import cart.service.dto.MemberInfo;
@@ -26,14 +26,14 @@ public class ShoppingCartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartResponse>> shoppingList(@MemberInfoPrincipal final MemberInfo info) {
+    public ResponseEntity<List<CartResponse>> shoppingList(@AuthMemberInfoPrincipal final MemberInfo info) {
         final List<CartResponse> cartResponses = shoppingCartService.findAllProduct(info);
         return ResponseEntity.ok().body(cartResponses);
     }
 
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody final Long productId,
-                                           @MemberInfoPrincipal final MemberInfo info) {
+                                           @AuthMemberInfoPrincipal final MemberInfo info) {
         shoppingCartService.addCartProduct(info, productId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
