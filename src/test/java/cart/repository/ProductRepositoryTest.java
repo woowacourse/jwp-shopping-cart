@@ -1,6 +1,6 @@
 package cart.repository;
 
-import static cart.ProductFixture.PRODUCT_ENTITY1;
+import static cart.fixture.ProductFixture.PRODUCT_ENTITY1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 

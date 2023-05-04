@@ -1,7 +1,7 @@
-package cart;
+package cart.fixture;
 
-import static cart.MemberFixture.TEST_MEMBER1;
-import static cart.ProductFixture.PRODUCT_ENTITY1;
+import static cart.fixture.MemberFixture.TEST_MEMBER1;
+import static cart.fixture.ProductFixture.PRODUCT_ENTITY1;
 
 public class CartFixture {
 

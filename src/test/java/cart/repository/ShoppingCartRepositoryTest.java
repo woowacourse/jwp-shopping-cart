@@ -1,8 +1,8 @@
 package cart.repository;
 
-import static cart.CartFixture.TEST_CART_RECORD;
-import static cart.MemberFixture.TEST_MEMBER1;
-import static cart.ProductFixture.PRODUCT_ENTITY2;
+import static cart.fixture.CartFixture.TEST_CART_RECORD;
+import static cart.fixture.MemberFixture.TEST_MEMBER1;
+import static cart.fixture.ProductFixture.PRODUCT_ENTITY2;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.service.dto.CartResponse;

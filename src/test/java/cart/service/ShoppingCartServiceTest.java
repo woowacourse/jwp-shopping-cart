@@ -1,11 +1,11 @@
 package cart.service;
 
-import static cart.CartFixture.TEST_CART_RECORD;
-import static cart.MemberFixture.TEST_MEMBER1;
-import static cart.ProductFixture.PRODUCT_ENTITY3;
+import static cart.fixture.CartFixture.TEST_CART_RECORD;
+import static cart.fixture.MemberFixture.TEST_MEMBER1;
+import static cart.fixture.ProductFixture.PRODUCT_ENTITY3;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.ProductFixture;
+import cart.fixture.ProductFixture;
 import cart.repository.JdbcMemberRepository;
 import cart.repository.JdbcShoppingCartRepository;
 import cart.service.dto.CartResponse;

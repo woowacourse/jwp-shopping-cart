@@ -1,7 +1,7 @@
 package cart.service;
 
-import static cart.MemberFixture.TEST_MEMBER1;
-import static cart.MemberFixture.TEST_MEMBER2;
+import static cart.fixture.MemberFixture.TEST_MEMBER1;
+import static cart.fixture.MemberFixture.TEST_MEMBER2;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.entity.Member;
