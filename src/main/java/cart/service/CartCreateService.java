@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.dto.CartResponse;
 import cart.repository.CartRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ public class CartCreateService {
         this.cartRepository = cartRepository;
     }
 
-    public void create(final String email, final Long productId) {
-        cartRepository.save(email, productId);
+    public CartResponse create(final String email, final Long productId) {
+        return cartRepository.save(email, productId);
     }
 }

@@ -9,6 +9,7 @@ import cart.dao.ProductDao;
 import cart.domain.cart.Cart;
 import cart.domain.product.Product;
 import cart.domain.user.Email;
+import cart.dto.CartResponse;
 import cart.entiy.CartEntity;
 import cart.entiy.ProductEntity;
 import org.springframework.stereotype.Repository;
@@ -25,9 +26,10 @@ public class RdsCartRepository implements CartRepository {
     }
 
     @Override
-    public void save(final String email, final Long productId) {
+    public CartResponse save(final String email, final Long productId) {
         final CartEntity cartEntity = new CartEntity(email, productId);
-        cartDao.insert(cartEntity);
+        final CartEntity cart = cartDao.insert(cartEntity);
+        return new CartResponse(cart.getCartId(), cart.getEmail(), cart.getProductId());
     }
 
     @Override
