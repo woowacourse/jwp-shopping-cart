@@ -20,7 +20,8 @@ public class CartItemsController {
     }
 
     @GetMapping("/cart-items")
-    public List<CartItemResponse> getCartItems(@AuthenticationPrincipal LoginDto loginDto, Model model) {
+    @ResponseStatus(HttpStatus.OK)
+    public List<CartItemResponse> getCartItems(@AuthenticationPrincipal LoginDto loginDto) {
         return cartService.findAllCartItems(loginDto.getMemberId());
     }
 
