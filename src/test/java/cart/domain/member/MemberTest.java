@@ -1,5 +1,6 @@
 package cart.domain.member;
 
+import cart.domain.MemberEntity;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,6 @@ class MemberTest {
         final String password = "12345abc!!";
 
         // expect
-        assertThatNoException().isThrownBy(() -> new Member(email, password));
+        assertThatNoException().isThrownBy(() -> new MemberEntity(email, password));
     }
 }

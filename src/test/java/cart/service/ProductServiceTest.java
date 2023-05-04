@@ -1,8 +1,7 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.dao.entity.ProductEntity;
-import cart.domain.Product;
+import cart.domain.ProductEntity;
 import cart.dto.RequestCreateProductDto;
 import cart.dto.RequestUpdateProductDto;
 import cart.dto.ResponseProductDto;
@@ -70,7 +69,7 @@ class ProductServiceTest {
     @Test
     void 상품을_수정한다() {
         // given
-        when(productDao.update(any(Long.class), any(Product.class)))
+        when(productDao.update(any(Long.class), any(ProductEntity.class)))
                 .thenReturn(1);
         final RequestUpdateProductDto requestUpdateProductDto = new RequestUpdateProductDto(1L, "치킨", 1000, "치킨 사진");
 
@@ -84,7 +83,7 @@ class ProductServiceTest {
     @Test
     void 존재하지_않은_상품을_수정하면_예외가_발생한다() {
         // given
-        when(productDao.update(any(Long.class), any(Product.class)))
+        when(productDao.update(any(Long.class), any(ProductEntity.class)))
                 .thenReturn(0);
         final RequestUpdateProductDto requestUpdateProductDto = new RequestUpdateProductDto(1L, "치킨", 1000, "치킨 사진");
 

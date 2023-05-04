@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.MemberDao;
-import cart.dao.entity.MemberEntity;
+import cart.domain.MemberEntity;
 import cart.dto.ResponseMemberDto;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

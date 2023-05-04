@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dao.entity.CartEntity;
+import cart.domain.CartEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

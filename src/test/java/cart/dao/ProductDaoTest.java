@@ -1,7 +1,6 @@
 package cart.dao;
 
-import cart.dao.entity.ProductEntity;
-import cart.domain.Product;
+import cart.domain.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -35,10 +34,10 @@ class ProductDaoTest {
     @Test
     void 데이터를_추가한다() {
         // given
-        final Product product = new Product("치킨", 1_000, "치킨 이미지 주소");
+        final ProductEntity productEntity = new ProductEntity("치킨", 1_000, "치킨 이미지 주소");
 
         // when
-        final Long id = productDao.insert(product);
+        final Long id = productDao.insert(productEntity);
 
         // then
         assertThat(id).isNotNull();
@@ -47,10 +46,10 @@ class ProductDaoTest {
     @Test
     void 입력한_id를_갖는_데이터를_수정한다() {
         // given
-        final Long id = productDao.insert(new Product("돈까스", 10_000, "돈까스 이미지 주소"));
+        final Long id = productDao.insert(new ProductEntity("돈까스", 10_000, "돈까스 이미지 주소"));
 
         // when
-        final int updatedRows = productDao.update(id, new Product("치킨", 1_000, "치킨 이미지 주소"));
+        final int updatedRows = productDao.update(id, new ProductEntity("치킨", 1_000, "치킨 이미지 주소"));
 
         // then
         assertSoftly(softly -> {
@@ -65,7 +64,7 @@ class ProductDaoTest {
     @Test
     void 등록되지_않은_데이터를_수정할_수_없다() {
         // when
-        final int updatedRows = productDao.update(99999L, new Product("치킨", 1_000, "치킨 이미지 주소"));
+        final int updatedRows = productDao.update(99999L, new ProductEntity("치킨", 1_000, "치킨 이미지 주소"));
 
         // then
         assertThat(updatedRows).isZero();
@@ -74,7 +73,7 @@ class ProductDaoTest {
     @Test
     void 입력한_id를_가진_데이터를_찾는다() {
         // given
-        final Long id = productDao.insert(new Product("돈까스", 10_000, "돈까스 이미지 주소"));
+        final Long id = productDao.insert(new ProductEntity("돈까스", 10_000, "돈까스 이미지 주소"));
 
         // when
         final ProductEntity productEntity = productDao.findById(id);
@@ -91,7 +90,7 @@ class ProductDaoTest {
     @Test
     void 입력한_id를_가진_데이터를_삭제한다() {
         // given
-        final Long id = productDao.insert(new Product("돈까스", 10_000, "돈까스 이미지 주소"));
+        final Long id = productDao.insert(new ProductEntity("돈까스", 10_000, "돈까스 이미지 주소"));
 
         // when
         productDao.delete(id);
@@ -104,7 +103,7 @@ class ProductDaoTest {
     @Test
     void 모든_데이터를_조회한다() {
         // given
-        productDao.insert(new Product("치킨", 1_000, "치킨 이미지 주소"));
+        productDao.insert(new ProductEntity("치킨", 1_000, "치킨 이미지 주소"));
 
         // when
         final List<ProductEntity> productEntities = productDao.findAll();

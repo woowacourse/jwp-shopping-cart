@@ -1,8 +1,7 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.dao.entity.ProductEntity;
-import cart.domain.Product;
+import cart.domain.ProductEntity;
 import cart.dto.RequestCreateProductDto;
 import cart.dto.RequestUpdateProductDto;
 import cart.dto.ResponseProductDto;
@@ -30,13 +29,13 @@ public class ProductService {
     }
 
     public Long insert(final RequestCreateProductDto requestCreateProductDto) {
-        final Product product = requestCreateProductDto.toProduct();
-        return productDao.insert(product);
+        final ProductEntity productEntity = requestCreateProductDto.toProductEntity();
+        return productDao.insert(productEntity);
     }
 
     public int update(final Long id, final RequestUpdateProductDto requestUpdateProductDto) {
-        final Product product = requestUpdateProductDto.toProduct();
-        final int updatedRows = productDao.update(id, product);
+        final ProductEntity productEntity = requestUpdateProductDto.toProductEntity();
+        final int updatedRows = productDao.update(id, productEntity);
         validateAffectedRowsCount(updatedRows);
         return updatedRows;
     }

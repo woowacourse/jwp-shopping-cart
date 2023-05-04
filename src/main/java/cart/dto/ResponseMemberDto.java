@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.dao.entity.MemberEntity;
+import cart.domain.MemberEntity;
 
 public class ResponseMemberDto {
 

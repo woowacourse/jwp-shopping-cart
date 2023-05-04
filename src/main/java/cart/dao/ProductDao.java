@@ -1,7 +1,6 @@
 package cart.dao;
 
-import cart.dao.entity.ProductEntity;
-import cart.domain.Product;
+import cart.domain.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -34,28 +33,28 @@ public class ProductDao {
         return jdbcTemplate.query(sql, PRODUCT_ENTITY_ROW_MAPPER);
     }
 
-    public Long insert(final Product product) {
+    public Long insert(final ProductEntity productEntity) {
         final String sql = "INSERT INTO product (name, price, image) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(sql, GENERATED_ID_COLUMN);
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setString(3, product.getImage());
+            preparedStatement.setString(1, productEntity.getName());
+            preparedStatement.setInt(2, productEntity.getPrice());
+            preparedStatement.setString(3, productEntity.getImage());
             return preparedStatement;
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public int update(final Long id, final Product product) {
+    public int update(final Long id, final ProductEntity productEntity) {
         final String sql = "UPDATE product SET name = ?, price = ?, image = ? WHERE id = ?";
         return jdbcTemplate.update(
                 sql,
-                product.getName(),
-                product.getPrice(),
-                product.getImage(),
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImage(),
                 id
         );
     }

@@ -1,8 +1,8 @@
 package cart.dao;
 
-import cart.dao.entity.CartEntity;
-import cart.dao.entity.MemberEntity;
-import cart.dao.entity.ProductEntity;
+import cart.domain.CartEntity;
+import cart.domain.MemberEntity;
+import cart.domain.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -121,7 +121,7 @@ class CartDaoTest {
         //given
         final Long memberId = insertMember(new MemberEntity("huchu@woowahan.com", "1234567a!"));
         final Long productId = insertProduct(new ProductEntity("치킨", 10_000, "치킨 사진"));
-        final Long id = cartDao.insert(new CartEntity(memberId, productId));
+        cartDao.insert(new CartEntity(memberId, productId));
 
         //when
         final int affectedRows = cartDao.delete(memberId, productId);

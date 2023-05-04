@@ -1,7 +1,6 @@
 package cart.dao;
 
-import cart.dao.entity.MemberEntity;
-import cart.domain.member.Member;
+import cart.domain.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,7 +14,7 @@ import java.util.Objects;
 @Repository
 public class MemberDao {
 
-    private static final RowMapper<MemberEntity> USER_ENTITY_ROW_MAPPER = (resultSet, rowNum) -> new MemberEntity(
+    private static final RowMapper<MemberEntity> MEMBER_ENTITY_ROW_MAPPER = (resultSet, rowNum) -> new MemberEntity(
             resultSet.getLong("id"),
             resultSet.getString("email"),
             resultSet.getString("password")
@@ -30,16 +29,16 @@ public class MemberDao {
 
     public List<MemberEntity> findAll() {
         final String sql = "SELECT * FROM member";
-        return jdbcTemplate.query(sql, USER_ENTITY_ROW_MAPPER);
+        return jdbcTemplate.query(sql, MEMBER_ENTITY_ROW_MAPPER);
     }
 
-    public Long insert(final Member member) {
+    public Long insert(final MemberEntity memberEntity) {
         final String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(sql, GENERATED_ID_COLUMN);
-            preparedStatement.setString(1, member.getEmail());
-            preparedStatement.setString(2, member.getPassword());
+            preparedStatement.setString(1, memberEntity.getEmail());
+            preparedStatement.setString(2, memberEntity.getPassword());
             return preparedStatement;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -52,11 +51,11 @@ public class MemberDao {
 
     public MemberEntity findById(Long id) {
         final String sql = "SELECT * FROM member WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, USER_ENTITY_ROW_MAPPER, id);
+        return jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_ROW_MAPPER, id);
     }
 
     public MemberEntity findByEmail(String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
-        return jdbcTemplate.queryForObject(sql, USER_ENTITY_ROW_MAPPER, email);
+        return jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_ROW_MAPPER, email);
     }
 }

@@ -1,21 +1,27 @@
 package cart.domain;
 
-public class Product {
+public class ProductEntity {
 
     private static final int MAXIMUM_NAME_LENGTH = 50;
     private static final int MINIMUM_PRICE = 0;
     private static final int MAXIMUM_PRICE = 1_000_000_000;
     private static final int MAXIMUM_IMAGE_LENGTH = 2_000;
 
+    private final Long id;
     private final String name;
     private final Integer price;
     private final String image;
 
-    public Product(final String name, final Integer price, final String image) {
+    public ProductEntity(final Long id, final String name, final Integer price, final String image) {
         validate(name, price, image);
+        this.id = id;
         this.name = name;
         this.price = price;
         this.image = image;
+    }
+
+    public ProductEntity(final String name, final Integer price, final String image) {
+        this(null, name, price, image);
     }
 
     private void validate(final String name, final Integer price, final String image) {
@@ -28,6 +34,10 @@ public class Product {
         if (image.length() > MAXIMUM_IMAGE_LENGTH) {
             throw new IllegalArgumentException("이미지 주소는 " + MAXIMUM_IMAGE_LENGTH + "자를 넘길 수 없습니다.");
         }
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {

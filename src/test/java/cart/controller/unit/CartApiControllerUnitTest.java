@@ -1,7 +1,7 @@
 package cart.controller.unit;
 
 import cart.controller.CartApiController;
-import cart.dao.entity.ProductEntity;
+import cart.domain.ProductEntity;
 import cart.dto.ResponseProductDto;
 import cart.service.CartService;
 import cart.service.MemberService;

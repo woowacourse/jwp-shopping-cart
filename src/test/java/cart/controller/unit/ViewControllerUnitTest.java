@@ -1,8 +1,8 @@
 package cart.controller.unit;
 
 import cart.controller.ViewController;
-import cart.dao.entity.MemberEntity;
-import cart.dao.entity.ProductEntity;
+import cart.domain.MemberEntity;
+import cart.domain.ProductEntity;
 import cart.dto.ResponseMemberDto;
 import cart.dto.ResponseProductDto;
 import cart.service.MemberService;

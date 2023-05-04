@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.Product;
+import cart.domain.ProductEntity;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -23,8 +23,8 @@ public class RequestCreateProductDto {
         this.image = image;
     }
 
-    public Product toProduct() {
-        return new Product(name, price, image);
+    public ProductEntity toProductEntity() {
+        return new ProductEntity(name, price, image);
     }
 
     public String getName() {

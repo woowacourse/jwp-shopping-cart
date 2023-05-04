@@ -1,7 +1,6 @@
 package cart.dao;
 
-import cart.dao.entity.MemberEntity;
-import cart.domain.member.Member;
+import cart.domain.MemberEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -33,7 +32,7 @@ class MemberDaoTest {
     @Test
     void 모든_데이터를_조회한다() {
         //given
-        memberDao.insert(new Member("huchu@woowahan.com", "1234567a!"));
+        memberDao.insert(new MemberEntity("huchu@woowahan.com", "1234567a!"));
 
         //when
         final List<MemberEntity> memberEntities = memberDao.findAll();
@@ -50,7 +49,7 @@ class MemberDaoTest {
     @Test
     void 데이터를_추가한다() {
         //given
-        final Member member = new Member("huchu@woowahan.com", "1234567a!");
+        final MemberEntity member = new MemberEntity("huchu@woowahan.com", "1234567a!");
 
         //when
         final Long id = memberDao.insert(member);
@@ -68,7 +67,7 @@ class MemberDaoTest {
     @Test
     void id로_데이터를_찾는다() {
         //given
-        final Member member = new Member("huchu@woowahan.com", "1234567a!");
+        final MemberEntity member = new MemberEntity("huchu@woowahan.com", "1234567a!");
         final Long id = memberDao.insert(member);
 
         //when
@@ -85,7 +84,7 @@ class MemberDaoTest {
     @Test
     void 모든_데이터를_삭제한다() {
         //given
-        memberDao.insert(new Member("huchu@woowahan.com", "1234567a!"));
+        memberDao.insert(new MemberEntity("huchu@woowahan.com", "1234567a!"));
 
         //when
         memberDao.deleteAll();
@@ -97,7 +96,7 @@ class MemberDaoTest {
     @Test
     void 이메일로_데이터를_찾는다() {
         //given
-        final Member member = new Member("huchu@woowahan.com", "1234567a!");
+        final MemberEntity member = new MemberEntity("huchu@woowahan.com", "1234567a!");
         final Long id = memberDao.insert(member);
 
         //when

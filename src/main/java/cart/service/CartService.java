@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.CartDao;
-import cart.dao.entity.CartEntity;
+import cart.domain.CartEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
