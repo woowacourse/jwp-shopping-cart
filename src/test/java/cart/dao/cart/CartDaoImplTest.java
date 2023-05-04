@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import cart.dao.product.ProductDao;
 import cart.dao.product.ProductDaoImpl;
 import cart.entity.cart.Cart;
+import cart.entity.cart.Count;
 import cart.entity.member.Email;
 import cart.entity.member.Member;
 import cart.entity.member.Password;
@@ -73,6 +74,27 @@ class CartDaoImplTest {
         assertThat(result.get().getMemberId()).isEqualTo(cart.getMemberId());
         assertThat(result.get().getProductId()).isEqualTo(cart.getProductId());
         assertThat(result.get().getCount()).isEqualTo(cart.getCount());
+
+    }
+
+    @Test
+    @DisplayName("장바구니의 데이터를 업데이트한다.")
+    void update_cart_count() {
+        // given
+        Long productId = productDao.insertProduct(new Product("연필", "이미지", 1000));
+        Member member = new Member(1L, new Email("ako@naver.com"), new Password("ako"));
+        Cart cart = new Cart(1L, productId, 1);
+        Long insertCart = cartDao.insertCart(cart);
+        Cart updateCart = new Cart(insertCart, cart.getMemberId(), cart.getProductId(), new Count(cart.getCount() + 1));
+
+        // when
+        cartDao.updateCart(updateCart);
+        Optional<Cart> result = cartDao.findByMemberIdAndProductId(member, productId);
+
+        // then
+        assertThat(result.get().getMemberId()).isEqualTo(updateCart.getMemberId());
+        assertThat(result.get().getProductId()).isEqualTo(updateCart.getProductId());
+        assertThat(result.get().getCount()).isEqualTo(updateCart.getCount());
 
     }
 

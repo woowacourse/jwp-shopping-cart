@@ -5,9 +5,9 @@ public class Cart {
     private final Long id;
     private final Long memberId;
     private final Long productId;
-    private final int count;
+    private final Count count;
 
-    public Cart(final Long id, final Long memberId, final Long productId, final int count) {
+    public Cart(final Long id, final Long memberId, final Long productId, final Count count) {
         this.id = id;
         this.memberId = memberId;
         this.productId = productId;
@@ -15,7 +15,7 @@ public class Cart {
     }
 
     public Cart(final Long memberId, final Long productId, final int count) {
-        this(null, memberId, productId, count);
+        this(null, memberId, productId, new Count(count));
     }
 
     public Long getId() {
@@ -31,6 +31,6 @@ public class Cart {
     }
 
     public int getCount() {
-        return count;
+        return count.getCount();
     }
 }

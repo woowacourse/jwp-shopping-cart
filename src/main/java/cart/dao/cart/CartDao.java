@@ -9,4 +9,6 @@ public interface CartDao {
     public Long insertCart(Cart cart);
 
     public Optional<Cart> findByMemberIdAndProductId(Member member, Long productId);
+
+    public void updateCart(Cart cart);
 }

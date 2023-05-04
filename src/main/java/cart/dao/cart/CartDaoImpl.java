@@ -1,6 +1,7 @@
 package cart.dao.cart;
 
 import cart.entity.cart.Cart;
+import cart.entity.cart.Count;
 import cart.entity.member.Member;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -19,7 +20,7 @@ public class CartDaoImpl implements CartDao {
         resultSet.getLong("id"),
         resultSet.getLong("member_id"),
         resultSet.getLong("product_id"),
-        resultSet.getInt("count")
+        new Count(resultSet.getInt("count"))
     );
 
     public CartDaoImpl(final JdbcTemplate jdbcTemplate) {
@@ -50,5 +51,14 @@ public class CartDaoImpl implements CartDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public void updateCart(final Cart updateCart) {
+        String sql = "UPDATE cart SET count=? WHERE id = ? ";
+        System.out.println("data " + updateCart.getCount());
+        jdbcTemplate.update(sql,
+            updateCart.getCount(),
+            updateCart.getId());
     }
 }
