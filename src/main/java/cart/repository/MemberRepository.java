@@ -11,6 +11,8 @@ public interface MemberRepository {
 
     Optional<MemberEntity> findById(Long id);
 
+    Optional<MemberEntity> findByEmail(String email);
+
     List<MemberEntity> findAll();
 
     void update(MemberEntity memberEntity);

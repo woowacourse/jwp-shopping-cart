@@ -1,6 +1,7 @@
 package cart.repository;
 
 import cart.entity.MemberEntity;
+import cart.exception.DuplicateEmailException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -39,6 +40,16 @@ public class DBMemberRepository implements MemberRepository {
     public Optional<MemberEntity> findById(Long id) {
         String sql = "SELECT id, email, password FROM member WHERE id = ?";
         List<MemberEntity> entities = jdbcTemplate.query(sql, memberEntityMaker(), id);
+        return entities.stream().findAny();
+    }
+
+    @Override
+    public Optional<MemberEntity> findByEmail(String email) throws DuplicateEmailException {
+        String sql = "SELECT id, email, password FROM member WHERE email = ?";
+        List<MemberEntity> entities = jdbcTemplate.query(sql, memberEntityMaker(), email);
+        if (entities.size() > 1) {
+            throw new DuplicateEmailException("동일한 이메일이 2개 이상 존재합니다.");
+        }
         return entities.stream().findAny();
     }
 
