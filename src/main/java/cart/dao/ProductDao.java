@@ -53,7 +53,7 @@ public class ProductDao {
         try {
             Product product = jdbcTemplate.queryForObject(sql, productRowMapper, productId);
             return Optional.of(product);
-        } catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }

@@ -20,7 +20,7 @@ public class MemberService {
     public List<MemberResponse> findAll() {
         List<Member> members = memberDao.findAll();
         return members.stream()
-                .map(member -> new MemberResponse(member.getEmail(), member.getPassword()))
+                .map(MemberResponse::from)
                 .collect(Collectors.toList());
     }
 }
