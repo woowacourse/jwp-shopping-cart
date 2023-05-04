@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -23,6 +24,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
+@Sql("classpath:data-test.sql")
 class CartDaoTest {
 
     private static final String[] GENERATED_ID_COLUMN = {"id"};
