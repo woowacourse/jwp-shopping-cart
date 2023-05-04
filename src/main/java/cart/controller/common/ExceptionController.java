@@ -65,7 +65,7 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Response> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         ErrorResponse errorResponse = ErrorResponse.badRequest(INVALID_REQUEST_MESSAGE);
-        errorResponse.addValidation(e.getName(), "유효하지 않은 경로입니다.");
+        errorResponse.addValidation(e.getName(), e.getMostSpecificCause().getMessage());
         return ResponseEntity.badRequest()
                 .body(errorResponse);
     }
