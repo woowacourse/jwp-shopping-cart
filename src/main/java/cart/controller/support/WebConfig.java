@@ -1,5 +1,6 @@
-package cart.advice;
+package cart.controller.support;
 
+import cart.controller.support.BasicAuthResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
