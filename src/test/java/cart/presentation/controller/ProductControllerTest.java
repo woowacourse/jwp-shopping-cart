@@ -26,6 +26,8 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = ProductController.class,
@@ -61,7 +63,7 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
                 // then
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -88,12 +90,12 @@ class ProductControllerTest {
         );
 
         // when
-        mockMvc.perform(post("/product")
+        mockMvc.perform(put("/product")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
 
                 // then
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -112,6 +114,6 @@ class ProductControllerTest {
                         .content(content))
 
                 // then
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 }

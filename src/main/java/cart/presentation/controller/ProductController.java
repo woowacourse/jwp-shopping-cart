@@ -5,8 +5,15 @@ import cart.business.service.ProductService;
 import cart.presentation.adapter.DomainConverter;
 import cart.presentation.dto.ProductDto;
 import cart.presentation.dto.ProductIdDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -23,8 +30,10 @@ public class ProductController {
     }
 
     @PostMapping
-    public void productCreate(@RequestBody @Valid ProductDto request) {
+    public ResponseEntity<Void> productCreate(@RequestBody @Valid ProductDto request) {
         productService.create(DomainConverter.toProductWithoutId(request));
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
@@ -38,12 +47,16 @@ public class ProductController {
     }
 
     @PutMapping
-    public void productUpdate(@RequestBody @Valid ProductDto request) {
+    public ResponseEntity<Void> productUpdate(@RequestBody @Valid ProductDto request) {
         productService.update(DomainConverter.toProductWithId(request));
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping
-    public void productDelete(@RequestBody @Valid ProductIdDto request) {
+    public ResponseEntity<Void> productDelete(@RequestBody @Valid ProductIdDto request) {
         productService.delete(request.getId());
+
+        return ResponseEntity.noContent().build();
     }
 }

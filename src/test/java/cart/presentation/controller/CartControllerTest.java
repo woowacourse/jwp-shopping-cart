@@ -69,7 +69,7 @@ class CartControllerTest {
                         .header("Authorization", encodedAuth))
 
                 // then
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -105,6 +105,6 @@ class CartControllerTest {
                         .header("Authorization", encodedAuth))
 
                 // then
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 }

@@ -10,6 +10,7 @@ import cart.presentation.dto.CartItemDto;
 import cart.presentation.dto.CartItemIdDto;
 import cart.presentation.dto.ProductIdDto;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,9 +38,11 @@ public class CartController {
     }
 
     @PostMapping
-    public void cartCreate(@ResolvedMember Member member, @RequestBody ProductIdDto productIdDto) {
+    public ResponseEntity<Void> cartCreate(@ResolvedMember Member member, @RequestBody ProductIdDto productIdDto) {
         Integer memberId = memberService.findAndReturnId(member);
         cartService.addCartItem(DomainConverter.toCartItemWithoutId(productIdDto.getId(), memberId));
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
@@ -55,9 +58,11 @@ public class CartController {
     }
 
     @DeleteMapping
-    public void cartDelete(@ResolvedMember Member member, @RequestBody CartItemIdDto cartItemIdDto) {
+    public ResponseEntity<Void> cartDelete(@ResolvedMember Member member, @RequestBody CartItemIdDto cartItemIdDto) {
         Integer memberId = memberService.findAndReturnId(member);
         memberService.validateExists(memberId);
         cartService.removeCartItem(cartItemIdDto.getId());
+
+        return ResponseEntity.noContent().build();
     }
 }
