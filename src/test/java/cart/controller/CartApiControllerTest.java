@@ -1,16 +1,9 @@
 package cart.controller;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-
 import cart.dto.request.RequestCreateProductDto;
 import cart.dto.request.RequestUpdateProductDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -28,6 +21,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -51,7 +52,7 @@ class CartApiControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/product")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -64,7 +65,7 @@ class CartApiControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto(name, 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/product")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -79,7 +80,7 @@ class CartApiControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto(overName, 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/product")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -93,7 +94,7 @@ class CartApiControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/product")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -107,7 +108,7 @@ class CartApiControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/product")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -121,7 +122,7 @@ class CartApiControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 1_000, image))
                 .when()
-                .post("/admin/product")
+                .post("/product")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -136,7 +137,7 @@ class CartApiControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 1_000, image))
                 .when()
-                .post("/admin/product")
+                .post("/product")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -151,7 +152,7 @@ class CartApiControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestUpdateProductDto("피자", 10_000, "피자 사진"))
                 .when()
-                .put("/admin/product/" + insertedId)
+                .put("/product/" + insertedId)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -181,7 +182,7 @@ class CartApiControllerTest {
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestUpdateProductDto("치킨", 10_000, "치킨 사진"))
                 .when()
-                .put("/admin/product/" + 0L)
+                .put("/product/" + 0L)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -194,7 +195,7 @@ class CartApiControllerTest {
         given()
                 .log().all()
                 .when()
-                .delete("/admin/product/" + insertedId)
+                .delete("/product/" + insertedId)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -205,7 +206,7 @@ class CartApiControllerTest {
         given()
                 .log().all()
                 .when()
-                .delete("/admin/product/" + 0)
+                .delete("/product/" + 0)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
