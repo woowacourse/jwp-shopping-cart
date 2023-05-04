@@ -4,6 +4,7 @@ package cart.authority;
 import cart.dao.MemberDao;
 import cart.entity.MemberEntity;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.StringUtils;
@@ -15,7 +16,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class AuthorityMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BASIC_TYPE = "Basic ";
     private final MemberDao memberDao;
 
@@ -48,7 +48,7 @@ public class AuthorityMemberArgumentResolver implements HandlerMethodArgumentRes
     }
 
     private String getBasicToken(final NativeWebRequest webRequest) {
-        final String token = webRequest.getHeader(AUTHORIZATION_HEADER);
+        final String token = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (!StringUtils.hasText(token)) {
             throw new IllegalArgumentException("Authorization 헤더가 없습니다.");
         }
