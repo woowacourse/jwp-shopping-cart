@@ -37,4 +37,11 @@ public class ProductUpdateRequest {
         return imageUrl;
     }
 
+    public void setName(String updateName) {
+        this.name = updateName;
+    }
+
+    public void setPrice(int updatePrice) {
+        this.price = updatePrice;
+    }
 }

@@ -6,7 +6,7 @@ import cart.entity.ProductEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ProductEntityConvertor {
+public class ProductEntityConvertor {
 	public ProductEntity dtoToEntity (ProductCreateRequest request) {
 		return new ProductEntity(null, request.getName(), request.getImageUrl(), request.getPrice());
 	}
