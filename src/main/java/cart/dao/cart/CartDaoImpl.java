@@ -81,4 +81,12 @@ public class CartDaoImpl implements CartDao {
             updateCart.getCount(),
             updateCart.getId());
     }
+
+    @Override
+    public void deleteCart(final Member member, final Long productId) {
+        String sql = "DELETE FROM cart WHERE member_id = ? AND product_id = ?";
+        jdbcTemplate.update(sql,
+            member.getId(),
+            productId);
+    }
 }

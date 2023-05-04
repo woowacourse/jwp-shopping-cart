@@ -15,4 +15,6 @@ public interface CartDao {
     public List<CartItem> findByMemberId(Member member);
 
     public void updateCart(Cart cart);
+
+    public void deleteCart(Member member, Long productId);
 }

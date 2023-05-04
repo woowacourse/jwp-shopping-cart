@@ -112,4 +112,24 @@ class CartDaoImplTest {
         assertThat(result.get().getCount()).isEqualTo(updateCart.getCount());
     }
 
+    @Test
+    @DisplayName("사용자의 장바구니 상품을 제거한다.")
+    void delete_cart_item() {
+        // given
+        Long productId1 = productDao.insertProduct(new Product("밥", "이미지", 1000));
+        Long productId2 = productDao.insertProduct(new Product("고기", "이미지", 2000));
+        Member member = new Member(1L, new Email("ako@naver.com"), new Password("ako"));
+        Cart cart1 = new Cart(member.getId(), productId1, 1);
+        Cart cart2 = new Cart(member.getId(), productId2, 1);
+        cartDao.insertCart(cart1);
+        cartDao.insertCart(cart2);
+
+        // when
+        cartDao.deleteCart(member, productId1);
+        List<CartItem> result = cartDao.findByMemberId(member);
+
+        // then
+        assertThat(result.size()).isEqualTo(1);
+    }
+
 }
