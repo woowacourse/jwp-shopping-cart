@@ -11,13 +11,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@Import(UserDao.class)
+@Import(CartUserDao.class)
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @JdbcTest
-class UserDaoTest {
+class CartUserDaoTest {
 
     @Autowired
-    private UserDao userDao;
+    private CartUserDao cartUserDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -30,7 +30,7 @@ class UserDaoTest {
                 + "values ('a@a.com', 'password1'),\n"
                 + "       ('b@b.com', 'password2');");
 
-        UserEntity user = userDao.findByEmail(findTargetEmail);
+        CartUserEntity user = cartUserDao.findByEmail(findTargetEmail);
 
         assertThat(user).isNotNull();
         assertThat(user.getEmail()).isEqualTo(findTargetEmail);

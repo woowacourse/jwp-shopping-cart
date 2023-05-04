@@ -2,12 +2,12 @@ package cart.dao.user;
 
 import java.util.Objects;
 
-public class UserEntity {
+public class CartUserEntity {
     private final Long id;
     private final String email;
     private final String password;
 
-    public UserEntity(Long id, String email, String password) {
+    public CartUserEntity(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -21,7 +21,7 @@ public class UserEntity {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        UserEntity that = (UserEntity) o;
+        CartUserEntity that = (CartUserEntity) o;
         return Objects.equals(id, that.id);
     }
 
