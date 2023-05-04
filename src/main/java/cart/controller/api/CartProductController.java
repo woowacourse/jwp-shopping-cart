@@ -1,5 +1,6 @@
 package cart.controller.api;
 
+import cart.auth.AuthenticationPrincipal;
 import cart.auth.AuthorizationExtractor;
 import cart.auth.BasicAuthorizationExtractor;
 import cart.domain.member.Member;
@@ -38,14 +39,14 @@ public class CartProductController {
 
     @PostMapping
     public ResponseEntity<Void> postCartProduct(@RequestBody final Long productId,
-                                                @RequestAttribute("member") final Member member) {
+                                                @AuthenticationPrincipal final Member member) {
         cartProductService.addCartProduct(productId, member.getEmail(), member.getPassword());
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getCartProduct(@RequestAttribute("member") final Member member) {
+    public ResponseEntity<List<ProductResponse>> getCartProduct(@AuthenticationPrincipal final Member member) {
         final List<Long> productIds = cartProductService.findAllProductIds(member.getEmail(), member.getPassword());
 
         return ResponseEntity.ok(productService.findByIds(productIds));
@@ -53,7 +54,7 @@ public class CartProductController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteCartProduct(@PathVariable final Long productId,
-                                                  @RequestAttribute("member") final Member member) {
+                                                  @AuthenticationPrincipal final Member member) {
         cartProductService.delete(productId, member.getEmail(), member.getPassword());
 
         return ResponseEntity.noContent().build();
