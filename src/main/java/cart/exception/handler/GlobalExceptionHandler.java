@@ -73,7 +73,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AuthException.class)
     private ResponseEntity<ExceptionResponse> handleAuthException(AuthException ex) {
         logger.warn(ex.getMessage());
-        return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(MemberException.class)

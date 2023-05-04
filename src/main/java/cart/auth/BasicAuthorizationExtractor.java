@@ -2,14 +2,12 @@ package cart.auth;
 
 import cart.controller.dto.AuthInfo;
 import cart.exception.AuthException;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BasicAuthorizationExtractor {
 
-    private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
     private static final String HEADER_EMPTY_ERROR_MESSAGE = "인증 정보가 없습니다.";
@@ -17,18 +15,17 @@ public class BasicAuthorizationExtractor {
     private static final int EMAIL_INDEX = 1;
     private static final int PASSWORD_INDEX = 2;
 
-    public AuthInfo extract(HttpServletRequest request) {
-        String header = request.getHeader(AUTHORIZATION);
+    public AuthInfo extract(String authHeader) {
 
-        if (header == null) {
+        if (authHeader == null) {
             throw new AuthException(HEADER_EMPTY_ERROR_MESSAGE);
         }
 
-        if (isInvalidHeader(header)) {
+        if (isInvalidHeader(authHeader)) {
             throw new AuthException(HEADER_INVALID_ERROR_MESSAGE);
         }
 
-        String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
+        String authHeaderValue = authHeader.substring(BASIC_TYPE.length()).trim();
         byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
         String decodedString = new String(decodedBytes);
 
