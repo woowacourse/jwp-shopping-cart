@@ -18,7 +18,7 @@ public class MemberViewController {
 	}
 
 	@GetMapping("settings")
-	public String showMembers(Model model){
+	public String showMembers(Model model) {
 		final List<MemberResponse> findAllMembers = memberService.findAll();
 		model.addAttribute("members", findAllMembers);
 		return "settings";
