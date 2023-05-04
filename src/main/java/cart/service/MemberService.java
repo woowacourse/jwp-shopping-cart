@@ -1,14 +1,11 @@
 package cart.service;
 
 import cart.controller.dto.MemberResponse;
-import cart.controller.dto.ProductResponse;
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.domain.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,24 +22,5 @@ public class MemberService {
         return members.stream()
                 .map(member -> new MemberResponse(member.getEmail(), member.getPassword()))
                 .collect(Collectors.toList());
-    }
-
-    public List<ProductResponse> findProductByEmail(final String email) {
-        List<Product> productByEmail = memberDao.findProductByEmail(email);
-        return productByEmail.stream().map(ProductResponse::from).collect(Collectors.toList());
-    }
-
-    public void save(final String email, final Long productId) {
-        Long memberId = memberDao.findByEmail(email);
-        Optional<Long> id = memberDao.findByIds(memberId, productId);
-        if (id.isPresent()) {
-            throw new IllegalArgumentException("장바구니에 이미 담겨있는 상품입니다.");
-        }
-        memberDao.save(memberId, productId);
-    }
-
-    public void delete(final String email, final Long productId) {
-        Long memberId = memberDao.findByEmail(email);
-        memberDao.delete(memberId, productId);
     }
 }

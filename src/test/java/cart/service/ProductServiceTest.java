@@ -48,7 +48,7 @@ class ProductServiceTest {
         Product product = Product.from(1L, productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
 
         given(productDao.findById(anyLong())).willReturn(Optional.of(product));
-        given(productDao.updateById(anyLong(), any(Product.class))).willReturn(1);
+        given(productDao.update(anyLong(), any(Product.class))).willReturn(1);
 
         // when, then
         assertThat(productService.update(1L, productRequest)).isEqualTo(1);

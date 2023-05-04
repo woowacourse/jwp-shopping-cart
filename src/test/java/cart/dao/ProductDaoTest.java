@@ -77,7 +77,7 @@ class ProductDaoTest {
         Product newProduct = Product.from(savedId, newProductRequest.getName(), newProductRequest.getImageUrl(), newProductRequest.getPrice());
 
         // when
-        productDao.updateById(savedId, newProduct);
+        productDao.update(savedId, newProduct);
 
         // then
         Product product = productDao.findById(savedId)
