@@ -45,7 +45,7 @@ public class CartService {
         if (!memberDao.isMemberExists(authMember)) {
             throw new ServiceIllegalArgumentException("email과 password를 다시 입력해주세요.");
         }
-        if (!itemDao.isItemExists(itemId)) {
+        if (!itemDao.isItemExistsById(itemId)) {
             throw new ServiceIllegalArgumentException("item을 다시 선택해주세요.");
         }
     }

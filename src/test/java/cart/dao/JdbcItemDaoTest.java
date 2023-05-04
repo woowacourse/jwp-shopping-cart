@@ -28,8 +28,8 @@ class JdbcItemDaoTest {
         itemDao.save(CREATE_ITEM2);
     }
 
-    @Test
     @DisplayName("상품을 저장할 수 있다.")
+    @Test
     void save_success() {
         CreateItem item = CREATE_ITEM3;
 
@@ -45,8 +45,8 @@ class JdbcItemDaoTest {
         );
     }
 
-    @Test
     @DisplayName("상품 목록을 조회할 수 있다.")
+    @Test
     void findAll_success() {
         List<Item> items = itemDao.findAll();
 
@@ -61,8 +61,8 @@ class JdbcItemDaoTest {
         );
     }
 
-    @Test
     @DisplayName("상품을 조회할 수 있다.")
+    @Test
     void findById_success() {
         Item item = itemDao.findById(1L);
 
@@ -71,14 +71,14 @@ class JdbcItemDaoTest {
                 .isEqualTo(ITEM1);
     }
 
-    @Test
     @DisplayName("상품 번호가 없는 경우 조회할 수 없다.")
+    @Test
     void findById_fail() {
         assertThat(itemDao.findById(3L)).isNull();
     }
 
-    @Test
     @DisplayName("상품 정보를 수정할 수 있다.")
+    @Test
     void update_success() {
         CreateItem item = CREATE_ITEM3;
 
@@ -95,16 +95,16 @@ class JdbcItemDaoTest {
         );
     }
 
-    @Test
     @DisplayName("없는 상품 정보를 수정하면 0이 반환된다.")
+    @Test
     void update_fail() {
         CreateItem item = CREATE_ITEM3;
 
         assertThat(itemDao.update(3L, item)).isZero();
     }
 
-    @Test
     @DisplayName("상품 삭제 할 수 있다.")
+    @Test
     void delete_success() {
         int deleteRow = itemDao.delete(2L);
 
@@ -116,25 +116,39 @@ class JdbcItemDaoTest {
         );
     }
 
-    @Test
     @DisplayName("없는 상품 삭제하면 0이 반환된다.")
+    @Test
     void delete_fail() {
 
         assertThat(itemDao.delete(3L)).isZero();
     }
 
 
+    @DisplayName("Id를 기준으로 상품이 있다면 true가 반환된다.")
     @Test
-    @DisplayName("상품이 있다면 true가 반환된다.")
-    void isItemExists_true() {
+    void isItemExistsById_true() {
 
-        assertThat(itemDao.isItemExists(2L)).isTrue();
+        assertThat(itemDao.isItemExistsById(2L)).isTrue();
     }
 
+    @DisplayName("Id를 기준으로 상품이 없다면 false가 반환된다.")
     @Test
-    @DisplayName("상품이 없다면 false가 반환된다.")
-    void isItemExists_false() {
+    void isItemExistsById_false() {
 
-        assertThat(itemDao.isItemExists(3L)).isFalse();
+        assertThat(itemDao.isItemExistsById(3L)).isFalse();
+    }
+
+    @DisplayName("CreateItem의 값을 기준으로 상품이 있다면 true가 반환된다.")
+    @Test
+    void isItemExistsByCreateItem_true() {
+
+        assertThat(itemDao.isItemExistsByCreateItem(CREATE_ITEM1)).isTrue();
+    }
+
+    @DisplayName("CreateItem의 값을 기준으로 상품이 없다면 false가 반환된다.")
+    @Test
+    void isItemExistsByCreateItem_false() {
+
+        assertThat(itemDao.isItemExistsByCreateItem(CREATE_ITEM3)).isFalse();
     }
 }

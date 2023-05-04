@@ -16,5 +16,7 @@ public interface ItemDao {
 
     int delete(Long id);
 
-    boolean isItemExists(Long itemId);
+    boolean isItemExistsById(Long itemId);
+
+    boolean isItemExistsByCreateItem(CreateItem createItem);
 }

@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.CreateItem;
 import cart.entity.Item;
+import cart.exception.ServiceIllegalArgumentException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,6 +21,9 @@ public class JdbcItemDao implements ItemDao {
 
     @Override
     public void save(final CreateItem createItem) {
+        if (isItemExistsByCreateItem(createItem)) {
+            throw new ServiceIllegalArgumentException("이미 동일한 상품이 존재합니다.");
+        }
         String sql = "insert into item(name, item_url, price) values (?, ?, ?)";
 
         jdbcTemplate.update(sql, createItem.getName(), createItem.getImageUrl(), createItem.getPrice());
@@ -69,9 +73,16 @@ public class JdbcItemDao implements ItemDao {
     }
 
     @Override
-    public boolean isItemExists(Long itemId) {
+    public boolean isItemExistsById(Long itemId) {
         String sql = "select exists(select id from item where id = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, itemId);
+    }
+
+    @Override
+    public boolean isItemExistsByCreateItem(CreateItem createItem) {
+        String sql = "select exists(select id from item where name = ? and item_url = ? and price = ?)";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, createItem.getName(), createItem.getImageUrl(), createItem.getPrice());
     }
 }
