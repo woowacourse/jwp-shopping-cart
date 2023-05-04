@@ -44,7 +44,7 @@ public class JdbcTemplateCartDao implements CartDao {
 
     private final RowMapper<CartEntity> cartEntityRowMapper = (resultSet, rowNumber) -> {
         CartEntity cartEntity = new CartEntity(
-                resultSet.getInt("use_id"),
+                resultSet.getInt("user_id"),
                 resultSet.getInt("product_id"),
                 resultSet.getInt("quantity")
         );

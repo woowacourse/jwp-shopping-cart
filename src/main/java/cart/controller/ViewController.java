@@ -12,11 +12,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/")
-public class CartController {
+public class ViewController {
 
     private final CartService cartService;
 
-    public CartController(CartService cartService) {
+    public ViewController(CartService cartService) {
         this.cartService = cartService;
     }
 

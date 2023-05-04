@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartService {
-    private final int MINAFFECTEDROW = 1;
+    private final static int MINAFFECTEDROW = 1;
 
     private final ProductDao productDao;
     private final UserDao userDao;
@@ -84,5 +84,10 @@ public class CartService {
                         product.getPrice()
                 ))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public int addCartItem(final AuthInfo authInfo, final int productId) {
+        int userId = userDao.selectByAuth(authInfo);
+        return cartDao.insert(new CartEntity(userId, productId, 1));
     }
 }

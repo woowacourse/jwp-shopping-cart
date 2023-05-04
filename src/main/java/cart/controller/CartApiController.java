@@ -48,6 +48,12 @@ public class CartApiController {
         return cartService.getCartItems(authInfo);
     }
 
+    @PostMapping("/cart/{productId}")
+    public void addProductToCart(@PathVariable int productId, HttpServletRequest request) {
+        AuthInfo authInfo = new BasicAuthorizationExtractor().extract(request);
+        cartService.addCartItem(authInfo, productId);
+    }
+
     private void validatePrice(int price) {
         if (price < 0) {
             throw new IllegalArgumentException("가격은 음수일 수 없습니다.");
