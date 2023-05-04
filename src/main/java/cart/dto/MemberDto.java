@@ -3,6 +3,7 @@ package cart.dto;
 import cart.domain.Member;
 
 public class MemberDto {
+
     private String email;
     private String password;
 
