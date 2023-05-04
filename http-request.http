@@ -1,4 +1,5 @@
 ### 상품 추가
+
 POST http://localhost:8080/products/
 Content-Type: application/json
 
@@ -9,6 +10,7 @@ Content-Type: application/json
 }
 
 ### 상품 수정
+
 PUT http://localhost:8080/products/1
 Content-Type: application/json
 
@@ -21,3 +23,19 @@ Content-Type: application/json
 ### 상품 삭제
 
 DELETE http://localhost:8080/products/1
+
+### 장바구니 추가
+
+POST http://localhost:8080/carts/
+Authorization: Basic cGl6emExQHBpenphLmNvbTpwaXp6YQ==
+Content-Type: application/json
+
+{
+  "productId": 1
+}
+
+### 장바구니 조회
+
+GET http://localhost:8080/carts/
+Authorization: Basic cGl6emExQHBpenphLmNvbTpwaXp6YQ==
+Content-Type: application/json
