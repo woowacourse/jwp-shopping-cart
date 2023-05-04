@@ -14,6 +14,10 @@ public class MemberEntity {
         this.name = name;
     }
 
+    public boolean hasDifferPassword(String inputPassword) {
+        return !password.equals(inputPassword);
+    }
+
     public Long getId() {
         return id;
     }
