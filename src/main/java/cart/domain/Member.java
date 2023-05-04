@@ -34,14 +34,14 @@ public class Member {
 
     private void validatePassword(String password) {
         int length = password.length();
-        if (length < PASSWORD_MIN_LENGTH || length > PASSWORD_MAX_LENGTH) {
+        if (password.isBlank() || length < PASSWORD_MIN_LENGTH || length > PASSWORD_MAX_LENGTH) {
             throw new LengthException(PASSWORD_ERROR_MESSAGE);
         }
     }
 
     private void validateName(String name) {
         int length = name.length();
-        if (length < NAME_MIN_LENGTH || length > NAME_MAX_LENGTH) {
+        if (name.isBlank() || length < NAME_MIN_LENGTH || length > NAME_MAX_LENGTH) {
             throw new LengthException(NAME_ERROR_MESSAGE);
         }
     }
