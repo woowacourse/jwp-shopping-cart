@@ -133,7 +133,7 @@ class CartApiEndToEndTest {
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .extract();
 
-        assertThat(response.body().asString()).contains("인증 정보가 필요합니다.");
+        assertThat(response.body().asString()).contains("올바른 인증 정보가 필요합니다.");
     }
 
     @Test
@@ -202,7 +202,7 @@ class CartApiEndToEndTest {
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .extract();
 
-        assertThat(response.body().asString()).contains("인증 정보가 필요합니다.");
+        assertThat(response.body().asString()).contains("올바른 인증 정보가 필요합니다.");
     }
 
     @Test

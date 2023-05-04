@@ -41,8 +41,8 @@ public class CartService {
     }
 
     private long getMemberIdIfRegistered(final String email, final String password) {
-        final Optional<MemberEntity> memberEntity = readAndValidateMember(email, password);
-        return memberEntity.get().getMemberId();
+        final MemberEntity memberEntity = readAndValidateMember(email, password);
+        return memberEntity.getMemberId();
     }
 
     public void deleteCartIdFromMember(final long cartId, final String email, final String password) {
@@ -51,12 +51,12 @@ public class CartService {
         assertRowChanged(affected);
     }
 
-    private Optional<MemberEntity> readAndValidateMember(final String email, final String password) {
+    private MemberEntity readAndValidateMember(final String email, final String password) {
         final Optional<MemberEntity> memberEntity = memberDao.findByEmail(email);
         if (memberEntity.isEmpty() || !memberEntity.get().getPassword().equals(password)) {
             throw new EntityNotFoundException("아이디 또는 비밀번호가 잘못되었습니다.");
         }
-        return memberEntity;
+        return memberEntity.get();
     }
 
     private void assertRowChanged(final int rowAffected) {
