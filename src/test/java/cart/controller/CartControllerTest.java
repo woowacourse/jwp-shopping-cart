@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.dto.ProductResponseDto;
+import cart.dto.UserResponseDto;
 import cart.service.CartService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,5 +50,19 @@ public class CartControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("products"))
                 .andExpect(view().name("admin"));
+    }
+
+    @DisplayName("settings View 테스트")
+    @Test
+    void settingsTest() throws Exception {
+        when(cartService.getUsers()).thenReturn(List.of(
+                new UserResponseDto("a@a.com", "password1"),
+                new UserResponseDto("b@b.com", "password2")
+        ));
+
+        this.mockMvc.perform(get("/settings"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("members"))
+                .andExpect(view().name("settings"));
     }
 }

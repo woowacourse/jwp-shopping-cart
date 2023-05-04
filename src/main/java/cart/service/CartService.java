@@ -1,10 +1,13 @@
 package cart.service;
 
 import cart.dao.ProductDao;
+import cart.dao.UserDao;
 import cart.dto.InsertRequestDto;
 import cart.dto.ProductResponseDto;
 import cart.dto.UpdateRequestDto;
+import cart.dto.UserResponseDto;
 import cart.entity.ProductEntity;
+import cart.entity.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +18,11 @@ public class CartService {
     private final int MINAFFECTEDROW = 1;
 
     private final ProductDao productDao;
+    private final UserDao userDao;
 
-    public CartService(ProductDao productDao) {
+    public CartService(ProductDao productDao, UserDao userDao) {
         this.productDao = productDao;
+        this.userDao = userDao;
     }
 
     public void addProduct(final InsertRequestDto insertRequestDto) {
@@ -49,5 +54,16 @@ public class CartService {
         if (affectedRow < MINAFFECTEDROW) {
             throw new IllegalArgumentException("존재하지 않는 상품입니다.");
         }
+    }
+
+    public List<UserResponseDto> getUsers() {
+        final List<UserEntity> users = userDao.selectAll();
+
+        return users.stream()
+                .map(user -> new UserResponseDto(
+                        user.getEmail(),
+                        user.getPassword()
+                ))
+                .collect(Collectors.toUnmodifiableList());
     }
 }
