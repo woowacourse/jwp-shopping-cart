@@ -2,19 +2,19 @@ package cart.entity;
 
 public class PutCart {
 
-    private final Integer memberId;
-    private final Integer productId;
+    private final Member member;
+    private final Item product;
 
-    public PutCart(Integer memberId, Integer productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+    public PutCart(Member member, Item product) {
+        this.member = member;
+        this.product = product;
     }
 
-    public Integer getMemberId() {
-        return memberId;
+    public Long getMemberId() {
+        return member.getId();
     }
 
-    public Integer getProductId() {
-        return productId;
+    public Long getProductId() {
+        return product.getId();
     }
 }
