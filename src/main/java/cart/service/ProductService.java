@@ -15,46 +15,38 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductRepository repository;
 
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductService(ProductRepository repository) {
+        this.repository = repository;
     }
 
     @Transactional(readOnly = true)
     public List<ProductDto> findAll() {
-        List<ProductEntity> productEntities = productRepository.findAll();
-        return productEntities.stream()
+        List<ProductEntity> entities = repository.findAll();
+        return entities.stream()
                 .map(ProductDto::fromEntity)
                 .collect(toList());
     }
 
     @Transactional
-    public ProductDto add(ProductRequestDto productRequestDto) {
-        Product product = new Product(
-                productRequestDto.getName(),
-                productRequestDto.getImgUrl(),
-                productRequestDto.getPrice()
-        );
+    public ProductDto add(ProductRequestDto requestDto) {
+        Product product = new Product(requestDto.getName(), requestDto.getImgUrl(), requestDto.getPrice());
         ProductEntity entity = new ProductEntity(null, product.getName(), product.getImgUrl(), product.getPrice());
-        ProductEntity savedProductentity = productRepository.save(entity);
-        return ProductDto.fromEntity(savedProductentity);
+        ProductEntity savedEntity = repository.save(entity);
+        return ProductDto.fromEntity(savedEntity);
     }
 
     @Transactional
-    public ProductDto updateById(ProductRequestDto productRequestDto, Long id) {
-        Product product = new Product(
-                productRequestDto.getName(),
-                productRequestDto.getImgUrl(),
-                productRequestDto.getPrice()
-        );
-        ProductEntity productEntity = new ProductEntity(id, product.getName(), product.getImgUrl(), product.getPrice());
-        productRepository.update(productEntity);
-        return ProductDto.fromEntity(productEntity);
+    public ProductDto updateById(ProductRequestDto requestDto, Long id) {
+        Product product = new Product(requestDto.getName(), requestDto.getImgUrl(), requestDto.getPrice());
+        ProductEntity entity = new ProductEntity(id, product.getName(), product.getImgUrl(), product.getPrice());
+        repository.update(entity);
+        return ProductDto.fromEntity(entity);
     }
 
     @Transactional
     public void deleteById(Long id) {
-        productRepository.deleteById(id);
+        repository.deleteById(id);
     }
 }
