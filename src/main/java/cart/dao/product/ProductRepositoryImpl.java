@@ -24,7 +24,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     private ProductEntity toEntity(Product product) {
         return new ProductEntity(
-                product.getProductId(),
+                product.getId(),
                 product.getName(),
                 product.getPrice().intValue(),
                 product.getCategory().name(),

@@ -19,7 +19,7 @@ public class ProductDto {
 
     public ProductDto(Product product) {
         this(
-                product.getProductId(),
+                product.getId(),
                 product.getName(),
                 product.getPrice().intValue(),
                 product.getCategory().name(),

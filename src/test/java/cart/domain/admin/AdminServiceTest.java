@@ -75,7 +75,7 @@ class AdminServiceTest {
         List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(1);
         Product savedProduct = allProducts.get(0);
-        assertThat(savedProduct.getProductId()).isEqualTo(savedId);
+        assertThat(savedProduct.getId()).isEqualTo(savedId);
         assertThat(savedProduct.getName()).isEqualTo("Chicken");
         assertThat(savedProduct.getPrice()).isEqualTo(BigDecimal.valueOf(20_000));
         assertThat(savedProduct.getCategory()).isEqualTo(ProductCategory.FOOD);
