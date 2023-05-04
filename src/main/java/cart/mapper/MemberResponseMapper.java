@@ -2,14 +2,14 @@ package cart.mapper;
 
 import cart.domain.member.Member;
 import cart.dto.MemberResponse;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberResponseMapper {
-
-    private MemberResponseMapper() {
-    }
 
     public static MemberResponse from(final Member member) {
         return MemberResponse.of(member.getId(), member.getEmail(), member.getPassword());

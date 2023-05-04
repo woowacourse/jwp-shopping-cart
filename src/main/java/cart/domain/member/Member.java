@@ -1,16 +1,14 @@
 package cart.domain.member;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Member {
 
     private final Long id;
     private final Email email;
     private final Password password;
-
-    public Member(final Long id, final Email email, final Password password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-    }
 
     public static Member of(final String email, final String password) {
         return new Member(null, new Email(email), new Password(password));

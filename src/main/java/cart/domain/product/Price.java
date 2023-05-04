@@ -1,5 +1,8 @@
 package cart.domain.product;
 
+import lombok.Getter;
+
+@Getter
 public class Price {
 
     private static final int MIN_PRICE = 1;
@@ -20,9 +23,5 @@ public class Price {
         if (MIN_PRICE > price || MAX_PRICE < price) {
             throw new IllegalArgumentException(String.format("상품 금액은 최소 %d원, 최대 %d원 입니다", MIN_PRICE, MAX_PRICE));
         }
-    }
-
-    public int getPrice() {
-        return price;
     }
 }

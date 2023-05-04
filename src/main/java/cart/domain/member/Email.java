@@ -1,7 +1,10 @@
 package cart.domain.member;
 
+import lombok.Getter;
+
 import java.util.regex.Pattern;
 
+@Getter
 public class Email {
 
     private static final Pattern PATTERN = Pattern.compile("^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
@@ -18,9 +21,5 @@ public class Email {
         if (!PATTERN.matcher(email).matches()) {
             throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다");
         }
-    }
-
-    public String getEmail() {
-        return email;
     }
 }

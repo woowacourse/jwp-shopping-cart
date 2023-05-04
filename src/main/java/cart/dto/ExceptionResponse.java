@@ -1,14 +1,11 @@
 package cart.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public class ExceptionResponse {
 
     private final String message;
-
-    public ExceptionResponse(final String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 }

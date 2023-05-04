@@ -1,7 +1,9 @@
 package cart.domain.product;
 
+import lombok.Getter;
 import org.springframework.util.StringUtils;
 
+@Getter
 public class Name {
 
     private static final int MAX_LENGTH = 255;
@@ -26,9 +28,5 @@ public class Name {
         if (name.length() > MAX_LENGTH) {
             throw new IllegalArgumentException(String.format("상품명은 최대 %d 글자까지 가능합니다", MAX_LENGTH));
         }
-    }
-
-    public String getName() {
-        return name;
     }
 }

@@ -1,7 +1,9 @@
 package cart.domain.member;
 
+import lombok.Getter;
 import org.springframework.util.StringUtils;
 
+@Getter
 public class Password {
 
     private final String password;
@@ -16,9 +18,5 @@ public class Password {
         if (!StringUtils.hasText(password)) {
             throw new IllegalArgumentException("비밀번호가 존재하지 않습니다");
         }
-    }
-
-    public String getPassword() {
-        return password;
     }
 }

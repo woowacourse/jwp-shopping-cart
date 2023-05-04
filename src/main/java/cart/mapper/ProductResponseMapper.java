@@ -1,15 +1,15 @@
 package cart.mapper;
 
-import cart.dto.ProductResponse;
 import cart.domain.product.Product;
+import cart.dto.ProductResponse;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductResponseMapper {
-
-    private ProductResponseMapper() {
-    }
 
     public static ProductResponse from(final Product product) {
         return ProductResponse.of(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());

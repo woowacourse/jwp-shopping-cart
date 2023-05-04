@@ -1,7 +1,10 @@
 package cart.domain.product;
 
+import lombok.Getter;
+
 import java.util.regex.Pattern;
 
+@Getter
 public class ImageUrl {
 
     private static final Pattern PATTERN = Pattern.compile("^https?://.*");
@@ -22,9 +25,5 @@ public class ImageUrl {
         if (!PATTERN.matcher(url).matches()) {
             throw new IllegalArgumentException("이미지 경로를 확인해주세요");
         }
-    }
-
-    public String getUrl() {
-        return url;
     }
 }
