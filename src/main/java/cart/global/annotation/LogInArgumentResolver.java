@@ -34,13 +34,8 @@ public class LogInArgumentResolver implements HandlerMethodArgumentResolver {
 
         final String header = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (hasNotHeader(header)) {
-            throw new CanNotFoundHeaderException();
-        }
-
         if (isBasicAuthFrom(header)) {
-            final String decodedString = decodingByBase64(header);
-            final String[] credentials = decodedString.split(DELIM);
+            final String[] credentials = decodingByBase64(header).split(DELIM);
 
             final String email = credentials[0];
             final String password = credentials[1];
@@ -51,18 +46,14 @@ public class LogInArgumentResolver implements HandlerMethodArgumentResolver {
         throw new InvalidAuthorizationTypeException();
     }
 
-    private String decodingByBase64(final String header) {
-        final String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
-        final byte[] decodeBytes = Base64.getDecoder().decode(authHeaderValue);
-
-        return new String(decodeBytes, StandardCharsets.UTF_8);
-    }
-
-    private boolean hasNotHeader(final String header) {
-        return header == null;
-    }
-
     private boolean isBasicAuthFrom(final String header) {
         return header.toLowerCase().startsWith((BASIC_TYPE.toLowerCase()));
+    }
+
+    private String decodingByBase64(final String header) {
+        final String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
+        final byte[] decodedBytes = Base64.getDecoder().decode(authHeaderValue);
+
+        return new String(decodedBytes, StandardCharsets.UTF_8);
     }
 }
