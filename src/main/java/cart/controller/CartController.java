@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.controller.dto.ProductResponse;
 import cart.service.MemberService;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,15 +29,7 @@ public class CartController {
     @ResponseBody
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getProducts(final HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-        if (header == null) {
-            System.out.println("no auth");
-            return ResponseEntity.badRequest().build();
-        }
-        String[] strings = header.split(" ");
-        byte[] bytes = Base64.decodeBase64(strings[1]);
-        String auth = new String(bytes);
-        String email = auth.split(":")[0];
+        String email = (String) request.getAttribute("email");
         System.out.println(email);
         List<ProductResponse> productByEmail = memberService.findProductByEmail(email);
         return ResponseEntity.ok().body(productByEmail);
