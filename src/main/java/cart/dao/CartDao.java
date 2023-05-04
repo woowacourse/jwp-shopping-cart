@@ -5,9 +5,13 @@ import cart.dao.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 
 import static cart.dao.ObjectMapper.getProductRowMapper;
 
@@ -32,9 +36,19 @@ public class CartDao {
         return jdbcTemplate.query(query, getProductRowMapper(), memberId);
     }
 
-    public void add(final CartEntity cartEntity) {
+    public Long insert(final CartEntity cartEntity) {
         final String query = "INSERT INTO CART (member_id, product_id) VALUES (?, ?)";
-        jdbcTemplate.update(query, cartEntity.getMemberId(), cartEntity.getProductId());
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(con -> {
+            final PreparedStatement preparedStatement = con.prepareStatement(
+                    query, new String[]{"ID"}
+            );
+            preparedStatement.setLong(1, cartEntity.getMemberId());
+            preparedStatement.setLong(2, cartEntity.getProductId());
+            return preparedStatement;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey().longValue());
     }
 
     public void deleteProduct(final CartEntity cartEntity) {

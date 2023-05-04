@@ -97,7 +97,7 @@ public class CartService {
                 .memberId(memberId)
                 .productId(productId)
                 .build();
-        cartDao.add(cartEntity);
+        cartDao.insert(cartEntity);
     }
 
     public void deleteProductFromCart(final Long memberId, final Long productId) {
