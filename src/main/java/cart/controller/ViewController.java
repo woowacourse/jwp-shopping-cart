@@ -6,11 +6,10 @@ import cart.dto.response.ProductResponseDto;
 import cart.service.CategoryService;
 import cart.service.MemberService;
 import cart.service.ProductService;
+import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 @Controller
 public final class ViewController {

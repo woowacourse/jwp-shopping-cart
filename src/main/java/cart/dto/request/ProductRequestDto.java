@@ -1,12 +1,11 @@
 package cart.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.hibernate.validator.constraints.Range;
-
+import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+import org.hibernate.validator.constraints.Range;
 
 public final class ProductRequestDto {
 

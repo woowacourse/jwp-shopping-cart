@@ -3,7 +3,6 @@ package cart.dto.response;
 import cart.entity.CategoryEntity;
 import cart.entity.product.ProductEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +37,8 @@ public final class ProductResponseDto {
         this.categoryResponseDtos = categoryResponseDtos;
     }
 
-    public static ProductResponseDto of(final ProductEntity productEntity, final List<CategoryEntity> categoryEntities) {
+    public static ProductResponseDto of(final ProductEntity productEntity,
+            final List<CategoryEntity> categoryEntities) {
         return new ProductResponseDto(
                 productEntity.getId(),
                 productEntity.getName(),

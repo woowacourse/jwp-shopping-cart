@@ -32,8 +32,12 @@ public final class ProductCategoryEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ProductCategoryEntity that = (ProductCategoryEntity) o;
         return Objects.equals(getId(), that.getId());
     }

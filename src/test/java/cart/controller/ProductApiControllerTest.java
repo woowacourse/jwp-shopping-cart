@@ -1,5 +1,9 @@
 package cart.controller;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+
 import cart.service.ProductService;
 import cart.test.ProductRequestFixture;
 import io.restassured.RestAssured;
@@ -14,8 +18,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
-
-import static org.hamcrest.Matchers.*;
 
 @Sql("/init.sql")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)

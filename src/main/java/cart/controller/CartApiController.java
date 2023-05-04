@@ -6,11 +6,16 @@ import cart.service.CartService;
 import cart.util.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Cart", description = "장바구니 API Document")
 @RequestMapping("/carts")
@@ -39,7 +44,8 @@ public final class CartApiController {
 
     @Operation(summary = "장바구니 상품 삭제 API", description = "사용자의 장바구니 상품을 삭제한다.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeCartItem(@PathVariable(name = "id") Long cartId, @Member MemberAuthDto memberAuthDto) {
+    public ResponseEntity<Void> removeCartItem(@PathVariable(name = "id") Long cartId,
+            @Member MemberAuthDto memberAuthDto) {
         cartService.removeCartItem(cartId, memberAuthDto);
         return ResponseEntity.noContent().build();
     }

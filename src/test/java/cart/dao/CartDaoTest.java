@@ -1,7 +1,12 @@
 package cart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import cart.entity.CartEntity;
 import cart.entity.product.ProductEntity;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -9,12 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 class CartDaoTest {
@@ -39,32 +38,6 @@ class CartDaoTest {
                 10000,
                 "description"
         ));
-    }
-
-    @Nested
-    @DisplayName("장바구니 ID로 조회 시")
-    class FindById {
-
-        @Test
-        @DisplayName("장바구니가 존재하면 장바구니를 반환한다.")
-        void findById() {
-            final Long savedCartId = cartDao.save(new CartEntity(savedMemberId, savedProductId));
-
-            final Optional<CartEntity> result = cartDao.findById(savedCartId);
-
-            assertAll(
-                    () -> assertThat(result).isNotEmpty(),
-                    () -> assertThat(result.get().getId()).isEqualTo(savedCartId)
-            );
-        }
-
-        @Test
-        @DisplayName("장바구니가 존재하지 않으면 반환하지 않는다.")
-        void findByIdWithEmpty() {
-            final Optional<CartEntity> result = cartDao.findById(1L);
-
-            assertThat(result).isEmpty();
-        }
     }
 
     @Test
@@ -93,7 +66,6 @@ class CartDaoTest {
         assertThat(savedCartId).isNotNull();
     }
 
-
     @Test
     @DisplayName("장바구니 상품을 삭제한다.")
     void delete() {
@@ -104,5 +76,31 @@ class CartDaoTest {
 
         final List<CartEntity> result = cartDao.findAllByMemberId(savedMemberId);
         assertThat(result).isEmpty();
+    }
+
+    @Nested
+    @DisplayName("장바구니 ID로 조회 시")
+    class FindById {
+
+        @Test
+        @DisplayName("장바구니가 존재하면 장바구니를 반환한다.")
+        void findById() {
+            final Long savedCartId = cartDao.save(new CartEntity(savedMemberId, savedProductId));
+
+            final Optional<CartEntity> result = cartDao.findById(savedCartId);
+
+            assertAll(
+                    () -> assertThat(result).isNotEmpty(),
+                    () -> assertThat(result.get().getId()).isEqualTo(savedCartId)
+            );
+        }
+
+        @Test
+        @DisplayName("장바구니가 존재하지 않으면 반환하지 않는다.")
+        void findByIdWithEmpty() {
+            final Optional<CartEntity> result = cartDao.findById(1L);
+
+            assertThat(result).isEmpty();
+        }
     }
 }

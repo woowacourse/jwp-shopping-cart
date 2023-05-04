@@ -1,11 +1,10 @@
 package cart.dao;
 
 import cart.entity.CategoryEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-
 import java.util.Collections;
 import java.util.List;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class CategoryDao {

@@ -36,8 +36,12 @@ public final class CartEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         CartEntity that = (CartEntity) o;
         return Objects.equals(getId(), that.getId());
     }
