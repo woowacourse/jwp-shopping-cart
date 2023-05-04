@@ -1,16 +1,21 @@
 package cart.web.controller;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 import cart.domain.cart.service.CartService;
+import cart.domain.product.TestFixture;
+import cart.domain.product.service.dto.ProductDto;
 import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
 import cart.web.controller.dto.request.ProductInCartAdditionRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,5 +53,20 @@ class CartRestControllerTest {
                 .when().post("/cart")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("사용자 장바구니 내 상품 조회 테스트")
+    @Test
+    void getProductsInCart() {
+        when(cartService.findAllProductsInCart(any()))
+                .thenReturn(List.of(ProductDto.from(TestFixture.CHICKEN), ProductDto.from(TestFixture.PIZZA)));
+
+        given().log().all()
+                .auth().preemptive().basic("a@a.com", "password1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/cart/products")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(2));
     }
 }
