@@ -37,7 +37,7 @@
   - [x] cart table 생성 및 연관 관계 설정
   - [x] data.sql 수정
 
-- [ ] 사용자 설정
+- [x] 사용자 설정
   - [x] basic authorization 구현
   - [x] email, password로 사용자 조회 구현
     - [x] repository 구현
@@ -49,7 +49,7 @@
   - [x] 로그인 된 사용자 정보 조회 기능 구현
   - [x] 사용자 설정 페이지 연동
 
-- [ ] 장바구니 설정
+- [x] 장바구니 설정
   - [x] 장바구니에 상품 추가 api 구현
     - [x] repository 구현
     - [x] service 구현
@@ -62,7 +62,7 @@
     - [x] repository 구현
     - [x] service 구현
     - [x] controller 구현
-  - [ ] 장바구니 페이지 연동
+  - [x] 장바구니 페이지 연동
 
 - [ ] 상품 설정
   - [ ] 상품 삭제할 때 모든 장바구니에서 해당 상품이 삭제되도록 수정
