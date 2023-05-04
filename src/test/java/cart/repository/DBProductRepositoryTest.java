@@ -29,21 +29,21 @@ class DBProductRepositoryTest {
     void setUp() {
         productRepository = new DBProductRepository(jdbcTemplate);
 
-        ProductEntity ProductEntity1 = new ProductEntity(null, "name1", "url1.com", 1000);
-        ProductEntity ProductEntity2 = new ProductEntity(null, "name2", "url2.com", 2000);
+        ProductEntity entity1 = new ProductEntity(null, "name1", "url1.com", 1000);
+        ProductEntity entity2 = new ProductEntity(null, "name2", "url2.com", 2000);
 
-        this.entity1 = productRepository.save(ProductEntity1);
-        this.entity2 = productRepository.save(ProductEntity2);
+        this.entity1 = productRepository.save(entity1);
+        this.entity2 = productRepository.save(entity2);
     }
 
     @Test
     @DisplayName("상품 정보를 DB에 저장한다.")
     void save() {
-        ProductEntity productEntity3 = new ProductEntity(null, "name3", "url3.com", 3000);
+        ProductEntity entity3 = new ProductEntity(null, "name3", "url3.com", 3000);
 
-        productRepository.save(productEntity3);
-        List<ProductEntity> productEntities = productRepository.findAll();
-        assertThat(productEntities).hasSize(3);
+        productRepository.save(entity3);
+        List<ProductEntity> entities = productRepository.findAll();
+        assertThat(entities).hasSize(3);
     }
 
     @Test
@@ -56,35 +56,35 @@ class DBProductRepositoryTest {
         ProductEntity response = nullableEntity.get();
 
         assertAll(
-                () -> assertThat(response.getName()).isEqualTo("name1"),
-                () -> assertThat(response.getImgUrl()).isEqualTo("url1.com"),
-                () -> assertThat(response.getPrice()).isEqualTo(1000)
+                () -> assertThat(response.getName()).isEqualTo(entity1.getName()),
+                () -> assertThat(response.getImgUrl()).isEqualTo(entity1.getImgUrl()),
+                () -> assertThat(response.getPrice()).isEqualTo(entity1.getPrice())
         );
     }
 
     @Test
     @DisplayName("모든 상품 정보를 조회한다.")
     void findAll() {
-        List<ProductEntity> productEntities = productRepository.findAll();
-        assertThat(productEntities).hasSize(2);
+        List<ProductEntity> entities = productRepository.findAll();
+        assertThat(entities).hasSize(2);
     }
 
     @Test
     @DisplayName("ID에 해당하는 상품 정보를 수정한다.")
     void updateById() {
-        ProductEntity modifiedProductEntity = new ProductEntity(entity1.getId(), entity1.getName(), entity1.getImgUrl(), 4000);
-        productRepository.update(modifiedProductEntity);
+        ProductEntity modifiedEntity = new ProductEntity(entity1.getId(), entity1.getName(), entity1.getImgUrl(), 4000);
+        productRepository.update(modifiedEntity);
 
         Optional<ProductEntity> nullableEntity = productRepository.findById(entity1.getId());
         if (nullableEntity.isEmpty()) {
             throw new RuntimeException();
         }
-        ProductEntity findProduct = nullableEntity.get();
+        ProductEntity entityAfterUpdate = nullableEntity.get();
 
         assertAll(
-                () -> assertThat(findProduct.getName()).isEqualTo(modifiedProductEntity.getName()),
-                () -> assertThat(findProduct.getImgUrl()).isEqualTo(modifiedProductEntity.getImgUrl()),
-                () -> assertThat(findProduct.getPrice()).isEqualTo(modifiedProductEntity.getPrice())
+                () -> assertThat(entityAfterUpdate.getName()).isEqualTo(modifiedEntity.getName()),
+                () -> assertThat(entityAfterUpdate.getImgUrl()).isEqualTo(modifiedEntity.getImgUrl()),
+                () -> assertThat(entityAfterUpdate.getPrice()).isEqualTo(modifiedEntity.getPrice())
         );
     }
 
@@ -93,7 +93,7 @@ class DBProductRepositoryTest {
     void deleteById() {
         productRepository.deleteById(entity2.getId());
 
-        List<ProductEntity> productEntities = productRepository.findAll();
-        assertThat(productEntities).hasSize(1);
+        List<ProductEntity> entities = productRepository.findAll();
+        assertThat(entities).hasSize(1);
     }
 }
