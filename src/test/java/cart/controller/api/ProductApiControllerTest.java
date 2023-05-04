@@ -38,8 +38,7 @@ class ProductApiControllerTest {
         jdbcTemplate.execute("TRUNCATE TABLE product");
         jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
     }
-
-
+    
     @DisplayName("POST /api/product")
     @Test
     void createProduct() {
