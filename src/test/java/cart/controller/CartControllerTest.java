@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.common.AuthInfoHandlerMethodArgumentResolver;
 import cart.domain.auth.service.AuthService;
 import cart.domain.cart.service.CartService;
-import cart.dto.AuthInfo;
+import cart.dto.MemberInformation;
 import cart.dto.CartResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,9 +46,9 @@ class CartControllerTest {
     @DisplayName("장바구니 리스트 api")
     public void testGetCarts() throws Exception {
         //given
-        final AuthInfo authInfo = new AuthInfo("test@test.com", "password");
+        final MemberInformation memberInformation = new MemberInformation("test@test.com", "password");
         when(authInfoHandlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
-            .thenReturn(authInfo);
+            .thenReturn(memberInformation);
         final List<CartResponse> cartResponses = List.of(
             new CartResponse(1L, "name1", "imageUrl1", 1000),
             new CartResponse(2L, "name2", "imageUrl2", 2000)
@@ -81,9 +81,9 @@ class CartControllerTest {
     @DisplayName("장바구니 추가 api")
     public void testAddCart() throws Exception {
         //given
-        final AuthInfo authInfo = new AuthInfo("test@test.com", "password");
+        final MemberInformation memberInformation = new MemberInformation("test@test.com", "password");
         when(authInfoHandlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
-            .thenReturn(authInfo);
+            .thenReturn(memberInformation);
 
         //when
         //then

@@ -1,7 +1,7 @@
 package cart.common;
 
 import cart.domain.auth.service.AuthorizationExtractor;
-import cart.dto.AuthInfo;
+import cart.dto.MemberInformation;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -23,7 +23,8 @@ public class AuthInfoHandlerMethodArgumentResolver implements HandlerMethodArgum
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.getParameterType().equals(AuthInfo.class);
+        return parameter.getParameterType().equals(MemberInformation.class)
+            && parameter.hasParameterAnnotation(AuthInfo.class);
     }
 
     @Override

@@ -8,9 +8,8 @@ import static org.mockito.BDDMockito.given;
 import cart.common.AuthenticationException;
 import cart.domain.member.dao.MemberDao;
 import cart.domain.member.entity.Member;
-import cart.dto.AuthInfo;
+import cart.dto.MemberInformation;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,32 +31,32 @@ class AuthServiceTest {
     @DisplayName("Authentication header 인증 확인한다.")
     public void testCheckAuthenticationHeader() {
         //given
-        final AuthInfo authInfo = new AuthInfo("test@test.com", "password");
-        final Member member = new Member(1L, authInfo.getEmail(), authInfo.getPassword(), null,
+        final MemberInformation memberInformation = new MemberInformation("test@test.com", "password");
+        final Member member = new Member(1L, memberInformation.getEmail(), memberInformation.getPassword(), null,
             null);
         given(authorizationExtractor.extract(anyString()))
-            .willReturn(authInfo);
-        given(memberDao.findByEmail(authInfo.getEmail()))
+            .willReturn(memberInformation);
+        given(memberDao.findByEmail(memberInformation.getEmail()))
             .willReturn(Optional.of(member));
 
         //when
-        final AuthInfo result = authService.checkAuthenticationHeader(anyString());
+        final MemberInformation result = authService.checkAuthenticationHeader(anyString());
 
         //then
-        assertThat(result.getEmail()).isEqualTo(authInfo.getEmail());
-        assertThat(result.getPassword()).isEqualTo(authInfo.getPassword());
+        assertThat(result.getEmail()).isEqualTo(memberInformation.getEmail());
+        assertThat(result.getPassword()).isEqualTo(memberInformation.getPassword());
     }
 
     @Test
     @DisplayName("Authentication header 인증 확인 실패.")
     public void testCheckAuthenticationHeaderFail() {
         //given
-        final AuthInfo authInfo = new AuthInfo("test@test.com", "wrongPassword");
-        final Member member = new Member(1L, authInfo.getEmail(), "password", null,
+        final MemberInformation memberInformation = new MemberInformation("test@test.com", "wrongPassword");
+        final Member member = new Member(1L, memberInformation.getEmail(), "password", null,
             null);
         given(authorizationExtractor.extract(anyString()))
-            .willReturn(authInfo);
-        given(memberDao.findByEmail(authInfo.getEmail()))
+            .willReturn(memberInformation);
+        given(memberDao.findByEmail(memberInformation.getEmail()))
             .willReturn(Optional.of(member));
 
         //when
