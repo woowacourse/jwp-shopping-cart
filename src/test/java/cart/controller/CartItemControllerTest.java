@@ -81,4 +81,35 @@ class CartItemControllerTest {
         }
     }
 
+    @Nested
+    @DisplayName("장바구니에 상품을 조회하는 getCartItems 메서드 테스트")
+    class GetTest {
+
+        @BeforeEach
+        void setUp() {
+            RestAssured.port = port;
+        }
+
+        @DisplayName("정상 조회가 되었다면 상태코드 200을 반환하는지 확인한다")
+        @Test
+        void successTest() {
+            RestAssured.given().log().all()
+                    .auth().preemptive().basic(EMAIL, PASSWORD)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .when().get("/cart/cart-items")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value());
+        }
+
+        @DisplayName("사용자 설정을 하지 않고 장바구니를 조회하면 상태코드 401을 반환하는지 확인한다")
+        @Test
+        void failTest() {
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .when().get("/cart/cart-items")
+                    .then().log().all()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value());
+        }
+    }
+
 }
