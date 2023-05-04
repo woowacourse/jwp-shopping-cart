@@ -40,7 +40,7 @@ public class TestDataInit {
         ProductEntity product2 = productDao.save(new Product(new ProductName("글렌리벳 12년"), new Price(20_000),
                 ImageUrl.from(
                         "https://www.willowpark.net/cdn/shop/products/21097-GlenLivet12YearOldSingleMaltScotchWhisky.png")));
-        ProductEntity product3 = productDao.save(new Product(new ProductName("글렌피딕 12년"), new Price(9_999_999),
+        ProductEntity product3 = productDao.save(new Product(new ProductName("달모어 62년"), new Price(9_999_999),
                 ImageUrl.from(
                         "https://www.thewhiskyexchange.com/media/rtwe/uploads/product/large/5480.jpg")));
         cartDao.save(member1.getId(), product1.getId());
