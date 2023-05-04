@@ -1,12 +1,17 @@
 package cart.dto;
 
 import cart.domain.product.Product;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CartProductsResponse {
 
     private final List<CartProductResponse> products;
+
+    private CartProductsResponse() {
+        this.products = new ArrayList<>();
+    }
 
     public CartProductsResponse(final List<CartProductResponse> products) {
         this.products = products;
