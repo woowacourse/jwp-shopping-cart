@@ -4,6 +4,7 @@ import cart.BasicAuthorizationEncoder;
 import cart.auth.dto.AuthenticationDto;
 import cart.auth.repository.AuthDao;
 import cart.dto.request.CartRequestDto;
+import cart.dto.response.CartItemResponseDto;
 import cart.service.CartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,10 +16,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CartController.class)
 class CartControllerTest {
@@ -62,5 +65,31 @@ class CartControllerTest {
                         .header("Authorization", authenticationHeader))
                 .andExpect(header().string("Location", "/"))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    @DisplayName("장바구니 조회 성공")
+    void read_success() throws Exception {
+        // given
+        final List<CartItemResponseDto> response = List.of(
+                new CartItemResponseDto(1, "삼겹살", "3-hierarchy-fat.jpg", 16000),
+                new CartItemResponseDto(1, "목살", "neck-fat.jpg", 15000)
+        );
+        given(authDao.findIdByEmailAndPassword("ditoo@wooteco.com", "ditoo1234"))
+                .willReturn(1);
+        given(cartService.getProductsInCart(userId))
+                .willReturn(response);
+
+        // expect
+        final String responseBody =
+                "[" +
+                        "{\"id\":1,\"name\":\"삼겹살\",\"image\":\"3-hierarchy-fat.jpg\",\"price\":16000}," +
+                        "{\"id\":1,\"name\":\"목살\",\"image\":\"neck-fat.jpg\",\"price\":15000}" +
+                "]";
+        mockMvc.perform(get("/cart")
+                        .header("Authorization", authenticationHeader))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(content().json(responseBody))
+                .andExpect(status().isOk());
     }
 }

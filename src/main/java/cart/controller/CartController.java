@@ -36,7 +36,7 @@ public class CartController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CartItemResponseDto>> readCart(@Auth final Integer userId) {
+    public ResponseEntity<List<CartItemResponseDto>> read(@Auth final Integer userId) {
         final List<CartItemResponseDto> response = cartService.getProductsInCart(userId);
         return ResponseEntity.ok().body(response);
     }
