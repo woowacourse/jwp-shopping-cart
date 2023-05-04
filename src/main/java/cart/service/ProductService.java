@@ -6,6 +6,7 @@ import cart.dto.RequestCreateProductDto;
 import cart.dto.RequestUpdateProductDto;
 import cart.dto.ResponseProductDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ResponseProductDto> findAll() {
         final List<ProductEntity> productEntities = productDao.findAll();
         return productEntities.stream()
@@ -28,11 +30,13 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional
     public Long insert(final RequestCreateProductDto requestCreateProductDto) {
         final ProductEntity productEntity = requestCreateProductDto.toProductEntity();
         return productDao.insert(productEntity);
     }
 
+    @Transactional
     public int update(final Long id, final RequestUpdateProductDto requestUpdateProductDto) {
         final ProductEntity productEntity = requestUpdateProductDto.toProductEntity();
         final int updatedRows = productDao.update(id, productEntity);
@@ -46,12 +50,14 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public int delete(final Long id) {
         final int affectedRows = productDao.delete(id);
         validateAffectedRowsCount(affectedRows);
         return affectedRows;
     }
 
+    @Transactional(readOnly = true)
     public List<ResponseProductDto> findByIds(final List<Long> productIds) {
         return productIds.stream()
                 .map(productDao::findById)
