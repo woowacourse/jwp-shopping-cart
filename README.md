@@ -123,7 +123,7 @@
 
 ### 리팩토링
 - [x] 깨진 테스트 복구
-- [ ] 테스트 작성
+- [x] 테스트 작성
 - [ ] 코드 일관성
 - [ ] AOP?..
 
@@ -138,4 +138,5 @@
 - [ ] 왜 필드가 하나인 DTO는 빈 생성자 없이 데이터 바인딩이 안 될까? (Reqeust의 Body로 넘어온 값)
 - [ ] data.sql 파일을 전체 주석 처리했더니, Bean 생성 과정에서 오류가 발생
 - [ ] @WebMvcTest에서 @Controller, @RestController의 의존성을 모두 추가해줘야 하는가?
-- 
+- [ ] JdbcTest에서 Dao가 의존성 주입받지 못하는 이유 
+- [ ] carDataTest.sql에서 truncate를 했을 때 auto_increment값이 유지되는 이유
