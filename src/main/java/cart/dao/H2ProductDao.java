@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class ProductDaoImpl implements ProductDao {
+public class H2ProductDao implements ProductDao {
     private static final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) ->
             ProductEntity.create(
                     resultSet.getLong("id"),
@@ -28,7 +28,7 @@ public class ProductDaoImpl implements ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ProductDaoImpl(JdbcTemplate jdbcTemplate) {
+    public H2ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")

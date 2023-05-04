@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.MemberDaoImpl;
+import cart.dao.H2MemberDao;
 import cart.domain.Member;
 import cart.dto.request.MemberRequest;
 import cart.dto.response.MemberResponse;
@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class MemberService {
-    private final MemberDaoImpl memberDao;
+    private final H2MemberDao memberDao;
     private final MemberMapper memberMapper;
 
-    public MemberService(MemberDaoImpl memberDao, MemberMapper memberMapper) {
+    public MemberService(H2MemberDao memberDao, MemberMapper memberMapper) {
         this.memberDao = memberDao;
         this.memberMapper = memberMapper;
     }
@@ -46,8 +46,8 @@ public class MemberService {
     }
 
     public void deleteById(Long id) {
-        memberDao.findById(id)
+        MemberEntity member = memberDao.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다." + System.lineSeparator() + "id : " + id));
-        memberDao.deleteById(id);
+        memberDao.deleteById(member.getId());
     }
 }

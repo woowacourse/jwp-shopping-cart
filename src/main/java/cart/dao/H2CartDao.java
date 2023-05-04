@@ -17,13 +17,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Repository
-public class CartDaoImpl {
+public class H2CartDao implements CartDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final ProductDaoImpl productDao;
-    private final MemberDaoImpl memberDao;
+    private final H2ProductDao productDao;
+    private final H2MemberDao memberDao;
 
-    public CartDaoImpl(JdbcTemplate jdbcTemplate, ProductDaoImpl productDao, MemberDaoImpl memberDao) {
+    public H2CartDao(JdbcTemplate jdbcTemplate, H2ProductDao productDao, H2MemberDao memberDao) {
         this.productDao = productDao;
         this.memberDao = memberDao;
         this.jdbcTemplate = jdbcTemplate;

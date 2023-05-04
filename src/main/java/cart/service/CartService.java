@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.CartDaoImpl;
+import cart.dao.H2CartDao;
 import cart.domain.Cart;
 import cart.dto.request.CartRequest;
 import cart.dto.response.CartResponse;
@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartService {
-    private final CartDaoImpl cartDao;
+    private final H2CartDao cartDao;
     private final CartMapper cartMapper;
 
-    public CartService(CartDaoImpl cartDao, CartMapper cartMapper) {
+    public CartService(H2CartDao cartDao, CartMapper cartMapper) {
         this.cartDao = cartDao;
         this.cartMapper = cartMapper;
     }
@@ -53,8 +53,8 @@ public class CartService {
     }
 
     public void deleteById(Long id) {
-        cartDao.findById(id)
+        CartEntity cart = cartDao.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다." + System.lineSeparator() + "id : " + id));
-        cartDao.deleteById(id);
+        cartDao.deleteById(cart.getId());
     }
 }

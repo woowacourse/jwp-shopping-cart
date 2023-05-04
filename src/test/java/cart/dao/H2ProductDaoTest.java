@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @JdbcTest
-class ProductDaoImplTest {
+class H2ProductDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -34,7 +34,7 @@ class ProductDaoImplTest {
 
     @BeforeEach
     void setUp() {
-        productDao = new ProductDaoImpl(jdbcTemplate);
+        productDao = new H2ProductDao(jdbcTemplate);
     }
 
     @Test

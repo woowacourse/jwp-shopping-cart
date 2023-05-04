@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class MemberDaoImpl {
+public class H2MemberDao implements MemberDao {
     private static final RowMapper<MemberEntity> memberEntityRowMapper = (resultSet, rowNum) ->
             new MemberEntity(
                     resultSet.getLong("id"),
@@ -31,7 +31,7 @@ public class MemberDaoImpl {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public MemberDaoImpl(JdbcTemplate jdbcTemplate) {
+    public H2MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("member")

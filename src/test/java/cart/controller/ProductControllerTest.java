@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dao.MemberDaoImpl;
+import cart.dao.H2MemberDao;
 import cart.dto.request.ProductRequest;
 import cart.fixture.ImageFixture;
 import cart.service.ProductService;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @WebMvcTest(ProductController.class)
-@Import({MemberDaoImpl.class})
+@Import({H2MemberDao.class})
 @MockBean(JdbcTemplate.class)
 class ProductControllerTest {
 
