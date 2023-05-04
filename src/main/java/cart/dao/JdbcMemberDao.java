@@ -6,12 +6,16 @@ import java.util.Optional;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class JdbcMemberDao implements MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertActor;
     private final RowMapper<Member> memberRowMapper = (resultSet, rowNum) ->
             new Member(
                     resultSet.getLong("id"),
@@ -22,6 +26,15 @@ public class JdbcMemberDao implements MemberDao {
 
     public JdbcMemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertActor = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("member")
+                .usingGeneratedKeyColumns("id");
+    }
+
+    @Override
+    public Long insert(final Member member) {
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(member);
+        return insertActor.executeAndReturnKey(parameters).longValue();
     }
 
     @Override
