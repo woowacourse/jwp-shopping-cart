@@ -31,12 +31,12 @@ class ProductControllerTest {
         final int requestPrice = 4_000;
         final String requestUrl = "none";
         final ProductRequest createRequest = new ProductRequest(requestName, requestPrice,
-                requestUrl);
+            requestUrl);
 
         RestAssured
-                .given().contentType(ContentType.JSON).body(createRequest)
-                .when().post("/products")
-                .then().statusCode(200);
+            .given().contentType(ContentType.JSON).body(createRequest)
+            .when().post("/products")
+            .then().statusCode(201);
     }
 
     @Test
@@ -46,12 +46,12 @@ class ProductControllerTest {
         final int requestPrice = 4_000;
         final String requestUrl = "none";
         final ProductRequest createRequest = new ProductRequest(requestName, requestPrice,
-                requestUrl);
+            requestUrl);
 
         RestAssured
-                .given().contentType(ContentType.JSON).body(createRequest)
-                .when().post("/products")
-                .then().statusCode(400).body(Matchers.containsString("유효하지 않은 값입니다."));
+            .given().contentType(ContentType.JSON).body(createRequest)
+            .when().post("/products")
+            .then().statusCode(400).body(Matchers.containsString("유효하지 않은 값입니다."));
     }
 
     @Test
@@ -61,12 +61,12 @@ class ProductControllerTest {
         final int requestPrice = 4_000;
         final String requestUrl = "none";
         final ProductRequest createRequest = new ProductRequest(requestName, requestPrice,
-                requestUrl);
+            requestUrl);
 
         RestAssured
-                .given().contentType(ContentType.JSON).body(createRequest)
-                .when().put("/products/1")
-                .then().statusCode(200);
+            .given().contentType(ContentType.JSON).body(createRequest)
+            .when().put("/products/1")
+            .then().statusCode(200);
     }
 
     @Test
@@ -76,12 +76,12 @@ class ProductControllerTest {
         final int requestPrice = 4_000;
         final String requestUrl = "none";
         final ProductRequest createRequest = new ProductRequest(requestName, requestPrice,
-                requestUrl);
+            requestUrl);
 
         RestAssured
-                .given().contentType(ContentType.JSON).body(createRequest)
-                .when().put("/products/1")
-                .then().statusCode(400).body(Matchers.containsString("유효하지 않은 값입니다."));
+            .given().contentType(ContentType.JSON).body(createRequest)
+            .when().put("/products/1")
+            .then().statusCode(400).body(Matchers.containsString("유효하지 않은 값입니다."));
     }
 
     @Test
@@ -91,29 +91,29 @@ class ProductControllerTest {
         final int requestPrice = 4_000;
         final String requestUrl = "none";
         final ProductRequest createRequest = new ProductRequest(requestName, requestPrice,
-                requestUrl);
+            requestUrl);
 
         RestAssured
-                .given().contentType(ContentType.JSON).body(createRequest)
-                .when().put("/products/-1")
-                .then().statusCode(400).body(Matchers.containsString("존재하지 않는 id입니다."));
+            .given().contentType(ContentType.JSON).body(createRequest)
+            .when().put("/products/-1")
+            .then().statusCode(400).body(Matchers.containsString("존재하지 않는 id입니다."));
     }
 
     @Test
     @DisplayName("/products/{id}로 delete 요청을 보내면 상태코드 200(OK)을 응답한다")
     void deleteProduct() {
         RestAssured
-                .given().contentType(ContentType.JSON)
-                .when().delete("/products/1")
-                .then().statusCode(200);
+            .given().contentType(ContentType.JSON)
+            .when().delete("/products/1")
+            .then().statusCode(200);
     }
 
     @Test
     @DisplayName("/products/{id}로 존재하지 않는 상품에 대해 delete 요청을 보내면 상태코드 400(BadRequest)을 응답한다")
     void deleteProduct_fail() {
         RestAssured
-                .given().contentType(ContentType.JSON)
-                .when().delete("/products/-1")
-                .then().statusCode(400).body(Matchers.containsString("존재하지 않는 id입니다."));
+            .given().contentType(ContentType.JSON)
+            .when().delete("/products/-1")
+            .then().statusCode(400).body(Matchers.containsString("존재하지 않는 id입니다."));
     }
 }

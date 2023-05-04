@@ -1,6 +1,9 @@
 package cart.controller;
 
+import cart.dao.CrudDao;
 import cart.dao.ProductDao;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -16,21 +19,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductDao productDao;
+    private final CrudDao productDao;
 
     public ProductController(ProductDao productDao) {
         this.productDao = productDao;
     }
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody ProductRequest product) {
+    public ResponseEntity create(@Valid @RequestBody ProductRequest product)
+        throws URISyntaxException {
         productDao.add(product);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(new URI("/admin")).build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity update(@PathVariable Long id,
-        @Valid @RequestBody ProductRequest product) {
+                                 @Valid @RequestBody ProductRequest product) {
         final int updateCount = productDao.updateById(id, product);
         validateChange(updateCount);
         return ResponseEntity.ok().build();

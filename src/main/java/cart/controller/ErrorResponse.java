@@ -2,7 +2,7 @@ package cart.controller;
 
 public class ErrorResponse {
 
-    String message;
+    private final String message;
 
     public ErrorResponse(String message) {
         this.message = message;

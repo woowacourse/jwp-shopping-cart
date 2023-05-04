@@ -12,9 +12,7 @@ public class ProductRequest {
     @NotBlank
     private String imageUrl;
 
-    public ProductRequest() {
-
-    }
+    public ProductRequest() {}
 
     public ProductRequest(String name, Integer price, String imageUrl) {
         this.name = name;
