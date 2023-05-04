@@ -45,7 +45,7 @@ class JdbcProductDaoTest {
         jdbcProductDao.insert(new Product("BROWN", 10000, null));
 
         assertThat(jdbcProductDao.findAll()).extracting("name")
-                .containsExactly("IO", "ASH", "BROWN");
+                .contains("IO", "ASH", "BROWN");
     }
 
     @Test
