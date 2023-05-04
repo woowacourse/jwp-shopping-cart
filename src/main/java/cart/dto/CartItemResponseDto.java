@@ -1,20 +1,20 @@
 package cart.dto;
 
-public class ProductResponseDto {
+public class CartItemResponseDto {
 
-    private final int id;
+    private final Integer id;
     private final String name;
     private final String image;
-    private final int price;
+    private final Integer price;
 
-    public ProductResponseDto(final int id, final String name, final String image, final int price) {
+    public CartItemResponseDto(final Integer id, final String name, final String image, final Integer price) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -26,7 +26,7 @@ public class ProductResponseDto {
         return image;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 }

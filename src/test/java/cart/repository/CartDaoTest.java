@@ -1,7 +1,7 @@
 package cart.repository;
 
 import cart.entity.CartEntity;
-import cart.entity.ProductEntity;
+import cart.dto.CartItemResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import javax.sql.DataSource;
-
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,7 +71,7 @@ class CartDaoTest {
         final int userId = 1;
 
         // when
-        final List<ProductEntity> productsInCart = cartDao.findProductByUserId(userId);
+        final List<CartItemResponseDto> productsInCart = cartDao.findByUserId(userId);
 
         // then
         assertAll(

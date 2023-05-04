@@ -1,11 +1,9 @@
 package cart.service;
 
 import cart.dto.CartRequestDto;
-import cart.dto.ProductResponseDto;
 import cart.entity.CartEntity;
-import cart.entity.ProductEntity;
 import cart.repository.CartDao;
-import cart.service.converter.ProductConverter;
+import cart.dto.CartItemResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +22,7 @@ public class CartService {
         return cartDao.create(cart);
     }
 
-    public List<ProductResponseDto> getProductsInCart(final int userId) {
-        final List<ProductEntity> productEntities = cartDao.findProductByUserId(userId);
-        return ProductConverter.entitiesToResponses(productEntities);
+    public List<CartItemResponseDto> getProductsInCart(final int userId) {
+        return cartDao.findByUserId(userId);
     }
 }

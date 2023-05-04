@@ -1,7 +1,7 @@
 package cart.repository;
 
 import cart.entity.CartEntity;
-import cart.entity.ProductEntity;
+import cart.dto.CartItemResponseDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -17,8 +17,9 @@ public class CartDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final RowMapper<ProductEntity> productEntityRowMapper = (rs, rn) ->
-            new ProductEntity(
+    private final RowMapper<CartItemResponseDto> cartItemRowMapper = (rs, rn) ->
+            new CartItemResponseDto(
+                    rs.getInt("id"),
                     rs.getString("name"),
                     rs.getString("image"),
                     rs.getInt("price")
@@ -36,10 +37,10 @@ public class CartDao {
         return simpleJdbcInsert.executeAndReturnKey(params).intValue();
     }
 
-    public List<ProductEntity> findProductByUserId(final int userId) {
-        final String sql = "select product.name, product.image, product.price from cart" +
+    public List<CartItemResponseDto> findByUserId(final int userId) {
+        final String sql = "select product.id, product.name, product.image, product.price from cart" +
                 " join product on cart.product_id = product.id" +
                 " where cart.user_id = ?";
-        return jdbcTemplate.query(sql, productEntityRowMapper, userId);
+        return jdbcTemplate.query(sql, cartItemRowMapper, userId);
     }
 }

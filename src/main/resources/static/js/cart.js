@@ -7,9 +7,11 @@ const addCartItem = (productId) => {
     }
 
     // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
-    axios.request({
-        url: '',
+    axios.post(
+        '/cart',
+        JSON.stringify({productId: productId}), {
         headers: {
+            'Content-Type': `application/json`,
             'Authorization': `Basic ${credentials}`
         }
     }).then((response) => {
