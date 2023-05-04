@@ -34,4 +34,30 @@ class UserDaoTest {
                 .isEqualTo(email);
     }
 
+    @DisplayName("특정 User 조회 테스트")
+    @Test
+    void findUserById() {
+        String email = "zuny@naver.com";
+        UserEntity userEntity = new UserEntity(null, email, "zuny1234");
+
+        Long userId = userDao.insert(userEntity);
+
+        UserEntity findedUserEntity = userDao.findById(userId).get();
+        assertThat(findedUserEntity.getEmail())
+                .isEqualTo(email);
+    }
+
+    @DisplayName("User 삭제 테스트")
+    @Test
+    void deleteUserById() {
+        String email = "zuny@naver.com";
+        UserEntity userEntity = new UserEntity(null, email, "zuny1234");
+
+        Long savedUserId = userDao.insert(userEntity);
+        assertThat(userDao.findAll()).hasSize(1);
+        userDao.deleteById(savedUserId);
+
+        assertThat(userDao.findAll()).hasSize(0);
+    }
+
 }
