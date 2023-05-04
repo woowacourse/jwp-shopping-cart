@@ -2,18 +2,18 @@
 
 ## 기능 목록 Step2
 
-- [ ] settings 페이지 연동
-    - [ ] settings.html 변경
-- [ ] 장바구니 페이지 연동
-    - [ ] cart.html 변경
+- [x] settings 페이지 연동
+    - [x] settings.html 변경
+- [x] 장바구니 페이지 연동
+    - [x] cart.html 변경
 
-- [ ] DB 설계
+- [x] DB 설계
 
 - [x] 필터 작성
 
-- [ ] User 도메인 추가
-    - [ ] User 도메인에 Cart 도메인 추가
-- [ ] Cart 도메인 추가
+- [x] User 도메인 추가
+    - [x] User 도메인에 Cart 도메인 추가
+- [x] Cart 도메인 추가
 
 ## 기능목록
 
