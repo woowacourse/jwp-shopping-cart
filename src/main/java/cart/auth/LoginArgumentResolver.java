@@ -6,6 +6,7 @@ import cart.exception.AuthenticationException;
 import java.util.Base64;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -14,8 +15,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
-
-  private static final String AUTHORIZATION = "Authorization";
   private static final String BASIC_TYPE = "Basic";
   private static final String DELIMITER = ":";
 
@@ -45,7 +44,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 
   private static String getAuthorization(NativeWebRequest webRequest) {
     final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-    final String header = request.getHeader(AUTHORIZATION);
+    final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
     return header.substring(BASIC_TYPE.length()).trim();
   }
 }
