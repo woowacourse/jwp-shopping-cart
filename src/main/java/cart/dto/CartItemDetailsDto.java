@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.entity.ProductEntity;
+import cart.domain.entity.ProductEntity;
 
 public class CartItemDetailsDto {
 

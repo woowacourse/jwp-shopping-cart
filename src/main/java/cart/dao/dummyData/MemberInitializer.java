@@ -1,7 +1,7 @@
 package cart.dao.dummyData;
 
 import cart.dao.MemberDao;
-import cart.entity.MemberEntity;
+import cart.domain.entity.MemberEntity;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;

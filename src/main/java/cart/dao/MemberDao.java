@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.MemberEntity;
+import cart.domain.entity.MemberEntity;
 
 import java.util.List;
 

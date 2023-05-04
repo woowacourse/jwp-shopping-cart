@@ -1,9 +1,7 @@
 package cart.dao;
 
-import cart.entity.CartItemEntity;
-import cart.entity.ProductEntity;
+import cart.domain.entity.CartItemEntity;
 
-import javax.validation.Valid;
 import java.util.List;
 
 public interface CartItemDao {

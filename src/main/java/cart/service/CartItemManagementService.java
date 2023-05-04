@@ -4,8 +4,8 @@ import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
 import cart.dto.CartItemCreationDto;
 import cart.dto.CartItemDetailsDto;
-import cart.entity.CartItemEntity;
-import cart.entity.ProductEntity;
+import cart.domain.entity.CartItemEntity;
+import cart.domain.entity.ProductEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

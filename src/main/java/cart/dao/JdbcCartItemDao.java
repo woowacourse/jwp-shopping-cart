@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.CartItemEntity;
+import cart.domain.entity.CartItemEntity;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

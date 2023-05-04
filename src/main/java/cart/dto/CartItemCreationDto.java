@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.entity.CartItemEntity;
+import cart.domain.entity.CartItemEntity;
 
 public class CartItemCreationDto {
 

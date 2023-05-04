@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.dao.JdbcProductDao;
 import cart.dto.ProductDto;
-import cart.entity.ProductEntity;
+import cart.domain.entity.ProductEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

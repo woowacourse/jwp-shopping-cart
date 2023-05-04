@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.entity.MemberEntity;
+import cart.domain.entity.MemberEntity;
 
 public class MemberAuthentication {
 
