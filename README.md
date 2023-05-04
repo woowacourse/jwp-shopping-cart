@@ -29,6 +29,10 @@
 | 삭제 | DELETE | /products/{id} |
  
 ### 사용자 API
+| 기능 | Method | URL      |
+|----|--------|----------|
+| 생성 | POST   | /members |
+| 조회 | GET    | /members |
 
 ### 장바구니 API
 - [ ] 장바구니 목록을 확인하는 기능
