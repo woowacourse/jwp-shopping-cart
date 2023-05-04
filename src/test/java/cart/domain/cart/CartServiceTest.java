@@ -71,4 +71,17 @@ class CartServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 상품입니다.");
     }
+
+    @Test
+    void 존재하지_않는_상품을_삭제하려고_하면_예외발생() {
+        given(memberDao.findByEmail(any()))
+                .willReturn(Optional.of(new Member(1L, "aa@aa.com", "qwer1234")));
+
+        given(cartDao.deleteCartItem(any(), any()))
+                .willReturn(0);
+
+        assertThatThrownBy(() -> cartService.deleteCartItem("cyh6099@gmail.com", 1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("잘못된 삭제 요청입니다.");
+    }
 }

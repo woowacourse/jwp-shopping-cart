@@ -37,13 +37,23 @@ public class CartService {
         return cartDao.addProduct(cart);
     }
 
-    public List<ProductResponse> findProductsByUserIdOnCart(String memberEmail) {
-        Member member = memberDao.findByEmail(memberEmail).orElseThrow(
+    public List<ProductResponse> findProductsByUserIdOnCart(String email) {
+        Member member = memberDao.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
         List<Product> products = cartDao.findProductsByUserId(member.getId());
         return products.stream()
                 .map(p -> new ProductResponse(p.getName(), p.getImageUrl(), p.getPrice()))
                 .collect(Collectors.toList());
+    }
+
+    public void deleteCartItem(String email, Long productId) {
+        Member member = memberDao.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
+        );
+        int affectedRow = cartDao.deleteCartItem(member, productId);
+        if (affectedRow != 1) {
+            throw new IllegalArgumentException("잘못된 삭제 요청입니다.");
+        }
     }
 }
