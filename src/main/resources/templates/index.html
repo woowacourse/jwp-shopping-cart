@@ -12,7 +12,7 @@
     <nav>
         <ul class="gnb-group">
             <li><a href="/">상품목록</a></li>
-            <li><a href="/cart">장바구니</a></li>
+            <li><a href="/carts">장바구니</a></li>
             <li><a href="/settings">설정</a></li>
             <li class="nav-admin"><a href="/admin">관리자</a></li>
         </ul>
@@ -20,7 +20,7 @@
 </header>
 <div class="container">
     <ul class="product-grid">
-        
+
         <li class="product" th:each="product : ${products}">
             <div class="product-image">
                 <img alt="상품 이미지" th:src="${product.image}">

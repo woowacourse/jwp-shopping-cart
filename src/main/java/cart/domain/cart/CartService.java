@@ -37,8 +37,11 @@ public class CartService {
         return cartDao.addProduct(cart);
     }
 
-    public List<ProductResponse> findProductsByUserIdOnCart(Long userId) {
-        List<Product> products = cartDao.findProductsByUserId(userId);
+    public List<ProductResponse> findProductsByUserIdOnCart(String memberEmail) {
+        Member member = memberDao.findByEmail(memberEmail).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
+        );
+        List<Product> products = cartDao.findProductsByUserId(member.getId());
         return products.stream()
                 .map(p -> new ProductResponse(p.getName(), p.getImageUrl(), p.getPrice()))
                 .collect(Collectors.toList());

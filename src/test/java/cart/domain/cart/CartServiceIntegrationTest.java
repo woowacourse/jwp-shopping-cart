@@ -45,11 +45,11 @@ public class CartServiceIntegrationTest {
         cartService.addProductToCart(email, chickenId);
         cartService.addProductToCart(email, pizzaId);
 
-        List<ProductResponse> productResponses = cartService.findProductsByUserIdOnCart(member.getId());
+        List<ProductResponse> productResponses = cartService.findProductsByUserIdOnCart(member.getEmail());
 
         assertAll(
-                () -> assertThat(cartService.findProductsByUserIdOnCart(member.getId())).hasSize(2),
-                () -> assertThat(cartService.findProductsByUserIdOnCart(memberNoHaveCartItem.getId())).hasSize(0),
+                () -> assertThat(cartService.findProductsByUserIdOnCart(member.getEmail())).hasSize(2),
+                () -> assertThat(cartService.findProductsByUserIdOnCart(memberNoHaveCartItem.getEmail())).hasSize(0),
                 () -> assertThat(productResponses.get(0).getName()).isEqualTo(products.get(0).getName())
         );
     }
