@@ -8,7 +8,7 @@ public class UserEmail {
 
     private final String email;
 
-    public UserEmail(String email) {
+    private UserEmail(String email) {
         validate(email);
         this.email = email;
     }
@@ -19,6 +19,10 @@ public class UserEmail {
         }
 
         throw new IllegalArgumentException();
+    }
+
+    public static UserEmail from(String email) {
+        return new UserEmail(email);
     }
 
     public String getEmail() {
