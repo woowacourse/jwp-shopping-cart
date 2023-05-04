@@ -5,6 +5,7 @@ import cart.service.dto.MemberInfo;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -36,7 +37,11 @@ public class JdbcMemberRepository implements MemberRepository {
     public Optional<Long> findId(final MemberInfo memberInfo) {
         final String sql = "select id from member where email=:email and password=:password";
         final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(memberInfo);
-        final Long memberId = namedParameterJdbcTemplate.queryForObject(sql, parameterSource, Long.class);
-        return Optional.ofNullable(memberId);
+        try {
+            final Long memberId = namedParameterJdbcTemplate.queryForObject(sql, parameterSource, Long.class);
+            return Optional.ofNullable(memberId);
+        } catch (final EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

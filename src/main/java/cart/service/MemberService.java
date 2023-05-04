@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.entity.Member;
 import cart.repository.JdbcMemberRepository;
+import cart.service.dto.MemberInfo;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +17,10 @@ public class MemberService {
 
     public List<Member> findAllMember() {
         return memberRepository.findAll();
+    }
+
+    public boolean isExist(final MemberInfo memberInfo) {
+        return memberRepository.findId(memberInfo)
+                .isPresent();
     }
 }
