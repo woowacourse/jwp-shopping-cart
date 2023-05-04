@@ -1,8 +1,6 @@
 package cart.controller;
 
-import cart.auth.AuthorizationExtractor;
-import cart.auth.BasicAuthorizationExtractor;
-import cart.config.AuthenticationPrincipal;
+import cart.auth.AuthenticationPrincipal;
 import cart.domain.cart.Item;
 import cart.domain.member.Member;
 import cart.dto.response.ProductResponse;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartResourceController {
 
     private final CartService cartService;
-    private final AuthorizationExtractor<Member> extractor = new BasicAuthorizationExtractor();
     private final MemberService memberService;
 
     public CartResourceController(final CartService cartService, final MemberService memberService) {

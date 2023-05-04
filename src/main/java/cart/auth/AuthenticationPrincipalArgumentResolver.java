@@ -1,5 +1,6 @@
-package cart.config;
+package cart.auth;
 
+import cart.auth.exception.AuthorizationException;
 import cart.domain.member.Member;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
@@ -25,10 +26,18 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
             throws Exception {
         final String header = webRequest.getHeader(AUTHORIZATION);
 
-        if (header == null || !header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
-            return false;
+        if (header == null) {
+            throw new AuthorizationException("인증 정보가 없습니다.");
         }
 
+        try {
+            return extractMember(header);
+        } catch (final Exception e) {
+            throw new AuthorizationException("사용자 정보를 찾을 수 없습니다.");
+        }
+    }
+
+    private Member extractMember(final String header) {
         final String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
         final byte[] decodeBytes = Base64.decodeBase64(authHeaderValue);
         final String decodedString = new String(decodeBytes);
