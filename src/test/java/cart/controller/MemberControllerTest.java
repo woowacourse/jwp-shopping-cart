@@ -5,9 +5,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.controller.dto.MemberDto;
 import cart.controller.helper.ControllerTestHelper;
 import cart.service.MemberService;
+import cart.service.dto.MemberResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,12 +30,12 @@ class MemberControllerTest extends ControllerTestHelper {
     @DisplayName("사용자 리스트를 조회한다.")
     void getMembers() throws Exception {
         // given
-        final MemberDto journey = new MemberDto(1L, "USER", "journey@gmail.com",
+        final MemberResponse journey = new MemberResponse(1L, "USER", "journey@gmail.com",
             "password", "져니", "010-1234-5678");
-        final MemberDto koda = new MemberDto(2L, "USER", "koda@gmail.com",
+        final MemberResponse koda = new MemberResponse(2L, "USER", "koda@gmail.com",
             "test1234", "코다", "010-4321-8765");
-        final List<MemberDto> memberDtos = List.of(journey, koda);
-        when(memberService.getMembers()).thenReturn(memberDtos);
+        final List<MemberResponse> memberResponses = List.of(journey, koda);
+        when(memberService.getMembers()).thenReturn(memberResponses);
 
         // when, then
         mockMvc.perform(get("/settings")
@@ -47,7 +47,7 @@ class MemberControllerTest extends ControllerTestHelper {
     @DisplayName("사용자 정보를 조회한다")
     void getMember() throws Exception {
         // given
-        final MemberDto journey = new MemberDto(1L, "USER", "journey@gmail.com",
+        final MemberResponse journey = new MemberResponse(1L, "USER", "journey@gmail.com",
             "password", "져니", "010-1234-5678");
         when(memberService.getById(any())).thenReturn(journey);
 

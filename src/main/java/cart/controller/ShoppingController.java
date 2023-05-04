@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.ProductDto;
 import cart.service.ProductService;
+import cart.service.dto.ProductResponse;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class ShoppingController {
 
     @GetMapping("/")
     public ModelAndView index() {
-        final List<ProductDto> products = productService.getProducts();
+        final List<ProductResponse> products = productService.getProducts();
         final ModelAndView mv = new ModelAndView();
         mv.setViewName("index");
         mv.addObject("products", products);
@@ -28,10 +28,10 @@ public class ShoppingController {
 
     @GetMapping("/{productId}")
     public ModelAndView getProduct(@PathVariable Long productId) {
-        final ProductDto productDto = productService.getById(productId);
+        final ProductResponse productResponse = productService.getById(productId);
         final ModelAndView mv = new ModelAndView();
         mv.setViewName("product");
-        mv.addObject("product", productDto);
+        mv.addObject("product", productResponse);
         return mv;
     }
 }

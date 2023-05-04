@@ -2,7 +2,7 @@ package cart.integration;
 
 import static io.restassured.RestAssured.given;
 
-import cart.controller.dto.MemberDto;
+import cart.service.dto.MemberRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +40,7 @@ public class MemberIntegrationTest {
     @DisplayName("사용자 정보를 추가한다")
     @Sql("classpath:init.sql")
     void addMember() {
-        final MemberDto journey = new MemberDto(1L, "USER", "journey@gmail.com",
+        final MemberRequest journey = new MemberRequest(1L, "USER", "journey@gmail.com",
             "password", "져니", "010-1234-5678");
 
         given()

@@ -17,8 +17,8 @@ public class Member {
 
     private final MemberRole role;
 
-    public Member(final String email, final MemberPassword password, final String nickname,
-                  final String telephone, final MemberRole role) {
+    private Member(final String email, final MemberPassword password, final String nickname,
+                   final String telephone, final MemberRole role) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;

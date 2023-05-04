@@ -2,8 +2,8 @@ package cart.integration;
 
 import static io.restassured.RestAssured.given;
 
-import cart.controller.dto.MemberDto;
-import cart.controller.dto.ProductDto;
+import cart.service.dto.MemberRequest;
+import cart.service.dto.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +21,12 @@ public class AdminIntegrationTest {
     @LocalServerPort
     private int port;
 
+    private String authorization;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        authorization = "Basic am91cm5leUBnbWFpbC5jb206Y0dGemMzZHZjbVE9";
     }
 
     @Test
@@ -36,7 +39,7 @@ public class AdminIntegrationTest {
         // when, then
         given()
             .when()
-            .header("Authorization", "Basic am91cm5leUBnbWFpbC5jb206cGFzc3dvcmQ=")
+            .header("Authorization", authorization)
             .get("/admin")
             .then().log().all()
             .contentType(ContentType.HTML)
@@ -49,14 +52,14 @@ public class AdminIntegrationTest {
     void addProduct() {
         // given
         addAdminMember();
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
+        final ProductRequest productRequest = new ProductRequest(1L, "치킨", "chickenUrl", 20000, "KOREAN");
 
         // when, then
         given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .header("Authorization", "Basic am91cm5leUBnbWFpbC5jb206cGFzc3dvcmQ=")
+            .header("Authorization", authorization)
             .when()
-            .body(productDto)
+            .body(productRequest)
             .post("/admin/register")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value());
@@ -68,15 +71,15 @@ public class AdminIntegrationTest {
     void updateProduct() {
         // given
         addAdminMember();
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
+        final ProductRequest productRequest = new ProductRequest(1L, "치킨", "chickenUrl", 20000, "KOREAN");
         addSampleProduct();
 
         // when, then
         given()
-            .header("Authorization", "Basic am91cm5leUBnbWFpbC5jb206cGFzc3dvcmQ=")
+            .header("Authorization", authorization)
             .when()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productDto)
+            .body(productRequest)
             .put("/admin/{productId}", 1L)
             .then().log().all()
             .statusCode(HttpStatus.NO_CONTENT.value());
@@ -92,7 +95,7 @@ public class AdminIntegrationTest {
 
         // when, then
         given()
-            .header("Authorization", "Basic am91cm5leUBnbWFpbC5jb206cGFzc3dvcmQ=")
+            .header("Authorization", authorization)
             .when()
             .delete("/admin/{productId}", 1L)
             .then().log().all()
@@ -100,7 +103,7 @@ public class AdminIntegrationTest {
     }
 
     private void addAdminMember() {
-        final MemberDto journey = new MemberDto(1L, "ADMIN", "journey@gmail.com",
+        final MemberRequest journey = new MemberRequest(1L, "ADMIN", "journey@gmail.com",
             "password", "져니", "010-1234-5678");
 
         given()
@@ -113,13 +116,13 @@ public class AdminIntegrationTest {
     }
 
     private void addSampleProduct() {
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
+        final ProductRequest productRequest = new ProductRequest(1L, "치킨", "chickenUrl", 20000, "KOREAN");
 
         given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .header("Authorization", "Basic am91cm5leUBnbWFpbC5jb206cGFzc3dvcmQ=")
+            .header("Authorization", authorization)
             .when()
-            .body(productDto)
+            .body(productRequest)
             .post("/admin/register")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value());

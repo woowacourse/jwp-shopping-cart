@@ -1,9 +1,9 @@
 package cart.controller;
 
 import cart.common.auth.MemberEmail;
-import cart.controller.dto.CartDto;
-import cart.controller.dto.CartResponse;
 import cart.service.CartService;
+import cart.service.dto.CartResponse;
+import cart.service.dto.ProductResponse;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +33,15 @@ public class CartRestController {
 
     @GetMapping("/me")
     public ResponseEntity<CartResponse> getCartByMember(@MemberEmail String memberEmail) {
-        final List<CartDto> cartDtos = cartService.getProductsByMemberEmail(memberEmail);
-        final CartResponse cartResponse = new CartResponse(cartDtos);
+        final List<ProductResponse> productResponses = cartService.getProductsByMemberEmail(memberEmail);
+        final CartResponse cartResponse = new CartResponse(productResponses);
         return ResponseEntity.ok().body(cartResponse);
     }
 
-    @DeleteMapping("/{targetMemberId}/{productId}")
+    @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteCart(@MemberEmail String memberEmail,
-                                           @PathVariable Long targetMemberId,
                                            @PathVariable Long productId) {
-        cartService.deleteCart(targetMemberId, memberEmail, productId);
+        cartService.deleteCart(memberEmail, productId);
         return ResponseEntity.noContent().build();
     }
 }

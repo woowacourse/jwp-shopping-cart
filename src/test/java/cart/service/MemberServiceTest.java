@@ -6,11 +6,12 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import cart.controller.dto.MemberDto;
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.persistence.dao.MemberDao;
 import cart.persistence.entity.MemberEntity;
+import cart.service.dto.MemberRequest;
+import cart.service.dto.MemberResponse;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +34,7 @@ class MemberServiceTest {
     @DisplayName("사용자 정보를 저장한다.")
     void save() {
         // given
-        final MemberDto memberDto = new MemberDto(1L, "USER", "journey@gmail.com",
+        final MemberRequest memberRequest = new MemberRequest(1L, "USER", "journey@gmail.com",
             "password", "져니", "010-1234-5678");
         final MemberEntity memberEntity = new MemberEntity("journey@gmail.com", "USER",
             "cGFzc3dvcmQ=", "져니", "010-1234-5678");
@@ -42,10 +43,10 @@ class MemberServiceTest {
         when(memberDao.findById(1L)).thenReturn(Optional.of(memberEntity));
 
         // when
-        final long savedUserId = memberService.save(memberDto);
+        final long savedUserId = memberService.save(memberRequest);
 
         // then
-        final MemberDto result = memberService.getById(savedUserId);
+        final MemberResponse result = memberService.getById(savedUserId);
         assertThat(result)
             .extracting("email", "role", "password", "nickname", "telephone")
             .containsExactly("journey@gmail.com", "USER", "cGFzc3dvcmQ=", "져니", "010-1234-5678");
@@ -55,7 +56,7 @@ class MemberServiceTest {
     @DisplayName("이미 존재하는 사용자 이메일이 주어지면, 예외가 발생한다.")
     void save_duplicate_fail() {
         // given
-        final MemberDto memberDto = new MemberDto(1L, "USER", "journey@gmail.com",
+        final MemberRequest memberRequest = new MemberRequest(1L, "USER", "journey@gmail.com",
             "password", "져니", "010-1234-5678");
         final MemberEntity memberEntity = new MemberEntity("journey@gmail.com", "USER",
             "cGFzc3dvcmQ=", "져니", "010-1234-5678");
@@ -63,7 +64,7 @@ class MemberServiceTest {
         when(memberDao.findByEmail(any())).thenReturn(Optional.of(memberEntity));
 
         // when, then
-        assertThatThrownBy(() -> memberService.save(memberDto))
+        assertThatThrownBy(() -> memberService.save(memberRequest))
             .isInstanceOf(GlobalException.class)
             .extracting("errorCode")
             .isEqualTo(ErrorCode.MEMBER_DUPLICATE_EMAIL);
@@ -79,10 +80,10 @@ class MemberServiceTest {
         when(memberDao.findById(any())).thenReturn(Optional.of(memberEntity));
 
         // when
-        final MemberDto memberDto = memberService.getById(1L);
+        final MemberResponse memberResponse = memberService.getById(1L);
 
         // then
-        assertThat(memberDto)
+        assertThat(memberResponse)
             .extracting("email", "role", "password", "nickname", "telephone")
             .containsExactly("journey@gmail.com", "USER", "cGFzc3dvcmQ=", "져니", "010-1234-5678");
     }
@@ -97,26 +98,26 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("유효한 사용자 이메일이 주어지면, 사용자 정보를 반환한다.")
-    void getByEmail_success() {
+    @DisplayName("유효한 사용자 이메일과 비밀번호가 주어지면, 사용자 정보를 반환한다.")
+    void getByEmailAndPassword_success() {
         // given
         final MemberEntity memberEntity = new MemberEntity("journey@gmail.com", "USER",
             "cGFzc3dvcmQ=", "져니", "010-1234-5678");
-        when(memberDao.findByEmail(any())).thenReturn(Optional.of(memberEntity));
+        when(memberDao.findByEmailAndPassword(any(), any())).thenReturn(Optional.of(memberEntity));
 
         // when
-        final MemberDto memberDto = memberService.getByEmail("journey@gmail.com");
+        final MemberResponse memberResponse = memberService.getByEmailAndPassword("journey@gmail.com", "cGFzc3dvcmQ=");
 
         // then
-        assertThat(memberDto)
+        assertThat(memberResponse)
             .extracting("email", "role", "password", "nickname", "telephone")
             .containsExactly("journey@gmail.com", "USER", "cGFzc3dvcmQ=", "져니", "010-1234-5678");
     }
 
     @Test
-    @DisplayName("유효하지 않은 사용자 이메일이 주어지면, 예외가 발생한다.")
-    void getByEmail_invalid_fail() {
-        assertThatThrownBy(() -> memberService.getByEmail("journey@gmail.com"))
+    @DisplayName("유효하지 않은 사용자 이메일과 비밀번호가 주어지면, 예외가 발생한다.")
+    void getByEmailAndPassword_invalid_fail() {
+        assertThatThrownBy(() -> memberService.getByEmailAndPassword("journey@gmail.com", "cGFzc3dvcmQ="))
             .isInstanceOf(GlobalException.class)
             .extracting("errorCode")
             .isEqualTo(ErrorCode.MEMBER_NOT_FOUND);
@@ -136,11 +137,11 @@ class MemberServiceTest {
         when(memberDao.findAll()).thenReturn(userEntities);
 
         // when
-        final List<MemberDto> users = memberService.getMembers();
+        final List<MemberResponse> members = memberService.getMembers();
 
         // then
-        assertThat(users).hasSize(3);
-        assertThat(users)
+        assertThat(members).hasSize(3);
+        assertThat(members)
             .extracting("id", "role", "email", "password", "nickname", "telephone")
             .containsExactly(
                 tuple(1L, "USER", "journey@gmail.com", "cGFzc3dvcmQ=", "져니", "010-1234-5678"),

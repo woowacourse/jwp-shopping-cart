@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.controller.dto.ProductDto;
 import cart.domain.ProductCategory;
 import cart.service.ProductService;
+import cart.service.dto.ProductResponse;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ public class AdminController {
 
     @GetMapping
     public ModelAndView getProducts() {
-        final List<ProductDto> products = productService.getProducts();
+        final List<ProductResponse> products = productService.getProducts();
         final ModelAndView mv = new ModelAndView();
         mv.setViewName("admin");
         mv.addObject("products", products);

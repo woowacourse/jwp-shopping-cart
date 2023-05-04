@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.controller.dto.MemberDto;
 import cart.domain.MemberRole;
 import cart.service.MemberService;
+import cart.service.dto.MemberResponse;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,19 +21,19 @@ public class MemberController {
 
     @GetMapping("/settings")
     public ModelAndView getMembers() {
-        final List<MemberDto> memberDtos = memberService.getMembers();
+        final List<MemberResponse> memberResponses = memberService.getMembers();
         final ModelAndView mv = new ModelAndView();
         mv.setViewName("settings");
-        mv.addObject("members", memberDtos);
+        mv.addObject("members", memberResponses);
         return mv;
     }
 
     @GetMapping("/member/{memberId}")
     public ModelAndView getMember(@PathVariable Long memberId) {
-        final MemberDto memberDto = memberService.getById(memberId);
+        final MemberResponse memberResponse = memberService.getById(memberId);
         final ModelAndView mv = new ModelAndView();
         mv.setViewName("member");
-        mv.addObject("member", memberDto);
+        mv.addObject("member", memberResponse);
         return mv;
     }
 

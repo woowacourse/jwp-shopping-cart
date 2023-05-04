@@ -44,7 +44,7 @@
         'Authorization': `Basic ${credentials}`
       }
     }).then((response) => {
-      const cartItems = response.data.cartDtos;
+      const cartItems = response.data.productResponses;
 
       let productElement = '';
 
@@ -58,7 +58,7 @@
                                 <div class="cart-item-name">${cartItem.productName}</div>
                                 <div class="cart-item-price" style="color: black">${cartItem.productPrice}원</div>
                             </div>
-                            <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.memberId}, ${cartItem.productId})">Delete</button>
+                            <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.productId})">Delete</button>
                         </div>
                     </div>
                       `;

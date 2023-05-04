@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.ProductDto;
 import cart.service.ProductService;
+import cart.service.dto.ProductRequest;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +24,16 @@ public class AdminRestController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> addProduct(@RequestBody @Valid final ProductDto productDto) {
-        final long productId = productService.save(productDto);
+    public ResponseEntity<Void> addProduct(@RequestBody @Valid final ProductRequest productRequest) {
+        final long productId = productService.save(productRequest);
         return ResponseEntity.created(URI.create("/" + productId)).build();
     }
 
     @PutMapping("/{productId}")
     public ResponseEntity<Void> updateProduct(
         @PathVariable final Long productId,
-        @RequestBody @Valid final ProductDto productDto) {
-        productService.update(productId, productDto);
+        @RequestBody @Valid final ProductRequest productRequest) {
+        productService.update(productId, productRequest);
         return ResponseEntity.noContent().build();
     }
 

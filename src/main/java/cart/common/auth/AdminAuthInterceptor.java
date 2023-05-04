@@ -1,9 +1,9 @@
 package cart.common.auth;
 
-import cart.controller.dto.MemberDto;
 import cart.domain.MemberRole;
 import cart.exception.ForbiddenException;
 import cart.service.MemberService;
+import cart.service.dto.MemberResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -27,8 +27,9 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
         final String authorization = request.getHeader(AUTHORIZATION_HEADER);
         final String memberToken = BasicTokenProvider.extractToken(authorization);
         final String memberEmail = memberToken.split(DELIMITER)[0];
-        final MemberDto memberDto = memberService.getByEmail(memberEmail);
-        boolean isAdmin = MemberRole.isAdmin(memberDto.getRole());
+        final String memberPassword = memberToken.split(DELIMITER)[1];
+        final MemberResponse memberResponse = memberService.getByEmailAndPassword(memberEmail, memberPassword);
+        boolean isAdmin = MemberRole.isAdmin(memberResponse.getRole());
         if (!isAdmin) {
             throw new ForbiddenException();
         }

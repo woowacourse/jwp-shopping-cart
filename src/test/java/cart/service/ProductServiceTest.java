@@ -7,11 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import cart.controller.dto.ProductDto;
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.persistence.dao.ProductDao;
 import cart.persistence.entity.ProductEntity;
+import cart.service.dto.ProductRequest;
+import cart.service.dto.ProductResponse;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -37,29 +38,29 @@ class ProductServiceTest {
     void getProducts() {
         // given
         final List<ProductEntity> products = List.of(
-            new ProductEntity("치킨", "chicken_image_url", 20000, "KOREAN"),
-            new ProductEntity("초밥", "chobab_image_url", 30000, "JAPANESE"),
-            new ProductEntity("스테이크", "steak_image_url", 40000, "WESTERN")
+            new ProductEntity(1L, "치킨", "chicken_image_url", 20000, "KOREAN"),
+            new ProductEntity(2L, "초밥", "chobab_image_url", 30000, "JAPANESE"),
+            new ProductEntity(3L, "스테이크", "steak_image_url", 40000, "WESTERN")
         );
         when(productDao.findAll()).thenReturn(products);
 
         // when
-        final List<ProductDto> resultProducts = productService.getProducts();
+        final List<ProductResponse> resultProducts = productService.getProducts();
 
         // then
         assertThat(resultProducts).hasSize(3);
         assertThat(resultProducts)
-            .extracting("name", "imageUrl", "price", "category")
-            .containsExactly(tuple("치킨", "chicken_image_url", 20000, "KOREAN"),
-                tuple("초밥", "chobab_image_url", 30000, "JAPANESE"),
-                tuple("스테이크", "steak_image_url", 40000, "WESTERN"));
+            .extracting("id", "name", "imageUrl", "price", "category")
+            .containsExactly(tuple(1L, "치킨", "chicken_image_url", 20000, "KOREAN"),
+                tuple(2L, "초밥", "chobab_image_url", 30000, "JAPANESE"),
+                tuple(3L, "스테이크", "steak_image_url", 40000, "WESTERN"));
     }
 
     @DisplayName("상품을 저장한다.")
     @Test
     void save() {
         // given
-        final ProductDto productDto = new ProductDto(1L, "스테이크", "steak_image_url", 40000,
+        final ProductRequest productRequest = new ProductRequest(1L, "스테이크", "steak_image_url", 40000,
             "WESTERN");
         final ProductEntity productEntity = new ProductEntity(1L, "스테이크", "steak_image_url", 40000,
             "WESTERN");
@@ -67,10 +68,10 @@ class ProductServiceTest {
         when(productDao.findById(1L)).thenReturn(Optional.of(productEntity));
 
         // when
-        final long savedProductId = productService.save(productDto);
+        final long savedProductId = productService.save(productRequest);
 
         // then
-        final ProductDto result = productService.getById(savedProductId);
+        final ProductResponse result = productService.getById(savedProductId);
 
         assertThat(result)
             .extracting("name", "price", "imageUrl", "category")
@@ -81,24 +82,24 @@ class ProductServiceTest {
     @Test
     void update_success() {
         // given
-        final ProductDto productDto = new ProductDto(1L, "스테이크", "steak_image_url", 40000,
+        final ProductRequest productRequest = new ProductRequest(1L, "스테이크", "steak_image_url", 40000,
             "WESTERN");
         when(productDao.updateById(any(), any())).thenReturn(1);
 
         // when, then
-        assertDoesNotThrow(() -> productService.update(1L, productDto));
+        assertDoesNotThrow(() -> productService.update(1L, productRequest));
     }
 
     @ParameterizedTest(name = "상품 수정이 실패하면 예외가 발생한다.")
     @ValueSource(ints = {0, 2})
     void update_fail(final int updatedCount) {
         // given
-        final ProductDto productDto = new ProductDto(1L, "스테이크", "steak_image_url", 40000,
+        final ProductRequest productRequest = new ProductRequest(1L, "스테이크", "steak_image_url", 40000,
             "WESTERN");
         when(productDao.updateById(any(), any())).thenReturn(updatedCount);
 
         // when, then
-        assertThatThrownBy(() -> productService.update(1L, productDto))
+        assertThatThrownBy(() -> productService.update(1L, productRequest))
             .isInstanceOf(GlobalException.class)
             .extracting("errorCode")
             .isEqualTo(ErrorCode.PRODUCT_INVALID_UPDATE);
@@ -131,17 +132,17 @@ class ProductServiceTest {
     @Test
     void getById_success() {
         // given
-        final ProductEntity productEntity = new ProductEntity("스테이크", "steak_image_url", 40000,
+        final ProductEntity productEntity = new ProductEntity(1L, "스테이크", "steak_image_url", 40000,
             "WESTERN");
         when(productDao.findById(any())).thenReturn(Optional.of(productEntity));
 
         // when
-        final ProductDto productDto = productService.getById(1L);
+        final ProductResponse productResponse = productService.getById(1L);
 
         // then
-        assertThat(productDto)
-            .extracting("name", "price", "imageUrl", "category")
-            .containsExactly("스테이크", 40000, "steak_image_url", "WESTERN");
+        assertThat(productResponse)
+            .extracting("id", "name", "price", "imageUrl", "category")
+            .containsExactly(1L, "스테이크", 40000, "steak_image_url", "WESTERN");
     }
 
     @DisplayName("유효하지 않은 상품 아이디가 주어지면 예외가 발생한다.")

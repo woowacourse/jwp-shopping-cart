@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.MemberDto;
 import cart.service.MemberService;
+import cart.service.dto.MemberRequest;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +21,8 @@ public class MemberRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addMember(@RequestBody @Valid final MemberDto memberDto) {
-        final long savedMemberId = memberService.save(memberDto);
+    public ResponseEntity<Void> addMember(@RequestBody @Valid final MemberRequest memberRequest) {
+        final long savedMemberId = memberService.save(memberRequest);
         return ResponseEntity.created(URI.create("/member/" + savedMemberId)).build();
     }
 }

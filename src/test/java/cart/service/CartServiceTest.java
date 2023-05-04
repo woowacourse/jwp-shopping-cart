@@ -7,11 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import cart.controller.dto.CartDto;
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.persistence.entity.MemberCartEntity;
 import cart.persistence.repository.MemberCartRepository;
+import cart.service.dto.ProductResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,37 +56,36 @@ class CartServiceTest {
             List.of(chickenProduct, steakProductEntity));
 
         // when
-        final List<CartDto> cartDtos = cartService.getProductsByMemberEmail("journey@gmail.com");
+        final List<ProductResponse> productResponses = cartService.getProductsByMemberEmail("journey@gmail.com");
 
         // then
-        assertThat(cartDtos).hasSize(2);
-        assertThat(cartDtos)
-            .extracting("memberId", "productId", "productName",
-                "productImageUrl", "productPrice", "productCategory")
+        assertThat(productResponses).hasSize(2);
+        assertThat(productResponses)
+            .extracting("id", "name", "imageUrl", "price", "category")
             .containsExactly(
-                tuple(1L, 1L, "치킨", "chicken_image_url", 20000, "KOREAN"),
-                tuple(1L, 2L, "스테이크", "steakUrl", 40000, "WESTERN"));
+                tuple(1L, "치킨", "chicken_image_url", 20000, "KOREAN"),
+                tuple(2L, "스테이크", "steakUrl", 40000, "WESTERN"));
     }
 
     @Test
     @DisplayName("장바구니 정보를 정상적으로 제거한다.")
     void deleteCart_success() {
         // given
-        when(memberProductRepository.deleteByMemberEmail(any(), any(), any())).thenReturn(1);
+        when(memberProductRepository.deleteByMemberEmail(any(), any())).thenReturn(1);
 
         // when, then
-        assertDoesNotThrow(() -> cartService.deleteCart(1L, "journey@gmail.com", 1L));
+        assertDoesNotThrow(() -> cartService.deleteCart("journey@gmail.com", 1L));
     }
 
     @ParameterizedTest(name = "장바구니 정보 삭제가 실패하면 예외가 발생한다.")
     @ValueSource(ints = {0, 2})
     void deleteCart_fail(final int deletedCount) {
         // given
-        when(memberProductRepository.deleteByMemberEmail(any(), any(), any())).thenReturn(
+        when(memberProductRepository.deleteByMemberEmail(any(), any())).thenReturn(
             deletedCount);
 
         // when, then
-        assertThatThrownBy(() -> cartService.deleteCart(1L, "journey@gmail.com", 1L))
+        assertThatThrownBy(() -> cartService.deleteCart("journey@gmail.com", 1L))
             .isInstanceOf(GlobalException.class)
             .extracting("errorCode")
             .isEqualTo(ErrorCode.CART_INVALID_DELETE);

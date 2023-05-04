@@ -112,4 +112,30 @@ class MemberDaoTest {
         // then
         assertThat(member).isEmpty();
     }
+
+    @Test
+    @DisplayName("유효한 사용자 이메일과 비밀번호가 주어지면, 사용자 정보를 반환한다.")
+    void findByEmailAndPassword_success() {
+        // given
+        memberDao.insert(memberEntity);
+
+        // when
+        final Optional<MemberEntity> member = memberDao.findByEmailAndPassword("journey@gmail.com", "password");
+        final MemberEntity findMember = member.get();
+
+        // then
+        assertThat(findMember)
+            .extracting("email", "role", "password", "nickname", "telephone")
+            .containsExactly("journey@gmail.com", "USER", "password", "져니", "010-1234-5678");
+    }
+
+    @Test
+    @DisplayName("유효하지 않은 사용자 이메일이 주어지면, 빈 값을 반환한다.")
+    void findByEmailAndPassword_fail() {
+        // when
+        final Optional<MemberEntity> member = memberDao.findByEmailAndPassword("koda@gmail.com", "test1234");
+
+        // then
+        assertThat(member).isEmpty();
+    }
 }

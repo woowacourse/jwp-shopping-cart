@@ -3,9 +3,8 @@ package cart.integration;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 
-import cart.controller.dto.CartResponse;
-import cart.controller.dto.MemberDto;
-import cart.controller.dto.ProductDto;
+import cart.service.dto.MemberRequest;
+import cart.service.dto.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +27,7 @@ public class CartIntegrationTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        authorization = "Basic am91cm5leUBnbWFpbC5jb206cGFzc3dvcmQ=";
+        authorization = "Basic am91cm5leUBnbWFpbC5jb206Y0dGemMzZHZjbVE9";
 
     }
 
@@ -91,13 +90,13 @@ public class CartIntegrationTest {
         given()
             .header("Authorization", authorization)
             .when()
-            .delete("/cart/{targetMemberId}/{productId}", 1L, 1L)
+            .delete("/cart/{productId}", 1L)
             .then().log().all()
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private void addAdminMember() {
-        final MemberDto journey = new MemberDto(1L, "ADMIN",
+        final MemberRequest journey = new MemberRequest(1L, "ADMIN",
             "journey@gmail.com", "password", "져니", "010-1234-5678");
 
         given()
@@ -110,12 +109,12 @@ public class CartIntegrationTest {
     }
 
     private void addSampleProduct() {
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
+        final ProductRequest productRequest = new ProductRequest(1L, "치킨", "chickenUrl", 20000, "KOREAN");
         given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .header("Authorization", authorization)
             .when()
-            .body(productDto)
+            .body(productRequest)
             .post("/admin/register")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value());

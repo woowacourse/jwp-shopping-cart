@@ -1,4 +1,4 @@
-package cart.controller.dto;
+package cart.service.dto;
 
 import cart.exception.ErrorCode;
 import java.util.List;

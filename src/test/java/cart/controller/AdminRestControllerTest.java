@@ -17,12 +17,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.controller.dto.ProductDto;
 import cart.controller.helper.RestDocsHelper;
 import cart.exception.ErrorCode;
 import cart.exception.ForbiddenException;
 import cart.exception.GlobalException;
 import cart.service.ProductService;
+import cart.service.dto.ProductRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.DisplayName;
@@ -46,13 +46,13 @@ class AdminRestControllerTest extends RestDocsHelper {
     @Test
     void addProduct() throws Exception {
         // given
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
+        final ProductRequest productRequest = new ProductRequest(1L, "치킨", "chickenUrl", 20000, "KOREAN");
         when(productService.save(any())).thenReturn(1L);
 
         // when, then
         mockMvc.perform(post("/admin/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productDto))
+                .content(objectMapper.writeValueAsString(productRequest))
                 .characterEncoding(StandardCharsets.UTF_8))
             .andExpectAll(
                 status().isCreated(),
@@ -79,12 +79,12 @@ class AdminRestControllerTest extends RestDocsHelper {
     @Test
     void addProduct_blank_fail() throws Exception {
         // given
-        final ProductDto productDto = new ProductDto(1L, "", "", null, null);
+        final ProductRequest productRequest = new ProductRequest(1L, "", "", null, null);
 
         // when, then
         mockMvc.perform(post("/admin/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productDto))
+                .content(objectMapper.writeValueAsString(productRequest))
                 .characterEncoding(StandardCharsets.UTF_8)
             )
             .andExpectAll(
@@ -110,14 +110,14 @@ class AdminRestControllerTest extends RestDocsHelper {
     @Test
     void addProduct_invalid_name_fail() throws Exception {
         // given
-        final ProductDto productDto = new ProductDto(1L, "안녕하세요너무나도긴상품이름입니다너무나도긴상품이름입니다",
+        final ProductRequest productRequest = new ProductRequest(1L, "안녕하세요너무나도긴상품이름입니다너무나도긴상품이름입니다",
             "image_url", 10000, "KOREAN");
         doThrow(new GlobalException(ErrorCode.PRODUCT_NAME_LENGTH)).when(productService).save(any());
 
         // when, then
         mockMvc.perform(post("/admin/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productDto))
+                .content(objectMapper.writeValueAsString(productRequest))
                 .characterEncoding(StandardCharsets.UTF_8)
             )
             .andExpectAll(
@@ -141,14 +141,14 @@ class AdminRestControllerTest extends RestDocsHelper {
     @Test
     void addProduct_invalid_price_fail() throws Exception {
         // given
-        final ProductDto productDto = new ProductDto(1L, "치킨",
+        final ProductRequest productRequest = new ProductRequest(1L, "치킨",
             "image_url", 10_000_001, "KOREAN");
         doThrow(new GlobalException(ErrorCode.PRODUCT_PRICE_RANGE)).when(productService).save(any());
 
         // when, then
         mockMvc.perform(post("/admin/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productDto))
+                .content(objectMapper.writeValueAsString(productRequest))
                 .characterEncoding(StandardCharsets.UTF_8)
             )
             .andExpectAll(
@@ -172,13 +172,13 @@ class AdminRestControllerTest extends RestDocsHelper {
     @Test
     void addProduct_forbidden_fail() throws Exception {
         // given
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
+        final ProductRequest productRequest = new ProductRequest(1L, "치킨", "chickenUrl", 20000, "KOREAN");
         doThrow(ForbiddenException.class).when(adminAuthInterceptor).preHandle(any(), any(), any());
 
         // when, then
         mockMvc.perform(post("/admin/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productDto))
+                .content(objectMapper.writeValueAsString(productRequest))
                 .characterEncoding(StandardCharsets.UTF_8)
             )
             .andExpectAll(
@@ -199,18 +199,17 @@ class AdminRestControllerTest extends RestDocsHelper {
     }
 
 
-
     @DisplayName("상품 정보를 수정한다")
     @Test
     void updateProduct() throws Exception {
         // given
-        final ProductDto productDto = new ProductDto(1L, "치킨", "chickenUrl", 20000, "KOREAN");
+        final ProductRequest productRequest = new ProductRequest(1L, "치킨", "chickenUrl", 20000, "KOREAN");
         doNothing().when(productService).update(any(), any());
 
         // when, then
         mockMvc.perform(put("/admin/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productDto))
+                .content(objectMapper.writeValueAsString(productRequest))
                 .characterEncoding(StandardCharsets.UTF_8)
             )
             .andExpect(status().isNoContent())
@@ -233,12 +232,12 @@ class AdminRestControllerTest extends RestDocsHelper {
     @Test
     void updateProduct_fail() throws Exception {
         // given
-        final ProductDto productDto = new ProductDto(1L, "", "", null, null);
+        final ProductRequest productRequest = new ProductRequest(1L, "", "", null, null);
 
         // when, then
         mockMvc.perform(put("/admin/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productDto))
+                .content(objectMapper.writeValueAsString(productRequest))
                 .characterEncoding(StandardCharsets.UTF_8)
             )
             .andExpectAll(

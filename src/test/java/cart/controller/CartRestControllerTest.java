@@ -18,10 +18,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.controller.dto.CartDto;
 import cart.controller.helper.RestDocsHelper;
 import cart.exception.ForbiddenException;
 import cart.service.CartService;
+import cart.service.dto.ProductResponse;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -84,15 +84,15 @@ class CartRestControllerTest extends RestDocsHelper {
     }
 
     @Test
-    @DisplayName("사용자의 장바구니 정보를 회한다.")
+    @DisplayName("사용자의 장바구니 정보를 조회한다.")
     void getCartByMember() throws Exception {
         // given
-        final CartDto chickenDto = new CartDto(1L, 1L, "치킨",
+        final ProductResponse chickenDto = new ProductResponse(1L, "치킨",
             "chicken_image_url", 20000, "KOREAN");
-        final CartDto steakDto = new CartDto(1L, 2L, "스테이크",
+        final ProductResponse steakDto = new ProductResponse(2L, "스테이크",
             "steak_image_url", 40000, "WESTERN");
-        final List<CartDto> cartDtos = List.of(chickenDto, steakDto);
-        when(cartService.getProductsByMemberEmail(any())).thenReturn(cartDtos);
+        final List<ProductResponse> productResponses = List.of(chickenDto, steakDto);
+        when(cartService.getProductsByMemberEmail(any())).thenReturn(productResponses);
 
         // when, then
         mockMvc.perform(get("/cart/me")
@@ -100,29 +100,26 @@ class CartRestControllerTest extends RestDocsHelper {
             .andExpectAll(
                 status().isOk(),
                 content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE),
-                jsonPath("$.cartDtos[0].memberId").value(1L),
-                jsonPath("$.cartDtos[0].productId").value(1L),
-                jsonPath("$.cartDtos[0].productName").value("치킨"),
-                jsonPath("$.cartDtos[0].productImageUrl").value("chicken_image_url"),
-                jsonPath("$.cartDtos[0].productPrice").value(20000),
-                jsonPath("$.cartDtos[0].productCategory").value("KOREAN"),
-                jsonPath("$.cartDtos[1].memberId").value(1L),
-                jsonPath("$.cartDtos[1].productId").value(2L),
-                jsonPath("$.cartDtos[1].productName").value("스테이크"),
-                jsonPath("$.cartDtos[1].productImageUrl").value("steak_image_url"),
-                jsonPath("$.cartDtos[1].productPrice").value(40000),
-                jsonPath("$.cartDtos[1].productCategory").value("WESTERN"))
+                jsonPath("$.productResponses[0].id").value(1L),
+                jsonPath("$.productResponses[0].name").value("치킨"),
+                jsonPath("$.productResponses[0].imageUrl").value("chicken_image_url"),
+                jsonPath("$.productResponses[0].price").value(20000),
+                jsonPath("$.productResponses[0].category").value("KOREAN"),
+                jsonPath("$.productResponses[1].id").value(2L),
+                jsonPath("$.productResponses[1].name").value("스테이크"),
+                jsonPath("$.productResponses[1].imageUrl").value("steak_image_url"),
+                jsonPath("$.productResponses[1].price").value(40000),
+                jsonPath("$.productResponses[1].category").value("WESTERN"))
             .andDo(
                 documentationResultHandler.document(
                     requestHeaders(
                         headerWithName("Authorization").description("인증 정보")),
                     responseFields(
-                        fieldWithPath("cartDtos[0].memberId").description("사용자 아이디"),
-                        fieldWithPath("cartDtos[0].productId").description("상품 아이디"),
-                        fieldWithPath("cartDtos[0].productName").description("상품 이름"),
-                        fieldWithPath("cartDtos[0].productImageUrl").description("상품 이미지 URL"),
-                        fieldWithPath("cartDtos[0].productPrice").description("상품 가격"),
-                        fieldWithPath("cartDtos[0].productCategory").description("상품 카테고리"))
+                        fieldWithPath("productResponses[0].id").description("상품 아이디"),
+                        fieldWithPath("productResponses[0].name").description("상품 이름"),
+                        fieldWithPath("productResponses[0].imageUrl").description("상품 이미지 URL"),
+                        fieldWithPath("productResponses[0].price").description("상품 가격"),
+                        fieldWithPath("productResponses[0].category").description("상품 카테고리"))
                 )
             );
     }
@@ -131,10 +128,10 @@ class CartRestControllerTest extends RestDocsHelper {
     @DisplayName("사용자의 장바구니 상품을 제거한다.")
     void deleteCart_success() throws Exception {
         // given
-        doNothing().when(cartService).deleteCart(any(), any(), any());
+        doNothing().when(cartService).deleteCart(any(), any());
 
         // when, then
-        mockMvc.perform(delete("/cart/{targetMemberId}/{productId}", 1L, 1L)
+        mockMvc.perform(delete("/cart/{productId}", 1L)
                 .header("Authorization", authorization)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
@@ -149,7 +146,7 @@ class CartRestControllerTest extends RestDocsHelper {
     @Test
     @DisplayName("장바구니 상품 제거 시 인증되지 않은 사용자면 예외가 발생한다.")
     void deleteCart_unauthorized() throws Exception {
-        mockMvc.perform(delete("/cart/{targetMemberId}/{productId}", 1L, 1L)
+        mockMvc.perform(delete("/cart/{productId}", 1L)
                 .header("Authorization", "")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpectAll(
@@ -167,10 +164,10 @@ class CartRestControllerTest extends RestDocsHelper {
     @DisplayName("장바구니 상품 제거 시 권한이 없는 사용자면 예외가 발생한다.")
     void deleteCart_forbidden() throws Exception {
         // given
-        doThrow(ForbiddenException.class).when(cartService).deleteCart(any(), any(), any());
+        doThrow(ForbiddenException.class).when(cartService).deleteCart(any(), any());
 
         // when, then
-        mockMvc.perform(delete("/cart/{targetMemberId}/{productId}", 1L, 1L)
+        mockMvc.perform(delete("/cart/{productId}", 1L)
                 .header("Authorization", "Basic dGVzdEBnbWFpbC5jb206dGVzdDEyMzQ=")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpectAll(

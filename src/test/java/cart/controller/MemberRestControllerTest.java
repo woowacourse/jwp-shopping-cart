@@ -14,11 +14,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.controller.dto.MemberDto;
 import cart.controller.helper.RestDocsHelper;
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.service.MemberService;
+import cart.service.dto.MemberRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.DisplayName;
@@ -43,7 +43,7 @@ public class MemberRestControllerTest extends RestDocsHelper {
     @DisplayName("사용자 정보를 추가한다")
     void addMember_success() throws Exception {
         // given
-        final MemberDto journey = new MemberDto(1L, "USER", "journey@gmail.com",
+        final MemberRequest journey = new MemberRequest(1L, "USER", "journey@gmail.com",
             "password", "져니", "010-1234-5678");
 
         when(memberService.save(any())).thenReturn(1L);
@@ -81,7 +81,7 @@ public class MemberRestControllerTest extends RestDocsHelper {
     @DisplayName("사용자 정보 추가 시 잘못된 형식으로 들어오면 예외가 발생한다")
     void addMember_invalid_fail() throws Exception {
         // given
-        final MemberDto journey = new MemberDto(1L, null, "aa", "",
+        final MemberRequest journey = new MemberRequest(1L, null, "aa", "",
             "", "010");
 
         // when, then
@@ -117,7 +117,7 @@ public class MemberRestControllerTest extends RestDocsHelper {
     @DisplayName("사용자 정보 추가 시 이미 존재하는 이메일이 들어오면 예외가 발생한다")
     void addMember_duplicate_fail() throws Exception {
         // given
-        final MemberDto journey = new MemberDto(1L, "USER", "journey@gmail.com",
+        final MemberRequest journey = new MemberRequest(1L, "USER", "journey@gmail.com",
             "password", "져니", "010-1234-5678");
         doThrow(new GlobalException(ErrorCode.MEMBER_DUPLICATE_EMAIL))
             .when(memberService).save(any());
