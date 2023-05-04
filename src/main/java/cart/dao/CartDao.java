@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.CartEntity;
+import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,21 @@ public class CartDao {
                         rs.getLong("product_id")
                 )
         );
+    }
+
+    public List<ProductEntity> findAllByMemberId(Long memberId) {
+        String sql = "SELECT * FROM product " +
+                "INNER JOIN cart " +
+                "ON cart.product_id = product.id " + // 수정된 부분: cart.id 대신 cart.product_id 사용
+                "WHERE member_id = ?";
+
+        return jdbcTemplate.query(sql, (rs, rowNum)
+                -> new ProductEntity(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("image_url"),
+                rs.getInt("price")
+        ), memberId);
     }
 
 }
