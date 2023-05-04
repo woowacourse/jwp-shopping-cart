@@ -16,30 +16,8 @@ public class ExceptionItemControllerAdvice {
 
     private static final Logger log = LoggerFactory.getLogger(ExceptionItemControllerAdvice.class);
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, NotFoundResultException.class, IllegalArgumentException.class})
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        log.warn(exception.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                exception.getMessage());
-        return ResponseEntity.badRequest()
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(exceptionResponse);
-    }
-
-    @ExceptionHandler(NotFoundResultException.class)
-    public ResponseEntity<ExceptionResponse> handleNotFoundResultException(NotFoundResultException exception) {
-        log.warn(exception.getMessage());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                exception.getMessage());
-        return ResponseEntity.badRequest()
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(exceptionResponse);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ExceptionResponse> handlerIllegalArgumentException(IllegalArgumentException exception) {
         log.warn(exception.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
