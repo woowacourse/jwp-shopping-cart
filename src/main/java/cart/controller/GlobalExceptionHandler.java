@@ -42,6 +42,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(final Exception exception) {
+        exception.printStackTrace();
         return ResponseEntity.internalServerError().body("예기치 못한 예외가 발생했습니다.");
     }
 }
