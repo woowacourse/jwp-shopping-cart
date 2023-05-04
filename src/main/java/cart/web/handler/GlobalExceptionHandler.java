@@ -19,12 +19,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(GlobalException.class)
     public ResponseEntity<ExceptionResponse> globalException(final GlobalException e) {
+        log.info("errorMessage = {}", e.getMessage());
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> methodArgumentNotValidException(final MethodArgumentNotValidException e) {
         final String errorMessages = getErrorMessage(e);
+        log.info("errorMessages = {}", errorMessages);
         return new ResponseEntity<>(new ExceptionResponse(errorMessages), HttpStatus.BAD_REQUEST);
     }
 

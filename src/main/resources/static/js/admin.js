@@ -59,7 +59,7 @@ const createProduct = (product) => {
             window.location.reload();
         }).catch((error) => {
         const {data} = error.response;
-        window.alert(data.errorMessage)
+        window.alert(data.message)
     });
 };
 
@@ -71,7 +71,7 @@ const updateProduct = (product) => {
             window.location.reload();
         }).catch((error) => {
         const {data} = error.response;
-        window.alert(data.errorMessage)
+        window.alert(data.message)
     });
 };
 

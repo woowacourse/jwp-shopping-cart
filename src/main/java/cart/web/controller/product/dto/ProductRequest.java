@@ -2,6 +2,7 @@ package cart.web.controller.product.dto;
 
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,7 +14,7 @@ public class ProductRequest {
 
     private final String imageUrl;
 
-    @NotNull(message = "상품 가격은 비어있을 수 없습니다.")
+    @Range(min = 0, max = 1000000, message = "올바르지 않은 입력입니다. 입력 가능한 범위 : 0 ~ 999999")
     private final Integer price;
 
     @NotNull(message = "상품 카테고리는 비어있을 수 없습니다.")
