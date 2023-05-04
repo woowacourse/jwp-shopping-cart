@@ -38,6 +38,11 @@ public class ProductDao {
                 rs.getInt("price")
         );
     }
+
+    public long save(final Product product) {
+        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
+        return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+    }
     
     public Product findById(Long id) {
         final String sql = "SELECT * FROM PRODUCT WHERE ID=:id";
@@ -48,11 +53,6 @@ public class ProductDao {
     public List<Product> findAll() {
         final String sql = "SELECT * FROM PRODUCT";
         return namedParameterJdbcTemplate.query(sql, rowMapper);
-    }
-    
-    public long save(final Product product) {
-        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
-        return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
     
     public void update(final Product product) {
