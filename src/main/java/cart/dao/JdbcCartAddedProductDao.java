@@ -45,7 +45,7 @@ public class JdbcCartAddedProductDao implements cartAddedProductDao {
                 .addValue("user_email", email.getValue())
                 .addValue("product_id", product.getId());
 
-        return simpleJdbcInsert.execute(parameterSource);
+        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
     @Override
