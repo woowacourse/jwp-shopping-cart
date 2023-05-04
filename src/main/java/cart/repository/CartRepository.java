@@ -31,22 +31,6 @@ public class CartRepository {
         }
     }
 
-    // 기존 카트와 비교해 삭제할 항목, 추가할 항목, 업데이트할 항목을 가져온다.
-    // 일단 어려우니 전체 삭제 후 저장.
-    // public void update(User user, Cart cart) {
-    //     List<Product> savedProducts = getCartOf(user).getProducts();
-    //     List<Product> productsToUpdate = cart.getProducts();
-    //
-    //     List<Product> productsToDelete = getChanges(productsToUpdate, savedProducts)
-    //     List<Product> productsToInsert = new ArrayList<>();
-    // }
-
-    // private List<Product> getChanges(List<Product> original, List<Product> changedProducts) {
-    //     return changedProducts.stream()
-    //             .filter(product -> !original.contains(product))
-    //             .collect(Collectors.toList());
-    // }
-
     public Cart getCartOf(final User user) {
         List<CartItemDto> cartItems = cartItemDao.selectAllItemsOf(user.getId());
 
