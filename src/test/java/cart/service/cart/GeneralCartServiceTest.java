@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class GeneralCartServiceTest extends ServiceTestConfig {
     private static final Member MEMBER = new Member("헤나", "test@test.com", "test");
@@ -49,6 +50,21 @@ class GeneralCartServiceTest extends ServiceTestConfig {
 
         // then
         assertThat(saveCartId).isNotNull();
+    }
+
+    @DisplayName("장바구니에 중복된 상품을 추가할 경우 예외가 발생한다.")
+    @Test
+    void throwExceptionWhenCartProductIsDuplicated() {
+        // when
+        final MemberId memberId = memberRepository.save(MEMBER);
+        final ProductId productId = productRepository.save(CHICKEN);
+        final AuthMember authMember = new AuthMember(memberId, "test@test.com");
+
+        generalCartService.addProduct(authMember, productId);
+
+        // expect
+        assertThatThrownBy(() -> generalCartService.addProduct(authMember, productId))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("장바구니에 상품을 삭제한다.")

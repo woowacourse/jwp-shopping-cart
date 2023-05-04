@@ -28,6 +28,12 @@ public class GeneralCartService implements CartService {
     @Transactional
     @Override
     public CartId addProduct(final AuthMember authMember, final ProductId productId) {
+        Optional<Cart> cart = cartRepository.findByMemberIdAndProductId(authMember.getId(), productId);
+
+        if (cart.isPresent()) {
+            throw new IllegalArgumentException("이미 장바구니에 등록되어 있는 상품입니다.");
+        }
+
         return cartRepository.saveByMemberId(authMember.getId(), productId);
     }
 

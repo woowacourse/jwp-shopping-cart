@@ -83,11 +83,27 @@ class CartIntegrationTest extends IntegrationTestConfig {
                 .statusCode(CREATED.value());
     }
 
+    @DisplayName("Authorization Basic 토큰값이 유효할 때 회원의 장바구니에 이미 존재하는 상품을 추가할 경우 BAD_REQUEST를 응답한다.")
+    @Test
+    void addCartProductDuplicated() {
+        cartRepository.saveByMemberId(memberId, productId);
+
+        given(this.spec)
+                .log().all()
+                .header("Authorization", BASIC_MEMBER)
+                .filter(document(METHOD_NAME))
+                .contentType(APPLICATION_JSON_VALUE)
+
+        .when()
+                .post("/carts/{id}", productId.getId())
+
+        .then()
+                .statusCode(BAD_REQUEST.value());
+    }
+
     @DisplayName("Authorization Basic 토큰값이 유효할 때 회원의 장바구니에 존재하는 상품을 제거할 수 있다.")
     @Test
     void removeProductInCart() {
-        final MemberId memberId = memberRepository.save(MEMBER);
-        final ProductId productId = productRepository.save(CHICKEN);
         cartRepository.saveByMemberId(memberId, productId);
 
         given(this.spec)

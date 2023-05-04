@@ -58,6 +58,16 @@ public class CartJdbcRepository implements CartRepository {
     }
 
     @Override
+    public Optional<Cart> findByMemberIdAndProductId(final MemberId memberId, final ProductId productId) {
+        final String sql = "SELECT * FROM carts WHERE member_id = ? AND product_id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartRowMapper, memberId.getId(), productId.getId()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public List<Cart> findAllByMemberId(final MemberId memberId) {
         final String sql = "SELECT * FROM carts WHERE member_id = ?";
         return jdbcTemplate.query(sql, cartRowMapper, memberId.getId());

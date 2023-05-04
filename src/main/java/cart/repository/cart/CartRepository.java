@@ -13,6 +13,8 @@ public interface CartRepository {
 
     Optional<Cart> findByCartId(final CartId cartId);
 
+    Optional<Cart> findByMemberIdAndProductId(final MemberId memberId, final ProductId productId);
+
     List<Cart> findAllByMemberId(final MemberId memberId);
 
     int deleteByMemberId(final MemberId memberId, final ProductId productId);

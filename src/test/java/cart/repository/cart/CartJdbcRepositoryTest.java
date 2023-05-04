@@ -62,9 +62,32 @@ class CartJdbcRepositoryTest extends RepositoryTestConfig {
                 ));
     }
 
+    @DisplayName("상품 번호로 회원 장바구니에 있는 카트를 가져온다.")
+    @Test
+    void findByMemberIdAndProductId() {
+        // given
+        final MemberId memberId = memberRepository.save(MEMBER);
+        final ProductId productChickenId = productRepository.save(CHICKEN);
+
+        final CartId cartChickenId = cartRepository.saveByMemberId(memberId, productChickenId);
+
+        // when
+        final Optional<Cart> maybeCart = cartRepository.findByMemberIdAndProductId(memberId, productChickenId);
+
+        assertThat(maybeCart).isPresent();
+        final Cart cart = maybeCart.get();
+
+        // then
+        assertThat(cart)
+                .usingRecursiveComparison()
+                .isEqualTo(new Cart(
+                        cartChickenId, memberId, productChickenId
+                ));
+    }
+
     @DisplayName("특정 회원의 장바구니 전체 상품 목록을 불러온다.")
     @Test
-    void joinProductsByMemberId() {
+    void findAllByMemberId() {
         // given
         final MemberId memberId = memberRepository.save(MEMBER);
         final ProductId productChickenId = productRepository.save(CHICKEN);
