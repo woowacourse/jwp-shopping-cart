@@ -32,7 +32,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 	@Override
 	public boolean supportsParameter(final MethodParameter parameter) {
 		boolean isLoginUserAnnotation = parameter.getParameterAnnotation(LoginUser.class) != null;
-		boolean isUserClass = AuthInfo.class.equals(parameter.getParameterType());
+		boolean isUserClass = AuthUser.class.equals(parameter.getParameterType());
 
 		return isLoginUserAnnotation && isUserClass;
 	}
@@ -55,6 +55,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 	private static User validateUser(final AuthInfo authInfo, final Optional<User> optionalUser) {
 		final User user = optionalUser
 			.orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+
 		if (!Objects.equals(user.getPassword(), authInfo.getPassword())) {
 			throw new IllegalArgumentException("올바른 패스워드가 아닙니다.");
 		}

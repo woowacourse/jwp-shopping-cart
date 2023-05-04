@@ -4,9 +4,12 @@ import cart.domain.user.User;
 
 public class AuthUser {
 
-	private final Long id;
-	private final String email;
-	private final String password;
+	private Long id;
+	private String email;
+	private String password;
+
+	public AuthUser() {
+	}
 
 	public AuthUser(final User user) {
 		this(user.getId(), user.getEmail(), user.getPassword());

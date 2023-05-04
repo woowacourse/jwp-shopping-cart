@@ -33,15 +33,7 @@ public class ViewController {
 	@GetMapping("/settings")
 	public String displaySettings(final Model model) {
 		model.addAttribute("members", userService.findAll());
-
 		return "settings";
-	}
-
-	@GetMapping("/cart")
-	public String displayCart(final Model model) {
-		// model.addAttribute("cartItem", cartService.findAll());
-
-		return "cart";
 	}
 
 }
