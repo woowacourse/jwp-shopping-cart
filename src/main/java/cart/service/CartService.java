@@ -89,7 +89,10 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public void addProduct(final Long memberId, final Long productId) {
+    public void addProductToCart(final Long memberId, final Long productId) {
+        if (cartDao.hasSameProduct(memberId, productId)) {
+            throw new IllegalArgumentException("카트에 이미 존재하는 상품입니다.");
+        }
         final CartEntity cartEntity = new CartEntity.Builder()
                 .memberId(memberId)
                 .productId(productId)

@@ -3,6 +3,7 @@ package cart.dao;
 import cart.dao.entity.CartEntity;
 import cart.dao.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +14,8 @@ import static cart.dao.ObjectMapper.getProductRowMapper;
 @Repository
 public class CartDao {
 
+    private static final boolean DOES_NOT_HAVE_SAME_PRODUCTS = false;
+    private static final boolean HAS_SAME_PRODUCTS = true;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -37,5 +40,15 @@ public class CartDao {
     public void deleteProduct(final CartEntity cartEntity) {
         final String query = "DELETE FROM CART WHERE member_id = ? AND product_id = ?";
         jdbcTemplate.update(query, cartEntity.getMemberId(), cartEntity.getProductId());
+    }
+
+    public boolean hasSameProduct(final Long memberId, final Long productId) {
+        try {
+            final String query = "SELECT * FROM CART WHERE member_id = ? AND product_id = ?";
+            jdbcTemplate.queryForObject(query, Long.class, memberId, productId);
+            return HAS_SAME_PRODUCTS;
+        } catch (EmptyResultDataAccessException exception) {
+            return DOES_NOT_HAVE_SAME_PRODUCTS;
+        }
     }
 }

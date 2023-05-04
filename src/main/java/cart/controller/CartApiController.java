@@ -36,7 +36,7 @@ public class CartApiController {
     public ResponseEntity<Void> addProductToCart(@PathVariable final Long id, final HttpServletRequest request) {
         final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
         final Long memberId = memberService.findIdByAuthInfo(authInfo);
-        cartService.addProduct(memberId, id);
+        cartService.addProductToCart(memberId, id);
         return ResponseEntity.ok().build();
     }
 
