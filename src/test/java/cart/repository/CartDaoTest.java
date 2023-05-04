@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -15,6 +16,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
@@ -80,5 +82,33 @@ class CartDaoTest {
                 () -> assertThat(productsInCart.get(0).getImage()).isEqualTo("pooh.jpg"),
                 () -> assertThat(productsInCart.get(0).getPrice()).isEqualTo(1000000)
         );
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 삭제 성공")
+    @Sql({"/product_dummy_data.sql", "/cart_dummy_data.sql"})
+    void delete_success() {
+        // given
+        final int cartId = 1;
+
+        // when
+        cartDao.delete(cartId);
+
+        // then
+        String sql = "select * from cart where id = ?";
+        assertThatThrownBy(() -> jdbcTemplate.queryForObject(sql, Integer.class, cartId))
+                .isInstanceOf(DataAccessException.class);
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 삭제 실패 - 존재하지 않는 장바구니 상품 id")
+    @Sql({"/product_dummy_data.sql", "/cart_dummy_data.sql"})
+    void delete_fail() {
+        // given
+        final int invalidId = 0;
+
+        // expect
+        assertThatThrownBy(() -> cartDao.delete(invalidId))
+                .isInstanceOf(DataAccessException.class);
     }
 }

@@ -1,7 +1,8 @@
 package cart.repository;
 
-import cart.entity.CartEntity;
 import cart.dto.response.CartItemResponseDto;
+import cart.entity.CartEntity;
+import cart.exception.CartItemNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -42,5 +43,17 @@ public class CartDao {
                 " join product on cart.product_id = product.id" +
                 " where cart.user_id = ?";
         return jdbcTemplate.query(sql, cartItemRowMapper, userId);
+    }
+
+    public void delete(final int id) {
+        final String sql = "delete from cart where id = ?";
+        final int changeRowCount = jdbcTemplate.update(sql, id);
+        validCartItemExist(changeRowCount);
+    }
+
+    private void validCartItemExist(final int changedRowCount) {
+        if (changedRowCount == 0) {
+            throw new CartItemNotFoundException();
+        }
     }
 }
