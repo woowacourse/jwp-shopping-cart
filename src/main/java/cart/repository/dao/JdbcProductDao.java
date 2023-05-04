@@ -43,6 +43,12 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
+    public ProductEntity findById(final Long id) {
+        final String sql = "SELECT product_id, name, image_url, price FROM product WHERE product_id = ?";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
+    }
+
+    @Override
     public List<ProductEntity> findAll() {
         final String sql = "SELECT product_id, name, image_url, price FROM product";
         return jdbcTemplate.query(sql, actorRowMapper);
