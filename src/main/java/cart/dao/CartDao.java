@@ -58,7 +58,7 @@ public class CartDao {
 
     public boolean hasSameProduct(final Long memberId, final Long productId) {
         try {
-            final String query = "SELECT * FROM CART WHERE member_id = ? AND product_id = ?";
+            final String query = "SELECT id FROM CART WHERE member_id = ? AND product_id = ?";
             jdbcTemplate.queryForObject(query, Long.class, memberId, productId);
             return HAS_SAME_PRODUCTS;
         } catch (EmptyResultDataAccessException exception) {

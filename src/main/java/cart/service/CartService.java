@@ -101,6 +101,9 @@ public class CartService {
     }
 
     public void deleteProductFromCart(final Long memberId, final Long productId) {
+        if (!cartDao.hasSameProduct(memberId, productId)) {
+            throw new IllegalArgumentException("카트에 존재하지 않는 상품입니다.");
+        }
         final CartEntity cartEntity = new CartEntity.Builder()
                 .memberId(memberId)
                 .productId(productId)

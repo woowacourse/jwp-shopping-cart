@@ -1,40 +1,34 @@
 package cart.controller;
 
-import cart.dto.request.RequestCreateProductDto;
-import cart.dto.request.RequestUpdateProductDto;
+import cart.dao.CartDao;
+import cart.dao.ProductDao;
+import cart.dao.entity.CartEntity;
+import cart.dao.entity.ProductEntity;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.NullSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Objects;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class CartApiControllerTest {
+
+    private static final String EMAIL = "a@a.com";
+    private static final String PASSWORD = "password1";
+
 
     @LocalServerPort
     int port;
@@ -42,174 +36,111 @@ class CartApiControllerTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private CartDao cartDao;
+
+    @Autowired
+    private ProductDao productDao;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
     }
 
     @Test
-    void 상품을_등록할_수_있다() {
-        given()
-                .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", 10_000, "치킨 사진"))
-                .when()
-                .post("/product")
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.CREATED.value());
-    }
+    void 카트에_담긴_상품을_조회할_수_있다() {
+        // given
+        Long productId = insertProduct("치킨", 10_000, "치킨 이미지");
+        insertProductToCart(1L, productId);
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    void 빈_상품을_등록할_수_없다(final String name) {
-        given()
-                .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto(name, 10_000, "치킨 사진"))
-                .when()
-                .post("/product")
+        // when
+        ExtractableResponse<Response> response = given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when().get("/carts")
                 .then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(containsString("상품 이름이 입력되지 않았습니다."));
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        // then
+        assertThat(response.body().asString()).contains("치킨", "치킨 이미지", "10000");
     }
 
     @Test
-    void 이름의_최대_길이를_넘긴_상품은_등록할_수_없다() {
-        final String overName = "가비".repeat(50);
+    void 카트에_상품을_추가할_수_있다() {
+        // given
+        Long productId = insertProduct("피자", 100000, "피자 사진");
 
-        given()
-                .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto(overName, 10_000, "치킨 사진"))
-                .when()
-                .post("/product")
+        RestAssured
+                .given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when().put("/cart/" + productId)
                 .then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(equalTo("상품 이름은 50자를 넘길 수 없습니다."));
-    }
-
-    @ParameterizedTest
-    @NullSource
-    void 가격이_빈_상품을_등록할_수_없다(final Integer price) {
-        given()
-                .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
-                .when()
-                .post("/product")
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(containsString("가격이 입력되지 않았습니다."));
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {Integer.MAX_VALUE, Integer.MIN_VALUE})
-    void 유효한_가격_범위를_넘긴_상품은_등록할_수_없다(final Integer price) {
-        given()
-                .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
-                .when()
-                .post("/product")
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(equalTo("가격은 0 미만이거나, 1000000000 초과일 수 없습니다."));
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    void 이미지_주소가_없는_상품을_등록할_수_없다(final String image) {
-        given()
-                .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", 1_000, image))
-                .when()
-                .post("/product")
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(containsString("상품 이미지 주소가 입력되지 않았습니다."));
-    }
-
-    @Test
-    void 유효한_이미지_주소_길이를_넘긴_상품은_등록할_수_없다() {
-        final String image = "후추".repeat(2001);
-
-        given()
-                .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", 1_000, image))
-                .when()
-                .post("/product")
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(equalTo("이미지 주소는 2000자를 넘길 수 없습니다."));
-    }
-
-    @Test
-    void 상품을_수정할_수_있다() {
-        final Long insertedId = insertProduct("치킨", 1_000, "치킨 사진");
-
-        given()
-                .log().all().contentType(ContentType.JSON)
-                .body(new RequestUpdateProductDto("피자", 10_000, "피자 사진"))
-                .when()
-                .put("/product/" + insertedId)
-                .then()
-                .log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
-    private Long insertProduct(final String name, final Integer price, final String image) {
-        final String sql = "INSERT INTO PRODUCT (name, price, image) VALUES (?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(final Connection con) throws SQLException {
-                final PreparedStatement preparedStatement = con.prepareStatement(
-                        sql, new String[]{"ID"}
-                );
-                preparedStatement.setString(1, name);
-                preparedStatement.setInt(2, price);
-                preparedStatement.setString(3, image);
-                return preparedStatement;
-            }
-        }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey().longValue());
-    }
-
     @Test
-    void 존재하지_않는_id의_상품은_수정할_수_없다() {
-        given()
-                .log().all().contentType(ContentType.JSON)
-                .body(new RequestUpdateProductDto("치킨", 10_000, "치킨 사진"))
-                .when()
-                .put("/product/" + 0L)
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+    void 중복된_상품은_추가할_수_없다() {
+        // given
+        Long productId = insertProduct("피자", 100000, "피자 사진");
+        insertProductToCart(1, productId);
+
+        // when
+        RestAssured
+                .given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when().put("/cart/" + productId)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract();
     }
 
     @Test
     void 상품을_삭제할_수_있다() {
-        final Long insertedId = insertProduct("치킨", 1_000, "치킨 사진");
+        // given
+        Long productId = insertProduct("피자", 100000, "피자 사진");
+        insertProductToCart(1, productId);
 
-        given()
-                .log().all()
-                .when()
-                .delete("/product/" + insertedId)
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.OK.value());
+        // when
+        RestAssured
+                .given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when().delete("/cart/" + productId)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        assertThat(cartDao.hasSameProduct(1L, productId)).isFalse();
     }
 
     @Test
-    void 존재하지_않는_id의_상품은_삭제할_수_없다() {
-        given()
-                .log().all()
-                .when()
-                .delete("/product/" + 0)
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+    void 카트에_추가되지_않은_상품은_삭제할_수_없다() {
+        // given
+        Long productId = 0L;
+
+        // when
+        RestAssured
+                .given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when().delete("/cart/" + productId)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract();
+    }
+
+    private Long insertProductToCart(long memberId, long productId) {
+        final CartEntity cartEntity = new CartEntity.Builder()
+                .memberId(memberId)
+                .productId(productId)
+                .build();
+        return cartDao.insert(cartEntity);
+    }
+
+    private Long insertProduct(String name, int price, String image) {
+        final ProductEntity productEntity = new ProductEntity.Builder()
+                .name(name)
+                .price(price)
+                .image(image)
+                .build();
+        return productDao.insert(productEntity);
     }
 }
