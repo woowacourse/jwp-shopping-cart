@@ -3,6 +3,7 @@ package cart.domain.cart;
 import cart.domain.product.Product;
 import cart.domain.user.User;
 import java.util.List;
+import java.util.Objects;
 
 public class Cart {
 
@@ -28,6 +29,11 @@ public class Cart {
         cartProducts.add(product);
     }
 
+    public void deleteProduct(final Long cartProductId) {
+        cartProducts.delete(cartProductId);
+    }
+
+
     public CartId getCartId() {
         return cartId;
     }
@@ -40,7 +46,20 @@ public class Cart {
         return cartProducts;
     }
 
-    public void deleteProduct(final Long cartProductId) {
-        cartProducts.delete(cartProductId);
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Cart cart = (Cart) o;
+        return cartId.equals(cart.cartId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cartId);
     }
 }

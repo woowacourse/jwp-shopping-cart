@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
 public class H2CartRepository implements CartRepository {
 
@@ -43,7 +42,6 @@ public class H2CartRepository implements CartRepository {
         saveCartProducts(cart, cartEntity);
         return findCart(cart.getUser(), cartEntity);
     }
-
 
     private void saveCartProducts(final Cart cart, final CartEntity cartEntity) {
         cartProductDao.deleteAllByCartId(cartEntity.getCartId());
