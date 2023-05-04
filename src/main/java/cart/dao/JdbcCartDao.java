@@ -52,4 +52,11 @@ public class JdbcCartDao implements CartDao {
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, putCart.getMemberId(), putCart.getProductId());
     }
+
+    @Override
+    public int delete(final Long itemId) {
+        String sql = "delete from cart where item_id = ?";
+
+        return jdbcTemplate.update(sql, itemId);
+    }
 }

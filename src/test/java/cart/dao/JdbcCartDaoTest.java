@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.Cart;
+import cart.entity.Item;
 import cart.entity.PutCart;
 import cart.exception.ServiceIllegalArgumentException;
 import org.assertj.core.api.Assertions;
@@ -82,5 +83,25 @@ class JdbcCartDaoTest {
     @Test
     void findAllByMemberId_false() {
         assertThat(cartDao.isCartExists(PUT_CART3)).isFalse();
+    }
+
+    @DisplayName("카드에 있는 상품 삭제 할 수 있다.")
+    @Test
+    void delete_success() {
+        int deleteRow = cartDao.delete(2L);
+
+        List<Cart> carts = cartDao.findAllByMemberId(1L);
+
+        assertAll(
+                () -> assertThat(deleteRow).isEqualTo(1),
+                () -> assertThat(carts).hasSize(1)
+        );
+    }
+
+    @DisplayName("카드에 없는 상품 삭제하면 0이 반환된다.")
+    @Test
+    void delete_fail() {
+
+        assertThat(cartDao.delete(3L)).isZero();
     }
 }

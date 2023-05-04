@@ -12,4 +12,6 @@ public interface CartDao {
     List<Cart> findAllByMemberId(Long id);
 
     boolean isCartExists(PutCart putCart);
+
+    int delete(Long itemId);
 }
