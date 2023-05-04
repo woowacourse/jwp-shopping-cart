@@ -33,7 +33,7 @@ public class CartService {
                 () -> new IllegalArgumentException("존재하지 않는 상품입니다.")
         );
 
-        Cart cart = new Cart(member.getId(), productEntity.getId());
+        Cart cart = new Cart(productEntity.getId(), member.getId());
         return cartDao.addProduct(cart);
     }
 
