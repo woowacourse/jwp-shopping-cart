@@ -46,6 +46,13 @@ public class Product {
 
         Product product = (Product)o;
 
+        if (Objects.isNull(id) && Objects.isNull(product.id)) {
+            return super.equals(product);
+        }
+        if (Objects.isNull(id) || Objects.isNull(product.id)) {
+            // 한 쪽이 id가 없다면, 같은 데이터일 수 없다. 현 상황에 한정해 상품들의 저장이 한 번에 이뤄지기 때문이다.
+            return false;
+        }
         return Objects.equals(id, product.id);
     }
 
