@@ -1,6 +1,5 @@
 package cart.auth;
 
-import cart.dto.AuthInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
