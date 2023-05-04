@@ -46,4 +46,24 @@ class JwpCartControllerTest {
                 .andExpect(view().name("index"))
                 .andExpect(model().attribute("products", expectResponses));
     }
+
+    @Test
+    @DisplayName("관리자 도구 페이지를 조회한다.")
+    void admin() throws Exception {
+        List<ProductDto> expectDtos = List.of(
+                ProductDto.fromEntity(new ProductEntity(1L, "product1", "p1p1.com", 1000)),
+                ProductDto.fromEntity(new ProductEntity(2L, "product2", "p2p2.com", 2000))
+        );
+
+        List<ProductResponseDto> expectResponses = expectDtos.stream()
+                .map(ProductResponseDto::fromDto)
+                .collect(toList());
+
+        when(productService.findAll()).thenReturn(expectDtos);
+
+        mockMvc.perform(get("/admin"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin"))
+                .andExpect(model().attribute("products", expectResponses));
+    }
 }
