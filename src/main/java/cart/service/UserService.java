@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.JdbcUserDao;
+import cart.dao.UserDao;
 import cart.dao.entity.User;
 import cart.dto.AuthUser;
 import cart.dto.UserResponse;
@@ -15,9 +15,9 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class UserService {
 
-    private final JdbcUserDao userDao;
+    private final UserDao userDao;
 
-    public UserService(final JdbcUserDao userDao) {
+    public UserService(final UserDao userDao) {
         this.userDao = userDao;
     }
 

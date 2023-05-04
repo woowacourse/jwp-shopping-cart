@@ -11,13 +11,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
-class JdbcUserDaoTest extends JdbcSaveUser {
+class UserDaoTest extends JdbcSaveUser {
 
-    private JdbcUserDao userDao;
+    private UserDao userDao;
 
     @BeforeEach
     void init() {
-        userDao = new JdbcUserDao(jdbcTemplate);
+        userDao = new UserDao(jdbcTemplate);
     }
 
     @Test

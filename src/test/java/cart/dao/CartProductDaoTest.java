@@ -15,19 +15,19 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcMySqlDialectTest
 @SuppressWarnings("NonAsciiCharacters")
-class JdbcCartProductDaoTest {
+class CartProductDaoTest {
 
-    private JdbcCartProductDao jdbcCartProductDao;
+    private CartProductDao cartProductDao;
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    private JdbcCartDao cartDao;
+    private CartDao cartDao;
 
     @BeforeEach
     void init() {
-        jdbcCartProductDao = new JdbcCartProductDao(jdbcTemplate);
-        cartDao = new JdbcCartDao(jdbcTemplate);
+        cartProductDao = new CartProductDao(jdbcTemplate);
+        cartDao = new CartDao(jdbcTemplate);
     }
 
     @Test
@@ -37,8 +37,8 @@ class JdbcCartProductDaoTest {
         final long firstUserId = 1L;
         final long secondUserId = 2L;
 
-        final List<CartProductResultMap> firstUserCart = jdbcCartProductDao.findAllByUserId(firstUserId);
-        final List<CartProductResultMap> secondUserCart = jdbcCartProductDao.findAllByUserId(secondUserId);
+        final List<CartProductResultMap> firstUserCart = cartProductDao.findAllByUserId(firstUserId);
+        final List<CartProductResultMap> secondUserCart = cartProductDao.findAllByUserId(secondUserId);
 
         // then
         assertAll(

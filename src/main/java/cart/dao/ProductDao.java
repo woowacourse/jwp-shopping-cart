@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class JdbcProductDao {
+public class ProductDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public JdbcProductDao(NamedParameterJdbcTemplate jdbcTemplate) {
+    public ProductDao(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

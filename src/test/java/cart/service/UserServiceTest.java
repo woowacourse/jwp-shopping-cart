@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.JdbcSaveUser;
-import cart.dao.JdbcUserDao;
+import cart.dao.UserDao;
 import cart.dao.entity.User;
 import cart.dto.UserResponse;
 import cart.dto.UserResponses;
@@ -22,11 +22,11 @@ class UserServiceTest extends JdbcSaveUser {
 
     private UserService userService;
 
-    private JdbcUserDao userDao;
+    private UserDao userDao;
 
     @BeforeEach
     void init() {
-        userDao = new JdbcUserDao(jdbcTemplate);
+        userDao = new UserDao(jdbcTemplate);
         userService = new UserService(userDao);
     }
 

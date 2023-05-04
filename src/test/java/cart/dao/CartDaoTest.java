@@ -16,16 +16,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcMySqlDialectTest
 @SuppressWarnings("NonAsciiCharacters")
-class JdbcCartDaoTest {
+class CartDaoTest {
 
-    private JdbcCartDao cartDao;
+    private CartDao cartDao;
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void init() {
-        cartDao = new JdbcCartDao(jdbcTemplate);
+        cartDao = new CartDao(jdbcTemplate);
     }
 
     @Test

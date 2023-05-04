@@ -1,7 +1,7 @@
 package cart.respository;
 
-import cart.dao.JdbcCartDao;
-import cart.dao.JdbcProductDao;
+import cart.dao.CartDao;
+import cart.dao.ProductDao;
 import cart.dao.entity.Product;
 import org.springframework.stereotype.Repository;
 
@@ -13,10 +13,10 @@ public class ProductRepository {
 
     private static final String NO_PRODUCT_EXCEPTION_MESSAGE = "상품을 찾을 수 없습니다.";
 
-    private final JdbcProductDao productDao;
-    private final JdbcCartDao cartDao;
+    private final ProductDao productDao;
+    private final CartDao cartDao;
 
-    public ProductRepository(JdbcProductDao productDao, JdbcCartDao cartDao) {
+    public ProductRepository(ProductDao productDao, CartDao cartDao) {
         this.productDao = productDao;
         this.cartDao = cartDao;
     }

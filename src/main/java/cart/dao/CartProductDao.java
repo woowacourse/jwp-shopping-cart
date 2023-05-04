@@ -10,11 +10,11 @@ import java.util.List;
 import static java.util.Collections.singletonMap;
 
 @Repository
-public class JdbcCartProductDao {
+public class CartProductDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public JdbcCartProductDao(final NamedParameterJdbcTemplate jdbcTemplate) {
+    public CartProductDao(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

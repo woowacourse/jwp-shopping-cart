@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class JdbcUserDao {
+public class UserDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public JdbcUserDao(final NamedParameterJdbcTemplate jdbcTemplate) {
+    public UserDao(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

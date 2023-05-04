@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.JdbcCartProductDao;
+import cart.dao.CartProductDao;
 import cart.dao.dto.CartProductResultMap;
 import cart.dto.CartResponse;
 import cart.dto.CartResponses;
@@ -23,14 +23,14 @@ class CartMockServiceTest {
     private CartService cartService;
 
     @Mock
-    private JdbcCartProductDao jdbcCartProductDao;
+    private CartProductDao cartProductDao;
 
     @Test
     void 사용자의_id가_주어지면_해당_사용자의_장바구니_목록을_전체_조회한다() {
         // given
         final Long userId = 1L;
         final CartProductResultMap result = new CartProductResultMap(1L, 1L, "치킨", 10000, "imgUrl");
-        when(jdbcCartProductDao.findAllByUserId(userId)).thenReturn(List.of(result));
+        when(cartProductDao.findAllByUserId(userId)).thenReturn(List.of(result));
 
         // when
         final CartResponses cartResponses = cartService.findAllByUserId(userId);

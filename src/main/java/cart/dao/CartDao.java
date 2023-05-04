@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.util.Collections;
 
 @Repository
-public class JdbcCartDao {
+public class CartDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public JdbcCartDao(final NamedParameterJdbcTemplate jdbcTemplate) {
+    public CartDao(final NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

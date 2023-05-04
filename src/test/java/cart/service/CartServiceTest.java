@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.JdbcMySqlDialectTest;
-import cart.dao.JdbcCartDao;
-import cart.dao.JdbcCartProductDao;
+import cart.dao.CartDao;
+import cart.dao.CartProductDao;
 import cart.dto.CartSaveRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -20,17 +20,17 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CartServiceTest {
 
     private CartService cartService;
-    private JdbcCartProductDao jdbcCartProductDao;
-    private JdbcCartDao cartDao;
+    private CartProductDao cartProductDao;
+    private CartDao cartDao;
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void init() {
-        cartDao = new JdbcCartDao(jdbcTemplate);
-        jdbcCartProductDao = new JdbcCartProductDao(jdbcTemplate);
-        cartService = new CartService(cartDao, jdbcCartProductDao, new CartMapper());
+        cartDao = new CartDao(jdbcTemplate);
+        cartProductDao = new CartProductDao(jdbcTemplate);
+        cartService = new CartService(cartDao, cartProductDao, new CartMapper());
     }
 
     @Test

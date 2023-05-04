@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.dao.JdbcCartDao;
-import cart.dao.JdbcCartProductDao;
+import cart.dao.CartDao;
+import cart.dao.CartProductDao;
 import cart.dao.dto.CartProductResultMap;
 import cart.dto.CartResponse;
 import cart.dto.CartResponses;
@@ -16,11 +16,11 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class CartService {
 
-    private final JdbcCartDao cartDao;
-    private final JdbcCartProductDao cartProductDao;
+    private final CartDao cartDao;
+    private final CartProductDao cartProductDao;
     private final CartMapper cartMapper;
 
-    public CartService(final JdbcCartDao cartDao, final JdbcCartProductDao cartProductDao, final CartMapper cartMapper) {
+    public CartService(final CartDao cartDao, final CartProductDao cartProductDao, final CartMapper cartMapper) {
         this.cartDao = cartDao;
         this.cartProductDao = cartProductDao;
         this.cartMapper = cartMapper;

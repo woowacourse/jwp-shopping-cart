@@ -17,16 +17,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcMySqlDialectTest
-class JdbcProductDaoTest {
+class ProductDaoTest {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    private JdbcProductDao productDao;
+    private ProductDao productDao;
 
     @BeforeEach
     void setup() {
-        productDao = new JdbcProductDao(jdbcTemplate);
+        productDao = new ProductDao(jdbcTemplate);
     }
 
     @Test
