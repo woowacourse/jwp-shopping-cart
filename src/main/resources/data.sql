@@ -1,9 +1,2 @@
-DROP TABLE IF EXISTS PRODUCT;
-
-CREATE TABLE PRODUCT (
-    id          INT           NOT NULL AUTO_INCREMENT,
-    `name`      VARCHAR(50)   NOT NULL,
-    image       VARCHAR(255)   NOT NULL,
-    price       INT           NOT NULL,
-    PRIMARY KEY (id)
-);
+INSERT INTO MEMBERS(email, password) VALUES('roy@gmail.com', '1234');
+INSERT INTO MEMBERS(email, password) VALUES('hoy@gmail.com', '4567');
