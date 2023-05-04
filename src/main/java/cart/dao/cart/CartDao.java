@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public interface CartDao {
 
-    ItemEntity save(String memberEmail, ItemEntity item);
+    Long save(String memberEmail, Long itemId);
 
     Optional<Map<ItemEntity, Long>> findAll(String memberEmail);
 
-    void delete(String memberEmail, ItemEntity item);
+    void delete(String memberEmail, Long itemId);
 }

@@ -9,6 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ItemEntity {
 
+    public static ItemEntity empty = new ItemEntity();
+
     private Long id;
     private String name;
     private String imageUrl;
