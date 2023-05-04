@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -44,27 +45,27 @@ class ProductControllerTest {
         String imgUrl = "http://asdf.asdf";
         int price = 3000;
 
-        ProductRequestDto productRequestDto = new ProductRequestDto(name, imgUrl, price);
+        ProductRequestDto requestDto = new ProductRequestDto(name, imgUrl, price);
         ProductDto expectDto = ProductDto.fromEntity(new ProductEntity(1L, name, imgUrl, price));
 
         when(productService.add(any(ProductRequestDto.class))).thenReturn(expectDto);
 
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productRequestDto)))
+                        .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value(name))
-                .andExpect(jsonPath("$.imgUrl").value(imgUrl))
-                .andExpect(jsonPath("$.price").value(price));
+                .andExpect(jsonPath("$.name").value(expectDto.getName()))
+                .andExpect(jsonPath("$.imgUrl").value(expectDto.getImgUrl()))
+                .andExpect(jsonPath("$.price").value(expectDto.getPrice()));
     }
 
     @ParameterizedTest
     @MethodSource("makeInvalidDto")
     @DisplayName("상품을 추가한다. - 잘못된 입력을 검증한다.")
-    void addProductInvalidInput(ProductRequestDto productRequestDto) throws Exception {
+    void addProductInvalidInput(ProductRequestDto requestDto) throws Exception {
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productRequestDto)))
+                        .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -73,57 +74,45 @@ class ProductControllerTest {
     void updateProduct() throws Exception {
         String name = "리오";
         String imgUrl = "http://asdf.asdf";
-        int price = 3000;
         int modifiedPrice = 1000;
 
-        ProductRequestDto productRequestDto = new ProductRequestDto(name, imgUrl, price);
-        ProductRequestDto modifiedProductRequestDto = new ProductRequestDto(name, imgUrl, modifiedPrice);
+        ProductRequestDto modifiedRequestDto = new ProductRequestDto(name, imgUrl, modifiedPrice);
         ProductDto expectDto = ProductDto.fromEntity(new ProductEntity(1L, name, imgUrl, modifiedPrice));
 
-        when(productService.updateById(any(ProductRequestDto.class), any(Long.class))).thenReturn(expectDto);
-
-        mockMvc.perform(post("/products")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productRequestDto)));
+        when(productService.updateById(any(ProductRequestDto.class), anyLong())).thenReturn(expectDto);
 
         mockMvc.perform(put("/products/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(modifiedProductRequestDto)))
+                        .content(objectMapper.writeValueAsString(modifiedRequestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(name))
-                .andExpect(jsonPath("$.imgUrl").value(imgUrl))
-                .andExpect(jsonPath("$.price").value(modifiedPrice));
+                .andExpect(jsonPath("$.name").value(expectDto.getName()))
+                .andExpect(jsonPath("$.imgUrl").value(expectDto.getImgUrl()))
+                .andExpect(jsonPath("$.price").value(expectDto.getPrice()));
     }
 
     @ParameterizedTest
     @MethodSource("makeInvalidDto")
     @DisplayName("상품 정보를 수정한다. - 잘못된 입력을 검증한다.")
-    void updateProductInvalidInput(ProductRequestDto modifiedProductRequestDto) throws Exception {
+    void updateProductInvalidInput(ProductRequestDto modifiedRequestDto) throws Exception {
         String name = "리오";
         String imgUrl = "http://asdf.asdf";
-        int price = 3000;
         int modifiedPrice = 1000;
 
-        ProductRequestDto productRequestDto = new ProductRequestDto(name, imgUrl, price);
         ProductDto expectDto = ProductDto.fromEntity(new ProductEntity(1L, name, imgUrl, modifiedPrice));
 
-        when(productService.updateById(any(ProductRequestDto.class), any(Long.class))).thenReturn(expectDto);
+        when(productService.updateById(any(ProductRequestDto.class), anyLong())).thenReturn(expectDto);
 
-        mockMvc.perform(post("/products")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productRequestDto)));
-
-        mockMvc.perform(put("/products/{id}", any(Long.class))
+        mockMvc.perform(put("/products/{id}", anyLong())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(modifiedProductRequestDto)))
+                        .content(objectMapper.writeValueAsString(modifiedRequestDto)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("상품을 삭제한다.")
     void deleteProduct() throws Exception {
-        doNothing().when(productService).deleteById(any(Long.class));
-        mockMvc.perform(delete("/products/{id}", any(Long.class)))
+        doNothing().when(productService).deleteById(anyLong());
+        mockMvc.perform(delete("/products/{id}", anyLong()))
                 .andExpect(status().isOk());
     }
 

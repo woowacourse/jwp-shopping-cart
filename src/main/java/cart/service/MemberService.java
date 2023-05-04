@@ -51,6 +51,7 @@ public class MemberService {
         return MemberDto.fromEntity(foundEntity);
     }
 
+    @Transactional(readOnly = true)
     public MemberDto findByEmail(String email) {
         Optional<MemberEntity> nullableEntity = repository.findByEmail(email);
         if (nullableEntity.isEmpty()) {

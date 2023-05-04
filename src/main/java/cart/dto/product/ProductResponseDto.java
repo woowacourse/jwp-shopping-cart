@@ -15,8 +15,8 @@ public class ProductResponseDto {
         this.price = price;
     }
 
-    public static ProductResponseDto of(String name, String imgUrl, int price) {
-        return new ProductResponseDto(null, name, imgUrl, price);
+    public static ProductResponseDto of(Long id, String name, String imgUrl, int price) {
+        return new ProductResponseDto(id, name, imgUrl, price);
     }
 
     public static ProductResponseDto fromDto(ProductDto productDto) {
@@ -40,6 +40,11 @@ public class ProductResponseDto {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(id, name, imgUrl, price);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -49,10 +54,5 @@ public class ProductResponseDto {
         }
         ProductResponseDto that = (ProductResponseDto) o;
         return price == that.price && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(imgUrl, that.imgUrl);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, imgUrl, price);
     }
 }
