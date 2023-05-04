@@ -38,7 +38,7 @@ class CartServiceTest {
         ProductRequest productRequest = new ProductRequest("jena", 90, "http://naver.com");
 
         //when
-        cartService.create(productRequest);
+        cartService.createProduct(productRequest);
 
         //then
         verify(productDao, times(1)).save(any(ProductEntity.class));
@@ -67,7 +67,7 @@ class CartServiceTest {
         ProductRequest productRequest = new ProductRequest("bingbong", 100, "http://naver.com");
 
         //when
-        cartService.update(productId, productRequest);
+        cartService.updateProduct(productId, productRequest);
 
         //then
         verify(productDao, times(1)).update(any(ProductEntity.class));
@@ -79,7 +79,7 @@ class CartServiceTest {
         long productId = 1L;
 
         //when
-        cartService.delete(productId);
+        cartService.deleteProduct(productId);
 
         //then
         verify(productDao).deleteById(productId);
@@ -92,7 +92,7 @@ class CartServiceTest {
         doThrow(new EmptyResultDataAccessException(0)).when(productDao).deleteById(nonExistingProductId);
 
         //when
-        assertThrows(EmptyResultDataAccessException.class, () -> cartService.delete(nonExistingProductId));
+        assertThrows(EmptyResultDataAccessException.class, () -> cartService.deleteProduct(nonExistingProductId));
 
         //then
         verify(productDao).deleteById(nonExistingProductId);

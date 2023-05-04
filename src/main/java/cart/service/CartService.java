@@ -29,7 +29,7 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    public long create(final ProductRequest productRequest) {
+    public long createProduct(final ProductRequest productRequest) {
         final ProductEntity productEntity =
                 new ProductEntity(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         return productDao.save(productEntity);
@@ -42,7 +42,7 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public void update(final long id, final ProductRequest productRequest) {
+    public void updateProduct(final long id, final ProductRequest productRequest) {
         final ProductEntity productEntity =
                 new ProductEntity(id, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         if (productDao.update(productEntity) != EXPECTED_SIZE) {
@@ -50,7 +50,7 @@ public class CartService {
         }
     }
 
-    public void delete(final long id) {
+    public void deleteProduct(final long id) {
         if (productDao.deleteById(id) != EXPECTED_SIZE) {
             throw new EmptyResultDataAccessException(EXPECTED_SIZE);
         }
