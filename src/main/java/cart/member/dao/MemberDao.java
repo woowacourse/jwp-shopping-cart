@@ -10,6 +10,4 @@ public interface MemberDao {
     List<Member> findAll();
     
     Member findByEmailAndPassword(final String email, final String password);
-    
-    void deleteAll();
 }

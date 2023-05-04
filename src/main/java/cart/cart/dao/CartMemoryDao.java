@@ -69,10 +69,4 @@ public class CartMemoryDao implements CartDao {
         
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
-    
-    @Override
-    public void deleteAll() {
-        final String sql = "DELETE FROM CART";
-        namedParameterJdbcTemplate.update(sql, Collections.emptyMap());
-    }
 }

@@ -62,10 +62,4 @@ public class MemberMemoryDao implements MemberDao {
         
         return namedParameterJdbcTemplate.queryForObject(sql, params, rowMapper);
     }
-    
-    @Override
-    public void deleteAll() {
-        final String sql = "DELETE FROM MEMBER";
-        namedParameterJdbcTemplate.update(sql, Collections.emptyMap());
-    }
 }

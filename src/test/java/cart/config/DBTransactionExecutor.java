@@ -14,22 +14,17 @@ import static cart.constant.TestConstant.*;
 
 public class DBTransactionExecutor implements BeforeEachCallback, AfterEachCallback {
     private final JdbcTemplate jdbcTemplate;
-    private final CartDao cartDao;
-    private final MemberDao memberDao;
-    private final ProductDao productDao;
     
     public DBTransactionExecutor(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.cartDao = new CartMemoryDao(new NamedParameterJdbcTemplate(jdbcTemplate));
-        this.memberDao = new MemberMemoryDao(new NamedParameterJdbcTemplate(jdbcTemplate));
-        this.productDao = new ProductMemoryDao(new NamedParameterJdbcTemplate(jdbcTemplate));
     }
     
     @Override
     public void beforeEach(final ExtensionContext context) {
-        cartDao.deleteAll();
-        memberDao.deleteAll();
-        productDao.deleteAll();
+        jdbcTemplate.execute(CART_DELETE_ALL_SQL);
+        jdbcTemplate.execute(PRODUCT_DELETE_ALL_SQL);
+        jdbcTemplate.execute(MEMBER_DELETE_ALL_SQL);
+        
         jdbcTemplate.execute(CART_ID_INIT_SQL);
         jdbcTemplate.execute(PRODUCT_ID_INIT_SQL);
         jdbcTemplate.execute(MEMBER_ID_INIT_SQL);
@@ -37,9 +32,10 @@ public class DBTransactionExecutor implements BeforeEachCallback, AfterEachCallb
     
     @Override
     public void afterEach(final ExtensionContext context) {
-        cartDao.deleteAll();
-        memberDao.deleteAll();
-        productDao.deleteAll();
+        jdbcTemplate.execute(CART_DELETE_ALL_SQL);
+        jdbcTemplate.execute(PRODUCT_DELETE_ALL_SQL);
+        jdbcTemplate.execute(MEMBER_DELETE_ALL_SQL);
+        
         jdbcTemplate.execute(CART_ID_INIT_SQL);
         jdbcTemplate.execute(PRODUCT_ID_INIT_SQL);
         jdbcTemplate.execute(MEMBER_ID_INIT_SQL);

@@ -76,10 +76,4 @@ public class ProductMemoryDao implements ProductDao {
                 .addValue("id", id);
         namedParameterJdbcTemplate.update(sql, params);
     }
-    
-    @Override
-    public void deleteAll() {
-        final String sql = "DELETE FROM PRODUCT";
-        namedParameterJdbcTemplate.update(sql, Collections.emptyMap());
-    }
 }
