@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.integration;
 
 import cart.dto.RequestCreateProductDto;
 import cart.dto.RequestUpdateProductDto;
