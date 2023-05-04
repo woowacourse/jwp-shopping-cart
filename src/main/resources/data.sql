@@ -38,6 +38,6 @@ INSERT INTO MEMBER(email, password, name) VALUES ('aaa@aaa.com', 'helloSpring', 
 INSERT INTO MEMBER(email, password, name) VALUES ('bbb@bbb.com', 'helloKotlin', 'zito');
 INSERT INTO MEMBER(email, password, name) VALUES ('ccc@ccc.com', 'helloJava', 'jaemy');
 
-INSERT INTO CART(cart_id, member_id, item_id) VALUES ('1', '1', '1');
-INSERT INTO CART(cart_id, member_id, item_id) VALUES ('2', '1', '2');
-INSERT INTO CART(cart_id, member_id, item_id) VALUES ('3', '2', '1');
+INSERT INTO CART(member_id, item_id) VALUES ('1', '1');
+INSERT INTO CART(member_id, item_id) VALUES ('1', '2');
+INSERT INTO CART(member_id, item_id) VALUES ('2', '1');

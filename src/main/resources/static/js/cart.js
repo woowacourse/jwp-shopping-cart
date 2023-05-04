@@ -16,6 +16,7 @@ const addCartItem = (itemId) => {
     }).then((response) => {
         alert('장바구니에 담았습니다.');
     }).catch((error) => {
+        alert(error.response.data.message)
         console.error(error);
     });
 }
