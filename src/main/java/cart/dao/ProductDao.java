@@ -53,6 +53,9 @@ public class ProductDao {
 
     public void deleteById(long id) {
         final String sql = "DELETE FROM product WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        int deletedCount = jdbcTemplate.update(sql, id);
+        if (deletedCount == 0) {
+            throw new IllegalArgumentException("없는 id의 Product 삭제를 요청했습니다.");
+        }
     }
 }

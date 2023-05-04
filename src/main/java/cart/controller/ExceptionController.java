@@ -12,4 +12,9 @@ public class ExceptionController {
     public ResponseEntity<String> handleException(MethodArgumentNotValidException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException(IllegalArgumentException exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
+    }
 }
