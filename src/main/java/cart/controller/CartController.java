@@ -31,14 +31,14 @@ public class CartController {
         return cartService.findAllItemByAuthInfo(authorizationInformation);
     }
 
-    @GetMapping("/carts/new/{itemId}")
+    @PostMapping("/carts/new/{itemId}")
     public String addItemIntoCart(@RequestHeader(value = "Authorization") String authorization, @PathVariable Long itemId) {
         AuthorizationInformation authorizationInformation = authorizationExtractor.extract(authorization);
         cartService.putItemIntoCart(itemId, authorizationInformation);
         return "ok";
     }
 
-    @GetMapping("/carts/delete/{itemId}")
+    @PostMapping("/carts/delete/{itemId}")
     public String deleteItem(@RequestHeader(value = "Authorization") String authorization, @PathVariable Long itemId) {
         AuthorizationInformation authorizationInformation = authorizationExtractor.extract(authorization);
         cartService.deleteItemInCart(itemId, authorizationInformation);
