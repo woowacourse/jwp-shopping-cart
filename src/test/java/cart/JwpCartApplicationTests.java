@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Sql("classpath:initializeTestDb.sql")
 class JwpCartApplicationTests {
 
     public static final List<ItemResponse> EXPECTED_PRODUCTS = List.of(
@@ -70,7 +71,6 @@ class JwpCartApplicationTests {
 
     @DisplayName("GET / 요청 정상 응답")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void contextLoads() throws Exception {
 
         mockMvc.perform(get("/"))
@@ -81,7 +81,6 @@ class JwpCartApplicationTests {
 
     @DisplayName("GET /admin 요청 정상 응답")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void getRequestAdmin() throws Exception {
         mockMvc.perform(get("/admin"))
                .andExpect(model().attribute("products", EXPECTED_PRODUCTS))
@@ -91,7 +90,6 @@ class JwpCartApplicationTests {
 
     @DisplayName("POST /items 요청 정상 응답")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void postRequestItem() throws Exception {
         String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "url"));
         RestAssured.given()
@@ -106,7 +104,6 @@ class JwpCartApplicationTests {
 
     @DisplayName("GET /items 요청 정상 응답")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void getRequestItem() {
         RestAssured.given()
                    .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -119,7 +116,6 @@ class JwpCartApplicationTests {
 
     @DisplayName("PUT /items/{id} 요청 정상 응답")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void putRequestItem() throws JsonProcessingException {
         String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "url"));
         RestAssured.given()
@@ -134,7 +130,6 @@ class JwpCartApplicationTests {
 
     @DisplayName("DELETE /items/{id} 요청 정상 응답")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void deleteRequestItem() {
         RestAssured.given()
                    .when()
@@ -146,7 +141,6 @@ class JwpCartApplicationTests {
 
     @DisplayName("POST /items 요청 예외 응답")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void postRequestItemException() throws Exception {
         String content = objectMapper.writeValueAsString(new ItemRequest("", 150000, "url"));
         RestAssured.given()
@@ -161,7 +155,6 @@ class JwpCartApplicationTests {
 
     @DisplayName("PUT /items 요청 예외 응답")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void putRequestItemException() throws Exception {
         String content = objectMapper.writeValueAsString(new ItemRequest("", 150000, "url"));
         RestAssured.given()
@@ -176,7 +169,6 @@ class JwpCartApplicationTests {
 
     @DisplayName("PUT /items 요청 예외 응답")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void putRequestItemExceptionWithNotExist() throws Exception {
         String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "url"));
         RestAssured.given()
@@ -191,8 +183,7 @@ class JwpCartApplicationTests {
 
     @DisplayName("DELETE /items 요청 예외 응답")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
-    void deleteRequestItemException() throws Exception {
+    void deleteRequestItemException() {
         RestAssured.when()
                    .delete("/items/100")
                    .then()
