@@ -36,6 +36,17 @@ class JdbcProductDaoTest {
     }
 
     @Nested
+    @DisplayName("id로 상품을 조회하는 selectById 메서드 테스트")
+    class SelectByIdTest {
+
+        @DisplayName("상품 데이터를 반환하는지 확인한다")
+        @Test
+        void returnAllProductsTest() {
+            assertDoesNotThrow(() -> productDao.selectById(1L));
+        }
+    }
+
+    @Nested
     @DisplayName("상품을 등록하는 insert 메서드 테스트")
     class InsertTest {
 
