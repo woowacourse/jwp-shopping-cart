@@ -16,12 +16,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         this.authArgumentResolver = authArgumentResolver;
     }
 
-//    @Override
-//    public void addInterceptors(final InterceptorRegistry registry) {
-//        registry.addInterceptor(new UserInterceptor())
-//                .addPathPatterns(List.of("/cart"));
-//    }
-
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(authArgumentResolver);
