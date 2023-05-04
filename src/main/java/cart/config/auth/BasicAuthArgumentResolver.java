@@ -1,10 +1,9 @@
 package cart.config.auth;
 
-import cart.common.auth.AuthMember;
+import cart.common.auth.AuthInfo;
 import cart.common.auth.AuthService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -16,8 +15,6 @@ import java.util.Objects;
 public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver {
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String AUTHORIZATION_BASIC = "Basic ";
-    private static final int EMAIL = 0;
-    private static final int PASSWORD = 1;
 
     private final AuthService authService;
 
@@ -30,20 +27,19 @@ public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver 
         return parameter.hasParameterAnnotation(BasicAuth.class);
     }
 
-        @Override
-        public Object resolveArgument(
-                final MethodParameter parameter,
-                final ModelAndViewContainer mavContainer,
-                final NativeWebRequest webRequest,
-                final WebDataBinderFactory binderFactory
-        ) throws Exception {
-            final String basicToken = webRequest.getHeader(HEADER_AUTHORIZATION);
-            validate(basicToken);
+    @Override
+    public Object resolveArgument(
+            final MethodParameter parameter,
+            final ModelAndViewContainer mavContainer,
+            final NativeWebRequest webRequest,
+            final WebDataBinderFactory binderFactory
+    ) throws Exception {
+        final String basicToken = webRequest.getHeader(HEADER_AUTHORIZATION);
+        validate(basicToken);
 
-        final String token = parseBasic(basicToken);
-        final String memberInformation = decode(token);
+        final AuthInfo authInfo = new BasicAuthProvider().getAuthInfo(basicToken);
 
-        return findAuthMember(memberInformation);
+        return authService.login(authInfo.getEmail(), authInfo.getPassword());
     }
 
     private void validate(final String basicToken) {
@@ -53,21 +49,5 @@ public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver 
         if (!basicToken.startsWith(AUTHORIZATION_BASIC)) {
             throw new BasicAuthException("인증이 불가능한 토큰입니다.");
         }
-    }
-
-    private static String parseBasic(final String basicToken) {
-        return basicToken.replaceFirst(AUTHORIZATION_BASIC, "");
-    }
-
-    private static String decode(final String token) {
-        return new String(Base64Utils.decodeFromString(token));
-    }
-
-    private AuthMember findAuthMember(final String memberInformation) {
-        final String[] memberInformations = memberInformation.split(":");
-        final String email = memberInformations[EMAIL];
-        final String password = memberInformations[PASSWORD];
-
-        return authService.login(email, password);
     }
 }
