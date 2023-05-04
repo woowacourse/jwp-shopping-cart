@@ -1,8 +1,8 @@
 package cart.dto;
 
-import cart.domain.ImgUrl;
-import cart.domain.Name;
-import cart.domain.Price;
+import cart.domain.product.ImgUrl;
+import cart.domain.product.Name;
+import cart.domain.product.Price;
 import cart.entity.ProductEntity;
 
 import java.util.Objects;

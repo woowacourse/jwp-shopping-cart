@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductRequestDto;
 import cart.entity.ProductEntity;
