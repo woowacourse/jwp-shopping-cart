@@ -16,15 +16,6 @@ public class Cart {
         return new Cart(user, new CartItems(cartItems));
     }
 
-    public void addCartItem(CartItem cartItem) {
-        cartItems.add(cartItem);
-    }
-
-    public void removeCartItem(Long cartItemId) {
-        cartItems.remove(cartItemId);
-    }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
