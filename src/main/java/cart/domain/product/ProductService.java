@@ -1,7 +1,7 @@
 package cart.domain.product;
 
-import cart.exception.ErrorCode;
-import cart.exception.GlobalException;
+import cart.exception.ProductNotFoundException;
+import cart.exception.UnexpectedException;
 import cart.web.controller.product.dto.ProductRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,24 +36,24 @@ public class ProductService {
         final Product product = productRequest.toEntity();
         int updatedCount = productRepository.update(id, product);
         if (updatedCount != 1) {
-            throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
+            throw new ProductNotFoundException(id);
         }
     }
 
     public void delete(final Long id) {
         int deletedCount = productRepository.deleteById(id);
         if (deletedCount == 0) {
-            throw new GlobalException(ErrorCode.PRODUCT_NOT_FOUND);
+            throw new ProductNotFoundException(id);
         }
         if (deletedCount > 1) {
-            log.error("error = {}", "삭제 상황에서 중복된 상품이 존재합니다. DB를 확인하세요.");
-            throw new GlobalException(ErrorCode.INVALID_DELETE);
+            log.error("error = {}", "삭제 상황에서 productId가 중복된 상품이 존재합니다. DB를 확인하세요.");
+            throw new UnexpectedException();
         }
     }
 
     @Transactional(readOnly = true)
     public Product getById(final Long id) {
         final Optional<Product> productOptional = productRepository.findById(id);
-        return productOptional.orElseThrow(() -> new GlobalException(ErrorCode.PRODUCT_NOT_FOUND));
+        return productOptional.orElseThrow(() -> new ProductNotFoundException(id));
     }
 }

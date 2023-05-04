@@ -1,11 +1,14 @@
 package cart.domain.product;
 
+import cart.exception.BadRequestException;
+
 import java.util.Objects;
 
 public final class ProductName {
 
     private static final int MIN = 1;
     private static final int MAX = 25;
+    private static final String ERROR_MESSAGE = "상품 이름의 길이는 " + MIN + " ~ " + MAX + "글자여야 합니다.";
 
     private final String name;
 
@@ -16,7 +19,7 @@ public final class ProductName {
 
     private void validateName(final String name) {
         if (name.length() < MIN || name.length() > MAX) {
-            throw new IllegalArgumentException("상품 이름의 길이는 " + MIN + " ~ " + MAX + "글자여야 합니다.");
+            throw new BadRequestException(name, ERROR_MESSAGE);
         }
     }
 

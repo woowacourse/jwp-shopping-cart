@@ -1,7 +1,6 @@
 package cart.domain.product;
 
-import cart.exception.ErrorCode;
-import cart.exception.GlobalException;
+import cart.exception.CategoryNotFoundException;
 
 import java.util.Arrays;
 
@@ -12,6 +11,6 @@ public enum ProductCategory {
         return Arrays.stream(values())
                 .filter(value -> value.name().equals(category))
                 .findFirst()
-                .orElseThrow(() -> new GlobalException(ErrorCode.INVALID_CATEGORY));
+                .orElseThrow(CategoryNotFoundException::new);
     }
 }

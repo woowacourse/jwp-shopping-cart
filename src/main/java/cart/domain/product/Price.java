@@ -1,11 +1,14 @@
 package cart.domain.product;
 
+import cart.exception.BadRequestException;
+
 import java.util.Objects;
 
 public final class Price {
 
     private static final int MIN = 0;
     private static final int MAX = 10_000_000;
+    private static final String ERROR_MESSAGE = "상품 가격은 " + MIN + " ~ " + MAX + "원까지 가능합니다.";
 
     private final Integer price;
 
@@ -16,7 +19,7 @@ public final class Price {
 
     private void validatePrice(final Integer price) {
         if (price < MIN || price > MAX) {
-            throw new IllegalArgumentException("상품 가격은 " + MIN + " ~ " + MAX + "원까지 가능합니다.");
+            throw new BadRequestException(price, ERROR_MESSAGE);
         }
     }
 

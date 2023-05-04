@@ -2,8 +2,7 @@ package cart.domain.cart;
 
 import cart.domain.user.User;
 import cart.domain.user.UserRepository;
-import cart.exception.ErrorCode;
-import cart.exception.GlobalException;
+import cart.exception.UserNotFoundException;
 import cart.web.controller.user.dto.UserRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,7 @@ public class CartService {
 
     public Long add(final UserRequest userRequest, final Long productId) {
         final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getEmail());
-        final User user = userOptional.orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        final User user = userOptional.orElseThrow(() -> new UserNotFoundException(userRequest.getEmail()));
 
         return cartRepository.insert(user, productId);
     }
@@ -33,14 +32,14 @@ public class CartService {
     @Transactional(readOnly = true)
     public List<CartProduct> getCartProducts(final UserRequest userRequest) {
         final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getEmail());
-        final User user = userOptional.orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        final User user = userOptional.orElseThrow(() -> new UserNotFoundException(userRequest.getEmail()));
 
         return cartRepository.findAllByUser(user);
     }
 
     public void delete(final UserRequest userRequest, final Long cartProductId) {
         final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getEmail());
-        final User user = userOptional.orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        final User user = userOptional.orElseThrow(() -> new UserNotFoundException(userRequest.getEmail()));
 
         cartRepository.delete(user, cartProductId);
     }

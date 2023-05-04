@@ -4,6 +4,7 @@ import cart.domain.product.ProductCategory;
 import cart.domain.product.ProductService;
 import cart.web.controller.product.dto.ProductRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -72,11 +72,9 @@ class ProductRestControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorMessage",
-                        containsInAnyOrder(
-                                "상품 이름은 비어있을 수 없습니다.", "상품 가격은 비어있을 수 없습니다.", "상품 카테고리는 비어있을 수 없습니다."
-                        )
-                ));
+                .andExpect(jsonPath("$.message", Matchers.containsString("상품 이름은 비어있을 수 없습니다.")))
+                .andExpect(jsonPath("$.message", Matchers.containsString( "상품 가격은 비어있을 수 없습니다.")))
+                .andExpect(jsonPath("$.message", Matchers.containsString("상품 카테고리는 비어있을 수 없습니다.")));
     }
 
 
@@ -108,11 +106,9 @@ class ProductRestControllerTest {
                         .characterEncoding(StandardCharsets.UTF_8)
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errorMessage",
-                        containsInAnyOrder(
-                                "상품 이름은 비어있을 수 없습니다.", "상품 가격은 비어있을 수 없습니다.", "상품 카테고리는 비어있을 수 없습니다."
-                        )
-                ));
+                .andExpect(jsonPath("$.message", Matchers.containsString("상품 이름은 비어있을 수 없습니다.")))
+                .andExpect(jsonPath("$.message", Matchers.containsString( "상품 가격은 비어있을 수 없습니다.")))
+                .andExpect(jsonPath("$.message", Matchers.containsString("상품 카테고리는 비어있을 수 없습니다.")));
     }
 
     @DisplayName("상품을 정상적으로 삭제한다")

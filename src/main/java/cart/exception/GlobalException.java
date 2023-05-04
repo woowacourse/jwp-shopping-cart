@@ -2,13 +2,9 @@ package cart.exception;
 
 public class GlobalException extends RuntimeException {
 
-    private final ErrorCode errorCode;
+    private final String message;
 
-    public GlobalException(final ErrorCode errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public ErrorCode getErrorCode() {
-        return errorCode;
+    public GlobalException(final String message) {
+        this.message = message;
     }
 }
