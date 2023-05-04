@@ -3,6 +3,6 @@ INSERT INTO PRODUCTS (name, price, image) VALUES ('피자', 2000, 'https://cdn.d
 INSERT INTO PRODUCTS (name, price, image) VALUES ('떡볶이', 3000, 'https://static.wtable.co.kr/image/production/service/recipe/1661/e8987193-0529-44c8-9740-56c0352f7184.jpg?size=1024x1024');
 
 INSERT INTO MEMBERS (email, password) VALUES ('yuja@naver.com', 'yuja1234');
-INSERT INTO MEMBERS (email, password) VALUES ('mint@google.com', 'min567');
+INSERT INTO MEMBERS (email, password) VALUES ('mint@gmail.com', 'min567');
 INSERT INTO MEMBERS (email, password) VALUES ('tea@kakao.com', 'tea890');
-
+INSERT INTO MEMBERS (email, password) VALUES ('jueun@gmail.com', 'jeewoo401');
