@@ -20,6 +20,6 @@ create table cart_added_product
     user_email VARCHAR(20) NOT NULL,
     product_id BIGINT      NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_email) REFERENCES users (email) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
+    FOREIGN KEY (user_email) REFERENCES users (email) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
