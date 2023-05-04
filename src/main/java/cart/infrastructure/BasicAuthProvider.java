@@ -41,7 +41,7 @@ public class BasicAuthProvider {
         return decodeToken.split(DELIMITER);
     }
 
-    private static String trimToken(String token) {
+    private String trimToken(String token) {
         return token.substring(BASIC_HEADER.length()).strip();
     }
 
