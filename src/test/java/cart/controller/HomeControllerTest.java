@@ -1,14 +1,9 @@
 package cart.controller;
 
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -25,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 @WebMvcTest(HomeController.class)
 class HomeControllerTest {
@@ -46,27 +42,17 @@ class HomeControllerTest {
                 new Product((long) 2, "햄버거", 2000, "http://hamburger"));
         given(productService.findAll()).willReturn(products);
 
-        mockMvc.perform(get("/"))
+        MvcResult result = mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML_VALUE))
                 .andExpect(view().name("index"))
-                .andExpect(model().attribute("products", instanceOf(ProductsResponse.class)))
-                .andExpect(model().attribute("products", hasProperty("products",
-                        allOf(
-                                hasItem(
-                                        allOf(
-                                                hasProperty("name", is("피자")),
-                                                hasProperty("price", is(1000)),
-                                                hasProperty("imageUrl", is("http://pizza"))
-                                        )
-                                ),
-                                hasItem(
-                                        allOf(
-                                                hasProperty("name", is("햄버거")),
-                                                hasProperty("price", is(2000)),
-                                                hasProperty("imageUrl", is("http://hamburger"))
-                                        )
-                                )
-                        ))));
+                .andReturn();
+
+        Object response = result.getModelAndView().getModel().get("products");
+        assertThat(response)
+                .isInstanceOf(ProductsResponse.class)
+                .usingRecursiveComparison()
+                .isEqualTo(ProductsResponse.of(products));
+
     }
 }
