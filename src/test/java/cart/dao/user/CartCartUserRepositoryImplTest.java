@@ -14,13 +14,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@Import({CartUserRepositoryImpl.class, CartUserDao.class})
+@Import({CartCartUserRepositoryImpl.class, CartUserDao.class})
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @JdbcTest
-class CartUserRepositoryImplTest {
+class CartCartUserRepositoryImplTest {
 
     @Autowired
-    private CartUserRepositoryImpl cartUserRepository;
+    private CartCartUserRepositoryImpl cartUserRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -67,7 +67,7 @@ class AdminRestControllerTest {
                 .when().accept(MediaType.APPLICATION_JSON_VALUE)
                 .delete("/admin/{deletedId}", 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.NO_CONTENT.value())
                 .body("deletedId", is(1));
     }
 

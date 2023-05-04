@@ -1,19 +1,19 @@
 package cart.dao.user;
 
 import cart.domain.user.CartUser;
+import cart.domain.user.CartUserRepository;
 import cart.domain.user.UserEmail;
-import cart.domain.user.UserRepository;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CartUserRepositoryImpl implements UserRepository {
+public class CartCartUserRepositoryImpl implements CartUserRepository {
 
     private final CartUserDao cartUserDao;
 
-    public CartUserRepositoryImpl(CartUserDao cartUserDao) {
+    public CartCartUserRepositoryImpl(CartUserDao cartUserDao) {
         this.cartUserDao = cartUserDao;
     }
 

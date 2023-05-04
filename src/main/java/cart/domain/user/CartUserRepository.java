@@ -1,5 +1,5 @@
 package cart.domain.user;
 
-public interface UserRepository {
+public interface CartUserRepository {
     CartUser findByEmail(String email);
 }
