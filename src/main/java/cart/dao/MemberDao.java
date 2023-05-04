@@ -2,10 +2,12 @@ package cart.dao;
 
 import cart.domain.Member;
 import cart.domain.Product;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -55,5 +57,16 @@ public class MemberDao {
         String sql = "DELETE FROM cart WHERE member_id = ? and product_id = ?";
 
         jdbcTemplate.update(sql, memberId, productId);
+    }
+
+    public Optional<Long> findByIds(final Long memberId, final Long productId) {
+        String sql = "SELECT id FROM cart WHERE member_id = ? and product_id = ?";
+
+        try {
+            Long id = jdbcTemplate.queryForObject(sql, Long.class, memberId, productId);
+            return Optional.of(id);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 }
