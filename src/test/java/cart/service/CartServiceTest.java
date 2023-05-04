@@ -91,6 +91,6 @@ class CartServiceTest {
         // expect
         assertThatThrownBy(() -> cartService.delete(1L, MEMBER_DTO_FIXTURE))
                 .isInstanceOf(CartException.class)
-                .hasMessage("존재하지 않는 장바구니입니다.");
+                .hasMessage("존재하지 않는 제품입니다.");
     }
 }

@@ -44,7 +44,7 @@ public class CartService {
         final Member member = memberService.find(memberDto);
         final Optional<Cart> cart = cartDao.find(productId, member.getId());
         if (cart.isEmpty()) {
-            throw new CartException("존재하지 않는 장바구니입니다.");
+            throw new CartException("존재하지 않는 제품입니다.");
         }
         return cartDao.delete(cart.get());
     }
