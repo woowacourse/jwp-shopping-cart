@@ -46,9 +46,12 @@ public class H2CartItemRepository implements CartItemRepository {
     }
 
     @Override
-    public void remove(Integer cartItemId) {
+    public CartItem remove(Integer cartItemId) {
+        final String findSql = "SELECT * FROM CART WHERE id = (?)";
         final String sql = "DELETE FROM CART WHERE id = (?)";
+        CartItem deleted = jdbcTemplate.queryForObject(findSql, cartItemRowMapper, cartItemId);
         jdbcTemplate.update(sql, cartItemId);
+        return deleted;
     }
 
     @Override
