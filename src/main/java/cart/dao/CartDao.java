@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
+import cart.entity.CartItemEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -22,14 +22,19 @@ public class CartDao {
         jdbcTemplate.update(sql, userId, productId, DEFAULT_COUNT);
     }
 
-    public List<ProductEntity> findByUserId(Long id) {
-        String sql = "SELECT P.ID, PRICE, NAME, IMAGE_URL  FROM PRODUCT P, CART C WHERE P.ID = C.PRODUCT_ID AND C.USER_ID = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new ProductEntity(
-                rs.getLong("ID"),
-                rs.getString("NAME"),
-                rs.getString("IMAGE_URL"),
-                rs.getInt("PRICE"))
+    public List<CartItemEntity> findByUserId(Long id) {
+        String sql = "SELECT *  FROM CART WHERE USER_ID = ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new CartItemEntity(
+                        rs.getLong("ID"),
+                        rs.getLong("USER_ID"),
+                        rs.getLong("PRODUCT_ID"),
+                        rs.getInt("COUNT"))
                 , id
         );
+    }
+
+    public void deleteByUserIdAndProductId(Long userId, Long productId) {
+        String sql = "DELETE FROM CART C WHERE C.USER_ID=? AND C.PRODUCT_ID=?";
+        jdbcTemplate.update(sql, userId, productId);
     }
 }

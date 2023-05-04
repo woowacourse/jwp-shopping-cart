@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.controller.dto.request.LoginRequest;
-import cart.controller.dto.response.ProductResponse;
+import cart.controller.dto.response.CartItemResponse;
 import cart.service.AuthService;
 import cart.service.CartService;
 import cart.util.BasicAuthExtractor;
@@ -41,14 +41,16 @@ public class CartController {
     @GetMapping("/carts")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<List<ProductResponse>> showCart(HttpServletRequest request) {
+    public ResponseEntity<List<CartItemResponse>> showCart(HttpServletRequest request) {
         LoginRequest loginRequest = basicAuthExtractor.extract(request);
-        List<ProductResponse> cartByUser = cartService.findCartByUser(authService.basicLogin(loginRequest));
-        return ResponseEntity.ok(cartByUser);
+        List<CartItemResponse> cartItemsByUser = cartService.findCartItemsByUser(authService.basicLogin(loginRequest));
+        return ResponseEntity.ok(cartItemsByUser);
     }
 
     @DeleteMapping("/carts/{productId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCartItem(HttpServletRequest request, @PathVariable(value = "productId") Long productId) {
-
+        LoginRequest loginRequest = basicAuthExtractor.extract(request);
+        cartService.deleteCartByUserAndProductId(authService.basicLogin(loginRequest), productId);
     }
 }
