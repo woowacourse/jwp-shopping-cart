@@ -1,7 +1,7 @@
 package cart.dao.product;
 
 import cart.domain.product.*;
-import cart.domain.product.ProductRepository;
+import cart.exception.GlobalException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,6 +30,14 @@ public class ProductRepositoryImpl implements ProductRepository {
                 product.getCategory().name(),
                 product.getImageUrl()
         );
+    }
+
+    @Override
+    public Product findById(Long id) {
+        ProductEntity productEntity = productDao.findById(id)
+                .orElseThrow(() -> new GlobalException("존재하지 않는 상품입니다."));
+
+        return toProduct(productEntity);
     }
 
     @Override
