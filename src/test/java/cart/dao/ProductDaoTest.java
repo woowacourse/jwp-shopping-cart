@@ -101,6 +101,7 @@ class ProductDaoTest {
     @Test
     void 모든_데이터를_조회한다() {
         // given
+        jdbcTemplate.execute("DELETE FROM PRODUCT");
         productDao.insert(new Product("치킨", 1_000, "치킨 이미지 주소"));
 
         // when
