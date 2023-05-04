@@ -34,10 +34,16 @@ public class CartDao {
     }
 
     public void saveCartItemByMemberEmail(final String email, final Long productId) {
-        String selectMemberIdSql = "SELECT id FROM member where email = ?";
+        String selectMemberIdSql = "SELECT id FROM member WHERE email = ?";
         Long memberId = jdbcTemplate.queryForObject(selectMemberIdSql, Long.class, email);
 
         String insertCartsql = "INSERT INTO cart (member_id, product_id) VALUES (?, ?)";
         jdbcTemplate.update(insertCartsql, memberId, productId);
+    }
+
+    public void deleteCartItem(final Long cartId) {
+        String sql = "DELETE FROM cart WHERE id = ?";
+
+        jdbcTemplate.update(sql, cartId);
     }
 }

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,7 +56,6 @@ public class CartController {
         String password = authInfo.getPassword();
 
         cartDao.saveCartItemByMemberEmail(email, productId);
-        System.out.println("반갑습니다.");
 
         return ResponseEntity.ok().build();
     }
@@ -68,9 +68,16 @@ public class CartController {
 
         List<Product> cartItems = cartDao.findCartItemsByMemberEmail(email);
         List<CartResponse> cartResponses = cartItems.stream()
-                .map(cartItem -> new CartResponse(cartItem.getName(), cartItem.getImageUrl(), cartItem.getPrice()))
+                .map(CartResponse::from)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(cartResponses);
+    }
+
+    @DeleteMapping("/cart/products/{cartId}")
+    public ResponseEntity<Void> removeProduct(@PathVariable final Long cartId) {
+        cartDao.deleteCartItem(cartId);
+
+        return ResponseEntity.ok().build();
     }
 }
