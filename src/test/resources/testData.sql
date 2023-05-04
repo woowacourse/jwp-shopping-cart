@@ -23,6 +23,9 @@ CREATE TABLE member
     password varchar(255)       NOT NULL
 );
 
+INSERT INTO member(email, password) VALUES ('irene@email.com', 'password1');
+INSERT INTO member(email, password) VALUES ('abcd@email.com', 'password2');
+
 CREATE TABLE cart_item
 (
     id         bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -34,3 +37,5 @@ ALTER TABLE cart_item
     ADD CONSTRAINT fk_member_id FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE;
 ALTER TABLE cart_item
     ADD CONSTRAINT fk_product_id FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE;
+
+INSERT INTO cart_item(member_id, product_id) VALUES (1L, 2L);
