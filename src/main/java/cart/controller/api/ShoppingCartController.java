@@ -6,7 +6,6 @@ import cart.service.dto.CartResponse;
 import cart.service.dto.MemberInfo;
 import java.util.List;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/cart")
+@RequestMapping("/cart/products")
 @RestController
 public class ShoppingCartController {
 
@@ -26,7 +25,7 @@ public class ShoppingCartController {
         this.shoppingCartService = shoppingCartService;
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public ResponseEntity<List<CartResponse>> shoppingList(@MemberInfoPrincipal final MemberInfo info) {
         final List<CartResponse> cartResponses = shoppingCartService.findAllProduct(info);
         return ResponseEntity.ok().body(cartResponses);

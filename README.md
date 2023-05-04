@@ -37,6 +37,7 @@
 
 - [x] 유저 service
     - [x] 저장된 유저 전체를 조회
+    - [ ] 유효한 Member인지 인증
 
 ### domain
 

@@ -35,12 +35,11 @@
         }
 
         axios.request({
-            url: '/cart',
+            url: '/cart/products',
             method: 'GET',
             headers: {
-                'content-type': `application/json`,
                 'Authorization': `Basic ${credentials}`
-            }
+            },
         }).then((response) => {
             const cartItems = response.data;
 
@@ -51,7 +50,7 @@
                 productElement += `
                         <div class="cart-item">
                           <div class="cart-item-info">
-                            <img src=${cartItem.productResponse.imageUrl}/> <!-- 상품 이미지 -->
+                            <img src=${cartItem.productResponse.imageUrl}> <!-- 상품 이미지 -->
                             <div class="cart-item-name">${cartItem.productResponse.name}</div> <!-- 상품 이름 -->
                             <div class="cart-item-price">${cartItem.productResponse.price}</div> <!-- 상품 가격 -->
                             <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
