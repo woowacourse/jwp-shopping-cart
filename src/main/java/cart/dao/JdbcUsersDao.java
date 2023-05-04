@@ -32,7 +32,7 @@ public class JdbcUsersDao implements UsersDao {
     public User findByEmail(final Email email) {
         final String sql = "SELECT * FROM users WHERE email=?;";
         try {
-            return jdbcTemplate.queryForObject(sql, userRowMapper, email);
+            return jdbcTemplate.queryForObject(sql, userRowMapper, email.getValue());
         } catch (EmptyResultDataAccessException exception) {
             throw new UserAuthorizationException("입력된 email을 사용하는 사용자를 찾을 수 없습니다. 입력된 email : " + email.getValue());
         }

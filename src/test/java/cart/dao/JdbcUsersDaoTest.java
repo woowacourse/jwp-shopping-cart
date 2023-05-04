@@ -57,6 +57,6 @@ class JdbcUsersDaoTest {
         // when & then
         assertThatThrownBy(() -> usersDao.findByEmail(unregisteredEmail))
                 .isInstanceOf(UserAuthorizationException.class)
-                .hasMessage("입력된 email을 사용하는 사용자를 찾을 수 없습니다. 입력된 email : " + unregisteredEmail);
+                .hasMessage("입력된 email을 사용하는 사용자를 찾을 수 없습니다. 입력된 email : " + unregisteredEmail.getValue());
     }
 }
