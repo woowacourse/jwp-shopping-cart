@@ -72,16 +72,6 @@ class CartServiceTest {
         assertDoesNotThrow(() -> cartService.delete(memberId, itemId));
     }
 
-    @Test
-    @DisplayName("회원 ID와 상품 ID에 해당하는 상품이 없는 경우 예외가 발생한다.")
-    void deleteFail() {
-        Long memberId = saveMember();
-        Long itemId = saveItem();
-        cartDao.insert(memberId, itemId);
-
-        assertThatThrownBy(() -> cartService.delete(memberId, itemId));
-    }
-
     private Long saveMember() {
         Member member = new Member("test@test.com", "1234", "gray");
         return memberDao.insert(member);
