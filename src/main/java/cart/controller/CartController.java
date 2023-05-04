@@ -32,4 +32,11 @@ public class CartController {
         AuthorizationInformation authorizationInformation = authorizationExtractor.extract(authorization);
         return cartService.findAllItemByAuthInfo(authorizationInformation);
     }
+
+    @GetMapping("/carts/new/{itemId}")
+    public String addItemIntoCart(@RequestHeader(value = "Authorization") String authorization, @PathVariable Long itemId) {
+        AuthorizationInformation authorizationInformation = authorizationExtractor.extract(authorization);
+        cartService.putItemIntoCart(itemId, authorizationInformation);
+        return "ok";
+    }
 }
