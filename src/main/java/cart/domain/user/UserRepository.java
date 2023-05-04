@@ -9,5 +9,7 @@ public interface UserRepository {
 
     User findById(Long id);
 
+    User findByEmailAndPassword(Email email, Password password);
+
     void deleteById(Long id);
 }

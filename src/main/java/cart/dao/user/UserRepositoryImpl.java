@@ -59,6 +59,14 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public User findByEmailAndPassword(Email email, Password password) {
+        UserEntity userEntity = userDao.findByEmailAndPassword(email.getEmail(), password.getPassword())
+                .orElseThrow(() -> new GlobalException("존재하지 않는 회원입니다."));
+
+        return toUser(userEntity);
+    }
+
+    @Override
     public void deleteById(Long id) {
         userDao.deleteById(id);
     }
