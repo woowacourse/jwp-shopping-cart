@@ -10,12 +10,19 @@ public class Product {
             "(%[0-9A-Fa-f]{2}|[-()_.!~*';/?:@&=+$,A-Za-z0-9])+)" +
             "([).!';/?:,][[:blank:]])?$";
 
+    private Integer id;
+
     private String name;
     private String imageUrl;
     private int price;
 
     public Product(final String name, final String imageUrl, final int price) {
+        this(null, name, imageUrl, price);
+    }
+
+    public Product(final Integer id, final String name, final String imageUrl, final int price) {
         validate(imageUrl, price);
+        this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
@@ -38,6 +45,10 @@ public class Product {
         if (!matcher.matches()) {
             throw new IllegalArgumentException("유효하지 않은 Url 입니다.");
         }
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
