@@ -25,6 +25,6 @@ CREATE TABLE IF NOT EXISTS cart
     user_id BIGINT UNSIGNED NOT NULL,
 
     PRIMARY KEY (cart_id),
-    FOREIGN KEY (product_id) REFERENCES product(product_id) ON UPDATE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES user(user_id) ON UPDATE CASCADE
+    FOREIGN KEY (product_id) REFERENCES product(product_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON UPDATE CASCADE ON DELETE CASCADE
 );

@@ -48,19 +48,16 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     private List<Cart> toCarts(User user, List<CartEntity> cartEntities) {
-        List<Long> productIds = getProductIds(cartEntities);
-
-        List<ProductEntity> productEntities = productDao.findByIds(productIds);
-
-        return productEntities.stream()
-                .map(productEntity -> new Cart(user, toProduct(productEntity)))
+        return cartEntities.stream()
+                .map(entity -> toCart(user, entity))
                 .collect(Collectors.toList());
     }
 
-    private List<Long> getProductIds(List<CartEntity> cartEntities) {
-        return cartEntities.stream()
-                .map(CartEntity::getProductId)
-                .collect(Collectors.toList());
+    private Cart toCart(User user, CartEntity cartEntity) {
+        ProductEntity productEntity = productDao.findById(cartEntity.getProductId())
+                .orElseThrow(() -> new GlobalException("존재하지 않는 상품입니다."));
+
+        return new Cart(user, toProduct(productEntity), cartEntity.getCartId());
     }
 
     private Product toProduct(ProductEntity productEntity) {
