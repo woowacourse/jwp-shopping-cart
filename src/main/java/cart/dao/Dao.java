@@ -11,4 +11,6 @@ public interface Dao<T> {
     int update(T t);
 
     int delete(int id);
+
+    List<T> selectById(Object id);
 }
