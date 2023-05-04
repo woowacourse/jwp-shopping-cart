@@ -24,7 +24,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         final String authorization = webRequest.getHeader(AUTHORIZATION_HEADER_NAME);
         validateAuthorization(authorization);
         final String encodedAuth = authorization.split(AUTHORIZATION_DELIMITER)[AUTHORIZATION_VALUE_INDEX];
