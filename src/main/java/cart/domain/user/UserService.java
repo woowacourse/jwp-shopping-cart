@@ -1,6 +1,7 @@
 package cart.domain.user;
 
 import cart.domain.user.dto.UserDto;
+import cart.domain.user.dto.UserLoginDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,5 +23,14 @@ public class UserService {
         return allUsers.stream()
                 .map(UserDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public UserDto login(UserLoginDto loginDto) {
+        Email email = Email.from(loginDto.getEmail());
+        Password password = Password.from(loginDto.getPassword());
+
+        User user = userRepository.findByEmailAndPassword(email, password);
+
+        return new UserDto(user);
     }
 }

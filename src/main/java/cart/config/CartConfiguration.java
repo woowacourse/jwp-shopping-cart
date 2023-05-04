@@ -11,10 +11,11 @@ import java.util.List;
 
 @Configuration
 public class CartConfiguration implements WebMvcConfigurer {
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthInterceptor())
-                .addPathPatterns("/cart/**");
+                .addPathPatterns("/carts/**");
     }
 
     @Override
