@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS member
     name         varchar(30)             NOT NULL,
     phone_number varchar(30)             NOT NULL,
     password     varchar(30)             NOT NULL,
-    cart         text
+    cart         TEXT
 );
