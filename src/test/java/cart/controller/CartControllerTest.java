@@ -17,6 +17,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -32,11 +33,8 @@ class CartControllerTest {
     @Autowired
     private ProductJdbcDao productJdbcDao;
 
-    @LocalServerPort
-    private int port;
-
     @BeforeEach
-    void setup() {
+    void setup(@LocalServerPort int port) {
         RestAssured.port = port;
     }
 
@@ -56,8 +54,7 @@ class CartControllerTest {
     @Test
     @DisplayName("/cart/{id} post요청 200을 응답한다.")
     void cartAddProduct() {
-        Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 1000L));
-
+        Integer id = productJdbcDao.insert(new ProductEntity("누누", "a", 1000L));
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
@@ -65,10 +62,11 @@ class CartControllerTest {
                 .then().log().all()
                 .extract();
 
-        List<CartEntity> cartEntities = cartJdbcDao.findByMemberId(Long.valueOf(id));
+        Optional<ProductEntity> productEntity = productJdbcDao.findById(Long.valueOf(id));
 
         Assertions.assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(productEntity.isEmpty()).isFalse()
         );
 
     }
@@ -77,6 +75,8 @@ class CartControllerTest {
     @DisplayName("/cart/{id} delete요청 200을 응답한다.")
     void cartDeleteProduct() {
         Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 1000L));
+        System.out.println("delete");
+        System.out.println(id);
 
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
@@ -84,6 +84,7 @@ class CartControllerTest {
                 .when().delete("/cart/" + id)
                 .then().log().all()
                 .extract();
+
 
         List<CartEntity> cartEntities = cartJdbcDao.findByMemberId(Long.valueOf(id));
 
