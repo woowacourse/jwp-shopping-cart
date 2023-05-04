@@ -29,6 +29,11 @@ public class CartDao {
         simpleJdbcInsert.executeAndReturnKey(params);
     }
 
+    public void deleteProduct(final int memberId, final int productId) {
+        final String sql = "delete from cart where member_id = ? and product_id = ?";
+        jdbcTemplate.update(sql, memberId, productId);
+    }
+
     public boolean existingCartItem(final int memberId, final int productId) {
         final String sql = "select * from cart where member_id = ? and product_id = ?";
         final int size = jdbcTemplate.query(sql, (ig, ig2) -> null, memberId, productId).size();

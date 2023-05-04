@@ -5,6 +5,7 @@ import cart.auth.Principal;
 import cart.request.ProductDto;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,5 +30,13 @@ public class CartController {
             @Valid @RequestBody ProductDto productDto) {
         cartService.addProduct(memberInfo, productDto);
         return ResponseEntity.created(URI.create("/carts")).build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteProduct(
+            @Principal MemberInfo memberInfo,
+            @Valid @RequestBody ProductDto productDto) {
+        cartService.deleteProduct(memberInfo, productDto);
+        return ResponseEntity.noContent().build();
     }
 }

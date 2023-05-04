@@ -85,6 +85,23 @@ class CartDaoTest {
         assertThat(afterSize).isEqualTo(originSize + 1);
     }
 
+    @DisplayName("cart 데이터를 삭제한다")
+    @Test
+    void deleteProduct() {
+        //given
+        int exitingProductId = 1;
+        int exitingMemberId = 1;
+        cartDao.addProduct(exitingMemberId, exitingProductId);
+
+        //when
+        final int originSize = jdbcTemplate.query("select * from cart", nullMapper()).size();
+        cartDao.deleteProduct(exitingMemberId, exitingProductId);
+        final int afterSize = jdbcTemplate.query("select * from cart", nullMapper()).size();
+
+        //then
+        assertThat(afterSize).isEqualTo(originSize - 1);
+    }
+
     private RowMapper<Object> nullMapper() {
         return (ig, ig2) -> null;
     }

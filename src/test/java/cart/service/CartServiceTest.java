@@ -67,4 +67,31 @@ class CartServiceTest {
         verify(cartDao, times(1)).existingCartItem(anyInt(), anyInt());
         verify(cartDao, times(1)).addProduct(anyInt(), anyInt());
     }
+
+    @DisplayName("카드에 등록되어 있는 정보에 대한 삭제 요청이 아니라면 예외가 발생한다")
+    @Test
+    void deleteProduct_invalid_nonexistenceCartData() {
+        //given,
+        given(cartDao.existingCartItem(anyInt(), anyInt()))
+                .willReturn(false);
+
+        //when,then
+        assertThatThrownBy(() -> cartService.deleteProduct(MEMBER_INFO, PRODUCT_DTO))
+                .isInstanceOf(CartException.class);
+    }
+
+    @DisplayName("만약 해당 유저의 cart 항목이 있따면 해당 Cart 아이템을 삭제한다")
+    @Test
+    void deleteProduct() {
+        //given
+        given(cartDao.existingCartItem(anyInt(), anyInt()))
+                .willReturn(true);
+
+        //when
+        cartService.deleteProduct(MEMBER_INFO, PRODUCT_DTO);
+
+        //then
+        verify(cartDao, times(1)).existingCartItem(anyInt(), anyInt());
+        verify(cartDao, times(1)).deleteProduct(anyInt(), anyInt());
+    }
 }
