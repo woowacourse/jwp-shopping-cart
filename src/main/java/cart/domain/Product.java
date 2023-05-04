@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class Product {
 
     private static final int MAX_NAME_LENGTH = 20;
@@ -33,6 +35,23 @@ public class Product {
         if (price > MAX_PRICE) {
             throw new IllegalArgumentException("가격은 " + MAX_PRICE + "이하입니다");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Product product = (Product)o;
+
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 
     public Integer getId() {
