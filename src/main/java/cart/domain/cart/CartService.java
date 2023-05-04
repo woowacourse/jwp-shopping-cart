@@ -1,10 +1,15 @@
 package cart.domain.cart;
 
 import cart.dao.ProductDao;
+import cart.domain.Product;
+import cart.domain.cart.dto.ProductResponse;
 import cart.domain.member.Member;
 import cart.domain.member.MemberDao;
 import cart.entity.ProductEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -30,5 +35,12 @@ public class CartService {
 
         Cart cart = new Cart(member.getId(), productEntity.getId());
         return cartDao.addProduct(cart);
+    }
+
+    public List<ProductResponse> findProductsByUserIdOnCart(Long userId) {
+        List<Product> products = cartDao.findProductsByUserId(userId);
+        return products.stream()
+                .map(p -> new ProductResponse(p.getName(), p.getImageUrl(), p.getPrice()))
+                .collect(Collectors.toList());
     }
 }
