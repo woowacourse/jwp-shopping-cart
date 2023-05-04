@@ -1,6 +1,6 @@
 package cart.config;
 
-import cart.argumnetresolver.LoginArgumentResolver;
+import cart.auth.LoginArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
