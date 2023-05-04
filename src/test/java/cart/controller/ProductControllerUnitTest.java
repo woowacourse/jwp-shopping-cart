@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.auth.AuthService;
 import cart.dto.ProductDto;
 import cart.dto.request.ProductSaveRequest;
 import cart.dto.request.ProductUpdateRequest;
@@ -30,6 +31,9 @@ class ProductControllerUnitTest {
 
     @MockBean
     ProductService productService;
+
+    @MockBean
+    AuthService authService;
 
     @Test
     void saveProduct는_상품을_저장하고_created상태코드를_반환한다() throws Exception {
