@@ -8,7 +8,7 @@ CREATE TABLE product
 
 CREATE TABLE member
 (
-    id       INT AUTO_INCREMENT
+    id       INT NOT NULL AUTO_INCREMENT
         PRIMARY KEY,
     email    VARCHAR(255) NOT NULL,
     password VARCHAR(15)  NOT NULL
@@ -16,7 +16,7 @@ CREATE TABLE member
 
 CREATE TABLE cart
 (
-    id         INT AUTO_INCREMENT
+    id         INT NOT NULL AUTO_INCREMENT
         PRIMARY KEY,
     product_id INT NOT NULL,
     member_id  INT NOT NULL,
