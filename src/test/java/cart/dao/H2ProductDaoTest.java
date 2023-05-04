@@ -51,7 +51,7 @@ class H2ProductDaoTest {
 
         Assertions.assertAll(
                 () -> assertThat(created).isNotNull(),
-                () -> assertThat(product.getName()).isEqualTo(created.getName())
+                () -> assertThat(created.getName()).isEqualTo(product.getName())
         );
     }
 
