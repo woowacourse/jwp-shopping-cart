@@ -45,8 +45,7 @@ public class MainController {
     }
 
     @GetMapping("/myCart")
-    public ModelAndView cart(ModelAndView mav) {
-        mav.setViewName("myCart");
-        return mav;
+    public String cart() {
+        return "myCart";
     }
 }

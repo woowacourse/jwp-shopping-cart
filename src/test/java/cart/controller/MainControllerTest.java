@@ -18,12 +18,12 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-//TODO 페이지 테스트
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MainControllerTest {
 
     private static final String ADMIN_PAGE_PRODUCT_LIST_HTML_TAG = "#product-list tr";
     private static final String INDEX_PAGE_PRODUCT_LIST_HTML_TAG = "ul.product-grid li.product";
+    private static final String SETTINGS_PAGE_MEMBER_LIST_HTML_TAG = "div.cart-item";
 
     @LocalServerPort
     private int port;
@@ -49,7 +49,6 @@ class MainControllerTest {
         //when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(PRODUCT_REQUEST_A)
                 .when()
                 .get("/admin");
         //then
@@ -68,7 +67,6 @@ class MainControllerTest {
         //when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(PRODUCT_REQUEST_A)
                 .when()
                 .get("/");
         //then
@@ -76,6 +74,23 @@ class MainControllerTest {
         int actual = doc.select(INDEX_PAGE_PRODUCT_LIST_HTML_TAG).size();
 
         assertThat(actual).isEqualTo(countOfProduct);
+    }
+
+    @DisplayName("settings 페이지로 접속시 모든 회원의 정보를 출력한다.")
+    @Test
+    void settings_page_print_all_members() {
+        //given
+        jdbcTemplate.update("insert into MEMBER(email, password) " +
+                "values ('emailA@naver.com', 'passwordA'), ('emailB@kakao.com', 'passwordB')");
+        //when
+        Response response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/settings");
+        //then
+        Document doc = Jsoup.parse(response.getBody().asString());
+        int actual = doc.select(SETTINGS_PAGE_MEMBER_LIST_HTML_TAG).size();
+        assertThat(actual).isEqualTo(2);
     }
 
     private void createProductsByCount(int count) {
