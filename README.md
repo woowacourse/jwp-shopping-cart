@@ -77,3 +77,13 @@
 | 생성 | POST   | /products       | product{name, imageUrl, price} |
 | 수정 | PUT    | /products/{id}  | product{name, imageUrl, price} |
 | 삭제 | DELETE | /products/{id}  | x                              |
+
+### Cart
+
+Cart API 요청 시 `Authorization : Basic Auth 필요`
+
+| 기능    | Method | URL                 | request body |
+|-------|-------|---------------------|--------------|
+| 생성    | POST  | /cart/products      | {productId}  |
+| 전체 조회 | GET   | /cart               | x            |
+| 삭제    | DELETE | /cart/products/{id} | x            |
