@@ -8,9 +8,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import cart.domain.Product;
-import cart.domain.ProductRepository;
-import cart.dto.ProductDto;
+import cart.entity.Product;
+import cart.entity.ProductRepository;
 
 @Repository
 public class DBProductRepository implements ProductRepository {
@@ -41,7 +40,7 @@ public class DBProductRepository implements ProductRepository {
         String sql = "SELECT name, imgURL, price FROM product WHERE id = ?";
 
         return jdbcTemplate.queryForObject(sql,
-            (resultSet, rowNum) -> Product.createWithId(
+            (resultSet, rowNum) -> Product.of(
                 id,
                 resultSet.getString("name"),
                 resultSet.getString("imgURL"),
@@ -54,7 +53,7 @@ public class DBProductRepository implements ProductRepository {
         String sql = "SELECT id, name, imgUrl, price FROM product";
 
         return jdbcTemplate.query(sql,
-            (resultSet, rowNum) -> Product.createWithId(
+            (resultSet, rowNum) -> Product.of(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getString("imgURL"),

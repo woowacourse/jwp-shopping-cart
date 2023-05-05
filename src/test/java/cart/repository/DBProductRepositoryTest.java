@@ -13,9 +13,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
-import cart.domain.Product;
-import cart.domain.ProductRepository;
-import cart.dto.ProductDto;
+import cart.entity.Product;
+import cart.entity.ProductRepository;
 import cart.dto.ProductRequestDto;
 
 @JdbcTest
@@ -64,7 +63,7 @@ class DBProductRepositoryTest {
     @Test
     @DisplayName("상품 정보를 DB에 저장한다.")
     void save() {
-        Product product3 = Product.createWithId(null, "name3", "url3", 3000);
+        Product product3 = Product.of(null, "name3", "url3", 3000);
         Long id3 = productRepository.save(product3);
 
         String sql = "SELECT * FROM product";
@@ -93,12 +92,12 @@ class DBProductRepositoryTest {
     @Test
     @DisplayName("ID에 해당하는 상품 정보를 수정한다.")
     void updateById() {
-        Product product1 = Product.createWithId(id2, "name4", "url4", 4000);
+        Product product1 = Product.of(id2, "name4", "url4", 4000);
         productRepository.updateById(product1, id2);
 
         String sql = "SELECT id, name, imgurl, price FROM product WHERE id = ?";
         Product product2 = jdbcTemplate.queryForObject(sql,
-            (rs, rn) -> Product.createWithId(
+            (rs, rn) -> Product.of(
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getString("imgurl"),

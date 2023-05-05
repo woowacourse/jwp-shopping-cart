@@ -1,8 +1,6 @@
-package cart.domain;
+package cart.entity;
 
 import java.util.List;
-
-import cart.dto.ProductDto;
 
 public interface ProductRepository {
     Long save(Product product);

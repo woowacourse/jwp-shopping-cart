@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.entity;
 
 import java.util.stream.Stream;
 
@@ -16,7 +16,7 @@ class ProductTest {
     @MethodSource("makeProduct")
     @DisplayName("잘못된 값을 검증한다")
     void invalidProductTest(String name, String imgUrl, int price) {
-        Assertions.assertThatThrownBy(() -> Product.createWithoutId(name, imgUrl, price))
+        Assertions.assertThatThrownBy(() -> Product.of(null, name, imgUrl, price))
             .isInstanceOf(DomainException.class);
 
     }

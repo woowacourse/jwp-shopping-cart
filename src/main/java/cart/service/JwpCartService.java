@@ -6,9 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.domain.Product;
-import cart.domain.ProductRepository;
-import cart.dto.ProductDto;
+import cart.entity.Product;
+import cart.entity.ProductRepository;
 import cart.dto.ProductRequestDto;
 import cart.dto.ProductResponseDto;
 
@@ -25,7 +24,7 @@ public class JwpCartService {
     public List<ProductResponseDto> findAll() {
         return productRepository.findAll()
             .stream()
-            .map(productDto -> Product.createWithId(
+            .map(productDto -> Product.of(
                 productDto.getId(),
                 productDto.getName(),
                 productDto.getImgUrl(),
@@ -36,7 +35,8 @@ public class JwpCartService {
 
     @Transactional
     public void add(ProductRequestDto productRequestDto) {
-        Product product = Product.createWithoutId(
+        Product product = Product.of(
+            null,
             productRequestDto.getName(),
             productRequestDto.getImgUrl(),
             productRequestDto.getPrice()
@@ -46,7 +46,8 @@ public class JwpCartService {
 
     @Transactional
     public void updateById(ProductRequestDto productRequestDto, Long id) {
-        Product product = Product.createWithoutId(
+        Product product = Product.of(
+            null,
             productRequestDto.getName(),
             productRequestDto.getImgUrl(),
             productRequestDto.getPrice()

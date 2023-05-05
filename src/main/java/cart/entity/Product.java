@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.entity;
 
 import cart.exception.DomainException;
 import cart.exception.ExceptionCode;
@@ -16,12 +16,8 @@ public class Product {
         this.price = validatePrice(price);
     }
 
-    public static Product createWithId(Long id, String name, String imgURL, int price) {
+    public static Product of(Long id, String name, String imgURL, int price) {
         return new Product(id, name, imgURL, price);
-    }
-
-    public static Product createWithoutId(String name, String imgURL, int price) {
-        return new Product(null, name, imgURL, price);
     }
 
     private int validatePrice(int price) {
