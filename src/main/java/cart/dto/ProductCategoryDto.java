@@ -3,7 +3,6 @@ package cart.dto;
 import cart.entity.CategoryEntity;
 import cart.entity.product.ProductEntity;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProductCategoryDto {
 
@@ -14,9 +13,14 @@ public class ProductCategoryDto {
     private final String description;
     private final List<CategoryEntity> categoryEntities;
 
-    private ProductCategoryDto(final Long id, final String name, final String imageUrl, final Integer price,
+    private ProductCategoryDto(
+        final Long id,
+        final String name,
+        final String imageUrl,
+        final Integer price,
         final String description,
-        final List<CategoryEntity> categoryEntities) {
+        final List<CategoryEntity> categoryEntities
+    ) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -25,8 +29,10 @@ public class ProductCategoryDto {
         this.categoryEntities = categoryEntities;
     }
 
-    public static ProductCategoryDto of(final ProductEntity productEntity,
-        final List<CategoryEntity> categoryEntities) {
+    public static ProductCategoryDto of(
+        final ProductEntity productEntity,
+        final List<CategoryEntity> categoryEntities
+    ) {
         return new ProductCategoryDto(
             productEntity.getId(),
             productEntity.getName(),
@@ -55,12 +61,6 @@ public class ProductCategoryDto {
 
     public String getDescription() {
         return description;
-    }
-
-    public List<String> getCategoryNames() {
-        return categoryEntities.stream()
-            .map(CategoryEntity::getName)
-            .collect(Collectors.toList());
     }
 
     public List<CategoryEntity> getCategoryEntities() {

@@ -1,8 +1,6 @@
 package cart.dto.response;
 
 import cart.entity.product.ProductEntity;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class CartProductResponseDto {
 
@@ -29,12 +27,6 @@ public class CartProductResponseDto {
             productEntity.getPrice(),
             productEntity.getDescription()
         );
-    }
-
-    public static List<CartProductResponseDto> asList(final List<ProductEntity> productEntities) {
-        return productEntities.stream()
-            .map(CartProductResponseDto::of)
-            .collect(Collectors.toList());
     }
 
     public Long getId() {
