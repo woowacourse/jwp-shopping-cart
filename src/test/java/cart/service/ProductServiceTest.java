@@ -1,6 +1,8 @@
 package cart.service;
 
 import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductResponse;
+import cart.dao.CartDao;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import org.junit.jupiter.api.DisplayName;
@@ -10,9 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,6 +30,9 @@ class ProductServiceTest {
     @Mock
     private ProductDao productDao;
 
+    @Mock
+    private CartDao cartDao;
+
     @InjectMocks
     private ProductService productService;
 
@@ -38,6 +45,27 @@ class ProductServiceTest {
 
         // when, then
         assertThat(productService.save(productRequest)).isEqualTo(1L);
+    }
+
+    @DisplayName("모든 Product를 조회하고 ProductResponse의 List 형태로 반환한다.")
+    @Test
+    void findAll() {
+        // given
+        Product product1 = Product.from(1L, "치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
+        Product product2 = Product.from(2L, "피자", "https://cdn.dominos.co.kr/admin/upload/goods/20210226_GYHC7RpD.jpg", 20000);
+        given(productDao.findAll()).willReturn(List.of(product1, product2));
+
+        // when
+        List<ProductResponse> productResponses = productService.findAll();
+
+        // then
+        assertSoftly(softly -> {
+            softly.assertThat(productResponses.size()).isEqualTo(2);
+            softly.assertThat(productResponses.get(0))
+                    .usingRecursiveComparison()
+                    .ignoringFields("id")
+                    .isEqualTo(product1);
+        });
     }
 
     @DisplayName("Product가 정상적으로 업데이트되고 업데이트된 row의 개수를 반환한다.")
@@ -71,6 +99,7 @@ class ProductServiceTest {
         // given
         given(productDao.findById(1L)).willReturn(Optional.of(new Product(1L, "치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 1000)));
         willDoNothing().given(productDao).deleteById(1L);
+        willDoNothing().given(cartDao).deleteByProductId(1L);
 
         // when, then
         assertDoesNotThrow(() -> productService.delete(1L));
