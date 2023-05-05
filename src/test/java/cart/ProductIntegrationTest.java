@@ -3,6 +3,7 @@ package cart;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.domain.product.Product;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -21,6 +22,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -123,12 +126,10 @@ public class ProductIntegrationTest {
     @Test
     @DisplayName("상품 수정 성공 시 NO CONTENT 응답 코드를 반환한다")
     void update() throws JSONException {
-        int updateCount = jdbcTemplate.update(
-                "INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000)");
-        assertThat(updateCount).isEqualTo(1);
+        Long id = insertProduct();
 
         JSONObject productUpdateRequest = parseJSON(Map.of(
-                "id", 1,
+                "id", id,
                 "name", "도이",
                 "image-url", "doy.png",
                 "price", 10000
@@ -148,13 +149,11 @@ public class ProductIntegrationTest {
     @Test
     @DisplayName("상품 식제 성공 시 NO CONTENT 응답 코드를 반환한다")
     void delete() {
-        int updateCount = jdbcTemplate.update(
-                "INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.png', 1000)");
-        assertThat(updateCount).isEqualTo(1);
+        Long id = insertProduct();
 
         ExtractableResponse<Response> response = given()
                 .when()
-                .delete("/products/1")
+                .delete("/products/" + id)
                 .then()
                 .extract();
 
@@ -168,5 +167,14 @@ public class ProductIntegrationTest {
         }
 
         return parsed;
+    }
+
+    private Long insertProduct() {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("products")
+                .usingGeneratedKeyColumns("id");
+        return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(
+                new Product("에밀", "emil.png", 1000)
+        )).longValue();
     }
 }
