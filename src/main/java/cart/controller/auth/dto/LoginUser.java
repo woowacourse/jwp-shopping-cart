@@ -1,4 +1,4 @@
-package cart.controller.dto;
+package cart.controller.auth.dto;
 
 import java.util.Objects;
 
