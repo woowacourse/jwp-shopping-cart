@@ -18,6 +18,10 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql("classpath:test.sql")
 class ProductResourceControllerTest {
 
+    private final String validName = "족발";
+    private final int validPrice = 10_000;
+    private final String validImageUrl = "https://naver.com";
+    private final ProductRequest validProduct = new ProductRequest(validName, validPrice, validImageUrl);
     @LocalServerPort
     private int port;
 
@@ -29,7 +33,7 @@ class ProductResourceControllerTest {
     @Test
     void 상품_추가() {
         RestAssured.given()
-                .body(new ProductRequest("족발", 5000, "https://image.com"))
+                .body(validProduct)
                 .contentType(ContentType.JSON)
                 .when()
                 .post("/admin/products")
@@ -42,7 +46,7 @@ class ProductResourceControllerTest {
         final long id = 1L;
 
         RestAssured.given()
-                .body(new ProductRequest("피자", 3000, "https://image.com"))
+                .body(validProduct)
                 .contentType(ContentType.JSON)
                 .when()
                 .put("/admin/products/" + id)
@@ -64,9 +68,34 @@ class ProductResourceControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     @NullSource
-    void 상품의_이름이_빈값_널_공백이면_Bad_Request_발생(final String name) {
+    void 상품의_이름이_빈값_널_공백이면_Bad_Request_발생(final String invalidName) {
+        final ProductRequest invalidProduct = new ProductRequest(
+                invalidName,
+                validPrice,
+                validImageUrl
+        );
+
         RestAssured.given()
-                .body(new ProductRequest(name, 1234, "https://image.url"))
+                .body(invalidProduct)
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/admin/products")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {21, 22})
+    void 상품의_이름이_20자를_초과하는_경우_Bad_Request_발생(final int length) {
+        final String invalidName = "a".repeat(length);
+        final ProductRequest invalidProduct = new ProductRequest(
+                invalidName,
+                validPrice,
+                validImageUrl
+        );
+
+        RestAssured.given()
+                .body(invalidProduct)
                 .contentType(ContentType.JSON)
                 .when()
                 .post("/admin/products")
@@ -76,9 +105,15 @@ class ProductResourceControllerTest {
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 100_000_001})
-    void 범위가_벗어난_가격을_입력시_Bad_Request_발생(final int price) {
+    void 범위가_벗어난_가격을_입력시_Bad_Request_발생(final int invalidPrice) {
+        final ProductRequest invalidProduct = new ProductRequest(
+                validName,
+                invalidPrice,
+                validImageUrl
+        );
+
         RestAssured.given()
-                .body(new ProductRequest("name", price, "https://image.url"))
+                .body(invalidProduct)
                 .contentType(ContentType.JSON)
                 .when()
                 .post("/admin/products")
@@ -89,9 +124,15 @@ class ProductResourceControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "github.com", "ssh://git@github.com"})
     @NullSource
-    void 유효하지_않은_URL_입력시_Bad_Request_발생(final String imageUrl) {
+    void 유효하지_않은_URL_입력시_Bad_Request_발생(final String invalidUrl) {
+        final ProductRequest invalidProduct = new ProductRequest(
+                validName,
+                validPrice,
+                invalidUrl
+        );
+
         RestAssured.given()
-                .body(new ProductRequest("name", 1234, imageUrl))
+                .body(invalidProduct)
                 .contentType(ContentType.JSON)
                 .when()
                 .post("/admin/products")
@@ -100,13 +141,18 @@ class ProductResourceControllerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {2084, 2085, 2086})
+    @ValueSource(ints = {2084, 2085})
     void 길이_제한을_벗어난_URL을_입력하면_Bad_Request_발생(final int length) {
         final int repeatCount = length - 12;
-        final String url = "https://" + "a".repeat(repeatCount) + ".com";
+        final String invalidUrl = "https://" + "a".repeat(repeatCount) + ".com";
+        final ProductRequest invalidProduct = new ProductRequest(
+                validName,
+                validPrice,
+                invalidUrl
+        );
 
         RestAssured.given()
-                .body(new ProductRequest("name", 1234, url))
+                .body(invalidProduct)
                 .contentType(ContentType.JSON)
                 .when()
                 .post("/admin/products")
