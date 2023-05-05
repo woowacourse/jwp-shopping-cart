@@ -46,7 +46,7 @@ public class CartService {
         }
     }
 
-    public CartResponse getProductsByMemberEmail(final String memberEmail) {
+    public CartResponse getCartResponseByMemberEmail(final String memberEmail) {
         final MemberEntity memberEntity = getMemberEntity(memberEmail);
         final List<CartDto> cartDtos = cartDao.getProductsByMemberId(memberEntity.getId());
         final Cart cart = convertToCart(memberEntity, cartDtos);

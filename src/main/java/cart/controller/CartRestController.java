@@ -3,9 +3,7 @@ package cart.controller;
 import cart.common.auth.MemberEmail;
 import cart.service.CartService;
 import cart.service.dto.CartResponse;
-import cart.service.dto.ProductResponse;
 import java.net.URI;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +31,7 @@ public class CartRestController {
 
     @GetMapping("/me")
     public ResponseEntity<CartResponse> getCartByMember(@MemberEmail String memberEmail) {
-        final CartResponse cartResponse = cartService.getProductsByMemberEmail(memberEmail);
+        final CartResponse cartResponse = cartService.getCartResponseByMemberEmail(memberEmail);
         return ResponseEntity.ok().body(cartResponse);
     }
 

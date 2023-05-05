@@ -97,7 +97,7 @@ class CartServiceTest {
         when(cartDao.getProductsByMemberId(any())).thenReturn(List.of(chickenProduct, steakProductEntity));
 
         // when
-        final CartResponse cartResponse = cartService.getProductsByMemberEmail("journey@gmail.com");
+        final CartResponse cartResponse = cartService.getCartResponseByMemberEmail("journey@gmail.com");
 
         // then
         assertThat(cartResponse.getProductCount()).isSameAs(2);

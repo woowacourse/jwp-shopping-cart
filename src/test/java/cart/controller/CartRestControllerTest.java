@@ -94,7 +94,7 @@ class CartRestControllerTest extends RestDocsHelper {
             "steak_image_url", 40000, "WESTERN");
         final List<ProductResponse> productResponses = List.of(chickenDto, steakDto);
         final CartResponse cartResponse = new CartResponse(2, productResponses);
-        when(cartService.getProductsByMemberEmail(any())).thenReturn(cartResponse);
+        when(cartService.getCartResponseByMemberEmail(any())).thenReturn(cartResponse);
 
         // when, then
         mockMvc.perform(get("/cart/me")
