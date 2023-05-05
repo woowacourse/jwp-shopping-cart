@@ -31,7 +31,7 @@ public class CartDao implements Dao<CartEntity> {
 
     @Override
     public CartEntity findById(final Long id) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class CartDao implements Dao<CartEntity> {
 
     @Override
     public int update(final CartEntity cartEntity) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
