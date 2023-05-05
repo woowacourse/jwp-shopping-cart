@@ -11,10 +11,6 @@ public class Product {
     private final ImageUrl imageUrl;
     private final Price price;
 
-    public Product(ProductName name, ImageUrl imageUrl, Price price) {
-        this(Id.EMPTY_ID, name, imageUrl, price);
-    }
-
     public Product(Id id, ProductName name, ImageUrl imageUrl, Price price) {
         this.id = id;
         this.name = name;

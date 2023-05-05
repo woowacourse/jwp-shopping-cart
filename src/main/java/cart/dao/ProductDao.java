@@ -46,7 +46,7 @@ public class ProductDao {
         return jdbcTemplate.query(sql, productRowMapper);
     }
 
-    public Optional<ProductEntity> findById(long id) {
+    public Optional<ProductEntity> findById(Long id) {
         String sql = "select * from PRODUCT where product_id = :product_id";
 
         SqlParameterSource paramSource = new MapSqlParameterSource().addValue("product_id", id);
@@ -57,7 +57,7 @@ public class ProductDao {
         }
     }
 
-    public void updateProduct(ProductEntity productEntity) {
+    public void update(ProductEntity productEntity) {
         String sql = "update PRODUCT set name = :name, image_url = :image_url, price = :price where product_id = :product_id";
         SqlParameterSource paramSource = new MapSqlParameterSource()
                 .addValue("product_id", productEntity.getId())
@@ -68,7 +68,7 @@ public class ProductDao {
         jdbcTemplate.update(sql, paramSource);
     }
 
-    public void deleteProduct(Long productId) {
+    public void delete(Long productId) {
         String sql = "delete from PRODUCT where product_id = :product_id";
         SqlParameterSource paramSource = new MapSqlParameterSource()
                 .addValue("product_id", productId);

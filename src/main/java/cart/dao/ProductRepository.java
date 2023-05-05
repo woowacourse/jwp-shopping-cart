@@ -41,13 +41,13 @@ public class ProductRepository {
     //todo 질문 : 객체를 update 하는 것이 어색하다고 느껴집니다.
     public Product updateProduct(Product product) {
         checkIfExistProduct(productDao.findById(product.getId()));
-        productDao.updateProduct(convertToProductEntity(product));
+        productDao.update(convertToProductEntity(product));
         return product;
     }
 
     public void removeProduct(Long productId) {
         checkIfExistProduct(productDao.findById(productId));
-        productDao.deleteProduct(productId);
+        productDao.delete(productId);
     }
 
     private void checkIfExistProduct(Optional<ProductEntity> productEntity) {

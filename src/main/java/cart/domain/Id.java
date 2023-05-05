@@ -12,8 +12,8 @@ public class Id {
         validate(this.id);
     }
 
-    private void validate(Long productId) {
-        if(id !=null && productId <= 0) {
+    private void validate(Long id) {
+        if(id != null && id <= 0) {
             throw new IllegalArgumentException("id는 0이 아닌 양수여야 합니다.");
         }
     }
@@ -30,13 +30,12 @@ public class Id {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Id id1 = (Id) o;
-        return Objects.equals(id, id1.id);
+        Id id = (Id) o;
+        return Objects.equals(this.id, id.id);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
-
 }

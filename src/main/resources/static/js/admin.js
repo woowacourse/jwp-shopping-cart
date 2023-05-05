@@ -11,7 +11,7 @@ const showEditModal = (product) => {
         element.value = product[element.getAttribute('name')];
     }
     modal.dataset.formType = 'edit';
-    modal.dataset.productId = product.productId;
+    modal.dataset.productId = product.id;
     modal.style.display = 'block';
 };
 
@@ -36,7 +36,7 @@ form.addEventListener('submit', (event) => {
     }
 
     if (modal.dataset.formType === 'edit') {
-        product['productId'] = modal.dataset.productId;
+        product['id'] = modal.dataset.productId;
         updateProduct(product);
         return;
     }
@@ -61,11 +61,11 @@ const createProduct = (product) => {
 
 // 상품 업데이
 const updateProduct = (product) => {
-    const { productId } = product; //왜???
+    const { id } = product; //왜???
 
     axios.request({
         method: 'put',
-        url: '/products/' + productId,
+        url: '/products/' + id,
         data: product
     }).then((response) => {
         window.location.reload();

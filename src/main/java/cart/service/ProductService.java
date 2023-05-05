@@ -21,8 +21,9 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public ProductResponse saveProduct(ProductRequest request) {
-        Product product = new Product(new ProductName(request.getName()),
+    public ProductResponse createProduct(ProductRequest request) {
+        Product product = new Product(Id.EMPTY_ID,
+                new ProductName(request.getName()),
                 new ImageUrl(request.getImage()),
                 new Price(request.getPrice()));
         Long productId = productRepository.addProduct(product);
@@ -52,7 +53,7 @@ public class ProductService {
         return new ProductResponse(productId, product.getName(), product.getImageUrl(), product.getPrice());
     }
 
-    public void deleteProduct(Long productId) {
+    public void removeMember(Long productId) {
         productRepository.removeProduct(productId);
     }
 

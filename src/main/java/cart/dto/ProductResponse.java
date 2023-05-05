@@ -4,20 +4,20 @@ import java.math.BigDecimal;
 
 public class ProductResponse {
 
-    private final Long productId;
+    private final Long id;
     private final String name;
     private final String image;
     private final BigDecimal price;
 
-    public ProductResponse(Long productId, String name, String image, BigDecimal price) {
-        this.productId = productId;
+    public ProductResponse(Long id, String name, String image, BigDecimal price) {
+        this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Long getId() {
+        return id;
     }
 
     public String getName() {

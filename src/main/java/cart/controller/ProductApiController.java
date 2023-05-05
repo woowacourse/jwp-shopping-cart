@@ -33,20 +33,20 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponse> saveProduct(@RequestBody @Valid ProductRequest productRequestDto) {
-        ProductResponse savedProduct = productService.saveProduct(productRequestDto);
-        return ResponseEntity.created(URI.create("products"+ savedProduct.getProductId())).body(savedProduct);
+    public ResponseEntity<ProductResponse> saveProduct(@RequestBody @Valid ProductRequest productRequest) {
+        ProductResponse savedProduct = productService.createProduct(productRequest);
+        return ResponseEntity.created(URI.create("products"+ savedProduct.getId())).body(savedProduct);
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable long productId, @RequestBody @Valid ProductRequest productRequestDto) {
-        ProductResponse updatedProduct = productService.updateProduct(productId, productRequestDto);
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long productId, @RequestBody @Valid ProductRequest productRequest) {
+        ProductResponse updatedProduct = productService.updateProduct(productId, productRequest);
         return ResponseEntity.ok(updatedProduct);
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable long productId) {
-        productService.deleteProduct(productId);
+    public ResponseEntity<Void> removeMember(@PathVariable Long productId) {
+        productService.removeMember(productId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -59,7 +59,7 @@ class ProductDaoTest {
 
         //when
         ProductEntity productToUpdate = new ProductEntity(productId, "chicken", "imagelink",BigDecimal.valueOf(19000));
-        productDao.updateProduct(productToUpdate);
+        productDao.update(productToUpdate);
 
         //then
         ProductEntity updatedroduct = productDao.findById(productId).get();
@@ -74,7 +74,7 @@ class ProductDaoTest {
         assertThat(productDao.findAll()).hasSize(1);
 
         //when
-        productDao.deleteProduct(productId);
+        productDao.delete(productId);
 
         //then
         assertThat(productDao.findAll()).isEmpty();
