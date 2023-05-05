@@ -1,8 +1,11 @@
 package cart.service;
 
-import cart.dao.CartMemberRepository;
+import cart.dao.CartDao;
+import cart.dao.MemberDao;
 import cart.dto.MemberRequestDto;
 import cart.dto.ProductResponseDto;
+import cart.dto.entity.CartEntity;
+import cart.dto.entity.MemberEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,14 +16,19 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CartService {
 
-    private final CartMemberRepository cartMemberRepository;
+    private final CartDao cartDao;
 
-    public CartService(CartMemberRepository cartMemberRepository) {
-        this.cartMemberRepository = cartMemberRepository;
+    private final MemberDao memberDao;
+
+    public CartService(CartDao cartDao, MemberDao memberDao) {
+        this.cartDao = cartDao;
+        this.memberDao = memberDao;
     }
 
     public List<ProductResponseDto> findAll(MemberRequestDto memberRequestDto) {
-        return cartMemberRepository.findCartByMember(memberRequestDto)
+        MemberEntity member = memberDao.findByEmail(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
+
+        return cartDao.findCartByMember(member.getId())
                 .stream()
                 .map(entity -> new ProductResponseDto(entity.getProductId(),
                         entity.getProductName(),
@@ -31,11 +39,13 @@ public class CartService {
 
     @Transactional
     public void save(MemberRequestDto memberRequestDto, Long id) {
-        cartMemberRepository.createCartByMember(memberRequestDto, id);
+        MemberEntity member = memberDao.findByEmail(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
+        cartDao.save(new CartEntity(id, member.getId()));
     }
 
     @Transactional
     public void delete(MemberRequestDto memberRequestDto, Long id) {
-        cartMemberRepository.delete(memberRequestDto, id);
+        MemberEntity member = memberDao.findByEmail(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
+        cartDao.delete(new CartEntity(id, member.getId()));
     }
 }
