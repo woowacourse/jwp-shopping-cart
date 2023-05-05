@@ -20,14 +20,15 @@ public class UserService {
         return jdbcUserTableDao.readAll()
                 .stream()
                 .map(user ->
-                        new UserDto(
-                                user.getEmail(),
-                                user.getPassword()
-                        ))
+                        new UserDto.Builder()
+                                .id(user.getId())
+                                .password(user.getPassword())
+                                .email(user.getEmail())
+                                .build())
                 .collect(Collectors.toList());
     }
     public boolean authUser(final UserDto userDto){
-        User user = jdbcUserTableDao.findByEmail(userDto.getEmail());
-        return user.authorization(userDto.getEmail(),userDto.getPassword());
+        boolean check= jdbcUserTableDao.findByEmail(userDto.getEmail()).authorization(userDto.getEmail(),userDto.getPassword());
+        return check;
     }
 }

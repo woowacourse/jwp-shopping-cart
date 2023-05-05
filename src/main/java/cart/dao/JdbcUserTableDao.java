@@ -19,6 +19,7 @@ public class JdbcUserTableDao {
         return jdbcTemplate.query(sql,
                 (rs, rowNum) ->
                         new User(
+                                rs.getLong("id"),
                                 rs.getString("user_email"),
                                 rs.getString("user_password"))
 
@@ -30,6 +31,7 @@ public class JdbcUserTableDao {
                 sql,
                 (rs,rowNUm) ->{
                     return new User(
+                            rs.getLong("id"),
                             rs.getString("user_email"),
                             rs.getString("user_password")
                     );

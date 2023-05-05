@@ -10,4 +10,8 @@ public class Password {
     public String value() {
         return stringValue;
     }
+    @Override
+    public boolean equals(Object obj) {
+        return this.stringValue.equals((String) obj);
+    }
 }

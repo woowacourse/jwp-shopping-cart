@@ -15,6 +15,9 @@ public class BasicAuthorizationExtractor {
         String[] emailAndPassword = new String(bytes).split(":");
         String email = emailAndPassword[0];
         String password = emailAndPassword[1];
-        return new UserDto(email, password);
+        return new UserDto.Builder()
+                .email(email)
+                .password(password)
+                .build();
     }
 }

@@ -7,12 +7,18 @@ import cart.entity.vo.Password;
 import java.util.Objects;
 
 public class User {
+    private final Id id;
     private final Email email;
     private final Password password;
 
-    public User(String email, String password) {
+    public User(Long id,String email, String password) {
+        this.id = new Id(id);
         this.email = new Email(email);
         this.password = new Password(password);
+    }
+
+    public Long getId() {
+        return id.value();
     }
 
     public String getEmail() {
