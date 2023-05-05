@@ -18,4 +18,9 @@ public class ProductControllerAdvice {
                 .collect(Collectors.joining(System.lineSeparator()));
         return ResponseEntity.badRequest().body(new ExceptionResponse(exceptionMessage));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(exception.getMessage()));
+    }
 }
