@@ -32,17 +32,6 @@ public class MemberJdbcDao implements MemberDao {
     }
 
     @Override
-    public Optional<MemberEntity> findMemberByEmail(final String email) {
-        final String sql = "SELECT * FROM MEMBER WHERE email = ?";
-
-        try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, getMemberEntityRowMapper(), email));
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
     public Optional<MemberEntity> findMemberById(final int id) {
         final String sql = "SELECT * FROM MEMBER WHERE id = ?";
 

@@ -7,8 +7,6 @@ public interface MemberDao {
 
     List<MemberEntity> findAll();
 
-    Optional<MemberEntity> findMemberByEmail(final String email);
-
     Optional<MemberEntity> findMemberById(final int id);
 
 }
