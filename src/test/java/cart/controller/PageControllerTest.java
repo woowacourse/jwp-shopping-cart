@@ -32,9 +32,6 @@ public class PageControllerTest {
     @MockBean
     private MemberService memberService;
 
-    @MockBean
-    private CartProductService cartProductService;
-
     @Autowired
     private MockMvc mockMvc;
 

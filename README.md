@@ -18,19 +18,28 @@
 
 
 # 예외 처리
-- [x] 상품명
+
+### 상품
+- [x] 이름
   - [x] Null or Empty인 경우
-  - [x] 길이가 255를 초과하는 벗어난 경우
+  - [x] 길이가 255를 초과인 경우
 - [x] 가격
   - [x] Null or Empty인 경우
   - [x] 숫자가 아닌 경우
   - [x] 천만 초과인 경우
   - [x] 0 이하인 경우
-- [x] URL
+- [x] 이미지 URL
   - [x] Null or Empty인 경우
-  - [x] 길이가 255를 초과하는 벗어난 경우
+  - [x] 길이가 255를 초과인 경우
 
-
+### 사용자
+- [x] 이메일
+  - [x] Null or Empty인 경우
+  - [x] 길이가 30자를 초과인 경우
+  - [x] 이메일 형식이 아닌 경우
+- [x] 비밀번호
+  - [x] Null or Empty인 경우
+  - [x] 길이가 5자미만, 30자 초과인 경우
 
 # DDL
 ```sql
@@ -48,8 +57,8 @@ CREATE TABLE PRODUCT
 CREATE TABLE IF NOT EXISTS MEMBER
 (
     ID          INT        UNSIGNED NOT NULL AUTO_INCREMENT,
-    EMAIL       VARCHAR(255)        NOT NULL UNIQUE,,
-    PASSWORD    VARCHAR(255)        NOT NULL,
+    EMAIL       VARCHAR(30)        NOT NULL UNIQUE,,
+    PASSWORD    VARCHAR(30)        NOT NULL,
     PRIMARY KEY (ID)
 );
 ```

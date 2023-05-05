@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -21,11 +23,10 @@ public class CartProductController {
     private final MemberService memberService;
 
     @PostMapping
-    public long save(@AuthenticationPrincipal final Credential credential, @RequestBody final CartProductRequest cartProductRequest) {
+    public ResponseEntity<Void> save(@AuthenticationPrincipal final Credential credential, @RequestBody @Valid final CartProductRequest cartProductRequest) {
         final MemberResponse memberResponse = memberService.findByEmail(credential.getEmail());
-        System.out.println("save: memberid - " + memberResponse.getId());
-        System.out.println("product id - " + cartProductRequest.getProductId());
-        return cartProductService.save(memberResponse.getId(), cartProductRequest);
+        long id = cartProductService.save(memberResponse.getId(), cartProductRequest);
+        return ResponseEntity.created(URI.create("/cart-products/" + id)).build();
     }
 
     @GetMapping

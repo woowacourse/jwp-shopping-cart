@@ -1,6 +1,5 @@
 package cart.controller;
 
-import cart.service.CartProductService;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class PageController {
     private final ProductService productService;
     private final MemberService memberService;
-    private final CartProductService cartProductService;
 
     @GetMapping
     public ModelAndView getIndexPage(final ModelAndView modelAndView) {
