@@ -26,9 +26,10 @@
 
 - [ ] 장바구니 기능 구현
     - [x] 장바구니 페이지 연동
+    - [x] 장바구니 아이템 테이블 설계
+    - [x] 장바구니 관리 API 설계
     - [ ] 장바구니 아이템 객체 구현
-    - [ ] 장바구니 아이템 테이블 설계
-    - [ ] 장바구니 관리 API 설계, 구현
+    - [ ] 장바구니 관리 API 구현, 페이지 - DB 연동
 
 ## API 명세
 
@@ -44,6 +45,10 @@
 ### [상품 관리 REST API](docs/PRODUCTS_API.md)
 
 ### [장바구니 관리 REST API](docs/CART_ITEMS_API.md)
+
+## ERD
+
+![image](https://user-images.githubusercontent.com/97426362/236440197-ab9a1102-6569-45db-9b3e-93a1407ce3ed.png)
 
 ## 코드리뷰 피드백 및 리팩터링 목록
 

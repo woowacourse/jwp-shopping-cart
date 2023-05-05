@@ -67,7 +67,7 @@ HTTP/1.1 204
 ### Request
 
 ```http request
-DELETE /products/1 HTTP/1.1
+DELETE /products/{id} HTTP/1.1
 ```
 
 #### path variable
