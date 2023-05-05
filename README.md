@@ -37,20 +37,63 @@
 
 ## 사용자 API
 
-| Method | URL             | Description |
-|--------|-----------------|-------------|
-| GET    | `/members`      | 사용자 조회      |
-| POST   | `/members`      | 사용자 추가      |
-| PUT    | `/members/{id}` | 사용자 수정      |
-| DELETE | `/members/{id}` | 사용자 삭제      |
+| Method | URL             | Description   |
+|--------|-----------------|---------------|
+| GET    | `/members`      | 사용자 조회        |
+| POST   | `/members`      | 사용자 추가 (회원가입) |
+| PUT    | `/members/{id}` | 사용자 정보 수정     |
+| DELETE | `/members/{id}` | 사용자 삭제        |
+
+### Request
+
+```json
+{
+  "email": "email@naver.com",
+  "password": "qwer1234!@#",
+  "name": "juno",
+  "phone": "010-1111-1111"
+}
+```
+
+### Response
+
+```json
+{
+  "id": 1,
+  "email": "email@naver.com",
+  "name": "juno",
+  "phone": "010-1111-1111"
+}
+```
 
 ## 상품 API
 
-| Method | URL              | Description |
+| Method | URL              | Description | 
 |--------|------------------|-------------|
 | POST   | `/products`      | 상품 작성       |
 | PUT    | `/products/{id}` | 상품 수정       |
 | DELETE | `/products/{id}` | 상품 삭제       |
+
+### Request
+
+```json
+{
+  "name": "상품명",
+  "image": "상품 이미지 URL",
+  "price": 10000
+}
+```
+
+### Response
+
+```json
+{
+  "id": 1,
+  "name": "상품명",
+  "image": "상품 이미지 URL",
+  "price": 10000
+}
+```
 
 ## 장바구니 API
 
@@ -60,6 +103,30 @@
 | POST   | `/carts`      | 장바구니 추가     |
 | PUT    | `/carts/{id}` | 장바구니 수정     |
 | DELETE | `/carts/{id}` | 장바구니 삭제     |
+
+### Request
+
+```json
+{
+  "productId": 1,
+  "count": 1
+}
+```
+
+### Response
+
+```json
+{
+  "id": 1,
+  "product": {
+    "id": 1,
+    "name": "상품명",
+    "image": "상품이미지 URL",
+    "price": 10000
+  },
+  "count": 3
+}
+```
 
 # 테이블 명세
 
