@@ -1,17 +1,17 @@
 package cart.auth;
 
+import cart.auth.excpetion.AuthorizeException;
 import cart.dao.UserDao;
 import cart.dao.entity.User;
 import cart.dto.AuthUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
-
 @Service
 @Transactional(readOnly = true)
 public class AuthService {
 
+    private static final String DIFFERENT_AUTHORIZATION = "인증 정보가 다릅니다.";
     private final BasicAuthExtractor basicAuthExtractor;
     private final UserDao userDao;
 
@@ -28,9 +28,11 @@ public class AuthService {
 
     private AuthUser findByAuthPrincipal(final AuthInfo authInfo) {
         final User findUser = userDao.findByEmail(authInfo.getEmail())
-                .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new AuthorizeException(DIFFERENT_AUTHORIZATION));
 
-        findUser.validatePassword(authInfo.getPassword());
+        if (findUser.isDifferentPassword(authInfo.getPassword())) {
+            throw new AuthorizeException(DIFFERENT_AUTHORIZATION);
+        }
 
         return new AuthUser(findUser);
     }

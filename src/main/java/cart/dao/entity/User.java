@@ -16,12 +16,8 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public void validatePassword(final String password) {
-        if (this.password.equals(password)) {
-            return;
-        }
-
-        throw new IllegalArgumentException("비밀번호가 잘못 되었습니다.");
+    public boolean isDifferentPassword(final String password) {
+        return !this.password.equals(password);
     }
 
     public Long getId() {
