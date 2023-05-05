@@ -32,7 +32,7 @@ public final class ProductApiController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ProductResponseDto>> findProducts() {
         final List<ProductCategoryDto> productCategoryDtos = productService.findAll();
-        return ResponseEntity.ok(ProductResponseDtoMapper.mapTo(productCategoryDtos));
+        return ResponseEntity.ok(ProductResponseDtoMapper.asList(productCategoryDtos));
     }
 
     @PostMapping

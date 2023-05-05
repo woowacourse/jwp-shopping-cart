@@ -3,6 +3,7 @@ package cart.dtomapper;
 import cart.dto.response.CartProductResponseDto;
 import cart.entity.product.ProductEntity;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CartProductResponseDtoMapper {
 
@@ -14,7 +15,9 @@ public class CartProductResponseDtoMapper {
         return CartProductResponseDto.of(productEntity);
     }
 
-    public static List<CartProductResponseDto> mapToDto(final List<ProductEntity> productEntities) {
-        return CartProductResponseDto.asList(productEntities);
+    public static List<CartProductResponseDto> asList(final List<ProductEntity> productEntities) {
+        return productEntities.stream()
+            .map(CartProductResponseDtoMapper::mapToDto)
+            .collect(Collectors.toList());
     }
 }

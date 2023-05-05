@@ -35,7 +35,7 @@ public final class CartApiController {
     public ResponseEntity<List<CartProductResponseDto>> showCart(@BasicAuthorization BasicAuthInfo basicAuthInfo) {
         final Long customerId = customerService.findCustomerIdByBasicAuthInfo(basicAuthInfo);
         final List<ProductEntity> products = cartService.findAllProductsByCustomerId(customerId);
-        return ResponseEntity.ok().body(CartProductResponseDtoMapper.mapToDto(products));
+        return ResponseEntity.ok().body(CartProductResponseDtoMapper.asList(products));
     }
 
     @PostMapping("/{productId}")

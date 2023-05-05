@@ -11,13 +11,13 @@ public class ProductResponseDtoMapper {
 
     }
 
-    public static ProductResponseDto mapTo(final ProductCategoryDto productCategoryDto) {
+    public static ProductResponseDto mapToDto(final ProductCategoryDto productCategoryDto) {
         return ProductResponseDto.of(productCategoryDto);
     }
 
-    public static List<ProductResponseDto> mapTo(final List<ProductCategoryDto> productCategoryDtos) {
+    public static List<ProductResponseDto> asList(final List<ProductCategoryDto> productCategoryDtos) {
         return productCategoryDtos.stream()
-            .map(ProductResponseDtoMapper::mapTo)
+            .map(ProductResponseDtoMapper::mapToDto)
             .collect(Collectors.toList());
     }
 }
