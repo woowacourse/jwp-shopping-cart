@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class MainControllerTest {
+class ViewControllerTest {
 
     @MockBean
     private ProductService productService;

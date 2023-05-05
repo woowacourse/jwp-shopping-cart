@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class MainController {
+public class ViewController {
 
     private final ProductService productService;
     private final MemberService memberService;
 
-    public MainController(final ProductService productService, final MemberService memberService) {
+    public ViewController(final ProductService productService, final MemberService memberService) {
         this.productService = productService;
         this.memberService = memberService;
     }
