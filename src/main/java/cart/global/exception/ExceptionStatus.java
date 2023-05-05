@@ -10,6 +10,7 @@ public enum ExceptionStatus {
     INVALID_AUTHORIZATION(401, "인증되지 않은 사용자입니다.", HttpStatus.UNAUTHORIZED),
     NOT_FOUND_PRODUCT(404, "상품을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     NOT_FOUND_CART(404, "카트를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    NOT_FOUND_MEMBER(404, "사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     INTERNAL_SERVER_EXCEPTION(500, "서버가 응답할 수 없습니다", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final int status;

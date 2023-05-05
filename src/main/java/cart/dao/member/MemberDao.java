@@ -2,6 +2,8 @@ package cart.dao.member;
 
 import cart.dao.Dao;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -46,5 +48,15 @@ public class MemberDao implements Dao<MemberEntity> {
     @Override
     public int deleteById(final Long id) {
         throw new UnsupportedOperationException();
+    }
+
+    public Optional<MemberEntity> findByEmailAndPassword(final String email, final String password) {
+        final String sql = "SELECT * FROM member WHERE email = ? AND password = ?";
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, email, password));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

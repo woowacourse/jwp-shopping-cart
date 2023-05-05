@@ -5,9 +5,9 @@ public class Member {
     private final Name name;
     private final Password password;
 
-    public Member(final Name name, final Password password) {
-        this.name = name;
-        this.password = password;
+    public Member(final String name, final String password) {
+        this.name = new Name(name);
+        this.password = new Password(password);
     }
 
     public String getName() {

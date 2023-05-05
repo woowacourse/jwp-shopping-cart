@@ -40,4 +40,9 @@ public class ViewController {
         model.addAttribute("members", memberSearchResponses);
         return "settings";
     }
+
+    @GetMapping("/carts")
+    public String showProductsInCart() {
+        return "cart";
+    }
 }

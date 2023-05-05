@@ -31,7 +31,7 @@ public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver 
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
     ) {
-        final HttpServletRequest httpServletRequest = (HttpServletRequest)webRequest.getNativeRequest();
+        final HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
         final String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
         if ((authorization.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
