@@ -1,13 +1,18 @@
 package cart.service.product;
 
 public class ProductPrice {
+    private static final int MAX_PRICE = 1_000_000_000;
     private final int price;
 
     public ProductPrice(int price) {
-        if (price > 1_000_000_000) {
+        validate(price);
+        this.price = price;
+    }
+
+    private void validate(int price) {
+        if (price > MAX_PRICE) {
             throw new IllegalArgumentException("상품 가격은 최대 10억입니다.");
         }
-        this.price = price;
     }
 
     public int getPrice() {
