@@ -23,6 +23,10 @@ public class MemberService {
     }
 
     public int findMemberId(String email, String password) {
+        if (!memberDao.isMemberExist(email, password)) {
+            throw new IllegalArgumentException("해당하는 유저가 존재하지 않습니다.");
+        }
+
         return memberDao.findMemberId(email, password);
     }
 }

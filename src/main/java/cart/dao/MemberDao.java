@@ -1,8 +1,11 @@
 package cart.dao;
 
+import cart.entity.CartItemEntity;
 import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -22,11 +25,19 @@ public class MemberDao {
             resultSet.getString("password")
     );
 
+    private final RowMapper<Boolean> booleanMapper = (resultSet, rowNum) -> resultSet.getBoolean("isExist");
+
     public MemberDao(DataSource dataSource, JdbcTemplate jdbcTemplate) {
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("customer")
+                .withTableName("member")
                 .usingGeneratedKeyColumns("id");
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public int addMember(MemberEntity memberEntity) {
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(memberEntity);
+        Number id = simpleJdbcInsert.executeAndReturnKey(parameterSource);
+        return id.intValue();
     }
 
     public List<MemberEntity> selectAllMembers() {
@@ -39,6 +50,12 @@ public class MemberDao {
                 "from member " +
                 "where member.email = ? and member.password = ?";
         return jdbcTemplate.queryForObject(sql, int.class, email, password);
+    }
+
+    public boolean isMemberExist(String email, String password) {
+        String sql = "select exists(" +
+                "select * from member where member.email = ? and member.password = ?) as isExist";
+        return jdbcTemplate.queryForObject(sql, booleanMapper, email, password);
     }
 
 }

@@ -18,13 +18,6 @@ public class CartItemDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<CartItemEntity> cartItemMapper
-            = (resultSet, rowNum) -> new CartItemEntity(
-            resultSet.getInt("id"),
-            resultSet.getInt("member_id"),
-            resultSet.getInt("product_id")
-    );
-
     private final RowMapper<ProductEntity> productMapper
             = (resultSet, rowNum) -> new ProductEntity(
             resultSet.getInt("id"),
@@ -32,6 +25,8 @@ public class CartItemDao {
             resultSet.getInt("price"),
             resultSet.getString("image")
     );
+
+    private final RowMapper<Boolean> booleanMapper = (resultSet, rowNum) -> resultSet.getBoolean("isExist");
 
     public CartItemDao(DataSource dataSource, JdbcTemplate jdbcTemplate) {
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
@@ -46,6 +41,12 @@ public class CartItemDao {
         return id.intValue();
     }
 
+    public boolean isCartItemExist(int memberId, int productId) {
+        String sql = "select exists(" +
+                "select * from cartItem where cartItem.member_id = ? and cartItem.product_id = ?) as isExist";
+        return jdbcTemplate.queryForObject(sql, booleanMapper, memberId, productId);
+    }
+
     public List<ProductEntity> selectAllCartItems(int memberId) {
         String sql = "select product.id, product.name, product.price, product.image " +
                 "from cartitem, product " +
@@ -57,4 +58,5 @@ public class CartItemDao {
         String sql = "delete from cartItem where id = ?";
         jdbcTemplate.update(sql, cartItemId);
     }
+
 }
