@@ -5,6 +5,7 @@ import cart.product.dto.ProductResponse;
 import cart.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ import javax.validation.Valid;
 public class ProductController {
     private final ProductService productService;
     
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductResponse> save(@RequestBody @Valid ProductRequest productRequest) {
         final Long productId = productService.save(productRequest);
         final ProductResponse productResponse = ProductResponse.builder()

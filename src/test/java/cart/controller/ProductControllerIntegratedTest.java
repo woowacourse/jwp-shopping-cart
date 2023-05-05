@@ -336,7 +336,7 @@ class ProductControllerIntegratedTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(ContentType.JSON)
-                .body("message", is("[ERROR] 가격의 최대 금액은 1000만원입니다."));
+                .body("message", is("[ERROR] 입력 형식이 잘못되었습니다."));
     }
     
     @ParameterizedTest(name = "{displayName} : name = {0}")
@@ -539,6 +539,6 @@ class ProductControllerIntegratedTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(ContentType.JSON)
-                .body("message", is("[ERROR] 가격의 최대 금액은 1000만원입니다."));
+                .body("message", is("[ERROR] 입력 형식이 잘못되었습니다."));
     }
 }

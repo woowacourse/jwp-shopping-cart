@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     }
     
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException() {
-        return ResponseEntity.badRequest().body(new ExceptionResponse("[ERROR] 가격의 최대 금액은 1000만원입니다."));
+    public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse("[ERROR] 입력 형식이 잘못되었습니다."));
     }
 }
