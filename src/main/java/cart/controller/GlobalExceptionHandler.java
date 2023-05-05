@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import cart.controller.auth.exception.AuthenticationException;
 import cart.controller.dto.ExceptionResponse;
 
 @RestControllerAdvice
@@ -19,6 +21,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleUnhandled(Exception exception) {
         exception.printStackTrace();
         return ResponseEntity.internalServerError().build();
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ExceptionResponse> handleAuthenticationException(final AuthenticationException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionResponse(exception.getMessage()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
