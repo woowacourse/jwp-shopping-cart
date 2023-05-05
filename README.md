@@ -1,5 +1,20 @@
 # jwp-shopping-cart
 
+## API 명세
+
+| Method | URI            |Description|
+|--------|----------------|---|
+|Get| /              | 상품목록 페이지 |
+|Get | /admin         | 관리자 페이지|
+|Get | /settings      | 설정 페이지 |
+|Get | /cart          | 장바구니 페이지 |
+|Post | /admin/product | 상품 추가 |
+|Put | /admin/product/{id} | 상품 정보 변경 |
+|Delete | /admin/product/{id} | 상품 삭제 |
+|Post | /carts/product | 장바구니에 상품 담기 |
+|Delete | /carts/product/{id} | 장바구니에 담긴 상품 삭제 |
+
+
 ## 2단계 기능 요구사항
 - [x] 사용자 기능 구현
   - [x] 사용자 정보(email, password)
