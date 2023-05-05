@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.cartitem;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,5 +10,5 @@ public class CartItem {
     private final Long id;
     private final String productName;
     private final String productImageUrl;
-    private final String productPrice;
+    private final Integer productPrice;
 }
