@@ -1,4 +1,4 @@
-package cart.auth;
+package cart.dto;
 
 public class MemeberDto {
     private String email;

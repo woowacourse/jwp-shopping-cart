@@ -1,5 +1,6 @@
 package cart.auth;
 
+import cart.dto.MemeberDto;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

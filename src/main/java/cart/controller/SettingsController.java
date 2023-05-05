@@ -1,7 +1,6 @@
 package cart.controller;
 
-
-import cart.dao.MemeberDao;
+import cart.dao.member.MemeberDao;
 import cart.domain.Member;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
