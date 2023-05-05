@@ -20,7 +20,7 @@ import java.net.URI;
 
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductsController {
 
     private final ProductsService productsService;

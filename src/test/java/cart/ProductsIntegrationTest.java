@@ -40,7 +40,7 @@ public class ProductsIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
-                .post("/products")
+                .post("/api/products")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -54,7 +54,7 @@ public class ProductsIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
-                .post("/products")
+                .post("/api/products")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("size()", is(3));
@@ -77,7 +77,7 @@ public class ProductsIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productUpdateRequest)
                 .when()
-                .put("/products/" + createdId)
+                .put("/api/products/" + createdId)
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -91,7 +91,7 @@ public class ProductsIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productUpdateRequest)
                 .when()
-                .put("/products/1")
+                .put("/api/products/1")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("size()", is(4));
@@ -107,7 +107,7 @@ public class ProductsIntegrationTest {
         RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/products/" + createdId)
+                .delete("/api/products/" + createdId)
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
