@@ -46,6 +46,8 @@ CREATE TABLE PRODUCT
 
 - [x] 관리자 페이지에서 상품 삭제 시 장바구니에 있는 해당 상품 정보도 같이 삭제
 
+- [x] slf4j를 통해 에러 로그를 찍는 기능 구현
+
 ```sql
 CREATE TABLE IF NOT EXISTS MEMBER
 (
