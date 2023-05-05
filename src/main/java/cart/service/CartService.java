@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,18 +63,19 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public CartResponse update(CartRequest cartRequest, Long cartId) {
-        CartEntity cart = cartDao.findById(cartId)
-                .orElseThrow(() -> new NoSuchElementException("해당 장바구니를 찾을 수 없습니다." + System.lineSeparator() + "cartId : " + cartId));
+    public CartResponse update(CartRequest cartRequest, Long cartId, Long memberId) {
+        CartEntity cart = findCartByMemberId(cartId, memberId);
         cart.replace(cartRequest.getCount());
         cartDao.update(cart);
         return cartMapper.entityToResponse(cart);
     }
 
-    public CartResponse increaseCount(CartEntity cart) {
-        cart.replace(cart.getCount() + 1);
-        cartDao.update(cart);
-        return cartMapper.entityToResponse(cart);
+    private CartEntity findCartByMemberId(Long cartId, Long memberId) {
+        return cartDao.findByMemberId(memberId)
+                .stream()
+                .filter(o -> Objects.equals(o.getId(), cartId))
+                .findAny()
+                .orElseThrow(() -> new NoSuchElementException("해당 장바구니를 찾을 수 없습니다." + System.lineSeparator() + "cartId : " + cartId));
     }
 
     public void deleteById(Long id) {
