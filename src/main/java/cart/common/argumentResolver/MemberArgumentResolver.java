@@ -1,5 +1,6 @@
 package cart.common.argumentResolver;
 
+import cart.exception.AuthException;
 import cart.service.member.dto.MemberRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
@@ -25,19 +26,20 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String header = webRequest.getHeader("Authorization");
 
         if (header == null) {
-            return null;
+            throw new AuthException("올바르지 않은 인증 정보입니다.");
         }
-        if (header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
-            String authValue = header.substring(BASIC_TYPE.length()).trim();
-            byte[] decodedAuthByteValue = Base64.decodeBase64(authValue);
-            String decodedAuthString = new String(decodedAuthByteValue);
+        if (!header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
+            throw new AuthException("올바르지 않은 인증 방식입니다.");
 
-            String[] credentials = decodedAuthString.split(DELIMITER);
-            String email = credentials[0];
-            String password = credentials[1];
-
-            return new MemberRequest(email, password);
         }
-        return null;
+        String authValue = header.substring(BASIC_TYPE.length()).trim();
+        byte[] decodedAuthByteValue = Base64.decodeBase64(authValue);
+        String decodedAuthString = new String(decodedAuthByteValue);
+
+        String[] credentials = decodedAuthString.split(DELIMITER);
+        String email = credentials[0];
+        String password = credentials[1];
+
+        return new MemberRequest(email, password);
     }
 }
