@@ -1,8 +1,8 @@
 package cart.fixture;
 
-import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.service.product.Product;
+import cart.service.product.dto.ProductRequest;
+import cart.service.product.dto.ProductResponse;
 
 public class ProductFixture {
     public static Product PIZZA = new Product("PIZZA", "url", 10000);

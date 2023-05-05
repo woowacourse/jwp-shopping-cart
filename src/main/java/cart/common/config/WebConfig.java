@@ -1,6 +1,6 @@
 package cart.common.config;
 
-import cart.common.MemberArgumentResolver;
+import cart.common.argumentResolver.MemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

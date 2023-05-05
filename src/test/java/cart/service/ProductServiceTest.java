@@ -1,10 +1,11 @@
 package cart.service;
 
-import cart.dao.ProductDao;
-import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
 import cart.fixture.ProductFixture;
+import cart.service.product.Product;
+import cart.service.product.ProductDao;
+import cart.service.product.ProductService;
+import cart.service.product.dto.ProductRequest;
+import cart.service.product.dto.ProductResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ class ProductServiceTest {
     @Test
     void 상품을_저장한다() {
         ProductRequest productRequest = new ProductRequest("image", "name", 1000);
-        Long productId = productService.create(productRequest);
+        productService.create(productRequest);
 
         List<ProductResponse> products = productService.findAll();
 
@@ -64,7 +65,7 @@ class ProductServiceTest {
         ProductResponse updatedResponse = productService.update(updateRequest, productId);
 
         Assertions.assertAll(
-                () -> assertThat(updatedResponse.getImage()).isEqualTo(updateRequest.getImageUrl()),
+                () -> assertThat(updatedResponse.getImageUrl()).isEqualTo(updateRequest.getImageUrl()),
                 () -> assertThat(updatedResponse.getName()).isEqualTo(updateRequest.getName()),
                 () -> assertThat(updatedResponse.getPrice()).isEqualTo(updateRequest.getPrice())
         );
