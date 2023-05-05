@@ -1,3 +1,10 @@
+const currentUrl = window.location.href;
+const url = new URL(currentUrl);
+const protocol = url.protocol;
+const hostname = url.hostname;
+const port = url.port;
+const currentServerUrl = protocol + "//" + hostname + ":" + port;
+
 const addCartItem = (itemId) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
@@ -6,7 +13,7 @@ const addCartItem = (itemId) => {
         return;
     }
 
-    axios.post('http://localhost:8080/carts/' + itemId, {}, {
+    axios.post(currentServerUrl + '/carts/' + itemId, {}, {
         headers: {
             'Authorization': `Basic ${credentials}`
         }
@@ -26,7 +33,7 @@ const removeCartItem = (id) => {
         return;
     }
 
-    axios.delete('http://localhost:8080/carts/' + id, {
+    axios.delete(currentServerUrl + '/carts/' + id, {
         headers: {
             'Authorization': `Basic ${credentials}`
         }
