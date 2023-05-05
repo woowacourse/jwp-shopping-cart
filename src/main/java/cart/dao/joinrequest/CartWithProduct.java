@@ -2,36 +2,36 @@ package cart.dao.joinrequest;
 
 public class CartWithProduct {
     private final Integer memberId;
-    private final Integer id;
-    private final String name;
-    private final String image;
-    private final Integer price;
+    private final Integer productId;
+    private final String productName;
+    private final String productImage;
+    private final Integer productPrice;
 
-    public CartWithProduct(final Integer memberId, final Integer id, final String name, final String image, final Integer price) {
+    public CartWithProduct(final Integer memberId, final Integer productId, final String productName, final String productImage, final Integer productPrice) {
         this.memberId = memberId;
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.price = price;
+        this.productId = productId;
+        this.productName = productName;
+        this.productImage = productImage;
+        this.productPrice = productPrice;
     }
 
     public Integer getMemberId() {
         return memberId;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public String getName() {
-        return name;
+    public String getProductName() {
+        return productName;
     }
 
-    public String getImage() {
-        return image;
+    public String getProductImage() {
+        return productImage;
     }
 
-    public Integer getPrice() {
-        return price;
+    public Integer getProductPrice() {
+        return productPrice;
     }
 }

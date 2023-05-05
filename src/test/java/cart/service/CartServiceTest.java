@@ -1,21 +1,29 @@
 package cart.service;
 
 import cart.auth.MemberInfo;
-import cart.dao.CartDao;
+import cart.domain.Cart;
+import cart.domain.Product;
 import cart.dto.request.ProductRequestDto;
 import cart.excpetion.CartException;
+import cart.repository.CartRepository;
+import cart.repository.ProductRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DataIntegrityViolationException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -24,18 +32,29 @@ class CartServiceTest {
 
     private static final ProductRequestDto PRODUCT_DTO = new ProductRequestDto(1);
     private static final MemberInfo MEMBER_INFO = new MemberInfo(1, "email");
+    private Cart defaultCart;
     @InjectMocks
     private CartService cartService;
 
     @Mock
-    private CartDao cartDao;
+    private CartRepository cartRepository;
+
+    @Mock
+    private ProductRepository productRepository;
+
+    @BeforeEach
+    void setting() {
+        final List<Product> products = new ArrayList<>();
+        products.add(new Product(1, "a", "", 1));
+        defaultCart = new Cart(1, products);
+    }
 
     @DisplayName("만약 이미 장바구니에 해당 아이템이 등록되어 있다면 예외가 발생한다")
     @Test
     void addProduct_invalid_exitingCartItem() {
         //given
-        given(cartDao.existingCartItem(anyInt(), anyInt()))
-                .willReturn(true);
+        given(cartRepository.getCartOf(anyInt())).willReturn(defaultCart);
+        given(productRepository.findBy(anyInt())).willReturn(Optional.of(new Product(1, "a", "", 1)));
 
         //when,then
         assertThatThrownBy(() -> cartService.addProduct(MEMBER_INFO, PRODUCT_DTO))
@@ -46,52 +65,63 @@ class CartServiceTest {
     @Test
     void addProduct_invalid_nonexistenceRequest() {
         //given
-        doThrow(new DataIntegrityViolationException("")).when(cartDao).addProduct(anyInt(), anyInt());
+        given(productRepository.findBy(anyInt()))
+                .willReturn(Optional.empty());
 
         //when,then
-        assertThatThrownBy(() -> cartService.addProduct(MEMBER_INFO, PRODUCT_DTO))
-                .isInstanceOf(CartException.class);
+        assertThatThrownBy(() -> cartService.addProduct(MEMBER_INFO, PRODUCT_DTO)).isInstanceOf(CartException.class);
     }
 
     @DisplayName("정상 요청 시 카트에 새로운 아이템을 넣는다")
     @Test
     void addProduct() {
-        //given,
-        given(cartDao.existingCartItem(anyInt(), anyInt()))
-                .willReturn(false);
+        //given
+        final int newItemId = 2;
+        given(productRepository.findBy(anyInt()))
+                .willReturn(Optional.of(new Product(newItemId, "a", "", 1)));
+        given(cartRepository.getCartOf(anyInt()))
+                .willReturn(defaultCart);
+        doNothing().when(cartRepository).save(any());
 
         //when
-        cartService.addProduct(MEMBER_INFO, PRODUCT_DTO);
+        cartService.addProduct(MEMBER_INFO, new ProductRequestDto(newItemId));
 
         //then
-        verify(cartDao, times(1)).existingCartItem(anyInt(), anyInt());
-        verify(cartDao, times(1)).addProduct(anyInt(), anyInt());
+        verify(cartRepository, times(1)).save(any());
+        verify(cartRepository, times(1)).getCartOf(anyInt());
+        verify(productRepository, times(1)).findBy(anyInt());
     }
 
     @DisplayName("카드에 등록되어 있는 정보에 대한 삭제 요청이 아니라면 예외가 발생한다")
     @Test
     void deleteProduct_invalid_nonexistenceCartData() {
-        //given,
-        given(cartDao.existingCartItem(anyInt(), anyInt()))
-                .willReturn(false);
+        //given
+        final int productNotInCart = 2;
+        given(productRepository.findBy(anyInt()))
+                .willReturn(Optional.of(new Product(productNotInCart, "a", "", 1)));
+        given(cartRepository.getCartOf(anyInt()))
+                .willReturn(defaultCart);
 
         //when,then
-        assertThatThrownBy(() -> cartService.deleteProduct(MEMBER_INFO, 1))
-                .isInstanceOf(CartException.class);
+        assertThatThrownBy(() -> cartService.deleteProduct(MEMBER_INFO, productNotInCart)).isInstanceOf(CartException.class);
     }
 
-    @DisplayName("만약 해당 유저의 cart 항목이 있따면 해당 Cart 아이템을 삭제한다")
+    @DisplayName("만약 해당 유저의 cart 항목이 있다면 해당 Cart 아이템을 삭제한다")
     @Test
     void deleteProduct() {
         //given
-        given(cartDao.existingCartItem(anyInt(), anyInt()))
-                .willReturn(true);
+        given(productRepository.findBy(anyInt()))
+                .willReturn(Optional.of(new Product(1, "a", "", 1)));
+        given(cartRepository.getCartOf(anyInt()))
+                .willReturn(defaultCart);
+        doNothing().when(cartRepository).save(any());
 
         //when
         cartService.deleteProduct(MEMBER_INFO, 1);
 
         //then
-        verify(cartDao, times(1)).existingCartItem(anyInt(), anyInt());
-        verify(cartDao, times(1)).deleteProduct(anyInt(), anyInt());
+        verify(cartRepository, times(1)).save(any());
+        verify(cartRepository, times(1)).getCartOf(anyInt());
+        verify(productRepository, times(1)).findBy(anyInt());
     }
 }

@@ -58,4 +58,37 @@ public class CartDao {
                 ), memberId
         );
     }
+
+    public void deleteProducts(final int memberId, final List<Integer> deletedCartItems) {
+        final String sql = "delete from cart where member_id = ? and product_id = ?";
+        jdbcTemplate.batchUpdate(
+                sql,
+                deletedCartItems,
+                optimizeBatchSize(deletedCartItems.size()),
+                (ps, argument) -> {
+                    ps.setInt(1, memberId);
+                    ps.setInt(2, argument.intValue());
+                }
+        );
+    }
+
+    public void insertProducts(final Integer memberId, final List<Integer> insertedCartItems) {
+        final String sql = "insert into cart (member_id, product_id) values(?, ?) ";
+        jdbcTemplate.batchUpdate(
+                sql,
+                insertedCartItems,
+                optimizeBatchSize(insertedCartItems.size()),
+                (ps, argument) -> {
+                    ps.setInt(1, memberId);
+                    ps.setInt(2, argument.intValue());
+                }
+        );
+    }
+
+    private int optimizeBatchSize(final int size) {
+        if (size > 100) {
+            return 100;
+        }
+        return size;
+    }
 }

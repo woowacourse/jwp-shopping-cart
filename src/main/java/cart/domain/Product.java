@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class Product {
     private static final int MIN_NAME_LENGTH = 1;
     private static final int MAX_NAME_LENGTH = 20;
@@ -65,5 +67,18 @@ public class Product {
 
     public Integer getPrice() {
         return price;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Product product = (Product) o;
+        return id.equals(product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
