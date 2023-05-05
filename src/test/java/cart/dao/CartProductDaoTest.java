@@ -9,7 +9,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import static cart.fixture.ProductFixture.*;
+import static cart.fixture.ProductFixture.FIRST_PRODUCT;
+import static cart.fixture.ProductFixture.SECOND_PRODUCT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -43,7 +44,7 @@ public class CartProductDaoTest {
         cartProductDao.save(firstCartProduct);
         cartProductDao.save(secondCartProduct);
 
-        assertThat(cartProductDao.findAllProductByMemberId(1L)).containsExactly(FIRST_PRODUCT_WITH_ID, SECOND_PRODUCT_WITH_ID);
+        assertThat(cartProductDao.findAllProductByMemberId(1L)).containsExactly(FIRST_PRODUCT.PRODUCT_WITH_ID, SECOND_PRODUCT.PRODUCT_WITH_ID);
     }
 
     private void saveMember() {
@@ -52,7 +53,7 @@ public class CartProductDaoTest {
     }
 
     private void saveProducts() {
-        System.out.println("save! " + productDao.save(FIRST_PRODUCT));
-        System.out.println("save! " + productDao.save(SECOND_PRODUCT));
+        productDao.save(FIRST_PRODUCT.PRODUCT);
+        productDao.save(SECOND_PRODUCT.PRODUCT);
     }
 }

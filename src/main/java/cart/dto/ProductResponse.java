@@ -1,14 +1,10 @@
 package cart.dto;
 
 import cart.domain.Product;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 @Getter
-@ToString
-@EqualsAndHashCode
 @RequiredArgsConstructor
 public class ProductResponse {
     private final Long id;
