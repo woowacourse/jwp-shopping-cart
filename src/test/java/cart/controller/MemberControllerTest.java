@@ -34,6 +34,6 @@ public class MemberControllerTest {
                 .body(memberRequestDto)
                 .when().post("/member")
                 .then()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+                .statusCode(HttpStatus.CREATED.value());
     }
 }

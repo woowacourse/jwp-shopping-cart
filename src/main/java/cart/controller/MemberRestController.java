@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 public class MemberRestController {
@@ -19,7 +20,7 @@ public class MemberRestController {
 
     @PostMapping("/member")
     public ResponseEntity<Void> createMember(@RequestBody @Valid MemberRequestDto memberRequestDto) {
-        memberService.addMember(memberRequestDto);
-        return ResponseEntity.noContent().build();
+        Long memberId = memberService.addMember(memberRequestDto);
+        return ResponseEntity.created(URI.create("/member/" + memberId)).build();
     }
 }

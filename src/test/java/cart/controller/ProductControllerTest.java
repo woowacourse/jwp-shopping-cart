@@ -35,7 +35,7 @@ class ProductControllerTest {
                 .body(productSaveRequestDto)
                 .when().post("/product")
                 .then()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("상품이 null일 경우 예외 발생")
@@ -76,7 +76,7 @@ class ProductControllerTest {
                 .body(productSaveRequestDto)
                 .when().post("/product");
 
-        ProductUpdateRequestDto updateDto = new ProductUpdateRequestDto(1L, "오션", "", 50);
+        ProductUpdateRequestDto updateDto = new ProductUpdateRequestDto("오션", "", 50);
 
         //then
         given().log().uri()

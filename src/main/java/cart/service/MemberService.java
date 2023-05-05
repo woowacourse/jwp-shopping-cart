@@ -21,8 +21,9 @@ public class MemberService {
     }
 
     @Transactional
-    public void addMember(MemberRequestDto memberRequestDto) {
-        memberDao.save(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
+    public Long addMember(MemberRequestDto memberRequestDto) {
+        MemberEntity member = memberDao.save(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
+        return member.getId();
     }
 
     public List<MemberResponseDto> findMembers() {

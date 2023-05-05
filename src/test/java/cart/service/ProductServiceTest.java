@@ -56,7 +56,7 @@ class ProductServiceTest {
         productService.addProduct(new ProductSaveRequestDto("오션", "이미지", 10000));
         ProductResponseDto product = productService.findProducts().get(0);
         //then
-        assertThatNoException().isThrownBy(() -> productService.updateProduct(1L, new ProductUpdateRequestDto(product.getId(), "연어", "이미지", 100)));
+        assertThatNoException().isThrownBy(() -> productService.updateProduct(1L, new ProductUpdateRequestDto("연어", "이미지", 100)));
     }
 
     @DisplayName("상품이 없을 때 update 시 예외가 발생한다.")

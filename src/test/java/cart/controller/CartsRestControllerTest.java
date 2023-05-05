@@ -54,7 +54,7 @@ class CartsRestControllerTest {
                 .header("Authorization", "Basic " + encoded)
                 .when().post("/carts/{id}", 1)
                 .then()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test

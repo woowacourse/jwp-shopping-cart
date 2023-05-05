@@ -24,17 +24,19 @@ public class ProductService {
     }
 
     @Transactional
-    public void addProduct(ProductSaveRequestDto productSaveRequestDto) {
+    public Long addProduct(ProductSaveRequestDto productSaveRequestDto) {
         Product product = new Product(
                 productSaveRequestDto.getName(),
                 productSaveRequestDto.getImage(),
                 productSaveRequestDto.getPrice());
 
-        productDao.save(
+        ProductEntity saveProduct = productDao.save(
                 new ProductEntity(product.getId(),
                         product.getName(),
                         product.getImage(),
                         product.getPrice()));
+
+        return saveProduct.getId();
     }
 
     public List<ProductResponseDto> findProducts() {
