@@ -1,6 +1,7 @@
 package cart.common;
 
 import cart.dto.MemberRequestDto;
+import cart.exception.UnAuthorizationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -21,7 +22,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String header = webRequest.getHeader("Authorization");
         if (header == null) {
-            return null;
+            throw new UnAuthorizationException();
         }
 
         if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
@@ -36,6 +37,6 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             return new MemberRequestDto(email, password);
         }
 
-        return null;
+        throw new UnAuthorizationException();
     }
 }
