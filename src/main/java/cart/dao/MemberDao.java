@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -39,12 +40,12 @@ public class MemberDao {
                         rs.getString("password")));
     }
 
-    public MemberEntity findByEmail(MemberEntity memberEntity) {
+    public Optional<MemberEntity> findByEmail(MemberEntity memberEntity) {
         String sql = "SELECT * FROM members WHERE email LIKE ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+        return Optional.of(jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
                         new MemberEntity(rs.getLong("id"),
                                 rs.getString("email"),
                                 rs.getString("password")),
-                memberEntity.getEmail());
+                memberEntity.getEmail()));
     }
 }

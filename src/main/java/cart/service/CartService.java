@@ -7,16 +7,17 @@ import cart.dto.MemberRequestDto;
 import cart.dto.ProductResponseDto;
 import cart.dto.entity.CartEntity;
 import cart.dto.entity.MemberEntity;
+import cart.exception.NotFoundUserException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 public class CartService {
-    private static final String NOT_EXIST_MEMBER = "해당하는 사용자가 없습니다.";
     private final CartDao cartDao;
 
     private final MemberDao memberDao;
@@ -28,10 +29,10 @@ public class CartService {
 
     public List<ProductResponseDto> findAll(MemberRequestDto memberRequestDto) {
         Member member = new Member(memberRequestDto.getEmail(), memberRequestDto.getPassword());
-        MemberEntity findMember = memberDao.findByEmail(new MemberEntity(member.getEmail(), member.getPassword()));
-        validateExistence(findMember.getId());
+        Optional<MemberEntity> findMember = memberDao.findByEmail(new MemberEntity(member.getEmail(), member.getPassword()));
+        findMember.orElseThrow(NotFoundUserException::new);
 
-        return cartDao.findCartByMember(findMember.getId())
+        return cartDao.findCartByMember(findMember.get().getId())
                 .stream()
                 .map(entity -> new ProductResponseDto(entity.getProductId(),
                         entity.getProductName(),
@@ -43,26 +44,18 @@ public class CartService {
     @Transactional
     public void save(MemberRequestDto memberRequestDto, Long id) {
         Member member = new Member(memberRequestDto.getEmail(), memberRequestDto.getPassword());
-        MemberEntity findMember = memberDao.findByEmail(new MemberEntity(member.getEmail(), member.getPassword()));
+        Optional<MemberEntity> findMember = memberDao.findByEmail(new MemberEntity(member.getEmail(), member.getPassword()));
+        findMember.orElseThrow(NotFoundUserException::new);
 
-        validateExistence(findMember.getId());
-
-        cartDao.save(new CartEntity(id, findMember.getId()));
+        cartDao.save(new CartEntity(id, findMember.get().getId()));
     }
 
     @Transactional
     public void delete(MemberRequestDto memberRequestDto, Long id) {
         Member member = new Member(memberRequestDto.getEmail(), memberRequestDto.getPassword());
-        MemberEntity findMember = memberDao.findByEmail(new MemberEntity(member.getEmail(), member.getPassword()));
+        Optional<MemberEntity> findMember = memberDao.findByEmail(new MemberEntity(member.getEmail(), member.getPassword()));
+        findMember.orElseThrow(NotFoundUserException::new);
 
-        validateExistence(findMember.getId());
-
-        cartDao.delete(new CartEntity(id, findMember.getId()));
-    }
-
-    private void validateExistence(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException(NOT_EXIST_MEMBER);
-        }
+        cartDao.delete(new CartEntity(id, findMember.get().getId()));
     }
 }

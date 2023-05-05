@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -55,11 +56,12 @@ class MemberDaoTest {
     void findByEmail() {
         MemberEntity member = memberDao.save(new MemberEntity("eastsea@eastsea", "eastsea"));
 
-        MemberEntity findMember = memberDao.findByEmail(new MemberEntity(member.getEmail(), member.getPassword()));
+        Optional<MemberEntity> findMember = memberDao.findByEmail(new MemberEntity(member.getEmail(), member.getPassword()));
+
 
         assertAll(
-                () -> assertThat(findMember.getEmail()).isEqualTo("eastsea@eastsea"),
-                () -> assertThat(findMember.getPassword()).isEqualTo("eastsea")
+                () -> assertThat(findMember.get().getEmail()).isEqualTo("eastsea@eastsea"),
+                () -> assertThat(findMember.get().getPassword()).isEqualTo("eastsea")
         );
     }
 }

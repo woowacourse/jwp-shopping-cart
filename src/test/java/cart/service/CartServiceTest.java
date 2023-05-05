@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,7 +38,7 @@ class CartServiceTest {
         ProductResponseDto productResponseDto = new ProductResponseDto(1L, "ocean", "image", 1000);
         MemberCartEntity memberCartEntity = new MemberCartEntity(1L, 1L, "ocean", "image", 1000);
 
-        when(memberDao.findByEmail(any())).thenReturn(new MemberEntity(1L, member.getEmail(), member.getPassword()));
+        when(memberDao.findByEmail(any())).thenReturn(Optional.of(new MemberEntity(1L, member.getEmail(), member.getPassword())));
         when(cartDao.findCartByMember(any())).thenReturn(List.of(memberCartEntity));
 
         assertThat(cartService.findAll(member)).usingRecursiveComparison().isEqualTo(List.of(productResponseDto));
@@ -48,7 +49,7 @@ class CartServiceTest {
     void save() {
         MemberRequestDto member = new MemberRequestDto("eastsea@eastsea", "eastsea");
         doNothing().when(cartDao).save(any());
-        when(memberDao.findByEmail(any())).thenReturn(new MemberEntity(1L, member.getEmail(), member.getPassword()));
+        when(memberDao.findByEmail(any())).thenReturn(Optional.of(new MemberEntity(1L, member.getEmail(), member.getPassword())));
 
         cartService.save(member, 1L);
 
@@ -60,7 +61,7 @@ class CartServiceTest {
     void delete() {
         MemberRequestDto member = new MemberRequestDto("eastsea@eastsea", "eastsea");
         doNothing().when(cartDao).save(any());
-        when(memberDao.findByEmail(any())).thenReturn(new MemberEntity(1L, member.getEmail(), member.getPassword()));
+        when(memberDao.findByEmail(any())).thenReturn(Optional.of(new MemberEntity(1L, member.getEmail(), member.getPassword())));
 
         cartService.save(member, 1L);
         cartService.delete(member, 1L);
