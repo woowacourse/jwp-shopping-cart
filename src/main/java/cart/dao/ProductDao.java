@@ -25,9 +25,7 @@ public class ProductDao {
             resultSet.getString("image")
     );
 
-    private final RowMapper<Boolean> booleanMapper = (resultSet, rowNum) -> new Boolean(
-            resultSet.getBoolean("isExist")
-    );
+    private final RowMapper<Boolean> booleanMapper = (resultSet, rowNum) -> resultSet.getBoolean("isExist");
 
     public ProductDao(DataSource dataSource, JdbcTemplate jdbcTemplate) {
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)

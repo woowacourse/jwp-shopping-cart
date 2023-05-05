@@ -6,7 +6,6 @@ import cart.entity.CartItemEntity;
 import cart.entity.ProductEntity;
 import cart.service.CartItemService;
 import cart.service.MemberService;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

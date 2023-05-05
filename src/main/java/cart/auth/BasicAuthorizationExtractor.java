@@ -6,10 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 
 public class BasicAuthorizationExtractor {
 
-    String AUTHORIZATION = "Authorization";
-
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
+    String AUTHORIZATION = "Authorization";
 
     public AuthInfo extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);

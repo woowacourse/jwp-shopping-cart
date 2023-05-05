@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AdminControllerTest {
+class AdminControllerTest {
 
     @LocalServerPort
     private int port;

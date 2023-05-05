@@ -2,13 +2,14 @@ package cart.auth;
 
 public class AuthInfo {
 
-    private String email;
-    private String password;
+    private final String email;
+    private final String password;
 
     public AuthInfo(String email, String password) {
         this.email = email;
         this.password = password;
     }
+
     public String getEmail() {
         return email;
     }
