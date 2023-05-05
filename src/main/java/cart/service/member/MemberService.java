@@ -1,4 +1,4 @@
-package cart.service;
+package cart.service.member;
 
 import cart.dao.MemberDao;
 import cart.domain.Member;

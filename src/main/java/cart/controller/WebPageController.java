@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.controller.dto.response.MemberResponse;
 import cart.controller.dto.response.ProductResponse;
-import cart.service.MemberService;
+import cart.service.member.MemberService;
 import cart.service.product.ProductReadService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
