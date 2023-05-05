@@ -18,8 +18,8 @@ public final class CartEntity {
         this.productId = productId;
     }
 
-    public boolean isOwner(final MemberEntity member) {
-        return memberId.equals(member.getId());
+    public boolean isOwner(final Long memberId) {
+        return this.memberId.equals(memberId);
     }
 
     public Long getId() {

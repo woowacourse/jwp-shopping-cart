@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-import cart.dto.MemberAuthDto;
 import cart.service.CartService;
 import cart.service.ProductService;
 import cart.test.ProductRequestFixture;
@@ -40,13 +39,13 @@ class CartApiControllerTest {
 
     @Nested
     @DisplayName("장바구니 목록 조회 시")
-    class FindCartItemsForMember {
+    class FindCartItemsForMemberId {
 
         @Test
         @DisplayName("멤버 정보가 유효하다면 장바구니 목록을 조회한다.")
         void findCartItemsForMember() {
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
-            final Long savedCartId = cartService.putInCart(savedProductId, new MemberAuthDto("a@a.com", "password1"));
+            final Long savedCartId = cartService.putInCart(savedProductId, 1L);
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com:password1".getBytes()));
 
             RestAssured.given()
@@ -118,7 +117,7 @@ class CartApiControllerTest {
         @Test
         @DisplayName("상품 ID 파라미터명이 일치하지 않으면 400 상태를 반환한다.")
         void putInCartWithInvalidParameterName() {
-            final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com".getBytes()));
+            final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com:password".getBytes()));
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
 
             RestAssured.given()
@@ -134,7 +133,7 @@ class CartApiControllerTest {
         @Test
         @DisplayName("상품 ID로 변환할 수 없는 타입이라면 400 상태를 반환한다.")
         void putInCartWithInvalidParameterType() {
-            final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com".getBytes()));
+            final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com:password".getBytes()));
 
             RestAssured.given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -155,7 +154,7 @@ class CartApiControllerTest {
         @DisplayName("ID, 멤버가 유효하다면 장바구니 상품을 삭제한다.")
         void removeCartItem() {
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
-            final Long savedCartId = cartService.putInCart(savedProductId, new MemberAuthDto("a@a.com", "password1"));
+            final Long savedCartId = cartService.putInCart(savedProductId, 1L);
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com:password1".getBytes()));
 
             RestAssured.given()
@@ -171,7 +170,7 @@ class CartApiControllerTest {
         @DisplayName("유효하지 않은 멤버 인증이라면 401 상태를 반환한다.")
         void removeCartItemWithInvalidMember() {
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
-            final Long savedCartId = cartService.putInCart(savedProductId, new MemberAuthDto("a@a.com", "password1"));
+            final Long savedCartId = cartService.putInCart(savedProductId, 1L);
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com".getBytes()));
 
             RestAssured.given()
@@ -187,7 +186,7 @@ class CartApiControllerTest {
         @Test
         @DisplayName("ID로 변환할 수 없는 타입이라면 400 상태를 반환한다.")
         void removeCartItemWithInvalidIDType() {
-            final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com".getBytes()));
+            final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com:password".getBytes()));
 
             RestAssured.given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)

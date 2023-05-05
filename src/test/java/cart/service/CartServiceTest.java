@@ -5,21 +5,17 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.dto.MemberAuthDto;
 import cart.dto.response.CartProductResponse;
 import cart.entity.CartEntity;
-import cart.entity.MemberEntity;
 import cart.entity.product.ProductEntity;
 import cart.exception.CartNotFoundException;
 import cart.exception.CartOwnerException;
-import cart.exception.MemberNotFoundException;
 import cart.exception.ProductNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -46,15 +42,11 @@ class CartServiceTest {
 
     @Nested
     @DisplayName("회원 장바구니 상품 목록 조회 시")
-    class FindCartItemsForMember {
+    class FindCartItemsForMemberId {
 
         @Test
-        @DisplayName("멤버가 유효하다면 장바구니 상품 목록을 조회한다.")
+        @DisplayName("해당 멤버의 장바구니 상품 목록을 조회한다.")
         void findCartItemsForMember() {
-            final MemberAuthDto memberAuthDto = new MemberAuthDto(
-                    "email",
-                    "password"
-            );
             final CartEntity cartEntity = new CartEntity(1L, 1L, 1L);
             final ProductEntity productEntity = new ProductEntity(
                     1L,
@@ -63,15 +55,10 @@ class CartServiceTest {
                     1000,
                     "description"
             );
-            given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.of(new MemberEntity(
-                    1L,
-                    "email",
-                    "password"
-            )));
             given(cartDao.findAllByMemberId(any())).willReturn(List.of(cartEntity));
             given(productDao.findById(any())).willReturn(Optional.of(productEntity));
 
-            final List<CartProductResponse> result = cartService.findCartItemsForMember(memberAuthDto);
+            final List<CartProductResponse> result = cartService.findCartItemsForMember(1L);
 
             assertAll(
                     () -> assertThat(result).hasSize(1),
@@ -82,20 +69,6 @@ class CartServiceTest {
                     () -> assertThat(result.get(0).getDescription()).isEqualTo("description")
             );
         }
-
-        @Test
-        @DisplayName("멤버가 유효하지 않으면 예외를 던진다.")
-        void findCartItemsForInvalidMember() {
-            final MemberAuthDto memberAuthDto = new MemberAuthDto(
-                    "email",
-                    "password"
-            );
-            given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.empty());
-
-            assertThatThrownBy(() -> cartService.findCartItemsForMember(memberAuthDto))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage("등록되지 않은 회원입니다.");
-        }
     }
 
     @Nested
@@ -105,15 +78,6 @@ class CartServiceTest {
         @Test
         @DisplayName("멤버, 상품이 유효하다면 장바구니에 추가한다.")
         void putInCart() {
-            final MemberAuthDto memberAuthDto = new MemberAuthDto(
-                    "email",
-                    "password"
-            );
-            given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.of(new MemberEntity(
-                    1L,
-                    "email",
-                    "password"
-            )));
             given(productDao.findById(any())).willReturn(Optional.of(new ProductEntity(
                     1L,
                     "name",
@@ -122,7 +86,7 @@ class CartServiceTest {
                     "description"
             )));
 
-            final Long result = cartService.putInCart(1L, memberAuthDto);
+            final Long result = cartService.putInCart(1L, 1L);
 
             assertThat(result).isNotNull();
         }
@@ -130,34 +94,11 @@ class CartServiceTest {
         @Test
         @DisplayName("상품이 존재하지 않으면 예외를 던진다.")
         void putInCartWithNotExistProduct() {
-            final MemberAuthDto memberAuthDto = new MemberAuthDto(
-                    "email",
-                    "password"
-            );
-            given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.of(new MemberEntity(
-                    1L,
-                    "email",
-                    "password"
-            )));
             given(productDao.findById(any())).willReturn(Optional.empty());
 
-            assertThatThrownBy(() -> cartService.putInCart(1L, memberAuthDto))
+            assertThatThrownBy(() -> cartService.putInCart(1L, 1L))
                     .isInstanceOf(ProductNotFoundException.class)
                     .hasMessage("등록되지 않은 상품입니다.");
-        }
-
-        @Test
-        @DisplayName("멤버가 존재하지 않으면 예외를 던진다.")
-        void putInCartWithNotExistMember() {
-            final MemberAuthDto memberAuthDto = new MemberAuthDto(
-                    "email",
-                    "password"
-            );
-            given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.empty());
-
-            assertThatThrownBy(() -> cartService.putInCart(1L, memberAuthDto))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage("등록되지 않은 회원입니다.");
         }
     }
 
@@ -168,51 +109,19 @@ class CartServiceTest {
         @Test
         @DisplayName("카트, 멤버가 유효하다면 상품을 제거한다.")
         void removeCartItem() {
-            final MemberAuthDto memberAuthDto = new MemberAuthDto(
-                    "email",
-                    "password"
-            );
-            given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.of(new MemberEntity(
-                    1L,
-                    "email",
-                    "password"
-            )));
             given(cartDao.findById(any())).willReturn(Optional.of(new CartEntity(1L, 1L, 1L)));
             willDoNothing().given(cartDao).delete(1L);
 
             assertThatNoException()
-                    .isThrownBy(() -> cartService.removeCartItem(1L, memberAuthDto));
-        }
-
-        @Test
-        @DisplayName("멤버가 유효하지 않으면 예외를 던진다.")
-        void removeCartItemWithInvalidMember() {
-            final MemberAuthDto memberAuthDto = new MemberAuthDto(
-                    "email",
-                    "password"
-            );
-            given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.empty());
-
-            assertThatThrownBy(() -> cartService.removeCartItem(1L, memberAuthDto))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage("등록되지 않은 회원입니다.");
+                    .isThrownBy(() -> cartService.removeCartItem(1L, 1L));
         }
 
         @Test
         @DisplayName("카트 상품이 유효하지 않으면 예외를 던진다.")
         void removeCartItemWithInvalidCart() {
-            final MemberAuthDto memberAuthDto = new MemberAuthDto(
-                    "email",
-                    "password"
-            );
-            given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.of(new MemberEntity(
-                    1L,
-                    "email",
-                    "password"
-            )));
             given(cartDao.findById(any())).willReturn(Optional.empty());
 
-            assertThatThrownBy(() -> cartService.removeCartItem(1L, memberAuthDto))
+            assertThatThrownBy(() -> cartService.removeCartItem(1L, 1L))
                     .isInstanceOf(CartNotFoundException.class)
                     .hasMessage("등록되지 않은 장바구니 상품입니다.");
         }
@@ -220,18 +129,9 @@ class CartServiceTest {
         @Test
         @DisplayName("카트 상품 소유주가 아니라면 예외를 던진다.")
         void removeCartItemWithNotOwner() {
-            final MemberAuthDto memberAuthDto = new MemberAuthDto(
-                    "email",
-                    "password"
-            );
-            given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.of(new MemberEntity(
-                    1L,
-                    "email",
-                    "password"
-            )));
             given(cartDao.findById(any())).willReturn(Optional.of(new CartEntity(1L, 2L, 1L)));
 
-            assertThatThrownBy(() -> cartService.removeCartItem(1L, memberAuthDto))
+            assertThatThrownBy(() -> cartService.removeCartItem(1L, 1L))
                     .isInstanceOf(CartOwnerException.class)
                     .hasMessage("장바구니 상품 소유자가 아닙니다.");
         }
