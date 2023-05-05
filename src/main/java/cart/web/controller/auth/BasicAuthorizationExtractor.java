@@ -1,25 +1,25 @@
 package cart.web.controller.auth;
 
 import cart.domain.user.User;
+import cart.exception.UnAuthorizedException;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.servlet.http.HttpServletRequest;
 
 public final class BasicAuthorizationExtractor {
 
-    private BasicAuthorizationExtractor() {
-    }
-
     private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
+    private BasicAuthorizationExtractor() {
+    }
+
     public static User extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
         if (header == null) {
-            return null;
+            throw new UnAuthorizedException();
         }
-
         if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
             String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
             byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
@@ -31,8 +31,6 @@ public final class BasicAuthorizationExtractor {
 
             return new User(email, password);
         }
-
-        return null;
+        throw new UnAuthorizedException();
     }
-
 }
