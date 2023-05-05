@@ -1,14 +1,9 @@
 package cart.config;
 
-import cart.cart.dao.CartDao;
-import cart.cart.dao.CartMemoryDao;
-import cart.member.dao.MemberDao;
-import cart.member.dao.MemberMemoryDao;
-import cart.product.dao.ProductDao;
-import cart.product.dao.ProductMemoryDao;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import static cart.constant.TestConstant.*;
 

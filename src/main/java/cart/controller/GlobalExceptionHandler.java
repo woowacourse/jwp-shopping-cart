@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.exception.dto.ExceptionResponse;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -14,12 +15,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
-    private static final Logger logger;
-    
-    static {
-        logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-    }
+    private final Logger logger;
     
     private ResponseEntity<ExceptionResponse> logAndRespond(String message, HttpStatus status) {
         logger.error(message);

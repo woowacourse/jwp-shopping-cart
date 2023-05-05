@@ -1,6 +1,6 @@
 package cart.member.service;
 
-import cart.auth.AuthSubjectArgumentResolver;
+import cart.config.TestConfig;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.member.dto.MemberResponse;
@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @SuppressWarnings("NonAsciiCharacters")
+@ContextConfiguration(classes = TestConfig.class)
 @WebMvcTest(MemberMemoryService.class)
 class MemberMemoryServiceTest {
     @Autowired
@@ -22,8 +24,6 @@ class MemberMemoryServiceTest {
     
     @MockBean
     private MemberDao memberDao;
-    @MockBean
-    private AuthSubjectArgumentResolver resolver;
     
     @Test
     void 모든_회원_정보를_가져온다() {

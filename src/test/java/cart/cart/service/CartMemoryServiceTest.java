@@ -1,9 +1,9 @@
 package cart.cart.service;
 
-import cart.auth.AuthSubjectArgumentResolver;
 import cart.cart.dao.CartDao;
 import cart.cart.domain.Cart;
 import cart.cart.dto.CartResponse;
+import cart.config.TestConfig;
 import cart.member.dto.MemberRequest;
 import cart.member.dto.MemberResponse;
 import cart.member.service.MemberService;
@@ -13,6 +13,7 @@ import org.mockito.InOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.only;
 
 @SuppressWarnings("NonAsciiCharacters")
+@ContextConfiguration(classes = TestConfig.class)
 @WebMvcTest(CartMemoryService.class)
 class CartMemoryServiceTest {
     @Autowired
@@ -35,8 +37,6 @@ class CartMemoryServiceTest {
     private CartDao cartDao;
     @MockBean
     private MemberService memberService;
-    @MockBean
-    private AuthSubjectArgumentResolver resolver;
     
     private InOrder inOrder;
     

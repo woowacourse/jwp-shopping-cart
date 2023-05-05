@@ -4,6 +4,7 @@ import cart.auth.AuthSubjectArgumentResolver;
 import cart.cart.dto.CartProductResponse;
 import cart.cart.dto.CartResponse;
 import cart.cart.service.CartService;
+import cart.config.TestConfig;
 import cart.member.dto.MemberRequest;
 import cart.product.dto.ProductResponse;
 import cart.product.service.ProductService;
@@ -11,10 +12,12 @@ import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Base64;
@@ -29,17 +32,19 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.only;
 
 @SuppressWarnings("NonAsciiCharacters")
+@ContextConfiguration(classes = TestConfig.class)
 @WebMvcTest(CartController.class)
 class CartControllerTest {
     private static final String DEFAULT_PATH = "/carts/";
     private static final String AUTH_HEADER = "Basic " + Base64.getEncoder().encodeToString(("a@a.com" + ":" + "password1").getBytes());
     
+    @Autowired
+    private AuthSubjectArgumentResolver resolver;
+    
     @MockBean
     private CartService cartService;
     @MockBean
     private ProductService productService;
-    @MockBean
-    private AuthSubjectArgumentResolver resolver;
     
     private InOrder inOrder;
     

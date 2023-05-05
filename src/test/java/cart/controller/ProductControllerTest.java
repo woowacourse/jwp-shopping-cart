@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.auth.AuthSubjectArgumentResolver;
+import cart.config.TestConfig;
 import cart.product.service.ProductMemoryService;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -9,9 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.HashMap;
@@ -24,14 +27,13 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 @SuppressWarnings("NonAsciiCharacters")
+@ContextConfiguration(classes = TestConfig.class)
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
     private static final String DEFAULT_PATH = "/products/";
     
     @MockBean
     private ProductMemoryService productMemoryService;
-    @MockBean
-    private AuthSubjectArgumentResolver resolver;
     
     private HashMap<Object, Object> productRequestMapper;
     
@@ -39,9 +41,10 @@ class ProductControllerTest {
     void setUp() {
         productRequestMapper = new HashMap<>();
         
+        final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
         RestAssuredMockMvc.standaloneSetup(
                 MockMvcBuilders.standaloneSetup(new ProductController(productMemoryService))
-                        .setControllerAdvice(new GlobalExceptionHandler())
+                        .setControllerAdvice(new GlobalExceptionHandler(logger))
         );
     }
     

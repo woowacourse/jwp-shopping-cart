@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.auth.AuthSubjectArgumentResolver;
+import cart.config.TestConfig;
 import cart.member.service.MemberService;
 import cart.product.service.ProductService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,14 +23,13 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 
 @SuppressWarnings("NonAsciiCharacters")
+@ContextConfiguration(classes = TestConfig.class)
 @WebMvcTest(ViewController.class)
 class ViewControllerTest {
     @MockBean
     private ProductService productService;
     @MockBean
     private MemberService memberService;
-    @MockBean
-    private AuthSubjectArgumentResolver resolver;
     
     @BeforeEach
     void setUp() {
