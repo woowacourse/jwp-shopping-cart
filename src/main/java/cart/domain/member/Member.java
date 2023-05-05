@@ -2,16 +2,16 @@ package cart.domain.member;
 
 public class Member {
 
-    private final Name name;
+    private final Email email;
     private final Password password;
 
-    public Member(final String name, final String password) {
-        this.name = new Name(name);
+    public Member(final String email, final String password) {
+        this.email = new Email(email);
         this.password = new Password(password);
     }
 
-    public String getName() {
-        return name.getValue();
+    public String getEmail() {
+        return email.getValue();
     }
 
     public String getPassword() {

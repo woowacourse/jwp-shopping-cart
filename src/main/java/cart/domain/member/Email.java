@@ -1,10 +1,10 @@
 package cart.domain.member;
 
-public class Name {
+public class Email {
 
     private final String value;
 
-    public Name(final String value) {
+    public Email(final String value) {
         validate(value);
         this.value = value;
     }
