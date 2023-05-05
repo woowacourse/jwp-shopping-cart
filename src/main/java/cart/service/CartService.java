@@ -4,7 +4,6 @@ import cart.dao.CartDao;
 import cart.domain.cart.CartItem;
 import cart.domain.product.Product;
 import cart.entity.CartEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +14,21 @@ import java.util.stream.Collectors;
 public class CartService {
 
     private final CartDao cartDao;
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+    private final UserService userService;
 
-    public CartService(final CartDao cartDao) {
+    public CartService(final ProductService productService, final UserService userService, final CartDao cartDao) {
+        this.productService = productService;
+        this.userService = userService;
         this.cartDao = cartDao;
+    }
+
+    @Transactional
+    public Long save(final Long userId, final Long productId) {
+        userService.checkExistUserId(userId);
+        productService.checkExistProductId(productId);
+
+        return cartDao.insert(userId, productId);
     }
 
     @Transactional(readOnly = true)

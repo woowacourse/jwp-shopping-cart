@@ -39,7 +39,7 @@ public class ProductService {
         productDao.update(product);
     }
 
-    private void checkExistProductId(final Long id) {
+    public void checkExistProductId(final Long id) {
         if (productDao.findById(id) == null) {
             throw new IllegalArgumentException("존재하지 않는 상품 id 입니다.");
         }
