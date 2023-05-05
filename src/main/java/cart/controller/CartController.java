@@ -7,14 +7,13 @@ import cart.entity.ProductEntity;
 import cart.service.CartItemService;
 import cart.service.MemberService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@Controller
+@RestController
 public class CartController {
 
     private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
@@ -25,11 +24,6 @@ public class CartController {
     public CartController(CartItemService cartItemService, MemberService memberService) {
         this.cartItemService = cartItemService;
         this.memberService = memberService;
-    }
-
-    @GetMapping("/cart")
-    public String getCartItem() {
-        return "cart";
     }
 
     @GetMapping("/cart/load")

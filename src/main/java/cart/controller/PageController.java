@@ -47,4 +47,10 @@ public class PageController {
         model.addAttribute("members", memberEntities);
         return "settings";
     }
+
+    @GetMapping("/cart")
+    public String getCartItem() {
+        return "cart";
+    }
+
 }
