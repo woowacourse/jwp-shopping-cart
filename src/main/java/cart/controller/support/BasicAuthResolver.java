@@ -3,7 +3,9 @@ package cart.controller.support;
 import static org.apache.tomcat.util.codec.binary.Base64.decodeBase64;
 
 import cart.dto.BasicCredentials;
-import java.util.Optional;
+import java.util.Objects;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -26,26 +28,44 @@ public class BasicAuthResolver implements HandlerMethodArgumentResolver {
     public BasicCredentials resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                             NativeWebRequest webRequest, WebDataBinderFactory binderFactory)
             throws Exception {
-        String authorizationHeader = getAuthorizationHeader(parameter, webRequest);
-        if (isBasicAuthHeader(authorizationHeader)) {
-            return decodeBasicCredentials(authorizationHeader);
+        HttpSession session = getHttpSession(webRequest);
+        BasicCredentials credentials = (BasicCredentials) session.getAttribute("credentials");
+        if (credentials != null) {
+            return credentials;
         }
-        throw new IllegalArgumentException("올바른 인증방식을 사용해주세요.");
+
+        BasicCredentials createdCredential = getBasicCredentials(parameter, webRequest);
+        session.setAttribute("credentials", createdCredential);
+        return createdCredential;
     }
 
-    private String getAuthorizationHeader(MethodParameter parameter, NativeWebRequest webRequest)
+    private HttpSession getHttpSession(NativeWebRequest webRequest) {
+        HttpServletRequest httpServletRequest = Objects.requireNonNull(webRequest.getNativeRequest(HttpServletRequest.class));
+        return httpServletRequest.getSession();
+    }
+
+    private BasicCredentials getBasicCredentials(MethodParameter parameter, NativeWebRequest webRequest)
             throws MissingRequestHeaderException {
-        return Optional.ofNullable(webRequest.getHeader(AUTH_HEADER_NAME))
-                .orElseThrow(() -> new MissingRequestHeaderException(AUTH_HEADER_NAME, parameter));
+        String authorizationHeader = webRequest.getHeader(AUTH_HEADER_NAME);
+        if (authorizationHeader == null) {
+            throw new MissingRequestHeaderException(AUTH_HEADER_NAME, parameter);
+        }
+
+        return extractBasicCredentials(authorizationHeader);
     }
 
-    private boolean isBasicAuthHeader(String authorization) {
-        return authorization.toLowerCase().startsWith(AUTHORIZATION_SCHEME_BASIC.toLowerCase());
-    }
+    private BasicCredentials extractBasicCredentials(String authorizationHeader) {
+        if (isNotBasicAuth(authorizationHeader)) {
+            throw new IllegalArgumentException("올바른 인증방식을 사용해주세요.");
+        }
 
-    private BasicCredentials decodeBasicCredentials(String authorizationHeader) {
         String credentials = authorizationHeader.substring(AUTHORIZATION_SCHEME_BASIC.length()).trim();
+
         String[] splitCredentials = new String(decodeBase64(credentials)).split(DELIMITER);
         return new BasicCredentials(splitCredentials[0], splitCredentials[1]);
+    }
+
+    private boolean isNotBasicAuth(String authorization) {
+        return !authorization.toLowerCase().startsWith(AUTHORIZATION_SCHEME_BASIC.toLowerCase());
     }
 }
