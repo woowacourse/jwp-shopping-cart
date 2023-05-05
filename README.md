@@ -13,12 +13,7 @@
     - 상품 제거
     - 목록 조회
 
-- 상품 관리 페이지를 Thymeleaf를 이용하여 랜더링
-    - `/` : 상품 목록 페이지
-    - `/admin` : 관리자 도구 페이지
-
 - 설정 페이지에서 사용자 설정을 한다.
-    - 어떤 사용자의 장바구니에 상품을 추가하거나 제거할 것 인지는 Basic Auth 를 이용하여 인증한다
     - Request Header의 Authorization 필드를 사용하여 인증 처리를 한다.
 
 ## ⚙️ 기능 목록
@@ -32,32 +27,34 @@
 - [x]  상품 목록 페이지를 반환한다. ( GET “/” )
     - Response Body : 모든 상품의 정보 ( ID, 이름, 가격, 이미지URL, 카테고리 이름 목록)
 - [x] 모든 사용자의 정보를 확인한다. ( GET "/settings" )
-    - Request Body : 없음
-    - Response Body : 모든 사용자들의 정보
+    - Response Body : 모든 사용자들의 정보 ( ID, 이메일, 비밀번호 )
 - [x] 장바구니 목록을 조회한다. ( GET "/cart" )
-    - Request Body : 없음
-    - Response Body : 장바구니에 담긴 모든 상품의 정보
 
 #### ProductApiController
 
 - [x]  상품을 생성한다. ( POST "/products" )
     - Request Body :  상품의 정보 ( 이름, 가격, 이미지URL, 카테고리 아이디 목록 )
-    - Response Header Location  : /products/{상품 ID}
+    - Status Code : 201 (CREATED)
+    - Location : /products/{상품 ID}
 - [x]  상품을 수정한다. ( PUT "/products/{id}" )
     - Request Body  : 상품의 정보 ( 이름, 가격, 이미지URL, 카테고리 아이디 목록 )
-    - Response Body : 없음
+    - Status Code : Status Code : 200 (OK)
 - [x]  상품을 삭제한다. ( DELETE "/products/{id}" )
-    - Request Body  : 없음
-    - Response Body : 없음 ( Status Code : 201 (CREATED) )
+    - Status Code : 204 (NO_CONTENT)
 
 #### CartApiController
 
+- [x] 사용자가 담은 모든 상품을 반환한다. ( GET "/cart/items" )
+    - Authorization : Basic Authorization
+    - Status Code : 200 (OK)
+    - Response Body : 사용자가 담은 상품들의 정보 ( 이름, 가격, 이미지URL, 카테고리 아이디 목록 )
 - [x] 상품 목록 페이지에서 상품을 장바구니에 추가한다. ( POST "/cart/{productId}" )
-    - Request Body : 상품 Id
-    - Response Body : 없음 ( Status Code : 204(CREATED) )
+    - Authorization : Basic Authorization
+    - Status Code : 201 (CREATED)
+    - Location : /cart/{상품 ID}
 - [x] 장바구니에 담긴 상품을 제거한다. ( DELETE "/cart/{productId}" )
-    - Request Body : 없음
-    - Response Body : 없음 ( Status Code : 204 (NO_CONTENT) )
+    - Authorization : Basic Authorization
+    - Status Code : 204 (NO_CONTENT) )
 
 ### Service
 
@@ -131,4 +128,4 @@
 - 장바구니 DAO
     - [x] 상품 추가
     - [x] 상품 제거
-    - [x] 고객이 담은 상품 ID 목록 조회
+    - [x] 해당 customer_id를 가진 상품 ID 목록 조회
