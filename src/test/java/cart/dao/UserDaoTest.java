@@ -66,7 +66,7 @@ class UserDaoTest {
             userDao.addProductToCart(1L, product.getId());
 
             //then
-            assertThat(countRowsInTable(jdbcTemplate, "user_product")).isEqualTo(1);
+            assertThat(countRowsInTable(jdbcTemplate, "cart")).isEqualTo(1);
         }
 
         @DisplayName("유저 id가 올바르지 않을 때 상품을 추가하면 예외가 발생한다")
@@ -95,7 +95,7 @@ class UserDaoTest {
         final Product product = productDao.save(new Product("상품", "이미지", 1000));
         final Long userProductId = userDao.addProductToCart(1L, product.getId());
 
-        final int beforeDelete = countRowsInTable(jdbcTemplate, "user_product");
+        final int beforeDelete = countRowsInTable(jdbcTemplate, "cart");
 
         //when
         userDao.deleteProductInCart(1L, userProductId);
@@ -103,7 +103,7 @@ class UserDaoTest {
         //then
         assertAll(
                 () -> assertThat(beforeDelete).isOne(),
-                () -> assertThat(countRowsInTable(jdbcTemplate, "user_product")).isZero());
+                () -> assertThat(countRowsInTable(jdbcTemplate, "cart")).isZero());
     }
 
     @DisplayName("유저의 장바구니 상품 전체를 가져올 수 있다")

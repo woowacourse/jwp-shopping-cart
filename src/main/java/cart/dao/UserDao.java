@@ -19,7 +19,7 @@ public class UserDao {
     public UserDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("user_product")
+                .withTableName("cart")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -48,14 +48,14 @@ public class UserDao {
     }
 
     public void deleteProductInCart(Long userId, Long userProductId) {
-        final String sql = "DELETE FROM user_product WHERE id = ? AND user_id = ?";
+        final String sql = "DELETE FROM cart WHERE id = ? AND user_id = ?";
 
         jdbcTemplate.update(sql, userProductId, userId);
     }
 
     public List<Product> findAllProductsInCart(Long userId) {
-        final String sql = "SELECT up.id, name, image, price " +
-                "FROM user_product up " +
+        final String sql = "SELECT c.id, name, image, price " +
+                "FROM cart c " +
                 "LEFT JOIN products p ON product_id=p.id " +
                 "WHERE user_id = ?";
 
