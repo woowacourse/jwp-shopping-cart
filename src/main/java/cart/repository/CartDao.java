@@ -51,6 +51,11 @@ public class CartDao {
         validCartItemExist(changeRowCount);
     }
 
+    public void deleteByProductId(final int productId) {
+        final String sql = "delete from cart where product_id = ?";
+        jdbcTemplate.update(sql, productId);
+    }
+
     private void validCartItemExist(final int changedRowCount) {
         if (changedRowCount == 0) {
             throw new CartItemNotFoundException();

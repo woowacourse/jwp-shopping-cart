@@ -113,4 +113,25 @@ class CartDaoTest {
         assertThatThrownBy(() -> cartDao.deleteByIdAndUserId(invalidId, userId))
                 .isInstanceOf(DataAccessException.class);
     }
+
+    @Test
+    @DisplayName("장바구니 상품id로 상품 삭제 성공")
+    @Sql({"/product_dummy_data.sql", "/cart_dummy_data.sql"})
+    void deleteByProductId_success() {
+        // given
+        final int productId = 1;
+
+        // when
+        cartDao.deleteByProductId(productId);
+
+        // then
+        final String sql = "select * from cart";
+        final List<CartEntity> cartEntities = jdbcTemplate.query(sql,
+                (rs, rowNum) -> new CartEntity(rs.getInt("id"), rs.getInt("user_id"), rs.getInt("product_id")));
+
+        assertAll(
+                () -> assertThat(cartEntities).hasSize(1),
+                () -> assertThat(cartEntities.get(0).getProductId()).isNotEqualTo(productId)
+        );
+    }
 }
