@@ -5,7 +5,6 @@ import cart.dto.ProductResponse;
 import cart.service.member.MemberFindService;
 import cart.service.product.ProductFindService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,7 +31,7 @@ public class ViewController {
     }
 
     @GetMapping("/admin")
-    public ModelAndView admin(Model model) {
+    public ModelAndView admin() {
         List<ProductResponse> products = productFindService.findProducts().stream().map(ProductResponse::from).collect(Collectors.toList());
         final ModelAndView modelAndView = new ModelAndView("admin.html");
         modelAndView.addObject("products", products);
@@ -40,10 +39,15 @@ public class ViewController {
     }
 
     @GetMapping("/settings")
-    public ModelAndView settings(Model model) {
+    public ModelAndView settings() {
         final List<MemberResponse> members = memberFindService.findAll().stream().map(MemberResponse::from).collect(Collectors.toList());
         final ModelAndView modelAndView = new ModelAndView("settings.html");
         modelAndView.addObject("members", members);
         return modelAndView;
+    }
+
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart.html";
     }
 }
