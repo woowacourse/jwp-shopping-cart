@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import cart.controller.auth.AuthorizedUserId;
 import cart.controller.dto.CartItemRequest;
 import cart.controller.dto.CartItemResponse;
 import cart.domain.CartItem;
@@ -28,21 +29,18 @@ public class CartController {
 
     @PostMapping("cart/items")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addItem(@RequestBody CartItemRequest cartItemRequest) {
-        Integer userId = 1;
+    public void addItem(@RequestBody CartItemRequest cartItemRequest, @AuthorizedUserId Integer userId) {
         cartService.addToCart(userId, cartItemRequest.getProductId());
     }
 
     @GetMapping("cart/items")
-    public List<CartItemResponse> getCartItems() {
-        Integer userId = 1;
+    public List<CartItemResponse> getCartItems(@AuthorizedUserId Integer userId) {
         final List<CartItem> products = cartService.getCartItemsOf(userId);
         return mapProducts(products);
     }
 
     @DeleteMapping("cart/items/{id}")
-    public void deleteItem(@PathVariable("id") Integer itemId) {
-        Integer userId = 1;
+    public void deleteItem(@PathVariable("id") Integer itemId, @AuthorizedUserId Integer userId) {
         cartService.deleteFromCart(userId, itemId);
     }
 
