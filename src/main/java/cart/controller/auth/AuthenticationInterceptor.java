@@ -5,6 +5,8 @@ import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import cart.controller.auth.dto.AuthInfo;
@@ -30,8 +32,12 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         validateHas(authInfo);
         validateHasEmailAndPasswordIn(authInfo);
 
-        final User user = userDao.selectBy(authInfo.getEmail());
-        validatePasswordMatches(authInfo, user);
+        try {
+            final User user = userDao.selectBy(authInfo.getEmail());
+            validatePasswordMatches(authInfo, user);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new InvalidAuthenticationException();
+        }
 
         return true;
     }
@@ -43,7 +49,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     }
 
     private void validateHasEmailAndPasswordIn(AuthInfo authInfo) {
-        if (Objects.isNull(authInfo.getEmail()) || Objects.isNull(authInfo.getPassword())) {
+        if (!StringUtils.hasLength(authInfo.getEmail()) || !StringUtils.hasLength(authInfo.getPassword())) {
             throw new InvalidAuthenticationException();
         }
     }

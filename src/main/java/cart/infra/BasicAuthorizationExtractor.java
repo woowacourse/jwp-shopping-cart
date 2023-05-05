@@ -10,6 +10,7 @@ public class BasicAuthorizationExtractor {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
+    private static final int NO_LIMIT = -1;
 
     public static AuthInfo extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
@@ -23,7 +24,7 @@ public class BasicAuthorizationExtractor {
             byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
             String decodedString = new String(decodedBytes);
 
-            String[] credentials = decodedString.split(DELIMITER);
+            String[] credentials = decodedString.split(DELIMITER, NO_LIMIT);
             String email = credentials[0];
             String password = credentials[1];
 

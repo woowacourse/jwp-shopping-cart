@@ -45,4 +45,28 @@ public class UserDaoTest {
                         tuple("beaver@wooteco.com", "veryverysecurepassword")
                 );
     }
+
+    @DisplayName("사용자를 Id로 조회한다")
+    @Test
+    void selectById() {
+        assertThat(userDao.selectBy(getGreatestId()))
+                .extracting("email", "password")
+                .containsExactly(
+                        "beaver@wooteco.com", "veryverysecurepassword"
+                );
+    }
+
+    @DisplayName("사용자를 이메일로 조회한다")
+    @Test
+    void selectByEmail() {
+        assertThat(userDao.selectBy("0@chll.it"))
+                .extracting("email", "password")
+                .containsExactly(
+                        "0@chll.it", "verysecurepassword"
+                );
+    }
+
+    private Integer getGreatestId() {
+        return jdbcTemplate.queryForObject("SELECT MAX(id) FROM users", Integer.class);
+    }
 }
