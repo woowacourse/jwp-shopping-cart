@@ -16,6 +16,10 @@ public class Credential {
         this.password = password;
     }
 
+    public boolean isNotSamePassword(final Credential credential) {
+        return !this.password.equals(credential.getPassword());
+    }
+
     public Long getId() {
         return id;
     }
