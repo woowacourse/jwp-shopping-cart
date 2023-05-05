@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.dto.request.ProductRequestDto;
-import cart.dto.response.ProductResponseDto;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import cart.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,15 +31,15 @@ public final class ProductApiController {
 
     @Operation(summary = "상품 목록 조회 API", description = "전체 상품 목록을 조회한다.")
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> findProducts() {
-        final List<ProductResponseDto> response = productService.findProducts();
+    public ResponseEntity<List<ProductResponse>> findProducts() {
+        final List<ProductResponse> response = productService.findProducts();
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "상품 등록 API", description = "상품 정보를 바탕으로 상품을 등록한다.")
     @PostMapping
-    public ResponseEntity<Void> registerProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
-        final Long productId = productService.registerProduct(productRequestDto);
+    public ResponseEntity<Void> registerProduct(@Valid @RequestBody ProductRequest productRequest) {
+        final Long productId = productService.registerProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
@@ -47,9 +47,9 @@ public final class ProductApiController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(
             @PathVariable(name = "id") Long productId,
-            @Valid @RequestBody ProductRequestDto productRequestDto
+            @Valid @RequestBody ProductRequest productRequest
     ) {
-        productService.updateProduct(productId, productRequestDto);
+        productService.updateProduct(productId, productRequest);
         return ResponseEntity.ok().build();
     }
 

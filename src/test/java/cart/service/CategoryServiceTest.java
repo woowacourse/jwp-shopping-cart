@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.CategoryDao;
-import cart.dto.response.CategoryResponseDto;
+import cart.dto.response.CategoryResponse;
 import cart.entity.CategoryEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,11 +32,11 @@ class CategoryServiceTest {
         final CategoryEntity korean = new CategoryEntity(2L, "한식");
         given(categoryDao.findAll()).willReturn(List.of(all, korean));
 
-        final List<CategoryResponseDto> result = categoryService.findCategories();
+        final List<CategoryResponse> result = categoryService.findCategories();
 
-        final List<CategoryResponseDto> expected = List.of(
-                CategoryResponseDto.from(all),
-                CategoryResponseDto.from(korean)
+        final List<CategoryResponse> expected = List.of(
+                CategoryResponse.from(all),
+                CategoryResponse.from(korean)
 
         );
         assertThat(objectMapper.writeValueAsString(result)).isEqualTo(objectMapper.writeValueAsString(expected));

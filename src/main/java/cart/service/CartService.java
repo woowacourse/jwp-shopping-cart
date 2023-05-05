@@ -4,7 +4,7 @@ import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.dto.MemberAuthDto;
-import cart.dto.response.CartProductResponseDto;
+import cart.dto.response.CartProductResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
 import cart.entity.product.ProductEntity;
@@ -31,13 +31,13 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartProductResponseDto> findCartItemsForMember(final MemberAuthDto memberAuthDto) {
+    public List<CartProductResponse> findCartItemsForMember(final MemberAuthDto memberAuthDto) {
         final MemberEntity member = getMember(memberAuthDto);
         final List<CartEntity> carts = cartDao.findAllByMemberId(member.getId());
         return carts.stream()
                 .map(cart -> {
                     final ProductEntity product = getProduct(cart.getProductId());
-                    return CartProductResponseDto.from(cart.getId(), product);
+                    return CartProductResponse.from(cart.getId(), product);
                 })
                 .collect(Collectors.toList());
     }

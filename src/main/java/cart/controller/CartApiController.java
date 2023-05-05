@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.config.Member;
 import cart.dto.MemberAuthDto;
-import cart.dto.response.CartProductResponseDto;
+import cart.dto.response.CartProductResponse;
 import cart.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,8 +30,8 @@ public final class CartApiController {
 
     @Operation(summary = "장바구니 목록 조회 API", description = "사용자의 모든 장바구니 목록을 조회합니다.")
     @GetMapping
-    public ResponseEntity<List<CartProductResponseDto>> findCartItemsForMember(@Member MemberAuthDto memberAuthDto) {
-        final List<CartProductResponseDto> response = cartService.findCartItemsForMember(memberAuthDto);
+    public ResponseEntity<List<CartProductResponse>> findCartItemsForMember(@Member MemberAuthDto memberAuthDto) {
+        final List<CartProductResponse> response = cartService.findCartItemsForMember(memberAuthDto);
         return ResponseEntity.ok(response);
     }
 

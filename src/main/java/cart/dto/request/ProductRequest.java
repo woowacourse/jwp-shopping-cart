@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
 
-public final class ProductRequestDto {
+public final class ProductRequest {
 
     @Schema(description = "상품명")
     @NotBlank(message = "상품명은 비어있을 수 없습니다.")
@@ -31,7 +31,7 @@ public final class ProductRequestDto {
     @NotNull(message = "카테고리를 선택해야 합니다.")
     private final List<Long> categoryIds;
 
-    public ProductRequestDto(
+    public ProductRequest(
             final String name,
             final String imageUrl,
             final Integer price,

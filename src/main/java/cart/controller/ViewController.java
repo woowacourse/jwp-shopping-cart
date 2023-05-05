@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.dto.response.CategoryResponseDto;
-import cart.dto.response.MemberResponseDto;
-import cart.dto.response.ProductResponseDto;
+import cart.dto.response.CategoryResponse;
+import cart.dto.response.MemberResponse;
+import cart.dto.response.ProductResponse;
 import cart.service.CategoryService;
 import cart.service.MemberService;
 import cart.service.ProductService;
@@ -30,7 +30,7 @@ public final class ViewController {
 
     @GetMapping
     public ModelAndView indexPage(final ModelAndView modelAndView) {
-        final List<ProductResponseDto> products = productService.findProducts();
+        final List<ProductResponse> products = productService.findProducts();
         modelAndView.addObject("products", products);
         modelAndView.setViewName("index");
         return modelAndView;
@@ -38,8 +38,8 @@ public final class ViewController {
 
     @GetMapping("/admin")
     public ModelAndView adminPage(final ModelAndView modelAndView) {
-        final List<ProductResponseDto> products = productService.findProducts();
-        final List<CategoryResponseDto> categories = categoryService.findCategories();
+        final List<ProductResponse> products = productService.findProducts();
+        final List<CategoryResponse> categories = categoryService.findCategories();
         modelAndView.addObject("products", products);
         modelAndView.addObject("categories", categories);
         modelAndView.setViewName("admin");
@@ -48,7 +48,7 @@ public final class ViewController {
 
     @GetMapping("/settings")
     public ModelAndView settingsPage(final ModelAndView modelAndView) {
-        final List<MemberResponseDto> members = memberService.findMembers();
+        final List<MemberResponse> members = memberService.findMembers();
         modelAndView.addObject("members", members);
         modelAndView.setViewName("settings");
         return modelAndView;

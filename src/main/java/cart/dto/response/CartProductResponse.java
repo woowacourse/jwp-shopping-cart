@@ -3,7 +3,7 @@ package cart.dto.response;
 import cart.entity.product.ProductEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public final class CartProductResponseDto {
+public final class CartProductResponse {
 
     @Schema(description = "장바구니 ID")
     private Long id;
@@ -18,7 +18,7 @@ public final class CartProductResponseDto {
     @Schema(description = "상품 설명")
     private String description;
 
-    public CartProductResponseDto(
+    public CartProductResponse(
             final Long id,
             final Long productId,
             final String name,
@@ -34,8 +34,8 @@ public final class CartProductResponseDto {
         this.description = description;
     }
 
-    public static CartProductResponseDto from(final Long id, final ProductEntity product) {
-        return new CartProductResponseDto(
+    public static CartProductResponse from(final Long id, final ProductEntity product) {
+        return new CartProductResponse(
                 id,
                 product.getId(),
                 product.getName(),

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.MemberDao;
-import cart.dto.response.MemberResponseDto;
+import cart.dto.response.MemberResponse;
 import cart.entity.MemberEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,11 +35,11 @@ class MemberServiceTest {
 
         given(memberDao.findAll()).willReturn(List.of(memberA, memberB));
 
-        final List<MemberResponseDto> result = memberService.findMembers();
+        final List<MemberResponse> result = memberService.findMembers();
 
-        final List<MemberResponseDto> expected = List.of(
-                MemberResponseDto.from(memberA),
-                MemberResponseDto.from(memberB)
+        final List<MemberResponse> expected = List.of(
+                MemberResponse.from(memberA),
+                MemberResponse.from(memberB)
         );
         assertThat(objectMapper.writeValueAsString(result)).isEqualTo(objectMapper.writeValueAsString(expected));
     }

@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import cart.dao.CategoryDao;
 import cart.dao.ProductCategoryDao;
 import cart.dao.ProductDao;
-import cart.dto.response.ProductResponseDto;
+import cart.dto.response.ProductResponse;
 import cart.entity.CategoryEntity;
 import cart.entity.ProductCategoryEntity;
 import cart.entity.product.ProductEntity;
@@ -58,7 +58,7 @@ class ProductServiceTest {
         given(productCategoryDao.findAll(any())).willReturn(productCategories);
         given(categoryDao.findAllInIds(any())).willReturn(categories);
 
-        final List<ProductResponseDto> result = productService.findProducts();
+        final List<ProductResponse> result = productService.findProducts();
 
         assertAll(
                 () -> assertThat(result).hasSize(1),

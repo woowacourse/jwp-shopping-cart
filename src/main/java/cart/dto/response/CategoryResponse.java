@@ -5,26 +5,26 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class CategoryResponseDto {
+public final class CategoryResponse {
 
     @Schema(description = "카테고리 ID")
     private final Long id;
     @Schema(description = "카테고리명")
     private final String name;
 
-    private CategoryResponseDto(final Long id, final String name) {
+    private CategoryResponse(final Long id, final String name) {
         this.id = id;
         this.name = name;
     }
 
-    public static List<CategoryResponseDto> listOf(final List<CategoryEntity> categoryEntities) {
+    public static List<CategoryResponse> listOf(final List<CategoryEntity> categoryEntities) {
         return categoryEntities.stream()
-                .map(CategoryResponseDto::from)
+                .map(CategoryResponse::from)
                 .collect(Collectors.toList());
     }
 
-    public static CategoryResponseDto from(final CategoryEntity categoryEntity) {
-        return new CategoryResponseDto(categoryEntity.getId(), categoryEntity.getName());
+    public static CategoryResponse from(final CategoryEntity categoryEntity) {
+        return new CategoryResponse(categoryEntity.getId(), categoryEntity.getName());
     }
 
     public Long getId() {

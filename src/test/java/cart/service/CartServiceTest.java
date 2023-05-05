@@ -13,7 +13,7 @@ import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.dto.MemberAuthDto;
-import cart.dto.response.CartProductResponseDto;
+import cart.dto.response.CartProductResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
 import cart.entity.product.ProductEntity;
@@ -71,7 +71,7 @@ class CartServiceTest {
             given(cartDao.findAllByMemberId(any())).willReturn(List.of(cartEntity));
             given(productDao.findById(any())).willReturn(Optional.of(productEntity));
 
-            final List<CartProductResponseDto> result = cartService.findCartItemsForMember(memberAuthDto);
+            final List<CartProductResponse> result = cartService.findCartItemsForMember(memberAuthDto);
 
             assertAll(
                     () -> assertThat(result).hasSize(1),

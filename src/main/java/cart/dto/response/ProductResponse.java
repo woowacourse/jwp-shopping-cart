@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class ProductResponseDto {
+public final class ProductResponse {
 
     @Schema(description = "상품 ID")
     private final Long id;
@@ -19,33 +19,33 @@ public final class ProductResponseDto {
     @Schema(description = "상품 설명")
     private final String description;
     @Schema(description = "상품 카테고리 목록")
-    private final List<CategoryResponseDto> categoryResponseDtos;
+    private final List<CategoryResponse> categoryResponses;
 
-    private ProductResponseDto(
+    private ProductResponse(
             final Long id,
             final String name,
             final String imageUrl,
             final Integer price,
             final String description,
-            final List<CategoryResponseDto> categoryResponseDtos
+            final List<CategoryResponse> categoryResponses
     ) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
         this.description = description;
-        this.categoryResponseDtos = categoryResponseDtos;
+        this.categoryResponses = categoryResponses;
     }
 
-    public static ProductResponseDto of(final ProductEntity productEntity,
+    public static ProductResponse of(final ProductEntity productEntity,
             final List<CategoryEntity> categoryEntities) {
-        return new ProductResponseDto(
+        return new ProductResponse(
                 productEntity.getId(),
                 productEntity.getName(),
                 productEntity.getImageUrl(),
                 productEntity.getPrice(),
                 productEntity.getDescription(),
-                CategoryResponseDto.listOf(categoryEntities)
+                CategoryResponse.listOf(categoryEntities)
         );
     }
 
@@ -70,12 +70,12 @@ public final class ProductResponseDto {
     }
 
     public List<String> getCategoryNames() {
-        return categoryResponseDtos.stream()
-                .map(CategoryResponseDto::getName)
+        return categoryResponses.stream()
+                .map(CategoryResponse::getName)
                 .collect(Collectors.toList());
     }
 
-    public List<CategoryResponseDto> getCategoryResponseDtos() {
-        return categoryResponseDtos;
+    public List<CategoryResponse> getCategoryResponseDtos() {
+        return categoryResponses;
     }
 }
