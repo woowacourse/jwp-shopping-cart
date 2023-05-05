@@ -33,7 +33,7 @@ class JdbcCartDaoTest {
 
     @Test
     void readAll(){
-        Assertions.assertThat(jdbcCartDao.readAll(1l)).hasSize(2);
+        Assertions.assertThat(jdbcCartDao.findByUserEmail("test1@test1.com")).hasSize(2);
     }
 
     @Test

@@ -1,9 +1,7 @@
 package cart.dao;
 
-import cart.entity.Product;
 import cart.entity.User;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,8 +24,8 @@ public class JdbcUserTableDao {
 
         );
     }
-    public User readOne(Long id){
-        final String sql = "SELECT * FROM user_table where id = ?";
+    public User findByEmail(final String userEmail){
+        final String sql = "SELECT * FROM user_table where user_email = ?";
         return jdbcTemplate.queryForObject(
                 sql,
                 (rs,rowNUm) ->{
@@ -35,6 +33,6 @@ public class JdbcUserTableDao {
                             rs.getString("user_email"),
                             rs.getString("user_password")
                     );
-                }, id);
+                }, userEmail);
     }
 }
