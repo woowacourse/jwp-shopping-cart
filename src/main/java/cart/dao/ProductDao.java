@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -79,7 +79,7 @@ public class ProductDao {
         final String sql = "select * from product where id = ?";
         try {
             return Optional.of(jdbcTemplate.queryForObject(sql, productEntityRowMapper, id));
-        } catch (DataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
