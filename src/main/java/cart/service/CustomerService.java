@@ -1,11 +1,12 @@
 package cart.service;
 
 import cart.dao.MemberDao;
-import cart.entity.MemberEntity;
+import cart.dto.response.MemberDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CustomerService {
@@ -17,7 +18,9 @@ public class CustomerService {
         this.memberDao = memberDao;
     }
 
-    public List<MemberEntity> findAll() {
-        return memberDao.findAll();
+    public List<MemberDto> findAll() {
+        return memberDao.findAll().stream()
+                .map(MemberDto::from)
+                .collect(Collectors.toList());
     }
 }
