@@ -14,6 +14,6 @@ public class MemberMapper {
     }
 
     public MemberResponse entityToResponse(MemberEntity entity) {
-        return new MemberResponse(entity.getId(), entity.getEmail(), entity.getName(), entity.getPhone());
+        return new MemberResponse(entity.getId(), entity.getEmail(), entity.getPassword(), entity.getName(), entity.getPhone());
     }
 }
