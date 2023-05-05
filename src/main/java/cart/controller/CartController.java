@@ -3,10 +3,14 @@ package cart.controller;
 import cart.auth.Auth;
 import cart.auth.Credential;
 import cart.service.CartService;
-import cart.service.dto.CartAllProductSearchResponse;
+import cart.service.dto.cart.CartAddProductRequest;
+import cart.service.dto.cart.CartAllProductSearchResponse;
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,5 +31,17 @@ public class CartController {
         return ResponseEntity
                 .ok()
                 .body(cartService.searchAllCartProducts(credential));
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> addProduct(
+            @Auth Credential credential,
+            @RequestBody CartAddProductRequest request
+    ) {
+        Long savedId = cartService.save(credential, request);
+
+        return ResponseEntity
+                .created(URI.create("/carts/products/" + savedId))
+                .build();
     }
 }

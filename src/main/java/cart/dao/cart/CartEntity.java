@@ -12,6 +12,10 @@ public class CartEntity {
         this.productId = productId;
     }
 
+    public CartEntity(final Long memberId, final Long productId) {
+        this(null, memberId, productId);
+    }
+
     public Long getId() {
         return id;
     }

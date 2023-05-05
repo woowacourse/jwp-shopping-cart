@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -43,7 +44,7 @@ public class CartDao implements Dao<CartEntity> {
 
     @Override
     public Long save(final CartEntity cartEntity) {
-        return null;
+        return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(cartEntity)).longValue();
     }
 
     @Override

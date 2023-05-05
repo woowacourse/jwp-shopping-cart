@@ -8,8 +8,9 @@ public class ProductRegisterRequest {
     @NotBlank(message = "상품의 이름은 공백일 수 없습니다.")
     private String name;
 
+    @NotBlank
     @Positive(message = "상품의 가격은 0보다 커야 합니다.")
-    private int price;
+    private Integer price;
 
     @NotBlank(message = "이미지 url은 공백일 수 없습니다.")
     private String imageUrl;
@@ -17,7 +18,7 @@ public class ProductRegisterRequest {
     private ProductRegisterRequest() {
     }
 
-    public ProductRegisterRequest(final String name, final int price, final String imageUrl) {
+    public ProductRegisterRequest(final String name, final Integer price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
