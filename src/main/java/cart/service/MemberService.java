@@ -24,4 +24,8 @@ public class MemberService {
                 .map(MemberResponse::from)
                 .collect(Collectors.toList());
     }
+
+    public MemberResponse findByEmail(String email) {
+        return MemberResponse.from(memberDao.findByEmail(email));
+    }
 }

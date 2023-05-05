@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.Member;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -44,5 +45,11 @@ public class MemberDao {
     public List<Member> findAll() {
         final String sql = "SELECT * FROM MEMBER";
         return namedParameterJdbcTemplate.query(sql, rowMapper);
+    }
+
+    public Member findByEmail(String email) {
+        final String sql = "SELECT * FROM MEMBER WHERE email=:email";
+        final SqlParameterSource sqlParameterSource = new MapSqlParameterSource("email", email);
+        return namedParameterJdbcTemplate.queryForObject(sql, sqlParameterSource, rowMapper);
     }
 }
