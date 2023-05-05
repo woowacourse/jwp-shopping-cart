@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,7 +67,7 @@ public class CartController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(
-            @PathVariable("id") Long productId,
+            @PathVariable("id") @NotNull(message = "아이디가 비어있습니다.") Long productId,
             @Authority final MemberIdRequest memberId
     ) {
         cartDeleteService.delete(memberId, productId);
