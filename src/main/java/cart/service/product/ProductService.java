@@ -2,12 +2,14 @@ package cart.service.product;
 
 import cart.service.product.dto.ProductResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ProductService {
     private final ProductDao productDao;
 
@@ -16,7 +18,6 @@ public class ProductService {
     }
 
     public Long create(String productName, String productImageUrl, int productPrice) {
-//        Product product = new Product(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
         Product product = new Product(
                 new ProductName(productName),
                 new ProductImage(productImageUrl),
@@ -25,6 +26,7 @@ public class ProductService {
         return productDao.save(product);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
         List<Product> products = productDao.findAll();
         return products.stream()

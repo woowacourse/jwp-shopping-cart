@@ -2,11 +2,13 @@ package cart.service.member;
 
 import cart.service.member.dto.MemberResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class MemberService {
     private final MemberDao memberDao;
 
@@ -23,6 +25,7 @@ public class MemberService {
         return member.getId();
     }
 
+    @Transactional(readOnly = true)
     public List<MemberResponse> findAllMembers() {
         List<Member> members = memberDao.findAll();
         return members.stream()

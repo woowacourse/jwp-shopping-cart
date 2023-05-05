@@ -6,11 +6,13 @@ import cart.service.member.MemberDao;
 import cart.service.product.Product;
 import cart.service.product.ProductDao;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CartService {
 
     private final CartDao cartDao;
@@ -36,6 +38,7 @@ public class CartService {
         return cartDao.addProduct(cart);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findProductsByUserIdOnCart(String email) {
         Member member = memberDao.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
