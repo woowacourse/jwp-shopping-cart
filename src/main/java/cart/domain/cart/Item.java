@@ -5,16 +5,16 @@ import cart.domain.product.ProductId;
 
 public class Item {
 
-    private final MemberId userId;
+    private final MemberId memberId;
     private final ProductId productId;
 
-    public Item(final long userId, final long productId) {
-        this.userId = new MemberId(userId);
+    public Item(final long memberId, final long productId) {
+        this.memberId = new MemberId(memberId);
         this.productId = new ProductId(productId);
     }
 
-    public long getUserId() {
-        return userId.getValue();
+    public long getMemberId() {
+        return memberId.getValue();
     }
 
     public long getProductId() {

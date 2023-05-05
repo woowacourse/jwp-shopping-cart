@@ -35,12 +35,12 @@ class CartDaoTest {
 
     @Test
     void 상품_삽입() {
-        final int userId = 2;
-        final Item item = new Item(userId, 1);
+        final int memberId = 2;
+        final Item item = new Item(memberId, 1);
 
         cartDao.insert(item);
 
-        assertThat(cartDao.findAll(userId).size()).isEqualTo(1);
+        assertThat(cartDao.findAll(memberId).size()).isEqualTo(1);
     }
 
     @Test

@@ -27,15 +27,15 @@ public class CartDao {
     private static RowMapper<ItemEntity> itemEntityRowMapper() {
         return (resultSet, rowNum) -> new ItemEntity(
                 resultSet.getLong("id"),
-                resultSet.getLong("user_id"),
+                resultSet.getLong("member_id"),
                 resultSet.getLong("product_id")
         );
     }
 
-    public List<ItemEntity> findAll(final long userId) {
-        final String sql = "SELECT * FROM cart WHERE user_id = ?";
+    public List<ItemEntity> findAll(final long memberId) {
+        final String sql = "SELECT * FROM cart WHERE member_id = ?";
 
-        return jdbcTemplate.query(sql, itemEntityRowMapper(), userId);
+        return jdbcTemplate.query(sql, itemEntityRowMapper(), memberId);
     }
 
     public void insert(final Item item) {
@@ -45,7 +45,7 @@ public class CartDao {
     }
 
     public void delete(final long itemId, final long memberId) {
-        final String sql = "DELETE cart WHERE id = ? AND user_id = ?";
+        final String sql = "DELETE cart WHERE id = ? AND member_id = ?";
 
         jdbcTemplate.update(sql, itemId, memberId);
     }
