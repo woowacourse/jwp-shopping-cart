@@ -25,20 +25,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Object> handleException(Exception e) {
         LOGGER.warn(e.getMessage());
-        Map<String, String> errorsResult = Map.of(DEFAULT_ERROR_KEY, "서버에서 오류가 발생했습니다");
-        return ResponseEntity.internalServerError().body(errorsResult);
+        return ResponseEntity.internalServerError().body(toErrorResponse("서버에서 오류가 발생했습니다"));
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleIllegalArgumentsException(IllegalArgumentException e) {
         LOGGER.warn(e.getMessage());
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.badRequest().body(toErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleApiException(ApiException e) {
         LOGGER.warn(e.getMessage());
-        return ResponseEntity.internalServerError().body(e.getMessage());
+        return ResponseEntity.internalServerError().body(toErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler
@@ -48,20 +47,26 @@ public class GlobalExceptionHandler {
                 .stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
-        Map<String, List<String>> errorsResult = Map.of(DEFAULT_ERROR_KEY, errors);
-
-        return ResponseEntity.badRequest().body(errorsResult);
+        return ResponseEntity.badRequest().body(toErrorResponse(errors));
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleAuthenticationException(AuthenticationException e) {
         LOGGER.warn(e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("잘못된 인증정보입니다.");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(toErrorResponse("잘못된 인증정보입니다."));
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleAuthenticationException(AuthorizationException e) {
         LOGGER.warn(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("해당 서비스에 권한이 없습니다.");
+    }
+
+    private static Map<String, String> toErrorResponse(String message) {
+        return Map.of(DEFAULT_ERROR_KEY, message);
+    }
+
+    private static Map<String, List<String>> toErrorResponse(List<String> messages) {
+        return Map.of(DEFAULT_ERROR_KEY, messages);
     }
 }
