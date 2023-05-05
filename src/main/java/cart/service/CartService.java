@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.CartDao;
-import cart.dto.CartProductDto;
+import cart.dto.CartProductResponse;
 import cart.entity.Cart;
 import cart.entity.CartProduct;
 import org.springframework.stereotype.Service;
@@ -17,10 +17,10 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    public List<CartProductDto> getCartsByEmail(String email) {
+    public List<CartProductResponse> getCartsByEmail(String email) {
         List<CartProduct> cartProducts = cartDao.selectById(email);
         return cartProducts.stream()
-                .map(CartProductDto::from)
+                .map(CartProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 

@@ -1,11 +1,11 @@
 package cart.dto;
 
-public class CartRequestDto {
+public class CartRequest {
     private int productId;
 
-    public CartRequestDto(){}
+    public CartRequest(){}
 
-    public CartRequestDto(int productId) {
+    public CartRequest(int productId) {
         this.productId = productId;
     }
 

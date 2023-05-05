@@ -38,13 +38,6 @@ public class CartDao {
         return id.intValue();
     }
 
-    public List<CartProduct> selectAll() {
-        return null;
-    }
-
-    public int update(CartProduct cartProduct) {
-        return 0;
-    }
 
     public int delete(int cartId, String email) {
         String sql = "delete from cart where id = ? and email = ? ";

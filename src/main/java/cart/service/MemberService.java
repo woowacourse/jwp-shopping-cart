@@ -1,10 +1,7 @@
 package cart.service;
 
-import cart.dao.Dao;
 import cart.dao.MemberDao;
-import cart.dao.ProductDao;
-import cart.dto.MemberDto;
-import cart.dto.ProductDto;
+import cart.dto.MemberResponse;
 import cart.entity.Member;
 import org.springframework.stereotype.Service;
 
@@ -13,17 +10,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class MemberService {
-    private final Dao dao;
+    private final MemberDao memberDao;
 
-    public MemberService(MemberDao dao) {
-        this.dao = dao;
+    public MemberService(MemberDao memberDao) {
+        this.memberDao = memberDao;
     }
 
 
-    public List<MemberDto> selectAllMember() {
-        List<Member> members = dao.selectAll();
+    public List<MemberResponse> selectAllMember() {
+        List<Member> members = memberDao.selectAll();
         return members.stream()
-                .map(MemberDto::from)
+                .map(MemberResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 }

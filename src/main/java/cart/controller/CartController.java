@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.dto.CartProductDto;
-import cart.dto.CartRequestDto;
+import cart.dto.CartProductResponse;
+import cart.dto.CartRequest;
 import cart.service.CartService;
 import cart.ui.CartAuthentication;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +20,14 @@ public class CartController {
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<CartProductDto>> allCarts(@CartAuthentication String email) {
-        List<CartProductDto> carts = cartService.getCartsByEmail(email);
+    public ResponseEntity<List<CartProductResponse>> allCarts(@CartAuthentication String email) {
+        List<CartProductResponse> carts = cartService.getCartsByEmail(email);
         return ResponseEntity.ok().body(carts);
     }
 
     @PostMapping("/carts")
-    public ResponseEntity<Void> addCart(@RequestBody CartRequestDto cartRequestDto, @CartAuthentication String email) {
-        int cartId = cartService.addCart(cartRequestDto.getProductId(), email);
+    public ResponseEntity<Void> addCart(@RequestBody CartRequest cartRequest, @CartAuthentication String email) {
+        int cartId = cartService.addCart(cartRequest.getProductId(), email);
         return ResponseEntity.created(URI.create("/carts/" + cartId)).build();
     }
 

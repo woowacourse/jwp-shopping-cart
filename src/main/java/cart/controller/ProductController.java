@@ -1,19 +1,12 @@
 package cart.controller;
 
-import java.net.URI;
+import cart.dto.ProductRequest;
+import cart.service.ProductService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import cart.dto.ProductRequestDto;
-import cart.service.ProductService;
+import java.net.URI;
 
 @RestController
 public class ProductController {
@@ -25,15 +18,15 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
-        int id = productService.addProduct(productRequestDto);
+    public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductRequest productRequest) {
+        int id = productService.addProduct(productRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<Void> updateProduct(@Valid @RequestBody ProductRequestDto productRequestDto,
+    public ResponseEntity<Void> updateProduct(@Valid @RequestBody ProductRequest productRequest,
         @PathVariable int id) {
-        productService.updateProduct(productRequestDto, id);
+        productService.updateProduct(productRequest, id);
         return ResponseEntity.noContent().build();
     }
 

@@ -1,11 +1,7 @@
 package cart.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.groups.Tuple.tuple;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.List;
-
+import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +9,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.dto.ProductDto;
-import cart.dto.ProductRequestDto;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.groups.Tuple.tuple;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
 @Transactional
 class ProductServiceTest {
 
-    private final ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000,
+    private final ProductRequest productRequest = new ProductRequest("케로로", 1000,
         "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
 
     @Autowired
@@ -29,43 +30,43 @@ class ProductServiceTest {
     @DisplayName("addProduct 성공 테스트")
     @Test
     void successAddProduct() {
-        assertDoesNotThrow(() -> productService.addProduct(productRequestDto));
+        assertDoesNotThrow(() -> productService.addProduct(productRequest));
     }
 
     @DisplayName("addProduct 실패 테스트 - 이름 길이 검증")
     @Test
     void addProduct_fail() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("케로케로케로케로케로케로케로케로케로케로케로케로케로", 1000,
+        ProductRequest productRequest = new ProductRequest("케로케로케로케로케로케로케로케로케로케로케로케로케로", 1000,
             "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
-        assertThatThrownBy(() -> productService.addProduct(productRequestDto))
+        assertThatThrownBy(() -> productService.addProduct(productRequest))
             .isExactlyInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
     void selectAllProducts() {
-        ProductRequestDto productRequestDto2 = new ProductRequestDto("쿠루루", 2000,
+        ProductRequest productRequest2 = new ProductRequest("쿠루루", 2000,
             "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
-        productService.addProduct(productRequestDto);
-        productService.addProduct(productRequestDto2);
+        productService.addProduct(productRequest);
+        productService.addProduct(productRequest2);
 
-        List<ProductDto> productEntities = productService.selectAllProducts();
+        List<ProductResponse> productEntities = productService.selectAllProducts();
 
         assertAll(
             () -> assertThat(productEntities).hasSize(2),
             () -> assertThat(productEntities).extracting("name", "price", "image")
-                .contains(tuple(productRequestDto.getName(), productRequestDto.getPrice(), productRequestDto.getImage())
-                    , tuple(productRequestDto2.getName(), productRequestDto2.getPrice(), productRequestDto2.getImage()))
+                .contains(tuple(productRequest.getName(), productRequest.getPrice(), productRequest.getImage())
+                    , tuple(productRequest2.getName(), productRequest2.getPrice(), productRequest2.getImage()))
         );
     }
 
     @Test
     void updateProduct() {
-        int id = productService.addProduct(productRequestDto);
-        ProductRequestDto updateProductDto = new ProductRequestDto("타마마", 100,
+        int id = productService.addProduct(productRequest);
+        ProductRequest updateProductDto = new ProductRequest("타마마", 100,
             "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
         productService.updateProduct(updateProductDto, id);
 
-        List<ProductDto> productEntities = productService.selectAllProducts();
+        List<ProductResponse> productEntities = productService.selectAllProducts();
 
         assertThat(productEntities).extracting("name", "price", "image")
             .contains(tuple(updateProductDto.getName(), updateProductDto.getPrice(), updateProductDto.getImage()));
@@ -73,10 +74,10 @@ class ProductServiceTest {
 
     @Test
     void deleteProduct() {
-        int id = productService.addProduct(productRequestDto);
+        int id = productService.addProduct(productRequest);
         productService.deleteProduct(id);
 
-        List<ProductDto> productEntities = productService.selectAllProducts();
+        List<ProductResponse> productEntities = productService.selectAllProducts();
 
         assertThat(productEntities).hasSize(0);
     }
