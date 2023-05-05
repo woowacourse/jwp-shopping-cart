@@ -1,8 +1,9 @@
 package cart.dao;
 
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import java.util.List;
 
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +46,7 @@ class MemberDaoTest {
         List<Member> members = memberDao.findAll();
 
         // then
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(members).hasSize(1);
             softly.assertThat(members.get(0).getEmail()).isEqualTo("jeomxon@gmail.com");
             softly.assertThat(members.get(0).getPassword()).isEqualTo("password1");

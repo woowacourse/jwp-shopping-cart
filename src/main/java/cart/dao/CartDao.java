@@ -51,7 +51,7 @@ public class CartDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public void deleteCartItem(final Long cartId) {
+    public void deleteCartItemById(final Long cartId) {
         String sql = "DELETE FROM cart WHERE id = ?";
 
         jdbcTemplate.update(sql, cartId);
