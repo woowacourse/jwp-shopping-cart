@@ -42,7 +42,7 @@ public class CartController {
             @BasicAuthentication final Member member,
             @Valid @RequestBody final AddCartRequest addCartRequest
     ) {
-        cartDao.addProduct(member.getId(), addCartRequest.getId());
+        cartDao.addProduct(member.getId(), addCartRequest.getProductId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

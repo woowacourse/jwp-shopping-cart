@@ -10,15 +10,15 @@ public class AddCartRequest {
 
     @NotNull
     @Positive
-    private final Long id;
+    private final Long productId;
 
     @JsonCreator
-    public AddCartRequest(@JsonProperty("id") final Long id) {
-        this.id = id;
+    public AddCartRequest(@JsonProperty("id") final Long productId) {
+        this.productId = productId;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProductId() {
+        return productId;
     }
 
 }
