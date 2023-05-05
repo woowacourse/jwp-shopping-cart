@@ -1,7 +1,6 @@
 package cart.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,19 +52,9 @@ public class CartService {
         cartRepository.save(user, cart);
     }
 
-    public List<CartItem> getItemsOf(Integer userId) {
+    public List<CartItem> getCartItemsOf(Integer userId) {
         User user = userDao.selectBy(userId);
-
         Cart cart = cartRepository.getCartOf(user);
         return cart.getItems();
-    }
-
-    public List<Product> getCartItemProductsOf(Integer userId) {
-        User user = userDao.selectBy(userId);
-
-        Cart cart = cartRepository.getCartOf(user);
-        return cart.getItems().stream()
-                .map(CartItem::getProduct)
-                .collect(Collectors.toList());
     }
 }

@@ -36,7 +36,7 @@ public class CartController {
     @GetMapping("cart/items")
     public List<CartItemResponse> getCartItems() {
         Integer userId = 1;
-        final List<CartItem> products = cartService.getItemsOf(userId);
+        final List<CartItem> products = cartService.getCartItemsOf(userId);
         return mapProducts(products);
     }
 
