@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.dto.MemberResponse;
 import cart.dto.ProductResponse;
-import cart.service.CartProductService;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -19,8 +18,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -43,9 +41,9 @@ public class PageControllerTest {
         given(productService.findAll()).willReturn(List.of(firstProductResponse, secondProductResponse));
 
         mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
                 .andExpectAll(
                         status().isOk(),
+                        view().name("index"),
                         model().attribute("products", equalTo(List.of(firstProductResponse, secondProductResponse)))
                 )
                 .andDo(print());
@@ -59,9 +57,9 @@ public class PageControllerTest {
         given(productService.findAll()).willReturn(List.of(firstProductResponse, secondProductResponse));
 
         mockMvc.perform(get("/admin"))
-                .andExpect(status().isOk())
                 .andExpectAll(
                         status().isOk(),
+                        view().name("admin"),
                         model().attribute("products", equalTo(List.of(firstProductResponse, secondProductResponse)))
                 )
                 .andDo(print());
@@ -75,9 +73,9 @@ public class PageControllerTest {
         given(memberService.findAll()).willReturn(List.of(firstMemberResponse, secondMemberResponse));
 
         mockMvc.perform(get("/settings"))
-                .andExpect(status().isOk())
                 .andExpectAll(
                         status().isOk(),
+                        view().name("settings"),
                         model().attribute("members", equalTo(List.of(firstMemberResponse, secondMemberResponse)))
                 )
                 .andDo(print());
