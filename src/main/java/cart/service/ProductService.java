@@ -23,6 +23,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
+    public Product findById(final Long id) {
+        return productDao.findById(id);
+    }
+
+    @Transactional(readOnly = true)
     public List<Product> findAll() {
         return productDao.findAll();
     }
