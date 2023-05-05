@@ -1,5 +1,6 @@
 package cart.infrastructure;
 
+import cart.exception.AuthenticationException;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -21,6 +22,10 @@ public class PrincipalArgumentResolver implements HandlerMethodArgumentResolver 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        return webRequest.getAttribute(USER_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        Object user = webRequest.getAttribute(USER_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        if (user == null) {
+            throw new AuthenticationException("인증이 되지 않았습니다.");
+        }
+        return user;
     }
 }
