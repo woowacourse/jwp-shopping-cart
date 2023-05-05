@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
@@ -39,6 +41,17 @@ class ProductControllerIntegratedTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body(containsString("관리자 페이지"));
+    }
+
+    @Test
+    void 상품_목록을_조회한다() {
+        RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/products")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
     }
 
     @Test
