@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dao.member.MemberCartDao;
+import cart.dao.cart.CartDao;
 import cart.dao.item.ItemDao;
 import cart.dao.member.MemberDao;
 import cart.dto.cart.CartSaveRequest;
@@ -28,7 +28,7 @@ class CartControllerTest {
     private int port;
 
     @Autowired
-    private MemberCartDao memberCartDao;
+    private CartDao cartDao;
     @Autowired
     private ItemDao itemDao;
     @Autowired
@@ -43,7 +43,7 @@ class CartControllerTest {
 
         MemberEntity member = memberDao.save(new MemberEntity("email@email.com", "hello", "01012345678", "password"));
 
-        memberCartDao.save(member.getEmail(), item.getId());
+        cartDao.save(member.getEmail(), item.getId());
 
         authorization = Base64Utils.encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes());
         invalidAuthorization = Base64Utils.encodeToString((member.getEmail() + ":" + "abc").getBytes());

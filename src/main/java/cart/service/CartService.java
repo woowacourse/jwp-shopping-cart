@@ -1,15 +1,16 @@
 package cart.service;
 
-import cart.dao.member.MemberCartDao;
+import cart.dao.cart.CartDao;
 import cart.dto.cart.CartResponse;
 import cart.dto.item.ItemResponse;
+import cart.entity.CartEntity;
 import cart.entity.ItemEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -17,26 +18,33 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CartService {
 
-    private final MemberCartDao memberCartDao;
+    private final CartDao cartDao;
 
+    @Transactional
     public Long save(String memberEmail, Long itemId) {
-        return memberCartDao.save(memberEmail, itemId);
+        Optional<CartEntity> cart = cartDao.findByEmailAndId(memberEmail, itemId);
+
+        if (cart.isEmpty()) {
+            return cartDao.save(memberEmail, itemId);
+        }
+
+        cartDao.update(memberEmail, cart.get().addQuantity());
+        return itemId;
     }
 
     public List<CartResponse> findAll(String memberEmail) {
-        Optional<Map<ItemEntity, Long>> cart = memberCartDao.findAll(memberEmail);
+        Optional<List<CartEntity>> carts = cartDao.findAll(memberEmail);
 
-        if(cart.isEmpty()){
+        if (carts.isEmpty()) {
             return Collections.emptyList();
         }
 
-        return convertItemEntityMapToCartItemEntityList(cart.get());
+        return convertItemEntityMapToCartItemEntityList(carts.get());
     }
 
-    private List<CartResponse> convertItemEntityMapToCartItemEntityList(final Map<ItemEntity, Long> itemEntities) {
-        return itemEntities.entrySet()
-                .stream()
-                .map(item -> new CartResponse(itemEntityToItemResponse(item.getKey()), item.getValue()))
+    private List<CartResponse> convertItemEntityMapToCartItemEntityList(final List<CartEntity> carts) {
+        return carts.stream()
+                .map(cart -> new CartResponse(itemEntityToItemResponse(cart.getItem()), cart.getQuantity()))
                 .collect(Collectors.toList());
     }
 
@@ -48,6 +56,18 @@ public class CartService {
     }
 
     public void delete(String memberEmail, Long itemId) {
-        memberCartDao.delete(memberEmail, itemId);
+        Optional<CartEntity> cart = cartDao.findByEmailAndId(memberEmail, itemId);
+
+        if (cart.isEmpty()) {
+            throw new IllegalArgumentException("삭제할 상품이 장바구니에 존재하지 않습니다.");
+        }
+
+        CartEntity retrievedCart = cart.get();
+
+        if (retrievedCart.isSingleQuantity()) {
+            cartDao.delete(memberEmail, itemId);
+            return;
+        }
+        cartDao.update(memberEmail, retrievedCart.deleteQuantity());
     }
 }
