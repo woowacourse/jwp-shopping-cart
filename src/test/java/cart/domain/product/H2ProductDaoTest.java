@@ -2,7 +2,6 @@ package cart.domain.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.Dao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class H2ProductDaoTest {
 
-    private Dao<Product> productDao;
+    private final ProductDao productDao;
 
     @Autowired
     H2ProductDaoTest(final JdbcTemplate jdbcTemplate) {
