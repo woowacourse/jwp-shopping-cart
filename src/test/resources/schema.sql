@@ -1,9 +1,19 @@
 DROP TABLE IF EXISTS products;
 
-CREATE TABLE IF NOT EXISTS products (
+CREATE TABLE products (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL,
     image_url VARCHAR(1000),
     price INT NOT NULL,
     PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS members;
+
+CREATE TABLE members (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    email	VARCHAR(255)	NOT NULL,
+    password	VARCHAR(30)	NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_email (email)
 );

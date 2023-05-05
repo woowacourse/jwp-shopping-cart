@@ -35,8 +35,8 @@ public class CartController {
     public ModelAndView settings() {
         return new ModelAndView("settings", Map.of(
                 "members", List.of(
-                        new Member("dummy@gmail.com", "1234"),
-                        new Member("dummy2@gmail.com", "4567")
+                        new Member(1L, "dummy@gmail.com", "1234"),
+                        new Member(2L, "dummy2@gmail.com", "4567")
                 )
         ));
     }

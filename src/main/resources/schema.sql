@@ -5,3 +5,13 @@ CREATE TABLE IF NOT EXISTS products (
     price INT NOT NULL,
     PRIMARY KEY (id)
 );
+
+DROP TABLE IF EXISTS members;
+
+CREATE TABLE members (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    email	VARCHAR(255)	NOT NULL,
+    password	VARCHAR(30)	NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_email (email)
+);
