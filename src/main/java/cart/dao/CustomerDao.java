@@ -49,7 +49,10 @@ public class CustomerDao {
         final MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("email", email);
         params.addValue("password", password);
-        final Long findId = namedParameterJdbcTemplate.queryForObject(sql, params, Long.class);
-        return Optional.ofNullable(findId);
+        final List<Long> customerIds = namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
+        if (customerIds.size() == 0) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(customerIds.get(0));
     }
 }
