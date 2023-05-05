@@ -5,6 +5,7 @@ import cart.domain.ImageUrl;
 import cart.domain.Price;
 import cart.domain.Product;
 import cart.domain.ProductName;
+import cart.exception.NotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,7 +20,6 @@ public class ProductRepository {
         this.productDao = productDao;
     }
 
-    //레포지토리와 dao의 메서드 네이밍
     public Long addProduct(Product product) {
         ProductEntity productEntity = convertToProductEntity(product);
         return productDao.insert(productEntity);
@@ -38,7 +38,7 @@ public class ProductRepository {
         return convertToProduct(productEntity.get());
     }
 
-    //todo : 객체를 update 하는 것이 어색하다고 느껴집니다.
+    //todo 질문 : 객체를 update 하는 것이 어색하다고 느껴집니다.
     public Product updateProduct(Product product) {
         checkIfExistProduct(productDao.findById(product.getId()));
         productDao.updateProduct(convertToProductEntity(product));
@@ -52,8 +52,7 @@ public class ProductRepository {
 
     private void checkIfExistProduct(Optional<ProductEntity> productEntity) {
         if(productEntity.isEmpty()) {
-            // todo : 커스텀 예외 던지기
-            throw new IllegalArgumentException("해당 상품이 존재하지 않습니다.");
+            throw new NotFoundException("해당 상품이 존재하지 않습니다.");
         }
     }
 
