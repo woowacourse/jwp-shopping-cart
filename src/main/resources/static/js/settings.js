@@ -18,7 +18,6 @@ function hideAddModal() {
 
 document.getElementById("form").addEventListener("submit", function (event) {
     event.preventDefault();
-    console.log("form submit event")
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     const phoneNumber = document.getElementById("phoneNumber").value;

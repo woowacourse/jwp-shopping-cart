@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
 
+    private static final int EXPECTED_DELETED_ITEMS_COUNT = 1;
+
     private final CartDao cartDao;
     private final ProductService productService;
     private final AuthorizationService authorizationService;
@@ -53,17 +55,21 @@ public class CartService {
 
     public long deleteItemFromCart(AuthInfo authInfo, Long productIdToDelete) {
         if (Objects.isNull(productIdToDelete)) {
-            throw new IllegalArgumentException("잘못된 상품 번호입니다");
+            throw new IllegalArgumentException("상품 번호를 입력해주세요");
         }
 
         final CartItemDto itemToDelete = new CartItemDto(getIdOfMember(authInfo), productIdToDelete);
         final int deletedItemsCount = cartDao.deleteItem(itemToDelete);
 
-        if (deletedItemsCount != 1) {
-            throw new NoSuchElementException("존재하지 않는 상품 번호입니다");
-        }
+        validateItemDeleted(deletedItemsCount);
 
         return itemToDelete.getProductId();
+    }
+
+    private void validateItemDeleted(int deletedItemsCount) {
+        if (deletedItemsCount != EXPECTED_DELETED_ITEMS_COUNT) {
+            throw new NoSuchElementException("존재하지 않는 상품 번호입니다");
+        }
     }
 
     private long getIdOfMember(AuthInfo authInfo) {

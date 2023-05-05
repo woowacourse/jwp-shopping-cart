@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public class ProductName {
 
-    public static final int MIN_LENGTH = 1;
-    public static final int MAX_LENGTH = 30;
+    private static final int MIN_LENGTH = 1;
+    private static final int MAX_LENGTH = 30;
 
     private final String productName;
 
