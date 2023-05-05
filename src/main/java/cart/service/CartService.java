@@ -6,6 +6,7 @@ import cart.domain.Cart;
 import cart.dto.request.CartRequest;
 import cart.dto.response.CartResponse;
 import cart.entity.CartEntity;
+import cart.entity.ProductEntity;
 import cart.exception.ResourceNotFoundException;
 import cart.mapper.CartMapper;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,26 @@ public class CartService {
     }
 
     public CartResponse create(CartRequest cartRequest, long memberId) {
+        validateExist(cartRequest, memberId);
         Cart cart = cartMapper.requestToCart(cartRequest);
 
         CartEntity save = cartDao.save(cart, cartRequest.getProductId(), memberId)
-                .orElseThrow(() -> new ResourceNotFoundException("데이터가 정상적으로 저장되지 않았습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("데이터가 정상적으로 저장되지 않았습니다." + System.lineSeparator() + "사용자 id : " + memberId));
 
         return cartMapper.entityToResponse(save);
+    }
+
+    private void validateExist(CartRequest cartRequest, long memberId) {
+        if (isExistProduct(cartRequest, memberId)) {
+            throw new IllegalArgumentException("이미 존재하는 상품입니다." + System.lineSeparator() + "productId : " + cartRequest.getProductId());
+        }
+    }
+
+    private boolean isExistProduct(CartRequest cartRequest, long memberId) {
+        List<CartEntity> carts = cartDao.findByMemberId(memberId);
+        return carts.stream().map(CartEntity::getProduct)
+                .map(ProductEntity::getId)
+                .anyMatch(id -> id == cartRequest.getProductId());
     }
 
     public List<CartResponse> findAll() {

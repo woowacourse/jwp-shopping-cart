@@ -7,7 +7,6 @@ import cart.dto.request.CartRequest;
 import cart.dto.response.CartResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
-import cart.exception.ApiException;
 import cart.exception.AuthorizationException;
 import cart.exception.ResourceNotFoundException;
 import cart.service.CartService;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/carts")
@@ -39,30 +37,15 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartResponse>> findByMemberId(@AuthMember MemberEntity member) {
-        List<CartResponse> cartResponse = cartService.findAllByMemberId(member.getId());
+    public ResponseEntity<List<CartResponse>> findByMemberId(@AuthMember Long memberId) {
+        List<CartResponse> cartResponse = cartService.findAllByMemberId(memberId);
         return ResponseEntity.ok().body(cartResponse);
     }
 
     @PostMapping
-    public ResponseEntity<CartResponse> addProduct(@RequestBody @Valid CartRequest cartRequest, @AuthMember MemberEntity member) {
-        List<CartEntity> carts = cartDao.findByMemberId(member.getId());
-
-        Optional<CartEntity> cartEntity = carts.stream()
-                .filter(cart -> cart.getProduct().getId() == cartRequest.getProductId())
-                .findAny();
-
-        CartResponse cartResponse = saveOrUpdate(cartRequest, member, cartEntity);
-
+    public ResponseEntity<CartResponse> create(@RequestBody @Valid CartRequest cartRequest, @AuthMember Long memberId) {
+        CartResponse cartResponse = cartService.create(cartRequest, memberId);
         return ResponseEntity.status(HttpStatus.CREATED).body(cartResponse);
-    }
-
-    private CartResponse saveOrUpdate(CartRequest cartRequest, MemberEntity member, Optional<CartEntity> cartEntity) {
-        if (cartEntity.isEmpty()) {
-            return cartService.create(cartRequest, member.getId());
-        }
-        CartEntity cart = cartEntity.orElseThrow(() -> new ApiException("존재하지 않는 장바구니입니다."));
-        return cartService.increaseCount(cart);
     }
 
     @PutMapping("/{cartId}")
