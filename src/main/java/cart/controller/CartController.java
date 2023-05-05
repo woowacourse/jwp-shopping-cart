@@ -1,6 +1,8 @@
 package cart.controller;
 
+import cart.domain.Member;
 import cart.service.ProductService;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +26,18 @@ public class CartController {
 
     @GetMapping(path = "/admin")
     public ModelAndView admin() {
-        return new ModelAndView("/admin", Map.of(
+        return new ModelAndView("admin", Map.of(
                 "products", productService.findAll()
+        ));
+    }
+
+    @GetMapping(path = "/settings")
+    public ModelAndView settings() {
+        return new ModelAndView("settings", Map.of(
+                "members", List.of(
+                        new Member("dummy@gmail.com", "1234"),
+                        new Member("dummy2@gmail.com", "4567")
+                )
         ));
     }
 }
