@@ -41,8 +41,12 @@ class MemberServiceTest {
         List<MemberResponseDto> members = memberService.findAll();
 
         assertThat(members).hasSize(2)
-                .anyMatch(memberResponseDto -> memberResponseDto.getEmail().equals("kpeel5839@a.com"))
-                .anyMatch(memberResponseDto -> memberResponseDto.getEmail().equals("jakind@b.com"));
+                .anyMatch(memberResponseDto -> isSameEmail(memberResponseDto, "kpeel5839@a.com"))
+                .anyMatch(memberResponseDto -> isSameEmail(memberResponseDto, "jakind@b.com"));
+    }
+
+    private boolean isSameEmail(MemberResponseDto memberResponseDto, String email) {
+        return memberResponseDto.getEmail().equals(email);
     }
 
     private Member getMember(String email, String password) {

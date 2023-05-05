@@ -48,17 +48,13 @@ class CartServiceTest {
 
         List<CartResponseDto> carts = cartService.findAll(email);
 
-        assertThat(carts).hasSize(2);
-        assertThat(carts.stream()
-                .anyMatch(cartResponseDto -> cartResponseDto.getProductResponseDto()
-                        .getName()
-                        .equals("샐러드"))
-        ).isTrue();
-        assertThat(carts.stream()
-                .anyMatch(cartResponseDto -> cartResponseDto.getProductResponseDto()
-                        .getName()
-                        .equals("치킨"))
-        ).isTrue();
+        assertThat(carts).hasSize(2)
+                .anyMatch(cartResponseDto -> isSameName(cartResponseDto, "샐러드"))
+                .anyMatch(cartResponseDto -> isSameName(cartResponseDto, "치킨"));
+    }
+
+    private boolean isSameName(CartResponseDto cartResponseDto, String name) {
+        return cartResponseDto.getProductResponseDto().getName().equals(name);
     }
 
     @Test
