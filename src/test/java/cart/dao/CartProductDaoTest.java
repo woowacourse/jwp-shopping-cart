@@ -28,9 +28,14 @@ public class CartProductDaoTest {
         namedParameterJdbcTemplate.getJdbcTemplate().execute("ALTER TABLE cart_product ALTER COLUMN id RESTART WITH 1");
         namedParameterJdbcTemplate.getJdbcTemplate().execute("ALTER TABLE product ALTER COLUMN id RESTART WITH 1");
         namedParameterJdbcTemplate.getJdbcTemplate().execute("ALTER TABLE member ALTER COLUMN id RESTART WITH 1");
+
         cartProductDao = new CartProductDao(namedParameterJdbcTemplate);
         memberDao = new MemberDao(namedParameterJdbcTemplate);
         productDao = new ProductDao(namedParameterJdbcTemplate);
+
+        cartProductDao.deleteAll();
+        memberDao.deleteAll();
+        productDao.deleteAll();
     }
 
     @Test

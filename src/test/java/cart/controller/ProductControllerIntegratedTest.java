@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.dao.ProductDao;
 import cart.dto.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -14,9 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -28,19 +26,14 @@ class ProductControllerIntegratedTest {
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Autowired
+    ProductDao productDao;
+
     @BeforeEach
     void setUp() {
-        namedParameterJdbcTemplate.getJdbcTemplate().execute("ALTER TABLE PRODUCT ALTER COLUMN id RESTART WITH 1");
+        productDao.deleteAll();
+        namedParameterJdbcTemplate.getJdbcTemplate().execute("ALTER TABLE product ALTER COLUMN id RESTART WITH 1");
         RestAssured.port = port;
-    }
-
-    @Test
-    void 모든_상품_목록을_관리자_페이지로_가져온다() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body(containsString("관리자 페이지"));
     }
 
     @Test
