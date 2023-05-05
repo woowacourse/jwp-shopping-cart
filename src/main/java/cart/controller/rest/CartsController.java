@@ -1,6 +1,6 @@
 package cart.controller.rest;
 
-import cart.auth.BasicAuthorizationExtractor;
+import cart.auth.AuthResolving;
 import cart.controller.Exception.UncertifiedMemberException;
 import cart.dto.auth.AuthInfo;
 import cart.dto.response.CartResponse;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 
@@ -34,13 +33,11 @@ public class CartsController {
     }
 
     @PostMapping("/items")
-    public ResponseEntity<ItemResponse> createItem(HttpServletRequest request, @RequestParam("product-id") Long productId) {
-        BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
-        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+    public ResponseEntity<ItemResponse> createItem(
+            @AuthResolving AuthInfo authInfo,
+            @RequestParam("product-id") Long productId) {
 
-        if (!membersService.isMemberCertified(authInfo)) {
-            throw new UncertifiedMemberException();
-        }
+        validateAuthorization(authInfo);
 
         Long memberId = membersService.readIdByEmail(authInfo.getEmail());
         ItemResponse itemResponse = cartService.createItem(memberId, productId);
@@ -54,13 +51,8 @@ public class CartsController {
     }
 
     @GetMapping("/items")
-    public ResponseEntity<CartResponse> readItemsByMember(HttpServletRequest request) {
-        BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
-        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-
-        if (!membersService.isMemberCertified(authInfo)) {
-            throw new UncertifiedMemberException();
-        }
+    public ResponseEntity<CartResponse> readItemsByMember(@AuthResolving AuthInfo authInfo) {
+        validateAuthorization(authInfo);
 
         Long memberId = membersService.readIdByEmail(authInfo.getEmail());
 
@@ -69,16 +61,20 @@ public class CartsController {
     }
 
     @DeleteMapping("/items/{id}")
-    public ResponseEntity<Void> deleteItem(HttpServletRequest request, @PathVariable("id") @NotNull Long itemId) {
-        BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
-        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+    public ResponseEntity<Void> deleteItem(
+            @AuthResolving AuthInfo authInfo,
+            @PathVariable("id") @NotNull Long itemId) {
 
-        if (!membersService.isMemberCertified(authInfo)) {
-            throw new UncertifiedMemberException();
-        }
+        validateAuthorization(authInfo);
 
         cartService.deleteItemById(itemId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    private void validateAuthorization(AuthInfo authInfo) {
+        if (!membersService.isMemberCertified(authInfo)) {
+            throw new UncertifiedMemberException();
+        }
     }
 }
