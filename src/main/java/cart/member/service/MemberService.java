@@ -1,6 +1,6 @@
 package cart.member.service;
 
-import cart.member.DuplicateEmailException;
+import cart.exception.DuplicateEmailException;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import cart.member.dto.DtoMapper;

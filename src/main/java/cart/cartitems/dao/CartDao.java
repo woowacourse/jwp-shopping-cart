@@ -2,7 +2,6 @@ package cart.cartitems.dao;
 
 import cart.cartitems.dto.CartItemDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -12,26 +11,28 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class CartItemDao {
+public class CartDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
-    public CartItemDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public CartDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public CartItemDto saveItemOfMember(CartItemDto cartItemDto) {
+    public CartItemDto saveItem(CartItemDto cartItemDto) {
         final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate()).withTableName("cart_items");
 
-        try {
-            final Map<String, Long> params = Map.of("member_id", cartItemDto.getMemberId(), "product_id", cartItemDto.getProductId());
-            simpleJdbcInsert.execute(params);
+        final Map<String, Long> params = Map.of("member_id", cartItemDto.getMemberId(), "product_id", cartItemDto.getProductId());
+        simpleJdbcInsert.execute(params);
 
-            return cartItemDto;
-        } catch (DuplicateKeyException e) {
-            throw new IllegalArgumentException("중복 키입니다");
-        }
+        return cartItemDto;
+    }
+
+    public boolean containsItem(CartItemDto itemToAdd) {
+        return findProductIdsByMemberId(itemToAdd.getMemberId())
+                .stream()
+                .anyMatch(productId -> productId.equals(itemToAdd.getProductId()));
     }
 
     public List<Long> findProductIdsByMemberId(long memberId) {

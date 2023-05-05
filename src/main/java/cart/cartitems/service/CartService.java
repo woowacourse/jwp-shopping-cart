@@ -2,9 +2,10 @@ package cart.cartitems.service;
 
 import cart.authorization.AuthInfo;
 import cart.authorization.AuthorizationService;
-import cart.cartitems.dao.CartItemDao;
+import cart.cartitems.dao.CartDao;
 import cart.cartitems.dto.CartItemDto;
 import cart.cartitems.dto.request.CartItemAddRequest;
+import cart.exception.DuplicateCartItemException;
 import cart.product.dto.ProductDto;
 import cart.product.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,25 +19,25 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class CartItemsService {
+public class CartService {
 
     private final AuthorizationService authorizationService;
-    private final CartItemDao cartItemDao;
+    private final CartDao cartDao;
     private final ProductService productService;
 
     @Autowired
-    public CartItemsService(AuthorizationService authorizationService, CartItemDao cartItemDao, ProductService productService) {
+    public CartService(AuthorizationService authorizationService, CartDao cartDao, ProductService productService) {
         this.authorizationService = authorizationService;
-        this.cartItemDao = cartItemDao;
+        this.cartDao = cartDao;
         this.productService = productService;
     }
 
     public List<ProductDto> findItemsOfCart(AuthInfo authInfo) {
-        final List<Long> itemsIds = cartItemDao.findProductIdsByMemberId(getIdOfMember(authInfo));
+        final List<Long> productIds = cartDao.findProductIdsByMemberId(getIdOfMember(authInfo));
 
-        return itemsIds.stream()
-                       .map(productService::getProductById)
-                       .collect(Collectors.toUnmodifiableList());
+        return productIds.stream()
+                         .map(productService::getProductById)
+                         .collect(Collectors.toUnmodifiableList());
     }
 
     public CartItemDto addItemToCart(AuthInfo authInfo, CartItemAddRequest cartItemAddRequest) {
@@ -44,24 +45,23 @@ public class CartItemsService {
 
         productService.validateProductExist(productIdToAdd);
 
-        try {
-            final CartItemDto toAdd = new CartItemDto(getIdOfMember(authInfo), productIdToAdd);
-            return cartItemDao.saveItemOfMember(toAdd);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("이미 카트에 존재하는 상품입니다");
+        final CartItemDto itemToAdd = new CartItemDto(getIdOfMember(authInfo), productIdToAdd);
+        if (cartDao.containsItem(itemToAdd)) {
+            throw new DuplicateCartItemException("이미 담은 상품은 중복으로 담을 수 없습니다");
         }
+        return cartDao.saveItem(itemToAdd);
     }
 
     public long deleteItemFromCart(AuthInfo authInfo, Long productId) {
         if (Objects.isNull(productId)) {
-            throw new IllegalArgumentException("잘못된 상품번호입니다");
+            throw new IllegalArgumentException("잘못된 상품 번호입니다");
         }
 
         final CartItemDto toDelete = new CartItemDto(getIdOfMember(authInfo), productId);
-        final int deletedItemsCount = cartItemDao.deleteItem(toDelete);
+        final int deletedItemsCount = cartDao.deleteItem(toDelete);
 
         if (deletedItemsCount != 1) {
-            throw new NoSuchElementException("잘못된 상품 번호입니다");
+            throw new NoSuchElementException("존재하지 않는 상품 번호입니다");
         }
 
         return toDelete.getProductId();

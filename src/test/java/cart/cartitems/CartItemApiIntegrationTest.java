@@ -1,6 +1,6 @@
 package cart.cartitems;
 
-import cart.cartitems.dao.CartItemDao;
+import cart.cartitems.dao.CartDao;
 import cart.cartitems.dao.CartItemTestConfig;
 import cart.cartitems.dto.CartItemDto;
 import cart.cartitems.dto.request.CartItemAddRequest;
@@ -35,7 +35,7 @@ public class CartItemApiIntegrationTest {
     private CartItemTestConfig cartItemTestConfig;
 
     @Autowired
-    private CartItemDao cartItemDao;
+    private CartDao cartDao;
 
     @BeforeEach
     void setUp() {
@@ -60,9 +60,9 @@ public class CartItemApiIntegrationTest {
 
     @Test
     @DisplayName("get은 카트에 담긴 모든 아이템을 반환한다")
-    void getCartItemsTest() throws JsonProcessingException {
-        cartItemDao.saveItemOfMember(new CartItemDto(2, 1));
-        cartItemDao.saveItemOfMember(new CartItemDto(2, 3));
+    void getCartItemsTest() {
+        cartDao.saveItem(new CartItemDto(2, 1));
+        cartDao.saveItem(new CartItemDto(2, 3));
 
         given()
                 .log().all()
@@ -78,8 +78,8 @@ public class CartItemApiIntegrationTest {
     @Test
     @DisplayName("상품 삭제가 성공하면 NO_CONTENT 상태 코드를 반환한다.")
     void delete() {
-        cartItemDao.saveItemOfMember(new CartItemDto(2, 1));
-        cartItemDao.saveItemOfMember(new CartItemDto(2, 3));
+        cartDao.saveItem(new CartItemDto(2, 1));
+        cartDao.saveItem(new CartItemDto(2, 3));
 
         given()
                 .log().all()
@@ -90,14 +90,14 @@ public class CartItemApiIntegrationTest {
                 .log().all().assertThat()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(cartItemDao.findProductIdsByMemberId(2)).hasSize(1);
+        assertThat(cartDao.findProductIdsByMemberId(2)).hasSize(1);
     }
 
     @Test
     @DisplayName("없는 상품을 삭제하려고 하면 NOT FOUND를 반환한다.")
     void deleteFail() {
-        cartItemDao.saveItemOfMember(new CartItemDto(2, 1));
-        cartItemDao.saveItemOfMember(new CartItemDto(2, 3));
+        cartDao.saveItem(new CartItemDto(2, 1));
+        cartDao.saveItem(new CartItemDto(2, 3));
 
         given()
                 .log().all()
@@ -108,6 +108,6 @@ public class CartItemApiIntegrationTest {
                 .log().all().assertThat()
                 .statusCode(HttpStatus.NOT_FOUND.value());
 
-        assertThat(cartItemDao.findProductIdsByMemberId(2)).hasSize(2);
+        assertThat(cartDao.findProductIdsByMemberId(2)).hasSize(2);
     }
 }

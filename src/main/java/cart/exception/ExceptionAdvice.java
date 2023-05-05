@@ -1,7 +1,6 @@
 package cart.exception;
 
 import cart.authorization.UnauthorizedMemberException;
-import cart.member.DuplicateEmailException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +36,8 @@ public class ExceptionAdvice {
         return handleException(exception, httpStatus, request.getRequestURI());
     }
 
-    @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity<ErrorDto> handleException(DuplicateEmailException exception, HttpServletRequest request) {
+    @ExceptionHandler({DuplicateEmailException.class, DuplicateCartItemException.class})
+    public ResponseEntity<ErrorDto> handleException(DuplicateException exception, HttpServletRequest request) {
         HttpStatus httpStatus = HttpStatus.CONFLICT;
         return handleException(exception, httpStatus, request.getRequestURI());
     }
