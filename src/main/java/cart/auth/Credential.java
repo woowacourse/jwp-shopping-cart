@@ -1,5 +1,7 @@
 package cart.auth;
 
+import org.springframework.lang.Nullable;
+
 public class Credential {
 
     private final Long memberId;
@@ -20,6 +22,7 @@ public class Credential {
         return !this.password.equals(credential.getPassword());
     }
 
+    @Nullable
     public Long getMemberId() {
         return memberId;
     }
