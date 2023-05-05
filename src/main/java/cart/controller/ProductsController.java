@@ -7,7 +7,6 @@ import cart.service.product.ProductDeleteService;
 import cart.service.product.ProductUpdateService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -33,10 +32,7 @@ public class ProductsController {
     public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getImgUrl(), productRequest.getPrice());
         Product createdProduct = createService.createProduct(product);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/" + createdProduct.getId())
-                .build()
-                .toUri();
+        final URI location = URI.create("/" + createdProduct.getId());
         return ResponseEntity.created(location).body(createdProduct);
     }
 

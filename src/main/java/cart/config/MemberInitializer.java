@@ -20,11 +20,11 @@ public class MemberInitializer {
         final Member gitchan = new Member("gitchan@wooteco.com", "password1");
         final Member boxster = new Member("boxster@wooteco.com", "password2");
         final Member irene = new Member("irene@wooteco.com", "password3");
-        final Member hyun9mak = new Member("hyun9mak@wooteco.com", "password4");
+        final Member hyeon9mak = new Member("hyeon9mak@wooteco.com", "password4");
 
         memberDao.save(gitchan);
         memberDao.save(boxster);
         memberDao.save(irene);
-        memberDao.save(hyun9mak);
+        memberDao.save(hyeon9mak);
     }
 }
