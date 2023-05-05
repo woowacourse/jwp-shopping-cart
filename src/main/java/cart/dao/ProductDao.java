@@ -1,17 +1,18 @@
 package cart.dao;
 
-import cart.controller.dto.ProductRequest;
-import cart.domain.Product;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import cart.controller.dto.ProductRequest;
+import cart.domain.Product;
 
 @Repository
 public class ProductDao {
@@ -72,7 +73,11 @@ public class ProductDao {
 
     public void deleteById(final Long id) {
         String sql = "DELETE FROM product WHERE id = ?";
-
         jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteAll() {
+        String sql = "DELETE FROM product";
+        jdbcTemplate.update(sql);
     }
 }

@@ -15,6 +15,3 @@ INSERT INTO member(email, password)
 values ('jeomxon@gmail.com', 'password123');
 INSERT INTO member(email, password)
 values ('abc123@naver.com', 'password1111');
-
-INSERT INTO cart(member_id, product_id)
-values (1, 1);
