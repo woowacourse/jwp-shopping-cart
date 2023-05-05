@@ -2,8 +2,8 @@ package cart.config;
 
 import cart.auth.AuthArgumentResolver;
 import cart.auth.AuthInterceptor;
-import cart.auth.AuthMemberDao;
 import cart.auth.BasicAuthorizationParser;
+import cart.auth.CredentialDao;
 import cart.auth.CredentialThreadLocal;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
@@ -14,16 +14,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
 
-    private final AuthMemberDao authMemberDao;
+    private final CredentialDao credentialDao;
     private final BasicAuthorizationParser basicAuthorizationParser;
     private final CredentialThreadLocal credentialThreadLocal;
 
     public WebConfiguration(
-            final AuthMemberDao authMemberDao,
+            final CredentialDao credentialDao,
             final BasicAuthorizationParser basicAuthorizationParser,
             final CredentialThreadLocal credentialThreadLocal
     ) {
-        this.authMemberDao = authMemberDao;
+        this.credentialDao = credentialDao;
         this.basicAuthorizationParser = basicAuthorizationParser;
         this.credentialThreadLocal = credentialThreadLocal;
     }
@@ -31,7 +31,7 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         final AuthInterceptor authInterceptor = new AuthInterceptor(
-                authMemberDao,
+                credentialDao,
                 basicAuthorizationParser,
                 credentialThreadLocal
         );

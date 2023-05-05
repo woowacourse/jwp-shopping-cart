@@ -1,6 +1,5 @@
 package cart.auth;
 
-import cart.domain.Member;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -9,16 +8,16 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
 
-    private final AuthMemberDao authMemberDao;
+    private final CredentialDao credentialDao;
     private final BasicAuthorizationParser basicAuthorizationParser;
     private final CredentialThreadLocal credentialThreadLocal;
 
     public AuthInterceptor(
-            final AuthMemberDao authMemberDao,
+            final CredentialDao credentialDao,
             final BasicAuthorizationParser basicAuthorizationParser,
             final CredentialThreadLocal credentialThreadLocal
     ) {
-        this.authMemberDao = authMemberDao;
+        this.credentialDao = credentialDao;
         this.basicAuthorizationParser = basicAuthorizationParser;
         this.credentialThreadLocal = credentialThreadLocal;
     }
@@ -31,23 +30,18 @@ public class AuthInterceptor implements HandlerInterceptor {
     ) {
         final String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER_NAME);
         if (authorizationHeader.isBlank() || basicAuthorizationParser.isNotValid(authorizationHeader)) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("올바르지 않은 인증 정보입니다.");
         }
 
         final Credential credential = basicAuthorizationParser.parse(authorizationHeader);
-        final Member member = authMemberDao.findByEmail(credential.getEmail())
-                .orElseThrow(AuthenticationException::new);
-        validCredential(credential, member);
+        final Credential savedCredential = credentialDao.findByEmail(credential.getEmail())
+                .orElseThrow(() -> new AuthenticationException("올바르지 않은 이메일입니다. 입력값: " + credential.getEmail()));
 
-        credentialThreadLocal.set(new Credential(member.getId(), credential.getEmail(), credential.getEmail()));
-        return true;
-    }
-
-    private void validCredential(final Credential credential, final Member member) {
-        final String credentialPassword = credential.getPassword();
-        final String memberPassword = member.getPassword();
-        if (!credentialPassword.equals(memberPassword)) {
+        if (credential.isNotSamePassword(savedCredential)) {
             throw new AuthenticationException();
         }
+
+        credentialThreadLocal.set(savedCredential);
+        return true;
     }
 }
