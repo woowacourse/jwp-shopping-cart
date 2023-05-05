@@ -32,17 +32,15 @@ const removeCartItem = (id) => {
     }
 
     // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
-    axios.delete(
-        '/cart/items',
-        {id},
-        {
-            headers: {
-                'Authorization': `Basic ${credentials}`,
-                'content-Type': 'application/json'
-            }
-        },
-    ).then((response) => {
-        alert('장바구니에 담았습니다.');
+    axios.request({
+        url: '/cart/items/' + id,
+        method: 'delete',
+        data: JSON.stringify(id),
+        headers: {
+            'Authorization': `Basic ${credentials}`
+        }
+    }).then((response) => {
+        window.location.reload();
     }).catch((error) => {
         console.error(error);
     });

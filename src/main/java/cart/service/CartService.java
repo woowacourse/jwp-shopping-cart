@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.controller.dto.request.CartItemCreationRequest;
-import cart.controller.dto.request.CartItemDeleteRequest;
 import cart.controller.dto.request.MemberIdRequest;
 import cart.dao.CartDao;
 import cart.domain.dto.CartDto;
@@ -29,8 +28,8 @@ public class CartService {
         cartDao.save(cartEntity);
     }
 
-    public void delete(final MemberIdRequest memberId, final CartItemDeleteRequest productId) {
-        final CartEntity cartEntity = new CartEntity(productId.getId(), memberId.getId());
+    public void delete(final MemberIdRequest memberId, final Long productId) {
+        final CartEntity cartEntity = new CartEntity(productId, memberId.getId());
 
         cartDao.deleteById(cartEntity);
     }

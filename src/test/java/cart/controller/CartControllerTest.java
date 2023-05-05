@@ -79,17 +79,15 @@ class CartControllerTest {
     }
 
     @Test
-    @DisplayName("/cart/items delete요청 204을 응답한다.")
+    @DisplayName("/cart/items/{product_id} delete요청 204을 응답한다.")
     void cartDeleteProduct() throws JsonProcessingException {
         Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 1000L));
 
 
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(objectMapper.writeValueAsString(id))
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().delete("/cart/items")
+                .when().delete("/cart/items" + id)
                 .then().log().all()
                 .extract();
 

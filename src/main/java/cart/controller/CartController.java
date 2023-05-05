@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.authority.Authority;
 import cart.controller.dto.request.CartItemCreationRequest;
-import cart.controller.dto.request.CartItemDeleteRequest;
 import cart.controller.dto.request.MemberIdRequest;
 import cart.controller.dto.response.CartItemResponse;
 import cart.domain.dto.CartDto;
@@ -54,9 +53,9 @@ public class CartController {
         return ResponseEntity.ok(cartItemResponses);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(
-            @RequestBody @Valid final CartItemDeleteRequest productId,
+            @PathVariable("id") Long productId,
             @Authority final MemberIdRequest memberId
     ) {
         cartService.delete(memberId, productId);
