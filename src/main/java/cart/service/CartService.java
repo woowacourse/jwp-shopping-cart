@@ -68,4 +68,8 @@ public class CartService {
 
         return new CartResponse(memberId, responses);
     }
+
+    public void deleteItemById(Long id) {
+        cartDao.deleteItemById(id);
+    }
 }
