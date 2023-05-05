@@ -31,13 +31,23 @@ public class CartItemDao {
         simpleJdbcInsert.execute(parameterSource);
     }
 
+    public void insertAll(Integer userId, List<Integer> productIds) {
+        SqlParameterSource[] parameterSources = productIds.stream()
+                .map(productId -> new MapSqlParameterSource()
+                        .addValue("user_id", userId)
+                        .addValue("product_id", productId)
+                ).toArray(SqlParameterSource[]::new);
+
+        simpleJdbcInsert.executeBatch(parameterSources);
+    }
+
     public void delete(Integer userId, Integer productId) {
         String sql = "DELETE FROM cart_item WHERE user_id = ? AND product_id = ?";
 
         jdbcTemplate.update(sql, userId, productId);
     }
 
-    public void deleteAll(Integer userId) {
+    public void deleteAllItemsOf(Integer userId) {
         String sql = "DELETE FROM cart_item WHERE user_id = ?";
 
         jdbcTemplate.update(sql, userId);

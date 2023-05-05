@@ -22,10 +22,13 @@ public class CartItemRepository {
     }
 
     public void save(Integer userId, List<CartItem> cartItems) {
-        cartItemDao.deleteAll(userId);
-        for (CartItem cartItem : cartItems) {
-            cartItemDao.insert(userId, cartItem.getProduct().getId());
-        }
+        cartItemDao.deleteAllItemsOf(userId);
+
+        List<Integer> productIds = cartItems.stream()
+                .map(cartItem -> cartItem.getProduct().getId())
+                .collect(Collectors.toList());
+
+        cartItemDao.insertAll(userId, productIds);
     }
 
     public List<CartItem> getItemsOf(User user) {
