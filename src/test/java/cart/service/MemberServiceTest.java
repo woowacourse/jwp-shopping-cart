@@ -23,7 +23,6 @@ class MemberServiceTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-
     MemberService memberService;
 
     @BeforeEach

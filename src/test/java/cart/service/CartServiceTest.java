@@ -24,7 +24,6 @@ class CartServiceTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-
     CartService cartService;
     CartDao cartDao;
     MemberDao memberDao;

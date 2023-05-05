@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CartController {
 
-
     private final CartService cartService;
     private final MemberService memberService;
 
@@ -40,7 +39,8 @@ public class CartController {
     }
 
     @PostMapping("/{itemId}")
-    public ResponseEntity<CartResponse> addItem(@PathVariable Long itemId, @Authentication MemberRequest memberRequest) {
+    public ResponseEntity<CartResponse> addItem(@PathVariable Long itemId,
+                                                @Authentication MemberRequest memberRequest) {
         MemberResponse findMember = memberService.findByEmailAndPassword(memberRequest.getEmail(),
                 memberRequest.getPassword());
 

@@ -8,7 +8,6 @@ public class Member {
     private static final int NAME_MAX_LENGTH = 5;
     private static final int PASSWORD_MIN_LENGTH = 4;
     private static final int PASSWORD_MAX_LENGTH = 12;
-
     private static final String EMAIL_ERROR_MESSAGE = "이메일은 빈 값이 될 수 없습니다.";
     private static final String PASSWORD_ERROR_MESSAGE = "비밀번호는 최소 4자 최대 12자까지 가능합니다.";
     private static final String NAME_ERROR_MESSAGE = "이름의 길이는 최소 2자 최대 5자까지 가능합니다.";

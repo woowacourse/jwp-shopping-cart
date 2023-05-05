@@ -27,7 +27,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
         AuthInfo authInfo = extractor.extract(request.getHeader(AUTHORIZATION));
         validate(authInfo);
 

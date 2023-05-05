@@ -22,7 +22,6 @@ class ItemServiceTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-
     ItemService itemService;
 
     @BeforeEach

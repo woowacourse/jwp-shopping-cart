@@ -9,7 +9,6 @@ public class Item {
     private static final int MAX_LENGTH = 50;
     private static final int MIN_PRICE = 10;
     private static final int MAX_PRICE = 100_000_000;
-
     private static final String NAME_ERROR_MESSAGE = "상품의 이름은 최소 1자, 최대 50자까지 가능합니다.";
     private static final String PRICE_ERROR_MESSAGE = "상품의 금액은 최소 10원, 최대 1억원 까지 가능합니다.";
 

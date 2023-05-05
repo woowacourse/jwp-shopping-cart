@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ViewController {
 
-
     private final ItemService itemService;
     private final MemberService memberService;
 
