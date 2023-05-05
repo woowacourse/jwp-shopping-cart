@@ -38,4 +38,5 @@ public class H2MembersDao implements MembersDao {
         String sql = "SELECT id FROM MEMBER WHERE email=?";
         return jdbcTemplate.queryForObject(sql, Long.class, email);
     }
+
 }

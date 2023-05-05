@@ -1,7 +1,7 @@
 package cart.persistence;
 
 
-import cart.domain.Item;
+import cart.domain.Cart.Item;
 
 import java.util.List;
 
@@ -11,5 +11,7 @@ public interface CartDao {
 
     Item findItemById(Long id);
 
-    List<Long> findAllItems(Long memberId);
+    List<Long> findAllItemIds(Long memberId);
+
+    List<Item> findAllItems(Long memberId);
 }

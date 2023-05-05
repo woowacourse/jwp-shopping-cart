@@ -1,6 +1,6 @@
 package cart.persistence;
 
-import cart.domain.Item;
+import cart.domain.Cart.Item;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -44,8 +44,18 @@ public class H2CartDao implements CartDao {
     }
 
     @Override
-    public List<Long> findAllItems(Long memberId) {
+    public List<Long> findAllItemIds(Long memberId) {
         String sql = "SELECT product_id FROM CART WHERE member_id=?";
         return jdbcTemplate.queryForList(sql, Long.class, memberId);
+    }
+
+    @Override
+    public List<Item> findAllItems(Long memberId) {
+        String sql = "SELECT id, member_id, product_id FROM CART WHERE member_id=?";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Item(
+                resultSet.getLong("id"),
+                resultSet.getLong("member_id"),
+                resultSet.getLong("product_id")
+        ), memberId);
     }
 }

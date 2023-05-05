@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.controller.Exception.CartHasDuplicatedItemsException;
 import cart.dto.response.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -29,6 +30,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleCartHasDuplicatedItemsException(
+            CartHasDuplicatedItemsException exception
+    ) {
         return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
     }
 }
