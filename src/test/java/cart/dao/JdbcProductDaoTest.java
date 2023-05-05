@@ -40,6 +40,16 @@ class JdbcProductDaoTest {
     }
 
     @Test
+    @DisplayName("Product Id로 조회 테스트")
+    void findByIdTest() {
+        final Long id1 = jdbcProductDao.insert(new Product("IO", 10000, null));
+        final Long id2 = jdbcProductDao.insert(new Product("ASH", 10000, null));
+
+        assertThat(jdbcProductDao.findById(id1).getName()).isEqualTo("IO");
+        assertThat(jdbcProductDao.findById(id2).getName()).isEqualTo("ASH");
+    }
+
+    @Test
     @DisplayName("Product 조회 테스트")
     void findAllTest() {
         jdbcProductDao.insert(new Product("IO", 10000, null));
@@ -54,7 +64,7 @@ class JdbcProductDaoTest {
     @DisplayName("Product 갱신 테스트")
     void updateTest() {
         final Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
-        
+
         jdbcProductDao.update(new Product(id, "ASH", 1000, "image"));
 
         final Product product = jdbcTemplate.queryForObject("SELECT * FROM product WHERE id = ?", productRowMapper, id);

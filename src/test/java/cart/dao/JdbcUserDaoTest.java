@@ -28,6 +28,16 @@ class JdbcUserDaoTest {
     }
 
     @Test
+    @DisplayName("User Email로 조회 테스트")
+    void finByEmailTest() {
+        final Long id1 = jdbcUserDao.insert(new User("IO@mail.com", "testpassword"));
+        final Long id2 = jdbcUserDao.insert(new User("ASH@mail.com", "testpassword"));
+
+        assertThat(jdbcUserDao.findByEmail("IO@mail.com").getUserId()).isEqualTo(id1);
+        assertThat(jdbcUserDao.findByEmail("ASH@mail.com").getUserId()).isEqualTo(id2);
+    }
+
+    @Test
     @DisplayName("User 조회 테스트")
     void findAllTest() {
         jdbcUserDao.insert(new User("IO@mail.com", "testpassword"));
