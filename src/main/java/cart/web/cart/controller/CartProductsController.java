@@ -31,8 +31,7 @@ public class CartProductsController {
     @GetMapping("/cart-products")
     public List<CartResponse> getAllCartProducts(@AuthorizeMember AuthorizedMember authorizedMember) {
         final String email = authorizedMember.getEmail();
-        final String password = authorizedMember.getPassword();
-        final List<ProductDto> productDtos = cartService.findProductsByMember(email, password);
+        final List<ProductDto> productDtos = cartService.findProductsByEmail(email);
         return productDtos.stream()
             .map(CartResponse::from)
             .collect(Collectors.toList());
@@ -40,17 +39,15 @@ public class CartProductsController {
 
     @PostMapping("/cart-products")
     public void addToCart(@RequestBody @Valid final PostCartRequest body,
-        @AuthorizeMember AuthorizedMember authorizedMember) {
+        @AuthorizeMember AuthorizedMember authorizedMember
+    ) {
         final long productId = body.getProductId();
         final String email = authorizedMember.getEmail();
-        final String password = authorizedMember.getPassword();
-        cartService.addProductByMember(productId, email, password);
+        cartService.addProductByEmail(productId, email);
     }
 
     @DeleteMapping("/cart-products/{cartId}")
-    public void deleteFromCart(@PathVariable final Integer cartId, @AuthorizeMember AuthorizedMember authorizedMember) {
-        final String email = authorizedMember.getEmail();
-        final String password = authorizedMember.getPassword();
-        cartService.deleteCartIdFromMember(cartId, email, password);
+    public void deleteFromCart(@PathVariable final Integer cartId) {
+        cartService.deleteByCartId(cartId);
     }
 }

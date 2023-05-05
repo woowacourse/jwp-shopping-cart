@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import cart.domain.exception.DbNotAffectedException;
-import cart.domain.exception.EntityNotFoundException;
+import cart.domain.exception.UnexpectedDomainException;
 import cart.domain.persistence.ProductDto;
 import cart.domain.persistence.dao.CartDao;
 import cart.domain.persistence.dao.MemberDao;
@@ -50,8 +50,8 @@ class CartServiceTest {
         final long chickenId = productDao.save(new ProductEntity("chicken", 30000, "https://a.com"));
 
         assertAll(() -> {
-            assertDoesNotThrow(() -> cartService.addProductByMember(chickenId, email, password));
-            List<ProductDto> products = cartService.findProductsByMember(email, password);
+            assertDoesNotThrow(() -> cartService.addProductByEmail(chickenId, email));
+            List<ProductDto> products = cartService.findProductsByEmail(email);
             assertThat(products.size()).isEqualTo(1);
         });
     }
@@ -63,19 +63,8 @@ class CartServiceTest {
         memberDao.save(new MemberEntity(email, password));
         final long chickenId = productDao.save(new ProductEntity("chicken", 30000, "https://a.com"));
 
-        assertThrows(EntityNotFoundException.class,
-            () -> cartService.addProductByMember(chickenId, "b@a.com", password));
-    }
-
-    @Test
-    void 틀린_비밀번호로_카트에_저장하면_예외가_발생한다() {
-        final String email = "a@a.com";
-        final String password = "password1";
-        memberDao.save(new MemberEntity(email, password));
-        final long chickenId = productDao.save(new ProductEntity("chicken", 30000, "https://a.com"));
-
-        assertThrows(EntityNotFoundException.class,
-            () -> cartService.addProductByMember(chickenId, email, "password2"));
+        assertThrows(UnexpectedDomainException.class,
+            () -> cartService.addProductByEmail(chickenId, "b@a.com"));
     }
 
     @Test
@@ -84,18 +73,8 @@ class CartServiceTest {
         final String password = "password1";
         memberDao.save(new MemberEntity(email, password));
 
-        assertThrows(EntityNotFoundException.class,
-            () -> cartService.findProductsByMember("b@a.com", password));
-    }
-
-    @Test
-    void 틀린_비밀번호로_카트를_조회하면_예외가_발생한다() {
-        final String email = "a@a.com";
-        final String password = "password1";
-        memberDao.save(new MemberEntity(email, password));
-
-        assertThrows(EntityNotFoundException.class,
-            () -> cartService.findProductsByMember(email, "password2"));
+        assertThrows(UnexpectedDomainException.class,
+            () -> cartService.findProductsByEmail("b@a.com"));
     }
 
     @Test
@@ -105,7 +84,7 @@ class CartServiceTest {
         memberDao.save(new MemberEntity(email, password));
         final long savedId = cartDao.save(new CartEntity(1, 1));
 
-        assertDoesNotThrow(() -> cartService.deleteCartIdFromMember(savedId, email, password));
+        assertDoesNotThrow(() -> cartService.deleteByCartId(savedId));
     }
 
     @Test
@@ -113,6 +92,6 @@ class CartServiceTest {
         final String email = "a@a.com";
         final String password = "password1";
         memberDao.save(new MemberEntity(email, password));
-        assertThrows(DbNotAffectedException.class, () -> cartService.deleteCartIdFromMember(1L, email, password));
+        assertThrows(DbNotAffectedException.class, () -> cartService.deleteByCartId(1L));
     }
 }
