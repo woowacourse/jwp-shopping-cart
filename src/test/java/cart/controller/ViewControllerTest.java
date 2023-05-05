@@ -8,11 +8,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.net.URISyntaxException;
 
 import static io.restassured.RestAssured.given;
 
+@Sql("/test.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ViewControllerTest {
 
@@ -41,6 +43,17 @@ class ViewControllerTest {
         given().log().all()
                 .when()
                 .get("/admin")
+                .then().log().all()
+                .statusCode(HttpStatus.SC_OK)
+                .contentType(ContentType.HTML);
+    }
+
+    @DisplayName("GET /settings 요청 시 Status OK 및 HTML 반환")
+    @Test
+    void shouldResponseHtmlWithStatusOkWhenRequestGetToSettings() {
+        given().log().all()
+                .when()
+                .get("/settings")
                 .then().log().all()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(ContentType.HTML);
