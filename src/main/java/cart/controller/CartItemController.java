@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +45,15 @@ public class CartItemController {
     public List<CartItemDto> get(HttpServletRequest request) {
         Long memberId = findMemberId(request);
         return cartItemService.findAllByMemberId(memberId);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id, HttpServletRequest request) {
+        // TODO id를 획득할 필요 없음
+        // TODO 컨트롤러에서만 인증하고 서비스에서는 확인 안해도 되나?
+        Long memberId = findMemberId(request);
+        cartItemService.deleteById(id);
     }
 
     private Long findMemberId(HttpServletRequest request) {

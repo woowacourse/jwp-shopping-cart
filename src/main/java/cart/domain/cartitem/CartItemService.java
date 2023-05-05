@@ -31,4 +31,16 @@ public class CartItemService {
     public List<CartItemDto> findAllByMemberId(final Long id) {
         return cartItemDao.findByMemberId(id);
     }
+
+    public void deleteById(final Long id) {
+        validateIdExist(id);
+        cartItemDao.deleteById(id);
+    }
+
+    private void validateIdExist(Long id) {
+        if (cartItemDao.isExist(id)) {
+            return;
+        }
+        throw new IllegalArgumentException("존재하지 않는 id입니다. value: " + id);
+    }
 }

@@ -16,6 +16,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class CartItemServiceTest {
 
+    private static final Long FIXTURE_MEMBER_ID = 1L;
+    private static final Long FIXTURE_PRODUCT_ID = 1L;
+    private static final Long FIXTURE_CART_ITEM_ID = 1L;
+    private static final CartItem FIXTURE_INSERT_CART_ITEM = new CartItem(FIXTURE_MEMBER_ID, FIXTURE_PRODUCT_ID);
+
     @Mock
     private CartItemDao cartItemDao;
     @Mock
@@ -32,25 +37,22 @@ class CartItemServiceTest {
     @Test
     void add() {
         // given
-        CartItem cartItem = new CartItem(1L, 1L);
-
         // when
-        cartItemService.add(cartItem);
+        cartItemService.add(FIXTURE_INSERT_CART_ITEM);
 
         // then
-        verify(cartItemDao).insert(cartItem);
+        verify(cartItemDao).insert(FIXTURE_INSERT_CART_ITEM);
     }
 
     @DisplayName("장바구니 아이템 등록 시 중복 정보가 있으면 예외를 던진다")
     @Test
     void addDuplicatedFail() {
         // given
-        CartItem cartItem = new CartItem(1L, 1L);
-        when(cartItemDao.isDuplicated(1L, 1L)).thenReturn(true);
+        when(cartItemDao.isDuplicated(FIXTURE_MEMBER_ID, FIXTURE_PRODUCT_ID)).thenReturn(true);
 
         // when
         // then
-        assertThatThrownBy(() -> cartItemService.add(cartItem))
+        assertThatThrownBy(() -> cartItemService.add(FIXTURE_INSERT_CART_ITEM))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -58,14 +60,38 @@ class CartItemServiceTest {
     @Test
     void addNotExistingProductFail() {
         // given
-        CartItem cartItem = new CartItem(1L, 1L);
         doThrow(IllegalArgumentException.class)
                 .when(productService)
-                .validateIdExist(1L);
+                .validateIdExist(FIXTURE_PRODUCT_ID);
 
         // when
         // then
-        assertThatThrownBy(() -> cartItemService.add(cartItem))
+        assertThatThrownBy(() -> cartItemService.add(FIXTURE_INSERT_CART_ITEM))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("장바구니 아이템 삭제 시 DB에 해당하는 아이디의 정보를 삭제한다")
+    @Test
+    void delete() {
+        // given
+        when(cartItemDao.isExist(FIXTURE_CART_ITEM_ID)).thenReturn(true);
+
+        // when
+        cartItemService.deleteById(FIXTURE_CART_ITEM_ID);
+
+        // then
+        verify(cartItemDao).deleteById(FIXTURE_CART_ITEM_ID);
+    }
+
+    @DisplayName("장바구니 아이템 삭제 시 DB에 해당하는 아이디가 없으면 예외를 던진다")
+    @Test
+    void deleteNotExistingIdFail() {
+        // given
+        when(cartItemDao.isExist(FIXTURE_CART_ITEM_ID)).thenReturn(false);
+
+        // when
+        // then
+        assertThatThrownBy(() -> cartItemService.deleteById(FIXTURE_CART_ITEM_ID))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }
