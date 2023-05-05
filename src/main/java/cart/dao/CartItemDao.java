@@ -19,7 +19,7 @@ public class CartItemDao {
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("cart");
+                .withTableName("cart_item");
     }
 
     public void insert(Integer userId, Integer productId) {
@@ -48,10 +48,25 @@ public class CartItemDao {
         return jdbcTemplate.query(
                 sql,
                 (rs, rowNum) -> new CartItemDto(
+                        rs.getInt("id"),
                         rs.getInt("user_id"),
                         rs.getInt("product_id")
                 ),
                 userId
+        );
+    }
+
+    public CartItemDto selectBy(Integer id) {
+        String sql = "SELECT id, user_id, product_id FROM cart_item WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(
+                sql,
+                (rs, rowNum) -> new CartItemDto(
+                        rs.getInt("id"),
+                        rs.getInt("user_id"),
+                        rs.getInt("product_id")
+                ),
+                id
         );
     }
 }
