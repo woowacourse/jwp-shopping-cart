@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,13 +20,14 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
-public class CustomAuthResolver implements HandlerMethodArgumentResolver {
+public class BasicTokenAuthResolver implements TokenAuthResolver {
     private static final int BASIC_TOKEN_SIZE = 2;
     private static final int BASIC_TOKEN_PASSWORD_INDEX = 1;
 
     private final MemberDao memberDao;
+    private MemberEntity member = null;
 
-    public CustomAuthResolver(H2MemberDao memberDao) {
+    public BasicTokenAuthResolver(H2MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
@@ -42,22 +42,24 @@ public class CustomAuthResolver implements HandlerMethodArgumentResolver {
         if (nativeRequest == null) {
             return null;
         }
-        List<String> token = extractBasicToken(nativeRequest);
 
-        validateToken(token);
+        validateToken(nativeRequest);
 
-        MemberEntity member = memberDao.findByEmail(token.get(0))
-                .orElseThrow(() -> new AuthenticationException("존재하지 않는 이메일 정보입니다." + System.lineSeparator() + "이메일 : " + token.get(0)));
-
-        validatePassword(token, member);
-
-        return member;
+        return member.getId();
     }
 
-    private void validateToken(List<String> token) {
+    @Override
+    public void validateToken(HttpServletRequest servletRequest) {
+        List<String> token = extractBasicToken(servletRequest);
+
         if (token.size() != BASIC_TOKEN_SIZE) {
             throw new InvalidTokenException("유효하지 않은 토큰입니다.");
         }
+
+        member = memberDao.findByEmail(token.get(0))
+                .orElseThrow(() -> new AuthenticationException("존재하지 않는 이메일 정보입니다." + System.lineSeparator() + "이메일 : " + token.get(0)));
+
+        validatePassword(token, member);
     }
 
     private void validatePassword(List<String> token, MemberEntity member) {

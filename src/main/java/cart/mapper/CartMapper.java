@@ -9,11 +9,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CartMapper {
     private final ProductMapper productMapper;
-    private final MemberMapper memberMapper;
 
-    public CartMapper(ProductMapper productMapper, MemberMapper memberMapper) {
+    public CartMapper(ProductMapper productMapper) {
         this.productMapper = productMapper;
-        this.memberMapper = memberMapper;
     }
 
     public Cart requestToCart(CartRequest request) {
@@ -25,6 +23,6 @@ public class CartMapper {
     }
 
     public CartResponse entityToResponse(CartEntity entity) {
-        return new CartResponse(entity.getId(), memberMapper.entityToResponse(entity.getMember()), productMapper.entityToResponse(entity.getProduct()), entity.getCount());
+        return new CartResponse(entity.getId(), productMapper.entityToResponse(entity.getProduct()), entity.getCount());
     }
 }
