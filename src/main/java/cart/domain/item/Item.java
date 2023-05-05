@@ -1,10 +1,11 @@
 package cart.domain.item;
 
 import java.math.BigInteger;
+import java.util.Objects;
 
 public class Item {
 
-    private Long id;
+    private final Long id;
     private final ItemName itemName;
     private final ItemUrl itemUrl;
     private final ItemPrice itemPrice;
@@ -41,5 +42,22 @@ public class Item {
 
     public int getPrice() {
         return itemPrice.getPrice().intValue();
+    }
+
+    @Override
+    public boolean equals(Object target) {
+        if (this == target) {
+            return true;
+        }
+        if (target == null || getClass() != target.getClass()) {
+            return false;
+        }
+        Item targetItem = (Item) target;
+        return Objects.equals(getId(), targetItem.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

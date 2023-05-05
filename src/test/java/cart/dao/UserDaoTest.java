@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.user.User;
+import cart.repository.dao.UserDao;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,13 +17,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class UserDaoTest {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
     UserDao userDao;
 
     @BeforeEach
-    void setUp() {
+    void setUp(@Autowired JdbcTemplate jdbcTemplate) {
         userDao = new UserDao(jdbcTemplate);
     }
 

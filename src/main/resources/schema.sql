@@ -1,27 +1,35 @@
 CREATE TABLE IF NOT EXISTS ITEMS
 (
-    item_id     BIGINT    AUTO_INCREMENT    NOT NULL,
+    id          BIGINT    AUTO_INCREMENT    NOT NULL,
     name        VARCHAR(255)                NOT NULL,
     image_url   CLOB                        NOT NULL,
     price       INT                         NOT NULL,
 
-    PRIMARY KEY (item_id)
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS USERS
+CREATE TABLE IF NOT EXISTS CART_ITEM
 (
-    user_id     BIGINT          AUTO_INCREMENT    NOT NULL,
-    email       VARCHAR(255)                      NOT NULL,
-    password    VARCHAR(255)                      NOT NULL,
+    id      BIGINT  AUTO_INCREMENT  NOT NULL,
+    cart_id BIGINT                  NOT NULL,
+    item_id BIGINT                  NOT NULL,
 
-    PRIMARY KEY (user_id)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS CARTS
 (
-    cart_id     BIGINT          AUTO_INCREMENT    NOT NULL,
+    id          BIGINT          AUTO_INCREMENT    NOT NULL,
     user_email  VARCHAR(255)                      NOT NULL,
-    item_id     VARCHAR(255)                      NOT NULL,
 
-    PRIMARY KEY (cart_id)
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS USERS
+(
+    id          BIGINT          AUTO_INCREMENT    NOT NULL,
+    email       VARCHAR(255)                      NOT NULL,
+    password    VARCHAR(255)                      NOT NULL,
+
+    PRIMARY KEY (id)
 );

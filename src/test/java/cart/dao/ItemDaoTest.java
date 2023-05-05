@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.item.Item;
+import cart.repository.dao.ItemDao;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,14 +16,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class ItemDaoTest {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
     ItemDao itemDao;
     Item savedItem;
 
     @BeforeEach
-    void setUp() {
+    void setUp(@Autowired JdbcTemplate jdbcTemplate) {
         itemDao = new ItemDao(jdbcTemplate);
         savedItem = itemDao.insert(createMacBookItem());
     }
@@ -66,8 +64,8 @@ class ItemDaoTest {
 
     @Test
     @DisplayName("지정된 id의 상품을 삭제한다")
-    void deleteSuccess() {
-        int deletedRecordCount = itemDao.delete(savedItem.getId());
+    void deleteByIdSuccess() {
+        int deletedRecordCount = itemDao.deleteById(savedItem.getId());
 
         assertThat(deletedRecordCount).isOne();
     }

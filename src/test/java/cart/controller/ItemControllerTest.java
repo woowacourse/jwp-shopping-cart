@@ -1,6 +1,6 @@
 package cart.controller;
 
-import static cart.fixture.ItemDtoFactory.createItemDto;
+import static cart.fixture.DtoFactory.MAC_BOOK_ITEM_DTO;
 import static cart.fixture.RequestFactory.ADD_MAC_BOOK_REQUEST;
 import static cart.fixture.RequestFactory.UPDATE_MAC_BOOK_REQUEST;
 import static cart.fixture.RequestFactory.createAddItemRequest;
@@ -32,11 +32,19 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@WebMvcTest(controllers = ItemController.class)
+@WebMvcTest(
+        controllers = ItemController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfigurer.class)
+        }
+)
 class ItemControllerTest {
 
     @MockBean
@@ -59,7 +67,7 @@ class ItemControllerTest {
     @Test
     @DisplayName("상품을 등록한다.")
     void createItemRequestSuccess() throws Exception {
-        when(itemService.add(any(String.class), any(String.class), anyInt())).thenReturn(createItemDto());
+        when(itemService.add(any(String.class), any(String.class), anyInt())).thenReturn(MAC_BOOK_ITEM_DTO);
 
         mockMvc.perform(post("/items")
                         .content(objectMapper.writeValueAsString(ADD_MAC_BOOK_REQUEST))
@@ -75,7 +83,7 @@ class ItemControllerTest {
     @Test
     @DisplayName("상품 전체를 조회한다.")
     void findAllItemRequestSuccess() throws Exception {
-        when(itemService.findAll()).thenReturn(List.of(createItemDto(), createItemDto()));
+        when(itemService.findAll()).thenReturn(List.of(MAC_BOOK_ITEM_DTO, MAC_BOOK_ITEM_DTO));
 
         mockMvc.perform(get("/items"))
                 .andExpect(status().isOk())
@@ -85,7 +93,7 @@ class ItemControllerTest {
     @Test
     @DisplayName("상품을 변경한다.")
     void updateItemRequestSuccess() throws Exception {
-        when(itemService.update(anyLong(), any(UpdateItemRequest.class))).thenReturn(createItemDto());
+        when(itemService.update(anyLong(), any(UpdateItemRequest.class))).thenReturn(MAC_BOOK_ITEM_DTO);
 
         mockMvc.perform(put("/items/{id}", 1)
                         .content(objectMapper.writeValueAsString(UPDATE_MAC_BOOK_REQUEST))

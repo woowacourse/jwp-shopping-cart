@@ -9,11 +9,15 @@ public class ItemDto {
     private final String imageUrl;
     private final int price;
 
-    public ItemDto(Item item) {
-        id = item.getId();
-        name = item.getName();
-        imageUrl = item.getImageUrl();
-        price = item.getPrice();
+    private ItemDto(final long id, final String name, final String imageUrl, final int price) {
+        this.id = id;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.price = price;
+    }
+
+    public static ItemDto from(Item item) {
+        return new ItemDto(item.getId(), item.getName(), item.getImageUrl(), item.getPrice());
     }
 
     public long getId() {

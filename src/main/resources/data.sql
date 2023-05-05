@@ -4,3 +4,6 @@ INSERT INTO ITEMS(name, image_url, price) VALUES ('자전거3', 'https://thumbna
 
 INSERT INTO USERS(email, password) VALUES ('a@a.com', 'a');
 INSERT INTO USERS(email, password) VALUES ('b@b.com', 'b');
+
+INSERT INTO CARTS(user_email) VALUES('a@a.com');
+INSERT INTO CARTS(user_email) VALUES('b@b.com');

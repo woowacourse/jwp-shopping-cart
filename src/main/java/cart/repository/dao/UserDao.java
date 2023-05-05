@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.repository.dao;
 
 import cart.domain.user.User;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class UserDao {
 
     private final RowMapper<User> actorRowMapper = (resultSet, rowNum) -> new User(
-            resultSet.getLong("user_id"),
+            resultSet.getLong("id"),
             resultSet.getString("email"),
             resultSet.getString("password")
     );
@@ -22,7 +22,7 @@ public class UserDao {
     }
 
     public Optional<User> findByEmail(String email) {
-        String sql = "SELECT user_id, email, password FROM USERS WHERE email = ?";
+        String sql = "SELECT id, email, password FROM USERS WHERE email = ?";
 
         return jdbcTemplate.query(sql, actorRowMapper, email)
                 .stream()
@@ -30,7 +30,7 @@ public class UserDao {
     }
 
     public List<User> findAll() {
-        String sql = "SELECT user_id, email, password FROM USERS";
+        String sql = "SELECT id, email, password FROM USERS";
 
         return jdbcTemplate.query(sql, actorRowMapper);
     }

@@ -1,1 +1,1 @@
-insert into carts(user_email, item_id) values('a@a.com', 1);
+INSERT INTO CART_ITEM(cart_id, item_id) VALUES(1, 1);

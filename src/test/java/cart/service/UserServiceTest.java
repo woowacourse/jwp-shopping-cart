@@ -4,7 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.UserDao;
+import cart.repository.UserRepository;
+import cart.repository.dao.UserDao;
 import cart.exception.user.SignInFailureException;
 import cart.service.dto.UserDto;
 import java.util.List;
@@ -20,15 +21,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class UserServiceTest {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
     UserService userService;
 
     @BeforeEach
-    void setUp() {
+    void setUp(@Autowired JdbcTemplate jdbcTemplate) {
         UserDao userDao = new UserDao(jdbcTemplate);
-        userService = new UserService(userDao);
+        UserRepository userRepository = new UserRepository(userDao);
+
+        userService = new UserService(userRepository);
     }
 
     @Test

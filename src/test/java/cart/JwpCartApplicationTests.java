@@ -3,6 +3,7 @@ package cart;
 import static cart.fixture.RequestFactory.ADD_MAC_BOOK_REQUEST;
 import static cart.fixture.RequestFactory.UPDATE_MAC_BOOK_REQUEST;
 import static cart.fixture.RequestFactory.createAddItemRequest;
+import static cart.fixture.ResponseFactory.MAC_BOOK_RESPONSE;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.containsString;
@@ -333,7 +334,7 @@ class JwpCartApplicationTests {
 
     @Nested
     @DisplayName("장바구니 CRD 테스트")
-    @Sql({"/truncate.sql", "/items.sql", "/carts.sql"})
+    @Sql({"/truncate.sql", "/items.sql"})
     class CartControllerCRDSuccessTest {
 
         private String basic;
@@ -376,9 +377,10 @@ class JwpCartApplicationTests {
                     .post("/carts")
                     .then().log().all()
                     .statusCode(HttpStatus.CREATED.value())
-                    .body("cartId", is(2))
-                    .body("itemName", is("자전거2"))
-                    .body("itemImageUrl", is("https://cdn.imweb.me/thumbnail/20220817/7b35b82e7c1ce.jpg"));
+                    .body("id", is(2))
+                    .body("name", is(MAC_BOOK_RESPONSE.getName()))
+                    .body("imageUrl", is(MAC_BOOK_RESPONSE.getImageUrl()))
+                    .body("price", is(MAC_BOOK_RESPONSE.getPrice()));
         }
 
         @Test
@@ -394,6 +396,7 @@ class JwpCartApplicationTests {
 
         @Test
         @DisplayName("이미 추가한 상품을 장바구니에 다시 추가하면 BAD REQUEST를 반환한다.")
+        @Sql("/carts.sql")
         void addCartFailWithAlreadyExistsItem() {
             AddCartRequest addCartRequest = new AddCartRequest(1L);
 
@@ -417,7 +420,7 @@ class JwpCartApplicationTests {
                     .delete("/carts/{id}", -999L)
                     .then().log().all()
                     .statusCode(HttpStatus.NOT_FOUND.value())
-                    .body("message", is("장바구니에 존재하지 않는 상품입니다."));
+                    .body("message", is("장바구니에서 일치하는 상품을 찾을 수 없습니다."));
         }
     }
 

@@ -1,47 +1,33 @@
 package cart.service.dto;
 
-import cart.domain.Cart;
-import cart.domain.item.Item;
+import cart.domain.cart.Cart;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CartDto {
 
     private final Long cartId;
-    private final Long itemId;
-    private final String name;
-    private final String imageUrl;
-    private final int price;
+    private final List<ItemDto> itemDtos;
 
-    public CartDto(final Long cartId, final Long itemId, final String name, final String imageUrl, final int price) {
+    private CartDto(final Long cartId, final List<ItemDto> itemDtos) {
         this.cartId = cartId;
-        this.itemId = itemId;
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.price = price;
+        this.itemDtos = itemDtos;
     }
 
     public static CartDto from(Cart cart) {
-        Item item = cart.getItem();
+        List<ItemDto> itemDtos = cart.getItems()
+                .stream()
+                .map(ItemDto::from)
+                .collect(Collectors.toList());
 
-        return new CartDto(cart.getId(), item.getId(), item.getName(), item.getImageUrl(), item.getPrice());
+        return new CartDto(cart.getId(), itemDtos);
     }
 
     public Long getCartId() {
         return cartId;
     }
 
-    public Long getItemId() {
-        return itemId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public int getPrice() {
-        return price;
+    public List<ItemDto> getItemDtos() {
+        return itemDtos;
     }
 }

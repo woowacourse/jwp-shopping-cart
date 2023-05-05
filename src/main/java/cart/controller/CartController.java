@@ -1,11 +1,12 @@
 package cart.controller;
 
 import cart.configuration.AuthenticationPrincipal;
-import cart.controller.dto.request.AddCartRequest;
 import cart.controller.dto.AuthInfo;
-import cart.controller.dto.response.CartResponse;
+import cart.controller.dto.request.AddCartRequest;
+import cart.controller.dto.response.ItemResponse;
 import cart.service.CartService;
 import cart.service.dto.CartDto;
+import cart.service.dto.ItemDto;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,29 +31,30 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartResponse>> findAllCarts(@AuthenticationPrincipal AuthInfo authInfo) {
-        List<CartResponse> cartResponses = cartService.findAllByEmail(authInfo.getEmail())
+    public ResponseEntity<List<ItemResponse>> findAllCarts(@AuthenticationPrincipal AuthInfo authInfo) {
+        CartDto cartDto = cartService.findCart(authInfo.getEmail());
+        List<ItemResponse> itemResponses = cartDto.getItemDtos()
                 .stream()
-                .map(CartResponse::from)
+                .map(ItemResponse::from)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(cartResponses);
+        return ResponseEntity.ok(itemResponses);
     }
 
     @PostMapping
-    public ResponseEntity<CartResponse> addCart(
+    public ResponseEntity<ItemResponse> addCart(
             @RequestBody @Valid AddCartRequest addCartRequest,
             @AuthenticationPrincipal AuthInfo authInfo
     ) {
-        CartDto cartDto = cartService.add(authInfo.getEmail(), addCartRequest.getId());
+        ItemDto itemDto = cartService.addItem(authInfo.getEmail(), addCartRequest.getId());
 
-        return ResponseEntity.created(URI.create("/carts/" + cartDto.getCartId()))
-                .body(CartResponse.from(cartDto));
+        return ResponseEntity.created(URI.create("/items/" + itemDto.getId()))
+                .body(ItemResponse.from(itemDto));
     }
 
     @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> deleteCart(@PathVariable Long cartId, @AuthenticationPrincipal AuthInfo authInfo) {
-        cartService.delete(cartId, authInfo.getEmail());
+        cartService.deleteCartItem(authInfo.getEmail(), cartId);
 
         return ResponseEntity.noContent().build();
     }

@@ -10,7 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.controller.dto.request.AddItemRequest;
 import cart.controller.dto.request.UpdateItemRequest;
-import cart.dao.ItemDao;
+import cart.repository.ItemRepository;
+import cart.repository.dao.ItemDao;
 import cart.exception.item.ItemException;
 import cart.service.dto.ItemDto;
 import java.util.List;
@@ -24,16 +25,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class ItemServiceTest {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
     ItemService itemService;
     ItemDto itemDto;
 
     @BeforeEach
-    void setUp() {
+    void setUp(@Autowired JdbcTemplate jdbcTemplate) {
         ItemDao itemDao = new ItemDao(jdbcTemplate);
-        itemService = new ItemService(itemDao);
+        ItemRepository itemRepository = new ItemRepository(itemDao);
+
+        itemService = new ItemService(itemRepository);
         itemDto = itemService.add(ADD_MAC_BOOK_REQUEST.getName(), ADD_MAC_BOOK_REQUEST.getImageUrl(),
                 ADD_MAC_BOOK_REQUEST.getPrice());
     }

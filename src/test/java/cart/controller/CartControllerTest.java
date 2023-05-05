@@ -1,5 +1,9 @@
 package cart.controller;
 
+import static cart.fixture.DtoFactory.MAC_BOOK_CART_DTO;
+import static cart.fixture.DtoFactory.MAC_BOOK_ITEM_DTO;
+import static cart.fixture.DtoFactory.createAuthInfo;
+import static cart.fixture.ResponseFactory.MAC_BOOK_RESPONSE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -16,17 +20,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.configuration.AuthenticationPrincipalArgumentResolver;
 import cart.controller.dto.request.AddCartRequest;
-import cart.controller.dto.AuthInfo;
 import cart.exception.GlobalControllerAdvice;
 import cart.exception.auth.NotSignInException;
 import cart.exception.cart.CartNotFoundException;
 import cart.exception.item.ItemNotFoundException;
 import cart.exception.user.UserNotFoundException;
+import cart.repository.UserRepository;
 import cart.service.CartService;
-import cart.service.dto.CartDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,10 +44,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 class CartControllerTest {
 
     @MockBean
-    CartService cartService;
+    UserRepository userRepository;
 
     @MockBean
     AuthenticationPrincipalArgumentResolver authArgumentResolver;
+
+    @MockBean
+    CartService cartService;
 
     @Autowired
     CartController cartController;
@@ -55,8 +60,11 @@ class CartControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(cartController).setControllerAdvice(new GlobalControllerAdvice())
-                .setCustomArgumentResolvers(authArgumentResolver).alwaysDo(print()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(cartController)
+                .setControllerAdvice(new GlobalControllerAdvice())
+                .setCustomArgumentResolvers(authArgumentResolver)
+                .alwaysDo(print())
+                .build();
     }
 
     @Test
@@ -64,7 +72,7 @@ class CartControllerTest {
     void findAllCartsSuccess() throws Exception {
         given(authArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(createAuthInfo());
-        given(cartService.findAllByEmail(anyString())).willReturn(List.of(createCartDto()));
+        given(cartService.findCart(anyString())).willReturn(MAC_BOOK_CART_DTO);
 
         mockMvc.perform(get("/carts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +87,6 @@ class CartControllerTest {
         given(authArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authArgumentResolver.resolveArgument(any(), any(), any(), any())).willThrow(
                 new NotSignInException("로그인이 필요한 기능입니다."));
-        given(cartService.findAllByEmail(anyString())).willReturn(List.of(createCartDto()));
 
         mockMvc.perform(get("/carts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -93,17 +100,18 @@ class CartControllerTest {
     void addCartSuccess() throws Exception {
         given(authArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(createAuthInfo());
-        given(cartService.add(anyString(), anyLong())).willReturn(createCartDto());
+        given(cartService.addItem(anyString(), anyLong())).willReturn(MAC_BOOK_ITEM_DTO);
         AddCartRequest addCartRequest = new AddCartRequest(1L);
 
         mockMvc.perform(post("/carts")
                         .content(objectMapper.writeValueAsString(addCartRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isCreated()).andExpect(header().string("Location", "/carts/1"))
-                .andExpect(jsonPath("$.cartId").value(1)).andExpect(jsonPath("$.itemName").value("a"))
-                .andExpect(jsonPath("$.itemImageUrl").value("https://image.com"))
-                .andExpect(jsonPath("$.itemPrice").value(10_000));
+                .andExpect(status().isCreated()).andExpect(header().string("Location", "/items/1"))
+                .andExpect(jsonPath("$.id").value(MAC_BOOK_RESPONSE.getId()))
+                .andExpect(jsonPath("$.name").value(MAC_BOOK_RESPONSE.getName()))
+                .andExpect(jsonPath("$.imageUrl").value(MAC_BOOK_RESPONSE.getImageUrl()))
+                .andExpect(jsonPath("$.price").value(MAC_BOOK_RESPONSE.getPrice()));
     }
 
     @Test
@@ -127,7 +135,7 @@ class CartControllerTest {
     void addCartFailWithNotExistsItemId() throws Exception {
         given(authArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(createAuthInfo());
-        given(cartService.add(anyString(), anyLong()))
+        given(cartService.addItem(anyString(), anyLong()))
                 .willThrow(new ItemNotFoundException("일치하는 상품을 찾을 수 없습니다."));
         AddCartRequest addCartRequest = new AddCartRequest(1L);
 
@@ -144,7 +152,8 @@ class CartControllerTest {
     void addCartFailWithNotExistsUser() throws Exception {
         given(authArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(createAuthInfo());
-        given(cartService.add(anyString(), anyLong())).willThrow(new UserNotFoundException("존재하지 않는 사용자입니다."));
+        given(cartService.addItem(anyString(), anyLong()))
+                .willThrow(new UserNotFoundException("존재하지 않는 사용자입니다."));
         AddCartRequest addCartRequest = new AddCartRequest(1L);
 
         mockMvc.perform(post("/carts")
@@ -161,8 +170,6 @@ class CartControllerTest {
         given(authArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authArgumentResolver.resolveArgument(any(), any(), any(), any())).willThrow(
                 new NotSignInException("로그인이 필요한 기능입니다."));
-        given(cartService.findAllByEmail(anyString())).willReturn(
-                List.of(createCartDto()));
         AddCartRequest addCartRequest = new AddCartRequest(1L);
 
         mockMvc.perform(post("/carts")
@@ -178,7 +185,7 @@ class CartControllerTest {
     void deleteCartSuccess() throws Exception {
         given(authArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(createAuthInfo());
-        willDoNothing().given(cartService).delete(anyLong(), anyString());
+        willDoNothing().given(cartService).deleteCartItem(anyString(), anyLong());
 
         mockMvc.perform(delete("/carts/{id}", 1L))
                 .andExpect(status().isNoContent());
@@ -190,7 +197,7 @@ class CartControllerTest {
         given(authArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(createAuthInfo());
         willThrow(new CartNotFoundException("장바구니에 존재하지 않는 상품입니다."))
-                .given(cartService).delete(anyLong(), anyString());
+                .given(cartService).deleteCartItem(anyString(), anyLong());
 
         mockMvc.perform(delete("/carts/{id}", 1L))
                 .andExpect(status().isNotFound())
@@ -203,23 +210,10 @@ class CartControllerTest {
         given(authArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authArgumentResolver.resolveArgument(any(), any(), any(), any())).willThrow(
                 new NotSignInException("로그인이 필요한 기능입니다."));
-        given(cartService.findAllByEmail(anyString())).willReturn(
-                List.of(createCartDto()));
-        AddCartRequest addCartRequest = new AddCartRequest(1L);
 
         mockMvc.perform(delete("/carts/{id}", 1L)
-                        .content(objectMapper.writeValueAsString(addCartRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("로그인이 필요한 기능입니다."));
-    }
-
-    private CartDto createCartDto() {
-        return new CartDto(1L, 1L, "a", "https://image.com", 10_000);
-    }
-
-    private AuthInfo createAuthInfo() {
-        return new AuthInfo("a@a.com", "a");
     }
 }
