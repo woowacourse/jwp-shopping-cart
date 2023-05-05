@@ -1,5 +1,6 @@
 package cart.intergration;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -7,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.dto.request.member.MemberSignupRequest;
 import cart.dto.request.product.ProductCreateRequest;
 import cart.dto.request.product.ProductUpdateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -242,5 +244,32 @@ class ProductIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.validation.imageUrl").exists());
+    }
+
+    @Test
+    @DisplayName("상품이 장바구니에 담겨있으면 상품을 삭제할 수 없다.")
+    void deleteProduct_productInCart() throws Exception {
+        // given
+        MvcResult mvcResult = mockMvc.perform(post(PRODUCT_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png"))))
+                .andReturn();
+        int productId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.result.productId");
+
+        mockMvc.perform(post("/members" + "/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new MemberSignupRequest("glen@naver.com", "123456"))));
+
+        mockMvc.perform(post("/api/cart" + "/" + productId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, "Basic Z2xlbkBuYXZlci5jb206MTIzNDU2"))
+                .andExpect(status().isOk());
+
+        // expect
+        mockMvc.perform(delete(PRODUCT_PATH + "/" + productId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("해당 상품이 장바구니에 존재합니다."));
     }
 }
