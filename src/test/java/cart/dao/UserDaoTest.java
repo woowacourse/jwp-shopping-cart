@@ -1,5 +1,9 @@
 package cart.dao;
 
+import static cart.TestFixture.EMAIL_0CHIL;
+import static cart.TestFixture.EMAIL_BEAVER;
+import static cart.TestFixture.PASSWORD_0CHIL;
+import static cart.TestFixture.PASSWORD_BEAVER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -20,8 +24,8 @@ public class UserDaoTest {
     @BeforeEach
     void setUp() {
         this.userDao = new UserDao(jdbcTemplate);
-        userDao.insert("0@chll.it", "verysecurepassword");
-        userDao.insert("beaver@wooteco.com", "veryverysecurepassword");
+        userDao.insert(EMAIL_0CHIL, PASSWORD_0CHIL);
+        userDao.insert(EMAIL_BEAVER, PASSWORD_BEAVER);
     }
 
     @DisplayName("사용자를 삽입한다")
@@ -30,8 +34,8 @@ public class UserDaoTest {
         assertThat(userDao.selectAll())
                 .extracting("email", "password")
                 .contains(
-                        tuple("0@chll.it", "verysecurepassword"),
-                        tuple("beaver@wooteco.com", "veryverysecurepassword")
+                        tuple(EMAIL_0CHIL, PASSWORD_0CHIL),
+                        tuple(EMAIL_BEAVER, PASSWORD_BEAVER)
                 );
     }
 
@@ -41,8 +45,8 @@ public class UserDaoTest {
         assertThat(userDao.selectAll())
                 .extracting("email", "password")
                 .containsExactlyInAnyOrder(
-                        tuple("0@chll.it", "verysecurepassword"),
-                        tuple("beaver@wooteco.com", "veryverysecurepassword")
+                        tuple(EMAIL_0CHIL, PASSWORD_0CHIL),
+                        tuple(EMAIL_BEAVER, PASSWORD_BEAVER)
                 );
     }
 
@@ -52,17 +56,17 @@ public class UserDaoTest {
         assertThat(userDao.selectBy(getGreatestId()))
                 .extracting("email", "password")
                 .containsExactly(
-                        "beaver@wooteco.com", "veryverysecurepassword"
+                        EMAIL_BEAVER, PASSWORD_BEAVER
                 );
     }
 
     @DisplayName("사용자를 이메일로 조회한다")
     @Test
     void selectByEmail() {
-        assertThat(userDao.selectBy("0@chll.it"))
+        assertThat(userDao.selectBy(EMAIL_0CHIL))
                 .extracting("email", "password")
                 .containsExactly(
-                        "0@chll.it", "verysecurepassword"
+                        EMAIL_0CHIL, PASSWORD_0CHIL
                 );
     }
 

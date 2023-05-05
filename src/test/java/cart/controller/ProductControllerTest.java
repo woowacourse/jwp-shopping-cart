@@ -1,5 +1,9 @@
 package cart.controller;
 
+import static cart.TestFixture.IMAGE_VANILLA_LATTE;
+import static cart.TestFixture.NAME_VANILLA_LATTE;
+import static cart.TestFixture.PRICE_VANILLA_LATTE;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import cart.TestFixture;
 import cart.controller.dto.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -30,7 +33,7 @@ class ProductControllerTest {
         RestAssured
                 .given()
                 .contentType(ContentType.JSON)
-                .body(new ProductRequest("비버", TestFixture.IMAGE_BEAVER, 100L))
+                .body(new ProductRequest(NAME_VANILLA_LATTE, IMAGE_VANILLA_LATTE, PRICE_VANILLA_LATTE))
                 .post("/products");
     }
 
@@ -40,7 +43,7 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .body(new ProductRequest("비버", TestFixture.IMAGE_BEAVER, 100L))
+                .body(new ProductRequest(NAME_VANILLA_LATTE, IMAGE_VANILLA_LATTE, PRICE_VANILLA_LATTE))
                 .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -52,7 +55,7 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .body(new ProductRequest("비버", TestFixture.IMAGE_BEAVER, 100L))
+                .body(new ProductRequest(NAME_VANILLA_LATTE, IMAGE_VANILLA_LATTE, 5000L))
                 .when().put("/products/" + getGreatestId())
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());

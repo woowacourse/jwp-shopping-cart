@@ -1,5 +1,14 @@
 package cart.dao;
 
+import static cart.TestFixture.IMAGE_CHICKEN;
+import static cart.TestFixture.IMAGE_ICE_CREAM;
+import static cart.TestFixture.IMAGE_VANILLA_LATTE;
+import static cart.TestFixture.NAME_CHICKEN;
+import static cart.TestFixture.NAME_ICE_CREAM;
+import static cart.TestFixture.NAME_VANILLA_LATTE;
+import static cart.TestFixture.PRICE_CHICKEN;
+import static cart.TestFixture.PRICE_ICE_CREAM;
+import static cart.TestFixture.PRICE_VANILLA_LATTE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -10,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import cart.TestFixture;
 import cart.dao.dto.ProductDto;
 
 @JdbcTest
@@ -24,10 +32,9 @@ class ProductDaoTest {
     @BeforeEach
     void setUp() {
         this.productDao = new ProductDao(jdbcTemplate);
-
-        productDao.insert("땡칠", TestFixture.IMAGE_0CHIL, 1000L);
-        productDao.insert("비버", TestFixture.IMAGE_BEAVER, 1000L);
-        productDao.insert("코다", TestFixture.IMAGE_KODA, 1000000L);
+        productDao.insert(NAME_CHICKEN, IMAGE_CHICKEN, PRICE_CHICKEN);
+        productDao.insert(NAME_ICE_CREAM, IMAGE_ICE_CREAM, PRICE_ICE_CREAM);
+        productDao.insert(NAME_VANILLA_LATTE, IMAGE_VANILLA_LATTE, PRICE_VANILLA_LATTE);
     }
 
     @Test
@@ -36,7 +43,7 @@ class ProductDaoTest {
         assertThat(productDao.findAll())
                 .extracting("name", "image", "price")
                 .contains(
-                        tuple("비버", TestFixture.IMAGE_BEAVER, 1000L)
+                        tuple(NAME_VANILLA_LATTE, IMAGE_VANILLA_LATTE, PRICE_VANILLA_LATTE)
                 );
     }
 
@@ -47,7 +54,7 @@ class ProductDaoTest {
 
         assertThat(entity)
                 .extracting("name", "image", "price")
-                .containsExactly("코다", TestFixture.IMAGE_KODA, 1000000L);
+                .containsExactly(NAME_VANILLA_LATTE, IMAGE_VANILLA_LATTE, PRICE_VANILLA_LATTE);
     }
 
     @Test
@@ -56,26 +63,27 @@ class ProductDaoTest {
         assertThat(productDao.findAll())
                 .extracting("name", "image", "price")
                 .containsExactlyInAnyOrder(
-                        tuple("땡칠", TestFixture.IMAGE_0CHIL, 1000L),
-                        tuple("비버", TestFixture.IMAGE_BEAVER, 1000L),
-                        tuple("코다", TestFixture.IMAGE_KODA, 1000000L)
+                        tuple(NAME_CHICKEN, IMAGE_CHICKEN, PRICE_CHICKEN),
+                        tuple(NAME_ICE_CREAM, IMAGE_ICE_CREAM, PRICE_ICE_CREAM),
+                        tuple(NAME_VANILLA_LATTE, IMAGE_VANILLA_LATTE, PRICE_VANILLA_LATTE)
                 );
     }
 
     @Test
     @DisplayName("상품 수정")
     void update() {
-        productDao.update(getGreatestId(), "코다", "VERY_BIG_IMAGE", 100L);
+        productDao.update(getGreatestId(), NAME_VANILLA_LATTE, "VERY_BIG_IMAGE", PRICE_VANILLA_LATTE);
 
         assertThat(productDao.findAll())
                 .extracting("name", "image", "price")
-                .contains(tuple("코다", "VERY_BIG_IMAGE", 100L));
+                .contains(tuple(NAME_VANILLA_LATTE, "VERY_BIG_IMAGE", PRICE_VANILLA_LATTE));
     }
 
     @Test
     @DisplayName("수정된 상품 수 반환")
     void count_updated() {
-        int updatedCount = productDao.update(getGreatestId(), "코다", "VERY_BIG_IMAGE", 100L);
+        int updatedCount = productDao.update(getGreatestId(), NAME_VANILLA_LATTE, "VERY_BIG_IMAGE",
+                PRICE_VANILLA_LATTE);
 
         assertThat(updatedCount).isEqualTo(1);
     }
@@ -87,7 +95,7 @@ class ProductDaoTest {
 
         assertThat(productDao.findAll())
                 .extracting("name")
-                .doesNotContain("코다");
+                .doesNotContain(NAME_VANILLA_LATTE);
     }
 
     @Test
