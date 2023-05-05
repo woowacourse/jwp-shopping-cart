@@ -9,27 +9,34 @@ import org.springframework.stereotype.Component;
 @Component
 public class BasicAuthorizationExtractor {
     private static UserService userService;
+    private static final String BASIC_TYPE = "Basic";
+    private static final String DELIMITER = ":";
 
     @Autowired
     public BasicAuthorizationExtractor(UserService userService) {
         BasicAuthorizationExtractor.userService = userService;
     }
 
-    public static UserDto extract(final String header) {
+    public static UserDto extract(final String header) throws IllegalAccessException {
         if (header == null) {
             throw new IllegalArgumentException("header가 비어있습니다");
         }
+        if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
+            String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
+            byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
+            String decodedString = new String(decodedBytes);
 
-        String credentials = header.split("\\s")[1];
-        byte[] bytes = Base64.decodeBase64(credentials);
-        String[] emailAndPassword = new String(bytes).split(":");
-        String email = emailAndPassword[0];
-        String password = emailAndPassword[1];
-        Long id = userService.findLoginUserId(email);
-        return new UserDto.Builder()
-                .id(id)
-                .email(email)
-                .password(password)
-                .build();
+            String[] credentials = decodedString.split(DELIMITER);
+            String email = credentials[0];
+            String password = credentials[1];
+            Long id = userService.findLoginUserId(email);
+            return new UserDto.Builder()
+                    .id(id)
+                    .email(email)
+                    .password(password)
+                    .build();
+        }
+
+        throw new IllegalAccessException("Basic 응답이 아닙니다.");
     }
 }
