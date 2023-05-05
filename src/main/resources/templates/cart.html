@@ -42,22 +42,22 @@
             }
         }).then((response) => {
             const cartItems = response.data;
-            console.log(response);
             let productElement = '';
             cartItems.forEach(cartItem => {
                 productElement += `
                         <div class="cart-item">
                           <div class="cart-item-info">
-                            <img src="${cartItem.product.image}" alt=""/> <!-- 상품 이미지 -->
-                            <div class="cart-item-name">${cartItem.product.name}</div> <!-- 상품 이름 -->
-                            <div class="cart-item-price">${cartItem.product.price}</div> <!-- 상품 가격 -->
-                            <div class="cart-item-price">${cartItem.count}개</div> <!-- 상품 개수 -->
+                            <img src="${cartItem.product.image}" alt=""/>
+                            <div class="cart-item-name">${cartItem.product.name}</div>
+                            <div class="cart-item-price">${cartItem.product.price}</div>
+                            <div class="cart-item-price">
+                                <input id="itemCount${cartItem.id}" class="cart-item-count" type="button" value="${cartItem.count}" onclick="changeToInput('itemCount${cartItem.id}')">개
+                            </div>
                             <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
                           </div>
                         </div>
                       `;
             });
-
             document.querySelector('.cart-items').innerHTML = productElement;
         }).catch((error) => {
             console.error(error);

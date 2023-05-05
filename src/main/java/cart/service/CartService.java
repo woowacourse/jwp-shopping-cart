@@ -6,12 +6,12 @@ import cart.domain.Cart;
 import cart.dto.request.CartRequest;
 import cart.dto.response.CartResponse;
 import cart.entity.CartEntity;
+import cart.exception.AuthorizationException;
 import cart.exception.ResourceNotFoundException;
 import cart.mapper.CartMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -62,23 +62,24 @@ public class CartService {
     }
 
     public CartResponse update(CartRequest cartRequest, Long cartId, Long memberId) {
-        CartEntity cart = findCartByMemberId(cartId, memberId);
+        CartEntity cart = cartDao.findById(cartId)
+                .orElseThrow(() -> new ResourceNotFoundException("해당 장바구니를 찾을 수 없습니다." + System.lineSeparator() + "cartId : " + cartId));
+        validateOwner(cart.getMemberId(), memberId);
         cart.replace(cartRequest.getCount());
         cartDao.update(cart);
         return cartMapper.entityToResponse(cart);
     }
 
-    private CartEntity findCartByMemberId(Long cartId, Long memberId) {
-        return cartDao.findByMemberId(memberId)
-                .stream()
-                .filter(o -> Objects.equals(o.getId(), cartId))
-                .findAny()
-                .orElseThrow(() -> new NoSuchElementException("해당 장바구니를 찾을 수 없습니다." + System.lineSeparator() + "cartId : " + cartId));
+    public void deleteById(Long id, Long memberId) {
+        CartEntity cart = cartDao.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("해당 장바구니를 찾을 수 없습니다." + System.lineSeparator() + "cartId : " + id));
+        validateOwner(cart.getMemberId(), memberId);
+        cartDao.deleteById(cart.getId());
     }
 
-    public void deleteById(Long id) {
-        CartEntity cart = cartDao.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 사용자를 찾을 수 없습니다." + System.lineSeparator() + "id : " + id));
-        cartDao.deleteById(cart.getId());
+    private void validateOwner(Long originId, Long currentId) {
+        if (!Objects.equals(originId, currentId)) {
+            throw new AuthorizationException("해당 작업에 대한 권한이 존재하지 않습니다." + System.lineSeparator() + "사용자 id : " + currentId);
+        }
     }
 }

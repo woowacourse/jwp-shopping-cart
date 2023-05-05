@@ -10,13 +10,13 @@ public interface CartDao {
 
     Optional<CartEntity> save(Cart cart, long productId, long memberId);
 
-    CartEntity update(CartEntity entity);
-
     Optional<CartEntity> findById(Long id);
 
+    List<CartEntity> findByMemberId(long memberId);
+    
     List<CartEntity> findAll();
 
-    void deleteById(Long id);
+    CartEntity update(CartEntity entity);
 
-    List<CartEntity> findByMemberId(long memberId);
+    void deleteById(Long id);
 }

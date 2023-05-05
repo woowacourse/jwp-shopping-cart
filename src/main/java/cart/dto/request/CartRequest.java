@@ -1,11 +1,11 @@
 package cart.dto.request;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 public class CartRequest {
 
-    @NotNull(message = "상품 아이디가 필요합니다.")
-    private long productId;
+    @Positive(message = "상품 아이디는 1 이상입니다.")
+    private Long productId;
 
     private int count = 1;
 
