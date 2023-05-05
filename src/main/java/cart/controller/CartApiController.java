@@ -5,6 +5,8 @@ import cart.dto.ProductResponseDto;
 import cart.infrastructure.BasicAuthorizationExtractor;
 import cart.service.AuthService;
 import cart.service.CartService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,18 +29,19 @@ public class CartApiController {
     }
 
     @PostMapping("/cart/{productId}")
-    public void addProductToCart(@PathVariable int productId, HttpServletRequest request) {
+    public ResponseEntity addProductToCart(@PathVariable int productId, HttpServletRequest request) {
         cartService.addCartItem(getUserIdByAuth(request), productId);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/cart/{productId}")
-    public void deleteProductInCart(@PathVariable int productId, HttpServletRequest request) {
+    public ResponseEntity deleteProductInCart(@PathVariable int productId, HttpServletRequest request) {
         cartService.deleteCartItem(getUserIdByAuth(request), productId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     private int getUserIdByAuth(final HttpServletRequest request) {
         AuthInfo authInfo = new BasicAuthorizationExtractor().extract(request);
-        int userId = authService.findUserIdByAuthInfo(authInfo);
-        return userId;
+        return authService.findUserIdByAuthInfo(authInfo);
     }
 }

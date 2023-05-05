@@ -28,10 +28,9 @@ public class JdbcTemplateCartDao implements CartDao {
 
     @Override
     public int insert(CartEntity cart) {
-        Map<String, Object> parameters = new HashMap<>(3);
+        Map<String, Object> parameters = new HashMap<>(2);
         parameters.put("user_id", cart.getUserId());
         parameters.put("product_id", cart.getProductId());
-        parameters.put("quantity", cart.getQuantity());
         return insertCarts.executeAndReturnKey(parameters).intValue();
     }
 
@@ -45,8 +44,7 @@ public class JdbcTemplateCartDao implements CartDao {
     private final RowMapper<CartEntity> cartEntityRowMapper = (resultSet, rowNumber) -> {
         CartEntity cartEntity = new CartEntity(
                 resultSet.getInt("user_id"),
-                resultSet.getInt("product_id"),
-                resultSet.getInt("quantity")
+                resultSet.getInt("product_id")
         );
         return cartEntity;
     };

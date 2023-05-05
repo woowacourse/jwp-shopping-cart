@@ -54,7 +54,7 @@ public class CartService {
     }
 
     public int addCartItem(final int userId, final int productId) {
-        return cartDao.insert(new CartEntity(userId, productId, 1));
+        return cartDao.insert(new CartEntity(userId, productId));
     }
 
     public int deleteCartItem(final int userId, final int productId) {
