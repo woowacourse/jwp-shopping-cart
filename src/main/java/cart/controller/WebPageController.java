@@ -53,6 +53,11 @@ public class WebPageController {
         return "settings";
     }
 
+    @GetMapping("/cart")
+    public String renderCartPage() {
+        return "cart";
+    }
+
     private List<ProductResponse> mapProducts(List<Product> products) {
         return products.stream()
                 .map(product -> new ProductResponse(
