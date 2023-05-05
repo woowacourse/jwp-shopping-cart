@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS CART;
+DROP TABLE IF EXISTS PRODUCT;
+DROP TABLE IF EXISTS MEMBER;
+
 CREATE TABLE IF NOT EXISTS product
 (
     id        BIGINT       NOT NULL AUTO_INCREMENT,
@@ -26,3 +30,8 @@ CREATE TABLE IF NOT EXISTS cart
     FOREIGN KEY (product_id) references product (id),
     UNIQUE (member_id, product_id)
 );
+
+INSERT INTO member (id, email, password)
+VALUES ('1', 'a@a.com', 'password1');
+INSERT INTO member (id, email, password)
+VALUES ('2', 'b@b.com', 'password2');
