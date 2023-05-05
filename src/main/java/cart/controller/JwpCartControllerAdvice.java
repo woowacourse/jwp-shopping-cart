@@ -5,20 +5,19 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import cart.exception.DomainException;
 import cart.exception.ExceptionCode;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class JwpCartControllerAdvice {
 
-    @ResponseBody
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ExceptionCode> handleDomainException(DomainException e) {
         return ResponseEntity.badRequest().body(e.getExceptionCode());
     }
 
-    @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionCode> handleBadRequest(MethodArgumentNotValidException e) {
         return ResponseEntity.badRequest().body(ExceptionCode.BAD_REQUEST);

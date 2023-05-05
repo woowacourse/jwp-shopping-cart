@@ -1,42 +1,51 @@
 package cart.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.List;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import cart.dto.ProductRequestDto;
+import cart.service.JwpCartService;
 import io.restassured.RestAssured;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WebMvcTest(JwpCartController.class)
 class JwpCartControllerTest {
+    @Autowired
+    private MockMvc mockMvc;
 
-    @LocalServerPort
-    int port;
+    @MockBean
+    private JwpCartService jwpCartService;
 
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
+    static Stream<Arguments> makeDto() {
+        return Stream.of(Arguments.arguments(new ProductRequestDto("a".repeat(256), "https://naver.com", 1000)),
+            Arguments.arguments(new ProductRequestDto("aaa", "https://naver" + "a".repeat(8001) + ".com", 1000)),
+            Arguments.arguments(new ProductRequestDto("aaa", "https://naver.com", -1000)));
     }
 
     @Test
     @DisplayName("상품 목록 페이지를 조회한다.")
-    void index() {
-        RestAssured.given().log().all()
-            .accept(MediaType.TEXT_HTML_VALUE)
-            .when().get("/")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .contentType(MediaType.TEXT_HTML_VALUE);
+    void index() throws Exception{
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/")
+            )
+            .andDo(print())
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -109,11 +118,5 @@ class JwpCartControllerTest {
             .when().delete("/admin/products/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
-    }
-
-    static Stream<Arguments> makeDto() {
-        return Stream.of(Arguments.arguments(new ProductRequestDto("a".repeat(256), "https://naver.com", 1000)),
-            Arguments.arguments(new ProductRequestDto("aaa", "https://naver" + "a".repeat(8001) + ".com", 1000)),
-            Arguments.arguments(new ProductRequestDto("aaa", "https://naver.com", -1000)));
     }
 }
