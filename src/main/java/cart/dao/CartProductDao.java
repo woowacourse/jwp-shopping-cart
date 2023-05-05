@@ -66,4 +66,12 @@ public class CartProductDao {
         List<Product> products = namedParameterJdbcTemplate.query(sql, sqlParameterSource, productRowMapper);
         return products;
     }
+
+    public void delete(final Long memberId, final Long productId) {
+        final String sql = "DELETE FROM CART_PRODUCT WHERE MEMBER_ID=:memberId AND PRODUCT_ID=:productId";
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("memberId", memberId)
+                .addValue("productId", productId);
+        namedParameterJdbcTemplate.update(sql, params);
+    }
 }

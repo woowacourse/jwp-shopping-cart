@@ -33,4 +33,11 @@ public class CartProductController {
         MemberResponse memberResponse = memberService.findByEmail(credential.getEmail());
         return ResponseEntity.ok(cartProductService.findAll(memberResponse.getId()));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal Credential credential, @PathVariable Long id) {
+        MemberResponse memberResponse = memberService.findByEmail(credential.getEmail());
+        cartProductService.delete(memberResponse.getId(), id);
+        return ResponseEntity.noContent().build();
+    }
 }

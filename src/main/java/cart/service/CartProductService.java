@@ -25,4 +25,8 @@ public class CartProductService {
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
     }
+
+    public void delete(Long memberId, Long productId) {
+        cartProductDao.delete(memberId, productId);
+    }
 }
