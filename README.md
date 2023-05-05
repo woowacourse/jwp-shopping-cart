@@ -69,7 +69,7 @@
     - Request: name, price, image
     - Response: 200 OK
 - [x] 상품 Read
-    - GET "/products/all"
+    - GET "/products"
     - Response: products{{id, name, image, price}, {..}}
 - [x] 상품 Update
     - PUT "/products/{id}"
@@ -89,5 +89,5 @@
     - DELETE "/user/cart/{id}"
     - Response: 200 OK
 - [x] 유저의 장바구니 전체 조회 (Authentication)
-    - GET "/user/cart/all"
+    - GET "/user/cart"
     - Response: products{{id, name, image, price}, {...}}

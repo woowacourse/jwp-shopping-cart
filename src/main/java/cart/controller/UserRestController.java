@@ -36,7 +36,7 @@ public class UserRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/user/cart/all")
+    @GetMapping("/user/cart")
     public ResponseEntity<List<ProductResponse>> getAllProductsInCart(@AuthParam UserInfo userInfo) {
         final List<ProductResponse> products = userService.getAllProductsInCart(userInfo);
 

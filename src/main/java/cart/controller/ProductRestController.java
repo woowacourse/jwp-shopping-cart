@@ -23,7 +23,7 @@ public final class ProductRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/products/all")
+    @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         List<ProductResponse> products = productService.findProducts();
 

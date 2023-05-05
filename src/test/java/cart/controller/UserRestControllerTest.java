@@ -120,7 +120,7 @@ class UserRestControllerTest {
             //then
             given()
                     .auth().preemptive().basic(user.getEmail(), user.getPassword())
-                    .when().get("user/cart/all")
+                    .when().get("user/cart")
                     .then()
                     .statusCode(HttpStatus.OK.value());
         }
@@ -130,7 +130,7 @@ class UserRestControllerTest {
         void notExistUser() {
             given()
                     .auth().preemptive().basic("없는 이메일", "password")
-                    .when().get("user/cart/all")
+                    .when().get("user/cart")
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }

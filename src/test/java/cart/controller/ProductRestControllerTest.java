@@ -91,7 +91,7 @@ class ProductRestControllerTest {
 
         //then
         given().log().uri()
-                .when().get("/products/all")
+                .when().get("/products")
                 .then().log().body()
                 .statusCode(HttpStatus.OK.value())
                 .body("name.get(0)", is("연어"))
@@ -110,7 +110,7 @@ class ProductRestControllerTest {
                     .when().post("/products");
 
             Integer productId = given()
-                    .when().get("/products/all")
+                    .when().get("/products")
                     .then()
                     .extract()
                     .body().jsonPath().get("id.get(0)");
@@ -154,7 +154,7 @@ class ProductRestControllerTest {
                     .when().post("/products");
 
             Integer productId = given()
-                    .when().get("/products/all")
+                    .when().get("/products")
                     .then()
                     .extract()
                     .body().jsonPath().get("id[0]");
