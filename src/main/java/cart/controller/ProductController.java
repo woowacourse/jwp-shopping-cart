@@ -1,6 +1,5 @@
 package cart.controller;
 
-import cart.dto.ApiDataResponse;
 import cart.dto.ApiResponse;
 import cart.dto.ProductCreateRequest;
 import cart.dto.ProductEditRequest;
@@ -30,13 +29,13 @@ public class ProductController {
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
-    public ApiDataResponse<ProductsReadResponse> findProducts() {
-        return ApiDataResponse.of(HttpStatus.OK, productService.findAll());
+    public ApiResponse<ProductsReadResponse> findProducts() {
+        return ApiResponse.of(HttpStatus.OK, productService.findAll());
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ApiResponse createProduct(@RequestBody @Valid final ProductCreateRequest productCreateRequest) {
+    public ApiResponse<Void> createProduct(@RequestBody @Valid final ProductCreateRequest productCreateRequest) {
         productService.createProduct(productCreateRequest);
 
         return ApiResponse.from(HttpStatus.CREATED);
@@ -44,7 +43,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ApiResponse editProduct(@PathVariable final Long id, @RequestBody @Valid final ProductEditRequest productEditRequest) {
+    public ApiResponse<Void> editProduct(@PathVariable final Long id, @RequestBody @Valid final ProductEditRequest productEditRequest) {
         productService.editProduct(id, productEditRequest);
 
         return ApiResponse.from(HttpStatus.OK);
@@ -52,7 +51,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ApiResponse deleteProduct(@PathVariable final Long id) {
+    public ApiResponse<Void> deleteProduct(@PathVariable final Long id) {
         productService.deleteById(id);
 
         return ApiResponse.from(HttpStatus.OK);
