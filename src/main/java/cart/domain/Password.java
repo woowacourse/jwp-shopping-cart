@@ -21,7 +21,7 @@ public class Password {
     }
 
     private void validateLength(final String value) {
-        if(value.length() > MAX_LENGTH) {
+        if (value.length() > MAX_LENGTH) {
             throw new IllegalArgumentException("비밀번호는 100자 이하여야 합니다.");
         }
     }

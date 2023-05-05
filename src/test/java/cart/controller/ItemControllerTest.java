@@ -63,8 +63,8 @@ class ItemControllerTest {
         when(itemService.saveItem(any())).thenReturn(1L);
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/items")
-                                              .contentType(MediaType.APPLICATION_JSON)
-                                              .content(value));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(value));
         //then
         verify(itemController, times(1)).addItem(any());
     }
@@ -86,10 +86,10 @@ class ItemControllerTest {
     void loadItemMappingURL() throws Exception {
         //given
         when(itemService.loadItem(1L)).thenReturn(ItemResponse.from(new Item.Builder().id(1L)
-                                                                                          .name(new Name("레드북"))
-                                                                                          .imageUrl(new ImageUrl("https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"))
-                                                                                          .price(new Price(50000))
-                                                                                          .build()));
+                .name(new Name("레드북"))
+                .imageUrl(new ImageUrl("https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"))
+                .price(new Price(50000))
+                .build()));
         //when
         mockMvc.perform(MockMvcRequestBuilders.get("/items/1"));
         //then
@@ -102,11 +102,11 @@ class ItemControllerTest {
         //given
         String value = objectMapper.writeValueAsString(new ItemRequest("레드북", 50000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"));
         doNothing().when(itemService)
-                   .updateItem(anyLong(), any());
+                .updateItem(anyLong(), any());
         //when
         mockMvc.perform(MockMvcRequestBuilders.put("/items/1")
-                                              .contentType(MediaType.APPLICATION_JSON)
-                                              .content(value));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(value));
         //then
         verify(itemController, times(1)).updateItem(anyLong(), any());
     }
@@ -116,7 +116,7 @@ class ItemControllerTest {
     void deleteItemMappingURL() throws Exception {
         //given
         doNothing().when(itemService)
-                   .deleteItem(anyLong());
+                .deleteItem(anyLong());
         //when
         mockMvc.perform(MockMvcRequestBuilders.delete("/items/1"));
         //then
@@ -134,7 +134,7 @@ class ItemControllerTest {
         Assertions.assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED),
                 () -> assertThat(responseEntity.getHeaders()
-                                               .getLocation()).isEqualTo(URI.create("/"))
+                        .getLocation()).isEqualTo(URI.create("/"))
         );
     }
 
@@ -191,7 +191,7 @@ class ItemControllerTest {
         Assertions.assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED),
                 () -> assertThat(responseEntity.getHeaders()
-                                               .getLocation()).isEqualTo(URI.create("/"))
+                        .getLocation()).isEqualTo(URI.create("/"))
         );
     }
 
@@ -201,13 +201,13 @@ class ItemControllerTest {
         //given
         Long itemId = 1L;
         doNothing().when(mockItemService)
-                   .deleteItem(anyLong());
+                .deleteItem(anyLong());
         //then
         ResponseEntity<Void> responseEntity = mockItemController.deleteItem(itemId);
         Assertions.assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),
                 () -> assertThat(responseEntity.getHeaders()
-                                               .getLocation()).isEqualTo(URI.create("/"))
+                        .getLocation()).isEqualTo(URI.create("/"))
         );
     }
 }

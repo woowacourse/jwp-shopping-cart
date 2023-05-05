@@ -20,7 +20,7 @@ public class ImageUrl {
     }
 
     private void validateLength(final String value) {
-        if(value.length() > MAX_LENGTH) {
+        if (value.length() > MAX_LENGTH) {
             throw new IllegalArgumentException("이미지 URL은 5000자 이하여야 합니다.");
         }
     }

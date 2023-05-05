@@ -1,7 +1,6 @@
 package cart.controller;
 
 import cart.controller.dto.CartResponse;
-import cart.controller.dto.ItemResponse;
 import cart.controller.dto.LoginUser;
 import cart.domain.*;
 import cart.service.CartService;
@@ -29,7 +28,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -149,7 +147,7 @@ public class CartControllerTest {
         String password = "12345678";
         LoginUser loginUser = new LoginUser(email, password);
         Long cartId = 1L;
-        doNothing().when(mockCartService).deleteCart("email@email.com",cartId);
+        doNothing().when(mockCartService).deleteCart("email@email.com", cartId);
         //when
         ResponseEntity<Void> responseEntity = mockCartController.deleteCart(loginUser, cartId);
         //then

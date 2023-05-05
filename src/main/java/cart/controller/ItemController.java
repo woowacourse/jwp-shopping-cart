@@ -26,40 +26,40 @@ public class ItemController {
     public ResponseEntity<Void> addItem(@RequestBody @Valid final ItemRequest itemRequest) {
         itemService.saveItem(itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                             .location(URI.create("/"))
-                             .build();
+                .location(URI.create("/"))
+                .build();
     }
 
     @GetMapping
     public ResponseEntity<List<ItemResponse>> loadAllItem() {
         List<ItemResponse> items = itemService.loadAllItem();
         return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(items);
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(items);
     }
 
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemResponse> loadItem(@PathVariable final Long itemId) {
         ItemResponse item = itemService.loadItem(itemId);
         return ResponseEntity.status(HttpStatus.OK)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(item);
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(item);
     }
 
     @PutMapping("/{itemId}")
     public ResponseEntity<Void> updateItem(@PathVariable final Long itemId,
-                                     @RequestBody @Valid final ItemRequest itemRequest) {
+                                           @RequestBody @Valid final ItemRequest itemRequest) {
         itemService.updateItem(itemId, itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                             .location(URI.create("/"))
-                             .build();
+                .location(URI.create("/"))
+                .build();
     }
 
     @DeleteMapping("/{itemId}")
     public ResponseEntity<Void> deleteItem(@PathVariable final Long itemId) {
         itemService.deleteItem(itemId);
         return ResponseEntity.status(HttpStatus.OK)
-                             .location(URI.create("/"))
-                             .build();
+                .location(URI.create("/"))
+                .build();
     }
 }

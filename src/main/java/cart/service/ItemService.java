@@ -27,8 +27,8 @@ public class ItemService {
     public List<ItemResponse> loadAllItem() {
         List<Item> allItem = itemDao.findAll();
         return allItem.stream()
-                      .map(ItemResponse::from)
-                      .collect(Collectors.toList());
+                .map(ItemResponse::from)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

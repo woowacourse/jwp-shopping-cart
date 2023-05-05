@@ -15,9 +15,9 @@ public class Price {
         this.value = value;
     }
 
-    private void validateEmpty (final Integer value) {
+    private void validateEmpty(final Integer value) {
         if (value == null) {
-           throw new IllegalArgumentException("가격은 반드시 있어야합니다.");
+            throw new IllegalArgumentException("가격은 반드시 있어야합니다.");
         }
     }
 

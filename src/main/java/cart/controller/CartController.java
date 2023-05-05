@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.controller.argumentresolver.BasicAuthorization;
 import cart.controller.dto.CartResponse;
-import cart.controller.dto.ItemResponse;
 import cart.controller.dto.LoginUser;
 import cart.service.CartService;
 import org.springframework.http.HttpStatus;

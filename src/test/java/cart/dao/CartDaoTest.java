@@ -42,7 +42,7 @@ class CartDaoTest {
         //then
         assertThat(after).hasSize(beforeSize + 1);
     }
-    
+
     @DisplayName("유저의 전체 장바구니를 조회한다.")
     @Test
     void findByUserId() {

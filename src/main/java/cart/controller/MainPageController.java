@@ -1,9 +1,7 @@
 package cart.controller;
 
 import cart.controller.dto.ItemResponse;
-import cart.controller.dto.LoginUser;
 import cart.controller.dto.UserResponse;
-import cart.service.CartService;
 import cart.service.ItemService;
 import cart.service.UserService;
 import org.springframework.stereotype.Controller;

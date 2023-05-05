@@ -21,7 +21,7 @@ public class Email {
     }
 
     private void validateLength(final String value) {
-        if(value.length() > MAX_LENGTH) {
+        if (value.length() > MAX_LENGTH) {
             throw new IllegalArgumentException("이메일은 100자 이하여야 합니다.");
         }
     }

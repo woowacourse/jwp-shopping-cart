@@ -14,7 +14,7 @@ public class UserResponse {
         this.password = password;
     }
 
-    public static UserResponse from (final User user) {
+    public static UserResponse from(final User user) {
         return new UserResponse(
                 user.getEmail(),
                 user.getPassword()

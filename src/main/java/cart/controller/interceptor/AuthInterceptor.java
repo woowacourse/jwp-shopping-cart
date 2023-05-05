@@ -3,7 +3,6 @@ package cart.controller.interceptor;
 import cart.exception.UnauthorizedException;
 import cart.service.UserService;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -22,7 +21,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
         String authorization = request.getHeader("authorization");
-        if (authorization == null ||authorization.isBlank()) {
+        if (authorization == null || authorization.isBlank()) {
             throw new UnauthorizedException("인증 정보가 없습니다.");
         }
         if (authorization.toLowerCase().startsWith("basic")) {

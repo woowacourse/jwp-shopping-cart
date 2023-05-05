@@ -34,20 +34,20 @@ class JwpCartApplicationTests {
 
     public static final List<ItemResponse> EXPECTED_PRODUCTS = List.of(
             ItemResponse.from(new Item.Builder().id(1L)
-                                                .name(new Name("위키드"))
-                                                .imageUrl(new ImageUrl("https://image.yes24.com/themusical/upFiles/Themusical/Play/post_2013wicked.jpg"))
-                                                .price(new Price(150000))
-                                                .build()),
+                    .name(new Name("위키드"))
+                    .imageUrl(new ImageUrl("https://image.yes24.com/themusical/upFiles/Themusical/Play/post_2013wicked.jpg"))
+                    .price(new Price(150000))
+                    .build()),
             ItemResponse.from(new Item.Builder().id(2L)
-                                                .name(new Name("마틸다"))
-                                                .imageUrl(new ImageUrl("https://ticketimage.interpark.com/Play/image/large/22/22009226_p.gif"))
-                                                .price(new Price(100000))
-                                                .build()),
+                    .name(new Name("마틸다"))
+                    .imageUrl(new ImageUrl("https://ticketimage.interpark.com/Play/image/large/22/22009226_p.gif"))
+                    .price(new Price(100000))
+                    .build()),
             ItemResponse.from(new Item.Builder().id(3L)
-                                                .name(new Name("빌리 엘리어트"))
-                                                .imageUrl(new ImageUrl("https://t1.daumcdn.net/cfile/226F4D4C544F42CF34"))
-                                                .price(new Price(200000))
-                                                .build())
+                    .name(new Name("빌리 엘리어트"))
+                    .imageUrl(new ImageUrl("https://t1.daumcdn.net/cfile/226F4D4C544F42CF34"))
+                    .price(new Price(200000))
+                    .build())
     );
     public static final List<UserResponse> EXPECTED_USERS = List.of(
             UserResponse.from(new User(new Email("email1@email.com"), new Password("12345678"))),
@@ -72,9 +72,9 @@ class JwpCartApplicationTests {
     @Test
     void showItemList() throws Exception {
         mockMvc.perform(get("/"))
-               .andExpect(model().attribute("products", EXPECTED_PRODUCTS))
-               .andExpect(view().name("index"))
-               .andExpect(status().isOk());
+                .andExpect(model().attribute("products", EXPECTED_PRODUCTS))
+                .andExpect(view().name("index"))
+                .andExpect(status().isOk());
     }
 
     @DisplayName("GET /admin 요청 정상 응답")
@@ -108,50 +108,50 @@ class JwpCartApplicationTests {
     void postRequestItem() throws Exception {
         String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"));
         RestAssured.given()
-                   .body(content)
-                   .contentType(MediaType.APPLICATION_JSON_VALUE)
-                   .when()
-                   .post("/items")
-                   .then()
-                   .statusCode(HttpStatus.CREATED.value())
-                   .header("Location", "/");
+                .body(content)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/items")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location", "/");
     }
 
     @DisplayName("GET /items 요청 정상 응답")
     @Test
     void getRequestItem() {
         RestAssured.given()
-                   .accept(MediaType.APPLICATION_JSON_VALUE)
-                   .when()
-                   .get("/items")
-                   .then()
-                   .statusCode(HttpStatus.OK.value())
-                   .body("size()", is(3));
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/items")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(3));
     }
 
     @DisplayName("PUT /items/{id} 요청 정상 응답")
     @Test
-    void putRequestItem() throws JsonProcessingException{
+    void putRequestItem() throws JsonProcessingException {
         String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"));
         RestAssured.given()
-                   .contentType(MediaType.APPLICATION_JSON_VALUE)
-                   .body(content)
-                   .when()
-                   .put("/items/1")
-                   .then()
-                   .statusCode(HttpStatus.CREATED.value())
-                   .header("Location", "/");
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(content)
+                .when()
+                .put("/items/1")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location", "/");
     }
 
     @DisplayName("DELETE /items/{id} 요청 정상 응답")
     @Test
     void deleteRequestItem() {
         RestAssured.given()
-                   .when()
-                   .delete("/items/1")
-                   .then()
-                   .statusCode(HttpStatus.OK.value())
-                   .header("Location", "/");
+                .when()
+                .delete("/items/1")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .header("Location", "/");
     }
 
     @DisplayName("POST /items 요청 예외 응답, 이름 empty")
@@ -188,13 +188,13 @@ class JwpCartApplicationTests {
     void putRequestItemException() throws Exception {
         String content = objectMapper.writeValueAsString(new ItemRequest("", 150000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"));
         RestAssured.given()
-                   .body(content)
-                   .contentType(MediaType.APPLICATION_JSON_VALUE)
-                   .when()
-                   .put("/items/1")
-                   .then()
-                   .statusCode(HttpStatus.BAD_REQUEST.value())
-                   .body(containsString("이름을 입력해주세요."));
+                .body(content)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put("/items/1")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(containsString("이름을 입력해주세요."));
     }
 
     @DisplayName("PUT /items 요청 예외 응답")
@@ -202,23 +202,23 @@ class JwpCartApplicationTests {
     void putRequestItemExceptionWithNotExist() throws Exception {
         String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "https://img.cgv.co.kr/Movie/Thumbnail/Poster/000086/86764/86764_1000.jpg"));
         RestAssured.given()
-                   .body(content)
-                   .contentType(MediaType.APPLICATION_JSON_VALUE)
-                   .when()
-                   .put("/items/100")
-                   .then()
-                   .statusCode(HttpStatus.BAD_REQUEST.value())
-                   .body(containsString("존재하지 않는 아이템 입니다."));
+                .body(content)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put("/items/100")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(containsString("존재하지 않는 아이템 입니다."));
     }
 
     @DisplayName("DELETE /items 요청 예외 응답")
     @Test
     void deleteRequestItemException() {
         RestAssured.when()
-                   .delete("/items/100")
-                   .then()
-                   .statusCode(HttpStatus.BAD_REQUEST.value())
-                   .body(containsString("존재하지 않는 아이템 입니다."));
+                .delete("/items/100")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(containsString("존재하지 않는 아이템 입니다."));
     }
 
     @DisplayName("POST /carts/{itemId} 요청 정상 응답")

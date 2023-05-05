@@ -38,7 +38,7 @@ public class ItemControllerAdvice {
                 internalServerError.getReasonPhrase(),
                 "예기치 못한 오류가 발생했습니다.");
         return ResponseEntity.status(internalServerError)
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(exceptionResponse);
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(exceptionResponse);
     }
 }
