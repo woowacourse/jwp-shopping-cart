@@ -28,13 +28,13 @@ public class CartProductController {
     @PostMapping
     public ResponseEntity<Void> save(@Auth final Credential credential,
                                      @RequestBody final CartProductSaveRequest request) {
-        final Long id = cartProductService.save(credential.getId(), request);
+        final Long id = cartProductService.save(credential.getMemberId(), request);
         return ResponseEntity.created(URI.create("/cart-products/" + id)).build();
     }
 
     @GetMapping
     public ResponseEntity<CartProductSearchResponse> findAll(@Auth final Credential credential) {
-        final CartProductSearchResponse result = cartProductService.findAll(credential.getId());
+        final CartProductSearchResponse result = cartProductService.findAll(credential.getMemberId());
         return ResponseEntity.ok(result);
     }
 
@@ -43,7 +43,7 @@ public class CartProductController {
             @Auth final Credential credential,
             @PathVariable final Long productId
     ) {
-        cartProductService.delete(productId, credential.getId());
+        cartProductService.delete(productId, credential.getMemberId());
         return ResponseEntity.noContent().build();
     }
 }

@@ -2,7 +2,7 @@ package cart.auth;
 
 public class Credential {
 
-    private final Long id;
+    private final Long memberId;
     private final String email;
     private final String password;
 
@@ -10,8 +10,8 @@ public class Credential {
         this(null, email, password);
     }
 
-    public Credential(final Long id, final String email, final String password) {
-        this.id = id;
+    public Credential(final Long memberId, final String email, final String password) {
+        this.memberId = memberId;
         this.email = email;
         this.password = password;
     }
@@ -20,8 +20,8 @@ public class Credential {
         return !this.password.equals(credential.getPassword());
     }
 
-    public Long getId() {
-        return id;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public String getEmail() {
