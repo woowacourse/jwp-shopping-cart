@@ -10,6 +10,6 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new MemberArgumentResolver());
+        resolvers.add(new MemberArgumentResolver(new BasicAuthenticationExtractor()));
     }
 }
