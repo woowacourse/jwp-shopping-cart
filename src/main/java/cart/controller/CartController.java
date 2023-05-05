@@ -6,7 +6,6 @@ import cart.dto.BasicCredentials;
 import cart.dto.CartItemCreateRequest;
 import cart.dto.CartItemResponse;
 import cart.service.CartService;
-import cart.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -24,19 +23,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user/cartItems")
 public class CartController {
 
-    private final UserService userService;
     private final CartService cartService;
 
-    public CartController(UserService userService, CartService cartService) {
-        this.userService = userService;
+    public CartController(CartService cartService) {
         this.cartService = cartService;
     }
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
     public ApiResponse<List<CartItemResponse>> readCartItems(@BasicAuth BasicCredentials basicCredentials) {
-        userService.authorizeUser(basicCredentials.getEmail(), basicCredentials.getPassword());
-
         List<CartItemResponse> cartItems = cartService.getCartItems(basicCredentials.getEmail()).stream()
                 .map(CartItemResponse::from)
                 .collect(Collectors.toList());
@@ -47,8 +42,6 @@ public class CartController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public ApiResponse<Void> createCartItem(@RequestBody @Valid CartItemCreateRequest request,
                                       @BasicAuth BasicCredentials basicCredentials) {
-        userService.authorizeUser(basicCredentials.getEmail(), basicCredentials.getPassword());
-
         cartService.addCartItem(basicCredentials.getEmail(), request.getProductId());
         return ApiResponse.from(HttpStatus.CREATED);
     }
@@ -57,8 +50,6 @@ public class CartController {
     @ResponseStatus(code = HttpStatus.OK)
     public ApiResponse<Void> deleteCartItem(@PathVariable(value = "cartItemId") Long cartItemId,
                                       @BasicAuth BasicCredentials basicCredentials) {
-        userService.authorizeUser(basicCredentials.getEmail(), basicCredentials.getPassword());
-
         cartService.deleteCartItem(cartItemId);
         return ApiResponse.from(HttpStatus.OK);
     }

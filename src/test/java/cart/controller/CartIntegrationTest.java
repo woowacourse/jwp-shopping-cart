@@ -191,4 +191,5 @@ public class CartIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartItemCreateRequest).post("/user/cartItems");
     }
+
 }
