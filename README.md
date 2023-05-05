@@ -12,11 +12,11 @@
 ```
 
 ### 장바구니
--[x] 장바구니에 상품 추가
+- [x] 장바구니에 상품 추가
 - [x] 장바구니에 담긴 상품 제거
 
 #### 예외
-- [ ] 장바구니에 id가 null인 상품을 넣으려하면 예외가 발생한다.
+- [x] 장바구니에 id가 null인 상품을 넣으려하면 예외가 발생한다.
 
 ## API
 ### 상품 관리 API
@@ -35,16 +35,15 @@
 | 조회 | GET    | /members |
 
 ### 장바구니 API
-| 기능        | Method | URL                             |
-|-----------|--------|---------------------------------|
-| 상품 여러개 추가 | POST   | /carts                          |
-| 상품 하나 추가  | POST   | /carts/{member_id} |
-| 상품 조회     | GET    | /carts/{member_id}              |
-| 상품 제거     | DELETE | /carts/{member_id}?{product_id} |
+| 기능      | Method | URL                             |
+|---------|--------|---------------------------------|
+| 장바구니 저장 | POST   | /carts                          |
+| 상품 하나 추가 | POST   | /carts/{member_id} |
+| 상품 조회   | GET    | /carts/{member_id}              |
+| 상품 제거   | DELETE | /carts/{member_id}?{product_id} |
 
 #### 인증
 - [x] Basic 인증 방식으로 인증한다.
-
 
 ## UI
 ### 상품 목록 페이지
