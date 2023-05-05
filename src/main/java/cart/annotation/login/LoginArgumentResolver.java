@@ -60,7 +60,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
             Optional<MemberEntity> member = memberDao.findByEmail(memberEmail);
 
             if (member.isEmpty()) {
-                throw new LoginException("아이디가 일치하지 않습니다. 다시 시도해주세요.");
+                throw new LoginException("이메일이 일치하지 않습니다. 다시 시도해주세요.");
             }
 
             MemberEntity retrievedMember = member.get();
