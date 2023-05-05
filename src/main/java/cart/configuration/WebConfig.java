@@ -14,8 +14,10 @@ public class WebConfig implements WebMvcConfigurer {
     private final BasicAuthorizationArgumentResolver basicAuthorizationArgumentResolver;
     private final AuthInterceptor authInterceptor;
 
-    public WebConfig(final BasicAuthorizationArgumentResolver basicAuthorizationArgumentResolver,
-        final AuthInterceptor authInterceptor) {
+    public WebConfig(
+        final BasicAuthorizationArgumentResolver basicAuthorizationArgumentResolver,
+        final AuthInterceptor authInterceptor
+    ) {
         this.basicAuthorizationArgumentResolver = basicAuthorizationArgumentResolver;
         this.authInterceptor = authInterceptor;
     }

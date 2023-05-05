@@ -12,6 +12,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public final class BasicAuthorizationArgumentResolver implements HandlerMethodArgumentResolver {
 
+    private static final String AUTH_INFO_ATTRIBUTE_KEY = "AuthInfo";
+
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.hasParameterAnnotation(BasicAuthorization.class);
@@ -28,7 +30,7 @@ public final class BasicAuthorizationArgumentResolver implements HandlerMethodAr
         if (httpServletRequest == null) {
             throw new RuntimeException("httpServletRequest 가 존재하지 않습니다.");
         }
-        final String authInfo = (String) httpServletRequest.getAttribute("AuthInfo");
+        final String authInfo = (String) httpServletRequest.getAttribute(AUTH_INFO_ATTRIBUTE_KEY);
         final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor(authInfo);
         return new BasicAuthInfo(extractor.extractUsername(), extractor.extractPassword());
     }

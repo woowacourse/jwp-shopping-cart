@@ -17,12 +17,4 @@ public final class BasicAuthInfo {
     public String getPassword() {
         return password;
     }
-
-    @Override
-    public String toString() {
-        return "BasicAuthInfo{" +
-            "email='" + email + '\'' +
-            ", password='" + password + '\'' +
-            '}';
-    }
 }
