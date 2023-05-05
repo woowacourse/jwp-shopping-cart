@@ -50,8 +50,7 @@ class CartControllerTest {
                 .given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when().get("/cart/items")
-                .then().log().all()
-                .extract();
+                .then().log().all().extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
@@ -71,33 +70,27 @@ class CartControllerTest {
 
         Optional<ProductEntity> productEntity = productJdbcDao.findById(Long.valueOf(id));
 
-        Assertions.assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(productEntity.isEmpty()).isFalse()
-        );
+        Assertions.assertAll(() -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()), () -> assertThat(productEntity.isEmpty()).isFalse());
 
     }
 
     @Test
     @DisplayName("/cart/items/{product_id} delete요청 204을 응답한다.")
-    void cartDeleteProduct() throws JsonProcessingException {
+    void cartDeleteProduct() {
         Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 1000L));
 
 
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().delete("/cart/items" + id)
+                .when().delete("/cart/items/" + id)
                 .then().log().all()
                 .extract();
 
 
         List<CartEntity> cartEntities = cartJdbcDao.findByMemberId(Long.valueOf(id));
 
-        Assertions.assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(cartEntities.size()).isEqualTo(0)
-        );
+        Assertions.assertAll(() -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()), () -> assertThat(cartEntities.size()).isEqualTo(0));
 
     }
 }

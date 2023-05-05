@@ -6,7 +6,9 @@ import cart.controller.dto.request.MemberIdRequest;
 import cart.controller.dto.response.CartItemResponse;
 import cart.domain.dto.CartDto;
 import cart.domain.dto.ProductDto;
-import cart.service.CartService;
+import cart.service.cart.CartCreateService;
+import cart.service.cart.CartDeleteService;
+import cart.service.cart.CartReadService;
 import cart.service.product.ProductReadService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +21,20 @@ import java.util.stream.Collectors;
 @RequestMapping("/cart/items")
 public class CartController {
 
-    private final CartService cartService;
+    private final CartCreateService cartCreateService;
+    private final CartReadService cartReadService;
+    private final CartDeleteService cartDeleteService;
     private final ProductReadService productReadService;
 
-    public CartController(final CartService cartService, final ProductReadService productReadService) {
-        this.cartService = cartService;
+    public CartController(
+            final CartCreateService cartCreateService,
+            final CartReadService cartReadService,
+            final CartDeleteService cartDeleteService,
+            final ProductReadService productReadService
+    ) {
+        this.cartCreateService = cartCreateService;
+        this.cartReadService = cartReadService;
+        this.cartDeleteService = cartDeleteService;
         this.productReadService = productReadService;
     }
 
@@ -32,13 +43,13 @@ public class CartController {
             @RequestBody @Valid final CartItemCreationRequest productId,
             @Authority final MemberIdRequest memberId
     ) {
-        cartService.addProduct(productId, memberId);
+        cartCreateService.addProduct(productId, memberId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> findIdMemberId(@Authority final MemberIdRequest memberId) {
-        final List<CartDto> cartDtos = cartService.getProducts(memberId);
+        final List<CartDto> cartDtos = cartReadService.getProducts(memberId);
         final List<ProductDto> productDtos = productReadService.findById(cartDtos);
 
         List<CartItemResponse> cartItemResponses = productDtos.stream()
@@ -58,7 +69,7 @@ public class CartController {
             @PathVariable("id") Long productId,
             @Authority final MemberIdRequest memberId
     ) {
-        cartService.delete(memberId, productId);
+        cartDeleteService.delete(memberId, productId);
         return ResponseEntity.noContent().build();
     }
 }
