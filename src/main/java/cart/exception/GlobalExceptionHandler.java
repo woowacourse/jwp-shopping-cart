@@ -1,6 +1,7 @@
 package cart.exception;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +24,12 @@ public class GlobalExceptionHandler {
         Map<String, List<String>> errorsResult = Map.of("errors", errors);
 
         return ResponseEntity.badRequest().body(errorsResult);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleAuthException(AuthException e) {
+        System.out.println(e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
     @ExceptionHandler
