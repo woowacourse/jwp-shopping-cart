@@ -61,7 +61,7 @@ public class Product {
 
     private void validatePrice(int price) {
         if (price < PRICE_MINIMUM || price > PRICE_MAXIMUM) {
-            throw new IllegalArgumentException("유효한 상품 금액이 아닙니다.");
+            throw new IllegalArgumentException("유효한 상품 금액이 아닙니다");
         }
     }
 }

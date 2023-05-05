@@ -21,6 +21,7 @@ public class ExceptionAdvice {
                 .getAllErrors().stream()
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("예외 메시지 정보가 존재하지 않습니다."));
+        // TODO Null값일 경우 어떤 필드인지 알려주기
         log.error("MethodArgumentNotValid message={}", foundError.getDefaultMessage());
         return new ErrorDto(foundError.getDefaultMessage());
     }
