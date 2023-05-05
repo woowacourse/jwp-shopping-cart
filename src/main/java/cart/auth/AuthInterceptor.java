@@ -12,7 +12,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             throws Exception {
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null) {
-            throw new AuthenticationException("권한이 없습니다.");
+            throw new AuthenticationException("인증되지 않았습니다.");
         }
         return true;
     }
