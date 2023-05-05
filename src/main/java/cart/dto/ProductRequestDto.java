@@ -1,5 +1,6 @@
 package cart.dto;
 
+import java.math.BigDecimal;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
@@ -16,9 +17,9 @@ public class ProductRequestDto {
 
     @NotNull(message = "상품의 가격은 비어있을 수 없습니다.")
     @Range(min = 0, max = 100_000_000, message = "상품 가격은 {min} ~ {max}원까지 가능합니다.")
-    private final Long price;
+    private final BigDecimal price;
 
-    public ProductRequestDto(String name, String image, Long price) {
+    public ProductRequestDto(String name, String image, BigDecimal price) {
         this.name = name;
         this.image = image;
         this.price = price;
@@ -32,7 +33,7 @@ public class ProductRequestDto {
         return image;
     }
 
-    public long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 

@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Product;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.DataAccessException;
@@ -10,67 +9,66 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class ProductDao {
 
-    private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final RowMapper<Product> productRowMapper = (rs, rowNum) -> {
-        return new Product(
+    private static final RowMapper<ProductEntity> productRowMapper = (rs, rowNum) -> new ProductEntity(
                 rs.getLong("product_id"),
                 rs.getString("name"),
-                rs.getString("image"),
-                rs.getLong("price")
+                rs.getString("image_url"),
+                rs.getBigDecimal("price")
         );
-    };
+
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public ProductDao(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long save(Product product) {
-        String sql = "insert into PRODUCT(name, image, price) values (:name,:image,:price)";
+    public Long insert(ProductEntity productEntity) {
+        String sql = "insert into PRODUCT(name, image_url, price) values (:name,:image_url,:price)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("name", product.getName())
-                .addValue("image", product.getImage())
-                .addValue("price", product.getPrice());
+                .addValue("name", productEntity.getName())
+                .addValue("image_url", productEntity.getImageUrl())
+                .addValue("price", productEntity.getPrice());
 
         jdbcTemplate.update(sql, paramSource, keyHolder);
 
         return keyHolder.getKey().longValue();
     }
 
-    public List<Product> findAllProducts() {
+    public List<ProductEntity> findAll() {
         String sql = "select * from PRODUCT";
         return jdbcTemplate.query(sql, productRowMapper);
     }
 
-    public Optional<Product> findProductById(long id) {
+    public Optional<ProductEntity> findById(long id) {
         String sql = "select * from PRODUCT where product_id = :product_id";
 
         SqlParameterSource paramSource = new MapSqlParameterSource().addValue("product_id", id);
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, paramSource, productRowMapper));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, paramSource, productRowMapper));
         } catch (DataAccessException e) {
             return Optional.empty();
         }
     }
 
-    public void updateProduct(Product product) {
-        String sql = "update PRODUCT set name = :name, image = :image, price = :price where product_id = :product_id";
+    public void updateProduct(ProductEntity productEntity) {
+        String sql = "update PRODUCT set name = :name, image_url = :image_url, price = :price where product_id = :product_id";
         SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("product_id", product.getProductId())
-                .addValue("name", product.getName())
-                .addValue("image", product.getImage())
-                .addValue("price", product.getPrice());
+                .addValue("product_id", productEntity.getId())
+                .addValue("name", productEntity.getName())
+                .addValue("image_url", productEntity.getImageUrl())
+                .addValue("price", productEntity.getPrice());
 
         jdbcTemplate.update(sql, paramSource);
     }
 
-    public void deleteProduct(long productId) {
+    public void deleteProduct(Long productId) {
         String sql = "delete from PRODUCT where product_id = :product_id";
         SqlParameterSource paramSource = new MapSqlParameterSource()
                 .addValue("product_id", productId);
