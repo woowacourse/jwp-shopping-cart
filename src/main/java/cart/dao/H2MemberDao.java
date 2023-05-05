@@ -52,8 +52,8 @@ public class H2MemberDao implements MemberDao {
     }
 
     public MemberEntity update(MemberEntity entity) {
-        String sql = "UPDATE member SET email = ?, password = ?, name = ?, phone = ? WHERE id = ?";
-        jdbcTemplate.update(sql, entity.getEmail(), entity.getPassword(), entity.getName(), entity.getPhone());
+        String sql = "UPDATE member SET email = ?, password = ?, name = ?, phone = ?, updated_at = ? WHERE id = ?";
+        jdbcTemplate.update(sql, entity.getEmail(), entity.getPassword(), entity.getName(), entity.getPhone(), entity.getUpdatedAt(), entity.getId());
         return entity;
     }
 

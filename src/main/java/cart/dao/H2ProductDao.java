@@ -50,8 +50,8 @@ public class H2ProductDao implements ProductDao {
 
     @Override
     public ProductEntity update(ProductEntity entity) {
-        String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
-        jdbcTemplate.update(sql, entity.getName(), entity.getImage(), entity.getPrice(), entity.getId());
+        String sql = "UPDATE product SET name = ?, image = ?, price = ?, updated_at = ? WHERE id = ?";
+        jdbcTemplate.update(sql, entity.getName(), entity.getImage(), entity.getPrice(), entity.getUpdatedAt(), entity.getId());
         return entity;
     }
 

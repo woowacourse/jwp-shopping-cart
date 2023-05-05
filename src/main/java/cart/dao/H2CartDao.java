@@ -53,7 +53,7 @@ public class H2CartDao implements CartDao {
 
     public CartEntity update(CartEntity entity) {
         String sql = "UPDATE cart SET count = ?, updated_at = ? WHERE id = ?";
-        jdbcTemplate.update(sql, entity.getCount(), Timestamp.valueOf(LocalDateTime.now()), entity.getId());
+        jdbcTemplate.update(sql, entity.getCount(), entity.getUpdatedAt(), entity.getId());
         return entity;
     }
 

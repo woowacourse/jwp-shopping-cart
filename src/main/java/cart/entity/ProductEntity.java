@@ -11,7 +11,7 @@ public class ProductEntity {
     private String image;
     private long price;
     private final Timestamp createdAt;
-    private final Timestamp updatedAt;
+    private Timestamp updatedAt;
 
     public ProductEntity(Long id, String name, String image, long price, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
@@ -31,6 +31,7 @@ public class ProductEntity {
         this.name = productRequest.getName();
         this.image = productRequest.getImage();
         this.price = productRequest.getPrice();
+        this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
     }
 
     public Long getId() {

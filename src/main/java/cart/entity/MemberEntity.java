@@ -3,6 +3,7 @@ package cart.entity;
 import cart.dto.request.MemberRequest;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class MemberEntity {
     private final Long id;
@@ -11,7 +12,7 @@ public class MemberEntity {
     private String name;
     private String phone;
     private final Timestamp createdAt;
-    private final Timestamp updatedAt;
+    private Timestamp updatedAt;
 
     public MemberEntity(Long id, String email, String password, String name, String phone, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
@@ -43,11 +44,11 @@ public class MemberEntity {
         return phone;
     }
 
-    private Timestamp getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    private Timestamp getUpdatedAt() {
+    public Timestamp getUpdatedAt() {
         return updatedAt;
     }
 
@@ -55,7 +56,7 @@ public class MemberEntity {
         this.name = memberRequest.getName();
         this.phone = memberRequest.getPhone();
         this.email = memberRequest.getEmail();
-        // TODO : password 정책
         this.password = memberRequest.getPassword();
+        this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
     }
 }

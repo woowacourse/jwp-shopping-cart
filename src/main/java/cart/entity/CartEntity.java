@@ -1,6 +1,7 @@
 package cart.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class CartEntity {
     private final Long id;
@@ -8,7 +9,7 @@ public class CartEntity {
     private final Long productId;
     private int count;
     private final Timestamp createdAt;
-    private final Timestamp updatedAt;
+    private Timestamp updatedAt;
 
     public CartEntity(Long id, Long memberId, Long productId, int count, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
@@ -45,5 +46,6 @@ public class CartEntity {
 
     public void replace(int count) {
         this.count = count;
+        this.updatedAt = Timestamp.valueOf(LocalDateTime.now());
     }
 }
