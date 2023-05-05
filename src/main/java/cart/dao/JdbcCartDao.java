@@ -3,6 +3,8 @@ package cart.dao;
 import cart.entity.CartEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +27,16 @@ public class JdbcCartDao implements CartDao {
         this.insertActor = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart")
                 .usingGeneratedKeyColumns("id");
+    }
+
+
+    @Override
+    public Long insert(final Long userId, final Long productId) {
+        final SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("user_id", userId)
+                .addValue("product_id", productId);
+
+        return insertActor.executeAndReturnKey(params).longValue();
     }
 
     @Override
