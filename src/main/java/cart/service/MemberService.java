@@ -1,7 +1,10 @@
 package cart.service;
 
 import cart.dao.MemberDao;
+import cart.dto.MemberAuthDto;
 import cart.dto.response.MemberResponse;
+import cart.entity.MemberEntity;
+import cart.exception.MemberNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -18,8 +21,15 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public List<MemberResponse> findMembers() {
-        return memberDao.findAll().stream()
+        return memberDao.findAll()
+                .stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public MemberEntity findMember(final MemberAuthDto memberAuthDto) {
+        return memberDao.findByEmailAndPassword(memberAuthDto.getEmail(), memberAuthDto.getPassword())
+                .orElseThrow(() -> new MemberNotFoundException("등록되지 않은 회원입니다."));
     }
 }

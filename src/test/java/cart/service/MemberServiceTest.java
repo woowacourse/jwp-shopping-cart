@@ -1,15 +1,21 @@
 package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.MemberDao;
+import cart.dto.MemberAuthDto;
 import cart.dto.response.MemberResponse;
 import cart.entity.MemberEntity;
+import cart.exception.MemberNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,5 +48,34 @@ class MemberServiceTest {
                 MemberResponse.from(memberB)
         );
         assertThat(objectMapper.writeValueAsString(result)).isEqualTo(objectMapper.writeValueAsString(expected));
+    }
+
+    @Nested
+    @DisplayName("이메일과 비밀번호로 멤버 조회 시")
+    class FindMember {
+
+        @Test
+        @DisplayName("멤버가 존재하면 멤버를 반환한다.")
+        void findMember() {
+            final MemberAuthDto memberAuthDto = new MemberAuthDto("a@a.com", "password");
+            given(memberDao.findByEmailAndPassword(any(), any())).willReturn(
+                    Optional.of(new MemberEntity(1L, "a@a.com", "password"))
+            );
+
+            final MemberEntity member = memberService.findMember(memberAuthDto);
+
+            assertThat(member.getId()).isEqualTo(1L);
+        }
+
+        @Test
+        @DisplayName("멤버가 존재하지 않으면 예외를 던진다.")
+        void findMemberWithNotExist() {
+            final MemberAuthDto memberAuthDto = new MemberAuthDto("a@a.com", "password");
+            given(memberDao.findByEmailAndPassword(any(), any())).willReturn(Optional.empty());
+
+            assertThatThrownBy(() -> memberService.findMember(memberAuthDto))
+                    .isInstanceOf(MemberNotFoundException.class)
+                    .hasMessage("등록되지 않은 회원입니다.");
+        }
     }
 }
