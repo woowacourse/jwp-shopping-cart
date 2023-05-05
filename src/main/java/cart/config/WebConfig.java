@@ -1,15 +1,11 @@
 package cart.config;
 
 import cart.global.annotation.LogInArgumentResolver;
-import cart.global.filter.AuthenticationFilter;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.servlet.Filter;
 import java.util.List;
 
 @Configuration
@@ -24,14 +20,5 @@ public class WebConfig implements WebMvcConfigurer {
     public void addViewControllers(final ViewControllerRegistry registry) {
         registry.addViewController("/cart")
                 .setViewName("cart");
-    }
-
-    @Bean
-    public FilterRegistrationBean authorizationFilter() {
-        final FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
-        filterFilterRegistrationBean.setFilter(new AuthenticationFilter());
-        filterFilterRegistrationBean.addUrlPatterns("/*");
-
-        return filterFilterRegistrationBean;
     }
 }
