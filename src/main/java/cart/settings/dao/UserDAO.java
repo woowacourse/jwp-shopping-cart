@@ -1,17 +1,19 @@
 package cart.settings.dao;
 
 import cart.settings.domain.User;
+import cart.settings.dto.UserRequestDTO;
+
 import java.util.List;
 
 public interface UserDAO {
-    
-    void insert(User user);
-    
-    boolean isExist(final String email);
-    
-    boolean isCorrectPassword(User user);
-    
-    User findByEmail(final String email);
-    
+
+    boolean isExist(UserRequestDTO userRequestDTO);
+
+    User create(UserRequestDTO userRequestDTO);
+
+    User find(UserRequestDTO userRequestDTO);
+
     List<User> findAll();
+
+    void delete(User user);
 }

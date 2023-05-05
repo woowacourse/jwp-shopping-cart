@@ -19,16 +19,12 @@ class NameTest {
     @Test
     @DisplayName("이름이 10자를 초과하면 예외가 발생한다.")
     void validateLength() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Name("스파게티스파게티티티티");
-        });
+        assertThrows(IllegalArgumentException.class, () -> new Name("스파게티스파게티티티티"));
     }
     
     @Test
     @DisplayName("이름이 비어있으면 예외가 발생한다.")
     void validateEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Name("");
-        });
+        assertThrows(IllegalArgumentException.class, () -> new Name(""));
     }
 }

@@ -14,7 +14,8 @@ INSERT INTO products (name,image,price) VALUES('피자','https://images.unsplash
 DROP TABLE users if exists;
 
 CREATE TABLE users (
-    email       VARCHAR(255)    NOT NULL PRIMARY KEY,
+    id         BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    email       VARCHAR(255)    NOT NULL,
     password    VARCHAR(255)    NOT NULL
 );
 
@@ -29,8 +30,8 @@ CREATE TABLE cart_items (
 
 CREATE TABLE carts (
     id         BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_email VARCHAR(255)    NOT NULL,
+    user_id     BIGINT           NOT NULL,
     cart_id   BIGINT          NOT NULL,
-    FOREIGN KEY (user_email) REFERENCES users (email),
+    FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (cart_id) REFERENCES cart_items (id)
 );
