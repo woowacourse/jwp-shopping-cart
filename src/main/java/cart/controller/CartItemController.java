@@ -33,18 +33,18 @@ public class CartItemController {
         this.cartItemService = cartItemService;
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/{productId}")
-    public void create(@PathVariable Long productId, HttpServletRequest request) {
-        Long memberId = findMemberId(request);
-        cartItemService.add(new CartItem(memberId, productId));
-    }
-
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<CartItemDto> get(HttpServletRequest request) {
         Long memberId = findMemberId(request);
         return cartItemService.findAllByMemberId(memberId);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/{productId}")
+    public void create(@PathVariable Long productId, HttpServletRequest request) {
+        Long memberId = findMemberId(request);
+        cartItemService.add(new CartItem(memberId, productId));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
