@@ -1,9 +1,12 @@
 package cart.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import cart.domain.Product;
@@ -12,6 +15,7 @@ import cart.domain.Product;
 public class CartDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<Product> cartItemRowMapper = (resultSet, rowNum) -> new Product(
             resultSet.getLong("id"),
             resultSet.getString("name"),
@@ -21,6 +25,9 @@ public class CartDao {
 
     public CartDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Product> findCartItemsByMemberEmail(final String email) {
@@ -33,12 +40,15 @@ public class CartDao {
         return jdbcTemplate.query(sql, cartItemRowMapper, email);
     }
 
-    public void saveCartItemByMemberEmail(final String email, final Long productId) {
+    public Long saveCartItemByMemberEmail(final String email, final Long productId) {
         String selectMemberIdSql = "SELECT id FROM member WHERE email = ?";
         Long memberId = jdbcTemplate.queryForObject(selectMemberIdSql, Long.class, email);
 
-        String insertCartsql = "INSERT INTO cart (member_id, product_id) VALUES (?, ?)";
-        jdbcTemplate.update(insertCartsql, memberId, productId);
+        Map<String, Object> params = new HashMap<>();
+        params.put("member_id", memberId);
+        params.put("product_id", productId);
+
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public void deleteCartItem(final Long cartId) {
