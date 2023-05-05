@@ -24,7 +24,11 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findByEmail(final String email) {
-        return userDao.findByEmail(email);
+        final User user = userDao.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("존재하지 않는 사용자 email입니다.");
+        }
+        return user;
     }
 
     @Transactional(readOnly = true)
