@@ -26,7 +26,7 @@ public class UserService {
     public User findByEmail(final String email) {
         final User user = userDao.findByEmail(email);
         if (user == null) {
-            throw new IllegalArgumentException("존재하지 않는 사용자 email입니다.");
+            throw new IllegalArgumentException("존재하지 않는 사용자 email 입니다.");
         }
         return user;
     }
@@ -41,5 +41,4 @@ public class UserService {
             throw new IllegalArgumentException("존재하지 않는 사용자 id 입니다.");
         }
     }
-
 }

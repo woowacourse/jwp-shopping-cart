@@ -20,15 +20,15 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Product>> showProducts() {
-        return ResponseEntity.ok(List.of());
-    }
-
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductRequest request) {
         productService.save(request.getName(), request.getPrice(), request.getImage());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Product>> showProducts() {
+        return ResponseEntity.ok(List.of());
     }
 
     @PutMapping("/{id}")

@@ -33,8 +33,8 @@ class JdbcUserDaoTest {
         final Long id1 = jdbcUserDao.insert(new User("IO@mail.com", "testpassword"));
         final Long id2 = jdbcUserDao.insert(new User("ASH@mail.com", "testpassword"));
 
-        assertThat(jdbcUserDao.findByEmail("IO@mail.com").getUserId()).isEqualTo(id1);
-        assertThat(jdbcUserDao.findByEmail("ASH@mail.com").getUserId()).isEqualTo(id2);
+        assertThat(jdbcUserDao.findByEmail("IO@mail.com").getId()).isEqualTo(id1);
+        assertThat(jdbcUserDao.findByEmail("ASH@mail.com").getId()).isEqualTo(id2);
     }
 
     @Test

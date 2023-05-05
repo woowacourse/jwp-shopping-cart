@@ -26,6 +26,20 @@ public class CartController {
         this.userService = userService;
     }
 
+    @PostMapping("/items")
+    public ResponseEntity<Void> createCartItem(@RequestBody final CartItemRequest cartItemRequset, final HttpServletRequest httpServletRequest) {
+        final Long userId = extractUserId(httpServletRequest);
+        final Long productId = cartItemRequset.getProductId();
+        cartService.save(userId, productId);
+        return ResponseEntity.ok().build();
+    }
+
+    private Long extractUserId(final HttpServletRequest request) {
+        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+        final String email = authInfo.getEmail();
+        return userService.findByEmail(email).getId();
+    }
+
     @GetMapping
     public String getSettingsPage() {
         return "cart";
@@ -35,20 +49,6 @@ public class CartController {
     public ResponseEntity<List<CartItem>> showCartItemList(final HttpServletRequest request) {
         final Long userId = extractUserId(request);
         return ResponseEntity.ok(cartService.findByUserId(userId));
-    }
-
-    private Long extractUserId(final HttpServletRequest request) {
-        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-        final String email = authInfo.getEmail();
-        return userService.findByEmail(email).getUserId();
-    }
-
-    @PostMapping("/items")
-    public ResponseEntity<Void> createCartItem(@RequestBody final CartItemRequest cartItemRequset, final HttpServletRequest httpServletRequest) {
-        final Long userId = extractUserId(httpServletRequest);
-        final Long productId = cartItemRequset.getProductId();
-        cartService.save(userId, productId);
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/items/{id}")

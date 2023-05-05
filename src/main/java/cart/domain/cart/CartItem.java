@@ -1,6 +1,7 @@
 package cart.domain.cart;
 
 public class CartItem {
+    
     private final Long id;
     private final String productName;
     private final int productPrice;

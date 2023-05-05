@@ -1,23 +1,23 @@
-DROP TABLE cart;
-DROP TABLE product;
-DROP TABLE user_list;
+DROP TABLE cart IF EXISTS;
+DROP TABLE product IF EXISTS;
+DROP TABLE user_list IF EXISTS;
 
-CREATE TABLE IF NOT EXISTS product
+CREATE TABLE product
 (
     id    BIGINT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name  VARCHAR(64) NOT NULL,
     price INT         NOT NULL,
     image TEXT
-    );
+);
 
-CREATE TABLE IF NOT EXISTS user_list
+CREATE TABLE user_list
 (
     id       BIGINT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email    VARCHAR(32) NOT NULL,
     password VARCHAR(32) NOT NULL
-    );
+);
 
-CREATE TABLE IF NOT EXISTS cart
+CREATE TABLE cart
 (
     id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id    BIGINT NOT NULL,

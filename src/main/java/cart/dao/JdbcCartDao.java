@@ -12,6 +12,7 @@ import java.util.List;
 
 @Repository
 public class JdbcCartDao implements CartDao {
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
 
@@ -28,7 +29,6 @@ public class JdbcCartDao implements CartDao {
                 .withTableName("cart")
                 .usingGeneratedKeyColumns("id");
     }
-
 
     @Override
     public Long insert(final Long userId, final Long productId) {

@@ -8,9 +8,9 @@ public interface ProductDao {
 
     Long insert(final Product product);
 
-    List<Product> findAll();
-
     Product findById(final long id);
+
+    List<Product> findAll();
 
     void update(final Product product);
 

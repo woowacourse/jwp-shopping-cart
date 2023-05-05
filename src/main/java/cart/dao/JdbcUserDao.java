@@ -13,6 +13,7 @@ import java.util.List;
 
 @Repository
 public class JdbcUserDao implements UserDao {
+    
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
     private final RowMapper<User> userRowMapper = (resultSet, rowNum) ->

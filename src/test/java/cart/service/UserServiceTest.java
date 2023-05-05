@@ -38,7 +38,7 @@ public class UserServiceTest {
 
         final User actual = userService.findByEmail(email);
 
-        assertThat(actual.getUserId()).isEqualTo(id);
+        assertThat(actual.getId()).isEqualTo(id);
     }
 
     @Test

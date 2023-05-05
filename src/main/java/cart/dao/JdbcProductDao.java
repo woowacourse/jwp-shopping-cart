@@ -13,6 +13,7 @@ import java.util.List;
 
 @Repository
 public class JdbcProductDao implements ProductDao {
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
     private final RowMapper<Product> productRowMapper = (resultSet, rowNum) ->
@@ -37,12 +38,6 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public List<Product> findAll() {
-        final String sql = "SELECT * FROM product ORDER BY id ASC";
-        return jdbcTemplate.query(sql, productRowMapper);
-    }
-
-    @Override
     public Product findById(final long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         try {
@@ -50,6 +45,12 @@ public class JdbcProductDao implements ProductDao {
         } catch (final IncorrectResultSizeDataAccessException exception) {
             return null;
         }
+    }
+
+    @Override
+    public List<Product> findAll() {
+        final String sql = "SELECT * FROM product ORDER BY id ASC";
+        return jdbcTemplate.query(sql, productRowMapper);
     }
 
     @Override

@@ -2,22 +2,22 @@ package cart.domain.user;
 
 public class User {
 
-    private final Long userId;
+    private final Long id;
     private final UserEmail email;
     private final UserPassword password;
 
-    public User(String email, String password) {
+    public User(final String email, final String password) {
         this(null, email, password);
     }
 
-    public User(Long userId, String email, String password) {
-        this.userId = userId;
+    public User(final Long userId, final String email, final String password) {
+        this.id = userId;
         this.email = new UserEmail(email);
         this.password = new UserPassword(password);
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
