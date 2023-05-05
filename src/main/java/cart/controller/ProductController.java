@@ -20,7 +20,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody @Valid final ProductRequest productRequest) {
         final long id = productService.save(productRequest);
-        return ResponseEntity.created(URI.create("/admin/" + id)).build();
+        return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @GetMapping
