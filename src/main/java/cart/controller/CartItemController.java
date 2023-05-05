@@ -5,11 +5,14 @@ import cart.domain.cartitem.CartItemService;
 import cart.domain.member.Member;
 import cart.domain.member.MemberService;
 import cart.dto.AuthInfo;
+import cart.dto.CartItemDto;
 import cart.infratstructure.BasicAuthorizationExtractor;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +37,13 @@ public class CartItemController {
     public void create(@PathVariable Long productId, HttpServletRequest request) {
         Long memberId = findMemberId(request);
         cartItemService.add(new CartItem(memberId, productId));
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping
+    public List<CartItemDto> get(HttpServletRequest request) {
+        Long memberId = findMemberId(request);
+        return cartItemService.findAllByMemberId(memberId);
     }
 
     private Long findMemberId(HttpServletRequest request) {
