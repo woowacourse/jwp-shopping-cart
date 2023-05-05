@@ -31,10 +31,10 @@ class AdminServiceTest {
     @Test
     void create_메서드로_productEntity를_저장한다() {
         final ProductEntity productEntity = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
+
         adminService.create(productEntity);
 
         final ProductEntity findEntity = productDao.findByName("modi");
-
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(findEntity.getName()).isEqualTo("modi");
             softAssertions.assertThat(findEntity.getPrice()).isEqualTo(10000);
@@ -48,8 +48,8 @@ class AdminServiceTest {
         productDao.save(productEntity);
 
         final List<ProductEntity> products = adminService.findAll();
-        final ProductEntity foundProduct = products.get(0);
 
+        final ProductEntity foundProduct = products.get(0);
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(products.size()).isEqualTo(1);
             softAssertions.assertThat(foundProduct.getName()).isEqualTo("modi");
