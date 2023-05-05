@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.dto.MemberResponse;
 import cart.dto.ProductResponse;
+import cart.service.CartProductService;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -30,6 +31,9 @@ public class PageControllerTest {
 
     @MockBean
     private MemberService memberService;
+
+    @MockBean
+    private CartProductService cartProductService;
 
     @Autowired
     private MockMvc mockMvc;

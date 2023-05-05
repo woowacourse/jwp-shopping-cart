@@ -41,7 +41,7 @@ class ProductControllerTest {
         given(productService.findAll()).willReturn(List.of(firstProductResponse, secondProductResponse));
 
         RestAssuredMockMvc.given().log().all()
-                .when().get("/admin")
+                .when().get("/products  ")
                 .then().log().all()
                 .status(HttpStatus.OK);
     }
