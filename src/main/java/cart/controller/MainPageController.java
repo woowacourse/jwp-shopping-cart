@@ -45,7 +45,7 @@ public class MainPageController {
     }
 
     @GetMapping("/cart")
-    public String showCart(final Model model) {
+    public String showCart() {
         return "cart";
     }
 }
