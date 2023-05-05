@@ -1,14 +1,12 @@
 package cart.controller;
 
-import cart.auth.BasicAuthorizationExtractor;
 import cart.dto.CartProductDto;
 import cart.dto.CartRequestDto;
-import cart.entity.Member;
 import cart.service.CartService;
+import cart.ui.CartAuthentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
 
@@ -17,32 +15,24 @@ public class CartController {
 
     private final CartService cartService;
 
-    private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
-
     public CartController(CartService cartService) {
         this.cartService = cartService;
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<CartProductDto>> allCarts(HttpServletRequest request) {
-        Member member = basicAuthorizationExtractor.extract(request);
-        String email = member.getEmail();
+    public ResponseEntity<List<CartProductDto>> allCarts(@CartAuthentication String email) {
         List<CartProductDto> carts = cartService.getCartsByEmail(email);
         return ResponseEntity.ok().body(carts);
     }
 
     @PostMapping("/carts")
-    public ResponseEntity<Void> addCart(HttpServletRequest request, @RequestBody CartRequestDto cartRequestDto) {
-        Member member = basicAuthorizationExtractor.extract(request);
-        String email = member.getEmail();
+    public ResponseEntity<Void> addCart(@RequestBody CartRequestDto cartRequestDto, @CartAuthentication String email) {
         int cartId = cartService.addCart(cartRequestDto.getProductId(), email);
         return ResponseEntity.created(URI.create("/carts/" + cartId)).build();
     }
 
     @DeleteMapping("/carts/{cartId}")
-    public ResponseEntity<Void> deleteCart(HttpServletRequest request,@PathVariable int cartId) {
-        Member member = basicAuthorizationExtractor.extract(request);
-        String email = member.getEmail();
+    public ResponseEntity<Void> deleteCart(@PathVariable int cartId, @CartAuthentication String email) {
         cartService.deleteCart(cartId, email);
         return ResponseEntity.noContent().build();
     }
