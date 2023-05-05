@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.entity.MemberEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,8 @@ class MemberServiceTest {
     @DisplayName("findMemberId 성공 테스트")
     @Test
     void findMemberId() {
-        assertDoesNotThrow(() -> memberService.findMemberId("dino96@naver.com", "jjongwa96"));
+        memberService.addMember(new MemberEntity("test@naver.com", "testPassword"));
+        assertDoesNotThrow(() -> memberService.findMemberId("test@naver.com", "testPassword"));
     }
 
     @DisplayName("findMemberId 실패 테스트")

@@ -22,6 +22,10 @@ public class MemberService {
         return memberDao.selectAllMembers();
     }
 
+    public int addMember(MemberEntity memberEntity) {
+        return memberDao.addMember(memberEntity);
+    }
+
     public int findMemberId(String email, String password) {
         if (!memberDao.isMemberExist(email, password)) {
             throw new IllegalArgumentException("해당하는 유저가 존재하지 않습니다.");
