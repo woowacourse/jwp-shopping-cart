@@ -23,7 +23,7 @@ public class ProductRestController {
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody @Valid ProductRequest productRequest) {
         Long productId = productService.create(productRequest);
-        return ResponseEntity.created(URI.create("/products" + productId)).build();
+        return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{id}")

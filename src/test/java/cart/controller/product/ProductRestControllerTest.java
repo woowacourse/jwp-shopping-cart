@@ -1,6 +1,5 @@
-package cart.controller;
+package cart.controller.product;
 
-import cart.controller.product.ProductRestController;
 import cart.service.product.ProductService;
 import cart.service.product.dto.ProductRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,9 +12,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static cart.fixture.ProductFixture.CHICKEN_RESPONSE;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SuppressWarnings("NonAsciiCharacters")
 @WebMvcTest(ProductRestController.class)
@@ -38,6 +37,7 @@ class ProductRestControllerTest {
         mockMvc.perform(post("/products")
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(header().exists("Location"))
                 .andExpect(status().isCreated());
     }
 
@@ -80,7 +80,7 @@ class ProductRestControllerTest {
         ProductRequest request = new ProductRequest("img", "name", 1000);
         String jsonRequest = objectMapper.writeValueAsString(request);
 
-        when(productService.update(any(), any())).thenReturn(CHICKEN_RESPONSE);
+        given(productService.update(any(), any())).willReturn(CHICKEN_RESPONSE);
 
         mockMvc.perform(put("/products/{id}", 1L)
                         .content(jsonRequest)
@@ -98,6 +98,7 @@ class ProductRestControllerTest {
     @Test
     void 조회_요청() throws Exception {
         mockMvc.perform(get("/"))
+                .andExpect(view().name("index"))
                 .andExpect(status().isOk());
     }
 }
