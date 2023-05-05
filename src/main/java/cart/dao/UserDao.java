@@ -8,5 +8,7 @@ public interface UserDao {
 
     Long insert(User user);
 
+    User findByEmail(String email);
+
     List<User> findAll();
 }

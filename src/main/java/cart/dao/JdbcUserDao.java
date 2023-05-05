@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.user.User;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -32,6 +33,16 @@ public class JdbcUserDao implements UserDao {
     public Long insert(final User user) {
         final SqlParameterSource parameters = new BeanPropertySqlParameterSource(user);
         return insertActor.executeAndReturnKey(parameters).longValue();
+    }
+
+    @Override
+    public User findByEmail(final String email) {
+        final String sql = "SELECT * FROM user_list WHERE email = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, userRowMapper, email);
+        } catch (final IncorrectResultSizeDataAccessException exception) {
+            return null;
+        }
     }
 
     @Override
