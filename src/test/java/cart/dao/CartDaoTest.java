@@ -37,7 +37,6 @@ class CartDaoTest {
         productDao = new ProductDao(namedParameterJdbcTemplate);
     }
 
-    // TODO: 2023-05-03 참조제약 때문에 cart의 setup이 너무 많아져 테스트의 독립성 저하되는데 어떡하나
     @Test
     @Sql("/truncate.sql")
     void save_and_findById_success() {
@@ -50,8 +49,6 @@ class CartDaoTest {
         assertThat(cartDao.findByMemberId(cart.getMemberId())).isEqualTo(cart);
     }
 
-    // TODO: 2023-05-03 cart에 들어가는 product의 id는 null이 아니라고 가정하는데, 이래도 되나? 
-    // TODO: 2023-05-03 참조키로 매핑하는 게 좋나 굳이 필요없나?질문
     @Test
     @Sql("/truncate.sql")
     void insertProduct_success() {

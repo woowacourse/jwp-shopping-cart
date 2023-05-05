@@ -38,7 +38,6 @@ public class CartDao {
 
         System.out.println(products);
 
-        // TODO: 2023-05-03 질문 어떻게 효율적으로 쿼리해오나 cart, cart_product가 구조 효율적인가/확장성 있나
         return new Cart(memberId, products);
     }
 

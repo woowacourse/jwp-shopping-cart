@@ -53,6 +53,4 @@ class CartTest {
         //then
         assertThat(cart.getProducts()).isEmpty();
     }
-
-    // TODO: 2023-05-02 remove 시 없는 상품일 케이스 작성
 }
