@@ -6,6 +6,7 @@ import cart.service.ProductService;
 import cart.service.dto.ProductSaveDto;
 import cart.service.dto.ProductUpdateDto;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,13 +39,13 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(
             @Valid @RequestBody final ProductUpdateRequest productUpdateRequest,
-            @PathVariable Long id) {
+            @NotNull @PathVariable Long id) {
         this.productService.update(ProductUpdateDto.createWithIdAndRequest(id, productUpdateRequest));
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@NotNull @PathVariable Long id) {
         this.productService.deleteById(id);
         return ResponseEntity.noContent().build();
 
