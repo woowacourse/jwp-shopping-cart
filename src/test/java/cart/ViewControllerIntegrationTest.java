@@ -57,4 +57,15 @@ class ViewControllerIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
+
+    @Test
+    @DisplayName("/cart로 get 요청을 보내면 ok 상태코드를 반환한다.")
+    void cartTest() {
+        RestAssured.given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/cart")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
 }
