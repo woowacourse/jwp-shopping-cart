@@ -7,9 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Member {
+public class Email {
 
-    private final Long id;
-    private final Email email;
-    private final Password password;
+    private final String value;
 }
