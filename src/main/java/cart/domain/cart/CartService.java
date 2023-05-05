@@ -5,8 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import cart.domain.exception.DbNotAffectedException;
-import cart.domain.exception.EntityNotFoundException;
-import cart.domain.exception.UnexpectedDomainException;
+import cart.domain.exception.EntityMappingException;
 import cart.domain.persistence.ProductDto;
 import cart.domain.persistence.dao.CartDao;
 import cart.domain.persistence.dao.MemberDao;
@@ -28,16 +27,16 @@ public class CartService {
     }
 
     public void addProductByEmail(final long productId, final String email) {
-        final MemberEntity memberEntity = memberDao.findByEmail(email).orElseThrow(UnexpectedDomainException::new);
+        final MemberEntity memberEntity = memberDao.findByEmail(email).orElseThrow(IllegalArgumentException::new);
         final long memberId = memberEntity.getMemberId();
         if (!productDao.existsById(productId)) {
-            throw new EntityNotFoundException("존재하지 않는 product id입니다.");
+            throw new EntityMappingException("존재하지 않는 product id입니다.");
         }
         cartDao.save(new CartEntity(memberId, productId));
     }
 
     public List<ProductDto> findProductsByEmail(final String email) {
-        final MemberEntity memberEntity = memberDao.findByEmail(email).orElseThrow(UnexpectedDomainException::new);
+        final MemberEntity memberEntity = memberDao.findByEmail(email).orElseThrow(IllegalArgumentException::new);
         final long memberId = memberEntity.getMemberId();
         return cartDao.findAllByMemberId(memberId);
     }
@@ -49,7 +48,7 @@ public class CartService {
 
     private void assertRowChanged(final int rowAffected) {
         if (rowAffected < 1) {
-            throw new DbNotAffectedException("변경된 정보가 없습니다.");
+            throw new DbNotAffectedException();
         }
     }
 }

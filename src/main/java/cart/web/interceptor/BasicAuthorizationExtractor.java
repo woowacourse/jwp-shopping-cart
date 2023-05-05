@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
+import cart.web.AuthorizationException;
 import cart.web.cart.dto.AuthInfo;
 
 @Component

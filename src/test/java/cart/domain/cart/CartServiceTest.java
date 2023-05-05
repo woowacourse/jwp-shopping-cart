@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import cart.domain.exception.DbNotAffectedException;
-import cart.domain.exception.UnexpectedDomainException;
 import cart.domain.persistence.ProductDto;
 import cart.domain.persistence.dao.CartDao;
 import cart.domain.persistence.dao.MemberDao;
@@ -63,7 +62,7 @@ class CartServiceTest {
         memberDao.save(new MemberEntity(email, password));
         final long chickenId = productDao.save(new ProductEntity("chicken", 30000, "https://a.com"));
 
-        assertThrows(UnexpectedDomainException.class,
+        assertThrows(IllegalArgumentException.class,
             () -> cartService.addProductByEmail(chickenId, "b@a.com"));
     }
 
@@ -73,7 +72,7 @@ class CartServiceTest {
         final String password = "password1";
         memberDao.save(new MemberEntity(email, password));
 
-        assertThrows(UnexpectedDomainException.class,
+        assertThrows(IllegalArgumentException.class,
             () -> cartService.findProductsByEmail("b@a.com"));
     }
 

@@ -43,7 +43,7 @@ public class AdminService {
 
     private void assertRowChanged(final int rowAffected) {
         if (rowAffected < 1) {
-            throw new DbNotAffectedException("변경된 정보가 없습니다.");
+            throw new DbNotAffectedException();
         }
     }
 }

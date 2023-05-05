@@ -14,13 +14,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import cart.domain.exception.DbNotAffectedException;
 import cart.domain.exception.EntityMappingException;
-import cart.domain.exception.EntityNotFoundException;
-import cart.web.interceptor.AuthorizationException;
 
 @ControllerAdvice
 public class ExceptionAdvice {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleAuthorizationException(final AuthorizationException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
+    }
 
     @ExceptionHandler
     public ResponseEntity<String> handleDataBindException(final MethodArgumentNotValidException exception) {
@@ -33,11 +36,11 @@ public class ExceptionAdvice {
 
     @ExceptionHandler
     public ResponseEntity<String> handleDbNotAffectedException(final DbNotAffectedException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
-    @ExceptionHandler({AuthorizationException.class, EntityMappingException.class, EntityNotFoundException.class})
-    public ResponseEntity<String> handleEntityMappingException(final Exception exception) {
+    @ExceptionHandler
+    public ResponseEntity<String> handleEntityMappingException(final EntityMappingException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 

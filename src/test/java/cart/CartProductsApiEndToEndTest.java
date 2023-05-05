@@ -77,7 +77,7 @@ class CartProductsApiEndToEndTest {
             .extract();
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
             softAssertions.assertThat(response.body().asString()).contains("올바른 인증 정보가 필요합니다.");
         });
     }
@@ -95,7 +95,7 @@ class CartProductsApiEndToEndTest {
             .extract();
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+            softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
             softAssertions.assertThat(response.body().asString()).contains("올바른 인증 정보가 필요합니다.");
         });
     }
@@ -130,7 +130,7 @@ class CartProductsApiEndToEndTest {
             .body(pizzaRequest)
             .when().post("/cart-products")
             .then()
-            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .statusCode(HttpStatus.UNAUTHORIZED.value())
             .extract();
 
         assertThat(response.body().asString()).contains("올바른 인증 정보가 필요합니다.");
@@ -199,7 +199,7 @@ class CartProductsApiEndToEndTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when().delete("/cart-products/" + cartId)
             .then()
-            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .statusCode(HttpStatus.UNAUTHORIZED.value())
             .extract();
 
         assertThat(response.body().asString()).contains("올바른 인증 정보가 필요합니다.");
@@ -219,7 +219,7 @@ class CartProductsApiEndToEndTest {
             .body(postCartRequest)
             .when().delete("/cart-products/" + cartId)
             .then()
-            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .statusCode(HttpStatus.UNAUTHORIZED.value())
             .extract();
 
         assertThat(response.body().asString()).contains("올바른 인증 정보가 필요합니다.");

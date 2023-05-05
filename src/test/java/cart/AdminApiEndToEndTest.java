@@ -219,7 +219,7 @@ class AdminApiEndToEndTest {
                 .when()
                 .put("/admin/products/" + wrongId)
                 .then()
-                .statusCode(HttpStatus.NOT_FOUND.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();
 
             assertThat(response.body().asString()).contains("변경된 정보가 없습니다.");
@@ -233,7 +233,7 @@ class AdminApiEndToEndTest {
                 .when()
                 .delete("/admin/products/" + wrongId)
                 .then()
-                .statusCode(HttpStatus.NOT_FOUND.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();
 
             assertThat(response.body().asString()).contains("변경된 정보가 없습니다.");
