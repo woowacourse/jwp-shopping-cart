@@ -4,6 +4,8 @@ INSERT INTO PRODUCT (name, image, price)
 VALUES ('도미노 치즈피자', 'https://cdn.dominos.co.kr/admin/upload/goods/20200311_TI57KvOH.jpg', 23900);
 INSERT INTO PRODUCT (name, image, price)
 VALUES ('서오릉 치즈피자', 'https://blog.kakaocdn.net/dn/bLtveJ/btqTJT1U7rX/sNzWENAmkZGyG5vOeknzzk/img.jpg', 20000);
+INSERT INTO PRODUCT (name, image, price)
+VALUES ('도미노 페페로니피자', 'https://cdn.dominos.co.kr/admin/upload/goods/20200311_x8StB1t3.jpg', 25900);
 
 INSERT INTO MEMBER (email, password)
 VALUES ('pizza1@pizza.com', 'pizza');
