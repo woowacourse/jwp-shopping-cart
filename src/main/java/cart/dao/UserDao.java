@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-public final class UserDao {
+public class UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 

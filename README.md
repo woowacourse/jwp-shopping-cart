@@ -67,7 +67,7 @@
 - [x] 상품 Create
     - POST "/products"
     - Request: name, price, image
-    - Response: 200 OK
+    - Response: 201 OK
 - [x] 상품 Read
     - GET "/products"
     - Response: products{{id, name, image, price}, {..}}
@@ -77,17 +77,17 @@
     - Response: 200 OK
 - [x] 상품 Delete
     - DELETE "/products/{id}"
-    - Response: 200 OK
+    - Response: 204 OK
 
 #### 유저 장바구니
 
 - [x] 유저 장바구니 상품 추가 (Authentication)
     - POST "/user/cart"
     - Request: productId
-    - Response: 200 OK
+    - Response: 201 OK
 - [x] 유저 장바구니 상품 제거 (Authentication)
     - DELETE "/user/cart/{id}"
-    - Response: 200 OK
+    - Response: 204 OK
 - [x] 유저의 장바구니 전체 조회 (Authentication)
     - GET "/user/cart"
     - Response: products{{id, name, image, price}, {...}}

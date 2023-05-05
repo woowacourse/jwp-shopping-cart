@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -23,9 +24,9 @@ public final class UserRestController {
     @PostMapping("/user/cart")
     public ResponseEntity<Void> addProductToCart(@AuthParam UserInfo userInfo,
                                                  @RequestBody @Valid UserCartRequest userCartRequest) {
-        userService.addProductToCart(userInfo, userCartRequest.getProductId());
+        final Long productId = userService.addProductToCart(userInfo, userCartRequest.getProductId());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(URI.create("/user/cart/" + productId)).build();
     }
 
     @DeleteMapping("/user/cart/{id}")
@@ -33,7 +34,7 @@ public final class UserRestController {
                                                     @PathVariable("id") Long userProductId) {
         userService.removeProductInCart(userInfo, userProductId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/user/cart")

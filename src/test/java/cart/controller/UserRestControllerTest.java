@@ -53,7 +53,7 @@ class UserRestControllerTest {
                     .body(new UserCartRequest(product.getId()))
                     .when().post("/user/cart")
                     .then()
-                    .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.CREATED.value());
         }
 
         @DisplayName("이메일이 유효하지 않으면 400을 리턴한다")
@@ -105,7 +105,7 @@ class UserRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("/user/cart/{id}", 1L)
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Nested

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -19,8 +20,9 @@ public final class ProductRestController {
 
     @PostMapping("/products")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequest productRequest) {
-        productService.addProduct(productRequest);
-        return ResponseEntity.ok().build();
+        final Long productId = productService.addProduct(productRequest);
+
+        return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
     @GetMapping("/products")
@@ -43,6 +45,6 @@ public final class ProductRestController {
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

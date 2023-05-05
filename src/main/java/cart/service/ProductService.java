@@ -22,8 +22,10 @@ public class ProductService {
     }
 
     @Transactional
-    public void addProduct(ProductRequest productRequest) {
-        productDao.save(productRequest.toEntity());
+    public Long addProduct(ProductRequest productRequest) {
+        final Product product = productDao.save(productRequest.toEntity());
+
+        return product.getId();
     }
 
     public List<ProductResponse> findProducts() {

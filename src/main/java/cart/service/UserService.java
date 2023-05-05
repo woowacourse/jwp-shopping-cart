@@ -30,11 +30,11 @@ public class UserService {
     }
 
     @Transactional
-    public void addProductToCart(final UserInfo userInfo, final Long productId) {
+    public Long addProductToCart(final UserInfo userInfo, final Long productId) {
         final User user = getUser(userInfo);
 
         try {
-            userDao.addProductToCart(user.getId(), productId);
+            return userDao.addProductToCart(user.getId(), productId);
         } catch (DataIntegrityViolationException dataIntegrityViolationException) {
             throw new IllegalArgumentException("존재하지 않는 상품입니다.");
         }

@@ -38,7 +38,7 @@ class ProductRestControllerTest {
                     .body(productRequest)
                     .when().post("/products")
                     .then()
-                    .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.CREATED.value());
         }
 
         @DisplayName("상품 이름이 null일 경우 예외 발생")
@@ -163,7 +163,7 @@ class ProductRestControllerTest {
             given().log().uri()
                     .when().delete("/products/{id}", productId)
                     .then()
-                    .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.NO_CONTENT.value());
         }
 
         @DisplayName("삭제하려는 상품이 없으면 400이 반환된다")
