@@ -16,7 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
 @Sql("/scheme.sql")
-@Sql("/data.sql")
+@Sql("/cartDataSetUp.sql")
 class H2CartDaoTest {
 
     @Autowired
@@ -75,14 +75,14 @@ class H2CartDaoTest {
     @Test
     void deleteById() {
         //given
-        final String sql = "insert into cart (id, member_id, product_id) values (4, 1, 20)";
+        final String sql = "insert into cart (id, member_id, product_id) values (5, 10, 20)";
         jdbcTemplate.update(sql);
 
         //when
-        cartDao.deleteById(4L);
+        cartDao.deleteById(5L);
 
         //then
-        final String sql2 = "select * from cart where id = 4";
+        final String sql2 = "select * from cart where id = 5";
         final List<CartEntity> cartEntities = jdbcTemplate.query(sql2, (rs, rowNum) -> new CartEntity(
                 rs.getLong("id"),
                 rs.getLong("member_id"),

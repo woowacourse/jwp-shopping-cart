@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
-@Sql("/data.sql")
+@Sql("/scheme.sql")
 class H2MemberDaoTest {
 
     private MemberDao memberDao;
@@ -27,6 +27,9 @@ class H2MemberDaoTest {
 
     @Test
     void findAll() {
+        jdbcTemplate.update("INSERT INTO member (id, email, password) values (30, 'email5@email', 'password5')");
+        jdbcTemplate.update("INSERT INTO member (id, email, password) values (40, 'email54@email', 'password54')");
+
         final List<MemberEntity> members = memberDao.findAll();
         assertThat(members).hasSize(2);
     }
