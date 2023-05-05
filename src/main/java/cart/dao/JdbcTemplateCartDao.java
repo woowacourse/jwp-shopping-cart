@@ -37,17 +37,13 @@ public class JdbcTemplateCartDao implements CartDao {
     @Override
     public List<CartEntity> selectByUserId(int userId) {
         String sql = "select * from carts where user_id = ?";
-
         return jdbcTemplate.query(sql, cartEntityRowMapper, userId);
     }
 
-    private final RowMapper<CartEntity> cartEntityRowMapper = (resultSet, rowNumber) -> {
-        CartEntity cartEntity = new CartEntity(
-                resultSet.getInt("user_id"),
-                resultSet.getInt("product_id")
-        );
-        return cartEntity;
-    };
+    private final RowMapper<CartEntity> cartEntityRowMapper = (resultSet, rowNumber) -> new CartEntity(
+            resultSet.getInt("user_id"),
+            resultSet.getInt("product_id")
+    );
 
     @Override
     public int delete(int userId, int productId) {

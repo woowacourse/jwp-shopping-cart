@@ -1,17 +1,17 @@
 package cart.entity;
 
 public class UserEntity {
-    private final int id;
+    private final Integer id;
     private final String email;
     private final String password;
 
-    public UserEntity(int id, String email, String password) {
+    public UserEntity(Integer id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
