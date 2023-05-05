@@ -38,4 +38,9 @@ public class CartController {
                 "members", memberService.findAll()
         ));
     }
+
+    @GetMapping(path = "/cart")
+    public ModelAndView cart() {
+        return new ModelAndView("cart");
+    }
 }
