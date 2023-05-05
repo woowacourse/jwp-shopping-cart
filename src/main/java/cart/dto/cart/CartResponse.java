@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class CartResponse {
 
     private ItemResponse item;
-    private Long count;
+    private Integer quantity;
 }
