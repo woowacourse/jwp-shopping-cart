@@ -2,7 +2,7 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.entity.CartEntity;
+import cart.entity.cart.CartEntity;
 import cart.entity.customer.CustomerEntity;
 import cart.entity.product.ProductEntity;
 import java.util.List;

@@ -4,7 +4,7 @@ import cart.annotation.BasicAuthorization;
 import cart.argumentresolver.basicauthorization.BasicAuthInfo;
 import cart.dto.response.CartProductResponseDto;
 import cart.dtomapper.CartProductResponseDtoMapper;
-import cart.entity.CartEntity;
+import cart.entity.cart.CartEntity;
 import cart.entity.product.ProductEntity;
 import cart.service.CartService;
 import cart.service.CustomerService;

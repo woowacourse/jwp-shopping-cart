@@ -2,7 +2,7 @@ package cart.service;
 
 import cart.dao.CartDao;
 import cart.dao.ProductDao;
-import cart.entity.CartEntity;
+import cart.entity.cart.CartEntity;
 import cart.entity.product.ProductEntity;
 import java.util.Collections;
 import java.util.List;

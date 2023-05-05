@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.entity.CategoryEntity;
+import cart.entity.category.CategoryEntity;
 import cart.entity.product.ProductEntity;
 import java.util.List;
 

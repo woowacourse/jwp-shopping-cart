@@ -2,8 +2,8 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.entity.ProductCategoryEntity;
 import cart.entity.product.ProductEntity;
+import cart.entity.productcategory.ProductCategoryEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

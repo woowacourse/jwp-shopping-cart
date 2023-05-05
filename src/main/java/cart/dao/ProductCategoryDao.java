@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.ProductCategoryEntity;
+import cart.entity.productcategory.ProductCategoryEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.CategoryEntity;
+import cart.entity.category.CategoryEntity;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;

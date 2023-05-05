@@ -1,6 +1,6 @@
 package cart.dto.response;
 
-import cart.entity.CategoryEntity;
+import cart.entity.category.CategoryEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 

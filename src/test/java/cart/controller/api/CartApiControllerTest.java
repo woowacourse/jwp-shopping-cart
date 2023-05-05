@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dto.request.ProductRequestDto;
 import cart.dto.response.CartProductResponseDto;
-import cart.entity.CartEntity;
+import cart.entity.cart.CartEntity;
 import cart.service.CartService;
 import cart.service.ProductService;
 import io.restassured.RestAssured;
