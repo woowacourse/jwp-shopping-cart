@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.common;
 
 import cart.excpetion.AuthException;
 import cart.excpetion.CartException;
