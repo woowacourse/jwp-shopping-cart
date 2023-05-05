@@ -1,9 +1,7 @@
 package cart.common;
 
-import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 
-@Component
 public class PasswordEncoder {
 
     public String encode(final String password) {

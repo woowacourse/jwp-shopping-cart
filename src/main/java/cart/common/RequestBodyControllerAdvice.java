@@ -11,11 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice;
 @ControllerAdvice
 public class RequestBodyControllerAdvice implements RequestBodyAdvice {
 
-    private final PasswordEncoder passwordEncoder;
-
-    public RequestBodyControllerAdvice(final PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final PasswordEncoder passwordEncoder = new PasswordEncoder();
 
     @Override
     public boolean supports(final MethodParameter methodParameter, final Type targetType,
