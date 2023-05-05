@@ -8,6 +8,7 @@ import cart.service.CartService;
 import cart.service.ProductService;
 import cart.test.ProductRequestFixture;
 import io.restassured.RestAssured;
+import io.restassured.response.ValidatableResponse;
 import java.util.Base64;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,12 +49,7 @@ class CartApiControllerTest {
             final Long savedCartId = cartService.putInCart(savedProductId, 1L);
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com:password1".getBytes()));
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .header("Authorization", "Basic " + encodedAuth)
-                    .when()
-                    .get("/carts")
-                    .then()
+            cartFindApi(encodedAuth)
                     .statusCode(HttpStatus.OK.value())
                     .body("size()", is(1))
                     .body("[0].id", equalTo(savedCartId.intValue()))
@@ -65,14 +61,18 @@ class CartApiControllerTest {
         void findCartItemsForInvalidMember() {
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com".getBytes()));
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .header("Authorization", "Basic " + encodedAuth)
-                    .when()
-                    .get("/carts")
-                    .then()
+            cartFindApi(encodedAuth)
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .body("message", equalTo("유효하지 않은 인증 정보입니다."));
+        }
+
+        private ValidatableResponse cartFindApi(final String auth) {
+            return RestAssured.given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .header("Authorization", "Basic " + auth)
+                    .when()
+                    .get("/carts")
+                    .then();
         }
     }
 
@@ -86,13 +86,7 @@ class CartApiControllerTest {
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com:password1".getBytes()));
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .header("Authorization", "Basic " + encodedAuth)
-                    .queryParam("productId", savedProductId)
-                    .when()
-                    .post("/carts")
-                    .then()
+            cartPutApi(encodedAuth, String.valueOf(savedProductId))
                     .statusCode(HttpStatus.CREATED.value())
                     .header("Location", containsString("/carts/"));
         }
@@ -103,13 +97,7 @@ class CartApiControllerTest {
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com".getBytes()));
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .header("Authorization", "Basic " + encodedAuth)
-                    .queryParam("productId", savedProductId)
-                    .when()
-                    .post("/carts")
-                    .then()
+            cartPutApi(encodedAuth, String.valueOf(savedProductId))
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .body("message", equalTo("유효하지 않은 인증 정보입니다."));
         }
@@ -120,13 +108,7 @@ class CartApiControllerTest {
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com:password".getBytes()));
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .header("Authorization", "Basic " + encodedAuth)
-                    .queryParam("id", savedProductId)
-                    .when()
-                    .post("/carts")
-                    .then()
+            cartPutApi(encodedAuth, String.valueOf(savedProductId))
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
 
@@ -135,14 +117,18 @@ class CartApiControllerTest {
         void putInCartWithInvalidParameterType() {
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com:password".getBytes()));
 
-            RestAssured.given()
+            cartPutApi(encodedAuth, "hello")
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        private ValidatableResponse cartPutApi(final String auth, final String productId) {
+            return RestAssured.given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .header("Authorization", "Basic " + encodedAuth)
-                    .queryParam("productId", "hello")
+                    .header("Authorization", "Basic " + auth)
+                    .queryParam("productId", productId)
                     .when()
                     .post("/carts")
-                    .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+                    .then();
         }
     }
 
@@ -157,12 +143,7 @@ class CartApiControllerTest {
             final Long savedCartId = cartService.putInCart(savedProductId, 1L);
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com:password1".getBytes()));
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .header("Authorization", "Basic " + encodedAuth)
-                    .when()
-                    .delete("/carts/" + savedCartId)
-                    .then()
+            cartRemoveApi(encodedAuth, String.valueOf(savedCartId))
                     .statusCode(HttpStatus.NO_CONTENT.value());
         }
 
@@ -173,12 +154,7 @@ class CartApiControllerTest {
             final Long savedCartId = cartService.putInCart(savedProductId, 1L);
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com".getBytes()));
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .header("Authorization", "Basic " + encodedAuth)
-                    .when()
-                    .delete("/carts/" + savedCartId)
-                    .then()
+            cartRemoveApi(encodedAuth, String.valueOf(savedCartId))
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .body("message", equalTo("유효하지 않은 인증 정보입니다."));
         }
@@ -188,13 +164,17 @@ class CartApiControllerTest {
         void removeCartItemWithInvalidIDType() {
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com:password".getBytes()));
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .header("Authorization", "Basic " + encodedAuth)
-                    .when()
-                    .delete("/carts/" + "hello")
-                    .then()
+            cartRemoveApi(encodedAuth, "hello")
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        private ValidatableResponse cartRemoveApi(final String auth, final String cartId) {
+            return RestAssured.given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .header("Authorization", "Basic " + auth)
+                    .when()
+                    .delete("/carts/" + cartId)
+                    .then();
         }
     }
 }

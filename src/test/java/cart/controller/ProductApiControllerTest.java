@@ -4,9 +4,11 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
+import cart.dto.request.ProductRequest;
 import cart.service.ProductService;
 import cart.test.ProductRequestFixture;
 import io.restassured.RestAssured;
+import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -55,12 +57,7 @@ class ProductApiControllerTest {
         @Test
         @DisplayName("요청이 유효하다면 상품을 생성한다.")
         void registerProduct() {
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ProductRequestFixture.request)
-                    .when()
-                    .post("/products")
-                    .then()
+            productRegisterApi(ProductRequestFixture.request)
                     .statusCode(HttpStatus.CREATED.value())
                     .header("Location", containsString("/products/"));
         }
@@ -68,12 +65,7 @@ class ProductApiControllerTest {
         @Test
         @DisplayName("이미지 URL이 null이라면 400 상태를 반환한다.")
         void registerProductWithNullImage() {
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ProductRequestFixture.imageEmptyRequest)
-                    .when()
-                    .post("/products")
-                    .then()
+            productRegisterApi(ProductRequestFixture.imageEmptyRequest)
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", containsString("이미지URL은 비어있을 수 없습니다."));
         }
@@ -81,12 +73,7 @@ class ProductApiControllerTest {
         @Test
         @DisplayName("상품명의 길이가 50자를 초과하면 400 상태를 반환한다.")
         void registerProductWithOverLengthName() {
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ProductRequestFixture.overLengthNameRequest)
-                    .when()
-                    .post("/products")
-                    .then()
+            productRegisterApi(ProductRequestFixture.overLengthNameRequest)
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", containsString("상품명은 1이상, 50이하여야 합니다."));
         }
@@ -94,12 +81,7 @@ class ProductApiControllerTest {
         @Test
         @DisplayName("가격이 0보다 작으면 400 상태를 반환한다.")
         void registerProductWithLowPrice() {
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ProductRequestFixture.negativePriceRequest)
-                    .when()
-                    .post("/products")
-                    .then()
+            productRegisterApi(ProductRequestFixture.negativePriceRequest)
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", containsString("가격은 0원 이상 " + Integer.MAX_VALUE + "원 이하여야 합니다."));
         }
@@ -107,14 +89,18 @@ class ProductApiControllerTest {
         @Test
         @DisplayName("카테고리를 선택하지 않으면 400 상태를 반환한다.")
         void registerProductWithEmptyCategory() {
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ProductRequestFixture.categoryNullRequest)
-                    .when()
-                    .post("/products")
-                    .then()
+            productRegisterApi(ProductRequestFixture.categoryNullRequest)
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", containsString("카테고리를 선택해야 합니다."));
+        }
+
+        private ValidatableResponse productRegisterApi(final ProductRequest productRequest) {
+            return RestAssured.given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(productRequest)
+                    .when()
+                    .post("/products")
+                    .then();
         }
     }
 
@@ -127,24 +113,14 @@ class ProductApiControllerTest {
         void updateProduct() {
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ProductRequestFixture.request)
-                    .when()
-                    .put("/products/" + savedProductId)
-                    .then()
+            productUpdateApi(ProductRequestFixture.request, String.valueOf(savedProductId))
                     .statusCode(HttpStatus.OK.value());
         }
 
         @Test
         @DisplayName("상품 ID 타입으로 변환할 수 없으면 400 상태를 반환한다.")
         void updateProductWithInvalidParameterType() {
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ProductRequestFixture.request)
-                    .when()
-                    .put("/products/" + "hello")
-                    .then()
+            productUpdateApi(ProductRequestFixture.request, "hello")
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
 
@@ -153,12 +129,7 @@ class ProductApiControllerTest {
         void updateProductWithNullImage() {
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ProductRequestFixture.imageEmptyRequest)
-                    .when()
-                    .put("/products/" + savedProductId)
-                    .then()
+            productUpdateApi(ProductRequestFixture.imageEmptyRequest, String.valueOf(savedProductId))
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", containsString("이미지URL은 비어있을 수 없습니다."));
         }
@@ -168,12 +139,7 @@ class ProductApiControllerTest {
         void updateProductWithOverLengthName() {
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ProductRequestFixture.overLengthNameRequest)
-                    .when()
-                    .put("/products/" + savedProductId)
-                    .then()
+            productUpdateApi(ProductRequestFixture.overLengthNameRequest, String.valueOf(savedProductId))
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", containsString("상품명은 1이상, 50이하여야 합니다."));
         }
@@ -183,12 +149,7 @@ class ProductApiControllerTest {
         void updateProductWithLowPrice() {
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ProductRequestFixture.negativePriceRequest)
-                    .when()
-                    .put("/products/" + savedProductId)
-                    .then()
+            productUpdateApi(ProductRequestFixture.negativePriceRequest, String.valueOf(savedProductId))
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", containsString("가격은 0원 이상 " + Integer.MAX_VALUE + "원 이하여야 합니다."));
         }
@@ -198,14 +159,18 @@ class ProductApiControllerTest {
         void updateProductWithEmptyCategory() {
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ProductRequestFixture.categoryNullRequest)
-                    .when()
-                    .put("/products/" + savedProductId)
-                    .then()
+            productUpdateApi(ProductRequestFixture.categoryNullRequest, String.valueOf(savedProductId))
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", containsString("카테고리를 선택해야 합니다."));
+        }
+
+        private ValidatableResponse productUpdateApi(final ProductRequest productRequest, final String productId) {
+            return RestAssured.given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(productRequest)
+                    .when()
+                    .put("/products/" + productId)
+                    .then();
         }
     }
 
@@ -218,23 +183,23 @@ class ProductApiControllerTest {
         void removeProduct() {
             final Long registeredId = productService.registerProduct(ProductRequestFixture.request);
 
-            RestAssured.given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .when()
-                    .delete("/products/" + registeredId)
-                    .then()
+            productRemoveApi(String.valueOf(registeredId))
                     .statusCode(HttpStatus.NO_CONTENT.value());
         }
 
         @Test
         @DisplayName("상품 ID 타입으로 변환할 수 없으면 400 상태를 반환한다.")
         void removeProductWithInvalidParameterType() {
-            RestAssured.given()
+            productRemoveApi("hello")
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        private ValidatableResponse productRemoveApi(final String productId) {
+            return RestAssured.given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .delete("/products/" + "hello")
-                    .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+                    .delete("/products/" + productId)
+                    .then();
         }
     }
 }
