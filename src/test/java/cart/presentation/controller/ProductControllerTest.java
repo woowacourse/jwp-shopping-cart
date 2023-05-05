@@ -4,8 +4,6 @@ import cart.business.domain.product.Product;
 import cart.business.service.ProductService;
 import cart.config.WebMvcConfiguration;
 import cart.presentation.adapter.AuthInterceptor;
-import cart.presentation.adapter.HeaderMemberIdResolver;
-import cart.presentation.adapter.LoggerInterceptor;
 import cart.presentation.dto.ProductDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +25,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = ProductController.class,
@@ -35,9 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 type = FilterType.ASSIGNABLE_TYPE,
                 classes = {
                         WebMvcConfiguration.class,
-                        AuthInterceptor.class,
-                        LoggerInterceptor.class,
-                        HeaderMemberIdResolver.class
+                        AuthInterceptor.class
                 }
         ))
 class ProductControllerTest {
@@ -80,7 +75,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("/product 로 POST 요청을 보낼 수 있다")
+    @DisplayName("/product 로 PUT 요청을 보낼 수 있다")
     void test_update_request() throws Exception {
         // given
         willDoNothing().given(productService).update(any(Product.class));

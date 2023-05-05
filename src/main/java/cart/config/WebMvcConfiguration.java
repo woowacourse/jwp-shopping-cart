@@ -1,6 +1,5 @@
 package cart.config;
 
-import cart.business.service.MemberService;
 import cart.presentation.adapter.AuthInterceptor;
 import cart.presentation.adapter.HeaderMemberIdResolver;
 import cart.presentation.adapter.LoggerInterceptor;
@@ -14,18 +13,20 @@ import java.util.List;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
-    private final MemberService memberService;
+    private final LoggerInterceptor loggerInterceptor;
+    private final AuthInterceptor authInterceptor;
 
-    public WebMvcConfiguration(MemberService memberService) {
-        this.memberService = memberService;
+    public WebMvcConfiguration(LoggerInterceptor loggerInterceptor, AuthInterceptor authInterceptor) {
+        this.loggerInterceptor = loggerInterceptor;
+        this.authInterceptor = authInterceptor;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoggerInterceptor())
+        registry.addInterceptor(loggerInterceptor)
                 .addPathPatterns("/**");
 
-        registry.addInterceptor(new AuthInterceptor(memberService))
+        registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/carts");
     }
 

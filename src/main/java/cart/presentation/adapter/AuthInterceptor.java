@@ -2,11 +2,13 @@ package cart.presentation.adapter;
 
 import cart.business.service.MemberService;
 import cart.presentation.dto.AuthInfo;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Component
 public class AuthInterceptor implements HandlerInterceptor {
 
     private final MemberService memberService;
