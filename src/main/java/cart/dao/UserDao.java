@@ -57,4 +57,17 @@ public class UserDao {
                 id
         );
     }
+
+    public User selectBy(String email) {
+        String sql = "SELECT id, email, password FROM users WHERE email = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (rs, rowNum) -> new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                ),
+                email
+        );
+    }
 }
