@@ -101,7 +101,7 @@ class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequestDto)
                 .accept(MediaType.TEXT_HTML_VALUE)
-                .when().put("products/1")
+                .when().put("products/2")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }

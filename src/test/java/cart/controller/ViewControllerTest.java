@@ -64,7 +64,7 @@ class ViewControllerTest {
                 .when().get("/cart")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body(containsString("<title>장바구</title>"));
+                .body(containsString("<title>장바구니</title>"));
     }
 
 }

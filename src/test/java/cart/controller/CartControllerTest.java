@@ -1,12 +1,15 @@
 package cart.controller;
 
 import cart.dto.CartResponseDto;
+import cart.service.ProductService;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,13 +18,15 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class CartControllerTest {
 
     private static final String EMAIL = "kpeel5839@a.com";
     private static final String PASSWORD = "password1!";
     @LocalServerPort
     private int port;
+    @Autowired
+    ProductService productService;
 
     @BeforeEach
     void beforeEach() {
@@ -33,7 +38,7 @@ class CartControllerTest {
     void addProductToCart() {
         RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().post("/carts/1")
+                .when().post("/carts/2")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -41,18 +46,24 @@ class CartControllerTest {
     @Test
     @DisplayName("/carts (Get) 요청을 보내 장바구니에 있는 상품을 조회한다.")
     void cartsList() {
+        RestAssured.given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when().post("/carts/2")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
         List<CartResponseDto> cartResponseDtos = RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/carts")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .extract().as(new TypeRef<List<CartResponseDto>>() {});
+                .extract().as(new TypeRef<>() {});
 
         assertThat(cartResponseDtos.get(0).getEmail()).isEqualTo(EMAIL);
         assertThat(cartResponseDtos.get(0).getProductResponseDto()
                 .getName())
-                .isEqualTo("치킨");
+                .isEqualTo("샐러드");
     }
 
 }
