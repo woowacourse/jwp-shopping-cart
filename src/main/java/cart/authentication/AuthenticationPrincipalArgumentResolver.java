@@ -1,21 +1,17 @@
-package cart.configuration;
+package cart.authentication;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static cart.authentication.AuthenticationInterceptor.AUTH_INFO_KEY;
 
 import cart.controller.dto.AuthInfo;
+import cart.exception.auth.NotSignInException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
-
-    private final BasicAuthorizationExtractor extractor;
-
-    public AuthenticationPrincipalArgumentResolver(BasicAuthorizationExtractor extractor) {
-        this.extractor = extractor;
-    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -25,8 +21,11 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String header = webRequest.getHeader(AUTHORIZATION);
+        AuthInfo authInfo = (AuthInfo) webRequest.getAttribute(AUTH_INFO_KEY, RequestAttributes.SCOPE_REQUEST);
 
-        return extractor.extract(header);
+        if (authInfo == null) {
+            throw new NotSignInException("로그인이 필요한 기능입니다.");
+        }
+        return authInfo;
     }
 }

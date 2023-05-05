@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.configuration.AuthenticationPrincipalArgumentResolver;
+import cart.authentication.AuthenticationPrincipalArgumentResolver;
 import cart.controller.dto.request.AddCartRequest;
 import cart.exception.GlobalControllerAdvice;
 import cart.exception.auth.NotSignInException;
