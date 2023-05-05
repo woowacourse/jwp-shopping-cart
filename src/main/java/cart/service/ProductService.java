@@ -1,10 +1,10 @@
 package cart.service;
 
+import cart.dao.ProductDao;
 import cart.dto.request.ProductCreateDto;
 import cart.dto.response.ProductDto;
 import cart.entity.ProductEntity;
 import cart.excpetion.ProductException;
-import cart.repository.ProductDao;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

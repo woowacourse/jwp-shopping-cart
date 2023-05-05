@@ -1,4 +1,4 @@
-package cart.repository;
+package cart.dao;
 
 import cart.dto.request.ProductCreateDto;
 import cart.entity.ProductEntity;

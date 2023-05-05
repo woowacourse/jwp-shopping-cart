@@ -1,7 +1,7 @@
 package cart.service;
 
+import cart.dao.MemberDao;
 import cart.entity.MemberEntity;
-import cart.repository.MemberDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

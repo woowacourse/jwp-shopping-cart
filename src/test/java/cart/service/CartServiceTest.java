@@ -1,9 +1,9 @@
 package cart.service;
 
 import cart.auth.MemberInfo;
+import cart.dao.CartDao;
 import cart.dto.request.ProductRequestDto;
 import cart.excpetion.CartException;
-import cart.repository.CartDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

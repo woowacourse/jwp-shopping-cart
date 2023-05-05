@@ -1,4 +1,4 @@
-package cart.repository.joinrequest;
+package cart.dao.joinrequest;
 
 public class CartWithProduct {
     private final Integer memberId;

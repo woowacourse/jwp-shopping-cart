@@ -1,11 +1,11 @@
 package cart.service;
 
 import cart.auth.MemberInfo;
+import cart.dao.CartDao;
+import cart.dao.joinrequest.CartWithProduct;
 import cart.dto.request.ProductRequestDto;
 import cart.dto.response.ProductDto;
 import cart.excpetion.CartException;
-import cart.repository.CartDao;
-import cart.repository.joinrequest.CartWithProduct;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 

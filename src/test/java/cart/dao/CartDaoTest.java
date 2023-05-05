@@ -1,4 +1,4 @@
-package cart.repository;
+package cart.dao;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

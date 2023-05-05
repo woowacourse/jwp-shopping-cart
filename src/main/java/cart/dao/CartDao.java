@@ -1,6 +1,6 @@
-package cart.repository;
+package cart.dao;
 
-import cart.repository.joinrequest.CartWithProduct;
+import cart.dao.joinrequest.CartWithProduct;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
