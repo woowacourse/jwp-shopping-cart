@@ -40,7 +40,7 @@ public class CartProductServiceTest {
     void 사용자의_장바구니_상품을_저장한다() {
         given(cartProductDao.save(any())).willReturn(1L);
 
-        long cartId = cartProductService.save(2L, new CartProductRequest());
+        long cartId = cartProductService.save(2L, new CartProductRequest(1L));
 
         assertThat(cartId).isEqualTo(1L);
     }
