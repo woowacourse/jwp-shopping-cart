@@ -69,7 +69,7 @@ class CartItemDaoTest {
     void removeCartItem() {
         int cartId = cartItemDao.addCartItem(cartItemEntity);
 
-        cartItemDao.removeCartItem(cartId);
+        cartItemDao.deleteCartItem(cartId);
 
         assertThat(cartItemDao.isCartItemExist(99, 100)).isFalse();
     }

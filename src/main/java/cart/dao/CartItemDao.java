@@ -54,9 +54,14 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, productMapper, memberId);
     }
 
-    public void removeCartItem(int cartItemId) {
+    public void deleteCartItem(int cartItemId) {
         String sql = "delete from cartItem where id = ?";
         jdbcTemplate.update(sql, cartItemId);
+    }
+
+    public void deleteAllCartItem() {
+        String sql = "delete from cartItem";
+        jdbcTemplate.update(sql);
     }
 
 }

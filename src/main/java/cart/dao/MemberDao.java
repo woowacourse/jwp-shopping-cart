@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.entity.CartItemEntity;
 import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -56,6 +55,11 @@ public class MemberDao {
         String sql = "select exists(" +
                 "select * from member where member.email = ? and member.password = ?) as isExist";
         return jdbcTemplate.queryForObject(sql, booleanMapper, email, password);
+    }
+
+    public void deleteAllMembers() {
+        String sql = "delete from member";
+        jdbcTemplate.update(sql);
     }
 
 }

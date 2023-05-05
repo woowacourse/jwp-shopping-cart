@@ -28,7 +28,11 @@ public class CartItemService {
     }
 
     public void deleteCartItem(int cartItemId) {
-        cartItemDao.removeCartItem(cartItemId);
+        cartItemDao.deleteCartItem(cartItemId);
+    }
+
+    public void deleteAllCartItem() {
+        cartItemDao.deleteAllCartItem();
     }
 
 }

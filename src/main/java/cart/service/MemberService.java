@@ -29,4 +29,8 @@ public class MemberService {
 
         return memberDao.findMemberId(email, password);
     }
+
+    public void deleteAllMembers() {
+        memberDao.deleteAllMembers();
+    }
 }
