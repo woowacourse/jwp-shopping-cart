@@ -20,15 +20,15 @@ import cart.web.cart.dto.CartResponse;
 import cart.web.cart.dto.PostCartRequest;
 
 @RestController
-public class CartApiController {
+public class CartProductsController {
 
     private final CartService cartService;
 
-    public CartApiController(final CartService cartService) {
+    public CartProductsController(final CartService cartService) {
         this.cartService = cartService;
     }
 
-    @GetMapping(path = "/cart", headers = "authorization")
+    @GetMapping("/cart-products")
     public List<CartResponse> getAllCartProducts(@AuthorizeMember AuthorizedMember authorizedMember) {
         final String email = authorizedMember.getEmail();
         final String password = authorizedMember.getPassword();
@@ -38,7 +38,7 @@ public class CartApiController {
             .collect(Collectors.toList());
     }
 
-    @PostMapping("/cart")
+    @PostMapping("/cart-products")
     public void addToCart(@RequestBody @Valid final PostCartRequest body,
         @AuthorizeMember AuthorizedMember authorizedMember) {
         final long productId = body.getProductId();
@@ -47,7 +47,7 @@ public class CartApiController {
         cartService.addProductByMember(productId, email, password);
     }
 
-    @DeleteMapping("/cart/{cartId}")
+    @DeleteMapping("/cart-products/{cartId}")
     public void deleteFromCart(@PathVariable final Integer cartId, @AuthorizeMember AuthorizedMember authorizedMember) {
         final String email = authorizedMember.getEmail();
         final String password = authorizedMember.getPassword();

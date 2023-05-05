@@ -9,13 +9,13 @@ const addCartItem = (productId) => {
     // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
     axios.request({
         method: 'post',
-        url: '/cart',
+        url: '/cart-products',
         headers: {
             'Authorization': `Basic ${credentials}`,
-            'Content-Type' : 'application/json'
+            'Content-Type': 'application/json'
         },
         data: {
-            "productId" : productId
+            "productId": productId
         }
     }).then((response) => {
         alert('장바구니에 담았습니다.');
@@ -34,13 +34,12 @@ const removeCartItem = (id) => {
     }
 
     // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
-    console.log(`/cart/${id}`);
     axios.request({
         method: 'delete',
-        url: `/cart/${id}`,
+        url: `/cart-products/${id}`,
         headers: {
             'Authorization': `Basic ${credentials}`,
-            'Content-Type' : 'application/json'
+            'Content-Type': 'application/json'
         }
     }).then((response) => {
         window.location.reload();

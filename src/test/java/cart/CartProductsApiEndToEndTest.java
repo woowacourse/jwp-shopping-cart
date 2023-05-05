@@ -29,7 +29,7 @@ import io.restassured.response.Response;
 @Sql(scripts = "classpath:schema-truncate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class CartApiEndToEndTest {
+class CartProductsApiEndToEndTest {
 
     @LocalServerPort
     private int port;
@@ -39,7 +39,7 @@ class CartApiEndToEndTest {
     private final CartDao cartDao;
 
     @Autowired
-    public CartApiEndToEndTest(final MemberDao memberDao, final ProductDao productDao, final CartDao cartDao) {
+    public CartProductsApiEndToEndTest(final MemberDao memberDao, final ProductDao productDao, final CartDao cartDao) {
         this.memberDao = memberDao;
         this.productDao = productDao;
         this.cartDao = cartDao;
@@ -59,7 +59,7 @@ class CartApiEndToEndTest {
         RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(email, password)
-            .when().get("/cart")
+            .when().get("/cart-products")
             .then()
             .statusCode(HttpStatus.OK.value());
     }
@@ -72,7 +72,7 @@ class CartApiEndToEndTest {
 
         ExtractableResponse<Response> response = RestAssured.given()
             .auth().preemptive().basic("b@a.com", password)
-            .when().get("/cart")
+            .when().get("/cart-products")
             .then()
             .extract();
 
@@ -90,7 +90,7 @@ class CartApiEndToEndTest {
 
         ExtractableResponse<Response> response = RestAssured.given()
             .auth().preemptive().basic("b@a.com", "password2")
-            .when().get("/cart")
+            .when().get("/cart-products")
             .then()
             .extract();
 
@@ -112,7 +112,7 @@ class CartApiEndToEndTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(email, password)
             .body(pizzaRequest)
-            .when().post("/cart")
+            .when().post("/cart-products")
             .then()
             .statusCode(HttpStatus.OK.value());
 
@@ -128,7 +128,7 @@ class CartApiEndToEndTest {
         ExtractableResponse<Response> response = RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(pizzaRequest)
-            .when().post("/cart")
+            .when().post("/cart-products")
             .then()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .extract();
@@ -147,7 +147,7 @@ class CartApiEndToEndTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(email, password)
             .body(postCartRequest)
-            .when().post("/cart")
+            .when().post("/cart-products")
             .then()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .extract();
@@ -166,7 +166,7 @@ class CartApiEndToEndTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(email, password)
             .body(postCartRequest)
-            .when().post("/cart")
+            .when().post("/cart-products")
             .then()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .extract();
@@ -186,7 +186,7 @@ class CartApiEndToEndTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(email, password)
             .body(postCartRequest)
-            .when().delete("/cart/" + cartId)
+            .when().delete("/cart-products/" + cartId)
             .then()
             .statusCode(HttpStatus.OK.value());
     }
@@ -197,7 +197,7 @@ class CartApiEndToEndTest {
 
         ExtractableResponse<Response> response = RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().delete("/cart/" + cartId)
+            .when().delete("/cart-products/" + cartId)
             .then()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .extract();
@@ -217,7 +217,7 @@ class CartApiEndToEndTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .auth().preemptive().basic(email, "password2")
             .body(postCartRequest)
-            .when().delete("/cart/" + cartId)
+            .when().delete("/cart-products/" + cartId)
             .then()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .extract();

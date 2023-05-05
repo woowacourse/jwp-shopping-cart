@@ -13,15 +13,13 @@
   
 
 - [x] 장바구니 페이지
-  - [x] 조회 (/cart GET)
-    - [x] 헤더에 authentication 필드가 누락되었을 때: cart.html 반환
-    - [x] 헤더에 authentication 필드가 포함되었을 때: 장바구니 상품 정보들 json 반환
+  - [x] 조회 (/cart-products GET)
     - [x] 잘못된 인증 정보가 포함되었을 때: `BAD_REQUEST`
-  - [x] 상품 추가 (/cart POST)
+  - [x] 상품 추가 (/cart-products POST)
     - [x] authentication 정보가 존재하지 않을 때: `BAD_REQUEST`
     - [x] 바디에 양의 정수가 아닌 productId가 포함되었을 때: `BAD_REQUEST`
     - [x] 바디에 존재하지 않는 productId가 포함되었을 때: `BAD_REQUEST`
-  - [x] 상품 삭제 (/cart/{cartId})
+  - [x] 상품 삭제 (/cart-products/{cartId})
     - [x] authentication 정보가 존재하지 않을 때: `BAD_REQUEST` 
     - [x] 헤더의 authentication 정보가 유효하지 않을 때: `BAD_REQUEST`
     - [x] URI에 잘못된 cartId가 포함되었을 때: `BAD_REQUEST`

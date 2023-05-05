@@ -1,7 +1,6 @@
 package cart.domain.cart;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -52,11 +51,9 @@ public class CartService {
     }
 
     private MemberEntity readAndValidateMember(final String email, final String password) {
-        final Optional<MemberEntity> memberEntity = memberDao.findByEmail(email);
-        if (memberEntity.isEmpty() || !memberEntity.get().getPassword().equals(password)) {
-            throw new EntityNotFoundException("아이디 또는 비밀번호가 잘못되었습니다.");
-        }
-        return memberEntity.get();
+        return memberDao.findByEmail(email)
+            .filter(memberEntity -> memberEntity.getPassword().equals(password))
+            .orElseThrow(() -> new EntityNotFoundException("아이디 또는 비밀번호가 잘못되었습니다."));
     }
 
     private void assertRowChanged(final int rowAffected) {
