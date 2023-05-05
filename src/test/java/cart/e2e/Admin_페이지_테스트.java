@@ -60,7 +60,7 @@ public class Admin_페이지_테스트 {
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(JSON_형태의_상품_저장_요청)
-                .when()정
+                .when()
                 .post("/products");
     }
 

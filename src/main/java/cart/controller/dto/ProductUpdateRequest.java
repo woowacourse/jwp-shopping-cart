@@ -6,15 +6,15 @@ import javax.validation.constraints.PositiveOrZero;
 
 public class ProductUpdateRequest {
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "상품 이름은 null일 수 없습니다.")
+    @NotBlank(message = "상품 이름은 비어있을 수 없습니다.")
     private final String name;
 
-    @PositiveOrZero
+    @PositiveOrZero(message = "상품 가격은 0 이상이어야 합니다.")
     private final long price;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "이미지 주소는 null일 수 없습니다.")
+    @NotBlank(message = "이미지 주소는 비어있을 수 없습니다.")
     private final String imageUrl;
 
     public ProductUpdateRequest(String name, long price, String imageUrl) {
