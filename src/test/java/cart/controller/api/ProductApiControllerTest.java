@@ -23,7 +23,7 @@ import org.springframework.http.MediaType;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @DisplayName("ProductController 는")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ProductControllerTest {
+class ProductApiControllerTest {
 
     @LocalServerPort
     private int port;
