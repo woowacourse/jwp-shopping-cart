@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @JdbcTest
 class ProductDaoTest {
@@ -27,17 +26,19 @@ class ProductDaoTest {
     void setUp() {
         namedParameterJdbcTemplate.getJdbcTemplate().execute("ALTER TABLE PRODUCT ALTER COLUMN id RESTART WITH 1");
         productDao = new ProductDao(namedParameterJdbcTemplate);
-        productDao.deleteAll();
     }
 
     @Test
     void 모든_상품_목록을_조회한다() {
-        final Product firstProduct = new Product(1L, "홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 10_000_000);
-        final Product secondProduct = new Product(2L, "아벨", "https://ca.slack-edge.com/TFELTJB7V-U04LMNLQ78X-a7ef923d5391-512", 10_000_000);
+        final Product firstProduct = new Product( "홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 10_000_000);
+        final Product secondProduct = new Product("아벨", "https://ca.slack-edge.com/TFELTJB7V-U04LMNLQ78X-a7ef923d5391-512", 10_000_000);
         productDao.save(firstProduct);
         productDao.save(secondProduct);
 
-        assertThat(productDao.findAll()).containsExactly(firstProduct, secondProduct);
+        final Product expetedFirstProduct = new Product( 1L, "홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 10_000_000);
+        final Product expectedSecondProduct = new Product(2L ,"아벨", "https://ca.slack-edge.com/TFELTJB7V-U04LMNLQ78X-a7ef923d5391-512", 10_000_000);
+
+        assertThat(productDao.findAll()).containsExactly(expetedFirstProduct, expectedSecondProduct);
     }
 
     @Test
