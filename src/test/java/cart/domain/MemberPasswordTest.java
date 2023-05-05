@@ -42,10 +42,10 @@ class MemberPasswordTest {
     @DisplayName("디코딩된 비밀번호 값을 반환한다.")
     void decodePassword() {
         // given
-        final MemberPassword memberPassword = MemberPassword.create("abcdefgh");
+        final String encodedPassword = "YWJjZGVmZ2g=";
 
         // when
-        final String decodePassword = memberPassword.decodePassword();
+        final String decodePassword = MemberPassword.decodePassword(encodedPassword);
 
         // then
         assertThat(decodePassword)

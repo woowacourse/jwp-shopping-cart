@@ -17,8 +17,7 @@ class MemberTest {
     void create_success(final String validEmail, final String validNickname) {
         // given
         final Member createdMember = assertDoesNotThrow(() ->
-            Member.create(validEmail, "12345678", validNickname, "010-1234-5678",
-                MemberRole.USER));
+            Member.create(validEmail, "12345678", validNickname, "010-1234-5678", "USER"));
 
         // when, then
         assertThat(createdMember)
@@ -31,7 +30,7 @@ class MemberTest {
     @ValueSource(strings = {"abcd", "abcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdeabcdea"})
     void create_withEmail_fail(final String invalidEmail) {
         assertThatThrownBy(() -> Member.create(invalidEmail, "password", "져니",
-            "010-1234-5678", MemberRole.USER))
+            "010-1234-5678", "USER"))
             .isInstanceOf(GlobalException.class)
             .extracting("errorCode")
             .isEqualTo(ErrorCode.MEMBER_EMAIL_LENGTH);
@@ -42,7 +41,7 @@ class MemberTest {
     void create_withNickname_fail(final String invalidNickname) {
         assertThatThrownBy(
             () -> Member.create("journey@gmail.com", "password", invalidNickname,
-                "010-1234-5678", MemberRole.USER))
+                "010-1234-5678", "USER"))
             .isInstanceOf(GlobalException.class)
             .extracting("errorCode")
             .isEqualTo(ErrorCode.MEMBER_NICKNAME_LENGTH);

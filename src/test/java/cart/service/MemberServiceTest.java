@@ -49,7 +49,7 @@ class MemberServiceTest {
         final MemberResponse result = memberService.getById(savedUserId);
         assertThat(result)
             .extracting("email", "role", "password", "nickname", "telephone")
-            .containsExactly("journey@gmail.com", "USER", "cGFzc3dvcmQ=", "져니", "010-1234-5678");
+            .containsExactly("journey@gmail.com", "USER", "password", "져니", "010-1234-5678");
     }
 
     @Test
@@ -85,7 +85,7 @@ class MemberServiceTest {
         // then
         assertThat(memberResponse)
             .extracting("email", "role", "password", "nickname", "telephone")
-            .containsExactly("journey@gmail.com", "USER", "cGFzc3dvcmQ=", "져니", "010-1234-5678");
+            .containsExactly("journey@gmail.com", "USER", "password", "져니", "010-1234-5678");
     }
 
     @Test
@@ -111,7 +111,7 @@ class MemberServiceTest {
         // then
         assertThat(memberResponse)
             .extracting("email", "role", "password", "nickname", "telephone")
-            .containsExactly("journey@gmail.com", "USER", "cGFzc3dvcmQ=", "져니", "010-1234-5678");
+            .containsExactly("journey@gmail.com", "USER", "password", "져니", "010-1234-5678");
     }
 
     @Test
@@ -144,8 +144,8 @@ class MemberServiceTest {
         assertThat(members)
             .extracting("id", "role", "email", "password", "nickname", "telephone")
             .containsExactly(
-                tuple(1L, "USER", "journey@gmail.com", "cGFzc3dvcmQ=", "져니", "010-1234-5678"),
-                tuple(2L, "USER", "koda@gmail.com", "a29kYWlzc29jdXRl", "코다", "010-4321-8765"),
-                tuple(3L, "USER", "baron@gmail.com", "YmFyb25iYWJv", "바론", "010-1111-2222"));
+                tuple(1L, "USER", "journey@gmail.com", "password", "져니", "010-1234-5678"),
+                tuple(2L, "USER", "koda@gmail.com", "kodaissocute", "코다", "010-4321-8765"),
+                tuple(3L, "USER", "baron@gmail.com", "baronbabo", "바론", "010-1111-2222"));
     }
 }

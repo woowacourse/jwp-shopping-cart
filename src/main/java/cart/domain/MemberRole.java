@@ -7,7 +7,7 @@ import cart.exception.GlobalException;
 public enum MemberRole {
     USER, ADMIN;
 
-    public static MemberRole from(final String role) {
+    static MemberRole from(final String role) {
         try {
             return MemberRole.valueOf(role);
         } catch (final IllegalArgumentException e) {

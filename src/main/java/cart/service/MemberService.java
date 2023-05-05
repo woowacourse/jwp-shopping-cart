@@ -2,7 +2,6 @@ package cart.service;
 
 import cart.domain.Member;
 import cart.domain.MemberPassword;
-import cart.domain.MemberRole;
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.persistence.dao.MemberDao;
@@ -54,15 +53,13 @@ public class MemberService {
 
     private MemberEntity convertToEntity(final MemberRequest memberRequest) {
         final Member member = Member.create(memberRequest.getEmail(), memberRequest.getPassword(),
-            memberRequest.getNickname(), memberRequest.getTelephone(),
-            MemberRole.from(memberRequest.getRole()));
+            memberRequest.getNickname(), memberRequest.getTelephone(), memberRequest.getRole());
         return new MemberEntity(member.getEmail(), member.getRole().name(),
             member.getPassword(), member.getNickname(), member.getTelephone());
     }
 
     private MemberResponse convertToDto(final MemberEntity memberEntity) {
-        final MemberPassword password = MemberPassword.create(memberEntity.getPassword());
-        final String decodedPassword = password.decodePassword();
+        final String decodedPassword = MemberPassword.decodePassword(memberEntity.getPassword());
         return new MemberResponse(memberEntity.getId(), memberEntity.getRole(), memberEntity.getEmail(),
             decodedPassword, memberEntity.getNickname(), memberEntity.getTelephone());
     }

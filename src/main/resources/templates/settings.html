@@ -34,7 +34,7 @@
         <div th:onclick="showMemberInfo([[${member.id}]])">
           <div th:if="${member.getRole().equals('ADMIN')}">👑</div>
           <div class="member-item-email" th:text="${member.getEmail()}"></div>
-          <div class="member-item-password" th:text="${member.getPassword()}"></div>
+          <div class="member-item-name" th:text="${member.getNickname()}"></div>
         </div>
         <button type="submit" id="delete-btn" class="member-item-select"
                 th:onclick="selectMember([[${member}]])">

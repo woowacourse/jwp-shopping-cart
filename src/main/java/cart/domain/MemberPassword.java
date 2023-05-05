@@ -16,15 +16,14 @@ public class MemberPassword {
         this.password = password;
     }
 
-    public static MemberPassword create(final String password) {
+    static MemberPassword create(final String password) {
         validatePassword(password);
         final String encodePassword = encodePassword(password);
         return new MemberPassword(encodePassword);
     }
 
-    public String decodePassword() {
-        return new String(Base64.getDecoder().decode(password.getBytes()),
-            StandardCharsets.UTF_8);
+    public static String decodePassword(final String password) {
+        return new String(Base64.getDecoder().decode(password.getBytes()), StandardCharsets.UTF_8);
     }
 
     private static void validatePassword(final String password) {

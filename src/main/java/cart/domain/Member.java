@@ -14,7 +14,6 @@ public class Member {
     private final MemberPassword password;
     private final String nickname;
     private final String telephone;
-
     private final MemberRole role;
 
     private Member(final String email, final MemberPassword password, final String nickname,
@@ -27,10 +26,10 @@ public class Member {
     }
 
     public static Member create(final String email, final String password, final String nickname,
-                                final String telephone, final MemberRole role) {
+                                final String telephone, final String role) {
         validateEmail(email);
         validateNickname(nickname);
-        return new Member(email, MemberPassword.create(password), nickname, telephone, role);
+        return new Member(email, MemberPassword.create(password), nickname, telephone, MemberRole.from(role));
     }
 
     private static void validateEmail(final String email) {
