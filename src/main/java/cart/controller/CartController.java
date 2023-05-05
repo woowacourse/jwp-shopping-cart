@@ -1,6 +1,9 @@
 package cart.controller;
 
 import cart.authority.Authority;
+import cart.controller.dto.CartItemCreationRequest;
+import cart.controller.dto.CartItemDeleteRequest;
+import cart.controller.dto.MemberIdRequest;
 import cart.domain.dto.CartDto;
 import cart.domain.dto.ProductDto;
 import cart.service.CartService;
@@ -8,7 +11,7 @@ import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,25 +26,25 @@ public class CartController {
         this.productService = productService;
     }
 
-    @PostMapping("/{id}")
+    @PostMapping
     public ResponseEntity<String> addProduct(
-            @PathVariable("id") @NotNull(message = "상품 아이디가 비어있습니다.") final Long productId,
-            @Authority final Long memberId
+            @RequestBody @Valid final CartItemCreationRequest productId,
+            @Authority final MemberIdRequest memberId
     ) {
         cartService.addProduct(productId, memberId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/items")
-    public ResponseEntity<List<ProductDto>> findIdMemberId(@Authority final Long memberId) {
+    public ResponseEntity<List<ProductDto>> findIdMemberId(@Authority final MemberIdRequest memberId) {
         final List<CartDto> cartDtos = cartService.getProducts(memberId);
         return ResponseEntity.ok(productService.findById(cartDtos));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     public ResponseEntity<String> deleteProduct(
-            @PathVariable("id") @NotNull(message = "상품 아이디가 비어있습니다.") final Long productId,
-            @Authority final Long memberId
+            @RequestBody @Valid final CartItemDeleteRequest productId,
+            @Authority final MemberIdRequest memberId
     ) {
         cartService.delete(memberId, productId);
         return ResponseEntity.noContent().build();

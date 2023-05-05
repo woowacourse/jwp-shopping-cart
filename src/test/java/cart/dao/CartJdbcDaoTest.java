@@ -44,7 +44,7 @@ class CartJdbcDaoTest {
     void deleteById() {
         final CartEntity cartEntity = new CartEntity(2L, 101L, 101L);
         cartJdbcDao.save(cartEntity);
-        cartJdbcDao.deleteById(101L, 101L);
+        cartJdbcDao.deleteById(new CartEntity(101L, 101L));
 
         final List<CartEntity> cartEntities = cartJdbcDao.findByMemberId(101L);
         assertAll(

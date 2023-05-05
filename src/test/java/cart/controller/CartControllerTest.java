@@ -4,6 +4,8 @@ import cart.dao.CartJdbcDao;
 import cart.dao.ProductJdbcDao;
 import cart.entity.CartEntity;
 import cart.entity.ProductEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +35,8 @@ class CartControllerTest {
     private CartJdbcDao cartJdbcDao;
     @Autowired
     private ProductJdbcDao productJdbcDao;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setup(@LocalServerPort int port) {
@@ -52,13 +57,15 @@ class CartControllerTest {
     }
 
     @Test
-    @DisplayName("/cart/{id} post요청 200을 응답한다.")
-    void cartAddProduct() {
+    @DisplayName("/cart post요청 200을 응답한다.")
+    void cartAddProduct() throws JsonProcessingException {
         Integer id = productJdbcDao.insert(new ProductEntity("누누", "a", 1000L));
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(objectMapper.writeValueAsString(id))
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().post("/cart/" + id)
+                .when().post("/cart")
                 .then().log().all()
                 .extract();
 
@@ -73,15 +80,16 @@ class CartControllerTest {
 
     @Test
     @DisplayName("/cart/{id} delete요청 200을 응답한다.")
-    void cartDeleteProduct() {
+    void cartDeleteProduct() throws JsonProcessingException {
         Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 1000L));
-        System.out.println("delete");
-        System.out.println(id);
+
 
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(objectMapper.writeValueAsString(id))
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().delete("/cart/" + id)
+                .when().delete("/cart")
                 .then().log().all()
                 .extract();
 

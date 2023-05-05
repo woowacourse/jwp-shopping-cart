@@ -1,5 +1,8 @@
 package cart.service;
 
+import cart.controller.dto.CartItemCreationRequest;
+import cart.controller.dto.CartItemDeleteRequest;
+import cart.controller.dto.MemberIdRequest;
 import cart.dao.CartDao;
 import cart.domain.dto.CartDto;
 import cart.entity.CartEntity;
@@ -20,19 +23,21 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    public void addProduct(final Long productId, final Long member) {
-        final CartEntity cartEntity = new CartEntity(productId, member);
+    public void addProduct(final CartItemCreationRequest productId, final MemberIdRequest member) {
+        final CartEntity cartEntity = new CartEntity(productId.getProductId(), member.getId());
 
         cartDao.save(cartEntity);
     }
 
-    public void delete(final Long memberId, final Long productId) {
-        cartDao.deleteById(memberId, productId);
+    public void delete(final MemberIdRequest memberId, final CartItemDeleteRequest productId) {
+        final CartEntity cartEntity = new CartEntity(productId.getProductId(), memberId.getId());
+
+        cartDao.deleteById(cartEntity);
     }
 
     @Transactional(readOnly = true)
-    public List<CartDto> getProducts(final Long memberId) {
-        final List<CartEntity> cartEntities = cartDao.findByMemberId(memberId);
+    public List<CartDto> getProducts(final MemberIdRequest memberId) {
+        final List<CartEntity> cartEntities = cartDao.findByMemberId(memberId.getId());
 
         return cartEntities.stream()
                 .map(cart -> new CartDto(cart.getId(), cart.getProductId(), cart.getMemberId()))

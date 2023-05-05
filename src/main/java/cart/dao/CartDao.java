@@ -7,7 +7,7 @@ import java.util.List;
 public interface CartDao {
     void save(final CartEntity cart);
 
-    void deleteById(final Long memberId, final Long productId);
+    void deleteById(final CartEntity cart);
 
     List<CartEntity> findByMemberId(final Long memberId);
 }
