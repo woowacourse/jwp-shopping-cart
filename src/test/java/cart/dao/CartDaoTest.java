@@ -1,19 +1,16 @@
 package cart.dao;
 
 import cart.domain.*;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
 @Sql("classpath:initializeTestDb.sql")
@@ -50,7 +47,7 @@ class CartDaoTest {
     @Test
     void findByUserId() {
         //when
-        List<Cart> carts = cartDao.findBy(1L);
+        List<Cart> carts = cartDao.findByUserId(1L);
         //then
         assertThat(carts).hasSize(2);
     }

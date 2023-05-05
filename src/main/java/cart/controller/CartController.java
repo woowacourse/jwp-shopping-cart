@@ -38,8 +38,8 @@ public class CartController {
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCart(@PathVariable final Long cartId) {
-        cartService.deleteCart(cartId);
+    public ResponseEntity<Void> deleteCart(@BasicAuthorization final LoginUser loginUser, @PathVariable final Long cartId) {
+        cartService.deleteCart(loginUser.getEmail(), cartId);
         return ResponseEntity.status(HttpStatus.OK)
                 .location(URI.create("/"))
                 .build();

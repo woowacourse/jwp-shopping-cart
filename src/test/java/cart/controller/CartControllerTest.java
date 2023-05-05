@@ -92,11 +92,11 @@ public class CartControllerTest {
     @Test
     void deleteCartMappingURL() throws Exception {
         //given
-        Mockito.doNothing().when(cartService).deleteCart(1L);
+        Mockito.doNothing().when(cartService).deleteCart("email@email.com", 1L);
         //when
         mockMvc.perform(MockMvcRequestBuilders.delete("/carts/1"));
         //given
-        Mockito.verify(cartController, Mockito.times(1)).deleteCart(Mockito.any());
+        Mockito.verify(cartController, Mockito.times(1)).deleteCart(Mockito.any(), Mockito.anyLong());
     }
 
     @DisplayName("장바구니 추가 시, ResponseEntity<Void>를 응답한다.")
@@ -145,10 +145,13 @@ public class CartControllerTest {
     @Test
     void deleteItem() {
         //given
+        String email = "email@email.com";
+        String password = "12345678";
+        LoginUser loginUser = new LoginUser(email, password);
         Long cartId = 1L;
-        doNothing().when(mockCartService).deleteCart(cartId);
+        doNothing().when(mockCartService).deleteCart("email@email.com",cartId);
         //when
-        ResponseEntity<Void> responseEntity = mockCartController.deleteCart(cartId);
+        ResponseEntity<Void> responseEntity = mockCartController.deleteCart(loginUser, cartId);
         //then
         Assertions.assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),

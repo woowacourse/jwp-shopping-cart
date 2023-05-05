@@ -5,7 +5,6 @@ import cart.dao.CartDao;
 import cart.dao.ItemDao;
 import cart.dao.UserDao;
 import cart.domain.*;
-import com.sun.source.tree.ModuleTree;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,7 +65,7 @@ public class CartServiceTest {
                 new Cart(2L, user, item2),
                 new Cart(3L, user, item3)
         );
-        Mockito.when(cartDao.findBy(user.getId())).thenReturn(carts);
+        Mockito.when(cartDao.findByUserId(user.getId())).thenReturn(carts);
         //when
         List<CartResponse> cartResponses = cartService.loadItemInsideCart(email);
         //given
@@ -77,10 +76,17 @@ public class CartServiceTest {
     @Test
     void deleteCart() {
         //given
+        String email = "email1@email.com";
+        String password = "12345678";
+        User user = new User(1L, new Email(email), new Password(password));
+        Mockito.when(userDao.findBy(email)).thenReturn(Optional.of(user));
+        Item item1 = new Item.Builder().id(1L).name(new Name("위키드")).imageUrl(new ImageUrl("https://image.yes24.com/themusical/upFiles/Themusical/Play/post_2013wicked.jpg")).price(new Price(150000)).build();
         Long cartId = 1L;
+        Mockito.when(userDao.findBy(email)).thenReturn(Optional.of(user));
+        Mockito.when(cartDao.findById(cartId)).thenReturn(Optional.of(new Cart(cartId, user, item1)));
         Mockito.doNothing().when(cartDao).delete(cartId);
         //when
-        cartService.deleteCart(cartId);
+        cartService.deleteCart(email, cartId);
         //then
         Mockito.verify(cartDao, Mockito.times(1)).delete(cartId);
     }
