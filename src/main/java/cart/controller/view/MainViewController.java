@@ -1,8 +1,7 @@
 package cart.controller.view;
 
-import cart.dto.ProductCategoryDto;
+import cart.dtomapper.ProductResponseDtoMapper;
 import cart.service.ProductService;
-import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,8 +17,7 @@ public final class MainViewController {
 
     @GetMapping
     public ModelAndView indexPage(final ModelAndView modelAndView) {
-        final List<ProductCategoryDto> productCategoryDtos = productService.findAll();
-        modelAndView.addObject("products", productCategoryDtos);
+        modelAndView.addObject("products", ProductResponseDtoMapper.asList(productService.findAll()));
         modelAndView.setViewName("index");
         return modelAndView;
     }
