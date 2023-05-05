@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Component
-public class ProductDao {
+public final class ProductDao {
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(JdbcTemplate jdbcTemplate) {

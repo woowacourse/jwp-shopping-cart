@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-public class UserRestController {
+public final class UserRestController {
 
     private final UserService userService;
 
