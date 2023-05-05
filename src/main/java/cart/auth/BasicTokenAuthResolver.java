@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class BasicTokenAuthResolver implements TokenAuthResolver {
     private static final int BASIC_TOKEN_SIZE = 2;
     private static final int BASIC_TOKEN_PASSWORD_INDEX = 1;
+    private static final String BASIC_TOKEN_PREFIX = "Basic";
 
     private final MemberDao memberDao;
     private MemberEntity member = null;
@@ -42,15 +43,13 @@ public class BasicTokenAuthResolver implements TokenAuthResolver {
         if (nativeRequest == null) {
             return null;
         }
-
         validateToken(nativeRequest);
-
         return member.getId();
     }
 
     @Override
     public void validateToken(HttpServletRequest servletRequest) {
-        List<String> token = extractBasicToken(servletRequest);
+        List<String> token = extractToken(servletRequest);
 
         if (token.size() != BASIC_TOKEN_SIZE) {
             throw new InvalidTokenException("유효하지 않은 토큰입니다." + System.lineSeparator() + "token : " + token);
@@ -68,9 +67,10 @@ public class BasicTokenAuthResolver implements TokenAuthResolver {
         }
     }
 
-    private List<String> extractBasicToken(HttpServletRequest nativeRequest) {
+    @Override
+    public List<String> extractToken(HttpServletRequest nativeRequest) {
         String requestHeader = nativeRequest.getHeader("Authorization");
-        String credential = StringUtils.delete(requestHeader, "Basic").strip();
+        String credential = StringUtils.delete(requestHeader, BASIC_TOKEN_PREFIX).strip();
 
         byte[] decode = Base64.getDecoder().decode(credential);
         String result = new String(decode);
