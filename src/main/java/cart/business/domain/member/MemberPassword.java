@@ -14,7 +14,7 @@ public class MemberPassword {
 
     private void validate(String password) {
         if (password.length() > MAX_SIZE || password.length() < MIN_SIZE) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(String.format("비밀번호는 %d자 이상, %d자 이하여야 합니다.", MIN_SIZE, MAX_SIZE));
         }
     }
 

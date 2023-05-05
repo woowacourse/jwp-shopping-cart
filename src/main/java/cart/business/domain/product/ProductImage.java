@@ -11,7 +11,7 @@ public class ProductImage {
         try {
             this.url = new URL(url);
         } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("URL 포맷이 맞지 않습니다");
+            throw new IllegalArgumentException("URL 포맷이 맞지 않습니다.");
         }
     }
 
