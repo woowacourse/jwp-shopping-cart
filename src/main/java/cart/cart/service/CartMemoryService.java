@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class CartMemoryService implements CartService {
     private final CartDao cartDao;
     private final MemberService memberService;
     
     @Override
-    @Transactional
     public Long addCart(final Long productId, final MemberRequest memberRequest) {
         if (isExistCartProduct(productId, memberRequest)) {
             throw new IllegalArgumentException("[ERROR] 해당 계정엔 해당 물품이 이미 장바구니에 존재합니다.");
