@@ -28,6 +28,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (authService.isNotRegistered(email, password)) {
             throw new AuthorizationException("올바른 인증 정보가 필요합니다.");
         }
+        request.setAttribute("email", email);
+        request.setAttribute("password", password);
         return true;
     }
 }
