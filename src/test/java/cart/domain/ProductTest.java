@@ -19,7 +19,7 @@ class ProductTest {
 
         Assertions.assertThatThrownBy(() -> new Product(name, ImageFixture.url, 1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("상품명은 50자를 초과할 수 없습니다.");
+                .hasMessage("상품명은 50자를 초과할 수 없습니다." + System.lineSeparator() + "name : " + name);
     }
 
     @ParameterizedTest
@@ -28,6 +28,6 @@ class ProductTest {
     void 상품명이_빈_값이면_예외가_발생한다(String name) {
         Assertions.assertThatThrownBy(() -> new Product(name, ImageFixture.url, 1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("상품명은 비어있을 수 없습니다.");
+                .hasMessage("상품명은 비어있을 수 없습니다." + System.lineSeparator() + "name : " + name);
     }
 }

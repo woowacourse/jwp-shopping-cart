@@ -58,7 +58,7 @@ class ProductServiceTest {
 
             assertThatThrownBy(() -> productService.create(request))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품명은 50자를 초과할 수 없습니다.");
+                    .hasMessage("상품명은 50자를 초과할 수 없습니다." + System.lineSeparator() + "name : " + invalidProductName);
         }
 
         @Test
@@ -67,7 +67,7 @@ class ProductServiceTest {
 
             assertThatThrownBy(() -> productService.create(request))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("이미지 URL은 비어있을 수 없습니다.");
+                    .hasMessage("이미지 URL은 비어있을 수 없습니다." + System.lineSeparator() + "url : " + request.getImage());
         }
 
         @Test
@@ -76,7 +76,7 @@ class ProductServiceTest {
 
             assertThatThrownBy(() -> productService.create(request))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("가격은 음수 혹은 빈 값이 될 수 없습니다.");
+                    .hasMessage("가격은 음수 혹은 빈 값이 될 수 없습니다." + System.lineSeparator() + "price : " + request.getPrice());
         }
     }
 
