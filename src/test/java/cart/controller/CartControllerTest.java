@@ -65,7 +65,7 @@ class CartControllerTest {
         Optional<ProductEntity> productEntity = productJdbcDao.findById(Long.valueOf(id));
 
         Assertions.assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(productEntity.isEmpty()).isFalse()
         );
 
@@ -89,7 +89,7 @@ class CartControllerTest {
         List<CartEntity> cartEntities = cartJdbcDao.findByMemberId(Long.valueOf(id));
 
         Assertions.assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
                 () -> assertThat(cartEntities.size()).isEqualTo(0)
         );
 

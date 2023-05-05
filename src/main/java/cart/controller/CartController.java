@@ -29,7 +29,7 @@ public class CartController {
             @Authority final Long memberId
     ) {
         cartService.addProduct(productId, memberId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/items")
@@ -44,6 +44,6 @@ public class CartController {
             @Authority final Long memberId
     ) {
         cartService.delete(memberId, productId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
