@@ -59,4 +59,10 @@ public final class ExceptionAdvice {
         logger.error(stringBuilder.toString());
         return ResponseEntity.badRequest().body(new ErrorResponseDto(stringBuilder.toString()));
     }
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(final CustomException e) {
+        logger.error(e.getMessage());
+        return ResponseEntity.status(e.getHttpStatus()).body(new ErrorResponseDto(e.getMessage()));
+    }
 }

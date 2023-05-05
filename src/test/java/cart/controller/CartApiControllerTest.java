@@ -62,7 +62,7 @@ class CartApiControllerTest {
         }
 
         @Test
-        @DisplayName("유효하지 않은 멤버 인증이라면 400 상태를 반환한다.")
+        @DisplayName("유효하지 않은 멤버 인증이라면 401 상태를 반환한다.")
         void findCartItemsForInvalidMember() {
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com".getBytes()));
 
@@ -72,7 +72,7 @@ class CartApiControllerTest {
                     .when()
                     .get("/carts")
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .body("message", equalTo("유효하지 않은 인증 정보입니다."));
         }
     }
@@ -99,7 +99,7 @@ class CartApiControllerTest {
         }
 
         @Test
-        @DisplayName("유효하지 않은 멤버 인증이라면 400 상태를 반환한다.")
+        @DisplayName("유효하지 않은 멤버 인증이라면 401 상태를 반환한다.")
         void putInCartWithInvalidAuth() {
             final String encodedAuth = new String(Base64.getEncoder().encode("a@a.com".getBytes()));
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
@@ -111,7 +111,7 @@ class CartApiControllerTest {
                     .when()
                     .post("/carts")
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .body("message", equalTo("유효하지 않은 인증 정보입니다."));
         }
 
@@ -168,7 +168,7 @@ class CartApiControllerTest {
         }
 
         @Test
-        @DisplayName("유효하지 않은 멤버 인증이라면 400 상태를 반환한다.")
+        @DisplayName("유효하지 않은 멤버 인증이라면 401 상태를 반환한다.")
         void removeCartItemWithInvalidMember() {
             final Long savedProductId = productService.registerProduct(ProductRequestFixture.request);
             final Long savedCartId = cartService.putInCart(savedProductId, new MemberAuthDto("a@a.com", "password1"));
@@ -180,7 +180,7 @@ class CartApiControllerTest {
                     .when()
                     .delete("/carts/" + savedCartId)
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .body("message", equalTo("유효하지 않은 인증 정보입니다."));
         }
 

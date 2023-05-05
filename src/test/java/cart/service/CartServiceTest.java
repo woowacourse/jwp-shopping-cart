@@ -17,6 +17,10 @@ import cart.dto.response.CartProductResponseDto;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
 import cart.entity.product.ProductEntity;
+import cart.exception.CartNotFoundException;
+import cart.exception.CartOwnerException;
+import cart.exception.MemberNotFoundException;
+import cart.exception.ProductNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -89,7 +93,7 @@ class CartServiceTest {
             given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> cartService.findCartItemsForMember(memberAuthDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(MemberNotFoundException.class)
                     .hasMessage("등록되지 않은 회원입니다.");
         }
     }
@@ -138,7 +142,7 @@ class CartServiceTest {
             given(productDao.findById(any())).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> cartService.putInCart(1L, memberAuthDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(ProductNotFoundException.class)
                     .hasMessage("등록되지 않은 상품입니다.");
         }
 
@@ -152,7 +156,7 @@ class CartServiceTest {
             given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> cartService.putInCart(1L, memberAuthDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(MemberNotFoundException.class)
                     .hasMessage("등록되지 않은 회원입니다.");
         }
     }
@@ -190,7 +194,7 @@ class CartServiceTest {
             given(memberDao.findByEmailAndPassword(anyString(), anyString())).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> cartService.removeCartItem(1L, memberAuthDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(MemberNotFoundException.class)
                     .hasMessage("등록되지 않은 회원입니다.");
         }
 
@@ -209,7 +213,7 @@ class CartServiceTest {
             given(cartDao.findById(any())).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> cartService.removeCartItem(1L, memberAuthDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(CartNotFoundException.class)
                     .hasMessage("등록되지 않은 장바구니 상품입니다.");
         }
 
@@ -228,7 +232,7 @@ class CartServiceTest {
             given(cartDao.findById(any())).willReturn(Optional.of(new CartEntity(1L, 2L, 1L)));
 
             assertThatThrownBy(() -> cartService.removeCartItem(1L, memberAuthDto))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(CartOwnerException.class)
                     .hasMessage("장바구니 상품 소유자가 아닙니다.");
         }
     }

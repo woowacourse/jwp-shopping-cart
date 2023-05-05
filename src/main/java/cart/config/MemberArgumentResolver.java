@@ -1,6 +1,7 @@
 package cart.config;
 
 import cart.dto.MemberAuthDto;
+import cart.exception.AuthenticationException;
 import java.util.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -36,16 +37,16 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private void validateAuthorization(final String authorization) {
         if (authorization == null) {
-            throw new IllegalArgumentException("인증 정보가 존재하지 않습니다.");
+            throw new AuthenticationException("인증 정보가 존재하지 않습니다.");
         }
         if (!authorization.matches(BASIC_REGEX)) {
-            throw new IllegalArgumentException("유효하지 않은 인증 정보 형식입니다.");
+            throw new AuthenticationException("유효하지 않은 인증 정보 형식입니다.");
         }
     }
 
     private void validateAuth(final String[] auth) {
         if (auth.length != 2) {
-            throw new IllegalArgumentException("유효하지 않은 인증 정보입니다.");
+            throw new AuthenticationException("유효하지 않은 인증 정보입니다.");
         }
     }
 }

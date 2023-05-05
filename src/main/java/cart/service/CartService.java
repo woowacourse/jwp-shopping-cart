@@ -8,6 +8,10 @@ import cart.dto.response.CartProductResponseDto;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
 import cart.entity.product.ProductEntity;
+import cart.exception.CartNotFoundException;
+import cart.exception.CartOwnerException;
+import cart.exception.MemberNotFoundException;
+import cart.exception.ProductNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -40,12 +44,12 @@ public class CartService {
 
     private MemberEntity getMember(final MemberAuthDto memberAuthDto) {
         return memberDao.findByEmailAndPassword(memberAuthDto.getEmail(), memberAuthDto.getPassword())
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 회원입니다."));
+                .orElseThrow(() -> new MemberNotFoundException("등록되지 않은 회원입니다."));
     }
 
     private ProductEntity getProduct(final Long productId) {
         return productDao.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 상품입니다."));
+                .orElseThrow(() -> new ProductNotFoundException("등록되지 않은 상품입니다."));
     }
 
     @Transactional
@@ -60,13 +64,13 @@ public class CartService {
         final MemberEntity member = getMember(memberAuthDto);
         final CartEntity cart = getCart(cartId);
         if (!cart.isOwner(member)) {
-            throw new IllegalArgumentException("장바구니 상품 소유자가 아닙니다.");
+            throw new CartOwnerException("장바구니 상품 소유자가 아닙니다.");
         }
         cartDao.delete(cartId);
     }
 
     private CartEntity getCart(final Long cartId) {
         return cartDao.findById(cartId)
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 장바구니 상품입니다."));
+                .orElseThrow(() -> new CartNotFoundException("등록되지 않은 장바구니 상품입니다."));
     }
 }
