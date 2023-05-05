@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Member;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -57,9 +56,9 @@ class MemberDaoTest {
         List<Member> result = memberDao.findAll();
 
         // then
-        assertThat(result).usingRecursiveComparison().ignoringFieldsOfTypes(LocalDateTime.class).isEqualTo(List.of(
-                new Member(id1, member1.getEmail(), member1.getPassword(), LocalDateTime.now(), LocalDateTime.now()),
-                new Member(id2, member2.getEmail(), member2.getPassword(), LocalDateTime.now(), LocalDateTime.now())
+        assertThat(result).usingRecursiveComparison().isEqualTo(List.of(
+                new Member(id1, member1.getEmail(), member1.getPassword()),
+                new Member(id2, member2.getEmail(), member2.getPassword())
         ));
     }
 }

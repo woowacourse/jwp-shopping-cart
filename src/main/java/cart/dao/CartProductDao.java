@@ -19,9 +19,7 @@ public class CartProductDao {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("image"),
-            resultSet.getLong("price"),
-            resultSet.getTimestamp("created_at").toLocalDateTime(),
-            resultSet.getTimestamp("updated_at").toLocalDateTime()
+            resultSet.getLong("price")
     );
 
     public CartProductDao(final JdbcTemplate jdbcTemplate) {
@@ -38,7 +36,7 @@ public class CartProductDao {
     }
 
     public List<Product> findAllProductByMemberId(final Long memberId) {
-        final String sql = "SELECT product.id AS id, name, image, price, product.created_at, product.updated_at "
+        final String sql = "SELECT product.id AS id, name, image, price "
                 + "FROM cart_product "
                 + "LEFT JOIN product "
                 + "ON cart_product.product_id = product.id "

@@ -17,9 +17,7 @@ public class MemberDao {
     private final RowMapper<Member> rowMapper = (resultSet, rowNum) -> new Member(
             resultSet.getLong("id"),
             resultSet.getString("email"),
-            resultSet.getString("password"),
-            resultSet.getTimestamp("created_at").toLocalDateTime(),
-            resultSet.getTimestamp("updated_at").toLocalDateTime()
+            resultSet.getString("password")
     );
 
     public MemberDao(final JdbcTemplate jdbcTemplate) {

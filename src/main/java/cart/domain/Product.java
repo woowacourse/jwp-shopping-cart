@@ -1,7 +1,6 @@
 package cart.domain;
 
 import cart.exception.ProductNotValidException;
-import java.time.LocalDateTime;
 
 public class Product {
 
@@ -12,32 +11,17 @@ public class Product {
     private final String name;
     private final String image;
     private final long price;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
 
     public Product(final String name, final String image, final long price) {
-        this(null, name, image, price, null, null);
+        this(null, name, image, price);
     }
 
     public Product(final Long id, final String name, final String image, final long price) {
-        this(id, name, image, price, null, null);
-    }
-
-    public Product(
-            final Long id,
-            final String name,
-            final String image,
-            final long price,
-            final LocalDateTime createdAt,
-            final LocalDateTime updatedAt
-    ) {
         validate(name, image, price);
         this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     private void validate(final String name, final String image, final long price) {
@@ -78,13 +62,5 @@ public class Product {
 
     public long getPrice() {
         return price;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 }

@@ -1,33 +1,22 @@
 package cart.domain;
 
 import cart.exception.MemberNotValidException;
-import java.time.LocalDateTime;
 
 public class Member {
 
     private final Long id;
     private final String email;
     private final String password;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
 
     public Member(final String email, final String password) {
-        this(null, email, password, null, null);
+        this(null, email, password);
     }
 
-    public Member(
-            final Long id,
-            final String email,
-            final String password,
-            final LocalDateTime createdAt,
-            final LocalDateTime updatedAt
-    ) {
+    public Member(final Long id, final String email, final String password) {
         validate(email, password);
         this.id = id;
         this.email = email;
         this.password = password;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     private void validate(final String email, final String password) {
@@ -57,13 +46,5 @@ public class Member {
 
     public String getPassword() {
         return password;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 }

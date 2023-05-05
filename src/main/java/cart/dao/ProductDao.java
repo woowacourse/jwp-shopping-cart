@@ -20,9 +20,7 @@ public class ProductDao {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("image"),
-            resultSet.getLong("price"),
-            resultSet.getTimestamp("created_at").toLocalDateTime(),
-            resultSet.getTimestamp("updated_at").toLocalDateTime()
+            resultSet.getLong("price")
     );
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {

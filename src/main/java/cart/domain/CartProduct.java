@@ -1,31 +1,19 @@
 package cart.domain;
 
-import java.time.LocalDateTime;
-
 public class CartProduct {
 
     private final Long id;
     private final Long memberId;
     private final Long productId;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
 
     public CartProduct(final Long memberId, final Long productId) {
-        this(null, memberId, productId, null, null);
+        this(null, memberId, productId);
     }
 
-    public CartProduct(
-            final Long id,
-            final Long memberId,
-            final Long productId,
-            final LocalDateTime createdAt,
-            final LocalDateTime updatedAt
-    ) {
+    public CartProduct(final Long id, final Long memberId, final Long productId) {
         this.id = id;
         this.memberId = memberId;
         this.productId = productId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public Long getId() {
@@ -38,13 +26,5 @@ public class CartProduct {
 
     public Long getProductId() {
         return productId;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 }
