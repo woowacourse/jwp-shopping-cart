@@ -46,7 +46,7 @@ public class ViewController {
     }
 
     @GetMapping(path = "/cart")
-    public String cart(Model model) {
+    public String cart() {
         return "cart";
     }
 }

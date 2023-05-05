@@ -12,7 +12,7 @@ public class BasicAuthorizationExtractor {
 
     @Autowired
     public BasicAuthorizationExtractor(UserService userService) {
-        this.userService = userService;
+        BasicAuthorizationExtractor.userService = userService;
     }
 
     public static UserDto extract(final String header) {
