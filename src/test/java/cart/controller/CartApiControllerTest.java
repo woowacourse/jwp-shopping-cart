@@ -2,6 +2,7 @@ package cart.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.controller.dto.request.cart.CartInsertRequest;
 import cart.dao.CartDao;
 import cart.dao.CartEntity;
 import cart.dao.ProductDao;
@@ -66,11 +67,13 @@ class CartApiControllerTest {
         List<ProductEntity> allProducts = productDao.findAll();
         ProductEntity productEntity = allProducts.get(0);
         int productId = productEntity.getId();
+        CartInsertRequest cartInsertRequest = new CartInsertRequest(productId);
 
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(header)
-                .when().post("http://localhost:" + port + "/carts/" + productId)
+                .body(cartInsertRequest)
+                .when().post("http://localhost:" + port + "/carts")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
 
@@ -86,10 +89,16 @@ class CartApiControllerTest {
         String credentials = "1:naver.com:1234";
         Header header = getHeader(credentials);
 
+        List<ProductEntity> allProducts = productDao.findAll();
+        ProductEntity productEntity = allProducts.get(0);
+        int productId = productEntity.getId();
+        CartInsertRequest cartInsertRequest = new CartInsertRequest(productId);
+
         RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(header)
-                .when().post("http://localhost:" + port + "/carts/" + 1)
+                .body(cartInsertRequest)
+                .when().post("http://localhost:" + port + "/carts")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
 
