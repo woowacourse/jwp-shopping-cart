@@ -53,4 +53,14 @@ class ViewControllerTest {
 			.statusCode(HttpStatus.OK.value())
 			.contentType(ContentType.HTML);
 	}
+
+	@Test
+	void displayCartPageTest() {
+		given()
+			.when()
+			.get("/cart-page")
+			.then()
+			.statusCode(HttpStatus.OK.value())
+			.contentType(ContentType.HTML);
+	}
 }
