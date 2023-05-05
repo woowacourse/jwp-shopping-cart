@@ -11,8 +11,8 @@ public class H2MemberDao extends MemberDao {
 
     private static final RowMapper<Member> MEMBER_ROW_MAPPER = (resultSet, rowNum) -> new Member(
             resultSet.getLong("id"),
-            new Email(resultSet.getString("email")),
-            new Password(resultSet.getString("password"))
+            resultSet.getString("email"),
+            resultSet.getString("password")
     );
     private final JdbcTemplate jdbcTemplate;
 
@@ -26,7 +26,9 @@ public class H2MemberDao extends MemberDao {
     }
 
     @Override
-    Optional<Member> findByEmail(final Email email) {
-        return Optional.empty();
+    Optional<Member> findByEmail(final String email) {
+        Member member = jdbcTemplate.queryForObject("SELECT id, email, password FROM MEMBERS WHERE email = ?",
+                MEMBER_ROW_MAPPER, email);
+        return Optional.ofNullable(member);
     }
 }

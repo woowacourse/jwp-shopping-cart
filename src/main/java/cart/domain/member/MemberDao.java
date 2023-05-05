@@ -5,7 +5,7 @@ import java.util.Optional;
 
 abstract class MemberDao implements Dao<Member> {
 
-    abstract Optional<Member> findByEmail(Email email);
+    abstract Optional<Member> findByEmail(String email);
 
     @Override
     public final Member insert(final Member entity) {
