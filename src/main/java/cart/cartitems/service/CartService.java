@@ -8,7 +8,6 @@ import cart.cartitems.dto.request.CartItemAddRequest;
 import cart.exception.DuplicateCartItemException;
 import cart.product.dto.ProductDto;
 import cart.product.service.ProductService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,19 +16,18 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class CartService {
 
-    private final AuthorizationService authorizationService;
     private final CartDao cartDao;
     private final ProductService productService;
+    private final AuthorizationService authorizationService;
 
     @Autowired
-    public CartService(AuthorizationService authorizationService, CartDao cartDao, ProductService productService) {
-        this.authorizationService = authorizationService;
+    public CartService(CartDao cartDao, ProductService productService, AuthorizationService authorizationService) {
         this.cartDao = cartDao;
         this.productService = productService;
+        this.authorizationService = authorizationService;
     }
 
     public List<ProductDto> findItemsOfCart(AuthInfo authInfo) {
@@ -49,22 +47,23 @@ public class CartService {
         if (cartDao.containsItem(itemToAdd)) {
             throw new DuplicateCartItemException("이미 담은 상품은 중복으로 담을 수 없습니다");
         }
+
         return cartDao.saveItem(itemToAdd);
     }
 
-    public long deleteItemFromCart(AuthInfo authInfo, Long productId) {
-        if (Objects.isNull(productId)) {
+    public long deleteItemFromCart(AuthInfo authInfo, Long productIdToDelete) {
+        if (Objects.isNull(productIdToDelete)) {
             throw new IllegalArgumentException("잘못된 상품 번호입니다");
         }
 
-        final CartItemDto toDelete = new CartItemDto(getIdOfMember(authInfo), productId);
-        final int deletedItemsCount = cartDao.deleteItem(toDelete);
+        final CartItemDto itemToDelete = new CartItemDto(getIdOfMember(authInfo), productIdToDelete);
+        final int deletedItemsCount = cartDao.deleteItem(itemToDelete);
 
         if (deletedItemsCount != 1) {
             throw new NoSuchElementException("존재하지 않는 상품 번호입니다");
         }
 
-        return toDelete.getProductId();
+        return itemToDelete.getProductId();
     }
 
     private long getIdOfMember(AuthInfo authInfo) {
