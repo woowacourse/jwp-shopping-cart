@@ -32,19 +32,20 @@ class CartApiControllerTest {
 
     @Autowired
     private ProductService productService;
+
     @Autowired
     private CartService cartService;
+
+    private Long productId;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        productId = saveProduct();
     }
 
-    @DisplayName("고객의 Basic 인증 정보를 통해 해당 고객이 담은 상품을 조회하여 반환한다.")
-    @Test
-    void showItems() {
-        //given
-        final Long savedProductId = productService.register(new ProductRequestDto(
+    private Long saveProduct() {
+        return productService.register(new ProductRequestDto(
                 "name",
                 "imageUrl",
                 1000,
@@ -52,7 +53,17 @@ class CartApiControllerTest {
                 List.of(1L)
             )
         );
+    }
+
+    private void saveCart(final Long savedProductId) {
         cartService.save(new CartEntity(1L, savedProductId));
+    }
+
+    @DisplayName("고객의 Basic 인증 정보를 통해 해당 고객이 담은 상품을 조회하여 반환한다.")
+    @Test
+    void showItems() {
+        //given
+        saveCart(productId);
 
         //when
         //then
@@ -76,15 +87,7 @@ class CartApiControllerTest {
     @Test
     void showItemsInvalidAuthorization() {
         //given
-        final Long savedProductId = productService.register(new ProductRequestDto(
-                "name",
-                "imageUrl",
-                1000,
-                "description",
-                List.of(1L)
-            )
-        );
-        cartService.save(new CartEntity(1L, savedProductId));
+        saveCart(productId);
 
         //when
         //then
@@ -100,20 +103,11 @@ class CartApiControllerTest {
     @Test
     void addItem() {
         //given
-        final Long savedProductId = productService.register(new ProductRequestDto(
-                "name",
-                "imageUrl",
-                1000,
-                "description",
-                List.of(1L)
-            )
-        );
-
         //when
         //then
         RestAssured.given()
             .auth().preemptive().basic("split@wooteco.com", "dazzle")
-            .when().post("/cart/" + savedProductId)
+            .when().post("/cart/" + productId)
             .then()
             .statusCode(HttpStatus.CREATED.value());
     }
@@ -122,21 +116,13 @@ class CartApiControllerTest {
     @Test
     void deleteItem() {
         //given
-        final Long savedProductId = productService.register(new ProductRequestDto(
-                "name",
-                "imageUrl",
-                1000,
-                "description",
-                List.of(1L)
-            )
-        );
-        cartService.save(new CartEntity(1L, savedProductId));
+        saveCart(productId);
 
         //when
         //then
         RestAssured.given()
             .auth().preemptive().basic("split@wooteco.com", "dazzle")
-            .when().delete("/cart/" + savedProductId)
+            .when().delete("/cart/" + productId)
             .then()
             .statusCode(HttpStatus.NO_CONTENT.value());
     }

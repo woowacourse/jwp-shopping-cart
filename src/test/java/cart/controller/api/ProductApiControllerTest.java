@@ -1,11 +1,16 @@
 package cart.controller.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.dto.ProductCategoryDto;
 import cart.dto.request.ProductRequestDto;
+import cart.entity.category.CategoryEntity;
 import cart.service.ProductService;
 import io.restassured.RestAssured;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -61,14 +66,8 @@ class ProductApiControllerTest {
     @DisplayName("상품의 정보를 수정하여 상품을 업테이트한다.")
     void update() {
         //given
-        final ProductRequestDto productRequestDto = new ProductRequestDto(
-            "스플릿",
-            "스프링",
-            15000,
-            "우아한테크코스",
-            List.of(1L, 2L)
-        );
-        final Long registeredId = productService.register(productRequestDto);
+        final Long registerProductId = registerProduct();
+
         final ProductRequestDto updatedProductRequestDto = new ProductRequestDto(
             "스플릿2",
             "스프링2",
@@ -82,15 +81,27 @@ class ProductApiControllerTest {
         RestAssured.given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(updatedProductRequestDto)
-            .when().put("/products/" + registeredId)
+            .when().put("/products/" + registerProductId)
             .then()
             .statusCode(HttpStatus.OK.value());
+
+        final ProductCategoryDto updatedProduct = productService.findAll().get(0);
+
+        assertAll(
+            () -> assertThat(updatedProduct.getName()).isEqualTo("스플릿2"),
+            () -> assertThat(updatedProduct.getImageUrl()).isEqualTo("스프링2"),
+            () -> assertThat(updatedProduct.getPrice()).isEqualTo(150000),
+            () -> assertThat(updatedProduct.getDescription()).isEqualTo("우아한테크코스2"),
+            () -> {
+                final List<Long> categoryIds = updatedProduct.getCategoryEntities().stream()
+                    .map(CategoryEntity::getId)
+                    .collect(Collectors.toList());
+                assertThat(categoryIds).containsExactly(3L, 4L);
+            }
+        );
     }
 
-    @Test
-    @DisplayName("상품 ID를 통해 상품을 삭제한다.")
-    void delete() {
-        //given
+    private Long registerProduct() {
         final ProductRequestDto productRequestDto = new ProductRequestDto(
             "스플릿",
             "스프링",
@@ -98,7 +109,14 @@ class ProductApiControllerTest {
             "우아한테크코스",
             List.of(1L, 2L)
         );
-        final Long registeredId = productService.register(productRequestDto);
+        return productService.register(productRequestDto);
+    }
+
+    @Test
+    @DisplayName("상품 ID를 통해 상품을 삭제한다.")
+    void delete() {
+        //given
+        final Long registeredId = registerProduct();
 
         //when
         //then
