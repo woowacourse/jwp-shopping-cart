@@ -1,5 +1,6 @@
 package cart.auth;
 
+import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -11,7 +12,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             throws Exception {
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null) {
-            throw new IllegalArgumentException("권한이 없습니다.");
+            throw new AuthenticationException("권한이 없습니다.");
         }
         return true;
     }
