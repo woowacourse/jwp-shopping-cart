@@ -20,7 +20,11 @@ public class AuthenticationCheckInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
         final Object handler) {
-        authService.checkAuthenticationHeader(request.getHeader(AUTHORIZATION));
+        final String authenticationHeader = request.getHeader(AUTHORIZATION);
+        if (authenticationHeader == null) {
+            throw new AuthenticationException("인증 실패");
+        }
+        authService.checkAuthenticationHeader(authenticationHeader);
         return true;
     }
 }
