@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.dao.H2MemberDao;
+import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.request.MemberRequest;
 import cart.dto.response.MemberResponse;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class MemberService {
-    private final H2MemberDao memberDao;
+    private final MemberDao memberDao;
     private final MemberMapper memberMapper;
 
     public MemberService(H2MemberDao memberDao, MemberMapper memberMapper) {

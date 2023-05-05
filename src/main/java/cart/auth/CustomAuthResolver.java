@@ -1,6 +1,7 @@
 package cart.auth;
 
 import cart.dao.H2MemberDao;
+import cart.dao.MemberDao;
 import cart.entity.MemberEntity;
 import cart.exception.AuthenticationException;
 import cart.exception.InvalidTokenException;
@@ -18,7 +19,7 @@ import java.util.Objects;
 
 @Component
 public class CustomAuthResolver implements HandlerMethodArgumentResolver {
-    private final H2MemberDao memberDao;
+    private final MemberDao memberDao;
 
     public CustomAuthResolver(H2MemberDao memberDao) {
         this.memberDao = memberDao;

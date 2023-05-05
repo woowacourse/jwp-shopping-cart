@@ -20,8 +20,8 @@ import java.util.Optional;
 public class H2CartDao implements CartDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final H2ProductDao productDao;
-    private final H2MemberDao memberDao;
+    private final ProductDao productDao;
+    private final MemberDao memberDao;
 
     public H2CartDao(JdbcTemplate jdbcTemplate, H2ProductDao productDao, H2MemberDao memberDao) {
         this.productDao = productDao;

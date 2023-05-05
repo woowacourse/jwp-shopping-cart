@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.dao.CartDao;
 import cart.dao.H2CartDao;
 import cart.domain.Cart;
 import cart.dto.request.CartRequest;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartService {
-    private final H2CartDao cartDao;
+    private final CartDao cartDao;
     private final CartMapper cartMapper;
 
     public CartService(H2CartDao cartDao, CartMapper cartMapper) {

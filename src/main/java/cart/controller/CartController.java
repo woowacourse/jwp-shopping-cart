@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.auth.AuthMember;
+import cart.dao.CartDao;
 import cart.dao.H2CartDao;
 import cart.dto.request.CartRequest;
 import cart.dto.response.CartResponse;
@@ -30,7 +31,7 @@ import java.util.Optional;
 @RequestMapping("/carts")
 public class CartController {
     private final CartService cartService;
-    private final H2CartDao cartDao;
+    private final CartDao cartDao;
 
     public CartController(CartService cartService, H2CartDao cartDao) {
         this.cartService = cartService;
