@@ -30,7 +30,7 @@ public class CartService {
     }
 
     public void delete(final MemberIdRequest memberId, final CartItemDeleteRequest productId) {
-        final CartEntity cartEntity = new CartEntity(productId.getProductId(), memberId.getId());
+        final CartEntity cartEntity = new CartEntity(productId.getId(), memberId.getId());
 
         cartDao.deleteById(cartEntity);
     }

@@ -1,4 +1,4 @@
-package cart.service;
+package cart.service.product;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
@@ -12,15 +12,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ProductService {
+@Transactional(readOnly = true)
+public class ProductReadService {
 
     private final ProductDao productDao;
 
-    public ProductService(@Qualifier("productJdbcDao") final ProductDao productDao) {
+    public ProductReadService(@Qualifier("productJdbcDao") final ProductDao productDao) {
         this.productDao = productDao;
     }
 
-    @Transactional(readOnly = true)
     public List<ProductDto> getAll() {
         List<Product> products = productDao.findAll().stream()
                 .map(productEntity -> new Product(
@@ -44,7 +44,6 @@ public class ProductService {
         );
     }
 
-    @Transactional(readOnly = true)
     public List<ProductDto> findById(final List<CartDto> cartDtos) {
         List<Product> products = cartDtos.stream()
                 .map(cartDto -> productDao.findById(cartDto.getProductId())
@@ -57,3 +56,4 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 }
+

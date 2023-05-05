@@ -2,7 +2,9 @@ package cart.controller;
 
 import cart.controller.dto.request.ProductCreationRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
-import cart.service.AdminService;
+import cart.service.product.ProductCreateService;
+import cart.service.product.ProductDeleteService;
+import cart.service.product.ProductUpdateService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,27 +15,34 @@ import javax.validation.constraints.NotNull;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final AdminService adminService;
+    private final ProductCreateService productCreateService;
+    private final ProductUpdateService productUpdateService;
+    private final ProductDeleteService productDeleteService;
 
-    public ProductController(final AdminService adminService) {
-        this.adminService = adminService;
+    public ProductController(final ProductCreateService productCreateService,
+                             final ProductUpdateService productUpdateService,
+                             final ProductDeleteService productDeleteService
+    ) {
+        this.productCreateService = productCreateService;
+        this.productUpdateService = productUpdateService;
+        this.productDeleteService = productDeleteService;
     }
 
     @PostMapping
     public ResponseEntity<String> createProduct(@RequestBody @Valid final ProductCreationRequest request) {
-        adminService.save(request);
+        productCreateService.save(request);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping
     public ResponseEntity<String> updateProduct(@RequestBody @Valid final ProductUpdateRequest request) {
-        adminService.update(request);
+        productUpdateService.update(request);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") @NotNull(message = "아이디가 비어있습니다.") Long id) {
-        adminService.delete(id);
+        productDeleteService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -2,16 +2,16 @@ package cart.controller.dto.request;
 
 public class CartItemDeleteRequest {
 
-    private Long productId;
+    private Long id;
 
     public CartItemDeleteRequest() {
     }
 
-    public CartItemDeleteRequest(final Long productId) {
-        this.productId = productId;
+    public CartItemDeleteRequest(final Long id) {
+        this.id = id;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Long getId() {
+        return id;
     }
 }

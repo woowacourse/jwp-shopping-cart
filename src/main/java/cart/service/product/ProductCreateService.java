@@ -1,7 +1,6 @@
-package cart.service;
+package cart.service.product;
 
 import cart.controller.dto.request.ProductCreationRequest;
-import cart.controller.dto.request.ProductUpdateRequest;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.entity.ProductEntity;
@@ -11,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class AdminService {
+public class ProductCreateService {
     private final ProductDao productDao;
 
-    public AdminService(@Qualifier("productJdbcDao") final ProductDao productDao) {
+    public ProductCreateService(@Qualifier("productJdbcDao") final ProductDao productDao) {
         this.productDao = productDao;
     }
 
@@ -28,22 +27,5 @@ public class AdminService {
         final ProductEntity productEntity = new ProductEntity(product);
 
         productDao.insert(productEntity);
-    }
-
-    public void delete(final Long id) {
-        productDao.deleteById(id);
-    }
-
-    public void update(final ProductUpdateRequest productUpdateRequest) {
-        final Product product = new Product(
-                productUpdateRequest.getId(),
-                productUpdateRequest.getName(),
-                productUpdateRequest.getImage(),
-                productUpdateRequest.getPrice()
-        );
-
-        final ProductEntity productEntity = new ProductEntity(product);
-
-        productDao.update(productEntity);
     }
 }

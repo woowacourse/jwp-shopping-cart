@@ -3,7 +3,7 @@ package cart.controller;
 import cart.controller.dto.response.MemberResponse;
 import cart.controller.dto.response.ProductResponse;
 import cart.service.MemberService;
-import cart.service.ProductService;
+import cart.service.product.ProductReadService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,23 +11,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class WebPageController {
 
-    private final ProductService productService;
+    private final ProductReadService productReadService;
     private final MemberService memberService;
 
-    public WebPageController(final ProductService productService, final MemberService memberService) {
-        this.productService = productService;
+    public WebPageController(final ProductReadService productReadService, final MemberService memberService) {
+        this.productReadService = productReadService;
         this.memberService = memberService;
     }
 
     @GetMapping("/")
     public String renderStartPage(final Model model) {
-        model.addAttribute("products", ProductResponse.mapProducts(productService.getAll()));
+        model.addAttribute("products", ProductResponse.mapProducts(productReadService.getAll()));
         return "index";
     }
 
     @GetMapping("/admin")
     public String renderAdminPage(final Model model) {
-        model.addAttribute("products", ProductResponse.mapProducts(productService.getAll()));
+        model.addAttribute("products", ProductResponse.mapProducts(productReadService.getAll()));
         return "admin";
     }
 

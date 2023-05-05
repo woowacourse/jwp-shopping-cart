@@ -8,7 +8,7 @@ import cart.controller.dto.response.CartItemResponse;
 import cart.domain.dto.CartDto;
 import cart.domain.dto.ProductDto;
 import cart.service.CartService;
-import cart.service.ProductService;
+import cart.service.product.ProductReadService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 public class CartController {
 
     private final CartService cartService;
-    private final ProductService productService;
+    private final ProductReadService productReadService;
 
-    public CartController(final CartService cartService, final ProductService productService) {
+    public CartController(final CartService cartService, final ProductReadService productReadService) {
         this.cartService = cartService;
-        this.productService = productService;
+        this.productReadService = productReadService;
     }
 
     @PostMapping
@@ -40,7 +40,7 @@ public class CartController {
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> findIdMemberId(@Authority final MemberIdRequest memberId) {
         final List<CartDto> cartDtos = cartService.getProducts(memberId);
-        final List<ProductDto> productDtos = productService.findById(cartDtos);
+        final List<ProductDto> productDtos = productReadService.findById(cartDtos);
 
         List<CartItemResponse> cartItemResponses = productDtos.stream()
                 .map(productDto -> new CartItemResponse(
