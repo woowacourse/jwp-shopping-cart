@@ -1,7 +1,7 @@
 package cart.exception;
 
 import cart.dto.response.ErrorResponse;
-import cart.exception.BusinessIllegalArgumentException;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,5 +20,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> invalidProductException(BusinessProductIdNullException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(e.getErrorCode()));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> invalidProductException(AuthenticationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(ErrorCode.INVALID_AUTH_HEADER));
     }
 }
