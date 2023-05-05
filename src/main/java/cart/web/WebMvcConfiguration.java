@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import cart.domain.member.AuthService;
@@ -24,6 +25,11 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         final AuthService authService) {
         this.authorizationExtractor = authorizationExtractor;
         this.authService = authService;
+    }
+
+    @Override
+    public void addViewControllers(final ViewControllerRegistry registry) {
+        registry.addViewController("/cart").setViewName("cart");
     }
 
     @Override
