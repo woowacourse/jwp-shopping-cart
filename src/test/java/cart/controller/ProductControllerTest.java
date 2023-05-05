@@ -99,7 +99,7 @@ public class ProductControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productRequest)
-            .when().put("/products/1")
+            .when().patch("/products/1")
             .then().log().all()
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -115,7 +115,7 @@ public class ProductControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productRequest)
-            .when().put("/products/2")
+            .when().patch("/products/2")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .body(Matchers.equalTo("존재하지 않는 상품입니다."));

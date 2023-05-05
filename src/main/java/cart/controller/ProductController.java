@@ -23,7 +23,7 @@ public class ProductController {
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
-    @PutMapping("/products/{id}")
+    @PatchMapping("/products/{id}")
     public ResponseEntity<Void> updateProduct(@Valid @RequestBody ProductRequest productRequest,
         @PathVariable int id) {
         productService.updateProduct(productRequest, id);
