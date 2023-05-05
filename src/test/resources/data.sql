@@ -1,5 +1,18 @@
-insert into product(id, name, price, image_url)
-values (3, '피자', 10000, 'https://t1.daumcdn.net/cfile/tistory/241D303357DD2A1404');
+INSERT INTO member(email, password)
+VALUES ('email@email.com', 'asdf1234');
 
-insert into product(id, name, price, image_url)
-values (4, '치킨', 20000, 'https://pelicana.co.kr/resources/images/menu/best_menu03_200623.jpg');
+INSERT INTO member(email, password)
+VALUES ('email2@email.com', 'asdf12345');
+
+
+INSERT INTO product(name, price, image_url)
+VALUES ('피자', 10000, 'https://t1.daumcdn.net/cfile/tistory/241D303357DD2A1404');
+
+INSERT INTO product(name, price, image_url)
+values ('치킨', 20000, 'https://pelicana.co.kr/resources/images/menu/best_menu03_200623.jpg');
+
+INSERT INTO cart(member_id, product_id)
+VALUES (1, 1);
+
+INSERT INTO cart(member_id, product_id)
+VALUES (1, 2)
