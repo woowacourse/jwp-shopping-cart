@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import cart.dao.dto.UserDto;
+import cart.domain.User;
 
 @Repository
 public class UserDao {
@@ -41,6 +42,19 @@ public class UserDao {
                         rs.getString("email"),
                         rs.getString("password")
                 )
+        );
+    }
+
+    public User selectBy(Integer id) {
+        String sql = "SELECT id, email, password FROM users WHERE id = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (rs, rowNum) -> new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                ),
+                id
         );
     }
 }

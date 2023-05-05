@@ -28,6 +28,11 @@ public class ProductRepository {
         );
     }
 
+    public Product findBy(final Integer id) {
+        // TODO: 2023/05/05 없는 Id 예외 처리
+        return toProduct(productDao.select(id));
+    }
+
     public void delete(final Integer id) {
         validateIdExists(productDao.deleteById(id));
     }

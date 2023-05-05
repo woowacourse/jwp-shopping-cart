@@ -6,31 +6,46 @@ import java.util.List;
 
 public class Cart {
 
-    private final List<Product> products;
+    private final List<CartItem> items;
 
     public Cart() {
         this(Collections.emptyList());
     }
 
-    public Cart(List<Product> products) {
-        if (products.stream().distinct().count() != products.size()) {
-            throw new IllegalArgumentException();
+    public Cart(List<CartItem> items) {
+        validateNoDuplicate(items);
+        this.items = new ArrayList<>(items);
+    }
+
+    private void validateNoDuplicate(List<CartItem> items) {
+        if (items.size() != items.stream().distinct().count()) {
+            throw new IllegalArgumentException("중복된 상품이 있습니다");
         }
-        this.products = new ArrayList<>(products);
     }
 
-    public void add(Product product) {
-        products.add(product);
+    private void validateDoesNotHave(CartItem item) {
+        if (items.contains(item)) {
+            throw new IllegalArgumentException("이미 담긴 상품입니다");
+        }
     }
 
-    public void delete(Product product) {
-        products.stream()
-                .filter(it -> it.equals(product))
-                .findFirst()
-                .ifPresent(products::remove);
+    private void validateHas(CartItem item) {
+        if (!items.contains(item)) {
+            throw new IllegalArgumentException("없는 상품입니다");
+        }
     }
 
-    public List<Product> getProducts() {
-        return new ArrayList<>(products);
+    public void add(CartItem item) {
+        validateDoesNotHave(item);
+        items.add(item);
+    }
+
+    public void delete(CartItem item) {
+        validateHas(item);
+        items.remove(item);
+    }
+
+    public List<CartItem> getItems() {
+        return new ArrayList<>(items);
     }
 }
