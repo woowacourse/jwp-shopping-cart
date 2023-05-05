@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.entity.CartEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,12 +40,15 @@ class CartDaoTest {
         //when
         final int findUser = jdbcTemplate.query("select * from member where id = ?", nullMapper(), exitingMemberId).size();
         final int findProduct = jdbcTemplate.query("select * from product where id = ?", nullMapper(), nonexistentProductId).size();
+        final CartEntity cartEntity = new CartEntity(exitingMemberId, nonexistentProductId);
 
         //then
         assertAll(
                 () -> assertThat(findUser).isEqualTo(1),
                 () -> assertThat(findProduct).isEqualTo(0),
-                () -> assertThatThrownBy(() -> cartDao.addProduct(exitingMemberId, nonexistentProductId))
+                () -> assertThatThrownBy(() -> {
+                    cartDao.addProduct(cartEntity);
+                })
                         .isInstanceOf(DataIntegrityViolationException.class)
         );
     }
@@ -59,12 +63,15 @@ class CartDaoTest {
         //when
         final int findUser = jdbcTemplate.query("select * from member where id = ?", nullMapper(), exitingProductId).size();
         final int findProduct = jdbcTemplate.query("select * from product where id = ?", nullMapper(), nonexistentMemberId).size();
+        final CartEntity cartEntity = new CartEntity(exitingProductId, nonexistentMemberId);
 
         //then
         assertAll(
                 () -> assertThat(findUser).isEqualTo(1),
                 () -> assertThat(findProduct).isEqualTo(0),
-                () -> assertThatThrownBy(() -> cartDao.addProduct(exitingProductId, nonexistentMemberId))
+                () -> assertThatThrownBy(() -> {
+                    cartDao.addProduct(cartEntity);
+                })
                         .isInstanceOf(DataIntegrityViolationException.class)
         );
     }
@@ -78,7 +85,7 @@ class CartDaoTest {
 
         //when
         final int originSize = jdbcTemplate.query("select * from cart", nullMapper()).size();
-        cartDao.addProduct(exitingMemberId, exitingProductId);
+        cartDao.addProduct(new CartEntity(exitingMemberId, exitingProductId));
         final int afterSize = jdbcTemplate.query("select * from cart", nullMapper()).size();
 
         //then
@@ -91,11 +98,11 @@ class CartDaoTest {
         //given
         int exitingProductId = 1;
         int exitingMemberId = 1;
-        cartDao.addProduct(exitingMemberId, exitingProductId);
+        cartDao.addProduct(new CartEntity(exitingMemberId, exitingProductId));
 
         //when
         final int originSize = jdbcTemplate.query("select * from cart", nullMapper()).size();
-        cartDao.deleteProduct(exitingMemberId, exitingProductId);
+        cartDao.deleteProduct(new CartEntity(exitingMemberId, exitingProductId));
         final int afterSize = jdbcTemplate.query("select * from cart", nullMapper()).size();
 
         //then

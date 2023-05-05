@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dao.joinrequest.CartWithProduct;
+import cart.entity.CartEntity;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,7 +14,6 @@ import java.util.List;
 @Repository
 public class CartDao {
 
-    private static final int EXITING_CART_ITEM = 1;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final JdbcTemplate jdbcTemplate;
 
@@ -24,22 +24,16 @@ public class CartDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void addProduct(final int memberId, final int productId) throws DataIntegrityViolationException {
+    public void addProduct(final CartEntity cartEntity) throws DataIntegrityViolationException {
         final MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("member_id", memberId);
-        params.addValue("product_id", productId);
+        params.addValue("member_id", cartEntity.getMemberId());
+        params.addValue("product_id", cartEntity.getProductId());
         simpleJdbcInsert.executeAndReturnKey(params);
     }
 
-    public void deleteProduct(final int memberId, final int productId) {
+    public void deleteProduct(final CartEntity cartEntity) {
         final String sql = "delete from cart where member_id = ? and product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
-    }
-
-    public boolean existingCartItem(final int memberId, final int productId) {
-        final String sql = "select * from cart where member_id = ? and product_id = ?";
-        final int size = jdbcTemplate.query(sql, (ig, ig2) -> null, memberId, productId).size();
-        return size >= EXITING_CART_ITEM;
+        jdbcTemplate.update(sql, cartEntity.getMemberId(), cartEntity.getProductId());
     }
 
     public List<CartWithProduct> cartWithProducts(final int memberId) {
@@ -59,28 +53,28 @@ public class CartDao {
         );
     }
 
-    public void deleteProducts(final int memberId, final List<Integer> deletedCartItems) {
+    public void deleteProducts(List<CartEntity> cartEntities) {
         final String sql = "delete from cart where member_id = ? and product_id = ?";
         jdbcTemplate.batchUpdate(
                 sql,
-                deletedCartItems,
-                optimizeBatchSize(deletedCartItems.size()),
+                cartEntities,
+                optimizeBatchSize(cartEntities.size()),
                 (ps, argument) -> {
-                    ps.setInt(1, memberId);
-                    ps.setInt(2, argument.intValue());
+                    ps.setInt(1, argument.getMemberId());
+                    ps.setInt(2, argument.getProductId());
                 }
         );
     }
 
-    public void insertProducts(final Integer memberId, final List<Integer> insertedCartItems) {
+    public void insertProducts(List<CartEntity> cartEntities) {
         final String sql = "insert into cart (member_id, product_id) values(?, ?) ";
         jdbcTemplate.batchUpdate(
                 sql,
-                insertedCartItems,
-                optimizeBatchSize(insertedCartItems.size()),
+                cartEntities,
+                optimizeBatchSize(cartEntities.size()),
                 (ps, argument) -> {
-                    ps.setInt(1, memberId);
-                    ps.setInt(2, argument.intValue());
+                    ps.setInt(1, argument.getMemberId());
+                    ps.setInt(2, argument.getProductId());
                 }
         );
     }

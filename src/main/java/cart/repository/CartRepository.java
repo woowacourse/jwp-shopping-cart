@@ -4,6 +4,7 @@ import cart.dao.CartDao;
 import cart.dao.joinrequest.CartWithProduct;
 import cart.domain.Cart;
 import cart.domain.Product;
+import cart.entity.CartEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -44,8 +45,22 @@ public class CartRepository {
 
     public void save(final Cart cart) {
         final List<Product> previousCartItems = getProductsOf(cart.getMemberId());
-        cartDao.deleteProducts(cart.getMemberId(), getDeletedCartItems(cart, previousCartItems));
-        cartDao.insertProducts(cart.getMemberId(), getInsertedCartItems(cart, previousCartItems));
+        cartDao.deleteProducts(makeEntitiesOf(
+                        cart.getMemberId(),
+                        getDeletedCartItems(cart, previousCartItems)
+                )
+        );
+        cartDao.insertProducts(makeEntitiesOf(
+                        cart.getMemberId(),
+                        getInsertedCartItems(cart, previousCartItems)
+                )
+        );
+    }
+
+    private List<CartEntity> makeEntitiesOf(final int memberId, final List<Integer> productIds) {
+        return productIds.stream()
+                .map(productId -> new CartEntity(memberId, productId))
+                .collect(Collectors.toList());
     }
 
     private List<Integer> getDeletedCartItems(final Cart cart, final List<Product> previousCartItems) {
