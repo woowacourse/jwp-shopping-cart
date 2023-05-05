@@ -12,10 +12,10 @@ public class Price {
 
     private void validatePrice(long price) {
         if (price < 0) {
-            throw new IllegalArgumentException("가격은 음수 혹은 빈 값이 될 수 없습니다.");
+            throw new IllegalArgumentException("가격은 음수 혹은 빈 값이 될 수 없습니다." + System.lineSeparator() + "price : " + price);
         }
         if (price > MAX_PRICE_VALUE) {
-            throw new IllegalArgumentException("가격은 10억을 초과할 수 없습니다.");
+            throw new IllegalArgumentException("가격은 10억을 초과할 수 없습니다." + System.lineSeparator() + "price : " + price);
         }
     }
 

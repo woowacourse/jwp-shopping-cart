@@ -53,7 +53,7 @@ public class BasicTokenAuthResolver implements TokenAuthResolver {
         List<String> token = extractBasicToken(servletRequest);
 
         if (token.size() != BASIC_TOKEN_SIZE) {
-            throw new InvalidTokenException("유효하지 않은 토큰입니다.");
+            throw new InvalidTokenException("유효하지 않은 토큰입니다." + System.lineSeparator() + "token : " + token);
         }
 
         member = memberDao.findByEmail(token.get(0))
@@ -64,7 +64,7 @@ public class BasicTokenAuthResolver implements TokenAuthResolver {
 
     private void validatePassword(List<String> token, MemberEntity member) {
         if (!Objects.equals(token.get(BASIC_TOKEN_PASSWORD_INDEX), member.getPassword())) {
-            throw new AuthenticationException("잘못된 인증정보입니다.");
+            throw new AuthenticationException("올바르지 않은 비밀번호입니다." + System.lineSeparator() + "password : " + token.get(BASIC_TOKEN_PASSWORD_INDEX));
         }
     }
 

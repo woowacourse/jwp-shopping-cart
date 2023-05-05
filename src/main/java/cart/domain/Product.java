@@ -16,10 +16,10 @@ public class Product {
 
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("상품명은 비어있을 수 없습니다.");
+            throw new IllegalArgumentException("상품명은 비어있을 수 없습니다." + System.lineSeparator() + "name : " + name);
         }
         if (name.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("상품명은 50자를 초과할 수 없습니다.");
+            throw new IllegalArgumentException("상품명은 50자를 초과할 수 없습니다." + System.lineSeparator() + "name : " + name);
         }
     }
 

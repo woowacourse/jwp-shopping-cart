@@ -80,9 +80,9 @@ public class CartController {
 
     private void validateMember(Long cartId, MemberEntity member) {
         CartEntity cart = cartDao.findById(cartId)
-                .orElseThrow(() -> new ResourceNotFoundException("해당 상품을 찾을 수 없습니다.", cartId));
+                .orElseThrow(() -> new ResourceNotFoundException("해당 장바구니를 찾을 수 없습니다." + System.lineSeparator() + "id : " + cartId));
         if (!Objects.equals(member.getId(), cart.getMember().getId())) {
-            throw new AuthorizationException();
+            throw new AuthorizationException("해당 사용자에게 권한이 존재하지 않습니다." + System.lineSeparator() + "id : " + member.getId());
         }
     }
 }
