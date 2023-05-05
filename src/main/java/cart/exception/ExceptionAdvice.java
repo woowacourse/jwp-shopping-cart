@@ -14,6 +14,12 @@ public final class ExceptionAdvice {
 
     private static final Logger logger = LoggerFactory.getLogger(ExceptionAdvice.class);
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleException(final Exception exception) {
+        logger.error(exception.getMessage());
+        return ResponseEntity.badRequest().body(new ErrorResponseDto(exception.getMessage()));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDto> handleException(final IllegalArgumentException exception) {
         logger.error(exception.getMessage());
