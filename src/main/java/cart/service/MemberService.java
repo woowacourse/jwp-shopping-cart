@@ -1,7 +1,6 @@
 package cart.service;
 
-import cart.dao.ReadOnlyDao;
-import cart.domain.Email;
+import cart.dao.Dao;
 import cart.domain.Member;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -9,9 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberService {
 
-    private final ReadOnlyDao<Member, Email> memberDao;
+    private final Dao<Member> memberDao;
 
-    public MemberService(final ReadOnlyDao<Member, Email> memberDao) {
+    public MemberService(final Dao<Member> memberDao) {
         this.memberDao = memberDao;
     }
 

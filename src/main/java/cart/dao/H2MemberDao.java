@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class H2MemberDao implements ReadOnlyDao<Member, Email> {
+public class H2MemberDao implements Dao<Member> {
 
     private static final RowMapper<Member> MEMBER_ROW_MAPPER = (resultSet, rowNum) -> new Member(
             resultSet.getLong("id"),
@@ -24,12 +24,32 @@ public class H2MemberDao implements ReadOnlyDao<Member, Email> {
     }
 
     @Override
+    public Member insert(final Member entity) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void update(final Member entity) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isExist(final Long id) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Optional<Member> findById(final Long id) {
+        return Optional.empty();
+    }
+
+    @Override
     public List<Member> findAll() {
         return jdbcTemplate.query("SELECT id, email, password FROM members", MEMBER_ROW_MAPPER);
     }
 
     @Override
-    public Optional<Member> findByUnique(final Email unique) {
-        return Optional.empty();
+    public void deleteById(final Long id) {
+        throw new UnsupportedOperationException();
     }
 }

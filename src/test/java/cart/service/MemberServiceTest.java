@@ -2,8 +2,7 @@ package cart.service;
 
 import static org.mockito.Mockito.verify;
 
-import cart.dao.ReadOnlyDao;
-import cart.domain.Email;
+import cart.dao.Dao;
 import cart.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MemberServiceTest {
 
     @Mock
-    private ReadOnlyDao<Member, Email> memberDao;
+    private Dao<Member> memberDao;
     private MemberService memberService;
 
     @BeforeEach

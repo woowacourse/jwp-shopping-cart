@@ -17,7 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class H2MemberDaoTest {
 
-    private ReadOnlyDao<Member, Email> memberDao;
+    private Dao<Member> memberDao;
 
     @Autowired
     public H2MemberDaoTest(final JdbcTemplate jdbcTemplate) {
