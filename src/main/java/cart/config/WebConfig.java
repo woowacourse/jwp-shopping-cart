@@ -1,6 +1,6 @@
 package cart.config;
 
-import cart.common.auth.AuthInfoHandlerMethodArgumentResolver;
+import cart.common.auth.AuthInfoArgumentResolver;
 import cart.common.auth.AuthenticationCheckInterceptor;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
@@ -11,19 +11,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final AuthInfoHandlerMethodArgumentResolver authInfoHandlerMethodArgumentResolver;
+    private final AuthInfoArgumentResolver authInfoArgumentResolver;
     private final AuthenticationCheckInterceptor authenticationCheckInterceptor;
 
     public WebConfig(
-        final AuthInfoHandlerMethodArgumentResolver authInfoHandlerMethodArgumentResolver,
+        final AuthInfoArgumentResolver authInfoArgumentResolver,
         final AuthenticationCheckInterceptor authenticationCheckInterceptor) {
-        this.authInfoHandlerMethodArgumentResolver = authInfoHandlerMethodArgumentResolver;
+        this.authInfoArgumentResolver = authInfoArgumentResolver;
         this.authenticationCheckInterceptor = authenticationCheckInterceptor;
     }
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(authInfoHandlerMethodArgumentResolver);
+        resolvers.add(authInfoArgumentResolver);
     }
 
     @Override

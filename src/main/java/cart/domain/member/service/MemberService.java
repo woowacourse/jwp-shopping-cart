@@ -15,23 +15,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberDao memberDao;
-    private final PasswordEncoder passwordEncoder;
 
-    public MemberService(final MemberDao memberDao, final PasswordEncoder passwordEncoder) {
+    public MemberService(final MemberDao memberDao) {
         this.memberDao = memberDao;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     public MemberCreateResponse create(final MemberCreateRequest request) {
+        checkMemberExist(request);
+        final Member requestMember = request.makeMember();
+        final Member savedMember = memberDao.save(requestMember);
+        return MemberCreateResponse.of(savedMember);
+    }
+
+    private void checkMemberExist(final MemberCreateRequest request) {
         memberDao.findByEmail(request.getEmail())
             .ifPresent(member -> {
                 throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
             });
-        final Member madeMember = request.makeMember();
-        madeMember.setPassword(passwordEncoder.encode(madeMember.getPassword()));
-        final Member member = memberDao.save(madeMember);
-        return MemberCreateResponse.of(member);
     }
 
     public List<MemberResponse> findAll() {

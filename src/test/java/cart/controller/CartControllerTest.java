@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.common.auth.AuthInfoHandlerMethodArgumentResolver;
+import cart.common.auth.AuthInfoArgumentResolver;
 import cart.common.auth.AuthenticationCheckInterceptor;
 import cart.domain.auth.service.AuthService;
 import cart.domain.cart.service.CartService;
@@ -37,7 +37,7 @@ class CartControllerTest {
     @MockBean
     private CartService cartService;
     @MockBean
-    private AuthInfoHandlerMethodArgumentResolver authInfoHandlerMethodArgumentResolver;
+    private AuthInfoArgumentResolver authInfoArgumentResolver;
     @MockBean
     private AuthenticationCheckInterceptor authenticationCheckInterceptor;
     @Autowired
@@ -57,7 +57,7 @@ class CartControllerTest {
 
         when(authenticationCheckInterceptor.preHandle(any(), any(), any()))
             .thenReturn(true);
-        when(authInfoHandlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
+        when(authInfoArgumentResolver.resolveArgument(any(), any(), any(), any()))
             .thenReturn(memberInformation);
         when(cartService.findByEmail(any()))
             .thenReturn(cartResponses);
@@ -87,7 +87,7 @@ class CartControllerTest {
     public void testAddCart() throws Exception {
         //given
         final MemberInformation memberInformation = new MemberInformation("test@test.com", "password");
-        when(authInfoHandlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
+        when(authInfoArgumentResolver.resolveArgument(any(), any(), any(), any()))
             .thenReturn(memberInformation);
         when(authenticationCheckInterceptor.preHandle(any(), any(), any()))
             .thenReturn(true);

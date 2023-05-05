@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.common.EncodePassword;
 import cart.domain.member.service.MemberService;
 import cart.dto.MemberCreateRequest;
 import cart.dto.MemberCreateResponse;
@@ -21,7 +22,7 @@ public class MemberController {
 
     @PostMapping("/member")
     public ResponseEntity<MemberCreateResponse> createMember(
-        @RequestBody @Valid final MemberCreateRequest request) {
+        @RequestBody @Valid @EncodePassword final MemberCreateRequest request) {
         final MemberCreateResponse response = memberService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

@@ -10,13 +10,13 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class AuthInfoHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+public class AuthInfoArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String AUTHORIZATION = "Authorization";
 
     private final AuthorizationExtractor authorizationExtractor;
 
-    public AuthInfoHandlerMethodArgumentResolver(
+    public AuthInfoArgumentResolver(
         final AuthorizationExtractor authorizationExtractor) {
         this.authorizationExtractor = authorizationExtractor;
     }
