@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -68,10 +69,15 @@ public class CartProductDao {
     }
 
     public void delete(final Long memberId, final Long productId) {
-        final String sql = "DELETE FROM CART_PRODUCT WHERE MEMBER_ID=:memberId AND PRODUCT_ID=:productId";
+        final String sql = "DELETE FROM cart_product WHERE member_id=:memberId AND product_id=:productId";
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("memberId", memberId)
                 .addValue("productId", productId);
         namedParameterJdbcTemplate.update(sql, params);
+    }
+
+    public void deleteAll() {
+        final String sql = "DELETE FROM cart_product";
+        namedParameterJdbcTemplate.update(sql, Collections.emptyMap());
     }
 }

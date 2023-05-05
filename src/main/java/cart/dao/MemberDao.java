@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -43,13 +44,18 @@ public class MemberDao {
     }
 
     public List<Member> findAll() {
-        final String sql = "SELECT * FROM MEMBER";
+        final String sql = "SELECT * FROM member";
         return namedParameterJdbcTemplate.query(sql, rowMapper);
     }
 
     public Member findByEmail(final String email) {
-        final String sql = "SELECT * FROM MEMBER WHERE email=:email";
+        final String sql = "SELECT * FROM member WHERE email=:email";
         final SqlParameterSource sqlParameterSource = new MapSqlParameterSource("email", email);
         return namedParameterJdbcTemplate.queryForObject(sql, sqlParameterSource, rowMapper);
+    }
+
+    public void deleteAll() {
+        final String sql = "DELETE FROM member";
+        namedParameterJdbcTemplate.update(sql, Collections.emptyMap());
     }
 }
