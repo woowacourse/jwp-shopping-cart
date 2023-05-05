@@ -1,6 +1,6 @@
 package cart;
 
-import cart.controller.dto.ModifyRequest;
+import cart.controller.dto.ModifyProductRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -39,7 +39,7 @@ public class ProductIntegrationTest {
     @Test
     public void getProducts() throws JsonProcessingException {
         // 1개의 상품 수정
-        ModifyRequest request3 = new ModifyRequest("애플", 1000, "super.com");
+        ModifyProductRequest request3 = new ModifyProductRequest("애플", 1000, "super.com");
         String jsonRequest3 = objectMapper.writeValueAsString(request3);
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

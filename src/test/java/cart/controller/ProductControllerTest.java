@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.dto.ModifyRequest;
+import cart.controller.dto.ModifyProductRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -44,7 +44,7 @@ class ProductControllerTest {
         @DisplayName("입력이 올바른 경우 Status Created 반환")
         @Test
         void shouldResponseStatusCreatedWhenRequestPostToAdminProduct() throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
+            final ModifyProductRequest request = new ModifyProductRequest("사과", 100, "domain.com");
             final String requestJson = objectMapper.writeValueAsString(request);
             given().log().all()
                     .contentType(ContentType.JSON)
@@ -60,7 +60,7 @@ class ProductControllerTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         void shouldThrowExceptionWhenNameIsBlank(String inputName) throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest(inputName, 100, "domain.super.com");
+            final ModifyProductRequest request = new ModifyProductRequest(inputName, 100, "domain.super.com");
             String requestJson = objectMapper.writeValueAsString(request);
             given().log().all()
                     .contentType(ContentType.JSON)
@@ -75,7 +75,7 @@ class ProductControllerTest {
         @ParameterizedTest(name = "가격 입력 : {0}")
         @ValueSource(longs = {-1, -10000, -1000000})
         void shouldThrowExceptionWhenPriceIsUnderZero(long inputPrice) throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", inputPrice, "domain.super.com");
+            final ModifyProductRequest request = new ModifyProductRequest("사과", inputPrice, "domain.super.com");
             String requestJson = objectMapper.writeValueAsString(request);
             given().log().all()
                     .contentType(ContentType.JSON)
@@ -91,7 +91,7 @@ class ProductControllerTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         void shouldThrowExceptionWhenImageUrlIsBlank(String inputImageUrl) throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", 100, inputImageUrl);
+            final ModifyProductRequest request = new ModifyProductRequest("사과", 100, inputImageUrl);
             String requestJson = objectMapper.writeValueAsString(request);
             given().log().all()
                     .contentType(ContentType.JSON)
@@ -110,7 +110,7 @@ class ProductControllerTest {
         @DisplayName("입력이 올바른 경우 Status OK 반환")
         @Test
         void shouldResponseStatusCreatedWhenRequestPutToAdminProductId() throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
+            final ModifyProductRequest request = new ModifyProductRequest("사과", 100, "domain.com");
             final String requestJson = objectMapper.writeValueAsString(request);
             given().log().all()
                     .contentType(ContentType.JSON)
@@ -124,7 +124,7 @@ class ProductControllerTest {
         @DisplayName("상품이 존재하지 않을 경우 Status Not Found 반환")
         @Test
         void shouldResponseStatusBadRequestWhenRequestPutToNotExistId() throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
+            final ModifyProductRequest request = new ModifyProductRequest("사과", 100, "domain.com");
             final String requestJson = objectMapper.writeValueAsString(request);
             given().log().all()
                     .contentType(ContentType.JSON)
@@ -140,7 +140,7 @@ class ProductControllerTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         void shouldThrowExceptionWhenNameIsBlank(String inputName) throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest(inputName, 100, "domain.super.com");
+            final ModifyProductRequest request = new ModifyProductRequest(inputName, 100, "domain.super.com");
             String requestJson = objectMapper.writeValueAsString(request);
             given().log().all()
                     .contentType(ContentType.JSON)
@@ -155,7 +155,7 @@ class ProductControllerTest {
         @ParameterizedTest(name = "가격 입력 : {0}")
         @ValueSource(longs = {-1, -10000, -1000000})
         void shouldThrowExceptionWhenPriceIsUnderZero(long inputPrice) throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", inputPrice, "domain.super.com");
+            final ModifyProductRequest request = new ModifyProductRequest("사과", inputPrice, "domain.super.com");
             String requestJson = objectMapper.writeValueAsString(request);
             given().log().all()
                     .contentType(ContentType.JSON)
@@ -171,7 +171,7 @@ class ProductControllerTest {
         @ValueSource(strings = {" "})
         @NullAndEmptySource
         void shouldThrowExceptionWhenImageUrlIsBlank(String inputImageUrl) throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", 100, inputImageUrl);
+            final ModifyProductRequest request = new ModifyProductRequest("사과", 100, inputImageUrl);
             String requestJson = objectMapper.writeValueAsString(request);
             given().log().all()
                     .contentType(ContentType.JSON)
