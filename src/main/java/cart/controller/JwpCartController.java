@@ -1,10 +1,12 @@
 package cart.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,20 +46,20 @@ public class JwpCartController {
 
     @PostMapping("/admin/products")
     @ResponseStatus(HttpStatus.CREATED)
-    public String addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
         jwpCartService.add(productRequestDto);
-        return "redirect:/admin";
+        return ResponseEntity.created(URI.create("/admin/products")).build();
     }
 
     @PutMapping("/admin/products/{id}")
-    public String updateProduct(@PathVariable("id") Long id, @RequestBody @Valid ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> updateProduct(@PathVariable("id") Long id, @RequestBody @Valid ProductRequestDto productRequestDto) {
         jwpCartService.updateById(productRequestDto, id);
-        return "/admin";
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/admin/products/{id}")
-    public String deleteProduct(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
         jwpCartService.deleteById(id);
-        return "/admin";
+        return ResponseEntity.ok().build();
     }
 }
