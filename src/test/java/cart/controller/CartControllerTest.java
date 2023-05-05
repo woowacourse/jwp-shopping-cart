@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql("/resetWebEnvironment.sql")
 class CartControllerTest {
 
     private static final String EXITING_USER_EMAIL = "pooh@naver.com";
@@ -20,7 +21,6 @@ class CartControllerTest {
     int port;
 
     @BeforeEach
-    @Sql("/reset.sql")
     void setUp() {
         RestAssured.port = port;
     }
@@ -89,8 +89,7 @@ class CartControllerTest {
                 .given()
                 .auth().preemptive().basic(EXITING_USER_EMAIL, USER_PASSWORD)
                 .contentType(ContentType.JSON)
-                .body(productRequestDto)
-                .when().delete("/cart")
+                .when().delete("/cart/1000")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -115,8 +114,7 @@ class CartControllerTest {
                 .given()
                 .auth().preemptive().basic(EXITING_USER_EMAIL, USER_PASSWORD)
                 .contentType(ContentType.JSON)
-                .body(productRequestDto)
-                .when().delete("/cart")
+                .when().delete("/cart/1")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

@@ -4,11 +4,14 @@ import javax.validation.constraints.NotNull;
 
 public class ProductCreateDto {
     @NotNull
-    private final String name;
+    private String name;
     @NotNull
-    private final String image;
+    private String image;
     @NotNull
-    private final Integer price;
+    private Integer price;
+
+    public ProductCreateDto() {
+    }
 
     public ProductCreateDto(final String name, final String image, final Integer price) {
         this.name = name;

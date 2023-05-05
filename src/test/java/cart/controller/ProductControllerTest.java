@@ -5,16 +5,25 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql("/resetWebEnvironment.sql")
 class ProductControllerTest {
 
     @LocalServerPort
     int port;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
@@ -58,6 +67,8 @@ class ProductControllerTest {
         //given
         final ProductCreateDto requestDto = new ProductCreateDto(null, "image.jpg", 100);
 
+        final List<Integer> s = jdbcTemplate.queryForList("select id from product", Integer.class);
+
         //expect
         RestAssured.given().log().headers()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -78,10 +89,10 @@ class ProductControllerTest {
         RestAssured.given().log().headers()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestDto)
-                .pathParam("id", 1001)
+                .pathParam("id", -1)
                 .when().patch("/products/{id}")
                 .then().log().all()
-                .statusCode(HttpStatus.NOT_FOUND.value());
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
@@ -89,6 +100,8 @@ class ProductControllerTest {
     void valid_update() {
         //given
         final ProductCreateDto requestDto = new ProductCreateDto("hello", "image.jpg", 100);
+
+        jdbcTemplate.queryForList("select id from product", Integer.class);
 
         //expect
         RestAssured.given().log().all()
@@ -114,4 +127,5 @@ class ProductControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
+
 }
