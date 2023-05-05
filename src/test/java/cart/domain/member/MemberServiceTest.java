@@ -1,9 +1,7 @@
-package cart.service;
+package cart.domain.member;
 
 import static org.mockito.Mockito.verify;
 
-import cart.dao.Dao;
-import cart.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MemberServiceTest {
 
     @Mock
-    private Dao<Member> memberDao;
+    private MemberDao memberDao;
     private MemberService memberService;
 
     @BeforeEach

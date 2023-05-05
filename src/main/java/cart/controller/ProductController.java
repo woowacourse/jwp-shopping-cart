@@ -1,9 +1,9 @@
 package cart.controller;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
+import cart.domain.product.ProductService;
 import cart.dto.ProductRequest.AddDto;
 import cart.dto.ProductRequest.UpdateDto;
-import cart.service.ProductService;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

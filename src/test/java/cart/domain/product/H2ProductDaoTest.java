@@ -1,8 +1,8 @@
-package cart.dao;
+package cart.domain.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.Product;
+import cart.dao.Dao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

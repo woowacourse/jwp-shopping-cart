@@ -1,11 +1,9 @@
-package cart.service;
+package cart.domain.product;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import cart.dao.Dao;
-import cart.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,7 @@ class ProductServiceTest {
     private static final Product FIXTURE_UPDATED_PRODUCT = new Product(FIXTURE_ID, "도이치킨", "doy.jpg", 10000);
 
     @Mock
-    private Dao<Product> productDao;
+    private ProductDao productDao;
     private ProductService productService;
 
     @BeforeEach

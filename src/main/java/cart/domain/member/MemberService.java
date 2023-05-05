@@ -1,16 +1,14 @@
-package cart.service;
+package cart.domain.member;
 
-import cart.dao.Dao;
-import cart.domain.Member;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
 
-    private final Dao<Member> memberDao;
+    private final MemberDao memberDao;
 
-    public MemberService(final Dao<Member> memberDao) {
+    public MemberService(final MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 

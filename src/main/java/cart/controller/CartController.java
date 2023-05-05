@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.service.MemberService;
-import cart.service.ProductService;
+import cart.domain.member.MemberService;
+import cart.domain.product.ProductService;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

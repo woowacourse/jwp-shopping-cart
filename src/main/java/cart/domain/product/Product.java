@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;

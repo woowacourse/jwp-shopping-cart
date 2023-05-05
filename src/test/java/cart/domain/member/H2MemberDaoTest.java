@@ -1,10 +1,8 @@
-package cart.dao;
+package cart.domain.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.Email;
-import cart.domain.Member;
-import cart.domain.Password;
+import cart.dao.Dao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

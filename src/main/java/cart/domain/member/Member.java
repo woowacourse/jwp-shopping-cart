@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.member;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
