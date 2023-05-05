@@ -80,4 +80,14 @@ public class PageControllerTest {
                 )
                 .andDo(print());
     }
+
+    @Test
+    void 장바구니_페이지를_가져온다() throws Exception {
+          mockMvc.perform(get("/cart"))
+                .andExpectAll(
+                        status().isOk(),
+                        view().name("cart")
+                )
+                .andDo(print());
+    }
 }
