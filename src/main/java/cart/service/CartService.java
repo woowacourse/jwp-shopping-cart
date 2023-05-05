@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
+import cart.domain.Member;
 import cart.dto.MemberRequestDto;
 import cart.dto.ProductResponseDto;
 import cart.dto.entity.CartEntity;
@@ -26,9 +27,11 @@ public class CartService {
     }
 
     public List<ProductResponseDto> findAll(MemberRequestDto memberRequestDto) {
-        MemberEntity member = memberDao.findByEmail(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
+        Member member = new Member(memberRequestDto.getEmail(), memberRequestDto.getPassword());
+        MemberEntity findMember = memberDao.findByEmail(new MemberEntity(member.getEmail(), member.getPassword()));
+        validateExistence(findMember.getId());
 
-        return cartDao.findCartByMember(member.getId())
+        return cartDao.findCartByMember(findMember.getId())
                 .stream()
                 .map(entity -> new ProductResponseDto(entity.getProductId(),
                         entity.getProductName(),
@@ -39,22 +42,26 @@ public class CartService {
 
     @Transactional
     public void save(MemberRequestDto memberRequestDto, Long id) {
-        validateExistence(id);
+        Member member = new Member(memberRequestDto.getEmail(), memberRequestDto.getPassword());
+        MemberEntity findMember = memberDao.findByEmail(new MemberEntity(member.getEmail(), member.getPassword()));
 
-        MemberEntity member = memberDao.findByEmail(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
-        cartDao.save(new CartEntity(id, member.getId()));
+        validateExistence(findMember.getId());
+
+        cartDao.save(new CartEntity(id, findMember.getId()));
     }
 
     @Transactional
     public void delete(MemberRequestDto memberRequestDto, Long id) {
-        validateExistence(id);
+        Member member = new Member(memberRequestDto.getEmail(), memberRequestDto.getPassword());
+        MemberEntity findMember = memberDao.findByEmail(new MemberEntity(member.getEmail(), member.getPassword()));
 
-        MemberEntity member = memberDao.findByEmail(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
-        cartDao.delete(new CartEntity(id, member.getId()));
+        validateExistence(findMember.getId());
+
+        cartDao.delete(new CartEntity(id, findMember.getId()));
     }
 
     private void validateExistence(Long id) {
-        if (!memberDao.existById(id)) {
+        if (id == null) {
             throw new IllegalArgumentException(NOT_EXIST_MEMBER);
         }
     }

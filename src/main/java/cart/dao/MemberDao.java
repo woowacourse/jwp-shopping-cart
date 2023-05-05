@@ -47,10 +47,4 @@ public class MemberDao {
                                 rs.getString("password")),
                 memberEntity.getEmail());
     }
-
-    public boolean existById(final Long id) {
-        final String sql = "SELECT EXISTS(SELECT id FROM members WHERE id=? )";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
-        return count > 0;
-    }
 }

@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.dao.MemberDao;
+import cart.domain.Member;
 import cart.dto.MemberRequestDto;
 import cart.dto.MemberResponseDto;
 import cart.dto.entity.MemberEntity;
@@ -22,8 +23,10 @@ public class MemberService {
 
     @Transactional
     public Long addMember(MemberRequestDto memberRequestDto) {
-        MemberEntity member = memberDao.save(new MemberEntity(memberRequestDto.getEmail(), memberRequestDto.getPassword()));
-        return member.getId();
+        Member member = new Member(memberRequestDto.getEmail(), memberRequestDto.getPassword());
+
+        MemberEntity addMember = memberDao.save(new MemberEntity(member.getEmail(), member.getPassword()));
+        return addMember.getId();
     }
 
     public List<MemberResponseDto> findMembers() {
