@@ -8,6 +8,7 @@ import cart.service.ProductService;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public final class ProductApiController {
         this.productService = productService;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ProductResponseDto>> findProducts() {
         final List<ProductCategoryDto> productCategoryDtos = productService.findAll();
         return ResponseEntity.ok(ProductResponseDtoMapper.mapTo(productCategoryDtos));

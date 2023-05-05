@@ -10,6 +10,7 @@ import cart.service.CartService;
 import cart.service.CustomerService;
 import java.net.URI;
 import java.util.List;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ public final class CartApiController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/items")
+    @GetMapping(value = "/items", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CartProductResponseDto>> showCart(@BasicAuthorization BasicAuthInfo basicAuthInfo) {
         final Long customerId = customerService.findCustomerIdByBasicAuthInfo(basicAuthInfo);
         final List<ProductEntity> products = cartService.findAllProductsByCustomerId(customerId);
