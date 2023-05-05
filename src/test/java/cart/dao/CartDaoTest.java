@@ -40,7 +40,7 @@ class CartDaoTest {
     }
     
     @Test
-    @DisplayName("데이터 베이스에 Cart를 저장한 뒤, findById 로 확인한다.")
+    @DisplayName("데이터 베이스에 Cart를 저장한 뒤, findById로 확인한다.")
     void findById() {
         Email email = Email.from("kpeel5839@a.com");
         cartDao.save(new Cart.Builder()
@@ -53,6 +53,23 @@ class CartDaoTest {
 
         assertThat(carts.get(0).getEmail()).isEqualTo(cart.getEmail());
         assertThat(carts.get(0).getProductId()).isEqualTo(cart.getProductId());
+    }
+
+    @Test
+    @DisplayName("Cart가 잘 삭제 되는지 확인한다.")
+    void deleteById() {
+        Email email = Email.from("kpeel5839@a.com");
+        cartDao.save(new Cart.Builder()
+                .email(email)
+                .productId(1L)
+                .build());
+
+        List<Cart> cartsBeforeDelete = cartDao.selectAll(email);
+        cartDao.deleteById(cartsBeforeDelete.get(0).getId());
+        List<Cart> cartsAfterDelete = cartDao.selectAll(email);
+
+        assertThat(cartsBeforeDelete).hasSize(1);
+        assertThat(cartsAfterDelete).isEmpty();
     }
 
 }
