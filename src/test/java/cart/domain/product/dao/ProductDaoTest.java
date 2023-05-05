@@ -2,6 +2,7 @@ package cart.domain.product.dao;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import cart.dao.ProductDao;
 import cart.domain.product.entity.Product;
 import java.util.List;
 import java.util.Optional;

@@ -7,7 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
-import cart.domain.product.dao.ProductDao;
+import cart.dao.ProductDao;
 import cart.domain.product.entity.Product;
 import cart.dto.ProductCreateRequest;
 import cart.dto.ProductResponse;

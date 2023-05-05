@@ -2,10 +2,11 @@ package cart.domain.cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.dao.CartDao;
 import cart.domain.cart.entity.Cart;
-import cart.domain.member.dao.MemberDao;
+import cart.dao.MemberDao;
 import cart.domain.member.entity.Member;
-import cart.domain.product.dao.ProductDao;
+import cart.dao.ProductDao;
 import cart.domain.product.entity.Product;
 import java.time.LocalDateTime;
 import java.util.List;

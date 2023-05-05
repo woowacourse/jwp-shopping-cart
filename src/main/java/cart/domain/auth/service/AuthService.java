@@ -1,7 +1,7 @@
 package cart.domain.auth.service;
 
 import cart.common.auth.AuthenticationException;
-import cart.domain.member.dao.MemberDao;
+import cart.dao.MemberDao;
 import cart.domain.member.entity.Member;
 import cart.dto.MemberInformation;
 import org.springframework.stereotype.Service;

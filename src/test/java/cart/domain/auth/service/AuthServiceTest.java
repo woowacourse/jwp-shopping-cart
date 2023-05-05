@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 import cart.common.auth.AuthenticationException;
-import cart.domain.member.dao.MemberDao;
+import cart.dao.MemberDao;
 import cart.domain.member.entity.Member;
 import cart.dto.MemberInformation;
 import java.util.Optional;

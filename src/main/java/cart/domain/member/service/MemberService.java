@@ -1,6 +1,6 @@
 package cart.domain.member.service;
 
-import cart.domain.member.dao.MemberDao;
+import cart.dao.MemberDao;
 import cart.domain.member.entity.Member;
 import cart.dto.MemberCreateRequest;
 import cart.dto.MemberCreateResponse;

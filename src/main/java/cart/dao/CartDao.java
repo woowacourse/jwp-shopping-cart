@@ -1,4 +1,4 @@
-package cart.domain.cart.dao;
+package cart.dao;
 
 import cart.domain.cart.entity.Cart;
 import cart.domain.member.entity.Member;
@@ -13,9 +13,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class CartDao {
 
     private final JdbcTemplate jdbcTemplate;
