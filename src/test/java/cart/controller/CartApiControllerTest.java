@@ -80,7 +80,7 @@ class CartApiControllerTest {
         List<CartEntity> findCartByMemberId = cartDao.findCartByMemberId(1);
 
         assertThat(findCartByMemberId).hasSize(1);
-        assertThat(findCartByMemberId.get(0).getProductId()).isEqualTo(1);
+        assertThat(findCartByMemberId.get(0).getProductId()).isEqualTo(productId);
     }
 
     @DisplayName("장바구니 삭제 테스트")
