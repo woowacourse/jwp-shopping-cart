@@ -41,7 +41,7 @@ class ProductControllerTest {
         mockMvc.perform(post("/products")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(productRequest)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @DisplayName("/products/{productId}으로 PUT 요청이 정상적으로 작동한다.")
