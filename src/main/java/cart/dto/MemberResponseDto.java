@@ -4,8 +4,11 @@ import cart.entity.Member;
 
 public class MemberResponseDto {
 
-    private final String email;
-    private final String password;
+    private String email;
+    private String password;
+
+    public MemberResponseDto(){
+    }
 
     public MemberResponseDto(Member member) {
         this.email = member.getEmail();

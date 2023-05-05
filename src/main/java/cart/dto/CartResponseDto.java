@@ -2,9 +2,12 @@ package cart.dto;
 
 public class CartResponseDto {
 
-    private final Long id;
-    private final String email;
-    private final ProductResponseDto productResponseDto;
+    private Long id;
+    private String email;
+    private ProductResponseDto productResponseDto;
+
+    public CartResponseDto(){
+    }
 
     public CartResponseDto(Long id, String email, ProductResponseDto productResponseDto) {
         this.id = id;

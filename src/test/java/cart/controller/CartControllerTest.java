@@ -38,4 +38,21 @@ class CartControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @Test
+    @DisplayName("/carts (Get) 요청을 보내 장바구니에 있는 상품을 조회한다.")
+    void cartsList() {
+        List<CartResponseDto> cartResponseDtos = RestAssured.given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/carts")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(new TypeRef<List<CartResponseDto>>() {});
+
+        assertThat(cartResponseDtos.get(0).getEmail()).isEqualTo(EMAIL);
+        assertThat(cartResponseDtos.get(0).getProductResponseDto()
+                .getName())
+                .isEqualTo("치킨");
+    }
+
 }

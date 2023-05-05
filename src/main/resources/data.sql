@@ -3,3 +3,5 @@ INSERT INTO Product(name, price, image_url) VALUES('샐러드', 5000, 'https://e
 
 INSERT INTO Member(email, password) VALUES('kpeel5839@a.com', 'password1!');
 INSERT INTO Member(email, password) VALUES('jakind@b.com', 'password2!');
+
+INSERT INTO Cart(member_email, product_id) VALUES('kpeel5839@a.com', 1);
