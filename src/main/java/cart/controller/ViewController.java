@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Controller
-public class AdminController {
+public class ViewController {
     private final ProductService productService;
     private final MemberService memberService;
 
-    public AdminController(ProductService productService, MemberService memberService) {
+    public ViewController(ProductService productService, MemberService memberService) {
         this.productService = productService;
         this.memberService = memberService;
     }
