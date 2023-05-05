@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS PRODUCT (
-  product_id LONG NOT NULL AUTO_INCREMENT,
-  name VARCHAR(50)NOT NULL,
-  image VARCHAR(255) NOT NULL,
-  price LONG NOT NULL,
+  product_id          BIGINT            NOT NULL   AUTO_INCREMENT,
+  name        VARCHAR(500)      NOT NULL,
+  image_url   TEXT              NOT NULL,
+  price       DECIMAL           NOT NULL,
   PRIMARY KEY (product_id)
 );
