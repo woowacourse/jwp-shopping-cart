@@ -45,4 +45,16 @@ class ViewControllerTest {
                 .body(containsString("<title>관리자 페이지</title>"));
     }
 
+    @Test
+    @DisplayName("/settings 을 통해, 사용자 설정 페이지를 반환받는다. (settings.html)")
+    void settings() {
+        RestAssured.given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when().get("/settings")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(containsString("<title>설정</title>"));
+    }
+
+
 }
