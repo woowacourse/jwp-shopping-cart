@@ -1,14 +1,14 @@
 package cart.controller;
 
 import cart.auth.Login;
-import cart.auth.MemeberDto;
-import cart.dao.MemeberDao;
-import cart.dao.ProductDao;
+import cart.dao.member.MemeberDao;
 import cart.domain.Cart;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartDto;
+import cart.dto.MemeberDto;
 import cart.service.CartService;
+import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,14 +25,13 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
+    private final ProductService productService;
     private final MemeberDao memeberDao;
-    private final ProductDao productDao;
 
-
-    public CartController(CartService cartService, MemeberDao memeberDao, ProductDao productDao) {
+    public CartController(CartService cartService, ProductService productService, MemeberDao memeberDao) {
         this.cartService = cartService;
+        this.productService = productService;
         this.memeberDao = memeberDao;
-        this.productDao = productDao;
     }
 
     @GetMapping("/carts/products")
@@ -43,7 +42,7 @@ public class CartController {
         List<Product> products = new ArrayList<>();
 
         for (Cart cart : carts) {
-            products.add(productDao.findById(cart.getProductId()));
+            products.add(productService.findById(cart.getProductId()));
         }
 
         return products;
@@ -61,6 +60,7 @@ public class CartController {
         cartService.add(new CartDto(member.getId(), productId));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
     @DeleteMapping("/carts/{productId}")
     @ResponseBody
     public ResponseEntity<String> delete(@PathVariable Long productId, @Login MemeberDto memeberDto) {
