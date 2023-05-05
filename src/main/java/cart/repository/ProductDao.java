@@ -14,6 +14,7 @@ import java.util.List;
 
 @Repository
 public class ProductDao {
+    private static final int ITEM_NOT_FOUND = 0;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -43,7 +44,6 @@ public class ProductDao {
     }
 
     public void update(final ProductCreateDto productCreateDto, final int id) {
-        validId(id);
         final String updateSql = "update product set name = ?, image = ?, price = ? where id = ?";
         jdbcTemplate.update(updateSql,
                 productCreateDto.getName(),
@@ -58,11 +58,10 @@ public class ProductDao {
         jdbcTemplate.update(sql, id);
     }
 
-    private void validId(final int id) {
+    public boolean exitingProduct(final int id) {
         final String sql = "select * from product where id = ?";
-        final List<Object> findData = jdbcTemplate.query(sql, (rs, rsnum) -> null, id);
-        if (findData.isEmpty()) {
-            throw new IllegalStateException("존재 하지 않는 id 입니다.");
-        }
+        final List<Object> findItems = jdbcTemplate.query(sql, (rs, rsnum) -> null, id);
+        return findItems.size() != ITEM_NOT_FOUND;
     }
+
 }

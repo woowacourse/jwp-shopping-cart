@@ -3,6 +3,7 @@ package cart.service;
 import cart.dto.request.ProductCreateDto;
 import cart.dto.response.ProductDto;
 import cart.entity.ProductEntity;
+import cart.excpetion.ProductException;
 import cart.repository.ProductDao;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +38,19 @@ public class ProductService {
     }
 
     public void update(final ProductCreateDto productCreateDto, final int id) {
-        productDao.update(productCreateDto, id);
+        if (productDao.exitingProduct(id)) {
+            productDao.update(productCreateDto, id);
+            return;
+        }
+        throw new ProductException("존재 하지 않는 상품 id에 대한 업데이트 요청입니다");
     }
 
     public void delete(final int id) {
-        productDao.delete(id);
+        if (productDao.exitingProduct(id)) {
+            productDao.delete(id);
+            return;
+        }
+        throw new ProductException("존재 하지 않는 상품 id에 대한 삭제 요청입니다");
     }
 
     private ProductEntity dtoToEntity(final ProductCreateDto productCreateDto) {

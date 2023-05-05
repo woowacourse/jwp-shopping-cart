@@ -1,0 +1,6 @@
+DELETE
+FROM product;
+DELETE
+FROM cart;
+DELETE
+FROM member;

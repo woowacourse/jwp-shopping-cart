@@ -91,7 +91,7 @@ class ProductControllerTest {
         final ProductCreateDto requestDto = new ProductCreateDto("hello", "image.jpg", 100);
 
         //expect
-        RestAssured.given().log().headers()
+        RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestDto)
                 .pathParam("id", 1)
