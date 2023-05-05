@@ -36,7 +36,7 @@ public class JdbcTemplateUserDao implements UserDao {
     }
 
     @Override
-    public int selectByAuth(final AuthInfo authInfo) {
+    public Integer selectByAuth(final AuthInfo authInfo) {
         String sql = "select id from users where email = ? and password = ?";
 
         return jdbcTemplate.queryForObject(sql, Integer.class, authInfo.getEmail(), authInfo.getPaasword());

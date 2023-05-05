@@ -36,8 +36,7 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<ProductResponseDto> getCartItems(final AuthInfo authInfo) {
-        int userId = userDao.selectByAuth(authInfo);
+    public List<ProductResponseDto> getCartItems(final int userId) {
         List<CartEntity> carts = cartDao.selectByUserId(userId);
 
         List<ProductEntity> cartItems = carts.stream()
@@ -54,13 +53,11 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public int addCartItem(final AuthInfo authInfo, final int productId) {
-        int userId = userDao.selectByAuth(authInfo);
+    public int addCartItem(final int userId, final int productId) {
         return cartDao.insert(new CartEntity(userId, productId, 1));
     }
 
-    public int deleteCartItem(final AuthInfo authInfo, final int productId) {
-        int userId = userDao.selectByAuth(authInfo);
+    public int deleteCartItem(final int userId, final int productId) {
         return cartDao.delete(userId, productId);
     }
 }

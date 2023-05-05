@@ -10,7 +10,7 @@ public interface UserDao {
 
     List<UserEntity> selectAll();
 
-    int selectByAuth(AuthInfo authInfo);
+    Integer selectByAuth(AuthInfo authInfo);
 
     int update(UserEntity user);
 
