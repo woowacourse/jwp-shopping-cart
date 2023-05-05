@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.entity.ProductEntity;
+import cart.domain.entity.Product;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,11 +19,11 @@ public class ProductDto {
         this.price = price;
     }
 
-    public static ProductDto from(final ProductEntity productEntity) {
-        return new ProductDto(productEntity.getId(), productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
+    public static ProductDto from(final Product product) {
+        return new ProductDto(product.getId(), product.getName(), product.getImage(), product.getPrice());
     }
 
-    public static List<ProductDto> from(final List<ProductEntity> productEntities) {
+    public static List<ProductDto> from(final List<Product> productEntities) {
         return productEntities.stream()
                 .map(ProductDto::from)
                 .collect(Collectors.toUnmodifiableList());
@@ -37,8 +37,8 @@ public class ProductDto {
         return new ProductDto(id, name, image, price);
     }
 
-    public static ProductEntity toEntity(final ProductDto productDto) {
-        return ProductEntity.of(productDto.id, productDto.name, productDto.image, productDto.price);
+    public static Product toEntity(final ProductDto productDto) {
+        return Product.of(productDto.id, productDto.name, productDto.image, productDto.price);
     }
 
     public Long getId() {

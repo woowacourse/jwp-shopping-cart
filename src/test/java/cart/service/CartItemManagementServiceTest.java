@@ -2,8 +2,8 @@ package cart.service;
 
 import cart.dao.JdbcCartItemDao;
 import cart.dao.JdbcProductDao;
-import cart.domain.entity.CartItemEntity;
-import cart.domain.entity.ProductEntity;
+import cart.domain.entity.CartItem;
+import cart.domain.entity.Product;
 import cart.dto.CartItemCreationDto;
 import cart.dto.CartItemDetailsDto;
 import org.junit.jupiter.api.DisplayName;
@@ -43,16 +43,16 @@ class CartItemManagementServiceTest {
         @DisplayName("장바구니 상품들을 가져와서 정보를 조합해 반환하는지 확인한다")
         @Test
         void successTest() {
-            final List<CartItemEntity> cartItemData = List.of(
-                    CartItemEntity.of(1L, 1L, 1L),
-                    CartItemEntity.of(2L, 1L, 2L)
+            final List<CartItem> cartItemData = List.of(
+                    CartItem.of(1L, 1L, 1L),
+                    CartItem.of(2L, 1L, 2L)
             );
-            final ProductEntity productEntity1 = ProductEntity.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
-            final ProductEntity productEntity2 = ProductEntity.of(2L, "pizza", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 20000);
+            final Product product1 = Product.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
+            final Product product2 = Product.of(2L, "pizza", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 20000);
 
             when(cartItemDao.selectAllByMemberId(anyLong())).thenReturn(cartItemData);
-            when(productDao.selectById(1L)).thenReturn(productEntity1);
-            when(productDao.selectById(2L)).thenReturn(productEntity2);
+            when(productDao.selectById(1L)).thenReturn(product1);
+            when(productDao.selectById(2L)).thenReturn(product2);
 
             final List<CartItemDetailsDto> cartItemDetailsDtos = managementService.findAllByMemberId(1L);
 

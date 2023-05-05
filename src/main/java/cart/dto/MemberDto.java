@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.entity.MemberEntity;
+import cart.domain.entity.Member;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,11 +17,11 @@ public class MemberDto {
         this.password = password;
     }
 
-    public static MemberDto from(final MemberEntity memberEntity) {
-        return new MemberDto(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
+    public static MemberDto from(final Member member) {
+        return new MemberDto(member.getId(), member.getEmail(), member.getPassword());
     }
 
-    public static List<MemberDto> from(final List<MemberEntity> memberEntities) {
+    public static List<MemberDto> from(final List<Member> memberEntities) {
         return memberEntities.stream()
                 .map(MemberDto::from)
                 .collect(Collectors.toUnmodifiableList());

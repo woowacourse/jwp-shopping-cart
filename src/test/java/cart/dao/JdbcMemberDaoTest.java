@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.dao.dummyData.MemberInitializer;
-import cart.domain.entity.MemberEntity;
+import cart.domain.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class JdbcMemberDaoTest {
         @DisplayName("모든 사용자를 반환하는지 확인한다")
         @Test
         void returnAllProductsTest() {
-            final List<MemberEntity> memberEntities = memberDao.selectAll();
+            final List<Member> memberEntities = memberDao.selectAll();
 
             assertThat(memberEntities.size()).isEqualTo(2);
         }
@@ -42,9 +42,9 @@ class JdbcMemberDaoTest {
         @DisplayName("사용자가 등록이 되는지 확인한다")
         @Test
         void successTest() {
-            final MemberEntity memberEntity = MemberEntity.of("hihi@email.com", "password3");
+            final Member member = Member.of("hihi@email.com", "password3");
 
-            assertDoesNotThrow(() -> memberDao.insert(memberEntity));
+            assertDoesNotThrow(() -> memberDao.insert(member));
         }
     }
 
@@ -55,20 +55,20 @@ class JdbcMemberDaoTest {
         @DisplayName("존재하는 사용자가 조회 되는지 확인한다")
         @Test
         void successTest() {
-            final MemberEntity memberEntity = MemberEntity.of("irene@email.com", "password1");
-            MemberEntity selectedMemberEntity = memberDao.selectByEmailAndPassword(memberEntity);
+            final Member member = Member.of("irene@email.com", "password1");
+            Member selectedMember = memberDao.selectByEmailAndPassword(member);
             assertAll(
-                    () -> assertThat(selectedMemberEntity.getEmail()).isEqualTo(memberEntity.getEmail()),
-                    () -> assertThat(selectedMemberEntity.getPassword()).isEqualTo(memberEntity.getPassword())
+                    () -> assertThat(selectedMember.getEmail()).isEqualTo(member.getEmail()),
+                    () -> assertThat(selectedMember.getPassword()).isEqualTo(member.getPassword())
             );
         }
 
         @DisplayName("존재하지 않는 사용자를 조회할 경우 null을 반환하는지 확인한다")
         @Test
         void returnNullTest() {
-            final MemberEntity memberEntity = MemberEntity.of("hihi@email.com", "password3");
+            final Member member = Member.of("hihi@email.com", "password3");
 
-            assertThat(memberDao.selectByEmailAndPassword(memberEntity)).isNull();
+            assertThat(memberDao.selectByEmailAndPassword(member)).isNull();
         }
     }
 

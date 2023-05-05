@@ -1,14 +1,14 @@
 package cart.dao;
 
-import cart.domain.entity.MemberEntity;
+import cart.domain.entity.Member;
 
 import java.util.List;
 
 public interface MemberDao {
 
-    List<MemberEntity> selectAll();
+    List<Member> selectAll();
 
-    long insert(final MemberEntity memberEntity);
+    long insert(final Member member);
 
-    MemberEntity selectByEmailAndPassword(final MemberEntity memberEntity);
+    Member selectByEmailAndPassword(final Member member);
 }

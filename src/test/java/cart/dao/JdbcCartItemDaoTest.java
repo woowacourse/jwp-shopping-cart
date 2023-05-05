@@ -2,7 +2,7 @@ package cart.dao;
 
 import cart.dao.dummyData.MemberInitializer;
 import cart.dao.dummyData.ProductInitializer;
-import cart.domain.entity.CartItemEntity;
+import cart.domain.entity.CartItem;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class JdbcCartItemDaoTest {
         @DisplayName("상품들을 반환하는 기능이 동작하는지 확인한다")
         @Test
         void successTest() {
-            final List<CartItemEntity> cartItemEntities = cartItemDao.selectAllByMemberId(1L);
+            final List<CartItem> cartItemEntities = cartItemDao.selectAllByMemberId(1L);
 
             assertThat(cartItemEntities.size()).isEqualTo(0);
         }
@@ -43,26 +43,26 @@ class JdbcCartItemDaoTest {
         @DisplayName("장바구니에 상품이 등록되는지 확인한다")
         @Test
         void successTest() {
-            final CartItemEntity cartItemEntity = CartItemEntity.of(1L, 1L);
+            final CartItem cartItem = CartItem.of(1L, 1L);
 
-            assertDoesNotThrow(() -> cartItemDao.insert(cartItemEntity));
+            assertDoesNotThrow(() -> cartItemDao.insert(cartItem));
         }
 
         @DisplayName("존재하지 않는 사용자 id로 상품을 장바구니에 담으려고 하면 예외가 발생하는지 확인한다")
         @Test
         void failTest() {
-            final CartItemEntity cartItemEntity = CartItemEntity.of(5L, 1L);
+            final CartItem cartItem = CartItem.of(5L, 1L);
 
-            assertThatThrownBy(() -> cartItemDao.insert(cartItemEntity))
+            assertThatThrownBy(() -> cartItemDao.insert(cartItem))
                     .isInstanceOf(IllegalArgumentException.class);
         }
 
         @DisplayName("존재하지 않는 상품 id로 상품을 장바구니에 담으려고 하면 예외가 발생하는지 확인한다")
         @Test
         void failTest2() {
-            final CartItemEntity cartItemEntity = CartItemEntity.of(1L, 4L);
+            final CartItem cartItem = CartItem.of(1L, 4L);
 
-            assertThatThrownBy(() -> cartItemDao.insert(cartItemEntity))
+            assertThatThrownBy(() -> cartItemDao.insert(cartItem))
                     .isInstanceOf(IllegalArgumentException.class);
         }
 
@@ -75,8 +75,8 @@ class JdbcCartItemDaoTest {
         @DisplayName("장바구니에서 상품 삭제가 되면 1을 반환하는지 확인한다")
         @Test
         void returnOneWhenDeletedTest() {
-            final CartItemEntity cartItemEntity = CartItemEntity.of(1L, 1L);
-            cartItemDao.insert(cartItemEntity);
+            final CartItem cartItem = CartItem.of(1L, 1L);
+            cartItemDao.insert(cartItem);
 
             int deletedRow = cartItemDao.deleteById(1L);
 

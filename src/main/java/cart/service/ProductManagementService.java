@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.domain.entity.ProductEntity;
+import cart.domain.entity.Product;
 import cart.dto.ProductDto;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class ProductManagementService {
     }
 
     public List<ProductDto> findAll() {
-        final List<ProductEntity> productEntities = productDao.selectAll();
+        final List<Product> productEntities = productDao.selectAll();
         return ProductDto.from(productEntities);
     }
 

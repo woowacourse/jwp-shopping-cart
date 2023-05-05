@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.domain.entity.MemberEntity;
+import cart.domain.entity.Member;
 
 public class AuthenticatedMember {
 
@@ -14,8 +14,8 @@ public class AuthenticatedMember {
         this.password = password;
     }
 
-    public static AuthenticatedMember from(final MemberEntity memberEntity) {
-        return new AuthenticatedMember(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
+    public static AuthenticatedMember from(final Member member) {
+        return new AuthenticatedMember(member.getId(), member.getEmail(), member.getPassword());
     }
 
     public static AuthenticatedMember of(final long id, final String email, final String password) {

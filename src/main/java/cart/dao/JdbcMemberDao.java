@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.entity.MemberEntity;
+import cart.domain.entity.Member;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,29 +17,29 @@ public class JdbcMemberDao implements MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<MemberEntity> memberEntityRowMapper = (resultSet, rowNum) -> MemberEntity.of(
+    private final RowMapper<Member> memberEntityRowMapper = (resultSet, rowNum) -> Member.of(
             resultSet.getLong("id"),
             resultSet.getString("email"),
             resultSet.getString("password")
     );
 
     @Override
-    public List<MemberEntity> selectAll() {
+    public List<Member> selectAll() {
         final String sql = "SELECT * FROM member";
         return jdbcTemplate.query(sql, memberEntityRowMapper);
     }
 
     @Override
-    public long insert(final MemberEntity memberEntity) {
+    public long insert(final Member member) {
         final String sql = "INSERT INTO member(email, password) VALUES (?, ?)";
-        return jdbcTemplate.update(sql, memberEntity.getEmail(), memberEntity.getPassword());
+        return jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
     }
 
     @Override
-    public MemberEntity selectByEmailAndPassword(final MemberEntity memberEntity) {
+    public Member selectByEmailAndPassword(final Member member) {
         final String sql = "SELECT * FROM member WHERE email = ? AND password = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, memberEntityRowMapper, memberEntity.getEmail(), memberEntity.getPassword());
+            return jdbcTemplate.queryForObject(sql, memberEntityRowMapper, member.getEmail(), member.getPassword());
         } catch (EmptyResultDataAccessException exception) {
             return null;
         }

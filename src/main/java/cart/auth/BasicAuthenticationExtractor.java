@@ -1,18 +1,18 @@
 package cart.auth;
 
 
-import cart.domain.entity.MemberEntity;
+import cart.domain.entity.Member;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.NativeWebRequest;
 
 @Component
-public class BasicAuthenticationExtractor implements AuthenticationExtractor<MemberEntity> {
+public class BasicAuthenticationExtractor implements AuthenticationExtractor<Member> {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
     @Override
-    public MemberEntity extract(NativeWebRequest request) {
+    public Member extract(NativeWebRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
         if (header == null) {
@@ -28,7 +28,7 @@ public class BasicAuthenticationExtractor implements AuthenticationExtractor<Mem
             String email = credentials[0];
             String password = credentials[1];
 
-            return MemberEntity.of(email, password);
+            return Member.of(email, password);
         }
 
         return null;

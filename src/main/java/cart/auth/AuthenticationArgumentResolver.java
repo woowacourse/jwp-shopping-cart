@@ -1,7 +1,7 @@
 package cart.auth;
 
 import cart.dao.MemberDao;
-import cart.domain.entity.MemberEntity;
+import cart.domain.entity.Member;
 import cart.exception.AuthenticationException;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -13,10 +13,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final AuthenticationExtractor<MemberEntity> authenticationExtractor;
+    private final AuthenticationExtractor<Member> authenticationExtractor;
     private final MemberDao memberDao;
 
-    public AuthenticationArgumentResolver(final AuthenticationExtractor<MemberEntity> authenticationExtractor, final MemberDao memberDao) {
+    public AuthenticationArgumentResolver(final AuthenticationExtractor<Member> authenticationExtractor, final MemberDao memberDao) {
         this.authenticationExtractor = authenticationExtractor;
         this.memberDao = memberDao;
     }
@@ -28,22 +28,22 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        MemberEntity extractedMember = authenticationExtractor.extract(webRequest);
+        Member extractedMember = authenticationExtractor.extract(webRequest);
         validateExtraction(extractedMember);
 
-        MemberEntity selectedMember = memberDao.selectByEmailAndPassword(extractedMember);
+        Member selectedMember = memberDao.selectByEmailAndPassword(extractedMember);
         validateMember(selectedMember);
 
         return AuthenticatedMember.from(selectedMember);
     }
 
-    private void validateExtraction(MemberEntity extractedMember) {
+    private void validateExtraction(Member extractedMember) {
         if (extractedMember == null) {
             throw new AuthenticationException("사용자 인증이 필요합니다.");
         }
     }
 
-    private void validateMember(MemberEntity selectedMember) {
+    private void validateMember(Member selectedMember) {
         if (selectedMember == null) {
             throw new AuthenticationException("사용자 인증에 실패하였습니다.");
         }

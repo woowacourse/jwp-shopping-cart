@@ -1,18 +1,18 @@
 package cart.dao;
 
-import cart.domain.entity.ProductEntity;
+import cart.domain.entity.Product;
 
 import java.util.List;
 
 public interface ProductDao {
 
-    List<ProductEntity> selectAll();
+    List<Product> selectAll();
 
-    ProductEntity selectById(final long id);
+    Product selectById(final long id);
 
-    long insert(final ProductEntity productEntity);
+    long insert(final Product product);
 
-    int update(final ProductEntity productEntity);
+    int update(final Product product);
 
     int deleteById(final long id);
 }

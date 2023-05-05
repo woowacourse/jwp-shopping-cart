@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.JdbcMemberDao;
-import cart.domain.entity.MemberEntity;
+import cart.domain.entity.Member;
 import cart.dto.MemberDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -33,9 +33,9 @@ class MemberManagementServiceTest {
         @DisplayName("모든 사용자를 가져와서 반환하는지 확인한다")
         @Test
         void successTest() {
-            final List<MemberEntity> data = List.of(
-                    MemberEntity.of(1L, "irene@email.com", "password1"),
-                    MemberEntity.of(2L, "hihi@email.com", "password2")
+            final List<Member> data = List.of(
+                    Member.of(1L, "irene@email.com", "password1"),
+                    Member.of(2L, "hihi@email.com", "password2")
             );
             when(memberDao.selectAll()).thenReturn(data);
 

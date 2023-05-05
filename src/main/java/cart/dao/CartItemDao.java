@@ -1,14 +1,14 @@
 package cart.dao;
 
-import cart.domain.entity.CartItemEntity;
+import cart.domain.entity.CartItem;
 
 import java.util.List;
 
 public interface CartItemDao {
 
-    List<CartItemEntity> selectAllByMemberId(final Long memberId);
+    List<CartItem> selectAllByMemberId(final Long memberId);
 
-    long insert(final CartItemEntity cartItemEntity);
+    long insert(final CartItem cartItem);
 
     int deleteById(final long id);
 

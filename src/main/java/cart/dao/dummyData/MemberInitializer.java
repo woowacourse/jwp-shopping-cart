@@ -1,7 +1,7 @@
 package cart.dao.dummyData;
 
 import cart.dao.MemberDao;
-import cart.domain.entity.MemberEntity;
+import cart.domain.entity.Member;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
@@ -19,10 +19,10 @@ public class MemberInitializer implements ApplicationRunner {
 
     @Override
     public void run(final ApplicationArguments args) throws Exception {
-        final MemberEntity memberEntity1 = MemberEntity.of("irene@email.com", "password1");
-        final MemberEntity memberEntity2 = MemberEntity.of("abcd@email.com", "password2");
+        final Member member1 = Member.of("irene@email.com", "password1");
+        final Member member2 = Member.of("abcd@email.com", "password2");
 
-        memberDao.insert(memberEntity1);
-        memberDao.insert(memberEntity2);
+        memberDao.insert(member1);
+        memberDao.insert(member2);
     }
 }

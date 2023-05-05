@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.JdbcProductDao;
-import cart.domain.entity.ProductEntity;
+import cart.domain.entity.Product;
 import cart.dto.ProductDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -37,9 +37,9 @@ class ProductManagementServiceTest {
         @DisplayName("모든 상품 데이터를 가져와서 반환하는지 확인한다")
         @Test
         void successTest() {
-            final List<ProductEntity> data = List.of(
-                    ProductEntity.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000),
-                    ProductEntity.of(2L, "pizza", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 20000)
+            final List<Product> data = List.of(
+                    Product.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000),
+                    Product.of(2L, "pizza", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 20000)
             );
             when(productDao.selectAll()).thenReturn(data);
 

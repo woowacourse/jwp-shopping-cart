@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.entity.ProductEntity;
+import cart.domain.entity.Product;
 
 public class CartItemDetailsDto {
 
@@ -16,8 +16,8 @@ public class CartItemDetailsDto {
         this.price = price;
     }
 
-    public static CartItemDetailsDto from(final long id, final ProductEntity productEntity) {
-        return new CartItemDetailsDto(id, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
+    public static CartItemDetailsDto from(final long id, final Product product) {
+        return new CartItemDetailsDto(id, product.getName(), product.getImage(), product.getPrice());
     }
 
     public long getId() {

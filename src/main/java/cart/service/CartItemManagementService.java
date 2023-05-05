@@ -2,8 +2,8 @@ package cart.service;
 
 import cart.dao.CartItemDao;
 import cart.dao.ProductDao;
-import cart.domain.entity.CartItemEntity;
-import cart.domain.entity.ProductEntity;
+import cart.domain.entity.CartItem;
+import cart.domain.entity.Product;
 import cart.dto.CartItemCreationDto;
 import cart.dto.CartItemDetailsDto;
 import org.springframework.stereotype.Service;
@@ -23,11 +23,11 @@ public class CartItemManagementService {
     }
 
     public List<CartItemDetailsDto> findAllByMemberId(final Long memberId) {
-        List<CartItemEntity> cartItemEntities = cartItemDao.selectAllByMemberId(memberId);
+        List<CartItem> cartItemEntities = cartItemDao.selectAllByMemberId(memberId);
         List<CartItemDetailsDto> cartItemDetailsDtos = new ArrayList<>();
-        for (CartItemEntity cartItemEntity : cartItemEntities) {
-            ProductEntity productEntity = productDao.selectById(cartItemEntity.getProductId());
-            cartItemDetailsDtos.add(CartItemDetailsDto.from(cartItemEntity.getId(), productEntity));
+        for (CartItem cartItem : cartItemEntities) {
+            Product product = productDao.selectById(cartItem.getProductId());
+            cartItemDetailsDtos.add(CartItemDetailsDto.from(cartItem.getId(), product));
         }
         return cartItemDetailsDtos;
     }

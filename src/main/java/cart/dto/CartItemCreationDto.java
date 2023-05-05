@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.entity.CartItemEntity;
+import cart.domain.entity.CartItem;
 
 public class CartItemCreationDto {
 
@@ -16,8 +16,8 @@ public class CartItemCreationDto {
         return new CartItemCreationDto(memberId, productId);
     }
 
-    public static CartItemEntity toEntity(final CartItemCreationDto cartItemCreationDto) {
-        return CartItemEntity.of(cartItemCreationDto.memberId, cartItemCreationDto.productId);
+    public static CartItem toEntity(final CartItemCreationDto cartItemCreationDto) {
+        return CartItem.of(cartItemCreationDto.memberId, cartItemCreationDto.productId);
     }
 
     public long getMemberId() {
