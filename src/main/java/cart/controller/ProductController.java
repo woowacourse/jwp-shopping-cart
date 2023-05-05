@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.domain.product.Product;
 import cart.dto.ProductRequest;
 import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -16,6 +18,11 @@ public class ProductController {
 
     public ProductController(final ProductService productService) {
         this.productService = productService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Product>> showProducts() {
+        return ResponseEntity.ok(List.of());
     }
 
     @PostMapping
