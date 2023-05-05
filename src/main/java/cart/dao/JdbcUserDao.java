@@ -36,6 +36,16 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
+    public User findById(final Long id) {
+        final String sql = "SELECT * FROM user_list WHERE id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, userRowMapper, id);
+        } catch (final IncorrectResultSizeDataAccessException exception) {
+            return null;
+        }
+    }
+
+    @Override
     public User findByEmail(final String email) {
         final String sql = "SELECT * FROM user_list WHERE email = ?";
         try {
