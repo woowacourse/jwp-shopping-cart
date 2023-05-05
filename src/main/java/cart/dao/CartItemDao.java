@@ -19,7 +19,8 @@ public class CartItemDao {
     public CartItemDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("cart_item");
+                .withTableName("cart_item")
+                .usingGeneratedKeyColumns("id");
     }
 
     public void insert(Integer userId, Integer productId) {
@@ -31,7 +32,7 @@ public class CartItemDao {
     }
 
     public void delete(Integer userId, Integer productId) {
-        String sql = "DELETE FROM cart_item WHERE user_id = ?, product_id = ?";
+        String sql = "DELETE FROM cart_item WHERE user_id = ? AND product_id = ?";
 
         jdbcTemplate.update(sql, userId, productId);
     }
