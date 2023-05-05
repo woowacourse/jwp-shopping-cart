@@ -70,7 +70,7 @@ public class CartDao {
 			+ "FROM cart "
 			+ "LEFT JOIN users ON cart.users_id = users.id "
 			+ "LEFT JOIN product ON cart.product_id = product.id "
-			+ "where cart.users_id = ? and cart.product_id = ?";
+			+ "WHERE cart.users_id = ? AND cart.product_id = ?";
 
 		try {
 			final CartProductDto cartProductDto = jdbcTemplate.queryForObject(sql, cartProductDtoRowMapper, userId,
