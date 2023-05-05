@@ -1,11 +1,12 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
+import cart.dto.ProductResponse;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
 @Controller
 public class PageController {
 
@@ -17,17 +18,16 @@ public class PageController {
 
     @GetMapping("/")
     public String productPageView(Model model) {
-        List<ProductDto> products = productService.findAllProducts();
+        List<ProductResponse> products = productService.findAllProducts();
         model.addAttribute("products", products);
         return "index";
     }
 
     @GetMapping("/admin")
     public String adminPageView(Model model) {
-        List<ProductDto> products = productService.findAllProducts();
+        List<ProductResponse> products = productService.findAllProducts();
         model.addAttribute("products", products);
         return "admin";
     }
-
 
 }

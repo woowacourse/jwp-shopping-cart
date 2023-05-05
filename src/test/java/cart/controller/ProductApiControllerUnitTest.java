@@ -16,8 +16,8 @@ import cart.domain.ImageUrl;
 import cart.domain.Price;
 import cart.domain.Product;
 import cart.domain.ProductName;
-import cart.dto.ProductDto;
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductResponse;
+import cart.dto.ProductRequest;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
@@ -54,7 +54,7 @@ class ProductApiControllerUnitTest {
     @DisplayName("/products로 POST 요청과 상품의 정보를 보내면, HTTP 201 코드와 상품이 등록된다.")
     void saveProduct는_상품을_저장하고_created상태코드를_반환한다() throws Exception {
         //given
-        ProductRequestDto request = new ProductRequestDto("치킨", "치킨image", BigDecimal.valueOf(20000L));
+        ProductRequest request = new ProductRequest("치킨", "치킨image", BigDecimal.valueOf(20000L));
 //        given(productService.saveProduct(request))
 //                .willReturn(1L);
 
@@ -70,7 +70,7 @@ class ProductApiControllerUnitTest {
     @DisplayName("상품을 생성할 때 이름이 25자를 초과하면, HTTP 400 코드와 에러 메시지가 반환된다")
     void saveProduct예외1_name의_길이가_25자_초과() throws Exception {
         // given
-        ProductRequestDto request = new ProductRequestDto("치킨ㄴㅇ라ㅣ낭러;ㅣㅁㄴ얼;ㅣㅁㄴ아ㅓㄹ;ㅣㄴ멍리;ㄴ얼;ㅣㅁ넝ㄹ;ㅣㄴ마얼;ㅁㄴㅇㄹㅁㄴㅇㄹㅇㄴㄹㄴㅇㄹ",
+        ProductRequest request = new ProductRequest("치킨ㄴㅇ라ㅣ낭러;ㅣㅁㄴ얼;ㅣㅁㄴ아ㅓㄹ;ㅣㄴ멍리;ㄴ얼;ㅣㅁ넝ㄹ;ㅣㄴ마얼;ㅁㄴㅇㄹㅁㄴㅇㄹㅇㄴㄹㄴㅇㄹ",
                 "치킨image", BigDecimal.valueOf(20000L));
 //        given(productService.saveProduct(request))
 //                .willReturn(1L);
@@ -89,7 +89,7 @@ class ProductApiControllerUnitTest {
     @DisplayName("상품을 생성할 때 이름이 null이면, HTTP 400 코드와 검증 메시지가 반환된다.")
     void saveProduct예외2_name이_Blank(String name) throws Exception {
         // given
-        ProductRequestDto request = new ProductRequestDto(name, "치킨image", BigDecimal.valueOf(20000L));
+        ProductRequest request = new ProductRequest(name, "치킨image", BigDecimal.valueOf(20000L));
 //        given(productService.saveProduct(request))
 //                .willReturn(1L);
 
@@ -107,7 +107,7 @@ class ProductApiControllerUnitTest {
     @DisplayName("상품을 생성할 때 가격이 음수이거나 1억 이상이면 HTTP 400 코드와 검증 메시지가 반환된다.")
     void saveProduct예외3_price가_음수이거나_1억_초과(Long price) throws Exception {
         // given
-        ProductRequestDto request = new ProductRequestDto("치킨", "치킨image", BigDecimal.valueOf(price));
+        ProductRequest request = new ProductRequest("치킨", "치킨image", BigDecimal.valueOf(price));
         // when
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -121,7 +121,7 @@ class ProductApiControllerUnitTest {
     @DisplayName("상품을 생성할 때 가격이 null이면, HTTP 400 코드와 검증 메시지가 반환된다.")
     void saveProduct예외4_price가_Blank() throws Exception {
         // given
-        ProductRequestDto request = new ProductRequestDto("치킨", "치킨image", null);
+        ProductRequest request = new ProductRequest("치킨", "치킨image", null);
         // when
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -137,7 +137,7 @@ class ProductApiControllerUnitTest {
     @DisplayName("상품을 생성할 때 이미지가 빈 값이면 HTTP 400 코드와 검증 메시지가 반환된다.")
     void saveProduct예외5_image가_Blank(String image) throws Exception {
         // given
-        ProductRequestDto request = new ProductRequestDto("치킨", image, BigDecimal.valueOf(20000L));
+        ProductRequest request = new ProductRequest("치킨", image, BigDecimal.valueOf(20000L));
 
         // when
         mockMvc.perform(post("/products")
@@ -156,7 +156,7 @@ class ProductApiControllerUnitTest {
         long productId = 1;
         Product savedProduct = new Product(new Id(1L), new ProductName("치킨"), new ImageUrl("치킨image"),
                 new Price(BigDecimal.valueOf(15000L)));
-        ProductRequestDto request = new ProductRequestDto("치킨", "치킨image", BigDecimal.valueOf(20000L));
+        ProductRequest request = new ProductRequest("치킨", "치킨image", BigDecimal.valueOf(20000L));
 
         given(productRepository.getProduct(productId))
                 .willReturn(savedProduct);
@@ -178,7 +178,7 @@ class ProductApiControllerUnitTest {
     void updateProduct예외1_productId가_db에_없을때() throws Exception {
         // given
         long productId = 1;
-        ProductRequestDto request = new ProductRequestDto("치킨", "치킨image", BigDecimal.valueOf(20000L));
+        ProductRequest request = new ProductRequest("치킨", "치킨image", BigDecimal.valueOf(20000L));
 
         // when
         mockMvc.perform(put("/products/" + productId)
@@ -193,7 +193,7 @@ class ProductApiControllerUnitTest {
     void updateProduct예외2_name의_길이가_25자_초과() throws Exception {
         // given
         long productId = 1;
-        ProductRequestDto request = new ProductRequestDto("치킨ㅁㄴ아룸니ㅏㅇ러;민아ㅓㄹ;ㅣㅁ나얼;미ㅏㅈ더리;맞더맂더라ㅣㅁㅈ덜ㄷㄹ저ㅣㄷ러짇란ㄹㄷㄹㄴㅈㄸㅈㄹㅈㄷㄹㅈㄷ",
+        ProductRequest request = new ProductRequest("치킨ㅁㄴ아룸니ㅏㅇ러;민아ㅓㄹ;ㅣㅁ나얼;미ㅏㅈ더리;맞더맂더라ㅣㅁㅈ덜ㄷㄹ저ㅣㄷ러짇란ㄹㄷㄹㄴㅈㄸㅈㄹㅈㄷㄹㅈㄷ",
                 "치킨image", BigDecimal.valueOf(20000L));
 
         // when
@@ -237,8 +237,8 @@ class ProductApiControllerUnitTest {
     @DisplayName("/products로 GET 요청을 보내면 HTTP 200 코드와 함께 상품이 조회되어야 한다.")
     void findAllProducts_success() throws Exception {
         // given
-        List<ProductDto> products = List.of(new ProductDto(1L, "치킨", "치킨image", BigDecimal.valueOf(20000L)),
-                new ProductDto(2L, "치킨", "치킨image", BigDecimal.valueOf(20000L)));
+        List<ProductResponse> products = List.of(new ProductResponse(1L, "치킨", "치킨image", BigDecimal.valueOf(20000L)),
+                new ProductResponse(2L, "치킨", "치킨image", BigDecimal.valueOf(20000L)));
 
         willReturn(products)
                 .given(productService)

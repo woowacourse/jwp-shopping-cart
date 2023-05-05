@@ -2,21 +2,14 @@ package cart.dto;
 
 import java.math.BigDecimal;
 
-public class ProductDto {
+public class ProductResponse {
 
     private final Long productId;
     private final String name;
     private final String image;
     private final BigDecimal price;
 
-    public ProductDto(String name, String image, BigDecimal price) {
-        this.productId = null;
-        this.name = name;
-        this.image = image;
-        this.price = price;
-    }
-
-    public ProductDto(Long productId, String name, String image, BigDecimal price) {
+    public ProductResponse(Long productId, String name, String image, BigDecimal price) {
         this.productId = productId;
         this.name = name;
         this.image = image;
