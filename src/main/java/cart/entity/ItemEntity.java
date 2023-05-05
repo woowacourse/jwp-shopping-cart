@@ -12,7 +12,7 @@ public class ItemEntity {
     private Long id;
     private String name;
     private String imageUrl;
-    private int price;
+    private Integer price;
 
     private ItemEntity() {
     }
