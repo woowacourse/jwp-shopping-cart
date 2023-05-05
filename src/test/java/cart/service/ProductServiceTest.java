@@ -2,7 +2,6 @@ package cart.service;
 
 import cart.dao.JdbcProductDao;
 import cart.domain.product.Product;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,23 +20,27 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @Sql(scripts = {"classpath:data.sql"})
 class ProductServiceTest {
 
-    private final JdbcTemplate jdbcTemplate;
     private final ProductService productService;
 
     public ProductServiceTest(@Autowired final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
         this.productService = new ProductService(new JdbcProductDao(jdbcTemplate));
-    }
-
-    @AfterEach
-    void clear() {
-        jdbcTemplate.execute("TRUNCATE TABLE product");
     }
 
     @Test
     @DisplayName("상품을 저장한다")
     void save() {
         assertDoesNotThrow(() -> productService.save("이오", 1000, null));
+    }
+
+
+    @Test
+    @DisplayName("Id로 상품을 조회한다")
+    void findById() {
+        final Long id = productService.save("이오", 1000, null);
+
+        final Product actual = productService.findById(id);
+
+        assertThat(actual.getName()).isEqualTo("이오");
     }
 
     @Test

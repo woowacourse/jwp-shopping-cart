@@ -32,6 +32,17 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("상품 리스트를 조회한다")
+    void findByEmail() {
+        final String email = "test12@mail.com";
+        final Long id = userService.save(email, "12121212");
+
+        final User actual = userService.findByEmail(email);
+
+        assertThat(actual.getUserId()).isEqualTo(id);
+    }
+
+    @Test
+    @DisplayName("상품 리스트를 조회한다")
     void findAll() {
         userService.save("test12@mail.com", "12121212");
         userService.save("test34@mail.com", "34343434");
