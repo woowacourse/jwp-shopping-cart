@@ -13,16 +13,16 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
-class ProductRepositoryTest {
+class ProductDaoTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    ProductRepository productRepository;
+    ProductDao productDao;
 
     @BeforeEach
     void setUp() {
-        productRepository = new ProductRepository(jdbcTemplate);
+        productDao = new ProductDao(jdbcTemplate);
     }
 
     @Test
@@ -36,10 +36,10 @@ class ProductRepositoryTest {
                 .build();
 
         // when
-        ProductEntity productEntity = productRepository.save(product);
+        ProductEntity productEntity = productDao.save(product);
 
         // then
-        List<ProductEntity> allProducts = productRepository.findAll();
+        List<ProductEntity> allProducts = productDao.findAll();
         assertThat(allProducts)
                 .hasSize(1);
         assertThat(allProducts.get(0))
@@ -56,7 +56,7 @@ class ProductRepositoryTest {
                 .imageUrl("no")
                 .build();
 
-        ProductEntity productEntity = productRepository.save(product);
+        ProductEntity productEntity = productDao.save(product);
 
         ProductEntity updateProduct = ProductEntity.builder()
                 .id(productEntity.getId())
@@ -66,10 +66,10 @@ class ProductRepositoryTest {
                 .build();
 
         // when
-        productRepository.update(updateProduct);
+        productDao.update(updateProduct);
 
         // then
-        ProductEntity foundProduct = productRepository.findAll().get(0);
+        ProductEntity foundProduct = productDao.findAll().get(0);
         assertThat(foundProduct)
                 .isEqualTo(updateProduct);
     }
@@ -84,13 +84,13 @@ class ProductRepositoryTest {
                 .imageUrl("no")
                 .build();
 
-        ProductEntity productEntity = productRepository.save(product);
+        ProductEntity productEntity = productDao.save(product);
 
         // when
-        productRepository.deleteById(productEntity.getId());
+        productDao.deleteById(productEntity.getId());
 
         // then
-        List<ProductEntity> allProducts = productRepository.findAll();
+        List<ProductEntity> allProducts = productDao.findAll();
 
         assertThat(allProducts)
                 .isEmpty();

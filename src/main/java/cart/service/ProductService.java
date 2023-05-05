@@ -6,7 +6,7 @@ import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.entity.ProductEntity;
 import cart.exception.ProductNotFoundException;
-import cart.repository.ProductRepository;
+import cart.repository.ProductDao;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class ProductService {
-    private final ProductRepository productRepository;
+    private final ProductDao productDao;
 
     public ProductDto createProduct(String name, int price, String imageUrl) {
         Product product = Product.builder()
@@ -24,20 +24,20 @@ public class ProductService {
                 .price(price)
                 .imageUrl(imageUrl)
                 .build();
-        ProductEntity productEntity = productRepository.save(product);
+        ProductEntity productEntity = productDao.save(product);
         return ProductDto.fromEntity(productEntity);
     }
 
     @Transactional(readOnly = true)
     public List<ProductDto> findAllProducts() {
-        return productRepository.findAll().stream()
+        return productDao.findAll().stream()
                 .map(ProductDto::fromEntity)
                 .collect(toList());
     }
 
     public void deleteById(Long id) {
         validateId(id);
-        productRepository.deleteById(id);
+        productDao.deleteById(id);
     }
 
     public ProductDto updateProductById(Long id, String name, int price, String imageUrl) {
@@ -48,13 +48,13 @@ public class ProductService {
                 .price(price)
                 .imageUrl(imageUrl)
                 .build();
-        productRepository.update(productEntity);
+        productDao.update(productEntity);
         return ProductDto.fromEntity(productEntity);
     }
 
     @Transactional(readOnly = true)
     private void validateId(Long id) {
-        if (!productRepository.existsById(id)) {
+        if (!productDao.existsById(id)) {
             throw new ProductNotFoundException("존재하지 않는 상품의 ID 입니다.");
         }
     }
