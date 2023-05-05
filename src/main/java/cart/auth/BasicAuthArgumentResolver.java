@@ -7,6 +7,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import javax.naming.AuthenticationException;
+
 public final class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
@@ -21,20 +23,16 @@ public final class BasicAuthArgumentResolver implements HandlerMethodArgumentRes
     public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) throws Exception {
         String header = webRequest.getHeader(AUTHORIZATION);
 
-        if (header == null) {
-            return null;
+        if (header == null || !header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
+            throw new AuthenticationException("사용자 인증이 필요합니다.");
         }
 
-        if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
-            String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
-            byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
-            String decodedString = new String(decodedBytes);
+        String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
+        byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
+        String decodedString = new String(decodedBytes);
 
-            String[] credentials = decodedString.split(DELIMITER);
+        String[] credentials = decodedString.split(DELIMITER);
 
-            return new UserInfo(credentials[0], credentials[1]);
-        }
-
-        return null;
+        return new UserInfo(credentials[0], credentials[1]);
     }
 }
