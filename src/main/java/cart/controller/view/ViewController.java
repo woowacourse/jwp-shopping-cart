@@ -2,7 +2,6 @@ package cart.controller.view;
 
 import cart.dto.response.MemberResponse;
 import cart.dto.response.ProductResponse;
-import cart.service.CartService;
 import cart.service.MembersService;
 import cart.service.ProductsService;
 import org.springframework.stereotype.Controller;
@@ -15,12 +14,10 @@ import java.util.List;
 public class ViewController {
 
     private final ProductsService productsService;
-    private final CartService cartService;
     private final MembersService membersService;
 
-    public ViewController(ProductsService productsService, CartService cartService, MembersService membersService) {
+    public ViewController(ProductsService productsService, MembersService membersService) {
         this.productsService = productsService;
-        this.cartService = cartService;
         this.membersService = membersService;
     }
 

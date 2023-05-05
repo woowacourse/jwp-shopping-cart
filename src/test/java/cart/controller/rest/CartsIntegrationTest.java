@@ -1,8 +1,5 @@
 package cart.controller.rest;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-
 import cart.domain.product.Product;
 import cart.persistence.CartDao;
 import cart.persistence.ProductsDao;
