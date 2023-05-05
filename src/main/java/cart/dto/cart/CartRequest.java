@@ -2,7 +2,10 @@ package cart.dto.cart;
 
 public class CartRequest {
 
-    private final Long productId;
+    private Long productId;
+
+    public CartRequest() {
+    }
 
     public CartRequest(final Long productId) {
         this.productId = productId;

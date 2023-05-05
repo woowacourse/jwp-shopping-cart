@@ -10,6 +10,7 @@ import cart.entity.cart.Cart;
 import cart.entity.cart.Count;
 import cart.entity.member.Member;
 import cart.exception.notfound.MemberNotFoundException;
+import cart.exception.notfound.ProductNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class CartService {
             return cartDao.insertCart(new Cart(member.getId(), cartRequest.getProductId(), 1));
         }
 
-        return update(cart.get());
+        return update(cart.get(), 1);
     }
 
     @Transactional
@@ -53,12 +54,25 @@ public class CartService {
             .collect(Collectors.toUnmodifiableList());
     }
 
-    private Long update(final Cart cart) {
+    public void deleteCartItem(final MemberRequest memberRequest, final Long productId) {
+        Member member = memberDao.findByEmail(memberRequest.getEmail())
+            .orElseThrow(MemberNotFoundException::new);
+        Cart cart = cartDao.findByMemberIdAndProductId(member, productId)
+            .orElseThrow(ProductNotFoundException::new);
+
+        if (cart.getCount() > 1) {
+            update(cart, -1);
+            return;
+        }
+        cartDao.deleteCart(member, productId);
+    }
+
+    private Long update(final Cart cart, final int count) {
         Cart updateCart = new Cart(
             cart.getId(),
             cart.getMemberId(),
             cart.getProductId(),
-            new Count(cart.getCount() + 1));
+            new Count(cart.getCount() + count));
         cartDao.updateCart(updateCart);
         return updateCart.getId();
     }
