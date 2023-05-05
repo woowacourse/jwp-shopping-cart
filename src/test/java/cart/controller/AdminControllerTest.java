@@ -93,13 +93,29 @@ public class AdminControllerTest {
     @Test
     void updateProduct() {
         ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+        int productId = adminService.addProduct(productRequestDto);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequestDto)
-                .when().put("/admin/products/1")
+                .when().put("/admin/products/{productId}", productId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("상품 수정 요청 실패 테스트")
+    @Test
+    void failUpdateProduct() {
+        ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+        int productId = adminService.addProduct(productRequestDto);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequestDto)
+                .when().put("/admin/products/{productId}", productId + 1)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(Matchers.containsStringIgnoringCase("수정하려는 제품이 존재하지 않습니다."));
     }
 
     @DisplayName("상품 삭제 요청 확인 테스트")
@@ -113,5 +129,19 @@ public class AdminControllerTest {
                 .when().delete("/admin/products/{productId}", productId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("상품 삭제 요청 실패 테스트")
+    @Test
+    void failDeleteProduct() {
+        ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+        int productId = adminService.addProduct(productRequestDto);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/admin/products/{productId}", productId + 1)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(Matchers.containsStringIgnoringCase("삭제하려는 제품이 존재하지 않습니다."));
     }
 }

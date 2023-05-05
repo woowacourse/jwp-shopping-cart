@@ -18,6 +18,7 @@ public class CartItemService {
         this.cartItemDao = cartItemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductEntity> getCartItems(int memberId) {
         return cartItemDao.selectAllCartItems(memberId);
     }

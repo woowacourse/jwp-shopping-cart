@@ -29,11 +29,19 @@ public class AdminService {
     }
 
     public void updateProduct(ProductRequestDto productRequestDto, int productId) {
+        if (!productDao.isProductExist(productId)) {
+            throw new IllegalArgumentException("수정하려는 제품이 존재하지 않습니다.");
+        }
+
         ProductEntity productEntity = new ProductEntity(productId, productRequestDto.getName(), productRequestDto.getPrice(), productRequestDto.getImage());
         productDao.updateProduct(productEntity);
     }
 
     public void deleteProduct(int productId) {
+        if (!productDao.isProductExist(productId)) {
+            throw new IllegalArgumentException("삭제하려는 제품이 존재하지 않습니다.");
+        }
+
         productDao.deleteProduct(productId);
     }
 

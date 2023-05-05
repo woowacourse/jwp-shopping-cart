@@ -25,6 +25,10 @@ public class ProductDao {
             resultSet.getString("image")
     );
 
+    private final RowMapper<Boolean> booleanMapper = (resultSet, rowNum) -> new Boolean(
+            resultSet.getBoolean("isExist")
+    );
+
     public ProductDao(DataSource dataSource, JdbcTemplate jdbcTemplate) {
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("product")
@@ -46,6 +50,12 @@ public class ProductDao {
     public void updateProduct(ProductEntity productEntity) {
         String sql = "update product set name = ?, price =? , image = ?  where id = ?";
         jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImage(), productEntity.getId());
+    }
+
+    public boolean isProductExist(int productId) {
+        String sql = "select exists(" +
+                "select * from product where product.id = ?) as isExist";
+        return jdbcTemplate.queryForObject(sql, booleanMapper, productId);
     }
 
     public void deleteProduct(int productId) {
