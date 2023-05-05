@@ -38,7 +38,7 @@ class ProductApiControllerTest {
         jdbcTemplate.execute("TRUNCATE TABLE product");
         jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
     }
-    
+
     @DisplayName("POST /api/product")
     @Test
     void createProduct() {
@@ -77,6 +77,20 @@ class ProductApiControllerTest {
         );
     }
 
+    @DisplayName("PUT /api/product/{id} NotFoundException")
+    @Test
+    void updateProduct_notFound() {
+        ProductRequest request = new ProductRequest("애쉬", 2000, "image");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/api/product/" + 9999)
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+
+    }
+
     @DisplayName("DELETE /api/product/{id}")
     @Test
     void deleteProduct() {
@@ -90,5 +104,12 @@ class ProductApiControllerTest {
         assertThat(productDao.findById(id)).isEmpty();
     }
 
-    // TODO: update 및 delete NotFoundException 테스트 추가
+    @DisplayName("DELETE /api/product/{id} NotFoundException")
+    @Test
+    void deleteProduct_notFound() {
+        RestAssured.given().log().all()
+                .when().delete("/api/product/" + 9999)
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
 }
