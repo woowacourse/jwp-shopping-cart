@@ -1,0 +1,22 @@
+### 상품 등록
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+  "name": "자전거",
+  "price": 240000,
+  "imageUrl": "test.com/image-url-test"
+}
+
+### 상품 수정
+PUT http://localhost:8080/products/{{id}}
+Content-Type: application/json
+
+{
+  "name": "수정된 자전거",
+  "price": 320000,
+  "imageUrl": "test.com/image-url-test"
+}
+
+### 상품 삭제
+DELETE http://localhost:8080/products/{{id}}

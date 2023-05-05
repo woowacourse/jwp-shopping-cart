@@ -1,0 +1,5 @@
+### Home 화면 요청
+GET http://localhost:8080/
+
+### Admin 화면 요청
+GET http://localhost:8080/admin
