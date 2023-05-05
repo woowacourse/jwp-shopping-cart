@@ -63,8 +63,8 @@ public class CartServiceTest {
         Item item3 = new Item.Builder().id(3L).name(new Name("빌리 엘리어트")).imageUrl(new ImageUrl("https://t1.daumcdn.net/cfile/226F4D4C544F42CF34")).price(new Price(200000)).build();
         List<Cart> carts = List.of(
                 new Cart(1L, user, item1),
-                new Cart(1L, user, item2),
-                new Cart(1L, user, item3)
+                new Cart(2L, user, item2),
+                new Cart(3L, user, item3)
         );
         Mockito.when(cartDao.findBy(user.getId())).thenReturn(carts);
         //when
