@@ -13,6 +13,7 @@ import static cart.fixture.ProductFixture.FIRST_PRODUCT;
 import static cart.fixture.ProductFixture.SECOND_PRODUCT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -32,8 +33,11 @@ class ProductServiceTest {
 
     @Test
     void 상품을_저장한다() {
-        assertThatNoException()
-                .isThrownBy(() -> productService.save(FIRST_PRODUCT.REQUEST));
+        given(productDao.save(any())).willReturn(1L);
+
+        long productId = productService.save(FIRST_PRODUCT.REQUEST);
+
+        assertThat(productId).isEqualTo(1L);
     }
 
     @Test
