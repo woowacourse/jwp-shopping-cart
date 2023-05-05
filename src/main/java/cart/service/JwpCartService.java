@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cart.entity.Product;
 import cart.entity.ProductRepository;
-import cart.dto.ProductRequestDto;
-import cart.dto.ProductResponseDto;
+import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,7 +21,7 @@ public class JwpCartService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponseDto> findAll() {
+    public List<ProductResponse> findAll() {
         return productRepository.findAll()
             .stream()
             .map(productDto -> Product.of(
@@ -29,28 +29,28 @@ public class JwpCartService {
                 productDto.getName(),
                 productDto.getImgUrl(),
                 productDto.getPrice()))
-            .map(ProductResponseDto::new)
+            .map(ProductResponse::new)
             .collect(Collectors.toList());
     }
 
     @Transactional
-    public void add(ProductRequestDto productRequestDto) {
+    public void add(ProductRequest productRequest) {
         Product product = Product.of(
             null,
-            productRequestDto.getName(),
-            productRequestDto.getImgUrl(),
-            productRequestDto.getPrice()
+            productRequest.getName(),
+            productRequest.getImgUrl(),
+            productRequest.getPrice()
         );
         productRepository.save(product);
     }
 
     @Transactional
-    public void updateById(ProductRequestDto productRequestDto, Long id) {
+    public void updateById(ProductRequest productRequest, Long id) {
         Product product = Product.of(
             null,
-            productRequestDto.getName(),
-            productRequestDto.getImgUrl(),
-            productRequestDto.getPrice()
+            productRequest.getName(),
+            productRequest.getImgUrl(),
+            productRequest.getPrice()
         );
         productRepository.updateById(product, id);
     }

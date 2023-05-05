@@ -4,7 +4,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import org.hibernate.validator.constraints.URL;
 
-public class ProductRequestDto {
+public class ProductRequest {
 
     @Length(max = 255,message = "상품명은 영문기준 255자 이하입니다.")
     private String name;
@@ -14,10 +14,10 @@ public class ProductRequestDto {
     @Range(min = 0, max = Integer.MAX_VALUE, message = "가격은 0원부터 21억원 미만입니다.")
     private int price;
 
-    public ProductRequestDto() {
+    public ProductRequest() {
     }
 
-    public ProductRequestDto(String name, String imgUrl, int price) {
+    public ProductRequest(String name, String imgUrl, int price) {
 
         this.name = name;
         this.imgUrl = imgUrl;
