@@ -27,7 +27,7 @@ CREATE TABLE cart_items
     id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     member_id  BIGINT UNSIGNED NOT NULL,
     product_id BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES members (id),
-    FOREIGN KEY (product_id) REFERENCES products (id),
+    FOREIGN KEY (member_id) REFERENCES members (id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
     UNIQUE KEY uk_member_id_product_id (member_id, product_id)
 );
