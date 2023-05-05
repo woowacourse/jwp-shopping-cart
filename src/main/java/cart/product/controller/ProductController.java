@@ -1,7 +1,7 @@
-package cart.controller;
+package cart.product.controller;
 
-import cart.entity.Product;
-import cart.repository.ProductRepository;
+import cart.product.entity.Product;
+import cart.product.repository.ProductRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +12,11 @@ import java.net.URI;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class ProductController {
 
     private final ProductRepository productRepository;
 
-    public AdminController(ProductRepository productRepository) {
+    public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
@@ -26,19 +26,25 @@ public class AdminController {
         return "admin";
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Void> createProduct(@RequestBody @Valid Product product) {
-        long id = productRepository.save(product).getId();
-        return ResponseEntity.created(URI.create("/admin/" + id)).build();
+    @GetMapping("/product/{id}")
+    public ResponseEntity<Product> product(@PathVariable final long id) {
+        Product product = productRepository.findById(id);
+        return ResponseEntity.ok(product);
     }
 
-    @PatchMapping("/edit")
+    @PostMapping("/product")
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid Product product) {
+        long id = productRepository.save(product).getId();
+        return ResponseEntity.created(URI.create("/admin/product/" + id)).build();
+    }
+
+    @PutMapping("/product")
     public ResponseEntity<Void> editProduct(@RequestBody Product product) {
         productRepository.update(product);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/product/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
         productRepository.deleteById(id);
         return ResponseEntity.ok().build();

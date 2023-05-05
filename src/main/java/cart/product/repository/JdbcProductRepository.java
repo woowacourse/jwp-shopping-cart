@@ -1,9 +1,8 @@
-package cart.repository;
+package cart.product.repository;
 
-import cart.entity.Product;
-import java.util.List;
-import java.util.Optional;
-import javax.sql.DataSource;
+import cart.common.exception.PersistenceExceptionMessages;
+import cart.product.entity.Product;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,6 +12,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.util.List;
+
 @Repository
 public class JdbcProductRepository implements ProductRepository {
 
@@ -20,7 +23,7 @@ public class JdbcProductRepository implements ProductRepository {
         final long id = rs.getLong("id");
         final String name = rs.getString("name");
         final String imageUrl = rs.getString("image_url");
-        final int price = rs.getInt("price");
+        final BigDecimal price = rs.getBigDecimal("price");
         return new Product(id, name, imageUrl, price);
     };
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -54,12 +57,15 @@ public class JdbcProductRepository implements ProductRepository {
     }
 
     @Override
-    public Optional<Product> findById(final long id) {
+    public Product findById(final long id) {
         final String sql = "select * from product where id = :id";
         final MapSqlParameterSource paramSource = new MapSqlParameterSource()
                 .addValue("id", id);
-        final Product product = jdbcTemplate.queryForObject(sql, paramSource, PRODUCT_ROW_MAPPER);
-        return Optional.ofNullable(product);
+        try {
+            return jdbcTemplate.queryForObject(sql, paramSource, PRODUCT_ROW_MAPPER);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new ProductPersistenceException(PersistenceExceptionMessages.PRODUCT_NOTFOUND, exception);
+        }
     }
 
     @Override
