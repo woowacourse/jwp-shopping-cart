@@ -1,9 +1,9 @@
 package cart.dao;
 
 import cart.entity.product.ProductEntity;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -50,10 +50,12 @@ public class ProductDao {
     }
 
     public List<ProductEntity> findAllByIdIn(final List<Long> ids) {
-        final String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
-        final String sql = String.format("SELECT * FROM product WHERE id IN (%s)", inSql);
+        final String sql = "SELECT * FROM product WHERE id = ?";
+        final String unionSql = ids.stream()
+            .map((id) -> sql)
+            .collect(Collectors.joining(" UNION ALL "));
         return namedParameterJdbcTemplate.getJdbcTemplate().query(
-            sql,
+            unionSql,
             PRODUCT_ENTITY_ROW_MAPPER,
             ids.toArray()
         );
