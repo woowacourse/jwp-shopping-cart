@@ -1,7 +1,6 @@
 package cart.dao.cart;
 
 import cart.dao.Dao;
-import cart.dao.product.ProductEntity;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -54,16 +53,18 @@ public class CartDao implements Dao<CartEntity> {
 
     @Override
     public int deleteById(final Long id) {
-        return 0;
+        final String sql = "DELETE FROM cart WHERE id = ?";
+
+        return jdbcTemplate.update(sql, id);
     }
 
-    public List<ProductEntity> findProductsByMemberId(final Long memberId) {
+    public List<CartProductDto> findProductsByMemberId(final Long memberId) {
         final String sql = "SELECT * FROM cart INNER JOIN product ON cart.product_id = product.id "
                 + "WHERE cart.member_id = ?";
 
-        final RowMapper<ProductEntity> cartRowMapper = (rs, rowNum) ->
-                new ProductEntity(
-                        rs.getLong("id"),
+        final RowMapper<CartProductDto> cartRowMapper = (rs, rowNum) ->
+                new CartProductDto(
+                        rs.getLong("cart.id"),
                         rs.getString("name"),
                         rs.getInt("price"),
                         rs.getString("image_url")

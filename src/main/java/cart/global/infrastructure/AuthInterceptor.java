@@ -1,4 +1,4 @@
-package cart.auth;
+package cart.global.infrastructure;
 
 import cart.global.exception.auth.AuthorizationNotFoundException;
 import javax.servlet.http.HttpServletRequest;

@@ -1,14 +1,16 @@
 package cart.controller;
 
-import cart.auth.Auth;
-import cart.auth.Credential;
+import cart.global.annotation.Auth;
+import cart.global.infrastructure.Credential;
 import cart.service.CartService;
 import cart.service.dto.cart.CartAddProductRequest;
 import cart.service.dto.cart.CartAllProductSearchResponse;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +45,12 @@ public class CartController {
         return ResponseEntity
                 .created(URI.create("/carts/products/" + savedId))
                 .build();
+    }
+
+    @DeleteMapping("{cart-product-id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable("cart-product-id") final Long cartProductId) {
+        cartService.deleteProduct(cartProductId);
+
+        return ResponseEntity.ok().build();
     }
 }

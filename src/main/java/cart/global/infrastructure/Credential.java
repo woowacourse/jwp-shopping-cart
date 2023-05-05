@@ -1,4 +1,4 @@
-package cart.auth;
+package cart.global.infrastructure;
 
 public class Credential {
 

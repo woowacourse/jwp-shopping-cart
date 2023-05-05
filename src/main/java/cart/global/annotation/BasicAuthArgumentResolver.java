@@ -1,6 +1,7 @@
-package cart.auth;
+package cart.global.annotation;
 
 import cart.global.exception.auth.UnsupportedAuthorizationException;
+import cart.global.infrastructure.Credential;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;

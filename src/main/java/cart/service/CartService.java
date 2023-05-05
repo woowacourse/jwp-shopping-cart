@@ -1,16 +1,19 @@
 package cart.service;
 
-import cart.auth.Credential;
 import cart.dao.cart.CartDao;
 import cart.dao.cart.CartEntity;
+import cart.dao.cart.CartProductDto;
 import cart.dao.member.MemberEntity;
-import cart.dao.product.ProductEntity;
+import cart.global.exception.cart.ProductNotFoundInCartException;
+import cart.global.infrastructure.Credential;
 import cart.service.dto.cart.CartAddProductRequest;
 import cart.service.dto.cart.CartAllProductSearchResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class CartService {
 
@@ -22,13 +25,14 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
+    @Transactional(readOnly = true)
     public List<CartAllProductSearchResponse> searchAllCartProducts(final Credential credential) {
         final MemberEntity member = authService.getMemberEntity(credential);
-        final List<ProductEntity> productEntities = cartDao.findProductsByMemberId(member.getId());
+        List<CartProductDto> cartProductDtos = cartDao.findProductsByMemberId(member.getId());
 
-        return productEntities.stream()
+        return cartProductDtos.stream()
                 .map(entity -> new CartAllProductSearchResponse(
-                        entity.getId(),
+                        entity.getCartId(),
                         entity.getName(),
                         entity.getPrice(),
                         entity.getImageUrl()
@@ -41,5 +45,13 @@ public class CartService {
         CartEntity saveCart = new CartEntity(member.getId(), request.getProductId());
 
         return cartDao.save(saveCart);
+    }
+
+    public void deleteProduct(final Long cartProductId) {
+        int affectedRow = cartDao.deleteById(cartProductId);
+
+        if (affectedRow == 0) {
+            throw new ProductNotFoundInCartException();
+        }
     }
 }

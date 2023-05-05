@@ -16,5 +16,8 @@ CREATE TABLE member
     password varchar(255) NOT NULL
 );
 
-INSERT INTO member(email, password) VALUES ('email@email.com', 'asdf1234');
-INSERT INTO member(email, password) VALUES ('email2@email.com', 'asdf12345');
+INSERT INTO member(email, password)
+VALUES ('email@email.com', 'asdf1234');
+
+INSERT INTO member(email, password)
+VALUES ('email2@email.com', 'asdf12345');
