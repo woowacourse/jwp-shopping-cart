@@ -1,14 +1,11 @@
 package cart.controller;
 
 
-import cart.entity.ProductEntity;
 import cart.service.CustomerService;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
 
 @Controller
 public class ViewController {
@@ -23,15 +20,13 @@ public class ViewController {
 
     @GetMapping("/admin")
     public String adminPage(final Model model) {
-        final List<ProductEntity> allProducts = productService.findAll();
-        model.addAttribute("products", allProducts);
+        model.addAttribute("products", productService.findAll());
         return "admin";
     }
 
     @GetMapping
     public String rootPage(Model model) {
-        final List<ProductEntity> allProducts = productService.findAll();
-        model.addAttribute("products", allProducts);
+        model.addAttribute("products", productService.findAll());
         return "index";
     }
 
@@ -39,5 +34,10 @@ public class ViewController {
     public String settingPage(Model model) {
         model.addAttribute("members", customerService.findAll());
         return "settings";
+    }
+
+    @GetMapping(path = "/cart", produces = "text/html")
+    public String cart() {
+        return "cart";
     }
 }
