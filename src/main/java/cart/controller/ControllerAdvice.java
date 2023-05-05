@@ -20,7 +20,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
     private ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
-        logger.info("[IllegalArgumentException] ", exception);
+        logger.warn("[IllegalArgumentException] ", exception);
 
         return ResponseEntity.badRequest()
                 .body(new ErrorResponse(exception.getMessage()));
@@ -28,7 +28,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     private ResponseEntity<ErrorResponse> handleInvalidArgument(MethodArgumentNotValidException exception) {
-        logger.info("[MethodArgumentNotValidException] ", exception);
+        logger.warn("[MethodArgumentNotValidException] ", exception);
 
         List<FieldError> fieldErrors = exception.getFieldErrors();
 
@@ -43,7 +43,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(UnauthenticatedException.class)
     private ResponseEntity<ErrorResponse> handleUnauthenticatedException(UnauthenticatedException exception) {
-        logger.info("[UnauthenticatedException] ", exception);
+        logger.warn("[UnauthenticatedException] ", exception);
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponse(exception.getMessage()));
@@ -51,7 +51,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(NotFoundException.class)
     private ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exception) {
-        logger.info("[NotFoundException] ", exception);
+        logger.warn("[NotFoundException] ", exception);
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(exception.getMessage()));
