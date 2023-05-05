@@ -41,15 +41,8 @@ public class UserService {
     }
 
     private User getUser(final UserInfo userInfo) {
-        final User user = userDao.findByEmail(userInfo.getEmail())
+        return userDao.findByEmail(userInfo.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException(INVALID_USER_INFO));
-
-
-        if (userInfo.isCorrect(user)) {
-            return user;
-        }
-
-        throw new IllegalArgumentException(INVALID_USER_INFO);
     }
 
     @Transactional

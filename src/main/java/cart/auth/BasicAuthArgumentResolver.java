@@ -1,18 +1,17 @@
 package cart.auth;
 
-import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import javax.naming.AuthenticationException;
-
 public final class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver {
     private static final String AUTHORIZATION = "Authorization";
-    private static final String BASIC_TYPE = "Basic";
-    private static final String DELIMITER = ":";
+
+    @Autowired
+    private BasicAuthExtractor basicAuthExtractor;
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
@@ -23,16 +22,6 @@ public final class BasicAuthArgumentResolver implements HandlerMethodArgumentRes
     public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) throws Exception {
         String header = webRequest.getHeader(AUTHORIZATION);
 
-        if (header == null || !header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
-            throw new AuthenticationException("사용자 인증이 필요합니다.");
-        }
-
-        String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
-        byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
-        String decodedString = new String(decodedBytes);
-
-        String[] credentials = decodedString.split(DELIMITER);
-
-        return new UserInfo(credentials[0], credentials[1]);
+        return basicAuthExtractor.extract(header);
     }
 }
