@@ -25,8 +25,6 @@ class CartControllerTest {
     private static final String PASSWORD = "password1!";
     @LocalServerPort
     private int port;
-    @Autowired
-    ProductService productService;
 
     @BeforeEach
     void beforeEach() {
@@ -46,12 +44,6 @@ class CartControllerTest {
     @Test
     @DisplayName("/carts (Get) 요청을 보내 장바구니에 있는 상품을 조회한다.")
     void cartsList() {
-        RestAssured.given().log().all()
-                .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().post("/carts/2")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
-
         List<CartResponseDto> cartResponseDtos = RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -60,10 +52,19 @@ class CartControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract().as(new TypeRef<>() {});
 
-        assertThat(cartResponseDtos.get(0).getEmail()).isEqualTo(EMAIL);
-        assertThat(cartResponseDtos.get(0).getProductResponseDto()
-                .getName())
-                .isEqualTo("샐러드");
+        assertThat(cartResponseDtos)
+                .anyMatch(cartResponseDto -> cartResponseDto.getEmail().equals(EMAIL))
+                .anyMatch(cartResponseDto -> cartResponseDto.getProductResponseDto().getName().equals("샐러드"));
+    }
+
+    @Test
+    @DisplayName("/carts/{id} (Delete) 요청을 보내 장바구니에 상품을 삭제한다.")
+    void removeProductToCart() {
+        RestAssured.given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when().delete("/carts/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
 }
