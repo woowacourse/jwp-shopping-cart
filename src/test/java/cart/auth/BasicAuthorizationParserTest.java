@@ -1,6 +1,7 @@
 package cart.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Base64;
@@ -17,22 +18,19 @@ class BasicAuthorizationParserTest {
     private final BasicAuthorizationParser basicAuthorizationParser = new BasicAuthorizationParser();
 
     @CsvSource({
-            "Basic, pizza@pizza.com:password, false",
-            "AnotherValue, pizza@pizza.com:password, true",
-            "Basic, pizza@pizza.com.password, true"
+            "AnotherValue, pizza@pizza.com:password",
+            "Basic, pizza@pizza.com.password"
     })
     @ParameterizedTest(name = "입력값이 {0}라면 {1}를 반환한다")
-    void 헤더를_입력받아_올바른_Basic_인증_유형이_아닌지_확인한다(
-            final String startWith,
-            final String credential,
-            final boolean result
-    ) {
+    void 올바른_Basic_인증_유형이_아니라면_InvalidBasicCredential_예외를_던진다(final String startWith, final String credential) {
         // given
         final String encodedCredential = new String(Base64.getEncoder().encode((credential.getBytes())));
         final String header = startWith + " " + encodedCredential;
 
         // expect
-        assertThat(basicAuthorizationParser.isNotValid(header)).isEqualTo(result);
+        assertThatThrownBy(() -> basicAuthorizationParser.parse(header))
+                .isInstanceOf(InvalidBasicCredentialException.class)
+                .hasMessage("올바른 Basic 형식의 인증정보가 아닙니다. 입력값: " + header);
     }
 
     @Test

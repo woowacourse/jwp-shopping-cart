@@ -13,9 +13,12 @@ public class BasicAuthorizationParser {
     private static final int PASSWORD_INDEX = 1;
     private static final String EMPTY = "";
 
-    public boolean isNotValid(final String authorizationHeader) {
-        return !authorizationHeader.startsWith(KEYWORD) ||
-                parseCredential(authorizationHeader).length != VALID_CREDENTIAL_SIZE;
+    public Credential parse(final String authorizationHeader) {
+        final String[] credential = parseCredential(authorizationHeader);
+        if (isInvalidBasicCredential(authorizationHeader)) {
+            throw new InvalidBasicCredentialException(authorizationHeader);
+        }
+        return new Credential(credential[EMAIL_INDEX], credential[PASSWORD_INDEX]);
     }
 
     private String[] parseCredential(final String authorizationHeader) {
@@ -24,12 +27,16 @@ public class BasicAuthorizationParser {
     }
 
     private String decodeBase64(final String credential) {
-        return new String(Base64.getDecoder().decode(credential));
+        try {
+            return new String(Base64.getDecoder().decode(credential));
+        } catch (final IllegalArgumentException e) {
+            throw new InvalidBasicCredentialException(credential);
+        }
     }
 
-    public Credential parse(final String authorizationHeader) {
-        final String[] credential = parseCredential(authorizationHeader);
-        return new Credential(credential[EMAIL_INDEX], credential[PASSWORD_INDEX]);
+    private boolean isInvalidBasicCredential(final String authorizationHeader) {
+        return !authorizationHeader.startsWith(KEYWORD) ||
+                parseCredential(authorizationHeader).length != VALID_CREDENTIAL_SIZE;
     }
 }
 

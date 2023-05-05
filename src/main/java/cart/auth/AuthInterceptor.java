@@ -29,9 +29,6 @@ public class AuthInterceptor implements HandlerInterceptor {
             final Object handler
     ) {
         final String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER_NAME);
-        if (authorizationHeader.isBlank() || basicAuthorizationParser.isNotValid(authorizationHeader)) {
-            throw new AuthenticationException("올바르지 않은 인증 정보입니다.");
-        }
 
         final Credential credential = basicAuthorizationParser.parse(authorizationHeader);
         final Credential savedCredential = credentialDao.findByEmail(credential.getEmail())
