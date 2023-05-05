@@ -1,5 +1,6 @@
-package cart.auth;
+package cart.dao;
 
+import cart.auth.Credential;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

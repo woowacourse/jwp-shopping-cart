@@ -1,7 +1,5 @@
 package cart.exception;
 
-import cart.auth.AuthenticationException;
-import cart.auth.InvalidBasicCredentialException;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

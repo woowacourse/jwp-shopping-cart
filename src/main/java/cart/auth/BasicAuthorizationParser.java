@@ -1,5 +1,6 @@
 package cart.auth;
 
+import cart.exception.InvalidBasicCredentialException;
 import java.util.Base64;
 import org.springframework.stereotype.Component;
 
