@@ -11,9 +11,7 @@ public interface CartDao {
 
     Item findItemById(Long id);
 
-    List<Long> findAllItemIds(Long memberId);
-
-    List<Item> findAllItems(Long memberId);
+    List<Item> findAllItemsByMemberId(Long memberId);
 
     void deleteItemById(Long id);
 }

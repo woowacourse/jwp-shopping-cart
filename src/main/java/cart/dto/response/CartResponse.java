@@ -5,9 +5,9 @@ import java.util.List;
 public class CartResponse {
 
     private final Long userId;
-    private final List<ProductResponse> items;
+    private final List<ItemResponse> items;
 
-    public CartResponse(Long userId, List<ProductResponse> items) {
+    public CartResponse(Long userId, List<ItemResponse> items) {
         this.userId = userId;
         this.items = items;
     }
@@ -16,7 +16,7 @@ public class CartResponse {
         return userId;
     }
 
-    public List<ProductResponse> getItems() {
+    public List<ItemResponse> getItems() {
         return items;
     }
 }

@@ -37,36 +37,44 @@ public class CartService {
         }
 
         Long registeredItemId = cartDao.createItem(requestedItem.getMemberId(), requestedItem.getProductId());
-        Item registered = cartDao.findItemById(registeredItemId);
+        Item registeredItem = cartDao.findItemById(registeredItemId);
+
+        ProductResponse productResponse = convertItemToProductResponse(registeredItem);
 
         return new ItemResponse(
-                registered.getId(),
-                registered.getMemberId(),
-                registered.getProductId()
+                registeredItem.getId(),
+                registeredItem.getMemberId(),
+                productResponse
         );
     }
 
     private Cart getCartByMemberId(Long memberId) {
-        List<Item> items = cartDao.findAllItems(memberId);
+        List<Item> items = cartDao.findAllItemsByMemberId(memberId);
         return new Cart(memberId, items);
     }
 
     public CartResponse readAllItemsByMemberId(Long memberId) {
-        List<Long> productIds = cartDao.findAllItemIds(memberId);
-        List<Product> products = new ArrayList<>();
+        List<Item> items = cartDao.findAllItemsByMemberId(memberId);
 
-        if (!productIds.isEmpty()) {
-            products = productsDao.findAll(productIds);
-        }
-
-        List<ProductResponse> responses = products.stream()
-                .map(product -> new ProductResponse(product.getId(),
-                        product.getName(),
-                        product.getPrice(),
-                        product.getImageUrl()))
-                .collect(Collectors.toList());
+        List<ItemResponse> responses = items.stream()
+                .map(item -> new ItemResponse(
+                        item.getId(),
+                        item.getMemberId(),
+                        convertItemToProductResponse(item))
+                ).collect(Collectors.toList());
 
         return new CartResponse(memberId, responses);
+    }
+
+    private ProductResponse convertItemToProductResponse(Item item) {
+        Product product = productsDao.findById(item.getProductId());
+
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl()
+        );
     }
 
     public void deleteItemById(Long id) {

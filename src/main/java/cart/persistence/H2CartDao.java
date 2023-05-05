@@ -44,13 +44,7 @@ public class H2CartDao implements CartDao {
     }
 
     @Override
-    public List<Long> findAllItemIds(Long memberId) {
-        String sql = "SELECT product_id FROM CART WHERE member_id=?";
-        return jdbcTemplate.queryForList(sql, Long.class, memberId);
-    }
-
-    @Override
-    public List<Item> findAllItems(Long memberId) {
+    public List<Item> findAllItemsByMemberId(Long memberId) {
         String sql = "SELECT id, member_id, product_id FROM CART WHERE member_id=?";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Item(
                 resultSet.getLong("id"),

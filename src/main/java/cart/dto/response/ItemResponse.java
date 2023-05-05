@@ -3,24 +3,25 @@ package cart.dto.response;
 public class ItemResponse {
 
     private final Long id;
-    private final Long cartId;
-    private final Long productId;
+    private final Long memberId;
+    private final ProductResponse productResponse;
 
-    public ItemResponse(Long id, Long cartId, Long productId) {
+
+    public ItemResponse(Long id, Long memberId, ProductResponse productResponse) {
         this.id = id;
-        this.cartId = cartId;
-        this.productId = productId;
+        this.memberId = memberId;
+        this.productResponse = productResponse;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getCartId() {
-        return cartId;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public Long getProductId() {
-        return productId;
+    public ProductResponse getProductResponse() {
+        return productResponse;
     }
 }
