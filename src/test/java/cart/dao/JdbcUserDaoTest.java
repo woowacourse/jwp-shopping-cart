@@ -11,7 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Sql(scripts = {"classpath:data.sql"})
+@Sql(scripts = {"classpath:test.sql"})
 class JdbcUserDaoTest {
 
     private final JdbcUserDao jdbcUserDao;

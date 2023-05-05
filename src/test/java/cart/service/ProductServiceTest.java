@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JdbcTest
-@Sql(scripts = {"classpath:data.sql"})
+@Sql(scripts = {"classpath:test.sql"})
 class ProductServiceTest {
 
     private final ProductService productService;
