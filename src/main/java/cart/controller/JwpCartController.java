@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import cart.dto.ProductRequestDto;
@@ -45,6 +46,7 @@ public class JwpCartController {
     }
 
     @PostMapping("/admin/products")
+    @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
         jwpCartService.add(productRequestDto);
@@ -52,12 +54,14 @@ public class JwpCartController {
     }
 
     @PutMapping("/admin/products/{id}")
+    @ResponseBody
     public ResponseEntity<Void> updateProduct(@PathVariable("id") Long id, @RequestBody @Valid ProductRequestDto productRequestDto) {
         jwpCartService.updateById(productRequestDto, id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/admin/products/{id}")
+    @ResponseBody
     public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
         jwpCartService.deleteById(id);
         return ResponseEntity.ok().build();
