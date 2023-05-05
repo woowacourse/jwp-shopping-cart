@@ -11,7 +11,7 @@ public class MemberResponse {
     private final String email;
     private final String password;
 
-    public static MemberResponse from(Member member) {
+    public static MemberResponse from(final Member member) {
         return new MemberResponse(member.getId(), member.getEmail(), member.getPassword());
-    } 
+    }
 }

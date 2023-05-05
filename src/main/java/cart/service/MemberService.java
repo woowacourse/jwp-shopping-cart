@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class MemberService {
     private final MemberDao memberDao;
 
-    public long save(MemberRequest memberRequest) {
+    public long save(final MemberRequest memberRequest) {
         return memberDao.save(new Member(null, memberRequest.getEmail(), memberRequest.getPassword()));
     }
 
@@ -25,7 +25,7 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
-    public MemberResponse findByEmail(String email) {
+    public MemberResponse findByEmail(final String email) {
         return MemberResponse.from(memberDao.findByEmail(email));
     }
 }

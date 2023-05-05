@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ProductControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
         final String exceptionMessage = exception.getBindingResult().getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(System.lineSeparator()));
@@ -20,7 +20,7 @@ public class ProductControllerAdvice {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
+    public ResponseEntity<ExceptionResponse> handleException(final Exception exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(exception.getMessage()));
     }
 }

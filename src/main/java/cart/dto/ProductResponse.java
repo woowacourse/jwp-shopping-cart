@@ -15,8 +15,8 @@ public class ProductResponse {
     private final String name;
     private final String imageUrl;
     private final Integer price;
-    
-    public static ProductResponse from(Product product) {
+
+    public static ProductResponse from(final Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());
     }
 }

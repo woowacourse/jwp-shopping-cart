@@ -23,10 +23,10 @@ import static org.mockito.BDDMockito.given;
 class ProductControllerTest {
     @MockBean
     private ProductService productService;
-    
+
     @BeforeEach
     void setUp() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        final InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setSuffix(".html");
         RestAssuredMockMvc.standaloneSetup(
                 MockMvcBuilders.standaloneSetup(new ProductController(productService))
@@ -52,14 +52,14 @@ class ProductControllerTest {
                 .when().post("/products")
                 .then().log().all();
     }
-    
+
     @Test
     void 상품을_수정한다() {
         RestAssuredMockMvc.given().log().all()
                 .when().put("/products/1")
                 .then().log().all();
     }
-    
+
     @Test
     void 상품을_삭제한다() {
         RestAssuredMockMvc.given().log().all()

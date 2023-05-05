@@ -26,7 +26,7 @@ class ProductIntegrationTest {
 
     @Test
     void getProducts() {
-        var result = given()
+        final var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/products")

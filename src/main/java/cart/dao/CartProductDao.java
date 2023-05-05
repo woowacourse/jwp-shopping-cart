@@ -62,8 +62,8 @@ public class CartProductDao {
                 + "ON cart_product.product_id = product.id "
                 + "WHERE member_id=:memberId";
 
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("memberId", memberId);
-        List<Product> products = namedParameterJdbcTemplate.query(sql, sqlParameterSource, productRowMapper);
+        final SqlParameterSource sqlParameterSource = new MapSqlParameterSource("memberId", memberId);
+        final List<Product> products = namedParameterJdbcTemplate.query(sql, sqlParameterSource, productRowMapper);
         return products;
     }
 

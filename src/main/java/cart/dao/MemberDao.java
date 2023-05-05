@@ -47,7 +47,7 @@ public class MemberDao {
         return namedParameterJdbcTemplate.query(sql, rowMapper);
     }
 
-    public Member findByEmail(String email) {
+    public Member findByEmail(final String email) {
         final String sql = "SELECT * FROM MEMBER WHERE email=:email";
         final SqlParameterSource sqlParameterSource = new MapSqlParameterSource("email", email);
         return namedParameterJdbcTemplate.queryForObject(sql, sqlParameterSource, rowMapper);
