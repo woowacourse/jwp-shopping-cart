@@ -31,4 +31,5 @@ public class BasicAuthorizationExtractor {
         String[] credentials = decodedHeaderValue.split(DELIMITER);
         return new AuthInfo(credentials[0], credentials[1]);
     }
+
 }

@@ -1,9 +1,5 @@
 package cart.dto;
 
-import cart.entity.Product;
-import cart.vo.Name;
-import cart.vo.Price;
-import cart.vo.Url;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
