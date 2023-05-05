@@ -35,13 +35,13 @@ public class CartService {
     }
 
     private User getUser(String userEmail) {
-        return userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException());
+        return userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
     }
 
     @Transactional
     public void addCartItem(String userEmail, Long productId) {
         User user = getUser(userEmail);
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException());
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
         Cart cart = cartRepository.findByUser(user);
         cartRepository.addCartItem(cart, new CartItem(product));
     }
