@@ -40,15 +40,17 @@ public class ProductService {
     public List<ProductResponse> findProducts() {
         return productDao.findAll()
                 .stream()
-                .map(product -> {
-                    final List<Long> categoryIds = getCategoryIds(product);
-                    if (categoryIds.isEmpty()) {
-                        return ProductResponse.of(product, Collections.emptyList());
-                    }
-                    final List<CategoryEntity> categories = categoryDao.findAllInIds(categoryIds);
-                    return ProductResponse.of(product, categories);
-                })
+                .map(this::generateProductResponse)
                 .collect(Collectors.toList());
+    }
+
+    private ProductResponse generateProductResponse(final ProductEntity product) {
+        final List<Long> categoryIds = getCategoryIds(product);
+        if (categoryIds.isEmpty()) {
+            return ProductResponse.of(product, Collections.emptyList());
+        }
+        final List<CategoryEntity> categories = categoryDao.findAllInIds(categoryIds);
+        return ProductResponse.of(product, categories);
     }
 
     private List<Long> getCategoryIds(final ProductEntity product) {

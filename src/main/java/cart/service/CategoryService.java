@@ -18,7 +18,8 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public List<CategoryResponse> findCategories() {
-        return categoryDao.findAll().stream()
+        return categoryDao.findAll()
+                .stream()
                 .map(CategoryResponse::from)
                 .collect(Collectors.toList());
     }
