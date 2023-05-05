@@ -17,12 +17,12 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public List<CustomerEntity> findAll() {
-        return customerDao.findAll();
-    }
-
     public Long findCustomerIdByBasicAuthInfo(final BasicAuthInfo basicAuthInfo) {
         return customerDao.findIdByEmailAndPassword(basicAuthInfo.getEmail(), basicAuthInfo.getPassword())
             .orElseThrow(() -> new IllegalArgumentException("해당 인증에 부합하는 고객이 없습니다."));
+    }
+
+    public List<CustomerEntity> findAll() {
+        return customerDao.findAll();
     }
 }

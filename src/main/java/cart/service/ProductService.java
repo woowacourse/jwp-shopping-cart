@@ -34,31 +34,30 @@ public class ProductService {
 
     @Transactional
     public Long register(final ProductRequestDto productRequestDto) {
-        final ProductEntity productEntity = new ProductEntity(
-            productRequestDto.getName(),
-            productRequestDto.getImageUrl(),
-            productRequestDto.getPrice(),
-            productRequestDto.getDescription()
-        );
-        final Long savedProductId = productDao.save(productEntity);
+        final Long savedProductId = productDao.save(ProductEntity.of(productRequestDto));
+        registerAllProductCategory(productRequestDto, savedProductId);
+
+        return savedProductId;
+    }
+
+    private void registerAllProductCategory(final ProductRequestDto productRequestDto, final Long savedProductId) {
         for (final Long categoryId : productRequestDto.getCategoryIds()) {
             productCategoryDao.save(new ProductCategoryEntity(savedProductId, categoryId));
         }
-        return savedProductId;
     }
 
     public List<ProductCategoryDto> findAll() {
         return productDao.findAll().stream()
             .map(productEntity -> {
-                final List<Long> categoryIds = getCategoryIds(productEntity);
+                final List<Long> categoryIds = findCategoryIds(productEntity);
                 final List<CategoryEntity> categoryEntities = categoryDao.findAllInId(categoryIds);
                 return ProductCategoryDto.of(productEntity, categoryEntities);
             })
             .collect(Collectors.toList());
     }
 
-    private List<Long> getCategoryIds(final ProductEntity productEntity) {
-        final ProductEntity savedProductEntity = getSavedProductEntity(productEntity.getId());
+    private List<Long> findCategoryIds(final ProductEntity productEntity) {
+        final ProductEntity savedProductEntity = findProductById(productEntity.getId());
 
         return productCategoryDao.findAll(savedProductEntity.getId())
             .stream()
@@ -66,42 +65,41 @@ public class ProductService {
             .collect(Collectors.toList());
     }
 
-    private ProductEntity getSavedProductEntity(final Long id) {
+    private ProductEntity findProductById(final Long id) {
         return productDao.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
     }
 
     public List<CategoryResponseDto> findCategories() {
-        return categoryDao.findAll().stream()
-            .map(CategoryResponseDto::from)
-            .collect(Collectors.toList());
+        return CategoryResponseDto.listOf(categoryDao.findAll());
     }
 
     @Transactional
     public void update(final Long id, final ProductRequestDto productRequestDto) {
-        final ProductEntity savedProductEntity = getSavedProductEntity(id);
+        final ProductEntity savedProductEntity = findProductById(id);
         savedProductEntity.update(
             productRequestDto.getName(),
             productRequestDto.getImageUrl(),
             productRequestDto.getPrice(),
             productRequestDto.getDescription()
         );
+        
         productDao.update(savedProductEntity);
+        deleteAllLegacyProductCategory(id);
+        registerAllProductCategory(productRequestDto, id);
+    }
+
+    private void deleteAllLegacyProductCategory(final Long id) {
         for (ProductCategoryEntity productCategoryEntity : productCategoryDao.findAll(id)) {
             productCategoryDao.delete(productCategoryEntity.getId());
-        }
-        for (final Long categoryId : productRequestDto.getCategoryIds()) {
-            productCategoryDao.save(new ProductCategoryEntity(id, categoryId));
         }
     }
 
     @Transactional
     public void delete(final Long id) {
-        final ProductEntity savedProductEntity = getSavedProductEntity(id);
-        final List<ProductCategoryEntity> productCategoryEntities = productCategoryDao.findAll(id);
-        for (ProductCategoryEntity productCategoryEntity : productCategoryEntities) {
-            productCategoryDao.delete(productCategoryEntity.getId());
-        }
+        final ProductEntity savedProductEntity = findProductById(id);
+        deleteAllLegacyProductCategory(id);
+
         productDao.delete(savedProductEntity.getId());
     }
 }
