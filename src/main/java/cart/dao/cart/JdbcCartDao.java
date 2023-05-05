@@ -55,9 +55,9 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
-    public void deleteByProductId(final Long productId) {
-        final String sql = "delete from cart where product_id = ?";
-        jdbcTemplate.update(sql, productId);
+    public void deleteByMemberIdAndProductId(final Long memberId, final Long productId) {
+        final String sql = "delete from cart where member_id = ? and product_id = ?";
+        jdbcTemplate.update(sql, memberId, productId);
     }
 
     @Override

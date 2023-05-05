@@ -99,15 +99,14 @@
           }
     ```
 
-- [ ] 장바구니 CRUD
+- [x] 장바구니 CRUD
     - [x] Basic Auth 방식의 `Authorization` header를 통해 사용자를 인증한다.
 
-    | Method | Path               |
-    |--------|--------------------|
-    | GET    | /cart              |
-    | POST   | /cart              |
-    | PUT    | /cart/{product_id} |
-    | DELETE | /cart/{product_id} |
+    | Method | Path                |
+    |--------|---------------------|
+    | GET    | /carts              |
+    | POST   | /carts              |
+    | DELETE | /carts/{product_id} |
 
 
 ### 장바구니 페이지 연동

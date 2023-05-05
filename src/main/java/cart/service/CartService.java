@@ -53,4 +53,9 @@ public class CartService {
         final Cart updateCart = new Cart(cart.getProductId(), cart.getMemberId(), updateQuantity);
         cartDao.update(updateCart);
     }
+
+    public void delete(final Long memberId, final Long productId) {
+        cartDao.findByMemberIdAndProductId(memberId, productId).orElseThrow(NoSuchElementException::new);
+        cartDao.deleteByMemberIdAndProductId(memberId, productId);
+    }
 }

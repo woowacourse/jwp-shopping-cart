@@ -12,7 +12,7 @@ public interface CartDao {
 
     Optional<Cart> findByMemberIdAndProductId(Long memberId, Long productId);
 
-    void deleteByProductId(Long productId);
+    void deleteByMemberIdAndProductId(Long memberId, Long productId);
 
     void update(Cart cart);
 }
