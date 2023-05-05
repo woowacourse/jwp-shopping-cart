@@ -3,10 +3,12 @@ package cart.dao;
 import cart.domain.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Component
+@Repository
 public class MemberDao {
     private final JdbcTemplate jdbcTemplate;
 
@@ -30,7 +32,6 @@ public class MemberDao {
 
     public Long findByEmailAndPassword(String email, String password) {
         String sql = "select member_id from MEMBER where email = (?) AND password = (?)";
-        System.out.println(email + password);
 
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Long(rs.getLong("member_id")), email, password);
     }

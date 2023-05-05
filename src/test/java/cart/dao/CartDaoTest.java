@@ -17,7 +17,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-// TODO: 2023-05-03 jdbcTest의 차이점?
 @JdbcTest
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 class CartDaoTest {
