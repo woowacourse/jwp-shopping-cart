@@ -13,4 +13,8 @@ public class Member {
     private final Long id;
     private final String email;
     private final String password;
+
+    public Member(String email, String password) {
+        this(null, email, password);
+    }
 }

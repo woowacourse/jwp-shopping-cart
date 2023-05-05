@@ -16,7 +16,7 @@ public class CartProductService {
     private final CartProductDao cartProductDao;
 
     public long save(final long memberId, final CartProductRequest cartProductRequest) {
-        final CartProduct cartProduct = new CartProduct(null, memberId, cartProductRequest.getProductId());
+        final CartProduct cartProduct = new CartProduct(memberId, cartProductRequest.getProductId());
         return cartProductDao.save(cartProduct);
     }
 

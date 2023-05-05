@@ -13,4 +13,8 @@ public class CartProduct {
     private final Long id;
     private final Long memberId;
     private final Long productId;
+
+    public CartProduct(Long memberId, Long productId) {
+        this(null, memberId, productId);
+    }
 }

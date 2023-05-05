@@ -16,7 +16,7 @@ public class MemberService {
     private final MemberDao memberDao;
 
     public long save(final MemberRequest memberRequest) {
-        return memberDao.save(new Member(null, memberRequest.getEmail(), memberRequest.getPassword()));
+        return memberDao.save(new Member(memberRequest.getEmail(), memberRequest.getPassword()));
     }
 
     public List<MemberResponse> findAll() {

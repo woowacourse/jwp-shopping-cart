@@ -22,7 +22,7 @@ public class ProductService {
     }
 
     public long save(final ProductRequest productRequest) {
-        final Product product = new Product(null, productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        final Product product = new Product(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
         return productDao.save(product);
     }
 
