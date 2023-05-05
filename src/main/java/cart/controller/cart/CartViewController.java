@@ -1,7 +1,5 @@
 package cart.controller.cart;
 
-import cart.common.argumentResolver.Member;
-import cart.service.member.dto.MemberRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CartViewController {
 
     @GetMapping
-    public String showCart(@Member MemberRequest memberRequest) {
+    public String showCart() {
         return "cart";
     }
 
