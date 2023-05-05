@@ -1,12 +1,14 @@
 package cart.controller;
 
 import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import cart.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class ProductController {
@@ -15,6 +17,12 @@ public class ProductController {
 
     public ProductController(ProductService productService) {
         this.productService = productService;
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductResponse>> allProducts() {
+        List<ProductResponse> products = productService.selectAllProducts();
+        return ResponseEntity.ok().body(products);
     }
 
     @PostMapping("/products")
