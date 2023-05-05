@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.cart.CartDao;
+import cart.dao.member.MemberCartDao;
 import cart.dto.cart.CartResponse;
 import cart.dto.item.ItemResponse;
 import cart.entity.ItemEntity;
@@ -17,14 +17,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CartService {
 
-    private final CartDao cartDao;
+    private final MemberCartDao memberCartDao;
 
     public Long save(String memberEmail, Long itemId) {
-        return cartDao.save(memberEmail, itemId);
+        return memberCartDao.save(memberEmail, itemId);
     }
 
     public List<CartResponse> findAll(String memberEmail) {
-        Optional<Map<ItemEntity, Long>> cart = cartDao.findAll(memberEmail);
+        Optional<Map<ItemEntity, Long>> cart = memberCartDao.findAll(memberEmail);
 
         if(cart.isEmpty()){
             return Collections.emptyList();
@@ -48,6 +48,6 @@ public class CartService {
     }
 
     public void delete(String memberEmail, Long itemId) {
-        cartDao.delete(memberEmail, itemId);
+        memberCartDao.delete(memberEmail, itemId);
     }
 }

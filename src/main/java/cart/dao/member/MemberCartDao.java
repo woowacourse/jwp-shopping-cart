@@ -1,11 +1,11 @@
-package cart.dao.cart;
+package cart.dao.member;
 
 import cart.entity.ItemEntity;
 
 import java.util.Map;
 import java.util.Optional;
 
-public interface CartDao {
+public interface MemberCartDao {
 
     Long save(String memberEmail, Long itemId);
 

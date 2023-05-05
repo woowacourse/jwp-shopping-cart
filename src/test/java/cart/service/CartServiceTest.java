@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.cart.CartDao;
+import cart.dao.member.MemberCartDao;
 import cart.entity.ItemEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +19,7 @@ import static org.mockito.BDDMockito.given;
 class CartServiceTest {
 
     @Mock
-    private CartDao cartDao;
+    private MemberCartDao memberCartDao;
 
     @InjectMocks
     private CartService cartService;
@@ -28,7 +28,7 @@ class CartServiceTest {
     @Test
     @DisplayName("모든 장바구니 아이템 조회 테스트")
     void findAll() {
-        given(cartDao.findAll("admin@naver.com")).willReturn(Optional.of(Map.of(
+        given(memberCartDao.findAll("admin@naver.com")).willReturn(Optional.of(Map.of(
                 new ItemEntity(1L, "치킨", "url", 10000), 1L,
                 new ItemEntity(2L, "치킨", "url", 10000), 10L
         )));

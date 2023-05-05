@@ -1,4 +1,4 @@
-package cart.dao.cart;
+package cart.dao.member;
 
 import cart.entity.ItemEntity;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -11,13 +11,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Repository
-public class JdbcCartDao implements CartDao {
+public class JdbcMemberCartDao implements MemberCartDao {
 
     public static final String DELIMITER = ",";
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcCartDao(final JdbcTemplate jdbcTemplate) {
+    public JdbcMemberCartDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
