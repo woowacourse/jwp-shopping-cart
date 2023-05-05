@@ -11,7 +11,6 @@ public class BasicAuthorizationExtractor {
 
     public Credential extract(final HttpServletRequest request) {
         final String header = request.getHeader(AUTHORIZATION);
-        System.out.println("header " + header);
         if (header == null) {
             return null;
         }

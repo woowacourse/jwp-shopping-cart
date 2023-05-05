@@ -18,6 +18,10 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) throws Exception {
-        return basicAuthorizationExtractor.extract(webRequest.getNativeRequest(HttpServletRequest.class));
+        Credential credential = basicAuthorizationExtractor.extract(webRequest.getNativeRequest(HttpServletRequest.class));
+        if (credential == null) {
+            throw new AuthenticationException();
+        }
+        return credential;
     }
 }
