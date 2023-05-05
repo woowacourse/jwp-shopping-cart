@@ -52,7 +52,7 @@ public class ExceptionController {
         log.error(exception.getMessage());
 
         final ExceptionResponse exceptionResponse = new ExceptionResponse("서버에서 장애가 발생하였습니다.");
-        return ResponseEntity.badRequest().body(exceptionResponse);
+        return ResponseEntity.internalServerError().body(exceptionResponse);
     }
 
 }
