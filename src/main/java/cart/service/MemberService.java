@@ -6,6 +6,7 @@ import cart.domain.member.Member;
 import cart.domain.member.MemberEmail;
 import cart.domain.member.MemberName;
 import cart.domain.member.MemberPassword;
+import cart.dto.MemberRequest;
 import cart.dto.MemberResponse;
 import java.util.List;
 import java.util.stream.Collectors;

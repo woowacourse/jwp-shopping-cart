@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.dto.MemberResponse;
-import cart.service.MemberRequest;
+import cart.dto.MemberRequest;
 import cart.service.MemberService;
 import java.net.URI;
 import java.util.List;

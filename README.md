@@ -60,36 +60,45 @@
 1. 질문: requestDto를 어디서 만드는 것이 맞을까요?
    - 현재는, 서비스에서 productRequestDto(이하 : ProductDto)를 만들고, 컨트롤러에서 그대로 뷰에 적용합니다
    - 서비스에서 product 객체를 반환하고, 컨트롤러에서 dto를 만드는 게 맞을까요?
-
+2. request dto(decimal) 에서는 @valid를 통해, 10억까지만 가능하도록 추가함
+   - 도메인 Price(decimal)에서 최대값 설정 안함
+   - 데이터 베이스테이블에서 price(decimal) 최대값 설정안함
+   - 뷰에서만 모두 통일해야 하나?
 
 ---
 
 # 2단계
 1. 사용자 기능 구현
-   - 사용자 member 도메인 만들기
-     - name, email, password 저장
-     - 이메일 유효성 검사(정규식)
+   - [x] 사용자 member 도메인 만들기
+     - [x] name, email, password 저장
+     - [x] 이메일 유효성 검사(정규식)
    - 테이블 만들기
-     - id, name, email, password 저장
-   - 사용자 dao 만들기
-     - 등록 / 모든 사용자 조회/ 이메일로 사용자 / 수정/ 삭제 기능 구현하기
-   - 사용자 service만들기
-     - add/ findAll/ update/ delete 기능 구현하기
+     - [x] id, name, email, password 저장
+   - [x] 사용자 dao 만들기
+     - [x] 등록 
+     - [x] 모든 사용자 조회
+     - [x] 아이디로 사용자 조회
+     - 이메일로 사용자 조회
+     - [x] 수정
+     - [x] 삭제 기능 구현하기
+   - [x] 사용자 service만들기
+     - [x] add/ findAll/ update/ remove 기능 구현하기
    
 2. 사용자 설정 페이지 연동
-   - settings.html 수정하기
-   - settings.js 수정하기
-   - 페이지 컨트롤러에서 "/setting" get 요청 시, 모든 사용자 조회 결과 반환하기
-   - member api 구현하기
-     - 멤버 추가
-     - 멤버 삭제
-     - 멤버 정보 수정 (이메일은 수정할 수 없음)
-     - 멤버 정보 조회
-       - 모든 멤버 정보 조회
+   - [x] settings.html 수정하기
+   - [x] settings.js 수정하기
+   - [x] 페이지 컨트롤러에서 "/setting" get 요청 시, 모든 사용자 조회 결과 반환하기
+   - [x] member api 구현하기
+     - [x] 멤버 추가
+     - [x] 멤버 삭제
+     - [x] 멤버 정보 수정 (이메일은 수정할 수 없음)
+     - [x] 멤버 정보 조회
+       - [x] 모든 멤버 정보 조회
        - 선택한 멤버 정보 조회(by member Id 또는 email)?? => 이메일로 조회하는 게 맞는 것 같다
 
 3. 장바구니 기능 구현
 4. 장바구니 페이지 연동
+5. 세션기능 추가 
 
 이번 단계는 크게 인증과 장바구니 기능 구현으로 나눌 수 있습니다.
 
