@@ -1,12 +1,10 @@
 package cart.controller;
 
 import cart.auth.Login;
-import cart.dao.member.MemeberDao;
 import cart.domain.Cart;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.dto.CartDto;
-import cart.dto.MemeberDto;
 import cart.service.CartService;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -26,18 +24,14 @@ public class CartController {
 
     private final CartService cartService;
     private final ProductService productService;
-    private final MemeberDao memeberDao;
-
-    public CartController(CartService cartService, ProductService productService, MemeberDao memeberDao) {
+    public CartController(CartService cartService, ProductService productService) {
         this.cartService = cartService;
         this.productService = productService;
-        this.memeberDao = memeberDao;
     }
 
     @GetMapping("/carts/products")
     @ResponseBody
-    public List<Product> get(@Login MemeberDto memeberDto) {
-        Member member = memeberDao.findByEmail(memeberDto.getEmail());
+    public List<Product> get(@Login Member member) {
         List<Cart> carts = cartService.findAll(member.getId());
         List<Product> products = new ArrayList<>();
 
@@ -55,15 +49,14 @@ public class CartController {
 
     @PostMapping("/carts/{productId}")
     @ResponseBody
-    public ResponseEntity<String> add(@PathVariable Long productId, @Login MemeberDto memeberDto) {
-        Member member = memeberDao.findByEmail(memeberDto.getEmail());
+    public ResponseEntity<String> add(@PathVariable Long productId, @Login Member member) {
         cartService.add(new CartDto(member.getId(), productId));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/carts/{productId}")
     @ResponseBody
-    public ResponseEntity<String> delete(@PathVariable Long productId, @Login MemeberDto memeberDto) {
+    public ResponseEntity<String> delete(@PathVariable Long productId, @Login Member member) {
         cartService.delete(productId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
