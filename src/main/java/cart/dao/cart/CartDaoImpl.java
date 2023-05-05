@@ -76,7 +76,6 @@ public class CartDaoImpl implements CartDao {
     @Override
     public void updateCart(final Cart updateCart) {
         String sql = "UPDATE cart SET count=? WHERE id = ? ";
-        System.out.println("data " + updateCart.getCount());
         jdbcTemplate.update(sql,
             updateCart.getCount(),
             updateCart.getId());
