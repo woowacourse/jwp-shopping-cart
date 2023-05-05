@@ -1,7 +1,7 @@
-package cart.dao;
+package cart.dao.member;
 
-import cart.auth.MemeberDto;
 import cart.domain.Member;
+import cart.dto.MemeberDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class MemeberDao {
+public class DbMemeberDao implements MemeberDao{
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -22,20 +22,23 @@ public class MemeberDao {
         return member;
     };
 
-    public MemeberDao(JdbcTemplate jdbcTemplate) {
+    public DbMemeberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public Member findByEmail(String email) {
         String sql = "select * from member where email = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, email);
     }
 
+    @Override
     public void save(MemeberDto memeberDto) {
         String sql = "insert into member(email, password) values (?, ?)";
         jdbcTemplate.update(sql, memeberDto.getEmail(), memeberDto.getPassowrd());
     }
 
+    @Override
     public List<Member> findAll() {
         String sql = "select * from member";
         return jdbcTemplate.query(sql, rowMapper);

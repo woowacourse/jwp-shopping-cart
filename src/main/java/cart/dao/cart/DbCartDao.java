@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.dao.cart;
 
 import cart.domain.Cart;
 import cart.dto.CartDto;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class CartDao {
+public class DbCartDao implements CartDao {
     private final JdbcTemplate jdbcTemplate;
 
     RowMapper<Cart> rowMapper = (resultSet, rowNum) -> {
@@ -21,20 +21,22 @@ public class CartDao {
         return cart;
     };
 
-    public CartDao(JdbcTemplate jdbcTemplate) {
+    public DbCartDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public List<Cart> findAll(Long memberId) {
         String sql = "select * from cart where member_id = ?";
         return jdbcTemplate.query(sql, rowMapper, memberId);
     }
 
+    @Override
     public void save(CartDto cartDto) {
         String sql = "insert into cart(member_id, product_id) values (?,?)";
         jdbcTemplate.update(sql, cartDto.getMemeberId(), cartDto.getProductId());
     }
-
+    @Override
     public void delete(Long productId) {
         String sql = "delete from cart where product_id = ?";
         jdbcTemplate.update(sql, productId);
