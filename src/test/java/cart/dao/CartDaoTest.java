@@ -28,7 +28,7 @@ class CartDaoTest {
     @Test
     @DisplayName("데이터 베이스에 Cart를 저장이 잘 되는지 확인한다.")
     void save() {
-        Email email = Email.from("kpeel5839@a.com");
+        Email email = Email.from("jakind@b.com");
         cartDao.save(new Cart.Builder()
                 .email(email)
                 .productId(1L)
@@ -42,7 +42,7 @@ class CartDaoTest {
     @Test
     @DisplayName("데이터 베이스에 Cart를 저장한 뒤, findById로 확인한다.")
     void findById() {
-        Email email = Email.from("kpeel5839@a.com");
+        Email email = Email.from("jakind@b.com");
         cartDao.save(new Cart.Builder()
                 .email(email)
                 .productId(1L)
@@ -58,7 +58,7 @@ class CartDaoTest {
     @Test
     @DisplayName("Cart가 잘 삭제 되는지 확인한다.")
     void deleteById() {
-        Email email = Email.from("kpeel5839@a.com");
+        Email email = Email.from("jakind@b.com");
         cartDao.save(new Cart.Builder()
                 .email(email)
                 .productId(1L)
