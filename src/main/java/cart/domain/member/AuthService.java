@@ -21,4 +21,10 @@ public class AuthService {
             .map(MemberEntity::getMemberId)
             .orElseThrow(() -> new EntityNotFoundException("아이디 또는 비밀번호가 잘못되었습니다."));
     }
+
+    public boolean isNotRegistered(final String email, final String password) {
+        return memberDao.findByEmail(email)
+            .filter(memberEntity -> memberEntity.getPassword().equals(password))
+            .isEmpty();
+    }
 }

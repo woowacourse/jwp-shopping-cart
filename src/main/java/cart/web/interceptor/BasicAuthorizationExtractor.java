@@ -1,11 +1,10 @@
-package cart.web.argumentResolver;
+package cart.web.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
-import cart.domain.exception.AuthorizationFormatException;
 import cart.web.cart.dto.AuthInfo;
 
 @Component
@@ -28,13 +27,13 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
 
     private void checkAuthHeaderIsNotNull(final String authHeader) {
         if (authHeader == null) {
-            throw new AuthorizationFormatException("올바른 인증 정보가 필요합니다.");
+            throw new AuthorizationException("올바른 인증 정보가 필요합니다.");
         }
     }
 
     private void checkDecodedType(final String authHeader) {
         if (!authHeader.startsWith(BASIC_TYPE)) {
-            throw new AuthorizationFormatException("올바른 인증 정보가 필요합니다.");
+            throw new AuthorizationException("올바른 인증 정보가 필요합니다.");
         }
     }
 
@@ -45,7 +44,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
 
         final String[] credentials = decodedString.split(DELIMITER);
         if (credentials.length != 2) {
-            throw new AuthorizationFormatException("올바른 인증 정보가 필요합니다.");
+            throw new AuthorizationException("올바른 인증 정보가 필요합니다.");
         }
         return credentials;
     }

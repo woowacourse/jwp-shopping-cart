@@ -78,7 +78,7 @@ class CartProductsApiEndToEndTest {
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-            softAssertions.assertThat(response.body().asString()).contains("아이디 또는 비밀번호가 잘못되었습니다.");
+            softAssertions.assertThat(response.body().asString()).contains("올바른 인증 정보가 필요합니다.");
         });
     }
 
@@ -96,7 +96,7 @@ class CartProductsApiEndToEndTest {
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-            softAssertions.assertThat(response.body().asString()).contains("아이디 또는 비밀번호가 잘못되었습니다.");
+            softAssertions.assertThat(response.body().asString()).contains("올바른 인증 정보가 필요합니다.");
         });
     }
 
@@ -222,6 +222,6 @@ class CartProductsApiEndToEndTest {
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .extract();
 
-        assertThat(response.body().asString()).contains("아이디 또는 비밀번호가 잘못되었습니다.");
+        assertThat(response.body().asString()).contains("올바른 인증 정보가 필요합니다.");
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import cart.domain.member.AuthService;
 import cart.web.cart.dto.AuthInfo;
+import cart.web.interceptor.AuthorizationExtractor;
 
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
 

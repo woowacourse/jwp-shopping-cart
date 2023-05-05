@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import cart.domain.exception.EntityNotFoundException;
 import cart.domain.persistence.dao.MemberDao;
 import cart.domain.persistence.entity.MemberEntity;
 
@@ -26,20 +25,29 @@ class AuthServiceTest {
     private AuthService authService;
 
     @Test
-    void getValidatedMemberId_메서드로_유효한_사용자의_ID를_가져온다() {
+    void isNotRegistered_메서드로_특정_정보의_사용자가_있는지_확인_성공_테스트() {
         final String email = "a@a.com";
         final String password = "password1";
         memberDao.save(new MemberEntity(email, password));
 
-        assertDoesNotThrow(() -> authService.getValidatedMemberId(email, password));
+        assertFalse(() -> authService.isNotRegistered(email, password));
     }
 
     @Test
-    void getValidatedMemberId_메서드로_유효하지_않은_사용자_검증_시_예외_발생_테스트() {
+    void isNotRegistered_메서드로_잘못된_이메일의_사용자가_없는지_확인_성공_테스트() {
         final String email = "a@a.com";
         final String password = "password1";
         memberDao.save(new MemberEntity(email, password));
 
-        assertThrows(EntityNotFoundException.class, () -> authService.getValidatedMemberId("b@a.com", password));
+        assertTrue(() -> authService.isNotRegistered("b@a.com", password));
+    }
+
+    @Test
+    void isNotRegistered_메서드로_잘못된_비밀번호의_사용자가_없는지_확인_성공_테스트() {
+        final String email = "a@a.com";
+        final String password = "password1";
+        memberDao.save(new MemberEntity(email, password));
+
+        assertTrue(() -> authService.isNotRegistered(email, "password2"));
     }
 }
