@@ -3,8 +3,7 @@ package cart.service.cart;
 import cart.service.cart.dto.ProductResponse;
 import cart.service.member.Member;
 import cart.service.member.MemberDao;
-import cart.service.product.Product;
-import cart.service.product.ProductDao;
+import cart.service.product.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +34,8 @@ public class CartServiceIntegrationTest {
         Member memberNoHaveCartItem = memberDao.save(new Member("cyh6099@wooteco.com", "qwer1234"));
 
         List<Product> products = List.of(
-                new Product("chicken", "image", 20000),
-                new Product("pizza", "image", 20000)
+                new Product(new ProductName("chicken"), new ProductImage("image"), new ProductPrice(20000)),
+                new Product(new ProductName("pizza"), new ProductImage("image"), new ProductPrice(20000))
         );
 
 
@@ -61,8 +60,8 @@ public class CartServiceIntegrationTest {
         memberDao.save(new Member(email, "Qwer1234"));
 
         List<Product> products = List.of(
-                new Product("chicken", "image", 20000),
-                new Product("pizza", "image", 20000)
+                new Product(new ProductName("chicken"), new ProductImage("image"), new ProductPrice(20000)),
+                new Product(new ProductName("pizza"), new ProductImage("image"), new ProductPrice(20000))
         );
 
 

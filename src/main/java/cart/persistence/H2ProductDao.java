@@ -1,7 +1,6 @@
 package cart.persistence;
 
-import cart.service.product.Product;
-import cart.service.product.ProductDao;
+import cart.service.product.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -27,9 +26,9 @@ public class H2ProductDao implements ProductDao {
     private final RowMapper<Product> productEntityRowMapper = (resultSet, rowNum) ->
             new Product(
                     resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("image_url"),
-                    resultSet.getInt("price")
+                    new ProductName(resultSet.getString("name")),
+                    new ProductImage(resultSet.getString("image_url")),
+                    new ProductPrice(resultSet.getInt("price"))
             );
 
     @Override

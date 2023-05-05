@@ -1,6 +1,5 @@
 package cart.service.product;
 
-import cart.service.product.dto.ProductRequest;
 import cart.service.product.dto.ProductResponse;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +15,13 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public Long create(ProductRequest productRequest) {
-        Product product = new Product(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+    public Long create(String productName, String productImageUrl, int productPrice) {
+//        Product product = new Product(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        Product product = new Product(
+                new ProductName(productName),
+                new ProductImage(productImageUrl),
+                new ProductPrice(productPrice)
+        );
         return productDao.save(product);
     }
 
@@ -28,10 +32,15 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public ProductResponse update(ProductRequest productRequest, Long id) {
+    public ProductResponse update(String productName, String productImageUrl, int productPrice, Long id) {
         Product product = productDao.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다." + System.lineSeparator() + "id : " + id));
-        Product newInfoProduct = product.replaceProduct(productRequest, id);
+        Product newInfoProduct = product.replaceProduct(
+                new ProductName(productName),
+                new ProductImage(productImageUrl),
+                new ProductPrice(productPrice),
+                id
+        );
         Product updateProduct = productDao.update(newInfoProduct);
         return ProductResponse.from(updateProduct);
     }

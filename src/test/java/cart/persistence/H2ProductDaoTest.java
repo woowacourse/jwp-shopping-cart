@@ -1,8 +1,7 @@
 package cart.persistence;
 
-import cart.service.product.Product;
-import cart.service.product.ProductDao;
-import cart.service.product.dto.ProductRequest;
+import cart.controller.product.dto.ProductRequest;
+import cart.service.product.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,14 +32,14 @@ class H2ProductDaoTest {
 
     @Test
     void 상품이_정상적으로_저장된다() {
-        Product product = new Product("pizza", "url", 10000);
+        Product product = new Product(new ProductName("image"), new ProductImage("url"), new ProductPrice(10000));
         Long productId = productDao.save(product);
         assertThat(productId).isPositive();
     }
 
     @Test
     void 상품_데이터_정합성_검증() {
-        Product product = new Product("pizza", "url", 10000);
+        Product product = new Product(new ProductName("pizza"), new ProductImage("url"), new ProductPrice(10000));
         Long productId = productDao.save(product);
         Product created = productDao.findById(productId).orElse(null);
         Assertions.assertAll(
@@ -70,13 +69,16 @@ class H2ProductDaoTest {
 
     @Test
     void 상품_정보_업데이트() {
-        Product ramyeon = RAMYEON;
-        Long productId = productDao.save(ramyeon);
+        Long productId = productDao.save(RAMYEON);
         Product product = productDao.findById(productId).get();
 
-        ProductRequest updateRequest = new ProductRequest("expectedUrl", "expected", 1000);
+        ProductRequest updateRequest = new ProductRequest("expectedUrl", "expectedName", 1000);
 
-        Product newInfoProduct = product.replaceProduct(updateRequest, product.getId());
+        Product newInfoProduct = product.replaceProduct(
+                new ProductName(updateRequest.getName()),
+                new ProductImage(updateRequest.getImageUrl()),
+                new ProductPrice(updateRequest.getPrice()),
+                product.getId());
         productDao.update(newInfoProduct);
 
         Product updatedProduct = productDao.findById(productId).get();

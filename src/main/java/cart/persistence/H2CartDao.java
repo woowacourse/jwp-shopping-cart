@@ -4,6 +4,9 @@ import cart.service.cart.Cart;
 import cart.service.cart.CartDao;
 import cart.service.member.Member;
 import cart.service.product.Product;
+import cart.service.product.ProductImage;
+import cart.service.product.ProductName;
+import cart.service.product.ProductPrice;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -29,9 +32,9 @@ public class H2CartDao implements CartDao {
     private final RowMapper<Product> rowMapper = (resultSet, rowNum) ->
             new Product(
                     resultSet.getLong("product_id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("image_url"),
-                    resultSet.getInt("price")
+                    new ProductName(resultSet.getString("name")),
+                    new ProductImage(resultSet.getString("image_url")),
+                    new ProductPrice(resultSet.getInt("price"))
             );
 
     private final RowMapper<Long> deleteCartItemRowMapper = (resultSet, rowNum) ->

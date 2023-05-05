@@ -1,22 +1,20 @@
-package cart.service.product.dto;
+package cart.controller.product.dto;
 
-import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 
 public class ProductRequest {
 
     @NotNull(message = "이미지 url은 비어있을 수 없습니다.")
     private String imageUrl;
 
-    @NotNull(message = "이름은 비어있을 수 없습니다.")
-    @Size(min = 1, max = 50)
+    @NotNull(message = "상품 이름은 비어있을 수 없습니다.")
+    @NotBlank(message = "상품 이름은 최소 한 글자 입니다.")
     private String name;
 
     @NotNull(message = "가격은 비어있을 수 없습니다.")
     @Positive(message = "가격은 0 이상이어야 합니다.")
-    @Max(value = 1_000_000_000, message = "가격은 최대 10억까지 가능합니다.")
     private Integer price;
 
     public ProductRequest(String imageUrl, String name, Integer price) {

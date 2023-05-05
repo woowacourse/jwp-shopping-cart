@@ -1,7 +1,7 @@
 package cart.service.product;
 
+import cart.controller.product.dto.ProductRequest;
 import cart.fixture.ProductFixture;
-import cart.service.product.dto.ProductRequest;
 import cart.service.product.dto.ProductResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,8 +33,7 @@ class ProductServiceTest {
 
     @Test
     void 상품을_저장한다() {
-        ProductRequest productRequest = new ProductRequest("image", "name", 1000);
-        productService.create(productRequest);
+        productService.create("image", "name", 1000);
 
         List<ProductResponse> products = productService.findAll();
 
@@ -59,7 +58,12 @@ class ProductServiceTest {
 
         ProductRequest updateRequest = new ProductRequest("expectedUrl", "expected", 1000);
 
-        ProductResponse updatedResponse = productService.update(updateRequest, productId);
+        ProductResponse updatedResponse = productService.update(
+                updateRequest.getName(),
+                updateRequest.getImageUrl(),
+                updateRequest.getPrice(),
+                productId
+        );
 
         Assertions.assertAll(
                 () -> assertThat(updatedResponse.getImageUrl()).isEqualTo(updateRequest.getImageUrl()),
@@ -74,7 +78,12 @@ class ProductServiceTest {
         ProductRequest updateRequest = new ProductRequest("expectedUrl", "expected", 1000);
 
 
-        assertThatThrownBy(() -> productService.update(updateRequest, productId))
+        assertThatThrownBy(() -> productService.update(
+                updateRequest.getName(),
+                updateRequest.getImageUrl(),
+                updateRequest.getPrice(),
+                productId)
+        )
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 상품을 찾을 수 없습니다." + System.lineSeparator() + "id : " + productId);
     }

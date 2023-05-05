@@ -2,8 +2,7 @@ package cart.service.cart;
 
 import cart.service.member.Member;
 import cart.service.member.MemberDao;
-import cart.service.product.Product;
-import cart.service.product.ProductDao;
+import cart.service.product.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +38,7 @@ class CartServiceTest {
                 .willReturn(Optional.of(new Member(1L, "Cyh6099@gmail.com", "qwer1234")));
 
         given(productDao.findById(any()))
-                .willReturn(Optional.of(new Product(1L, "치킨", "image", 10000)));
+                .willReturn(Optional.of(new Product(1L, new ProductName("치킨"), new ProductImage("image"), new ProductPrice(10000))));
 
         given(cartDao.addProduct(any()))
                 .willReturn(1L);

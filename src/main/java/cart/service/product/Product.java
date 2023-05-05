@@ -1,27 +1,25 @@
 package cart.service.product;
 
-import cart.service.product.dto.ProductRequest;
-
 public class Product {
 
     private final Long id;
-    private final String name;
-    private final String imageUrl;
-    private final int price;
+    private final ProductName name;
+    private final ProductImage imageUrl;
+    private final ProductPrice price;
 
-    public Product(Long id, String name, String imageUrl, int price) {
+    public Product(Long id, ProductName name, ProductImage imageUrl, ProductPrice price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
     }
 
-    public Product(String name, String imageUrl, int price) {
+    public Product(ProductName name, ProductImage imageUrl, ProductPrice price) {
         this(null, name, imageUrl, price);
     }
 
-    public Product replaceProduct(ProductRequest productRequest, Long id) {
-        return new Product(id, productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+    public Product replaceProduct(ProductName name, ProductImage imageUrl, ProductPrice price, Long id) {
+        return new Product(id, name, imageUrl, price);
     }
 
     public Long getId() {
@@ -29,14 +27,14 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return name.getName();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUrl.getImageUrl();
     }
 
     public int getPrice() {
-        return price;
+        return price.getPrice();
     }
 }

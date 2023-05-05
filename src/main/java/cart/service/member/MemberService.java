@@ -1,5 +1,6 @@
 package cart.service.member;
 
+import cart.service.member.dto.MemberResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
