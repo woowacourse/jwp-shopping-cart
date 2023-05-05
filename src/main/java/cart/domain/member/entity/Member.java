@@ -20,6 +20,10 @@ public class Member {
         this.updatedAt = updatedAt;
     }
 
+    public boolean passwordNotEquals(final String comparedPassword) {
+        return !this.password.equals(comparedPassword);
+    }
+
     public Long getId() {
         return id;
     }

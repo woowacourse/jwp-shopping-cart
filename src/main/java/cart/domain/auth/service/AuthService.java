@@ -24,7 +24,7 @@ public class AuthService {
         final MemberInformation memberInformation = authorizationExtractor.extract(header);
         final Member member = memberDao.findByEmail(memberInformation.getEmail())
             .orElseThrow(() -> new AuthenticationException("인증 실패"));
-        if (!member.getPassword().equals(memberInformation.getPassword())) {
+        if (member.passwordNotEquals(memberInformation.getPassword())) {
             throw new AuthenticationException("인증 실패");
         }
         return memberInformation;
