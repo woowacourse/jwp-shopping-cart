@@ -18,6 +18,14 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private static RowMapper<MemberEntity> memberEntityRowMapper() {
+        return (resultSet, rowNum) -> new MemberEntity(
+                resultSet.getLong("id"),
+                resultSet.getString("username"),
+                resultSet.getString("password")
+        );
+    }
+
     public List<MemberEntity> findAll() {
         final String sql = "SELECT id, username, password FROM Member";
 
@@ -34,13 +42,5 @@ public class MemberDao {
         final String sql = "SELECT id FROM Member WHERE username = ? AND password= ?";
 
         return jdbcTemplate.queryForObject(sql, Long.class, member.getUsername(), member.getPassword());
-    }
-
-    private RowMapper<MemberEntity> memberEntityRowMapper() {
-        return (resultSet, rowNum) -> new MemberEntity(
-                resultSet.getLong("id"),
-                resultSet.getString("username"),
-                resultSet.getString("password")
-        );
     }
 }

@@ -15,6 +15,18 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
+    private static MemberRequest extractMember(final String header) {
+        final String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
+        final byte[] decodeBytes = Base64.decodeBase64(authHeaderValue);
+        final String decodedString = new String(decodeBytes);
+
+        final String[] credentials = decodedString.split(DELIMITER);
+        final String username = credentials[0];
+        final String password = credentials[1];
+
+        return new MemberRequest(username, password);
+    }
+
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
@@ -22,8 +34,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
-                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory)
-            throws Exception {
+                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final String header = webRequest.getHeader(AUTHORIZATION);
 
         if (header == null) {
@@ -35,17 +46,5 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         } catch (final Exception e) {
             throw new AuthorizationException("사용자 정보를 찾을 수 없습니다.");
         }
-    }
-
-    private MemberRequest extractMember(final String header) {
-        final String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
-        final byte[] decodeBytes = Base64.decodeBase64(authHeaderValue);
-        final String decodedString = new String(decodeBytes);
-
-        final String[] credentials = decodedString.split(DELIMITER);
-        final String username = credentials[0];
-        final String password = credentials[1];
-
-        return new MemberRequest(username, password);
     }
 }

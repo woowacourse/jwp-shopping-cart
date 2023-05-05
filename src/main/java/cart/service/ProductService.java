@@ -29,12 +29,14 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductEntityDto> findAll() {
         return productDao.findAll().stream()
                 .map(productEntityToProductEntityDto)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProductEntityDto find(final long id) {
         final ProductId productId = new ProductId(id);
 

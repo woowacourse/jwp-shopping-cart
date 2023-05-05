@@ -14,14 +14,14 @@ public class MemberUsername {
         this.value = username;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    private void validateUsername(final String username) {
+    private static void validateUsername(final String username) {
         if (username.length() < MIN_LENGTH || username.length() > MAX_LENGTH) {
             throw new IllegalArgumentException(MIN_LENGTH + "-" + MAX_LENGTH + "자 사이의 사용자명을 입력해 주세요.");
         }
+    }
+
+    public String getValue() {
+        return value;
     }
 
     @Override

@@ -12,14 +12,14 @@ public class ProductImageUrl {
         this.value = imageUrl;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    private void validateImageUrl(final String imageUrl) {
+    private static void validateImageUrl(final String imageUrl) {
         if (imageUrl.length() > MAX_LENGTH) {
             throw new IllegalArgumentException(MAX_LENGTH + "자 이하의 URL을 입력해 주세요.");
         }
+    }
+
+    public String getValue() {
+        return value;
     }
 
     @Override

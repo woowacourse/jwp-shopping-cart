@@ -12,7 +12,6 @@ public class Product {
         this.imageUrl = new ProductImageUrl(imageUrl);
     }
 
-
     public String getName() {
         return name.getValue();
     }

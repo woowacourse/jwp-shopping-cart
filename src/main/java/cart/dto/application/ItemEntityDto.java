@@ -5,11 +5,6 @@ public class ItemEntityDto {
     private final long id;
     private final ProductDto product;
 
-    public ItemEntityDto(final long id, final String name, final int price, final String imageUrl) {
-        this.id = id;
-        this.product = new ProductDto(name, price, imageUrl);
-    }
-
     public ItemEntityDto(final long id, final ProductEntityDto product) {
         this.id = id;
         this.product = product.getProduct();

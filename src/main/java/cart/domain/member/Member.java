@@ -10,7 +10,6 @@ public class Member {
         this.password = new MemberPassword(password);
     }
 
-
     public String getUsername() {
         return username.getValue();
     }

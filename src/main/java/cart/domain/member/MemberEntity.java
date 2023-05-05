@@ -10,15 +10,9 @@ public class MemberEntity {
         this.member = new Member(username, password);
     }
 
-    public MemberEntity(final long id, final Member member) {
-        this.id = new MemberId(id);
-        this.member = member;
-    }
-
     public long getId() {
         return id.getValue();
     }
-
 
     public String getUsername() {
         return member.getUsername();

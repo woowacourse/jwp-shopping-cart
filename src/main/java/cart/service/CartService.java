@@ -25,7 +25,7 @@ public class CartService {
         this.productService = productService;
     }
 
-
+    @Transactional(readOnly = true)
     public List<ItemEntityDto> findAll(final MemberDto member) {
         final long memberId = memberService.findMemberId(member);
 

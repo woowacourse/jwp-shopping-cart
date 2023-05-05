@@ -25,6 +25,15 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
+    private static RowMapper<ProductEntity> productEntityRowMapper() {
+        return (resultSet, rowNum) -> new ProductEntity(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getInt("price"),
+                resultSet.getString("image_url")
+        );
+    }
+
     public long insert(final Product product) {
         final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
 
@@ -46,7 +55,8 @@ public class ProductDao {
     public void update(final ProductEntity newProduct) {
         final String sql = "update Product set name = ?, price = ?, image_url = ? where id = ?";
 
-        jdbcTemplate.update(sql,
+        jdbcTemplate.update(
+                sql,
                 newProduct.getName(),
                 newProduct.getPrice(),
                 newProduct.getImageUrl(),
@@ -64,14 +74,5 @@ public class ProductDao {
         final String sql = "select count(*) from Product where id = ?";
 
         return jdbcTemplate.queryForObject(sql, Integer.class, id.getValue()) > 0;
-    }
-
-    private RowMapper<ProductEntity> productEntityRowMapper() {
-        return (resultSet, rowNum) -> new ProductEntity(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getInt("price"),
-                resultSet.getString("image_url")
-        );
     }
 }

@@ -12,7 +12,7 @@ public class ProductPrice {
         this.value = price;
     }
 
-    private void validatePrice(final int price) {
+    private static void validatePrice(final int price) {
         if (price > MAX_RANGE) {
             throw new IllegalArgumentException(MAX_RANGE + "원 이하의 가격을 입력해 주세요");
         }

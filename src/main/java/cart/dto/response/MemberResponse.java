@@ -7,11 +7,6 @@ public class MemberResponse {
     private final String username;
     private final String password;
 
-    public MemberResponse(final String username, final String password) {
-        this.username = username;
-        this.password = password;
-    }
-
     public MemberResponse(final MemberDto member) {
         this.username = member.getUsername();
         this.password = member.getPassword();

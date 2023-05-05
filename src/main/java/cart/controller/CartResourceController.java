@@ -8,6 +8,7 @@ import cart.service.CartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,7 @@ public class CartResourceController {
     }
 
     @GetMapping
-    public List<ItemEntityResponse> findAllProducts(@AuthenticationPrincipal final MemberRequest memberRequest) {
+    public List<ItemEntityResponse> findAllProducts(@AuthenticationPrincipal @Valid final MemberRequest memberRequest) {
         final MemberDto member = new MemberDto(memberRequest);
 
         return cartService.findAll(member).stream()
@@ -35,13 +36,16 @@ public class CartResourceController {
     public void createItem(@PathVariable final long productId,
                            @AuthenticationPrincipal final MemberRequest memberRequest) {
         final MemberDto member = new MemberDto(memberRequest);
+
         cartService.insert(member, productId);
     }
 
     @DeleteMapping("/{itemId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteItem(@PathVariable final long itemId, @AuthenticationPrincipal final MemberRequest memberRequest) {
+    public void deleteItem(@PathVariable final long itemId,
+                           @AuthenticationPrincipal @Valid final MemberRequest memberRequest) {
         final MemberDto member = new MemberDto(memberRequest);
+
         cartService.delete(itemId, member);
     }
 }

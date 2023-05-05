@@ -10,11 +10,6 @@ public class ItemEntity {
         this.item = new Item(userId, productId);
     }
 
-    public ItemEntity(final long id, final Item item) {
-        this.id = new CartId(id);
-        this.item = item;
-    }
-
     public long getId() {
         return id.getValue();
     }

@@ -24,6 +24,14 @@ public class CartDao {
                 .usingGeneratedKeyColumns("id");
     }
 
+    private static RowMapper<ItemEntity> itemEntityRowMapper() {
+        return (resultSet, rowNum) -> new ItemEntity(
+                resultSet.getLong("id"),
+                resultSet.getLong("user_id"),
+                resultSet.getLong("product_id")
+        );
+    }
+
     public List<ItemEntity> findAll(final long userId) {
         final String sql = "SELECT * FROM cart WHERE user_id = ?";
 
@@ -40,13 +48,5 @@ public class CartDao {
         final String sql = "DELETE cart WHERE id = ? AND user_id = ?";
 
         jdbcTemplate.update(sql, itemId, memberId);
-    }
-
-    private RowMapper<ItemEntity> itemEntityRowMapper() {
-        return (resultSet, rowNum) -> new ItemEntity(
-                resultSet.getLong("id"),
-                resultSet.getLong("user_id"),
-                resultSet.getLong("product_id")
-        );
     }
 }
