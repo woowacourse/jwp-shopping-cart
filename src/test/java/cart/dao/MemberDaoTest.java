@@ -12,14 +12,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
 @Transactional
-class JdbcMemberDaoTest {
+class MemberDaoTest {
 
     @Autowired
-    private JdbcMemberDao jdbcCustomerDao;
+    private MemberDao jdbcCustomerDao;
 
     @DisplayName("selectAllUsers 성공 테스트")
     @Test

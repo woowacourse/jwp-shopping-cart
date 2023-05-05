@@ -1,18 +1,62 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.util.List;
 
-public interface ProductDao {
+@Repository
+public class ProductDao {
 
-    int insertProduct(ProductEntity productEntity);
+    private final SimpleJdbcInsert simpleJdbcInsert;
+    private final JdbcTemplate jdbcTemplate;
 
-    List<ProductEntity> selectAllProducts();
+    private final RowMapper<ProductEntity> productMapper
+            = (resultSet, rowNum) -> new ProductEntity(
+            resultSet.getInt("id"),
+            resultSet.getString("name"),
+            resultSet.getInt("price"),
+            resultSet.getString("image")
+    );
 
-    void updateProduct(ProductEntity productEntity);
+    public ProductDao(DataSource dataSource, JdbcTemplate jdbcTemplate) {
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-    void deleteProduct(int productId);
+    public int insertProduct(ProductEntity productEntity) {
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(productEntity);
+        Number id = simpleJdbcInsert.executeAndReturnKey(parameterSource);
+        return id.intValue();
+    }
 
-    void deleteAllProduct();
+    public List<ProductEntity> selectAllProducts() {
+        String sql = "select id, name, price, image from product";
+        return jdbcTemplate.query(sql, productMapper);
+    }
+
+    public void updateProduct(ProductEntity productEntity) {
+        String sql = "update product set name = ?, price =? , image = ?  where id = ?";
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImage(), productEntity.getId());
+    }
+
+    public void deleteProduct(int productId) {
+        System.out.println(Thread.currentThread());
+
+        String sql = "delete from product where id = ?";
+        jdbcTemplate.update(sql, productId);
+    }
+
+    public void deleteAllProduct() {
+        String sql = "delete from product";
+        jdbcTemplate.update(sql);
+    }
 }

@@ -17,32 +17,32 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Transactional
-class JdbcProductDaoTest {
+class ProductDaoTest {
 
     ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
     ProductEntity productEntity = new ProductEntity(productRequestDto.getName(), productRequestDto.getPrice(), productRequestDto.getImage());
 
 
     @Autowired
-    private JdbcProductDao jdbcProductDao;
+    private ProductDao productDao;
 
     @DisplayName("addProduct 성공 테스트")
     @Test
     void insertProduct() {
 
-        Assertions.assertDoesNotThrow(() -> jdbcProductDao.insertProduct(productEntity));
+        Assertions.assertDoesNotThrow(() -> productDao.insertProduct(productEntity));
     }
 
     @DisplayName("selectAllProducts 성공 테스트")
     @Test
     void selectAllProducts() {
+        productDao.deleteAllProduct();
         ProductRequestDto productRequestDto2 = new ProductRequestDto("타마마", 10000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
         ProductEntity productEntity2 = new ProductEntity(productRequestDto2.getName(), productRequestDto2.getPrice(), productRequestDto2.getImage());
 
-        jdbcProductDao.insertProduct(productEntity);
-        jdbcProductDao.insertProduct(productEntity2);
-
-        List<ProductEntity> productEntities = jdbcProductDao.selectAllProducts();
+        productDao.insertProduct(productEntity);
+        productDao.insertProduct(productEntity2);
+        List<ProductEntity> productEntities = productDao.selectAllProducts();
 
         assertAll(
                 () -> assertThat(productEntities).hasSize(2),
@@ -55,13 +55,13 @@ class JdbcProductDaoTest {
     @DisplayName("updateProduct 성공 테스트")
     @Test
     void updateProduct() {
-        int id = jdbcProductDao.insertProduct(productEntity);
+        int id = productDao.insertProduct(productEntity);
         ProductRequestDto updateProductDto = new ProductRequestDto("기로로", 100, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
         ProductEntity updateProductEntity = new ProductEntity(id, updateProductDto.getName(), updateProductDto.getPrice(), updateProductDto.getImage());
 
-        jdbcProductDao.updateProduct(updateProductEntity);
+        productDao.updateProduct(updateProductEntity);
 
-        List<ProductEntity> productEntities = jdbcProductDao.selectAllProducts();
+        List<ProductEntity> productEntities = productDao.selectAllProducts();
 
         assertThat(productEntities).extracting("name", "price", "image")
                 .contains(tuple(updateProductDto.getName(), updateProductDto.getPrice(), updateProductDto.getImage()));
@@ -70,12 +70,13 @@ class JdbcProductDaoTest {
     @DisplayName("deleteProduct 성공 테스트")
     @Test
     void deleteProduct() {
-        int id = jdbcProductDao.insertProduct(productEntity);
-        jdbcProductDao.deleteProduct(id);
+        int id = productDao.insertProduct(productEntity);
+        List<ProductEntity> beforeProductEntities = productDao.selectAllProducts();
 
-        List<ProductEntity> productEntities = jdbcProductDao.selectAllProducts();
+        productDao.deleteProduct(id);
+        List<ProductEntity> afterProductEntities = productDao.selectAllProducts();
 
-        assertThat(productEntities.size()).isZero();
+        assertThat(beforeProductEntities.size() - afterProductEntities.size()).isEqualTo(1);
     }
 
 }
