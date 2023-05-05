@@ -43,7 +43,7 @@ public class CartRestControllerTest {
 
     @Test
     void 상품추가() throws Exception {
-        BDDMockito.given(cartService.addProductToCart(any(), any()))
+        BDDMockito.given(cartService.createCartItem(any(), any()))
                 .willReturn(1L);
         String header = "Basic " + new String(Base64.getEncoder().encode("cyh6099@gmail.com:qwer1234".getBytes()));
         mockMvc.perform(MockMvcRequestBuilders.post("/carts/1")

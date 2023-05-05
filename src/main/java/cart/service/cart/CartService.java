@@ -23,7 +23,7 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public Long addProductToCart(String email, Long productId) {
+    public Long createCartItem(String email, Long productId) {
         Member member = memberDao.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );

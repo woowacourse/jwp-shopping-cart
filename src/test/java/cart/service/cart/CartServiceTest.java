@@ -43,7 +43,7 @@ class CartServiceTest {
         given(cartDao.addProduct(any()))
                 .willReturn(1L);
 
-        Long cartId = cartService.addProductToCart("cyh6099@gmail.com", 1L);
+        Long cartId = cartService.createCartItem("cyh6099@gmail.com", 1L);
 
         Assertions.assertThat(cartId).isPositive();
     }
@@ -53,7 +53,7 @@ class CartServiceTest {
         given(memberDao.findByEmail(any()))
                 .willReturn(Optional.empty());
 
-        assertThatThrownBy(() -> cartService.addProductToCart("cyh6099@gmail.com", 1L))
+        assertThatThrownBy(() -> cartService.createCartItem("cyh6099@gmail.com", 1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
@@ -66,7 +66,7 @@ class CartServiceTest {
         given(productDao.findById(any()))
                 .willReturn(Optional.empty());
 
-        assertThatThrownBy(() -> cartService.addProductToCart("cyh6099@gmail.com", 1L))
+        assertThatThrownBy(() -> cartService.createCartItem("cyh6099@gmail.com", 1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 상품입니다.");
     }

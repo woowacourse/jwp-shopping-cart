@@ -22,8 +22,8 @@ public class CartRestController {
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<Object> addCart(@Member MemberRequest memberRequest, @PathVariable Long productId) {
-        Long cartId = cartService.addProductToCart(memberRequest.getEmail(), productId);
+    public ResponseEntity<Object> createCart(@Member MemberRequest memberRequest, @PathVariable Long productId) {
+        Long cartId = cartService.createCartItem(memberRequest.getEmail(), productId);
         return ResponseEntity.created(URI.create("carts/" + cartId)).build();
     }
 

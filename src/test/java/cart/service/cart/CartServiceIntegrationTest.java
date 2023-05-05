@@ -42,8 +42,8 @@ public class CartServiceIntegrationTest {
         Long chickenId = productDao.save(products.get(0));
         Long pizzaId = productDao.save(products.get(1));
 
-        cartService.addProductToCart(email, chickenId);
-        cartService.addProductToCart(email, pizzaId);
+        cartService.createCartItem(email, chickenId);
+        cartService.createCartItem(email, pizzaId);
 
         List<ProductResponse> productResponses = cartService.findProductsByUserIdOnCart(member.getEmail());
 
@@ -68,8 +68,8 @@ public class CartServiceIntegrationTest {
         Long chickenId = productDao.save(products.get(0));
         Long pizzaId = productDao.save(products.get(1));
 
-        cartService.addProductToCart(email, chickenId);
-        cartService.addProductToCart(email, pizzaId);
+        cartService.createCartItem(email, chickenId);
+        cartService.createCartItem(email, pizzaId);
 
         Assertions.assertDoesNotThrow(() -> cartService.deleteCartItem(email, pizzaId));
     }
