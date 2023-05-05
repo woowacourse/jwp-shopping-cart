@@ -49,42 +49,34 @@ class ProductDaoImplTest {
     @DisplayName("상품 전체를 조회한다.")
     @Test
     void find_all_product() {
-        // given
-        Product product1 = new Product("연필", "이미지url", 1000);
-        Product product2 = new Product("지우개", "이미지url", 1000);
-        productDao.insertProduct(product1);
-        productDao.insertProduct(product2);
-
         // when
         List<Product> result = productDao.findAll();
 
         // then
-        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.size()).isEqualTo(3);
     }
 
     @DisplayName("상품 아이디를 통해서 상품을 조회한다.")
     @Test
     void find_product_by_id() {
         // given
-        Product product1 = new Product("연필", "이미지url", 1000);
-        Product product2 = new Product("지우개", "이미지url", 1000);
-        Long product1Id = productDao.insertProduct(product1);
-        Long product2Id = productDao.insertProduct(product2);
+        Product product = new Product("볼팬", "이미지url", 1500);
+        Long id = productDao.insertProduct(product);
 
         // when
-        Optional<Product> result = productDao.findById(product1Id);
+        Optional<Product> result = productDao.findById(id);
 
         // then
-        assertThat(result.get().getName()).isEqualTo(product1.getName());
-        assertThat(result.get().getImageUrl()).isEqualTo(product1.getImageUrl());
-        assertThat(result.get().getPrice()).isEqualTo(product1.getPrice());
+        assertThat(result.get().getName()).isEqualTo(product.getName());
+        assertThat(result.get().getImageUrl()).isEqualTo(product.getImageUrl());
+        assertThat(result.get().getPrice()).isEqualTo(product.getPrice());
     }
 
     @DisplayName("상품의 ID를 통해 내용을 업데이트 한다.")
     @Test
     void update_product_by_id() {
         // given
-        Product product = new Product("연필", "이미지url", 1000);
+        Product product = new Product("볼팬", "이미지url", 1500);
         Long productId = productDao.insertProduct(product);
         Product updateProduct = new Product("지우개", "이미지url", 2000);
 
