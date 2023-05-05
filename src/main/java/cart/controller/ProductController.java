@@ -28,7 +28,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAll());
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable final Long id, @RequestBody @Valid final ProductRequest productRequest) {
         productService.update(id, productRequest);
         return ResponseEntity.noContent().build();
