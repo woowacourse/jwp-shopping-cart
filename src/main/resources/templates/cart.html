@@ -28,6 +28,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const credentials = localStorage.getItem('credentials');
+        console.log(credentials)
         if (!credentials) {
             alert('사용자 정보가 없습니다.');
             window.location.href = '/settings';
@@ -43,7 +44,7 @@
             const cartItems = response.data;
 
             let productElement = '';
-            // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
+
             cartItems.forEach(cartItem => {
                 productElement += `
                         <div class="cart-item">
