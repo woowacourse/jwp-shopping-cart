@@ -25,14 +25,14 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CartResponse>> getCarts(
         @AuthInfo final MemberInformation memberInformation) {
         final List<CartResponse> responses = cartService.findByEmail(memberInformation.getEmail());
         return ResponseEntity.ok().body(responses);
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<Void> addCart(@RequestParam final Long productId,
         @AuthInfo final MemberInformation memberInformation) {
         final CartCreateRequest request = new CartCreateRequest(productId,
@@ -41,7 +41,7 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("")
+    @DeleteMapping
     public ResponseEntity<Void> deleteCart(@RequestParam final Long id) {
         cartService.delete(id);
         return ResponseEntity.noContent().build();

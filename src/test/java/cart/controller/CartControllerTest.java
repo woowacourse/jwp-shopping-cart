@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.common.auth.AuthInfoHandlerMethodArgumentResolver;
+import cart.common.auth.AuthenticationCheckInterceptor;
 import cart.domain.auth.service.AuthService;
 import cart.domain.cart.service.CartService;
 import cart.dto.MemberInformation;
@@ -37,6 +38,8 @@ class CartControllerTest {
     private CartService cartService;
     @MockBean
     private AuthInfoHandlerMethodArgumentResolver authInfoHandlerMethodArgumentResolver;
+    @MockBean
+    private AuthenticationCheckInterceptor authenticationCheckInterceptor;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -47,13 +50,15 @@ class CartControllerTest {
     public void testGetCarts() throws Exception {
         //given
         final MemberInformation memberInformation = new MemberInformation("test@test.com", "password");
-        when(authInfoHandlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
-            .thenReturn(memberInformation);
         final List<CartResponse> cartResponses = List.of(
             new CartResponse(1L, "name1", "imageUrl1", 1000),
             new CartResponse(2L, "name2", "imageUrl2", 2000)
         );
 
+        when(authenticationCheckInterceptor.preHandle(any(), any(), any()))
+            .thenReturn(true);
+        when(authInfoHandlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
+            .thenReturn(memberInformation);
         when(cartService.findByEmail(any()))
             .thenReturn(cartResponses);
 
@@ -84,6 +89,8 @@ class CartControllerTest {
         final MemberInformation memberInformation = new MemberInformation("test@test.com", "password");
         when(authInfoHandlerMethodArgumentResolver.resolveArgument(any(), any(), any(), any()))
             .thenReturn(memberInformation);
+        when(authenticationCheckInterceptor.preHandle(any(), any(), any()))
+            .thenReturn(true);
 
         //when
         //then
@@ -99,6 +106,9 @@ class CartControllerTest {
     @DisplayName("장바구니 삭제 api")
     public void testDeleteCart() throws Exception {
         //given
+        when(authenticationCheckInterceptor.preHandle(any(), any(), any()))
+            .thenReturn(true);
+
         //when
         //then
         mockMvc.perform(delete("/cart?id=1")
