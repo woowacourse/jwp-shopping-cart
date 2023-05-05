@@ -79,4 +79,5 @@ class CartJdbcDaoTest {
         // then
         assertThat(cartsByMemberId2).hasSize(1);
     }
+
 }

@@ -40,4 +40,5 @@ public class ProductUpdateRequest {
     public Product toProduct() {
         return new Product(name, imageUrl, price);
     }
+
 }

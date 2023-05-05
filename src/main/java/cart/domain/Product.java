@@ -9,9 +9,9 @@ public class Product {
     private static final String URL_REGEX = "^((((https?|ftps?|gopher|telnet|nntp)://)|(mailto:|news:))" +
             "(%[0-9A-Fa-f]{2}|[-()_.!~*';/?:@&=+$,A-Za-z0-9])+)" +
             "([).!';/?:,][[:blank:]])?$";
+    private static final Pattern URL_PATTERN = Pattern.compile(URL_REGEX);
 
     private Integer id;
-
     private String name;
     private String imageUrl;
     private int price;
@@ -40,8 +40,7 @@ public class Product {
     }
 
     private void validateImageUrl(String imageUrl) {
-        Pattern urlPattern = Pattern.compile(URL_REGEX);
-        Matcher matcher = urlPattern.matcher(imageUrl);
+        Matcher matcher = URL_PATTERN.matcher(imageUrl);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("유효하지 않은 Url 입니다.");
         }

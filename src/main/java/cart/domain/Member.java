@@ -3,7 +3,6 @@ package cart.domain;
 public class Member {
 
     private final int id;
-
     private final String email;
     private final String password;
 
