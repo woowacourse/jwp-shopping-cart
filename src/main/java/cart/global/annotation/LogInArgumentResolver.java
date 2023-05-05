@@ -1,7 +1,6 @@
 package cart.global.annotation;
 
 import cart.auth.AuthAccount;
-import cart.global.exception.auth.CanNotFoundHeaderException;
 import cart.global.exception.auth.InvalidAuthorizationTypeException;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
