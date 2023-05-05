@@ -52,12 +52,6 @@ public class JdbcTemplateCartDao implements CartDao {
     };
 
     @Override
-    public int updateQuantity(CartEntity cart) {
-        String sql = "update carts set quntity = ? where user_id = ? and product_id = ?";
-        return jdbcTemplate.update(sql, cart.getQuantity(), cart.getUserId(), cart.getProductId());
-    }
-
-    @Override
     public int delete(int userId, int productId) {
         String sql = "delete from carts where user_id = ? and product_id = ?";
         return jdbcTemplate.update(sql, userId, productId);

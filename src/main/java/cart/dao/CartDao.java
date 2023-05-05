@@ -9,7 +9,5 @@ public interface CartDao {
 
     List<CartEntity> selectByUserId(int userId);
 
-    int updateQuantity(CartEntity cart);
-
     int delete(int userId, int productId);
 }
