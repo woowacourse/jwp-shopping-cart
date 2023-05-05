@@ -53,4 +53,17 @@ class CartServiceTest {
         assertThat(actual).extracting("id")
                 .containsExactly(productId1, productId2);
     }
+
+    @Test
+    @DisplayName("장바구니의 상품을 삭제한다")
+    void delete() {
+        final Long productId = productService.save("치킨", 1000, null);
+        final Long userId = userService.save("ASH@mail.com", "12121212");
+        final Long id = cartService.save(userId, productId);
+
+        cartService.delete(id);
+
+        final List<CartItem> cartItems = cartService.findByUserId(userId);
+        assertThat(cartItems.size()).isEqualTo(0);
+    }
 }

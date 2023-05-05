@@ -56,4 +56,16 @@ public class JdbcCartDaoTest {
 
         assertThat(jdbcCartDao.findByUserId(userId)).extracting("productId").contains(productId1, productId2);
     }
+
+    @Test
+    @DisplayName("cart 삭제 테스트")
+    void deleteTest() {
+        final Long productId = jdbcProductDao.insert(new Product("name", 1000, null));
+        final Long userId = jdbcUserDao.insert(new User("io@mail.com", "password"));
+
+        final Long id = jdbcCartDao.insert(userId, productId);
+        jdbcCartDao.deleteById(id);
+
+        assertThat(jdbcCartDao.findByUserId(userId).size()).isEqualTo(0);
+    }
 }
