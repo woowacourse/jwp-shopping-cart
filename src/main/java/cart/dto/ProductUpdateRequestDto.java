@@ -3,8 +3,6 @@ package cart.dto;
 import javax.validation.constraints.NotNull;
 
 public class ProductUpdateRequestDto {
-    @NotNull(message = "상품 id는 비어있으면 안됩니다.")
-    private Long id;
     @NotNull(message = "상품 이름은 비어있으면 안됩니다.")
     private String name;
     @NotNull(message = "상품 이미지는 비어있으면 안됩니다.")
@@ -15,15 +13,10 @@ public class ProductUpdateRequestDto {
     public ProductUpdateRequestDto() {
     }
 
-    public ProductUpdateRequestDto(Long id, String name, String image, Integer price) {
-        this.id = id;
+    public ProductUpdateRequestDto(String name, String image, Integer price) {
         this.name = name;
         this.image = image;
         this.price = price;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {
