@@ -1,5 +1,6 @@
 package cart.authorization;
 
+import cart.exception.UnauthorizedMemberException;
 import cart.member.dao.MemberDao;
 import cart.member.domain.Member;
 import org.springframework.beans.factory.annotation.Autowired;
