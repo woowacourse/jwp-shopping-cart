@@ -1,6 +1,8 @@
 package cart.controller;
 
+import cart.controller.dto.MemberResponse;
 import cart.controller.dto.ProductResponse;
+import cart.domain.Member;
 import cart.domain.Product;
 import cart.service.MemberService;
 import cart.service.ProductService;
@@ -48,9 +50,34 @@ class ViewControllerTest {
                 .andExpect(view().name("index"));
     }
 
-    @DisplayName("/admin으로 GET 요청을 했을 때 admin template을 반환한다.")
+    @DisplayName("'/cart'으로 GET 요청을 했을 때 cart template을 반환한다.")
     @Test
-    void findAllProducts() throws Exception {
+    void getCartPage() throws Exception {
+        // when, then
+        mockMvc.perform(get("/cart"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("cart"));
+    }
+
+    @DisplayName("'/settings'으로 GET 요청을 했을 때 settings template을 반환한다.")
+    @Test
+    void getSettingsPage() throws Exception {
+        // given
+        Member member = new Member(1L, "a@a.com", "password1");
+        given(memberService.findAll()).willReturn(List.of(MemberResponse.from(member)));
+
+        // when, then
+        mockMvc.perform(get("/settings"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("members"))
+                .andExpect(model().attribute("members", hasItem(hasProperty("email", is("a@a.com")))))
+                .andExpect(model().attribute("members", hasItem(hasProperty("password", is("password1")))))
+                .andExpect(view().name("settings"));
+    }
+
+    @DisplayName("'/admin'으로 GET 요청을 했을 때 admin template을 반환한다.")
+    @Test
+    void getAdminPage() throws Exception {
         // given
         Product product = new Product(1L, "치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
         given(productService.findAll()).willReturn(List.of(ProductResponse.from(product)));
