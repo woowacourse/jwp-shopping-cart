@@ -18,24 +18,24 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductRequest productRequest) {
+    public ResponseEntity<Void> create(@RequestBody @Valid final ProductRequest productRequest) {
         final long id = productService.save(productRequest);
-        return ResponseEntity.created(URI.create("/admin/" + id)).build(); // TODO 상품 상세페이지
+        return ResponseEntity.created(URI.create("/admin/" + id)).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getProducts() {
+    public ResponseEntity<List<ProductResponse>> findAll() {
         return ResponseEntity.ok(productService.findAll());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable final Long id, @RequestBody @Valid final ProductRequest productRequest) {
+    public ResponseEntity<Void> update(@PathVariable final Long id, @RequestBody @Valid final ProductRequest productRequest) {
         productService.update(id, productRequest);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable final Long id) {
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
         productService.delete(id);
         return ResponseEntity.noContent().build();
     }
