@@ -4,13 +4,15 @@ import cart.domain.product.Product;
 
 public class ResponseCartDto {
 
+    private final Long productId;
     private final String productImage;
     private final String productName;
     private final int productPrice;
     private final int quantity;
 
-    private ResponseCartDto(final String productImage, final String productName,
+    private ResponseCartDto(final Long productId, final String productImage, final String productName,
                             final int productPrice, final int quantity) {
+        this.productId = productId;
         this.productImage = productImage;
         this.productName = productName;
         this.productPrice = productPrice;
@@ -18,8 +20,12 @@ public class ResponseCartDto {
     }
 
     public static ResponseCartDto of(final Product product, final int quantity) {
-        return new ResponseCartDto(product.getImage(), product.getName().getValue(), product.getPrice().getValue(),
-                quantity);
+        return new ResponseCartDto(product.getId(), product.getImage(), product.getName().getValue(),
+                product.getPrice().getValue(), quantity);
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
     public String getProductImage() {
