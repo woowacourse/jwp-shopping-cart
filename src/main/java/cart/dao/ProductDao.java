@@ -76,7 +76,7 @@ public class ProductDao {
 
     public void delete(final Long id) {
         final String sql = "DELETE FROM product WHERE id = ?";
-        
+
         jdbcTemplate.update(sql, id);
     }
 }

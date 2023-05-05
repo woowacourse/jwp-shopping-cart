@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -35,7 +35,11 @@ public class CustomerDao {
     }
 
     public Long save(final CustomerEntity customerEntity) {
-        return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(customerEntity))
+        final MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("email", customerEntity.getEmail());
+        params.addValue("password", customerEntity.getPassword());
+
+        return simpleJdbcInsert.executeAndReturnKey(params)
             .longValue();
     }
 

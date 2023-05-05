@@ -15,12 +15,11 @@ final class Email {
     }
 
     public void validate(String value) {
-        Pattern patter = Pattern.compile(emailRegex);
-        Matcher mater = patter.matcher(value);
-        if (mater.matches()) {
-            return;
+        final Pattern patter = Pattern.compile(emailRegex);
+        final Matcher mater = patter.matcher(value);
+        if (!mater.matches()) {
+            throw new IllegalArgumentException("잘못된 이메일 형식입니다.");
         }
-        throw new IllegalArgumentException("잘못된 이메일 형식입니다.");
     }
 
     public String getValue() {

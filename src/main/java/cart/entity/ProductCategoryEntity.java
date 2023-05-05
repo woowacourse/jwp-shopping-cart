@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public final class ProductCategoryEntity {
 
-    private Long id;
-    private Long productId;
-    private Long categoryId;
+    private final Long id;
+    private final Long productId;
+    private final Long categoryId;
 
     public ProductCategoryEntity(final Long productId, final Long categoryId) {
         this(null, productId, categoryId);

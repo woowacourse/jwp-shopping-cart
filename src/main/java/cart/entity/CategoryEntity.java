@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public final class CategoryEntity {
 
-    private Long id;
-    private String name;
+    private final Long id;
+    private final String name;
 
     public CategoryEntity(final Long id, final String name) {
         this.id = id;

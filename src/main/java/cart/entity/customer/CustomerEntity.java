@@ -4,13 +4,9 @@ import java.util.Objects;
 
 public final class CustomerEntity {
 
-    private Long id;
-    private Email email;
-    private String password;
-
-    CustomerEntity() {
-
-    }
+    private final Long id;
+    private final Email email;
+    private final String password;
 
     public CustomerEntity(Long id, String email, String password) {
         this.id = id;
