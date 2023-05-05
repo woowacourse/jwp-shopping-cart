@@ -1,4 +1,4 @@
-package cart.study.materials;
+package study.materials;
 
 import java.util.Objects;
 

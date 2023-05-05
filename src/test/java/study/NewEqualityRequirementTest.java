@@ -1,4 +1,4 @@
-package cart.study;
+package study;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -7,10 +7,10 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import cart.study.materials.Box;
-import cart.study.materials.FieldCompareProduct;
-import cart.study.materials.IdCompareProduct;
-import cart.study.materials.NoDuplicateBox;
+import study.materials.Box;
+import study.materials.FieldCompareProduct;
+import study.materials.IdCompareProduct;
+import study.materials.NoDuplicateBox;
 
 @DisplayName("동등성에 관련한 비즈니스 룰이 바뀌었을 때, 어떻게 반영하는가?")
 // 객체지향 세계에서 반영해도 괜찮은가? 이 행위가 데이터 자체에 영향을 미치지는 않는가?
@@ -129,21 +129,7 @@ public class NewEqualityRequirementTest {
 
     /*
         엔티티의 EQ & HC 오버라이딩 기준
-        Id로 비교해야 하는 경우
-             DB가 없다고 가정했을 때, 상품을 동일성(메모리 주소)으로 비교하도록 설계했다면?
-             -> 동일한 필드를 가지는 도메인 객체를 허용하고, 동일한 인스턴스를 추가할 수 없게 막는 것이 비즈니스적 결정사항이다.
-             따라서 영속화 맥락을 고려했을 땐 Id로 비교를 이어나가야 한다.
-             -> Id의 목적은 '데이터 자체'의 식별이기 때문이다. (ex) 테이블이라면 한 행을 식별하는 것이 목적이다)
-                (인스턴스의 생명 주기와 데이터의 생명 주기는 다르다. 영속화 후 인스턴스화 했을 때는 메모리 주소가 달라진다. 따라서 '데이터 자체'를 식별하기 위해서는 Id를 사용해야 한다.)
 
-        Id를 빼고 비교해야 하는 경우
-            비즈니스 로직 안에서 결정해버리면 잘못된 데이터가 DB까지 내려갈 일이 없다. (정말 불안하다면, DB에다가도 동일한 제약조건을 추가하면 오히려 가장 안전한 것 아닌가?)
-            이 경우에도 Id로 식별하거나 Id를 포함해 식별한다면, '도메인의 저장 방식'을 도메인이 신경쓰는 꼴이므로,
-            비즈니스 룰이 있는 경우에 한해서 Id를 도메인의 식별에 활용하는 것은 책임을 훨씬 벗어난 행위다.
-
-        이렇게 직접 판단을 끝내고 찾아보니 이런 Stackoverflow 답변이 있다.
-        누군가와 의견을 나눈 셈 쳐야겠다.
-        미리 찾아봤으면 시간을 아꼈겠지만, 과연 이렇게 직접 판단해봤을까 싶긴 하다.
-        https://stackoverflow.com/a/4388453
+        README 참고
     */
 }
