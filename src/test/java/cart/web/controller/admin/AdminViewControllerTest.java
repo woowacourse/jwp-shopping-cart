@@ -2,6 +2,7 @@ package cart.web.controller.admin;
 
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
+import cart.web.controller.auth.LoginCheckInterceptor;
 import cart.web.controller.auth.LoginUserArgumentResolver;
 import cart.web.controller.config.WebConfig;
 import cart.web.service.ProductService;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
                 classes = {
-                        LoginUserArgumentResolver.class, WebConfig.class
+                        WebConfig.class, LoginCheckInterceptor.class, LoginUserArgumentResolver.class
                 }
         )
 )

@@ -2,9 +2,12 @@ package cart.domain.user;
 
 public final class User {
 
-    private final Long id;
-    private final UserEmail userEmail;
-    private final UserPassword userPassword;
+    private Long id;
+    private UserEmail userEmail;
+    private UserPassword userPassword;
+
+    private User() {
+    }
 
     public User(final String emailAddress, final String password) {
         this(null, emailAddress, password);

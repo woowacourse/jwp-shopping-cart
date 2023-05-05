@@ -1,6 +1,9 @@
 package cart.web.controller.product;
 
 import cart.domain.product.ProductCategory;
+import cart.web.controller.auth.LoginCheckInterceptor;
+import cart.web.controller.auth.LoginUserArgumentResolver;
+import cart.web.controller.config.WebConfig;
 import cart.web.controller.product.dto.ProductRequest;
 import cart.web.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,7 +30,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ProductRestController.class)
+@WebMvcTest(value = ProductRestController.class,
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {
+                        WebConfig.class, LoginCheckInterceptor.class, LoginUserArgumentResolver.class
+                }
+        )
+)
 class ProductRestControllerTest {
 
     private ProductRequest productRequest;
@@ -73,7 +85,7 @@ class ProductRestControllerTest {
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", Matchers.containsString("상품 이름은 비어있을 수 없습니다.")))
-                .andExpect(jsonPath("$.message", Matchers.containsString( "상품 가격이 입력되지 않았습니다. 상품 가격을 입력해주세요")))
+                .andExpect(jsonPath("$.message", Matchers.containsString("상품 가격이 입력되지 않았습니다. 상품 가격을 입력해주세요")))
                 .andExpect(jsonPath("$.message", Matchers.containsString("상품 카테고리는 비어있을 수 없습니다.")));
     }
 
@@ -107,7 +119,7 @@ class ProductRestControllerTest {
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", Matchers.containsString("상품 이름은 비어있을 수 없습니다.")))
-                .andExpect(jsonPath("$.message", Matchers.containsString( "상품 가격이 입력되지 않았습니다. 상품 가격을 입력해주세요")))
+                .andExpect(jsonPath("$.message", Matchers.containsString("상품 가격이 입력되지 않았습니다. 상품 가격을 입력해주세요")))
                 .andExpect(jsonPath("$.message", Matchers.containsString("상품 카테고리는 비어있을 수 없습니다.")));
     }
 

@@ -3,12 +3,17 @@ package cart.web.controller.cart;
 import cart.domain.cart.CartProduct;
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
+import cart.web.controller.auth.LoginCheckInterceptor;
+import cart.web.controller.auth.LoginUserArgumentResolver;
+import cart.web.controller.config.WebConfig;
 import cart.web.service.CartService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -21,7 +26,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = CartRestController.class)
+@WebMvcTest(value = CartRestController.class,
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {
+                        WebConfig.class, LoginCheckInterceptor.class, LoginUserArgumentResolver.class
+                }
+        )
+)
 class CartRestControllerTest {
 
     private static final String COOKIE_VALUE = "Basic : YUBhLmNvbTpwYXNzd29yZDE=";

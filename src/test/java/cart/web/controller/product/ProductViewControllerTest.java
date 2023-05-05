@@ -3,12 +3,17 @@ package cart.web.controller.product;
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
 import cart.web.controller.admin.AdminViewController;
+import cart.web.controller.auth.LoginCheckInterceptor;
+import cart.web.controller.auth.LoginUserArgumentResolver;
+import cart.web.controller.config.WebConfig;
 import cart.web.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -17,7 +22,13 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest({ProductViewController.class, AdminViewController.class})
+@WebMvcTest(value = {ProductViewController.class, AdminViewController.class},
+        excludeFilters = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        classes = {
+                WebConfig.class, LoginCheckInterceptor.class, LoginUserArgumentResolver.class
+        }
+))
 class ProductViewControllerTest {
 
     @Autowired
