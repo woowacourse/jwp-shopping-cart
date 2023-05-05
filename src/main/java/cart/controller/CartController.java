@@ -45,7 +45,15 @@ public class CartController {
     @PostMapping("{productId}")
     public ResponseEntity<CartResponse> save(@PathVariable final Long productId, @AuthSubject MemberRequest memberRequest) {
         final Long cartId = cartService.addCart(productId, memberRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CartResponse(cartId, memberRequest.getId(), productId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(getCartResponse(cartId, memberRequest, productId));
+    }
+    
+    private static CartResponse getCartResponse(final Long cartId, final MemberRequest memberRequest, final Long productId) {
+        return CartResponse.builder()
+                .id(cartId)
+                .memberId(memberRequest.getId())
+                .productId(productId)
+                .build();
     }
     
     @DeleteMapping("{cartId}")

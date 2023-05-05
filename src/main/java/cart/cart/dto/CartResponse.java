@@ -1,6 +1,7 @@
 package cart.cart.dto;
 
 import cart.cart.domain.Cart;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,6 +14,7 @@ public class CartResponse {
     private final Long memberId;
     private final Long productId;
     
+    @Builder
     public CartResponse(final Long id, final Long memberId, final Long productId) {
         this.id = id;
         this.memberId = memberId;
