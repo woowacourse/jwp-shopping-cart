@@ -38,8 +38,8 @@ public class GlobalExceptionHandler {
                 .body(new ExceptionResponse(e.getMessage()));
     }
 
-    @ExceptionHandler({AuthenticationException.class, InvalidBasicCredentialException.class})
-    public ResponseEntity<ExceptionResponse> handleAuthenticationException(final RuntimeException e) {
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ExceptionResponse> handleAuthenticationException(final AuthenticationException e) {
         logger.warn(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ExceptionResponse("인증에 실패했습니다."));
