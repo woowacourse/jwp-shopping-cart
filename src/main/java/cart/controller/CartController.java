@@ -6,6 +6,7 @@ import cart.dto.CartCreateRequest;
 import cart.dto.CartResponse;
 import cart.dto.MemberInformation;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +39,7 @@ public class CartController {
         final CartCreateRequest request = new CartCreateRequest(productId,
             memberInformation.getEmail());
         cartService.create(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping
