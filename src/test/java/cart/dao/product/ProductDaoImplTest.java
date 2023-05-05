@@ -38,7 +38,7 @@ class ProductDaoImplTest {
 
         // when
         Long savedId = productDao.insertProduct(product);
-        Optional<Product> result  = productDao.findById(savedId);
+        Optional<Product> result = productDao.findById(savedId);
 
         // then
         assertThat(result.get().getName()).isEqualTo(product.getName());

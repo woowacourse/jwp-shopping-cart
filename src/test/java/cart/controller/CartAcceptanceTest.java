@@ -36,7 +36,7 @@ class CartAcceptanceTest {
     @DisplayName("사용자가 상품을 장바구니에 담는 것을 성공한다.")
     void member_put_product_success() {
         // given
-        MemberRequest member = new MemberRequest("ako@wooteco.com","ako");
+        MemberRequest member = new MemberRequest("ako@wooteco.com", "ako");
         CartItemRequest cartItemRequest = new CartItemRequest(1L);
         // when
         ExtractableResponse<Response> result = given()
@@ -72,9 +72,9 @@ class CartAcceptanceTest {
 
     private static Stream<Arguments> createWrongMemberORProduct() {
         return Stream.of(
-            Arguments.arguments(new MemberRequest("fail@wooteco.com","fail"), new CartItemRequest(1L)),
-            Arguments.arguments(new MemberRequest("ako@wooteco.com","ako"), new CartItemRequest(100L)),
-            Arguments.arguments(new MemberRequest("fail@wooteco.com","fail"), new CartItemRequest(100L))
+            Arguments.arguments(new MemberRequest("fail@wooteco.com", "fail"), new CartItemRequest(1L)),
+            Arguments.arguments(new MemberRequest("ako@wooteco.com", "ako"), new CartItemRequest(100L)),
+            Arguments.arguments(new MemberRequest("fail@wooteco.com", "fail"), new CartItemRequest(100L))
         );
     }
 
@@ -82,7 +82,7 @@ class CartAcceptanceTest {
     @DisplayName("사용자가 자신의 장바구니 상품을 조회한다.")
     void member_find_cart_item_success() {
         // given
-        MemberRequest member = new MemberRequest("ako@wooteco.com","ako");
+        MemberRequest member = new MemberRequest("ako@wooteco.com", "ako");
 
         // when
         ExtractableResponse<Response> result = given()
@@ -101,7 +101,7 @@ class CartAcceptanceTest {
     @DisplayName("잘못된 사용자가 자신의 장바구니 상품을 조회한다.")
     void member_find_cart_item_fail() {
         // given
-        MemberRequest member = new MemberRequest("fail@wooteco.com","fail");
+        MemberRequest member = new MemberRequest("fail@wooteco.com", "fail");
 
         // when
         ExtractableResponse<Response> result = given()
@@ -119,7 +119,7 @@ class CartAcceptanceTest {
     @DisplayName("사용자가 장바구니 상품을 삭제한다.")
     void member_delete_cart_item_success() {
         // given
-        final MemberRequest member = new MemberRequest("ako@wooteco.com","ako");
+        final MemberRequest member = new MemberRequest("ako@wooteco.com", "ako");
         final CartItemRequest cartItemRequest = new CartItemRequest(1L);
 
         // when
@@ -154,9 +154,9 @@ class CartAcceptanceTest {
 
     private static Stream<Arguments> deleteWrongMemberORProduct() {
         return Stream.of(
-            Arguments.arguments(new MemberRequest("fail@wooteco.com","fail"), new CartItemRequest(1L)),
-            Arguments.arguments(new MemberRequest("ako@wooteco.com","ako"), new CartItemRequest(100L)),
-            Arguments.arguments(new MemberRequest("fail@wooteco.com","fail"), new CartItemRequest(100L))
+            Arguments.arguments(new MemberRequest("fail@wooteco.com", "fail"), new CartItemRequest(1L)),
+            Arguments.arguments(new MemberRequest("ako@wooteco.com", "ako"), new CartItemRequest(100L)),
+            Arguments.arguments(new MemberRequest("fail@wooteco.com", "fail"), new CartItemRequest(100L))
         );
     }
 }

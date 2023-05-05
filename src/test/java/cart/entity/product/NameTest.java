@@ -1,9 +1,7 @@
 package cart.entity.product;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
-import cart.entity.member.Email;
 import cart.exception.common.NullOrBlankException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
