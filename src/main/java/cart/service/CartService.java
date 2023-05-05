@@ -38,12 +38,12 @@ public class CartService {
 
     @Transactional
     public void deleteProduct(Long memberId, Long cartId) {
-        validateCartId(cartId);
+        validateCartId(memberId, cartId);
         cartDao.delete(memberId, cartId);
     }
 
-    private void validateCartId(Long cartId) {
-        if (!cartDao.existsById(cartId)) {
+    private void validateCartId(Long memberId, Long cartId) {
+        if (!cartDao.existsByIdAndMemberId(cartId, memberId)) {
             throw new CartNotFoundException();
         }
     }

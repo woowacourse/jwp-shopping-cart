@@ -51,9 +51,9 @@ public class CartDao {
         jdbcTemplate.update(sql, memberId, cartId);
     }
 
-    public boolean existsById(Long id) {
-        String sql = "SELECT COUNT(*) FROM CART WHERE id = ? LIMIT 1";
-        return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
+    public boolean existsByIdAndMemberId(Long cartId, Long memberId) {
+        String sql = "SELECT COUNT(*) FROM CART WHERE id = ? AND member_id = ? LIMIT 1";
+        return jdbcTemplate.queryForObject(sql, Integer.class, cartId, memberId) > 0;
     }
 
     public boolean existsByProductId(Long productId) {
