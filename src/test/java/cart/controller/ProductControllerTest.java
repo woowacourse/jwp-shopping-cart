@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.ProductCreationRequest;
-import cart.controller.dto.ProductUpdateRequest;
+import cart.controller.dto.request.ProductCreationRequest;
+import cart.controller.dto.request.ProductUpdateRequest;
 import cart.dao.ProductJdbcDao;
 import cart.entity.ProductEntity;
 import io.restassured.RestAssured;

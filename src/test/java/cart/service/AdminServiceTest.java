@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.controller.dto.ProductCreationRequest;
-import cart.controller.dto.ProductUpdateRequest;
+import cart.controller.dto.request.ProductCreationRequest;
+import cart.controller.dto.request.ProductUpdateRequest;
 import cart.domain.dto.ProductDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

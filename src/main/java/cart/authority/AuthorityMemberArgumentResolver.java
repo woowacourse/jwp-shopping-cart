@@ -1,7 +1,7 @@
 package cart.authority;
 
 
-import cart.controller.dto.MemberIdRequest;
+import cart.controller.dto.request.MemberIdRequest;
 import cart.dao.MemberDao;
 import cart.entity.MemberEntity;
 import org.springframework.core.MethodParameter;

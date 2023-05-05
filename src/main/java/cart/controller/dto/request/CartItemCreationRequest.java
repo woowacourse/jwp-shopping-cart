@@ -1,4 +1,4 @@
-package cart.controller.dto;
+package cart.controller.dto.request;
 
 public class CartItemCreationRequest {
     private Long productId;
