@@ -1,6 +1,8 @@
 package cart.controller;
 
+import cart.dto.MemberResponse;
 import cart.dto.ProductResponse;
+import cart.service.MemberService;
 import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -25,6 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PageControllerTest {
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private MemberService memberService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -57,6 +62,22 @@ public class PageControllerTest {
                 .andExpectAll(
                         status().isOk(),
                         model().attribute("products", equalTo(List.of(firstProductResponse, secondProductResponse)))
+                )
+                .andDo(print());
+    }
+
+    @Test
+    void 세팅_페이지를_가져온다() throws Exception {
+        final MemberResponse firstMemberResponse = new MemberResponse(1L, "turtle@test.com", "pw1");
+        final MemberResponse secondMemberResponse = new MemberResponse(2L, "hongo@test.com", "pw2");
+
+        given(memberService.findAll()).willReturn(List.of(firstMemberResponse, secondMemberResponse));
+
+        mockMvc.perform(get("/settings"))
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        status().isOk(),
+                        model().attribute("members", equalTo(List.of(firstMemberResponse, secondMemberResponse)))
                 )
                 .andDo(print());
     }

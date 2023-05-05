@@ -7,8 +7,8 @@
   - [x] 상품 삭제
 
 ### 사용자
-  - [ ] 사용자 생성
-  - [ ] 사용자 리스트 조회
+  - [x] 사용자 생성
+  - [x] 사용자 리스트 조회
 
 ### 장바구니
   - [ ] 장바구니에 상품 추가
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS CART_PRODUCT
   MEMBER_ID   INT        UNSIGNED NOT NULL,
   PRIMARY KEY (ID),
   FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCT (ID) ON DELETE CASCADE,
-  FOREIGN KEY (MEMBER_ID REFERENCES MEMBER (ID) ON DELETE CASCADE
+  FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER (ID) ON DELETE CASCADE
   );
 ```
 
@@ -97,11 +97,11 @@ CREATE TABLE IF NOT EXISTS CART_PRODUCT
 - [x] 상품 리스트 출력
 - [x] 상품 생성
 - [x] 상품 정보 업데이트
-- [ ] 상품 삭제
+- [x] 상품 삭제
 
 ### 세팅 페이지
-- [ ] 사용자 리스트 출력
-- [ ] 사용자 선택
+- [x] 사용자 리스트 출력
+- [x] 사용자 선택
 
 ### 장바구니 페이지
 - [ ] 장바구니에 담긴 상품 리스트 출력
