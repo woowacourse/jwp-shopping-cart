@@ -2,12 +2,12 @@ package cart.dto;
 
 import cart.entity.ProductEntity;
 
-public class InsertRequestDto {
+public class InsertProductRequestDto {
     private final String name;
     private final String image;
     private final int price;
 
-    public InsertRequestDto(final String name, final String image, final int price) {
+    public InsertProductRequestDto(final String name, final String image, final int price) {
         this.name = name;
         this.image = image;
         this.price = price;

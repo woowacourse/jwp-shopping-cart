@@ -3,6 +3,7 @@ package cart.controller;
 import cart.dto.ProductResponseDto;
 import cart.dto.UserResponseDto;
 import cart.service.CartService;
+import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,15 @@ public class ViewControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
+    private ProductService productService;
+
+    @MockBean
     private CartService cartService;
 
     @DisplayName("index View 테스트")
     @Test
     void indexTest() throws Exception {
-        when(cartService.getProducts()).thenReturn(List.of(
+        when(productService.getProducts()).thenReturn(List.of(
                 new ProductResponseDto(1, "image1", "name1", 1000),
                 new ProductResponseDto(2, "image2", "name2", 2000)
         ));
@@ -41,7 +45,7 @@ public class ViewControllerTest {
     @DisplayName("admin View 테스트")
     @Test
     void adminTest() throws Exception {
-        when(cartService.getProducts()).thenReturn(List.of(
+        when(productService.getProducts()).thenReturn(List.of(
                 new ProductResponseDto(1, "image1", "name1", 1000),
                 new ProductResponseDto(2, "image2", "name2", 2000)
         ));

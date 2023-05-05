@@ -9,6 +9,7 @@ import cart.dto.ProductResponseDto;
 import cart.service.CartService;
 import java.util.List;
 
+import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest
-public class CartApiControllerTest {
+public class ProductApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private ProductService productService;
 
     @MockBean
     private CartService cartService;
@@ -46,7 +50,7 @@ public class CartApiControllerTest {
     @DisplayName("GET /product 성공 테스트")
     @Test
     void getTest() throws Exception {
-        when(cartService.getProducts()).thenReturn(List.of(
+        when(productService.getProducts()).thenReturn(List.of(
                 new ProductResponseDto(1, "image1", "name1", 1000),
                 new ProductResponseDto(2, "image2", "name2", 2000)));
 

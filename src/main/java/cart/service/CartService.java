@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartService {
-    private final static int MINAFFECTEDROW = 1;
 
     private final ProductDao productDao;
     private final UserDao userDao;
@@ -24,37 +23,6 @@ public class CartService {
         this.productDao = productDao;
         this.userDao = userDao;
         this.cartDao = cartDao;
-    }
-
-    public void addProduct(final InsertRequestDto insertRequestDto) {
-        productDao.insert(insertRequestDto.toEntity());
-    }
-
-    public List<ProductResponseDto> getProducts() {
-        final List<ProductEntity> products = productDao.selectAll();
-
-        return products.stream()
-                .map(product -> new ProductResponseDto(
-                        product.getId(),
-                        product.getImage(),
-                        product.getName(),
-                        product.getPrice()
-                ))
-                .collect(Collectors.toUnmodifiableList());
-    }
-
-    public void updateProduct(final UpdateRequestDto updateRequestDto) {
-        int affectedRow = productDao.update(updateRequestDto.toEntity());
-        if (affectedRow < MINAFFECTEDROW) {
-            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
-        }
-    }
-
-    public void deleteProduct(final int productId) {
-        int affectedRow = productDao.delete(productId);
-        if (affectedRow < MINAFFECTEDROW) {
-            throw new IllegalArgumentException("존재하지 않는 상품입니다.");
-        }
     }
 
     public List<UserResponseDto> getUsers() {
