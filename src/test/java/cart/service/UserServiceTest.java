@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.auth.UserInfo;
+import cart.dao.CartDao;
 import cart.dao.UserDao;
 import cart.entity.User;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +26,8 @@ class UserServiceTest {
 
     @Mock
     private UserDao userDao;
+    @Mock
+    private CartDao cartDao;
 
     @DisplayName("존재하지 않는 유저 이메일로 장바구니 추가, 제거, 조회를 하면 예외가 발생한다")
     @Test
@@ -53,7 +56,7 @@ class UserServiceTest {
     void notExistProduct() {
         //given
         when(userDao.findByEmail(anyString())).thenReturn(Optional.of(new User(1L, "email@email", "password")));
-        when(userDao.addProductToCart(anyLong(), anyLong())).thenThrow(DataIntegrityViolationException.class);
+        when(cartDao.addProductToCart(anyLong(), anyLong())).thenThrow(DataIntegrityViolationException.class);
 
         //then
         assertThatThrownBy(() -> userService.addProductToCart(new UserInfo("email@email", "password"), 1L))

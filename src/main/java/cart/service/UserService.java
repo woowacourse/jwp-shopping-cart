@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.auth.UserInfo;
+import cart.dao.CartDao;
 import cart.dao.UserDao;
 import cart.dto.ProductResponse;
 import cart.dto.UserResponse;
@@ -17,10 +18,13 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private static final String INVALID_USER_INFO = "잘못된 유저 정보입니다.";
-    private final UserDao userDao;
 
-    public UserService(final UserDao userDao) {
+    private final UserDao userDao;
+    private final CartDao cartDao;
+
+    public UserService(final UserDao userDao, final CartDao cartDao) {
         this.userDao = userDao;
+        this.cartDao = cartDao;
     }
 
     public List<UserResponse> findAllUsers() {
@@ -34,7 +38,7 @@ public class UserService {
         final User user = getUser(userInfo);
 
         try {
-            return userDao.addProductToCart(user.getId(), productId);
+            return cartDao.addProductToCart(user.getId(), productId);
         } catch (DataIntegrityViolationException dataIntegrityViolationException) {
             throw new IllegalArgumentException("존재하지 않는 상품입니다.");
         }
@@ -49,13 +53,13 @@ public class UserService {
     public void removeProductInCart(final UserInfo userInfo, final Long userProductId) {
         final User user = getUser(userInfo);
 
-        userDao.deleteProductInCart(user.getId(), userProductId);
+        cartDao.deleteProductInCart(user.getId(), userProductId);
     }
 
     public List<ProductResponse> getAllProductsInCart(final UserInfo userInfo) {
         final User user = getUser(userInfo);
 
-        return userDao.findAllProductsInCart(user.getId()).stream()
+        return cartDao.findAllProductsInCart(user.getId()).stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
