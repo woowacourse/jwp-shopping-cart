@@ -20,7 +20,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<ProductResponse> all = jwpCartService.findAll();
+        List<ProductResponse> all = jwpCartService.findAllProducts();
         model.addAttribute("products", all);
         return "index";
     }

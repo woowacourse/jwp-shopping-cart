@@ -33,7 +33,7 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        List<ProductResponse> all = jwpCartService.findAll();
+        List<ProductResponse> all = jwpCartService.findAllProducts();
         model.addAttribute("products", all);
         return "admin";
     }
@@ -42,7 +42,7 @@ public class AdminController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequest productRequest) {
-        jwpCartService.add(productRequest);
+        jwpCartService.addProduct(productRequest);
         return ResponseEntity.created(URI.create("/admin/products")).build();
     }
 
@@ -50,14 +50,14 @@ public class AdminController {
     @ResponseBody
     public ResponseEntity<Void> updateProduct(@PathVariable("id") Long id,
         @RequestBody @Valid ProductRequest productRequest) {
-        jwpCartService.updateById(productRequest, id);
+        jwpCartService.updateProductById(productRequest, id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/admin/products/{id}")
     @ResponseBody
     public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
-        jwpCartService.deleteById(id);
+        jwpCartService.deleteProductById(id);
         return ResponseEntity.ok().build();
     }
 }

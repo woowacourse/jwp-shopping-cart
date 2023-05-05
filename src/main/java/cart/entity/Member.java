@@ -1,12 +1,22 @@
 package cart.entity;
 
 public class Member {
-    private String email;
-    private String password;
+    private final Long id;
+    private final String email;
+    private final String password;
 
-    public Member(String email, String password) {
+    private Member(Long id, String email, String password) {
+        this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public static Member of(Long id, String email, String password) {
+        return new Member(id, email, password);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
