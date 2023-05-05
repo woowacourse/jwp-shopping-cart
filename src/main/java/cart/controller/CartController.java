@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.configuration.AuthenticationPrincipal;
+import cart.authentication.AuthenticationPrincipal;
 import cart.controller.dto.AuthInfo;
 import cart.controller.dto.request.AddCartRequest;
 import cart.controller.dto.response.ItemResponse;
