@@ -1,10 +1,10 @@
 package cart.dto;
 
-public class AuthPayload {
+public class BasicCredentials {
     private final String email;
     private final String password;
 
-    public AuthPayload(String email, String password) {
+    public BasicCredentials(String email, String password) {
         this.email = email;
         this.password = password;
     }

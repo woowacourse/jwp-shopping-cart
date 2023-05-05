@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.controller.support.BasicAuth;
 import cart.dto.ApiResponse;
-import cart.dto.AuthPayload;
+import cart.dto.BasicCredentials;
 import cart.dto.CartItemCreateRequest;
 import cart.dto.CartItemResponse;
 import cart.service.CartService;
@@ -34,10 +34,10 @@ public class CartController {
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
-    public ApiResponse<List<CartItemResponse>> readCartItems(@BasicAuth AuthPayload authPayload) {
-        userService.authorizeUser(authPayload.getEmail(), authPayload.getPassword());
+    public ApiResponse<List<CartItemResponse>> readCartItems(@BasicAuth BasicCredentials basicCredentials) {
+        userService.authorizeUser(basicCredentials.getEmail(), basicCredentials.getPassword());
 
-        List<CartItemResponse> cartItems = cartService.getCartItems(authPayload.getEmail()).stream()
+        List<CartItemResponse> cartItems = cartService.getCartItems(basicCredentials.getEmail()).stream()
                 .map(CartItemResponse::from)
                 .collect(Collectors.toList());
         return ApiResponse.of(HttpStatus.OK, cartItems);
@@ -46,18 +46,18 @@ public class CartController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public ApiResponse<Void> createCartItem(@RequestBody @Valid CartItemCreateRequest request,
-                                      @BasicAuth AuthPayload authPayload) {
-        userService.authorizeUser(authPayload.getEmail(), authPayload.getPassword());
+                                      @BasicAuth BasicCredentials basicCredentials) {
+        userService.authorizeUser(basicCredentials.getEmail(), basicCredentials.getPassword());
 
-        cartService.addCartItem(authPayload.getEmail(), request.getProductId());
+        cartService.addCartItem(basicCredentials.getEmail(), request.getProductId());
         return ApiResponse.from(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{cartItemId}")
     @ResponseStatus(code = HttpStatus.OK)
     public ApiResponse<Void> deleteCartItem(@PathVariable(value = "cartItemId") Long cartItemId,
-                                      @BasicAuth AuthPayload authPayload) {
-        userService.authorizeUser(authPayload.getEmail(), authPayload.getPassword());
+                                      @BasicAuth BasicCredentials basicCredentials) {
+        userService.authorizeUser(basicCredentials.getEmail(), basicCredentials.getPassword());
 
         cartService.deleteCartItem(cartItemId);
         return ApiResponse.from(HttpStatus.OK);
