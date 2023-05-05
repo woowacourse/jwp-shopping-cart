@@ -8,7 +8,6 @@ import cart.exception.ItemException;
 import cart.exception.ItemNotFoundException;
 import cart.exception.LengthException;
 import cart.exception.MemberException;
-import cart.exception.PasswordException;
 import cart.exception.PriceRangeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -78,12 +77,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MemberException.class)
     private ResponseEntity<ExceptionResponse> handleMemberException(MemberException ex) {
-        logger.warn(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponse(ex.getMessage()));
-    }
-
-    @ExceptionHandler(PasswordException.class)
-    private ResponseEntity<ExceptionResponse> handlePasswordException(PasswordException ex) {
         logger.warn(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponse(ex.getMessage()));
     }

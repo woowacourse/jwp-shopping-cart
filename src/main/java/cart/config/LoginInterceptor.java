@@ -5,7 +5,6 @@ import cart.controller.dto.AuthInfo;
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.exception.MemberNotFoundException;
-import cart.exception.PasswordException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -40,7 +39,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_ERROR_MESSAGE));
 
         if (findMember.hasDifferPassword(authInfo.getPassword())) {
-            throw new PasswordException(PASSWORD_ERROR_MESSAGE);
+            throw new MemberNotFoundException(PASSWORD_ERROR_MESSAGE);
         }
     }
 }

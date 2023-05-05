@@ -4,7 +4,6 @@ import cart.controller.dto.MemberResponse;
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.exception.MemberNotFoundException;
-import cart.exception.PasswordException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,7 @@ public class MemberService {
 
     private static void validatePassword(String inputPassword, String memberPassword) {
         if (!inputPassword.equals(memberPassword)) {
-            throw new PasswordException(PASSWORD_ERROR_MESSAGE);
+            throw new MemberNotFoundException(PASSWORD_ERROR_MESSAGE);
         }
     }
 }

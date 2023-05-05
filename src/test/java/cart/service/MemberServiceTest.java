@@ -8,7 +8,6 @@ import cart.controller.dto.MemberResponse;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.exception.MemberNotFoundException;
-import cart.exception.PasswordException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -76,7 +75,7 @@ class MemberServiceTest {
 
         assertThatThrownBy(() -> memberService.findByEmailAndPassword(member.getEmail(),
                 "wrongPW"))
-                .isInstanceOf(PasswordException.class)
+                .isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("비밀번호가 일치하지 않습니다.");
     }
 
