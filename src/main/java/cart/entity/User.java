@@ -4,19 +4,15 @@ import cart.entity.vo.Email;
 import cart.entity.vo.Id;
 import cart.entity.vo.Password;
 
+import java.util.Objects;
+
 public class User {
-    private final Id id;
     private final Email email;
     private final Password password;
 
-    public User(Long id, String email, String password) {
-        this.id = new Id(id);
+    public User(String email, String password) {
         this.email = new Email(email);
         this.password = new Password(password);
-    }
-
-    public Long getId() {
-        return id.value();
     }
 
     public String getEmail() {
@@ -25,5 +21,9 @@ public class User {
 
     public String getPassword() {
         return password.value();
+    }
+
+    public boolean authorization(final String email, final String password){
+        return this.email.equals(email) & this.password.equals(password);
     }
 }

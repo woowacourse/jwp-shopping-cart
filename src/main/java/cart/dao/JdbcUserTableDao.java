@@ -18,7 +18,7 @@ public class JdbcUserTableDao {
         final String sql = "SELECT * FROM user_table";
         return jdbcTemplate.query(sql,
                 (rs, rowNum) ->
-                        new User(rs.getLong("id"),
+                        new User(
                                 rs.getString("user_email"),
                                 rs.getString("user_password"))
 
@@ -29,7 +29,7 @@ public class JdbcUserTableDao {
         return jdbcTemplate.queryForObject(
                 sql,
                 (rs,rowNUm) ->{
-                    return new User(rs.getLong("id"),
+                    return new User(
                             rs.getString("user_email"),
                             rs.getString("user_password")
                     );

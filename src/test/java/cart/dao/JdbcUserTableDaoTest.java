@@ -27,6 +27,6 @@ class JdbcUserTableDaoTest {
     @Test
     @DisplayName("사용자 한명을 조회")
     void readOneTest(){
-        Assertions.assertThat(jdbcUserTableDao.findByEmail("test1@test1.com").getId()).isEqualTo(1l);
+        Assertions.assertThat(jdbcUserTableDao.findByEmail("test1@test1.com").getEmail()).isEqualTo("test1@test1.com");
     }
 }

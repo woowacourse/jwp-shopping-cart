@@ -1,15 +1,13 @@
-package cart.service.dto;
+package cart.controller.dto;
 
-public class UserDto {
+public class UserResponseDto {
     private final String email;
     private final String password;
 
-    public UserDto(String email, String password) {
-
+    public UserResponseDto(String email, String password) {
         this.email = email;
         this.password = password;
     }
-
 
     public String getEmail() {
         return email;
