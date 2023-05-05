@@ -11,9 +11,9 @@ import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.persistence.dao.CartDao;
 import cart.persistence.dao.MemberDao;
-import cart.persistence.entity.MemberCartEntity;
+import cart.persistence.dto.CartDto;
 import cart.persistence.entity.MemberEntity;
-import cart.service.dto.ProductResponse;
+import cart.service.dto.CartResponse;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -90,18 +90,18 @@ class CartServiceTest {
             "journey@gmail.com", "cGFzc3dvcmQ=", "져니", "010-1234-5678");
         when(memberDao.findByEmail(any())).thenReturn(Optional.of(memberEntity));
 
-        final MemberCartEntity chickenProduct = new MemberCartEntity(1L, 1L, 1L,
+        final CartDto chickenProduct = new CartDto(1L, 1L, 1L,
             "치킨", "chicken_image_url", 20000, "KOREAN");
-        final MemberCartEntity steakProductEntity = new MemberCartEntity(2L, 1L, 2L,
+        final CartDto steakProductEntity = new CartDto(2L, 1L, 2L,
             "스테이크", "steakUrl", 40000, "WESTERN");
         when(cartDao.getProductsByMemberId(any())).thenReturn(List.of(chickenProduct, steakProductEntity));
 
         // when
-        final List<ProductResponse> productResponses = cartService.getProductsByMemberEmail("journey@gmail.com");
+        final CartResponse cartResponse = cartService.getProductsByMemberEmail("journey@gmail.com");
 
         // then
-        assertThat(productResponses).hasSize(2);
-        assertThat(productResponses)
+        assertThat(cartResponse.getProductCount()).isSameAs(2);
+        assertThat(cartResponse.getProductResponses())
             .extracting("id", "name", "imageUrl", "price", "category")
             .containsExactly(
                 tuple(1L, "치킨", "chicken_image_url", 20000, "KOREAN"),

@@ -1,12 +1,17 @@
 package cart.service;
 
+import cart.domain.Cart;
+import cart.domain.Member;
+import cart.domain.MemberPassword;
+import cart.domain.Product;
 import cart.exception.ErrorCode;
 import cart.exception.GlobalException;
 import cart.persistence.dao.CartDao;
 import cart.persistence.dao.MemberDao;
+import cart.persistence.dto.CartDto;
 import cart.persistence.entity.CartEntity;
-import cart.persistence.entity.MemberCartEntity;
 import cart.persistence.entity.MemberEntity;
+import cart.service.dto.CartResponse;
 import cart.service.dto.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,12 +46,13 @@ public class CartService {
         }
     }
 
-    public List<ProductResponse> getProductsByMemberEmail(final String memberEmail) {
+    public CartResponse getProductsByMemberEmail(final String memberEmail) {
         final MemberEntity memberEntity = getMemberEntity(memberEmail);
-        final List<MemberCartEntity> memberProductEntities =  cartDao.getProductsByMemberId(memberEntity.getId());
-        return memberProductEntities.stream()
-            .map(this::convertToDto)
-            .collect(Collectors.toUnmodifiableList());
+        final List<CartDto> cartDtos = cartDao.getProductsByMemberId(memberEntity.getId());
+        final Cart cart = convertToCart(memberEntity, cartDtos);
+        final List<ProductResponse> productResponses = convertToProductResponse(cart);
+        final int productCount = cart.getProductCount();
+        return new CartResponse(productCount, productResponses);
     }
 
     private MemberEntity getMemberEntity(final String memberEmail) {
@@ -54,9 +60,29 @@ public class CartService {
             .orElseThrow(() -> new GlobalException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
-    private ProductResponse convertToDto(final MemberCartEntity memberCartEntity) {
-        return new ProductResponse(memberCartEntity.getProductId(),
-            memberCartEntity.getProductName(), memberCartEntity.getProductImageUrl(),
-            memberCartEntity.getProductPrice(), memberCartEntity.getProductCategory());
+    private Cart convertToCart(final MemberEntity memberEntity, final List<CartDto> cartDtos) {
+        final Member member = convertToMember(memberEntity);
+        final List<Product> products = convertToProducts(cartDtos);
+        return new Cart(member, products);
+    }
+
+    private Member convertToMember(final MemberEntity memberEntity) {
+        return Member.create(memberEntity.getEmail(), MemberPassword.decodePassword(memberEntity.getPassword()),
+            memberEntity.getNickname(), memberEntity.getTelephone(), memberEntity.getRole());
+    }
+
+    private List<Product> convertToProducts(final List<CartDto> cartDtos) {
+        return cartDtos.stream()
+            .map(cartDto -> Product.createWithId(cartDto.getProductId(), cartDto.getProductName(),
+                cartDto.getProductImageUrl(), cartDto.getProductPrice(), cartDto.getProductCategory()))
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    private List<ProductResponse> convertToProductResponse(final Cart cart) {
+        final List<Product> products = cart.getProducts();
+        return products.stream()
+            .map(product -> new ProductResponse(product.getId(), product.getName(), product.getImageUrl(),
+                product.getPrice(), product.getCategory().name()))
+            .collect(Collectors.toUnmodifiableList());
     }
 }

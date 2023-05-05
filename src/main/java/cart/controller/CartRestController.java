@@ -33,8 +33,7 @@ public class CartRestController {
 
     @GetMapping("/me")
     public ResponseEntity<CartResponse> getCartByMember(@MemberEmail String memberEmail) {
-        final List<ProductResponse> productResponses = cartService.getProductsByMemberEmail(memberEmail);
-        final CartResponse cartResponse = new CartResponse(productResponses);
+        final CartResponse cartResponse = cartService.getProductsByMemberEmail(memberEmail);
         return ResponseEntity.ok().body(cartResponse);
     }
 

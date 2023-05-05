@@ -74,7 +74,7 @@ public class CartIntegrationTest {
             .then().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .statusCode(HttpStatus.OK.value())
-            .body("size()", is(1));
+            .body("size()", is(2));
     }
 
     @Test

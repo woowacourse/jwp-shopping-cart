@@ -45,18 +45,19 @@
       }
     }).then((response) => {
       const cartItems = response.data.productResponses;
+      const productCount = response.data.productCount
 
-      let productElement = '';
+      let productElement = `<div style="margin-bottom: 15px;"> ${productCount}개의 상품이 담겼습니다. </div>`;
 
       cartItems.forEach(cartItem => {
         productElement += `
                     <div class = "cart-item">
                         <div class="cart-item-info">
-                            <img alt="상품 이미지" src="${cartItem.productImageUrl}">
+                            <img alt="상품 이미지" src="${cartItem.imageUrl}">
                             <div>
-                                <div class="cart-item-category" style="font-weight: bold">${cartItem.productCategory}</div>
-                                <div class="cart-item-name">${cartItem.productName}</div>
-                                <div class="cart-item-price" style="color: black">${cartItem.productPrice}원</div>
+                                <div class="cart-item-category" style="font-weight: bold">${cartItem.category}</div>
+                                <div class="cart-item-name">${cartItem.name}</div>
+                                <div class="cart-item-price" style="color: black">${cartItem.price}원</div>
                             </div>
                             <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.productId})">Delete</button>
                         </div>

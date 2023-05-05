@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.controller.helper.RestDocsHelper;
 import cart.exception.ForbiddenException;
 import cart.service.CartService;
+import cart.service.dto.CartResponse;
 import cart.service.dto.ProductResponse;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,7 +93,8 @@ class CartRestControllerTest extends RestDocsHelper {
         final ProductResponse steakDto = new ProductResponse(2L, "스테이크",
             "steak_image_url", 40000, "WESTERN");
         final List<ProductResponse> productResponses = List.of(chickenDto, steakDto);
-        when(cartService.getProductsByMemberEmail(any())).thenReturn(productResponses);
+        final CartResponse cartResponse = new CartResponse(2, productResponses);
+        when(cartService.getProductsByMemberEmail(any())).thenReturn(cartResponse);
 
         // when, then
         mockMvc.perform(get("/cart/me")
@@ -100,6 +102,7 @@ class CartRestControllerTest extends RestDocsHelper {
             .andExpectAll(
                 status().isOk(),
                 content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE),
+                jsonPath("$.productCount").value(2),
                 jsonPath("$.productResponses[0].id").value(1L),
                 jsonPath("$.productResponses[0].name").value("치킨"),
                 jsonPath("$.productResponses[0].imageUrl").value("chicken_image_url"),
@@ -115,6 +118,7 @@ class CartRestControllerTest extends RestDocsHelper {
                     requestHeaders(
                         headerWithName("Authorization").description("인증 정보")),
                     responseFields(
+                        fieldWithPath("productCount").description("상품 개수"),
                         fieldWithPath("productResponses[0].id").description("상품 아이디"),
                         fieldWithPath("productResponses[0].name").description("상품 이름"),
                         fieldWithPath("productResponses[0].imageUrl").description("상품 이미지 URL"),

@@ -3,8 +3,8 @@ package cart.persistence.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
+import cart.persistence.dto.CartDto;
 import cart.persistence.entity.CartEntity;
-import cart.persistence.entity.MemberCartEntity;
 import cart.persistence.entity.MemberEntity;
 import cart.persistence.entity.ProductEntity;
 import java.util.List;
@@ -102,7 +102,7 @@ class CartDaoTest {
         cartDao.insert(steakEntity);
 
         // when
-        final List<MemberCartEntity> memberProductEntities = cartDao.getProductsByMemberId(
+        final List<CartDto> memberProductEntities = cartDao.getProductsByMemberId(
             savedMemberId);
 
         // then
