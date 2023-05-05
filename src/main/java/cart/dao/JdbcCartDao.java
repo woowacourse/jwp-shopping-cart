@@ -28,6 +28,7 @@ public class JdbcCartDao {
                 .addValue("product_id", productId);
         simpleJdbcInsert.execute(parameterMap);
     }
+
     public List<Cart> findByUserEmail(final String email){
         final String sql = "SELECT *" +
                 " FROM products_table" +

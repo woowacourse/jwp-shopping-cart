@@ -31,4 +31,8 @@ public class UserService {
         boolean check= jdbcUserTableDao.findByEmail(userDto.getEmail()).authorization(userDto.getEmail(),userDto.getPassword());
         return check;
     }
+
+    public Long findLoginUserId(final String email){
+        return jdbcUserTableDao.findByEmail(email).getId();
+    }
 }

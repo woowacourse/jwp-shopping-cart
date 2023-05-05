@@ -35,6 +35,7 @@ public class CartApiController {
 
     @PostMapping("/{productId}")
     public void addCart(@PathVariable Long productId, @BasicAuthorization UserDto userDto){
+        System.out.println(userDto.getId());
         cartService.addCart(userDto.getId(),productId);
     }
 
