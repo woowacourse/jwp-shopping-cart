@@ -22,6 +22,7 @@ public class MemberDaoTest {
     void setUp() {
         namedParameterJdbcTemplate.getJdbcTemplate().execute("ALTER TABLE member ALTER COLUMN id RESTART WITH 1");
         memberDao = new MemberDao(namedParameterJdbcTemplate);
+        memberDao.deleteAll();
     }
 
     @Test
