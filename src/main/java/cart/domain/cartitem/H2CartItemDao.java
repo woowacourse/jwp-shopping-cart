@@ -73,4 +73,14 @@ public class H2CartItemDao extends CartItemDao {
                         + "WHERE c.product_id = p.id "
                         + "AND c.member_id = ?", CART_ITEM_DTO_ROW_MAPPER, id);
     }
+
+    @Override
+    boolean isDuplicated(final Long member_id, final Long product_id) {
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                "SELECT EXISTS (SELECT id FROM cart_items "
+                        + "WHERE member_id = ? "
+                        + "AND product_id = ? limit 1) AS SUCCESS",
+                Boolean.class,
+                member_id, product_id));
+    }
 }

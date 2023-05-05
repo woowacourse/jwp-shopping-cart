@@ -8,6 +8,8 @@ abstract class CartItemDao implements Dao<CartItem> {
 
     abstract List<CartItemDto> findByMemberId(Long id);
 
+    abstract boolean isDuplicated(Long member_id, Long product_id);
+
     @Override
     public final void update(final CartItem entity) {
         throw new UnsupportedOperationException();

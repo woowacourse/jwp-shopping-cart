@@ -30,7 +30,7 @@ public class ProductService {
         productDao.deleteById(id);
     }
 
-    private void validateIdExist(final Long id) {
+    public void validateIdExist(final Long id) {
         if (productDao.isExist(id)) {
             return;
         }
