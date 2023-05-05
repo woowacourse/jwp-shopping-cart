@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import cart.entity.Product;
 import cart.entity.ProductRepository;
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductRequest;
 
 @JdbcTest
 class DBProductRepositoryTest {
@@ -42,8 +42,8 @@ class DBProductRepositoryTest {
             .withTableName("product")
             .usingGeneratedKeyColumns("id");
 
-        ProductRequestDto product1 = new ProductRequestDto("name1", "url1", 1000);
-        ProductRequestDto product2 = new ProductRequestDto("name2", "url2", 2000);
+        ProductRequest product1 = new ProductRequest("name1", "url1", 1000);
+        ProductRequest product2 = new ProductRequest("name2", "url2", 2000);
 
         Map<String, Object> map1 = Map.of(
             "name", product1.getName(),

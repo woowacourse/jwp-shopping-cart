@@ -3,7 +3,6 @@ package cart.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -18,14 +17,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductRequest;
 import cart.service.JwpCartService;
 import io.restassured.RestAssured;
 
-@WebMvcTest(JwpCartController.class)
-class JwpCartControllerTest {
+@WebMvcTest(AdminController.class)
+class AdminControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -33,9 +31,9 @@ class JwpCartControllerTest {
     private JwpCartService jwpCartService;
 
     static Stream<Arguments> makeDto() {
-        return Stream.of(Arguments.arguments(new ProductRequestDto("a".repeat(256), "https://naver.com", 1000)),
-            Arguments.arguments(new ProductRequestDto("aaa", "https://naver" + "a".repeat(8001) + ".com", 1000)),
-            Arguments.arguments(new ProductRequestDto("aaa", "https://naver.com", -1000)));
+        return Stream.of(Arguments.arguments(new ProductRequest("a".repeat(256), "https://naver.com", 1000)),
+            Arguments.arguments(new ProductRequest("aaa", "https://naver" + "a".repeat(8001) + ".com", 1000)),
+            Arguments.arguments(new ProductRequest("aaa", "https://naver.com", -1000)));
     }
 
     @Test
@@ -62,11 +60,11 @@ class JwpCartControllerTest {
     @Test
     @DisplayName("상품을 추가한다.")
     void addProduct() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("리오", "http://asdf.asdf", 3000);
+        ProductRequest productRequest = new ProductRequest("리오", "http://asdf.asdf", 3000);
 
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
+            .body(productRequest)
             .when().post("/admin/products")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value());
@@ -75,11 +73,11 @@ class JwpCartControllerTest {
     @ParameterizedTest
     @MethodSource("makeDto")
     @DisplayName("상품을 추가한다. - 잘못된 입력을 검증한다.")
-    void addProductInvalidInput(ProductRequestDto productRequestDto) {
+    void addProductInvalidInput(ProductRequest productRequest) {
 
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
+            .body(productRequest)
             .when().post("/admin/products")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -88,11 +86,11 @@ class JwpCartControllerTest {
     @Test
     @DisplayName("상품 정보를 수정한다.")
     void updateProduct() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("리오", "http://asdf.asdf", 3000);
+        ProductRequest productRequest = new ProductRequest("리오", "http://asdf.asdf", 3000);
 
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
+            .body(productRequest)
             .when().put("/admin/products/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
@@ -101,11 +99,11 @@ class JwpCartControllerTest {
     @ParameterizedTest
     @MethodSource("makeDto")
     @DisplayName("상품 정보를 수정한다. - 잘못된 입력을 검증한다.")
-    void updateProductInvalidInput(ProductRequestDto productRequestDto) {
+    void updateProductInvalidInput(ProductRequest productRequest) {
 
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
+            .body(productRequest)
             .when().put("/admin/products/1")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value());

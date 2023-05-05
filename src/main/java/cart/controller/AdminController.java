@@ -18,29 +18,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import cart.dto.ProductRequestDto;
-import cart.dto.ProductResponseDto;
+import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import cart.service.JwpCartService;
 
 @Controller
-public class JwpCartController {
+public class AdminController {
 
     private final JwpCartService jwpCartService;
 
-    public JwpCartController(JwpCartService jwpCartService) {
+    public AdminController(JwpCartService jwpCartService) {
         this.jwpCartService = jwpCartService;
-    }
-
-    @GetMapping("/")
-    public String index(Model model) {
-        List<ProductResponseDto> all = jwpCartService.findAll();
-        model.addAttribute("products", all);
-        return "index";
     }
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        List<ProductResponseDto> all = jwpCartService.findAll();
+        List<ProductResponse> all = jwpCartService.findAll();
         model.addAttribute("products", all);
         return "admin";
     }
@@ -48,15 +41,16 @@ public class JwpCartController {
     @PostMapping("/admin/products")
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
-        jwpCartService.add(productRequestDto);
+    public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequest productRequest) {
+        jwpCartService.add(productRequest);
         return ResponseEntity.created(URI.create("/admin/products")).build();
     }
 
     @PutMapping("/admin/products/{id}")
     @ResponseBody
-    public ResponseEntity<Void> updateProduct(@PathVariable("id") Long id, @RequestBody @Valid ProductRequestDto productRequestDto) {
-        jwpCartService.updateById(productRequestDto, id);
+    public ResponseEntity<Void> updateProduct(@PathVariable("id") Long id,
+        @RequestBody @Valid ProductRequest productRequest) {
+        jwpCartService.updateById(productRequest, id);
         return ResponseEntity.ok().build();
     }
 
