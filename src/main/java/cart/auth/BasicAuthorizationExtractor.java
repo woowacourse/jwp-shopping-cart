@@ -1,10 +1,8 @@
-package cart.infrastructure;
+package cart.auth;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.tomcat.util.codec.binary.Base64;
-
-import cart.controller.dto.AuthInfo;
 
 public class BasicAuthorizationExtractor {
 
