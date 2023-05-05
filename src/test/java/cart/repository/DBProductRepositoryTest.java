@@ -30,6 +30,7 @@ class DBProductRepositoryTest {
     void setUp() {
         productRepository = new DBProductRepository(jdbcTemplate);
 
+        jdbcTemplate.execute("DROP TABLE cart IF EXISTS");
         jdbcTemplate.execute("DROP TABLE product IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE product ("
             + "    id      BIGINT            NOT NULL    AUTO_INCREMENT,"

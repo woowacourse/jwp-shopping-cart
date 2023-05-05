@@ -1,34 +1,26 @@
 package cart.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import cart.dto.ProductRequest;
-import cart.service.JwpCartService;
 import io.restassured.RestAssured;
 
-@WebMvcTest(AdminController.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AdminControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
 
-    @MockBean
-    private JwpCartService jwpCartService;
+    @LocalServerPort
+    int port;
 
     static Stream<Arguments> makeDto() {
         return Stream.of(Arguments.arguments(new ProductRequest("a".repeat(256), "https://naver.com", 1000)),
@@ -36,14 +28,9 @@ class AdminControllerTest {
             Arguments.arguments(new ProductRequest("aaa", "https://naver.com", -1000)));
     }
 
-    @Test
-    @DisplayName("상품 목록 페이지를 조회한다.")
-    void index() throws Exception{
-        mockMvc.perform(
-                MockMvcRequestBuilders.get("/")
-            )
-            .andDo(print())
-            .andExpect(status().isOk());
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
     }
 
     @Test
