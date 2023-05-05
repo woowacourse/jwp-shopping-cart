@@ -1,7 +1,8 @@
 package cart.service;
 
-import cart.dao.ProductDao;
 import cart.dto.request.ProductCreateDto;
+import cart.excpetion.ProductionServiceException;
+import cart.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,15 +12,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
 
     @Mock
-    ProductDao productDao;
+    ProductRepository productRepository;
 
     @InjectMocks
     ProductService productService;
@@ -28,15 +29,14 @@ class ProductServiceTest {
     @DisplayName("product 생성 테스트")
     void create() {
         //given
-        when(productDao.create(any()))
-                .thenReturn(1);
+        doNothing().when(productRepository).create(any());
         final ProductCreateDto request = new ProductCreateDto("name", "image.jpg", 1000);
 
         //when
         productService.create(request);
 
         //then
-        verify(productDao, times(1))
+        verify(productRepository, times(1))
                 .create(any());
     }
 
@@ -48,6 +48,6 @@ class ProductServiceTest {
 
         //expect
         Assertions.assertThatThrownBy(() -> productService.create(request))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ProductionServiceException.class);
     }
 }

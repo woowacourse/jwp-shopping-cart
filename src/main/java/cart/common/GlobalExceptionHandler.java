@@ -2,7 +2,8 @@ package cart.common;
 
 import cart.excpetion.AuthException;
 import cart.excpetion.CartException;
-import cart.excpetion.ProductException;
+import cart.excpetion.ProductionRepoException;
+import cart.excpetion.ProductionServiceException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.notFound().build();
     }
 
-    @ExceptionHandler({ProductException.class})
-    public ResponseEntity<String> handle(ProductException e) {
+    @ExceptionHandler({ProductionServiceException.class, ProductionRepoException.class})
+    public ResponseEntity<String> handleProduct(Exception e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 

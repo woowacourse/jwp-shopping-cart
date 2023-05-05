@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.dto.request.ProductCreateDto;
 import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -85,11 +84,15 @@ class ProductDaoTest {
     @DisplayName("수정 테스트")
     void update() {
         //given
-        final ProductCreateDto requestDto = new ProductCreateDto("푸우", "pooh.png", 1_000_001);
         final Integer targetId = findPoohId();
 
         //when
-        productDao.update(requestDto, targetId);
+        productDao.update(new ProductEntity(
+                targetId,
+                "푸우",
+                "pooh.png",
+                1_000_001
+        ));
         final String findUpdatedUserSql = "select * from product where id = ?";
         final ProductEntity updatedProduct = jdbcTemplate.queryForObject(findUpdatedUserSql,
                 (rs, rowNum) -> new ProductEntity(

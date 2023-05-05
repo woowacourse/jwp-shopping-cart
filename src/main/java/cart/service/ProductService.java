@@ -1,36 +1,40 @@
 package cart.service;
 
-import cart.dao.ProductDao;
+import cart.domain.Product;
 import cart.dto.request.ProductCreateDto;
 import cart.dto.response.ProductDto;
-import cart.entity.ProductEntity;
-import cart.excpetion.ProductException;
+import cart.excpetion.ProductionServiceException;
+import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(final ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(final ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    public int create(final ProductCreateDto productCreateDto) {
-        return productDao.create(dtoToEntity(productCreateDto));
+    public void create(final ProductCreateDto productCreateDto) {
+        final Product product = dtoToDomain(productCreateDto);
+        productRepository.create(product);
     }
 
     public List<ProductDto> findAll() {
         final ArrayList<ProductDto> productDtos = new ArrayList<>();
-        for (ProductEntity productEntity : productDao.findAll()) {
+        for (Product product : productRepository.findAll()) {
             productDtos.add(new ProductDto(
-                            productEntity.getId(),
-                            productEntity.getName(),
-                            productEntity.getImage(),
-                            productEntity.getPrice()
+                            product.getId(),
+                            product.getName(),
+                            product.getImage(),
+                            product.getPrice()
                     )
             );
         }
@@ -38,24 +42,29 @@ public class ProductService {
     }
 
     public void update(final ProductCreateDto productCreateDto, final int id) {
-        if (productDao.exitingProduct(id)) {
-            productDao.update(productCreateDto, id);
+        final Product requestProduct = dtoToDomain(productCreateDto);
+        final Optional<Product> exitingProduct = productRepository.findBy(id);
+        if (exitingProduct.isPresent()) {
+            productRepository.update(id, requestProduct);
             return;
         }
-        throw new ProductException("존재 하지 않는 상품 id에 대한 업데이트 요청입니다");
+        throw new ProductionServiceException("존재 하지 않는 상품에 대한 업데이트입니다");
     }
 
     public void delete(final int id) {
-        if (productDao.exitingProduct(id)) {
-            productDao.delete(id);
+        final Optional<Product> exitingProduct = productRepository.findBy(id);
+        if (exitingProduct.isPresent()) {
+            productRepository.delete(id);
             return;
         }
-        throw new ProductException("존재 하지 않는 상품 id에 대한 삭제 요청입니다");
+        throw new ProductionServiceException("존재 하지 않는 상품에 대한 삭제 입니다");
     }
 
-    private ProductEntity dtoToEntity(final ProductCreateDto productCreateDto) {
-        return new ProductEntity(productCreateDto.getName(),
-                productCreateDto.getImage(),
-                productCreateDto.getPrice());
+    private Product dtoToDomain(final ProductCreateDto productCreateDto) {
+        try {
+            return productCreateDto.toProduct();
+        } catch (IllegalArgumentException e) {
+            throw new ProductionServiceException(e.getMessage());
+        }
     }
 }

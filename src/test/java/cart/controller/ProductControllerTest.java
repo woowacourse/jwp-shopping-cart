@@ -36,7 +36,7 @@ class ProductControllerTest {
         //given
         final ProductCreateDto requestDto = new ProductCreateDto("test", "image.jpg", 100);
 
-        //expect
+        //when,then
         RestAssured.given().log().headers()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestDto)
@@ -52,7 +52,7 @@ class ProductControllerTest {
         //given
         final ProductCreateDto requestDto = new ProductCreateDto(null, "image.jpg", 100);
 
-        //expect
+        //when,then
         RestAssured.given().log().headers()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestDto)
@@ -69,7 +69,7 @@ class ProductControllerTest {
 
         final List<Integer> s = jdbcTemplate.queryForList("select id from product", Integer.class);
 
-        //expect
+        //when,then
         RestAssured.given().log().headers()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestDto)
@@ -85,7 +85,7 @@ class ProductControllerTest {
         //given
         final ProductCreateDto requestDto = new ProductCreateDto("update", "image.jpg", 100);
 
-        //expect
+        //when,then
         RestAssured.given().log().headers()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestDto)
@@ -101,9 +101,7 @@ class ProductControllerTest {
         //given
         final ProductCreateDto requestDto = new ProductCreateDto("hello", "image.jpg", 100);
 
-        jdbcTemplate.queryForList("select id from product", Integer.class);
-
-        //expect
+        //when,then
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestDto)
@@ -119,7 +117,7 @@ class ProductControllerTest {
         //given
         final int id = 1;
 
-        //expect
+        //when,then
         RestAssured.given().log().headers()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .pathParam("id", id)

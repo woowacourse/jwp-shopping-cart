@@ -1,13 +1,14 @@
-package cart.entity;
+package cart.domain;
 
-public class ProductEntity {
-    private static final int MAX_NAME_LENGTH_IN_DB = 20;
+public class Product {
+    private static final int MIN_NAME_LENGTH = 1;
+    private static final int MAX_NAME_LENGTH = 20;
     private final Integer id;
     private final String name;
     private final String image;
     private final Integer price;
 
-    public ProductEntity(final Integer id, final String name, final String image, final Integer price) {
+    public Product(final Integer id, final String name, final String image, final Integer price) {
         validate(name, image, price);
         this.id = id;
         this.name = name;
@@ -15,7 +16,7 @@ public class ProductEntity {
         this.price = price;
     }
 
-    public ProductEntity(final String name, final String image, final Integer price) {
+    public Product(final String name, final String image, final Integer price) {
         this(null, name, image, price);
     }
 
@@ -27,22 +28,26 @@ public class ProductEntity {
 
     private void validateName(final String name) {
         if (name == null) {
-            throw new IllegalArgumentException("DB 테이블의 name 은 not null 로 설정 되어 있습니다.");
+            throw new IllegalArgumentException("상품의 이름은 필수 입니다.");
         }
-        if (name.length() > MAX_NAME_LENGTH_IN_DB) {
-            throw new IllegalArgumentException("DB 테이블에 이름의 최대 길이는 20 입니다.");
+        if (name.length() < MIN_NAME_LENGTH || name.length() > MAX_NAME_LENGTH) {
+            throw new IllegalArgumentException(String.format("상품의 이름은 %d이상 %d이하 입니다", MIN_NAME_LENGTH, MAX_NAME_LENGTH));
         }
     }
 
     private void validateImage(final String image) {
         if (image == null) {
-            throw new IllegalArgumentException("DB 테이블의 image 는 not null 로 설정 되어 있습니다.");
+            throw new IllegalArgumentException("상품은 이미지를 가져야 합니다.");
         }
     }
 
     private void validatePrice(final Integer price) {
         if (price == null) {
-            throw new IllegalArgumentException("DB 테이블의 price 는 not null 로 설정 되어 있습니다.");
+            throw new IllegalArgumentException("상품은 가격을 가져야 합니다.");
+        }
+
+        if (price < 0) {
+            throw new IllegalArgumentException("상품의 가격은 0보다 커야합니다.");
         }
     }
 
