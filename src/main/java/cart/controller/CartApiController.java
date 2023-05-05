@@ -20,7 +20,7 @@ public class CartApiController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<ProductResponseDto>> displayProduct(@BasicAuthorization UserDto userDto){
+    public ResponseEntity<List<ProductResponseDto>> displayProduct(@BasicAuthorization UserDto userDto) {
         List<ProductResponseDto> carts = cartService.displayUserCart(userDto.getEmail())
                 .stream().map(productDto ->
                         new ProductResponseDto(
@@ -34,13 +34,12 @@ public class CartApiController {
     }
 
     @PostMapping("/{productId}")
-    public void addCart(@PathVariable Long productId, @BasicAuthorization UserDto userDto){
-        System.out.println(userDto.getId());
-        cartService.addCart(userDto.getId(),productId);
+    public void addCart(@PathVariable Long productId, @BasicAuthorization UserDto userDto) {
+        cartService.addCart(userDto.getId(), productId);
     }
 
     @DeleteMapping("/{cartId}")
-    public void deleteCart(@PathVariable Long cartId){
+    public void deleteCart(@PathVariable Long cartId) {
         cartService.deleteCart(cartId);
     }
 }

@@ -2,12 +2,9 @@ package cart.dao;
 
 import cart.entity.Product;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
@@ -19,11 +16,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
-@Sql({"classpath:truncateTable.sql","classpath:productsTestData.sql"})
+@Sql({"classpath:truncateTable.sql", "classpath:productsTestData.sql"})
 class JdbcProductsDaoTest {
     private final ProductsDao productsDao;
 
     private final JdbcTemplate jdbcTemplate;
+
     @Autowired
     public JdbcProductsDaoTest(JdbcTemplate jdbcTemplate) {
         this.productsDao = new JdbcProductsDao(jdbcTemplate);

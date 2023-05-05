@@ -17,7 +17,7 @@ public class ViewController {
     private final ProductService productService;
     private final UserService userService;
 
-    public ViewController(final ProductService productService, final  UserService userService) {
+    public ViewController(final ProductService productService, final UserService userService) {
         this.productService = productService;
         this.userService = userService;
     }
@@ -37,16 +37,16 @@ public class ViewController {
     }
 
     @GetMapping(path = "/settings")
-    public String settings(Model model){
+    public String settings(Model model) {
         List<UserResponseDto> users = userService.getAllUser().stream()
-                .map(userDto -> new UserResponseDto(userDto.getEmail(),userDto.getPassword()))
+                .map(userDto -> new UserResponseDto(userDto.getEmail(), userDto.getPassword()))
                 .collect(Collectors.toList());
-        model.addAttribute("members",users);
+        model.addAttribute("members", users);
         return "settings";
     }
 
     @GetMapping(path = "/cart")
-    public String cart(Model model){
+    public String cart(Model model) {
         return "cart";
     }
 }

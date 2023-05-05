@@ -1,6 +1,5 @@
 package cart.service;
 
-import cart.controller.dto.ProductResponseDto;
 import cart.dao.JdbcCartDao;
 import cart.service.dto.ProductDto;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ public class CartService {
         this.jdbcCartDao = jdbcCartDao;
     }
 
-    public List<ProductDto> displayUserCart(final String userEmail){
+    public List<ProductDto> displayUserCart(final String userEmail) {
         return jdbcCartDao.findByUserEmail(userEmail).stream()
                 .map(cart -> new ProductDto.Builder()
                         .id(cart.getId())
@@ -28,11 +27,11 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public void addCart(final Long userId, final Long productId){
-        jdbcCartDao.addProduct(userId,productId);
+    public void addCart(final Long userId, final Long productId) {
+        jdbcCartDao.addProduct(userId, productId);
     }
 
-    public void deleteCart(final Long cartId){
+    public void deleteCart(final Long cartId) {
         jdbcCartDao.delete(cartId);
     }
 }

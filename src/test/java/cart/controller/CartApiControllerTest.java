@@ -1,9 +1,9 @@
 package cart.controller;
 
 import cart.dao.JdbcCartDao;
-import cart.entity.Cart;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -14,7 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
-@Sql({"classpath:truncateTable.sql","classpath:userTestData.sql"})
+@Sql({"classpath:truncateTable.sql", "classpath:userTestData.sql"})
 public class CartApiControllerTest {
     @Autowired
     JdbcCartDao jdbcCartDao;
@@ -26,11 +26,33 @@ public class CartApiControllerTest {
     void setPort() {
         RestAssured.port = port;
     }
+
     @Test
-    void deleteTest(){
+    @DisplayName("장바구니 제거 테스트")
+    void deleteTest() {
         RestAssured.given().log().all()
-                .auth().preemptive().basic("test1@test1.com","password1")
+                .auth().preemptive().basic("test1@test1.com", "password1")
                 .when().delete("/carts/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("조회 테스트 테스트")
+    void authorizationTest() {
+        RestAssured.given().log().all()
+                .auth().preemptive().basic("test1@test1.com", "password1")
+                .when().get("/carts")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("상품 추가 테스트")
+    void insertCartTest() {
+        RestAssured.given().log().all()
+                .auth().preemptive().basic("test1@test1.com", "password")
+                .when().post("/carts/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

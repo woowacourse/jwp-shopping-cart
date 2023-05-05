@@ -16,13 +16,15 @@ public class WebConfigurer implements WebMvcConfigurer {
     public WebConfigurer(BasicAuthorizationInterceptor basicAuthorizationInterceptor) {
         this.basicAuthorizationInterceptor = basicAuthorizationInterceptor;
     }
+
     @Override
-    public void addInterceptors(final InterceptorRegistry registry){
+    public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(basicAuthorizationInterceptor)
                 .addPathPatterns("/carts/**");
     }
+
     @Override
-    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers){
+    public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new BasicAuthorizationArgumentResolver());
     }
 }

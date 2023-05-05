@@ -10,6 +10,7 @@ public class UserDto {
         this.email = builder.email;
         this.password = builder.password;
     }
+
     public Long getId() {
         return id;
     }

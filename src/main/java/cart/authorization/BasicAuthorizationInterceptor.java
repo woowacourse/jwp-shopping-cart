@@ -1,9 +1,7 @@
 package cart.authorization;
 
 import cart.service.UserService;
-import cart.service.dto.UserDto;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;

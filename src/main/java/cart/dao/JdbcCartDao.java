@@ -22,27 +22,29 @@ public class JdbcCartDao {
     }
 
 
-    public void addProduct(Long userId,Long productId) {
+    public void addProduct(Long userId, Long productId) {
         final MapSqlParameterSource parameterMap = new MapSqlParameterSource()
-                .addValue("user_id",userId)
+                .addValue("user_id", userId)
                 .addValue("product_id", productId);
         simpleJdbcInsert.execute(parameterMap);
     }
 
-    public List<Cart> findByUserEmail(final String email){
+    public List<Cart> findByUserEmail(final String email) {
         final String sql = "SELECT *" +
                 " FROM products_table" +
                 " INNER JOIN cart_table ON products_table.id = cart_table.product_id" +
                 " INNER JOIN user_table ON cart_table.user_id = user_table.id" +
-                " WHERE user_table.user_email = ?";;
-        return jdbcTemplate.query(sql,(rs, rowNum) ->new Cart(new Product(rs.getLong("id"),
-                rs.getString("product_name"),
-                rs.getInt("product_price"),
-                rs.getString("product_image")),rs.getLong("cart_table.id")),
+                " WHERE user_table.user_email = ?";
+        ;
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new Cart(new Product(rs.getLong("id"),
+                        rs.getString("product_name"),
+                        rs.getInt("product_price"),
+                        rs.getString("product_image")), rs.getLong("cart_table.id")),
                 email
         );
     }
-    public void delete(Long id){
+
+    public void delete(Long id) {
         final String sql = "DELETE FROM cart_table WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

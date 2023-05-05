@@ -8,16 +8,20 @@ public class Cart {
         this.product = product;
         this.id = id;
     }
+
     public Long getId() {
         return id;
     }
-    public String getName(){
+
+    public String getName() {
         return product.getName();
     }
-    public Integer getPrice(){
+
+    public Integer getPrice() {
         return product.getPrice();
     }
-    public String getImage(){
+
+    public String getImage() {
         return product.getImage();
     }
 }

@@ -8,5 +8,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BasicAuthorization {
-    boolean required() default true;
 }

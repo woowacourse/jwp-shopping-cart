@@ -11,7 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.Map;
 
 @JdbcTest
-@Sql(scripts = {"classpath:truncateTable.sql","classpath:productsTestData.sql","classpath:userTestData.sql","classpath:cartTestData.sql"})
+@Sql(scripts = {"classpath:truncateTable.sql", "classpath:productsTestData.sql", "classpath:userTestData.sql", "classpath:cartTestData.sql"})
 class JdbcCartDaoTest {
     private final JdbcTemplate jdbcTemplate;
     private final JdbcCartDao jdbcCartDao;
@@ -21,9 +21,10 @@ class JdbcCartDaoTest {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcCartDao = new JdbcCartDao(jdbcTemplate);
     }
+
     @Test
-    void addProduct(){
-        jdbcCartDao.addProduct(1l,1l);
+    void addProduct() {
+        jdbcCartDao.addProduct(1l, 1l);
         final Map<String, Object> actual = jdbcTemplate.queryForMap("SELECT * FROM cart_table ORDER BY id DESC LIMIT 1");
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(actual.get("user_id")).isEqualTo(1l);
@@ -32,16 +33,16 @@ class JdbcCartDaoTest {
     }
 
     @Test
-    void readAll(){
+    void readAll() {
         Assertions.assertThat(jdbcCartDao.findByUserEmail("test1@test1.com")).hasSize(2);
     }
 
     @Test
-    void delete(){
+    void delete() {
         jdbcCartDao.delete(1l);
         Assertions.assertThat(jdbcTemplate.query(
-                "SELECT * FROM cart_table",
-                        (rs,rowNum)->rs.getLong("id")
+                        "SELECT * FROM cart_table",
+                        (rs, rowNum) -> rs.getLong("id")
                 )
         ).hasSize(1);
     }

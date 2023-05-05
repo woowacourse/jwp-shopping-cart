@@ -25,11 +25,12 @@ public class JdbcUserTableDao {
 
         );
     }
-    public User findByEmail(final String userEmail){
+
+    public User findByEmail(final String userEmail) {
         final String sql = "SELECT * FROM user_table where user_email = ?";
         return jdbcTemplate.queryForObject(
                 sql,
-                (rs,rowNUm) ->{
+                (rs, rowNUm) -> {
                     return new User(
                             rs.getLong("id"),
                             rs.getString("user_email"),

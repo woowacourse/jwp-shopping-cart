@@ -9,13 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class BasicAuthorizationExtractor {
     private static UserService userService;
+
     @Autowired
     public BasicAuthorizationExtractor(UserService userService) {
         this.userService = userService;
     }
 
-    public static UserDto extract(final String header){
-        if(header== null){
+    public static UserDto extract(final String header) {
+        if (header == null) {
             throw new IllegalArgumentException("header가 비어있습니다");
         }
 
@@ -24,7 +25,6 @@ public class BasicAuthorizationExtractor {
         String[] emailAndPassword = new String(bytes).split(":");
         String email = emailAndPassword[0];
         String password = emailAndPassword[1];
-
         Long id = userService.findLoginUserId(email);
         return new UserDto.Builder()
                 .id(id)
