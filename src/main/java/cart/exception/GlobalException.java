@@ -7,4 +7,9 @@ public class GlobalException extends RuntimeException {
     public GlobalException(final String message) {
         this.message = message;
     }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }

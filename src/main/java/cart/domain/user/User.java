@@ -27,4 +27,13 @@ public final class User {
     public String getUserPasswordValue() {
         return userPassword.getUserPassword();
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userEmail=" + userEmail +
+                ", userPassword=" + userPassword +
+                '}';
+    }
 }

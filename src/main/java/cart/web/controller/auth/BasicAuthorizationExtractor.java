@@ -1,21 +1,23 @@
 package cart.web.controller.auth;
 
 import cart.domain.user.User;
-import cart.exception.UnAuthorizedException;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class BasicAuthorizationExtractor implements AuthorizationExtractor<User> {
+public final class BasicAuthorizationExtractor {
+
+    private BasicAuthorizationExtractor() {
+    }
+
+    private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
-    @Override
-    public User extract(final HttpServletRequest request) {
+    public static User extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
-
         if (header == null) {
-            throw new UnAuthorizedException();
+            return null;
         }
 
         if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
@@ -30,6 +32,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<User>
             return new User(email, password);
         }
 
-        throw new UnAuthorizedException();
+        return null;
     }
+
 }

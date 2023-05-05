@@ -1,7 +1,5 @@
 package cart.web.controller.cart;
 
-import cart.domain.user.User;
-import cart.web.controller.auth.Login;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -9,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class CartViewController {
 
     @GetMapping("/cart")
-    public String renderCart(@Login User user) {
+    public String renderCart() {
         return "cart.html";
     }
 }

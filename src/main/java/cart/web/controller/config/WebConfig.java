@@ -1,4 +1,4 @@
-package cart;
+package cart.web.controller.config;
 
 import cart.web.controller.auth.LoginCheckInterceptor;
 import cart.web.controller.auth.LoginUserArgumentResolver;
@@ -12,15 +12,23 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    private final LoginUserArgumentResolver loginUserArgumentResolver;
+    private final LoginCheckInterceptor loginCheckInterceptor;
+
+    public WebConfig(final LoginUserArgumentResolver loginUserArgumentResolver, final LoginCheckInterceptor loginCheckInterceptor) {
+        this.loginUserArgumentResolver = loginUserArgumentResolver;
+        this.loginCheckInterceptor = loginCheckInterceptor;
+    }
+
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LoginUserArgumentResolver());
+        resolvers.add(loginUserArgumentResolver);
     }
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginCheckInterceptor())
+        registry.addInterceptor(loginCheckInterceptor)
                 .order(1)
-                .addPathPatterns("/cart/**");
+                .addPathPatterns("/cart/");
     }
 }

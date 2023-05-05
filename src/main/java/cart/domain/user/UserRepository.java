@@ -11,4 +11,6 @@ public interface UserRepository {
     List<User> findAll();
 
     Optional<User> findUserByEmail(String email);
+
+    Optional<User> findUserByEmailAndPassword(String email, String password);
 }

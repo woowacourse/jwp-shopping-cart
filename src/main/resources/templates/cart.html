@@ -26,7 +26,7 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/cart.js}"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const credentials = localStorage.getItem('credentials');
         if (!credentials) {
             alert('사용자 정보가 없습니다.');
@@ -36,17 +36,20 @@
 
         axios.request({
             url: '/cart/all',
+            method: 'GET',
             headers: {
                 'Authorization': `Basic ${credentials}`
             }
         }).then((response) => {
-            const {data} = response;
+            console.log(response);
+            const cartItems = response.data;
+
             let productElement = '';
-            data.forEach(cartItem => {
+            cartItems.forEach(cartItem => {
                 productElement += `
                         <div class="cart-item">
                           <div class="cart-item-info">
-                            <img src="${cartItem.imageUrl}" alt="imageUrl"/> <!-- 상품 이미지 -->
+                            <img src="${cartItem.imageUrl}" alt=""/> <!-- 상품 이미지 -->
                             <div class="cart-item-name">${cartItem.name}</div> <!-- 상품 이름 -->
                             <div class="cart-item-price">${cartItem.price}원</div> <!-- 상품 가격 -->
                             <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.cartProductId})">Delete</button>
@@ -61,6 +64,8 @@
         });
 
     });
+
+
 </script>
 </body>
 </html>

@@ -20,20 +20,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(GlobalException.class)
     public ResponseEntity<ExceptionResponse> globalException(final GlobalException e) {
-        log.info("errorMessage = {}", e.getMessage());
+        log.info("error = ", e);
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> methodArgumentNotValidException(final MethodArgumentNotValidException e) {
         final String errorMessages = getErrorMessage(e);
-        log.info("errorMessages = {}", errorMessages);
+        log.info("error = ", e);
         return new ResponseEntity<>(new ExceptionResponse(errorMessages), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UnAuthorizedException.class)
     public ResponseEntity<ExceptionResponse> unAuthorizedException(final UnAuthorizedException e) {
-        log.info("errorMessage = {}", e.getMessage());
+        log.info("error = ", e);
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 

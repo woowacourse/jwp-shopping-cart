@@ -41,4 +41,15 @@ public class UserDao implements UserRepository {
             return Optional.empty();
         }
     }
+
+    @Override
+    public Optional<User> findUserByEmailAndPassword(final String email, final String password) {
+        final String query = "SELECT u.id, u.email, u.password FROM _user u WHERE u.email = ? and u.password = ?";
+        try {
+            final User user = jdbcTemplate.queryForObject(query, userRowMapper, email, password);
+            return Optional.of(user);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
 }

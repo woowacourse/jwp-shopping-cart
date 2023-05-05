@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,5 +21,15 @@ public class UserService {
 
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    public Optional<User> findUserByEmailAndPassword(final String email, final String password) {
+        return userRepository.findUserByEmailAndPassword(email, password);
+    }
+
+    public boolean isExistUser(final User user) {
+        final Optional<User> userOptional = userRepository.findUserByEmailAndPassword(
+                user.getUserEmailValue(), user.getUserPasswordValue());
+        return userOptional.isPresent();
     }
 }
