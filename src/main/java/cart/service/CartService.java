@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cart.dao.UserDao;
+import cart.dao.dto.UserDto;
 import cart.domain.Cart;
 import cart.domain.CartItem;
 import cart.domain.Product;
@@ -32,7 +33,7 @@ public class CartService {
 
     @Transactional
     public void addToCart(Integer userId, Integer productId) {
-        User user = userDao.selectBy(userId);
+        User user = getUserFrom(userDao.selectBy(userId));
         Product product = productRepository.findBy(productId);
 
         Cart cart = cartRepository.getCartOf(user);
@@ -43,7 +44,7 @@ public class CartService {
 
     @Transactional
     public void deleteFromCart(Integer userId, Integer cartItemId) {
-        User user = userDao.selectBy(userId);
+        User user = getUserFrom(userDao.selectBy(userId));
         CartItem cartItem = cartItemRepository.findBy(cartItemId);
 
         Cart cart = cartRepository.getCartOf(user);
@@ -53,8 +54,16 @@ public class CartService {
     }
 
     public List<CartItem> getCartItemsOf(Integer userId) {
-        User user = userDao.selectBy(userId);
+        User user = getUserFrom(userDao.selectBy(userId));
         Cart cart = cartRepository.getCartOf(user);
         return cart.getItems();
+    }
+
+    private User getUserFrom(UserDto userDto) {
+        return new User(
+                userDto.getId(),
+                userDto.getEmail(),
+                userDto.getPassword()
+        );
     }
 }

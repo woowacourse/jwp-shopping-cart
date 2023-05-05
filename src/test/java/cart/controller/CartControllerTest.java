@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Collections;
@@ -23,9 +22,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.Base64Utils;
 
 import cart.dao.UserDao;
+import cart.dao.dto.UserDto;
 import cart.domain.CartItem;
 import cart.domain.Product;
-import cart.domain.User;
 import cart.service.CartService;
 
 @WebMvcTest(CartController.class)
@@ -50,9 +49,9 @@ class CartControllerTest {
         given(userDao.selectBy(anyString()))
                 .willThrow(new EmptyResultDataAccessException(1));
         given(userDao.selectBy(eq(EMAIL)))
-                .willReturn(new User(USER_ID, EMAIL, PASSWORD));
+                .willReturn(new UserDto(USER_ID, EMAIL, PASSWORD));
         given(userDao.selectBy(eq(OTHER_EMAIL)))
-                .willReturn(new User(OTHER_USER_ID, OTHER_EMAIL, PASSWORD));
+                .willReturn(new UserDto(OTHER_USER_ID, OTHER_EMAIL, PASSWORD));
 
         given(cartService.getCartItemsOf(any()))
                 .willReturn(Collections.emptyList());

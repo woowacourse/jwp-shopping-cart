@@ -11,10 +11,10 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import cart.controller.auth.dto.AuthInfo;
 import cart.controller.auth.exception.AuthenticateFailException;
-import cart.controller.auth.exception.InvalidAuthenticationException;
 import cart.controller.auth.exception.EmptyAuthenticationException;
+import cart.controller.auth.exception.InvalidAuthenticationException;
 import cart.dao.UserDao;
-import cart.domain.User;
+import cart.dao.dto.UserDto;
 import cart.infra.BasicAuthorizationExtractor;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
@@ -33,8 +33,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         validateHasEmailAndPasswordIn(authInfo);
 
         try {
-            final User user = userDao.selectBy(authInfo.getEmail());
-            validatePasswordMatches(authInfo, user);
+            final UserDto userDto = userDao.selectBy(authInfo.getEmail());
+            validatePasswordMatches(authInfo, userDto);
         } catch (EmptyResultDataAccessException exception) {
             throw new InvalidAuthenticationException();
         }
@@ -54,8 +54,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
     }
 
-    private void validatePasswordMatches(AuthInfo authInfo, User user) {
-        if (!Objects.equals(authInfo.getPassword(), user.getPassword())) {
+    private void validatePasswordMatches(AuthInfo authInfo, UserDto userDto) {
+        if (!Objects.equals(authInfo.getPassword(), userDto.getPassword())) {
             throw new AuthenticateFailException();
         }
     }

@@ -45,11 +45,11 @@ public class UserDao {
         );
     }
 
-    public User selectBy(Integer id) {
+    public UserDto selectBy(Integer id) {
         String sql = "SELECT id, email, password FROM users WHERE id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
-                (rs, rowNum) -> new User(
+                (rs, rowNum) -> new UserDto(
                         rs.getInt("id"),
                         rs.getString("email"),
                         rs.getString("password")
@@ -58,11 +58,11 @@ public class UserDao {
         );
     }
 
-    public User selectBy(String email) {
+    public UserDto selectBy(String email) {
         String sql = "SELECT id, email, password FROM users WHERE email = ?";
         return jdbcTemplate.queryForObject(
                 sql,
-                (rs, rowNum) -> new User(
+                (rs, rowNum) -> new UserDto(
                         rs.getInt("id"),
                         rs.getString("email"),
                         rs.getString("password")
