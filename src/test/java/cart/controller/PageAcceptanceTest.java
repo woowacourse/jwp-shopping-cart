@@ -43,4 +43,14 @@ class PageAcceptanceTest {
 
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
+
+    @DisplayName("장바구니 페이지에 접속하면 상태 코드로 200을 반환한다.")
+    @Test
+    void cart_page() {
+        ExtractableResponse<Response> result = get("/cart")
+            .then()
+            .extract();
+
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
 }
