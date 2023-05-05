@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS CART;
+DROP TABLE IF EXISTS PRODUCT;
+DROP TABLE IF EXISTS MEMBER;
+
 CREATE TABLE PRODUCT (
     id          INT           NOT NULL AUTO_INCREMENT,
     `name`      VARCHAR(50)   NOT NULL,
@@ -8,10 +12,9 @@ CREATE TABLE PRODUCT (
 
 CREATE TABLE MEMBER (
     id          INT           NOT NULL AUTO_INCREMENT,
-    email       VARCHAR(255)  NOT NULL,
+    email       VARCHAR(255)  NOT NULL UNIQUE,
     password    VARCHAR(255)  NOT NULL,
-    PRIMARY KEY (email),
-    UNIQUE KEY unique_email (email)
+    PRIMARY KEY (email)
 );
 
 CREATE TABLE CART (
