@@ -1,7 +1,6 @@
 INSERT INTO member
 VALUES (null, 'turtle@admin', 'turtlepassword')
-    INSERT
-INTO member
+INSERT INTO member
 VALUES (null, 'hongo@admin', 'hongopassword' )
 
 INSERT INTO product
