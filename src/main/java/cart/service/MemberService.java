@@ -24,6 +24,7 @@ public class MemberService {
         memberDao.save(member);
     }
 
+    @Transactional(readOnly = true)
     public List<MemberDto> findAll() {
         List<Member> members = memberDao.findAll();
         return members.stream()
