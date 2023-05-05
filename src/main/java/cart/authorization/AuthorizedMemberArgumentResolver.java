@@ -1,6 +1,5 @@
 package cart.authorization;
 
-import cart.exception.UnauthorizedMemberException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -21,7 +20,7 @@ public class AuthorizedMemberArgumentResolver implements HandlerMethodArgumentRe
         final HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         final Object authInfo = request.getAttribute(MemberLoginInterceptor.AUTH_INFO);
         if (authInfo == null) {
-            throw new UnauthorizedMemberException("인증되지 않은 사용자입니다");
+            throw new IllegalStateException("AuthInfo가 존재하지 않음");
         }
 
         return authInfo;

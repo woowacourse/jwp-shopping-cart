@@ -6,7 +6,7 @@ import lombok.Getter;
 public class ProductImageUrl {
 
     public static final int MIN_LENGTH = 1;
-    public static final int MAX_LENGTH = 1000;
+    public static final int MAX_LENGTH = 10000;
 
     private final String productImageUrl;
 
