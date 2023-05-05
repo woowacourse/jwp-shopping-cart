@@ -12,12 +12,8 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public static Product of(final String name, final int price, final String imageUrl) {
-        return new Product(
-                new Name(name),
-                new Price(price),
-                new Image(imageUrl)
-        );
+    public Product(final String name, final int price, final String imageUrl) {
+        this(new Name(name), new Price(price), new Image(imageUrl));
     }
 
     public String getName() {

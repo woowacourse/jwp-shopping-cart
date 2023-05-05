@@ -29,7 +29,7 @@ public class ProductCommandService {
     }
 
     public void modifyProduct(final Long productId, final ProductModifyRequest productModifyRequest) {
-        final Product modifiedProduct = Product.of(
+        final Product modifiedProduct = new Product(
                 productModifyRequest.getName(),
                 productModifyRequest.getPrice(),
                 productModifyRequest.getImageUrl()
