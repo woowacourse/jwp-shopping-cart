@@ -21,14 +21,7 @@ public class Config implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
-                .excludePathPatterns(
-                        "/",
-                        "/settings",
-                        "/items/**",
-                        "/cart",
-                        "/css/**",
-                        "/js/**"
-                );
+                .addPathPatterns("/carts/**");
     }
 
     @Override

@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS CARTS
     user_id     BIGINT          NOT NULL,
     item_id     BIGINT          NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES USERS(id),
-    FOREIGN KEY (item_id) REFERENCES ITEMS(id)
+    FOREIGN KEY (user_id) REFERENCES USERS(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES ITEMS(id) ON DELETE CASCADE
 );
 
 INSERT INTO users (email, password) values ('email1@email.com', '12345678');
