@@ -3,6 +3,7 @@ package cart.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import cart.dao.ProductDao;
@@ -29,8 +30,11 @@ public class ProductRepository {
     }
 
     public Product findBy(final Integer id) {
-        // TODO: 2023/05/05 없는 Id 예외 처리
-        return toProduct(productDao.select(id));
+        try {
+            return toProduct(productDao.select(id));
+        } catch (EmptyResultDataAccessException exception) {
+            throw new NoSuchIdException();
+        }
     }
 
     public void delete(final Integer id) {
