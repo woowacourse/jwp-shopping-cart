@@ -6,24 +6,23 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import cart.domain.member.MemberService;
-import cart.web.cart.controller.AuthorizationExtractor;
+import cart.domain.member.AuthService;
 import cart.web.cart.dto.AuthInfo;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     private final AuthorizationExtractor<AuthInfo> authorizationExtractor;
-    private final MemberService memberService;
+    private final AuthService authService;
 
     public WebMvcConfiguration(final AuthorizationExtractor<AuthInfo> authorizationExtractor,
-        final MemberService memberService) {
+        final AuthService authService) {
         this.authorizationExtractor = authorizationExtractor;
-        this.memberService = memberService;
+        this.authService = authService;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthenticationArgumentResolver(authorizationExtractor, memberService));
+        resolvers.add(new AuthenticationArgumentResolver(authorizationExtractor, authService));
     }
 }

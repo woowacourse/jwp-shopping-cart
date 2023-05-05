@@ -8,19 +8,18 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import cart.domain.member.MemberService;
-import cart.web.cart.controller.AuthorizationExtractor;
+import cart.domain.member.AuthService;
 import cart.web.cart.dto.AuthInfo;
 
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final AuthorizationExtractor<AuthInfo> authorizationExtractor;
-    private final MemberService memberService;
+    private final AuthService authService;
 
     public AuthenticationArgumentResolver(final AuthorizationExtractor<AuthInfo> authorizationExtractor,
-        final MemberService memberService) {
+        final AuthService authService) {
         this.authorizationExtractor = authorizationExtractor;
-        this.memberService = memberService;
+        this.authService = authService;
     }
 
     @Override
@@ -37,7 +36,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
         final AuthInfo authInfo = authorizationExtractor.extract(request);
         final String email = authInfo.getEmail();
         final String password = authInfo.getPassword();
-        final long memberId = memberService.getValidatedMemberId(email, password);
+        final long memberId = authService.getValidatedMemberId(email, password);
         return new AuthorizedMember(memberId, email, password);
     }
 }
