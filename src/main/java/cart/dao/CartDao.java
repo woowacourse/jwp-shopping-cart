@@ -9,4 +9,6 @@ public interface CartDao {
     Long insert(Long userId, Long productId);
 
     List<CartEntity> findByUserId(Long userId);
+
+    void deleteById(Long id);
 }
