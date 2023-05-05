@@ -7,10 +7,8 @@ import org.springframework.util.Base64Utils;
 @Component
 public class AuthorizationExtractor {
 
-
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
-
 
     public MemberInformation extract(final String header) {
         if (header == null) {

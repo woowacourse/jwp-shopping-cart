@@ -31,7 +31,6 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     public Member save(final Member member) {
         final String sql = "INSERT INTO MEMBER (email, password, created_at, updated_at) VALUES (?, ?, ?, ?);";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
