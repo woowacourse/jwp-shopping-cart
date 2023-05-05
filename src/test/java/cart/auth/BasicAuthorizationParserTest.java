@@ -22,7 +22,7 @@ class BasicAuthorizationParserTest {
             "AnotherValue, pizza@pizza.com:password",
             "Basic, pizza@pizza.com.password"
     })
-    @ParameterizedTest(name = "입력값이 {0}라면 {1}를 반환한다")
+    @ParameterizedTest(name = "올바른 Basic 인증 유형이 아니라면 InvalidBasicCredential 예외를_던진다. 입력: {0} {1}")
     void 올바른_Basic_인증_유형이_아니라면_InvalidBasicCredential_예외를_던진다(final String startWith, final String credential) {
         // given
         final String encodedCredential = new String(Base64.getEncoder().encode((credential.getBytes())));
