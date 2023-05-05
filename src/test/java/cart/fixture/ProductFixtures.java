@@ -1,6 +1,6 @@
 package cart.fixture;
 
-import cart.dto.ProductModifyRequest;
+import cart.dto.ProductUpdateRequest;
 import cart.dto.ProductRegisterRequest;
 import cart.dto.ProductResponse;
 import cart.entity.ProductEntity;
@@ -38,8 +38,8 @@ public class ProductFixtures {
     public static final ProductResponse DUMMY_BARON_RESPONSE =
             new ProductResponse(DUMMY_BARON_ID, DUMMY_BARON_IMG_URL, DUMMY_BARON_NAME, DUMMY_BARON_PRICE);
 
-    public static final ProductModifyRequest DUMMY_SEONGHA_MODIFY_REQUEST =
-            new ProductModifyRequest("new" + DUMMY_SEONGHA_NAME, 10000 + DUMMY_SEONGHA_PRICE, "new" + DUMMY_SEONGHA_IMG_URL);
+    public static final ProductUpdateRequest DUMMY_SEONGHA_MODIFY_REQUEST =
+            new ProductUpdateRequest("new" + DUMMY_SEONGHA_NAME, 10000 + DUMMY_SEONGHA_PRICE, "new" + DUMMY_SEONGHA_IMG_URL);
 
     public static final ProductRegisterRequest DUMMY_SEONGHA_REGISTER_REQUEST =
             new ProductRegisterRequest(DUMMY_SEONGHA_IMG_URL, DUMMY_SEONGHA_NAME, DUMMY_SEONGHA_PRICE);

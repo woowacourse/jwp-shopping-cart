@@ -2,7 +2,7 @@ package cart.dto;
 
 import javax.validation.constraints.NotBlank;
 
-public class ProductModifyRequest {
+public class ProductUpdateRequest {
 
     private String name;
 
@@ -11,10 +11,10 @@ public class ProductModifyRequest {
     @NotBlank(message = "이미지 URL은 필수입니다.")
     private String imgUrl;
 
-    private ProductModifyRequest() {
+    private ProductUpdateRequest() {
     }
 
-    public ProductModifyRequest(String name, int price, String imgUrl) {
+    public ProductUpdateRequest(String name, int price, String imgUrl) {
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;

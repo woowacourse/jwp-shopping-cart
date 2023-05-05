@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cart.dto.ProductModifyRequest;
+import cart.dto.ProductUpdateRequest;
 import cart.dto.ProductResponse;
 import cart.exception.ProductNotFoundException;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +45,7 @@ class ProductServiceTest {
     @DisplayName("상품 수정 시 수정 상품 ID에 해당하는 상품이 없다면 예외가 발생한다.")
     void modifyByIdWhenProductNotFound() {
         // when, then
-        assertThatThrownBy(() -> productService.modifyById(DUMMY_SEONGHA_MODIFY_REQUEST, 100L))
+        assertThatThrownBy(() -> productService.updateById(DUMMY_SEONGHA_MODIFY_REQUEST, 100L))
                 .isInstanceOf(ProductNotFoundException.class)
                 .hasMessage("상품 ID에 해당하는 상품이 존재하지 않습니다.");
 
@@ -56,10 +56,10 @@ class ProductServiceTest {
     void modifyById() {
         // given
         long savedId = productService.save(DUMMY_SEONGHA_REGISTER_REQUEST);
-        ProductModifyRequest productToModify = DUMMY_SEONGHA_MODIFY_REQUEST;
+        ProductUpdateRequest productToModify = DUMMY_SEONGHA_MODIFY_REQUEST;
 
         // when
-        productService.modifyById(productToModify, savedId);
+        productService.updateById(productToModify, savedId);
 
         // then
         ProductResponse foundProduct = productService.findAllProducts().get(0);

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import cart.domain.product.Product;
-import cart.dto.ProductModifyRequest;
+import cart.dto.ProductUpdateRequest;
 import cart.dto.ProductRegisterRequest;
 import cart.dao.ProductDao;
 import cart.entity.ProductEntity;
@@ -39,9 +39,9 @@ public class ProductService {
         return productDao.insert(productEntity);
     }
 
-    public void modifyById(ProductModifyRequest productModifyRequest, long id) {
-        Product product = Product.createBy(productModifyRequest.getName(), productModifyRequest.getImgUrl(),
-                productModifyRequest.getPrice());
+    public void updateById(ProductUpdateRequest productUpdateRequest, long id) {
+        Product product = Product.createBy(productUpdateRequest.getName(), productUpdateRequest.getImgUrl(),
+                productUpdateRequest.getPrice());
 
         checkProductExistBy(id);
 

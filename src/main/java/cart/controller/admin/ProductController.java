@@ -1,6 +1,6 @@
 package cart.controller.admin;
 
-import cart.dto.ProductModifyRequest;
+import cart.dto.ProductUpdateRequest;
 import cart.service.ProductService;
 import cart.dto.ProductRegisterRequest;
 import cart.dto.ProductResponse;
@@ -42,9 +42,9 @@ public class ProductController {
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<Void> modifyProduct(@RequestBody @Valid ProductModifyRequest productModifyRequest,
+    public ResponseEntity<Void> updateProduct(@RequestBody @Valid ProductUpdateRequest productUpdateRequest,
                                               @PathVariable long id) {
-        productService.modifyById(productModifyRequest, id);
+        productService.updateById(productUpdateRequest, id);
         return ResponseEntity.noContent().build();
 
     }
