@@ -1,7 +1,6 @@
 package cart.controller;
 
-import cart.controller.Exception.CartHasDuplicatedItemsException;
-import cart.controller.Exception.MissingAuthorizationHeaderException;
+import cart.controller.exception.CartHasDuplicatedItemsException;
 import cart.dto.response.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

@@ -1,7 +1,7 @@
 package cart.controller.rest;
 
 import cart.auth.AuthResolving;
-import cart.controller.Exception.UncertifiedMemberException;
+import cart.controller.exception.UncertifiedMemberException;
 import cart.dto.auth.AuthInfo;
 import cart.dto.response.CartResponse;
 import cart.dto.response.ItemResponse;

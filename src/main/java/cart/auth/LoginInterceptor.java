@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.controller.Exception.MissingAuthorizationHeaderException;
+import cart.controller.exception.MissingAuthorizationHeaderException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;

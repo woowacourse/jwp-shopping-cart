@@ -1,8 +1,8 @@
 package cart.service;
 
-import cart.controller.Exception.CartHasDuplicatedItemsException;
-import cart.domain.Cart.Cart;
-import cart.domain.Cart.Item;
+import cart.controller.exception.CartHasDuplicatedItemsException;
+import cart.domain.cart.Cart;
+import cart.domain.cart.Item;
 import cart.domain.product.Product;
 import cart.dto.response.CartResponse;
 import cart.dto.response.ItemResponse;

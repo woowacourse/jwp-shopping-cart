@@ -1,4 +1,4 @@
-package cart.controller.Exception;
+package cart.controller.exception;
 
 public class CartHasDuplicatedItemsException extends RuntimeException {
     public CartHasDuplicatedItemsException() {

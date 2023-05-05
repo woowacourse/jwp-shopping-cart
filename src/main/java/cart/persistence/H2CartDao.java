@@ -1,6 +1,6 @@
 package cart.persistence;
 
-import cart.domain.Cart.Item;
+import cart.domain.cart.Item;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;

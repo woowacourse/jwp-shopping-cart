@@ -1,4 +1,4 @@
-package cart.controller.Exception;
+package cart.controller.exception;
 
 public class UncertifiedMemberException extends RuntimeException {
     public UncertifiedMemberException() {
