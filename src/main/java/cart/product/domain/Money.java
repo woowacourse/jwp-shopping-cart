@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public class Money {
 
-    private static final int MIN_AMOUNT = 0;
-    private static final int MAX_AMOUNT = 1_000_000_000;
+    public static final int MIN_AMOUNT = 0;
+    public static final int MAX_AMOUNT = 1_000_000_000;
 
     private final int amount;
 

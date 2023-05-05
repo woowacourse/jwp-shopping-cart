@@ -49,11 +49,28 @@
     - [x] 장바구니에 담긴 모든 상품을 조회할 수 있다.
 
 ### 발생 예외 정리
-- product 패키지
+- product
   - Product
     - 이름이 1~30자가 아닌 경우 -> IllegalArgumentException
     - 이미지 URL이 1~1000자가 아닌 경우 -> IllegalArgumentException
     - 가격이 영~십억이 아닌 경우 -> IllegalArgumentException
-  - ProductService
-    - getProductById, update, delete에서 productId가 유효하지 않은 경우 -> NoSuchElementException
-  - 
+  - update, delete
+    - productId가 유효하지 않은 경우 -> NoSuchElementException
+
+- member 패키지
+  - Member
+    - IllegalArgumentException 발생
+    - Email: 이메일 패턴을 만족하지 않는 경우 ("^[A-Za-z0-9+_.-]+@(\\S+)$")
+    - Password: 8~40자가 아닌 경우, 영문자 숫자 조합이 아닌 경우
+    - PhoneNumber: 10~20자가 아닌 경우, 오직 숫자로만 이루어지지 않은 경우
+  - add
+    - 이메일이 중복인 경우 -> DuplicateEmailException
+
+- cartitems 패키지
+  - 공통
+    - 인증되지 않은 사용자인 경우 -> UnauthorizedMemberException
+  - add
+    - 존재하지 않는 상품을 추가할 경우 -> NoSuchElementException
+    - 이미 담은 상품을 다시 추가할 경우 -> DuplicateCartItemException
+  - delete
+    - 존재하지 않는 상품을 삭제할 경우 -> NoSuchElementException
