@@ -4,16 +4,16 @@ import java.sql.Timestamp;
 
 public class CartEntity {
     private final Long id;
-    private final MemberEntity member;
-    private final ProductEntity product;
+    private final Long memberId;
+    private final Long productId;
     private int count;
     private final Timestamp createdAt;
     private final Timestamp updatedAt;
 
-    public CartEntity(Long id, MemberEntity member, ProductEntity product, int count, Timestamp createdAt, Timestamp updatedAt) {
+    public CartEntity(Long id, Long memberId, Long productId, int count, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
-        this.member = member;
-        this.product = product;
+        this.memberId = memberId;
+        this.productId = productId;
         this.count = count;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -23,12 +23,12 @@ public class CartEntity {
         return id;
     }
 
-    public MemberEntity getMember() {
-        return member;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public ProductEntity getProduct() {
-        return product;
+    public Long getProductId() {
+        return productId;
     }
 
     public int getCount() {

@@ -46,8 +46,8 @@ public class ProductService {
     }
 
     public void deleteById(Long id) {
-        productDao.findById(id)
+        ProductEntity product = productDao.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다." + System.lineSeparator() + "id : " + id));
-        productDao.deleteById(id);
+        productDao.deleteById(product.getId());
     }
 }

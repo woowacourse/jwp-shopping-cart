@@ -6,7 +6,6 @@ import cart.domain.Cart;
 import cart.dto.request.CartRequest;
 import cart.dto.response.CartResponse;
 import cart.entity.CartEntity;
-import cart.entity.ProductEntity;
 import cart.exception.ResourceNotFoundException;
 import cart.mapper.CartMapper;
 import org.springframework.stereotype.Service;
@@ -44,8 +43,7 @@ public class CartService {
 
     private boolean isExistProduct(CartRequest cartRequest, long memberId) {
         List<CartEntity> carts = cartDao.findByMemberId(memberId);
-        return carts.stream().map(CartEntity::getProduct)
-                .map(ProductEntity::getId)
+        return carts.stream().map(CartEntity::getProductId)
                 .anyMatch(id -> id == cartRequest.getProductId());
     }
 

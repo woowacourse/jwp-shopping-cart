@@ -13,19 +13,14 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Repository
 public class H2CartDao implements CartDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final ProductDao productDao;
-    private final MemberDao memberDao;
 
-    public H2CartDao(JdbcTemplate jdbcTemplate, H2ProductDao productDao, H2MemberDao memberDao) {
-        this.productDao = productDao;
-        this.memberDao = memberDao;
+    public H2CartDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart")
@@ -36,10 +31,8 @@ public class H2CartDao implements CartDao {
         return (resultSet, rowNum) ->
                 new CartEntity(
                         resultSet.getLong("id"),
-                        memberDao.findById(resultSet.getLong("member_id"))
-                                .orElseThrow(() -> new NoSuchElementException("회원 조회 중 문제가 발생했습니다.")),
-                        productDao.findById(resultSet.getLong("product_id"))
-                                .orElseThrow(() -> new NoSuchElementException("상품 조회 중 문제가 발생했습니다.")),
+                        resultSet.getLong("member_id"),
+                        resultSet.getLong("product_id"),
                         resultSet.getInt("count"),
                         resultSet.getTimestamp("created_at"),
                         resultSet.getTimestamp("updated_at")
