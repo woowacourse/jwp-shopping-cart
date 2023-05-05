@@ -1,10 +1,10 @@
 package cart.dao;
 
 import cart.domain.Id;
-import cart.domain.ImageUrl;
-import cart.domain.Price;
-import cart.domain.Product;
-import cart.domain.ProductName;
+import cart.domain.product.ImageUrl;
+import cart.domain.product.Price;
+import cart.domain.product.Product;
+import cart.domain.product.ProductName;
 import cart.exception.NotFoundException;
 import java.util.List;
 import java.util.Optional;

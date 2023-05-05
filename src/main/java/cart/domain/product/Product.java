@@ -1,5 +1,6 @@
-package cart.domain;
+package cart.domain.product;
 
+import cart.domain.Id;
 import java.math.BigDecimal;
 import java.util.Objects;
 

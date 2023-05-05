@@ -2,10 +2,10 @@ package cart.service;
 
 import cart.dao.ProductRepository;
 import cart.domain.Id;
-import cart.domain.ImageUrl;
-import cart.domain.Price;
-import cart.domain.Product;
-import cart.domain.ProductName;
+import cart.domain.product.ImageUrl;
+import cart.domain.product.Price;
+import cart.domain.product.Product;
+import cart.domain.product.ProductName;
 import cart.dto.ProductResponse;
 import cart.dto.ProductRequest;
 import java.util.List;
