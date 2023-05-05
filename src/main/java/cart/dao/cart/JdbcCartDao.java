@@ -45,10 +45,10 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
-    public Optional<Cart> findByProductId(final Long productId) {
-        final String sql = "select * from cart where product_id = ?";
+    public Optional<Cart> findByMemberIdAndProductId(final Long memberId, final Long productId) {
+        final String sql = "select * from cart where member_id = ? and product_id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartRowMapper, productId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartRowMapper, memberId, productId));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

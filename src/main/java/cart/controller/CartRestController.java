@@ -24,8 +24,8 @@ public class CartRestController {
 
     @PostMapping("/carts")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@BasicAuth final Long memberId, @RequestBody @Valid final RequestCartDto requestCartDto) {
-        cartService.create(memberId, requestCartDto);
+    public void save(@BasicAuth final Long memberId, @RequestBody @Valid final RequestCartDto requestCartDto) {
+        cartService.save(memberId, requestCartDto);
     }
 
     @GetMapping("/carts")

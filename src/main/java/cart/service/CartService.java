@@ -3,6 +3,7 @@ package cart.service;
 import cart.dao.cart.CartDao;
 import cart.dao.product.ProductDao;
 import cart.domain.cart.Cart;
+import cart.domain.cart.Quantity;
 import cart.domain.product.Product;
 import cart.dto.cart.RequestCartDto;
 import cart.dto.cart.ResponseCartDto;
@@ -22,8 +23,14 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public void create(final Long memberId, final RequestCartDto requestCartDto) {
-        final Cart cart = new Cart(requestCartDto.getProductId(), memberId);
+    public void save(final Long memberId, final RequestCartDto requestCartDto) {
+        final Long productId = requestCartDto.getProductId();
+        cartDao.findByMemberIdAndProductId(memberId, productId)
+                .ifPresentOrElse(this::update, () -> create(memberId, productId));
+    }
+
+    private void create(final Long memberId, final Long productId) {
+        final Cart cart = new Cart(productId, memberId);
         cartDao.insert(cart);
     }
 
@@ -39,5 +46,11 @@ public class CartService {
         final Product product = productDao.findByID(cart.getProductId()).orElseThrow(NoSuchElementException::new);
         final int quantity = cart.getQuantity().getValue();
         return ResponseCartDto.of(product, quantity);
+    }
+
+    private void update(final Cart cart) {
+        final Quantity updateQuantity = new Quantity(cart.getQuantity().getValue() + 1);
+        final Cart updateCart = new Cart(cart.getProductId(), cart.getMemberId(), updateQuantity);
+        cartDao.update(updateCart);
     }
 }

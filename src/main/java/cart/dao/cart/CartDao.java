@@ -10,7 +10,7 @@ public interface CartDao {
 
     List<Cart> findAll();
 
-    Optional<Cart> findByProductId(Long productId);
+    Optional<Cart> findByMemberIdAndProductId(Long memberId, Long productId);
 
     void deleteByProductId(Long productId);
 
