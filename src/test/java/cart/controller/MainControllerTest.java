@@ -1,47 +1,26 @@
 package cart.controller;
 
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import cart.controller.dto.MemberResponse;
-import cart.controller.dto.ProductResponse;
-import cart.service.MemberService;
-import cart.service.ProductService;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
-@WebMvcTest(MainController.class)
+@AutoConfigureMockMvc
+@Transactional
+@SpringBootTest
+@Sql("/scheme.sql")
 class MainControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private ProductService productService;
-
-    @MockBean
-    private MemberService memberService;
-
-    @BeforeEach
-    void setUp() {
-        final List<ProductResponse> productResponses = List.of(
-                new ProductResponse(1L, "무민", "moomin", 10000),
-                new ProductResponse(2L, "포이", "poi", 100000));
-        given(productService.findAll()).willReturn(productResponses);
-
-        final List<MemberResponse> memberResponses = List.of(
-                new MemberResponse("email@email", "password"),
-                new MemberResponse("email@email", "password"));
-        given(memberService.findAll()).willReturn(memberResponses);
-    }
 
     @Test
     void showHome() throws Exception {
