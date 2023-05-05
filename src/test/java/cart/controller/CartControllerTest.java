@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.dao.CartJdbcDao;
+import cart.dao.CarProductJdbcDao;
 import cart.dao.ProductJdbcDao;
-import cart.entity.CartEntity;
+import cart.entity.CartProductEntity;
 import cart.entity.ProductEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +32,7 @@ class CartControllerTest {
     private static final String PASSWORD = "a";
 
     @Autowired
-    private CartJdbcDao cartJdbcDao;
+    private CarProductJdbcDao cartJdbcDao;
     @Autowired
     private ProductJdbcDao productJdbcDao;
     @Autowired
@@ -88,7 +88,7 @@ class CartControllerTest {
                 .extract();
 
 
-        List<CartEntity> cartEntities = cartJdbcDao.findByMemberId(Long.valueOf(id));
+        List<CartProductEntity> cartEntities = cartJdbcDao.findByMemberId(Long.valueOf(id));
 
         Assertions.assertAll(() -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()), () -> assertThat(cartEntities.size()).isEqualTo(0));
 

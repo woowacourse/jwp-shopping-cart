@@ -1,26 +1,26 @@
 package cart.service.cart;
 
 import cart.controller.dto.request.MemberIdRequest;
-import cart.dao.CartDao;
-import cart.entity.CartEntity;
+import cart.dao.CarProductDao;
+import cart.entity.CartProductEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 public class CartDeleteService {
-    private final CartDao cartDao;
+    private final CarProductDao carProductDao;
 
 
-    public CartDeleteService(final CartDao cartDao) {
-        this.cartDao = cartDao;
+    public CartDeleteService(final CarProductDao carProductDao) {
+        this.carProductDao = carProductDao;
     }
 
 
     public void delete(final MemberIdRequest memberId, final Long productId) {
-        final CartEntity cartEntity = new CartEntity(productId, memberId.getId());
+        final CartProductEntity cartProductEntity = new CartProductEntity(productId, memberId.getId());
 
-        cartDao.deleteById(cartEntity);
+        carProductDao.deleteById(cartProductEntity);
     }
 
 }

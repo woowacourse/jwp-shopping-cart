@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.CartEntity;
+import cart.entity.CartProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -11,26 +11,26 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class CartJdbcDao implements CartDao {
+public class CarProductJdbcDao implements CarProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insert;
 
-    private final RowMapper<CartEntity> cartEntityRowMapper = ((rs, rowNum) ->
-            new CartEntity(
+    private final RowMapper<CartProductEntity> cartEntityRowMapper = ((rs, rowNum) ->
+            new CartProductEntity(
                     rs.getLong("id"),
                     rs.getLong("productId"),
                     rs.getLong("memberId")
             ));
 
-    public CartJdbcDao(final JdbcTemplate jdbcTemplate) {
+    public CarProductJdbcDao(final JdbcTemplate jdbcTemplate) {
         this.insert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("cart")
+                .withTableName("cart_product")
                 .usingGeneratedKeyColumns("id");
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public void save(final CartEntity cart) {
+    public void save(final CartProductEntity cart) {
         final Map<String, Object> parameters = new HashMap<>();
 
         parameters.put("memberId", cart.getMemberId());
@@ -40,14 +40,14 @@ public class CartJdbcDao implements CartDao {
     }
 
     @Override
-    public void deleteById(final CartEntity cart) {
-        String sql = "delete from cart where memberId = ? and productId = ?";
+    public void deleteById(final CartProductEntity cart) {
+        String sql = "delete from cart_product where memberId = ? and productId = ?";
         jdbcTemplate.update(sql, cart.getMemberId(), cart.getProductId());
     }
 
     @Override
-    public List<CartEntity> findByMemberId(final Long memberId) {
-        String sql = "select * from cart where memberId = ?";
+    public List<CartProductEntity> findByMemberId(final Long memberId) {
+        String sql = "select * from cart_product where memberId = ?";
         return jdbcTemplate.query(sql, cartEntityRowMapper, memberId);
     }
 }

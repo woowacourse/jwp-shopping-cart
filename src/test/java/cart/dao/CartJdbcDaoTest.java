@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.CartEntity;
+import cart.entity.CartProductEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,19 +20,19 @@ class CartJdbcDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private CartJdbcDao cartJdbcDao;
+    private CarProductJdbcDao cartJdbcDao;
 
     @BeforeEach
     void setUp() {
-        this.cartJdbcDao = new CartJdbcDao(jdbcTemplate);
+        this.cartJdbcDao = new CarProductJdbcDao(jdbcTemplate);
     }
 
     @Test
     void save() {
-        final CartEntity cartEntity = new CartEntity(1L, 100L, 100L);
-        cartJdbcDao.save(cartEntity);
+        final CartProductEntity cartProductEntity = new CartProductEntity(1L, 100L, 100L);
+        cartJdbcDao.save(cartProductEntity);
 
-        final List<CartEntity> cartEntities = cartJdbcDao.findByMemberId(100L);
+        final List<CartProductEntity> cartEntities = cartJdbcDao.findByMemberId(100L);
         assertAll(
                 () -> Assertions.assertThat(cartEntities.get(0).getId()).isEqualTo(1L),
                 () -> Assertions.assertThat(cartEntities.get(0).getMemberId()).isEqualTo(100L),
@@ -42,11 +42,11 @@ class CartJdbcDaoTest {
 
     @Test
     void deleteById() {
-        final CartEntity cartEntity = new CartEntity(2L, 101L, 101L);
-        cartJdbcDao.save(cartEntity);
-        cartJdbcDao.deleteById(new CartEntity(101L, 101L));
+        final CartProductEntity cartProductEntity = new CartProductEntity(2L, 101L, 101L);
+        cartJdbcDao.save(cartProductEntity);
+        cartJdbcDao.deleteById(new CartProductEntity(101L, 101L));
 
-        final List<CartEntity> cartEntities = cartJdbcDao.findByMemberId(101L);
+        final List<CartProductEntity> cartEntities = cartJdbcDao.findByMemberId(101L);
         assertAll(
                 () -> Assertions.assertThat(cartEntities.size()).isEqualTo(0)
         );
