@@ -21,11 +21,11 @@ POST /products HTTP/1.1
 
 #### body
 
-| name     | type    | description | required |
-|----------|---------|-------------|----------|
-| name     | String  | 상품명         | O        |
-| imageUrl | String  | 상품 이미지 URL  | O        |
-| price    | Integer | 상품가격        | O        |
+| name      | type    | description | required |
+|-----------|---------|-------------|----------|
+| name      | String  | 상품명         | O        |
+| image-url | String  | 상품 이미지 URL  | O        |
+| price     | Integer | 상품가격        | O        |
 
 ### Response
 
@@ -49,12 +49,12 @@ PUT /products HTTP/1.1
 
 #### body
 
-| name     | type    | description | required |
-|----------|---------|-------------|----------|
-| id       | Long    | 수정할 상품 아이디  | O        |
-| name     | String  | 상품명         | O        |
-| imageUrl | String  | 상품 이미지 URL  | O        |
-| price    | Integer | 상품가격        | O        |
+| name      | type    | description | required |
+|-----------|---------|-------------|----------|
+| id        | Long    | 수정할 상품 아이디  | O        |
+| name      | String  | 상품명         | O        |
+| image-url | String  | 상품 이미지 URL  | O        |
+| price     | Integer | 상품가격        | O        |
 
 ### Response
 
