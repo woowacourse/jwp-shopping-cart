@@ -1,6 +1,6 @@
 package cart.cartitems.controller;
 
-import cart.authorization.AuthInfo;
+import cart.authorization.AuthorizedMember;
 import cart.cartitems.dto.CartItemDto;
 import cart.cartitems.dto.request.CartItemAddRequest;
 import cart.cartitems.service.CartService;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/cart/items")
@@ -25,22 +26,26 @@ public class CartApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getItemsOfCart(AuthInfo authInfo) {
-        List<ProductDto> items = cartService.findItemsOfCart(authInfo);
+    public ResponseEntity<List<ProductDto>> getItemsOfCart(@AuthorizedMember long memberId) {
+        List<ProductDto> items = cartService.findItemsOfCart(memberId);
 
         return ResponseEntity.ok(items);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addItemToCart(AuthInfo authInfo, @RequestBody @Valid CartItemAddRequest cartItemAddRequest) {
-        final CartItemDto cartItemDto = cartService.addItemToCart(authInfo, cartItemAddRequest);
+    public ResponseEntity<Void> addItemToCart(@AuthorizedMember long memberId, @RequestBody @Valid CartItemAddRequest cartItemAddRequest) {
+        final CartItemDto cartItemDto = cartService.addItemToCart(memberId, cartItemAddRequest.getProductId());
 
         return ResponseEntity.created(URI.create("/cart/items/" + cartItemDto.getProductId())).build();
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteItemFromCart(AuthInfo authInfo, @PathVariable Long productId) {
-        cartService.deleteItemFromCart(authInfo, productId);
+    public ResponseEntity<Void> deleteItemFromCart(@AuthorizedMember long memberId, @PathVariable Long productId) {
+        if (Objects.isNull(productId)) {
+            throw new IllegalArgumentException("상품 번호를 입력해주세요");
+        }
+
+        cartService.deleteItemFromCart(memberId, productId);
 
         return ResponseEntity.noContent().build();
     }

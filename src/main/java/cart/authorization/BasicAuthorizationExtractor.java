@@ -1,21 +1,20 @@
 package cart.authorization;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-@Slf4j
-public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthInfo> {
+@Component
+public class BasicAuthorizationExtractor implements AuthorizationExtractor<MemberAuthorizationInfo> {
 
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
-    public AuthInfo extract(HttpServletRequest request) {
+    public MemberAuthorizationInfo extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
-        log.info("{}", header);
         if (header == null) {
             return null;
         }
@@ -26,11 +25,10 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
             String decodedString = new String(decodedBytes);
 
             String[] credentials = decodedString.split(DELIMITER);
-            log.info("credectials: {}, {}", credentials[0], credentials[1]);
             String email = credentials[0];
             String password = credentials[1];
 
-            return new AuthInfo(email, password);
+            return new MemberAuthorizationInfo(email, password);
         }
 
         return null;

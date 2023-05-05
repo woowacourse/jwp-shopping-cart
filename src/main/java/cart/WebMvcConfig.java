@@ -1,8 +1,9 @@
 package cart;
 
-import cart.authorization.AuthInfoArgumentResolver;
-import cart.authorization.BasicAuthorizationExtractor;
-import cart.authorization.LoginInterceptor;
+import cart.authorization.AuthorizationService;
+import cart.authorization.AuthorizedMemberArgumentResolver;
+import cart.authorization.MemberLoginInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -15,6 +16,13 @@ import java.util.List;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    private final AuthorizationService authorizationService;
+
+    @Autowired
+    public WebMvcConfig(AuthorizationService authorizationService) {
+        this.authorizationService = authorizationService;
+    }
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/cart")
@@ -23,7 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        final HandlerInterceptor interceptor = new LoginInterceptor(new BasicAuthorizationExtractor());
+        final HandlerInterceptor interceptor = new MemberLoginInterceptor(authorizationService);
 
         registry.addInterceptor(interceptor)
                 .addPathPatterns("/cart/items/**");
@@ -31,6 +39,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthInfoArgumentResolver());
+        resolvers.add(new AuthorizedMemberArgumentResolver());
     }
 }
