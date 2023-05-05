@@ -22,23 +22,26 @@ public class CartDao {
     }
 
     public Long save(final CartEntity cartEntity) {
-        final Number savedId = simpleJdbcInsert.executeAndReturnKey(
-            new BeanPropertySqlParameterSource(cartEntity));
-        return savedId.longValue();
+        final BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(cartEntity);
+
+        return simpleJdbcInsert.executeAndReturnKey(parameterSource)
+            .longValue();
     }
 
-    public void delete(final Long id) {
-        final String sql = "DELETE FROM CART WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
+    public List<Long> findIdsBy(final Long customerId, final Long productId) {
+        final String sql = "SELECT (id) FROM CART WHERE customer_id = ? AND product_id = ?";
 
-    public void deleteByCustomerIdAndProductId(final Long customerID, final Long productId) {
-        final String sql = "DELETE FROM CART WHERE customer_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, customerID, productId);
+        return jdbcTemplate.query(
+            sql,
+            (rs, rowNum) -> rs.getLong("id"),
+            customerId,
+            productId
+        );
     }
 
     public List<Long> findAllProductIdsBy(final Long customerId) {
         final String sql = "SELECT product_id FROM CART WHERE customer_id=?";
+
         return jdbcTemplate.query(
             sql,
             (rs, rowNum) -> rs.getLong("product_id"),
@@ -46,14 +49,15 @@ public class CartDao {
         );
     }
 
-    public List<Long> findIdsBy(final Long customerId, final Long productId) {
-        final String sql = "SELECT (id) FROM CART WHERE customer_id = ? AND product_id = ?";
-        final List<Long> cartIds = jdbcTemplate.query(
-            sql,
-            (rs, rowNum) -> rs.getLong("id"),
-            customerId,
-            productId
-        );
-        return cartIds;
+    public void delete(final Long id) {
+        final String sql = "DELETE FROM CART WHERE id = ?";
+
+        jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteByCustomerIdAndProductId(final Long customerID, final Long productId) {
+        final String sql = "DELETE FROM CART WHERE customer_id = ? AND product_id = ?";
+
+        jdbcTemplate.update(sql, customerID, productId);
     }
 }

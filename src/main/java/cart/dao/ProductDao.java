@@ -23,10 +23,12 @@ public class ProductDao {
         rs.getString("description")
     );
 
+    private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
             .withTableName("product")
@@ -36,42 +38,31 @@ public class ProductDao {
 
     public Long save(final ProductEntity productEntity) {
         final SqlParameterSource params = new BeanPropertySqlParameterSource(productEntity);
-        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+
+        return simpleJdbcInsert.executeAndReturnKey(params)
+            .longValue();
     }
 
     public Optional<ProductEntity> findById(final Long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
-        final ProductEntity productEntity = namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(
-            sql,
-            PRODUCT_ENTITY_ROW_MAPPER,
-            id
-        );
+        final ProductEntity productEntity = jdbcTemplate.queryForObject(sql, PRODUCT_ENTITY_ROW_MAPPER, id);
+
         return Optional.ofNullable(productEntity);
     }
 
     public List<ProductEntity> findAllByIdIn(final List<Long> ids) {
-        final String sql = "SELECT * FROM product WHERE id = ?";
+        final String sql = "SELECT * FROM product WHERE id = %d";
         final String unionSql = ids.stream()
-            .map((id) -> sql)
+            .map((id) -> String.format(sql, id))
             .collect(Collectors.joining(" UNION ALL "));
-        return namedParameterJdbcTemplate.getJdbcTemplate().query(
-            unionSql,
-            PRODUCT_ENTITY_ROW_MAPPER,
-            ids.toArray()
-        );
+
+        return jdbcTemplate.query(unionSql, PRODUCT_ENTITY_ROW_MAPPER);
     }
 
     public List<ProductEntity> findAll() {
         final String sql = "SELECT * FROM product";
-        return namedParameterJdbcTemplate.query(sql,
-            (rs, rowNum) -> new ProductEntity(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("image_url"),
-                rs.getInt("price"),
-                rs.getString("description")
-            )
-        );
+
+        return jdbcTemplate.query(sql, PRODUCT_ENTITY_ROW_MAPPER);
     }
 
     public void update(final ProductEntity productEntity) {
@@ -79,11 +70,13 @@ public class ProductDao {
             + "SET name = :name, image_url = :imageUrl, price = :price, description = :description "
             + "WHERE id = :id";
         final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(productEntity);
+
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
 
     public void delete(final Long id) {
         final String sql = "DELETE FROM product WHERE id = ?";
-        namedParameterJdbcTemplate.getJdbcTemplate().update(sql, id);
+        
+        jdbcTemplate.update(sql, id);
     }
 }

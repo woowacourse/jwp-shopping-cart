@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -20,6 +19,7 @@ public class CustomerDao {
         final String password = rs.getString("password");
         return new CustomerEntity(id, email, password);
     });
+    private static final RowMapper<Long> LONG_ROW_MAPPER = (rs, rowNum) -> rs.getLong("id");
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -35,22 +35,21 @@ public class CustomerDao {
     }
 
     public Long save(final CustomerEntity customerEntity) {
-        final Number savedId = simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(customerEntity));
-        return savedId.longValue();
+        return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(customerEntity))
+            .longValue();
     }
 
     public List<CustomerEntity> findAll() {
         final String sql = "SELECT * FROM CUSTOMER";
+
         return jdbcTemplate.query(sql, CUSTOMER_ENTITY_ROW_MAPPER);
     }
 
     public Optional<Long> findIdByEmailAndPassword(final String email, final String password) {
-        final String sql = "SELECT id FROM CUSTOMER WHERE email=:email AND password=:password";
-        final MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("email", email);
-        params.addValue("password", password);
-        final List<Long> customerIds = namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
-        if (customerIds.size() == 0) {
+        final String sql = "SELECT id FROM CUSTOMER WHERE email = ? AND password = ?";
+        final List<Long> customerIds = jdbcTemplate.query(sql, LONG_ROW_MAPPER, email, password);
+
+        if (customerIds.isEmpty()) {
             return Optional.empty();
         }
         return Optional.ofNullable(customerIds.get(0));
