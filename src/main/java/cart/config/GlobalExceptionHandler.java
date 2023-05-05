@@ -35,31 +35,31 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Object> handleAuthenticationException(AuthenticationException e) {
-        LOGGER.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        LOGGER.warn(e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("잘못된 인증정보입니다.");
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleAuthenticationException(AuthorizationException e) {
-        LOGGER.info(e.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        LOGGER.warn(e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("해당 서비스에 권한이 없습니다.");
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleIllegalArgumentsException(IllegalArgumentException e) {
-        LOGGER.info(e.getMessage());
+        LOGGER.warn(e.getMessage());
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleApiException(ApiException e) {
-        LOGGER.info(e.getMessage());
+        LOGGER.warn(e.getMessage());
         return ResponseEntity.internalServerError().body(e.getMessage());
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> handleException(Exception e) {
-        LOGGER.info(e.getMessage());
+        LOGGER.warn(e.getMessage());
         Map<String, String> errorsResult = Map.of("errors", "서버에서 오류가 발생했습니다");
         return ResponseEntity.internalServerError().body(errorsResult);
     }

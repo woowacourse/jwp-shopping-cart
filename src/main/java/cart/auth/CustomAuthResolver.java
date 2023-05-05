@@ -47,7 +47,7 @@ public class CustomAuthResolver implements HandlerMethodArgumentResolver {
         validateToken(token);
 
         MemberEntity member = memberDao.findByEmail(token.get(0))
-                .orElseThrow(() -> new AuthenticationException("잘못된 인증정보입니다."));
+                .orElseThrow(() -> new AuthenticationException("존재하지 않는 이메일 정보입니다." + System.lineSeparator() + "이메일 : " + token.get(0)));
 
         validatePassword(token, member);
 

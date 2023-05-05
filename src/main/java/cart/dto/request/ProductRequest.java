@@ -6,11 +6,11 @@ import javax.validation.constraints.NotNull;
 
 public class ProductRequest {
 
-    @NotNull(message = "이미지 url은 비어있을 수 없습니다.")
-    private String image;
-
     @NotNull(message = "이름은 비어있을 수 없습니다.")
     private String name;
+
+    @NotNull(message = "이미지 url은 비어있을 수 없습니다.")
+    private String image;
 
     @NotNull(message = "가격은 비어있을 수 없습니다.")
     @Min(value = 0, message = "가격은 {min} 이상이여야 합니다.")
