@@ -127,7 +127,18 @@
 - [x] 코드 일관성
 - [ ] AOP?..
 
-  ### 궁금한 내용
+### 2단계 리뷰 내용
+- [x] Argument Resolver를 활용한 인증
+- [ ] CREATED 상태를 보낼 때의 URI에 대한 고민
+- [ ] `CartService.getCartByMemberID` 네이밍 수정
+- [ ] Dto 기본 생성자 접근제어자 수정
+- [ ] CartEntity equals,hashcode 오버라이드 필요성에 대한 고민
+- [ ] ExceptionHandler가 Exception.message를 이용할 수 있도록 수정
+- [ ] UPDATE 요청의 응답으로 수정된 엔티티를 반환하도록 수정
+- [ ] ProductValidator 네이밍 수정(ConstraintValidator 구현체로 생각할 여지 있음)
+- [ ] DTO 유효성 검사 서비스 or 영속성 계층에서 더블 체크?
+
+### 궁금한 내용
 - [x] 컨트롤러에서 응답으로 엔티티 객체를 반환해도 될까?
   - 필요 이상의 많은 정보를 전달하게 된다면 응답용 DTO를 반환하는 게 맞는 것 같다. 그렇지 않다면 굳이 DTO로 보내지 않는 것이 나은 것 같다.
 - [ ] 상품 추가 요청에 대한 컨트롤러의 응답으로 엔티티를 반환하도록 했다. 이때 상태 코드는 CREATED로 설정하며, location 헤더에 단건 조회 API URL을 담았다. 프론트 쪽에서는 이 응답을 보고 단건 조회 API를 담았다는 것을 바로 알기 힘들 것 같다.
@@ -144,3 +155,9 @@
 - [ ] JdbcTest에서 Dao가 의존성 주입받지 못하는 이유 
 - [ ] carDataTest.sql에서 truncate를 했을 때 auto_increment값이 유지되는 이유
 - [ ] 컨트롤러 테스트에서 조회 기능 테스트를 하기 위해, Dao로 값을 저장한 뒤 테스트 진행해도 될까?
+
+---
+
+- [ ] ArgumentResolver가 PW 검사를 하기 위해 MemberService를 의존해도 괜찮을까? MemberService 의존이 많이 발생하는 것 같아서 궁금하다.
+- [ ] CartApiController의 Delete처럼 인증 확인만 하고, 그 외에는 MemberEntity를 필요로 하지 않는 경우에는 매개변수로 받기만 하고, 사용하지 않아도 괜찮을까?
+- [ ] CartApiController가 MemberService를 의존하며, 회원 조회를 마친 뒤에 CartService로 넘기기 vs 요청으로 받은 Email만 CartService에 넘기고, CartService에서 MemberService를 통해 회원 조회하기 

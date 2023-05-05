@@ -1,19 +1,7 @@
 package shoppingbasket.cart.controller;
 
-import shoppingbasket.auth.AuthInfo;
-import shoppingbasket.auth.BasicAuthorizationExtractor;
-import shoppingbasket.cart.dto.CartDeleteResponseDto;
-import shoppingbasket.cart.dto.CartInsertRequestDto;
-import shoppingbasket.cart.dto.CartSelectResponseDto;
-import shoppingbasket.cart.entity.CartEntity;
-import shoppingbasket.cart.service.CartService;
-import shoppingbasket.exception.PasswordMismatchException;
-import shoppingbasket.exception.UnauthenticatedException;
-import shoppingbasket.member.entity.MemberEntity;
-import shoppingbasket.member.service.MemberService;
 import java.net.URI;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +11,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import shoppingbasket.auth.AuthInfo;
+import shoppingbasket.auth.AuthenticationPrincipal;
+import shoppingbasket.auth.BasicAuthorizationExtractor;
+import shoppingbasket.cart.dto.CartDeleteResponseDto;
+import shoppingbasket.cart.dto.CartInsertRequestDto;
+import shoppingbasket.cart.dto.CartSelectResponseDto;
+import shoppingbasket.cart.entity.CartEntity;
+import shoppingbasket.cart.service.CartService;
+import shoppingbasket.member.service.MemberService;
 
 @RestController
 public class CartApiController {
@@ -40,51 +37,27 @@ public class CartApiController {
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<CartEntity> addProduct(HttpServletRequest request,
+    public ResponseEntity<CartEntity> addProduct(@AuthenticationPrincipal AuthInfo authInfo,
                                                  @RequestBody @Valid CartInsertRequestDto insertRequestDto) {
 
-        final AuthInfo authInfo = authorizationExtractor.extract(request);
-        checkAuth(authInfo);
-        MemberEntity member = memberService.findMemberByEmail(authInfo.getEmail());
-        validatePassword(member.getPassword(), authInfo.getPassword());
-
         final int productId = insertRequestDto.getProductId();
-        final CartEntity cart = cartService.addCart(member, productId);
+        final CartEntity cart = cartService.addCart(authInfo.getEmail(), productId);
         final int savedId = cart.getId();
 
         return ResponseEntity.created(URI.create("/shoppingbasket/" + savedId))
                 .body(cart);
     }
 
-    private void checkAuth(final AuthInfo authInfo) {
-        if (authInfo == null) {
-            throw new UnauthenticatedException("사용자가 선택되지 않았습니다.");
-        }
-    }
-
-    private void validatePassword(final String memberPassword, final String authPassword) {
-        if (!memberPassword.equals(authPassword)) {
-            throw new PasswordMismatchException("비밀번호가 일치하지 않습니다.");
-        }
-    }
-
     @GetMapping(value = "/cart", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CartSelectResponseDto>> getCart(HttpServletRequest request) {
-        final AuthInfo authInfo = authorizationExtractor.extract(request);
-        checkAuth(authInfo);
-        MemberEntity member = memberService.findMemberByEmail(authInfo.getEmail());
-        validatePassword(member.getPassword(), authInfo.getPassword());
-
-        final List<CartSelectResponseDto> cartSelectResponse = cartService.getCartByMemberID(member.getId());
+    public ResponseEntity<List<CartSelectResponseDto>> getCart(@AuthenticationPrincipal AuthInfo authInfo) {
+        final String memberEmail = authInfo.getEmail();
+        final List<CartSelectResponseDto> cartSelectResponse = cartService.getCartsByMemberEmail(memberEmail);
         return ResponseEntity.ok(cartSelectResponse);
     }
 
     @DeleteMapping("/cart/{id}")
-    public ResponseEntity<CartDeleteResponseDto> removeCart(HttpServletRequest request, @PathVariable int id) {
-        final AuthInfo authInfo = authorizationExtractor.extract(request);
-        checkAuth(authInfo);
-        MemberEntity member = memberService.findMemberByEmail(authInfo.getEmail());
-        validatePassword(member.getPassword(), authInfo.getPassword());
+    public ResponseEntity<CartDeleteResponseDto> removeCart(@AuthenticationPrincipal AuthInfo authInfo,
+                                                            @PathVariable int id) {
 
         final CartDeleteResponseDto deleteResponseDto = cartService.removeCart(id);
         return ResponseEntity.ok(deleteResponseDto);
