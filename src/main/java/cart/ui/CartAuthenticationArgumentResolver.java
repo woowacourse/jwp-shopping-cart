@@ -26,11 +26,11 @@ public class CartAuthenticationArgumentResolver implements HandlerMethodArgument
         Member member = basicAuthorizationExtractor.extract(request);
 
         if (member == null) {
-            throw new AuthorizationException("권한이 없습니다");
+            throw new AuthorizationException();
         }
 
         if (member.getEmail() == null || member.getPassword() == null) {
-            throw new AuthorizationException("권한이 없습니다");
+            throw new AuthorizationException();
         }
 
         return member.getEmail();
