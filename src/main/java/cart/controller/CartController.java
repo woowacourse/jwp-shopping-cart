@@ -8,12 +8,10 @@ import cart.service.CartService;
 import cart.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Controller
@@ -50,6 +48,12 @@ public class CartController {
         final Long userId = extractUserId(httpServletRequest);
         final Long productId = cartItemRequset.getProductId();
         cartService.save(userId, productId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/items/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable @NotNull final Long id) {
+        cartService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

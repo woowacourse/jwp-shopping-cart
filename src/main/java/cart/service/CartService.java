@@ -41,4 +41,9 @@ public class CartService {
         final Product product = productService.findById(cartEntity.productId);
         return new CartItem(cartEntity.id, product.getName(), product.getPrice(), product.getImage());
     }
+
+    @Transactional
+    public void delete(final Long id) {
+        cartDao.deleteById(id);
+    }
 }
