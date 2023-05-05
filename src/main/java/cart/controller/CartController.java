@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/cart/items")
 public class CartController {
 
     private final CartService cartService;
@@ -35,7 +35,7 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/items")
+    @GetMapping
     public ResponseEntity<List<ProductDto>> findIdMemberId(@Authority final MemberIdRequest memberId) {
         final List<CartDto> cartDtos = cartService.getProducts(memberId);
         return ResponseEntity.ok(productService.findById(cartDtos));

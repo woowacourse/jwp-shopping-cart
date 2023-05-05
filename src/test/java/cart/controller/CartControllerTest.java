@@ -65,7 +65,7 @@ class CartControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(objectMapper.writeValueAsString(id))
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().post("/cart")
+                .when().post("/cart/items")
                 .then().log().all()
                 .extract();
 
@@ -89,7 +89,7 @@ class CartControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(objectMapper.writeValueAsString(id))
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().delete("/cart")
+                .when().delete("/cart/items")
                 .then().log().all()
                 .extract();
 
