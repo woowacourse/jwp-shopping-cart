@@ -2,13 +2,15 @@ package cart.service.cart;
 
 import cart.dao.cart.CartDao;
 import cart.dao.member.MemberDao;
-import cart.dto.cart.CartRequest;
+import cart.dao.product.ProductDao;
+import cart.dto.cartitem.CartItemRequest;
 import cart.dto.cartitem.CartItem;
 import cart.dto.cartitem.CartItemResponse;
 import cart.dto.member.MemberRequest;
 import cart.entity.cart.Cart;
 import cart.entity.cart.Count;
 import cart.entity.member.Member;
+import cart.entity.product.Product;
 import cart.exception.notfound.MemberNotFoundException;
 import cart.exception.notfound.ProductNotFoundException;
 import java.util.List;
@@ -22,21 +24,25 @@ public class CartService {
 
     private final CartDao cartDao;
     private final MemberDao memberDao;
+    private final ProductDao productDao;
 
-    public CartService(final CartDao cartDao, final MemberDao memberDao) {
+    public CartService(final CartDao cartDao, final MemberDao memberDao, final ProductDao productDao) {
         this.cartDao = cartDao;
         this.memberDao = memberDao;
+        this.productDao = productDao;
     }
 
     @Transactional
-    public Long saveCart(final MemberRequest memberRequest, final CartRequest cartRequest) {
+    public Long saveCart(final MemberRequest memberRequest, final CartItemRequest cartItemRequest) {
         Member member = memberDao.findByEmail(memberRequest.getEmail())
             .orElseThrow(MemberNotFoundException::new);
+        Product product = productDao.findById(cartItemRequest.getProductId())
+            .orElseThrow(ProductNotFoundException::new);
 
-        Optional<Cart> cart = cartDao.findByMemberIdAndProductId(member, cartRequest.getProductId());
+        Optional<Cart> cart = cartDao.findByMemberIdAndProductId(member, cartItemRequest.getProductId());
 
         if (cart.isEmpty()) {
-            return cartDao.insertCart(new Cart(member.getId(), cartRequest.getProductId(), 1));
+            return cartDao.insertCart(new Cart(member.getId(), cartItemRequest.getProductId(), 1));
         }
 
         return update(cart.get(), 1);

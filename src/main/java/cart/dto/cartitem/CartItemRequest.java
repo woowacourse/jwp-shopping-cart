@@ -1,13 +1,13 @@
-package cart.dto.cart;
+package cart.dto.cartitem;
 
-public class CartRequest {
+public class CartItemRequest {
 
     private Long productId;
 
-    public CartRequest() {
+    public CartItemRequest() {
     }
 
-    public CartRequest(final Long productId) {
+    public CartItemRequest(final Long productId) {
         this.productId = productId;
     }
 

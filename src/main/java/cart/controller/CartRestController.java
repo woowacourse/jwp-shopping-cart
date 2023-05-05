@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.authentication.RequestMember;
-import cart.dto.cart.CartRequest;
+import cart.dto.cartitem.CartItemRequest;
 import cart.dto.cartitem.CartItemResponse;
 import cart.dto.member.MemberRequest;
 import cart.service.cart.CartService;
@@ -25,8 +25,8 @@ public class CartRestController {
     }
 
     @PostMapping("/cart-items")
-    public ResponseEntity<Long> saveCart(@RequestMember final MemberRequest memberRequest, @RequestBody final CartRequest cartRequest) {
-        Long cartId = cartService.saveCart(memberRequest, cartRequest);
+    public ResponseEntity<Long> saveCart(@RequestMember final MemberRequest memberRequest, @RequestBody final CartItemRequest cartItemRequest) {
+        Long cartId = cartService.saveCart(memberRequest, cartItemRequest);
         return ResponseEntity.created(URI.create("/carts/" + cartId)).build();
     }
 
