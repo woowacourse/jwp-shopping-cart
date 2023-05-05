@@ -3,11 +3,14 @@ package cart.controller;
 import cart.auth.AuthInfo;
 import cart.auth.BasicAuthorizationExtractor;
 import cart.domain.cart.CartItem;
+import cart.dto.CartItemRequest;
 import cart.service.CartService;
 import cart.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,11 +34,22 @@ public class CartController {
     }
 
     @GetMapping("/items")
-    public ResponseEntity<List<CartItem>> showCartItemListByUserId(final HttpServletRequest request) {
+    public ResponseEntity<List<CartItem>> showCartItemList(final HttpServletRequest request) {
+        final Long userId = extractUserId(request);
+        return ResponseEntity.ok(cartService.findByUserId(userId));
+    }
+
+    private Long extractUserId(final HttpServletRequest request) {
         final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
         final String email = authInfo.getEmail();
-        final Long userId = userService.findByEmail(email).getUserId();
+        return userService.findByEmail(email).getUserId();
+    }
 
-        return ResponseEntity.ok(cartService.findByUserId(userId));
+    @PostMapping("/items")
+    public ResponseEntity<Void> createCartItem(@RequestBody final CartItemRequest cartItemRequset, final HttpServletRequest httpServletRequest) {
+        final Long userId = extractUserId(httpServletRequest);
+        final Long productId = cartItemRequset.getProductId();
+        cartService.save(userId, productId);
+        return ResponseEntity.ok().build();
     }
 }
