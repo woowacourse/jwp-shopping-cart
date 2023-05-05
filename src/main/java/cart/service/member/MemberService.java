@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class MemberService {
     private final MemberDao memberDao;
 
@@ -17,7 +18,6 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    @Transactional(readOnly = true)
     public List<MemberDto> getMembers() {
         List<Member> members = memberDao.findAll().stream()
                 .map(memberEntity -> new Member(
