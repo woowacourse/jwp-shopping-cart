@@ -44,7 +44,7 @@ class CartControllerTest {
     }
 
     @Test
-    @DisplayName("/cart get요청에 200을 응답한다.")
+    @DisplayName("/cart/items get요청에 200을 응답한다.")
     void cart() {
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
@@ -57,7 +57,7 @@ class CartControllerTest {
     }
 
     @Test
-    @DisplayName("/cart post요청 200을 응답한다.")
+    @DisplayName("/cart/items post요청 200을 응답한다.")
     void cartAddProduct() throws JsonProcessingException {
         Integer id = productJdbcDao.insert(new ProductEntity("누누", "a", 1000L));
         ExtractableResponse<Response> response = RestAssured
@@ -79,7 +79,7 @@ class CartControllerTest {
     }
 
     @Test
-    @DisplayName("/cart/{id} delete요청 200을 응답한다.")
+    @DisplayName("/cart/items delete요청 204을 응답한다.")
     void cartDeleteProduct() throws JsonProcessingException {
         Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 1000L));
 
