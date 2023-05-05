@@ -1,10 +1,7 @@
 package cart.controller;
 
-import cart.domain.Email;
-import cart.domain.Member;
-import cart.domain.Password;
+import cart.service.MemberService;
 import cart.service.ProductService;
-import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +11,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class CartController {
 
     private final ProductService productService;
+    private final MemberService memberService;
 
-    public CartController(final ProductService productService) {
+    public CartController(final ProductService productService, final MemberService memberService) {
         this.productService = productService;
+        this.memberService = memberService;
     }
 
     @GetMapping(path = "/")
@@ -36,10 +35,7 @@ public class CartController {
     @GetMapping(path = "/settings")
     public ModelAndView settings() {
         return new ModelAndView("settings", Map.of(
-                "members", List.of(
-                        new Member(1L, new Email("dummy@gmail.com"), new Password("1234")),
-                        new Member(2L, new Email("dummy2@gmail.com"), new Password("4567"))
-                )
+                "members", memberService.findAll()
         ));
     }
 }
