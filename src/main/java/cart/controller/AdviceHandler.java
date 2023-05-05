@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.ui.AuthorizationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -13,7 +14,13 @@ public class AdviceHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handler(Exception exception) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body("서버오류");
+                .body("서버오류");
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<String> handler(AuthorizationException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("권한이 없습니다.");
     }
 
     @ExceptionHandler(IllegalStateException.class)
@@ -28,13 +35,13 @@ public class AdviceHandler {
 
         for (FieldError error : result.getFieldErrors()) {
             errMessage.append("[")
-                .append(error.getField())
-                .append("] ")
-                .append(":")
-                .append(error.getDefaultMessage());
+                    .append(error.getField())
+                    .append("] ")
+                    .append(":")
+                    .append(error.getDefaultMessage());
         }
 
         return ResponseEntity.badRequest()
-            .body(errMessage.toString());
+                .body(errMessage.toString());
     }
 }

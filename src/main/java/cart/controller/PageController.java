@@ -28,8 +28,8 @@ public class PageController {
 
     @GetMapping("/")
     String allProducts(Model model) {
-        List<ProductResponse> productEntities = productService.selectAllProducts();
-        model.addAttribute("products", productEntities);
+        List<ProductResponse> products = productService.selectAllProducts();
+        model.addAttribute("products", products);
         return "index";
     }
 
