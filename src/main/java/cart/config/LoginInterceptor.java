@@ -1,7 +1,7 @@
 package cart.config;
 
 import cart.auth.BasicAuthorizationExtractor;
-import cart.controller.dto.AuthInfo;
+import cart.controller.dto.MemberDto;
 import cart.dao.MemberDao;
 import cart.dao.entity.MemberEntity;
 import cart.exception.MemberNotFoundException;
@@ -27,17 +27,17 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        AuthInfo authInfo = extractor.extract(request.getHeader(AUTHORIZATION));
-        validate(authInfo);
+        MemberDto memberDto = extractor.extract(request.getHeader(AUTHORIZATION));
+        validate(memberDto);
 
         return true;
     }
 
-    private void validate(AuthInfo authInfo) {
-        MemberEntity findMember = memberDao.findByEmail(authInfo.getEmail())
+    private void validate(MemberDto memberDto) {
+        MemberEntity findMember = memberDao.findByEmail(memberDto.getEmail())
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_ERROR_MESSAGE));
 
-        if (findMember.hasDifferPassword(authInfo.getPassword())) {
+        if (findMember.hasDifferPassword(memberDto.getPassword())) {
             throw new MemberNotFoundException(PASSWORD_ERROR_MESSAGE);
         }
     }

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.controller.dto.AuthInfo;
+import cart.controller.dto.MemberDto;
 import cart.exception.AuthException;
 import java.util.Base64;
 import org.junit.jupiter.api.DisplayName;
@@ -23,11 +23,11 @@ class BasicAuthorizationExtractorTest {
         String encodedCredential = new String(Base64.getEncoder().encode((credential.getBytes())));
         String header = "Basic " + encodedCredential;
 
-        AuthInfo authInfo = basicAuthorizationParser.extract(header);
+        MemberDto memberDto = basicAuthorizationParser.extract(header);
 
         assertAll(
-                () -> assertThat(authInfo.getEmail()).isEqualTo("hello@hello.com"),
-                () -> assertThat(authInfo.getPassword()).isEqualTo("password")
+                () -> assertThat(memberDto.getEmail()).isEqualTo("hello@hello.com"),
+                () -> assertThat(memberDto.getPassword()).isEqualTo("password")
         );
     }
 
