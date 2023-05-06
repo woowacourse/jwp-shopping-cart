@@ -9,6 +9,7 @@ import cart.repository.entity.MemberEntity;
 import cart.repository.entity.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,9 @@ public class CartService {
     public void deleteProductByAuthInfo(final Long productId, final AuthInfoRequest authInfoRequest) {
         final MemberEntity memberEntity = memberDao.findByEmailAndPassword(authInfoRequest.getEmail(), authInfoRequest.getPassword());
 
-        cartDao.delete(memberEntity.getId(), productId);
+        final int affected = cartDao.delete(memberEntity.getId(), productId);
+        if (affected == 0) {
+            throw new EmptyResultDataAccessException(1);
+        }
     }
 }

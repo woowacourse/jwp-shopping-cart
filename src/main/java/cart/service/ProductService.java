@@ -8,6 +8,7 @@ import cart.repository.dao.ProductDao;
 import cart.repository.entity.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,10 +35,16 @@ public class ProductService {
 
     public void updateProduct(final Long id, final UpdateProductRequest request) {
         final Product product = new Product(request.getName(), request.getImageUrl(), request.getPrice());
-        productDao.update(ProductEntity.of(id, product));
+        final int affected = productDao.update(ProductEntity.of(id, product));
+        if (affected == 0) {
+            throw new EmptyResultDataAccessException(1);
+        }
     }
 
     public void deleteProduct(final Long id) {
-        productDao.delete(id);
+        final int affected = productDao.delete(id);
+        if (affected == 0) {
+            throw new EmptyResultDataAccessException(1);
+        }
     }
 }
