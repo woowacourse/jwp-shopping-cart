@@ -5,6 +5,7 @@ import cart.domain.product.Product;
 import cart.dto.ProductResponse;
 import cart.mapper.ProductResponseMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,16 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    public void add(final Product product) {
+        productDao.insert(product);
+    }
+
     public List<ProductResponse> findAll() {
         final List<Product> productEntities = productDao.findAll();
         return ProductResponseMapper.from(productEntities);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findByIds(final List<Long> productIds) {
         final List<Product> productEntities = new ArrayList<>();
         for (Long productId : productIds) {
@@ -30,10 +36,6 @@ public class ProductService {
         }
 
         return ProductResponseMapper.from(productEntities);
-    }
-
-    public void add(final Product product) {
-        productDao.insert(product);
     }
 
     public void updateById(final Long id, final Product product) {

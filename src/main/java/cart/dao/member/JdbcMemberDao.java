@@ -4,7 +4,6 @@ import cart.domain.member.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,14 +29,12 @@ public class JdbcMemberDao implements MemberDao {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Member findByEmailAndPassword(final String email, final String password) {
         final String sql = "SELECT * FROM member WHERE email = ? AND password = ?";
         return jdbcTemplate.queryForObject(sql, memberRowMapper, email, password);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Member> findAll() {
         final String sql = "SELECT * FROM member";
         return jdbcTemplate.query(sql, memberRowMapper);

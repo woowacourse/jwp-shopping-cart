@@ -1,11 +1,9 @@
 package cart.dao.product;
 
 import cart.domain.product.Product;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
-@Validated
 public interface ProductDao {
 
     void insert(final Product product);

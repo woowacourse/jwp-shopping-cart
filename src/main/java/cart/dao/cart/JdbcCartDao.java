@@ -2,7 +2,6 @@ package cart.dao.cart;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,7 +21,6 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Long> findAllProductIdByMemberId(final Long memberId) {
         final String sql = "SELECT product_id FROM cart_product WHERE member_id = ?";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> resultSet.getLong(1), memberId);

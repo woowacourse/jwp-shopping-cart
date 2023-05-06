@@ -4,7 +4,6 @@ import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,14 +30,12 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Product findById(final Long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Product> findAll() {
         final String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, productEntityRowMapper);
