@@ -15,7 +15,7 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public void authorizeUser(BasicCredentials credentials) {
+    public void authenticateUser(BasicCredentials credentials) {
         String email = credentials.getEmail();
         User foundUser = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 

@@ -3,6 +3,7 @@ package cart.controller.support;
 import cart.dto.ApiErrorResponse;
 import cart.exception.InvalidPasswordException;
 import cart.exception.ProductNotFoundException;
+import cart.exception.UserAccessDeniedException;
 import cart.exception.UserNotFoundException;
 import java.util.Objects;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +25,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ApiErrorResponse.of(HttpStatus.BAD_REQUEST, exception);
     }
 
-    @ExceptionHandler(InvalidPasswordException.class)
+    @ExceptionHandler({InvalidPasswordException.class, UserAccessDeniedException.class})
     @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     public ApiErrorResponse handleInvalidPasswordException(final RuntimeException exception) {
         return ApiErrorResponse.of(HttpStatus.UNAUTHORIZED, exception);

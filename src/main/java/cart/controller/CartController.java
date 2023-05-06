@@ -5,6 +5,7 @@ import cart.dto.ApiResponse;
 import cart.dto.BasicCredentials;
 import cart.dto.CartItemCreateRequest;
 import cart.dto.CartItemResponse;
+import cart.exception.UserAccessDeniedException;
 import cart.service.CartService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,23 +36,36 @@ public class CartController {
         List<CartItemResponse> cartItems = cartService.getCartItems(basicCredentials.getEmail()).stream()
                 .map(CartItemResponse::from)
                 .collect(Collectors.toList());
+
         return ApiResponse.of(HttpStatus.OK, cartItems);
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public ApiResponse<Void> createCartItem(@RequestBody @Valid CartItemCreateRequest request,
-                                      @BasicAuth BasicCredentials basicCredentials) {
+                                            @BasicAuth BasicCredentials basicCredentials) {
         cartService.addCartItem(basicCredentials.getEmail(), request.getProductId());
+
         return ApiResponse.from(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{cartItemId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ApiResponse<Void> deleteCartItem(@PathVariable(value = "cartItemId") Long cartItemId,
-                                      @BasicAuth BasicCredentials basicCredentials) {
+    public ApiResponse<Void> deleteCartItem(@BasicAuth BasicCredentials basicCredentials,
+                                            @PathVariable(value = "cartItemId") Long cartItemId) {
+        authorizeUser(basicCredentials.getEmail(), cartItemId);
+
         cartService.deleteCartItem(cartItemId);
         return ApiResponse.from(HttpStatus.OK);
+    }
+
+    private void authorizeUser(String email, Long cartItemId) {
+        boolean invalidUser = cartService.getCartItems(email).stream()
+                .noneMatch(cartItem -> cartItem.getId().equals(cartItemId));
+
+        if (invalidUser) {
+            throw new UserAccessDeniedException();
+        }
     }
 
 }
