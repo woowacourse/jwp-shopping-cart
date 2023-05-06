@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import cart.service.CartService;
@@ -18,9 +19,8 @@ public class CartApiController {
 		this.cartService = cartService;
 	}
 
-	@GetMapping("/carts")
-	public ResponseEntity<List<CartResponse>> findAll(){
-		String email = "a@a.com";
+	@GetMapping("/carts/{email}")
+	public ResponseEntity<List<CartResponse>> findAllByEmail(@PathVariable(name = "email") String email){
 		List<CartResponse> cart = cartService.findAllByEmail(email);
 		return ResponseEntity.ok(cart);
 	}
