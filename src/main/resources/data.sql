@@ -16,14 +16,19 @@ CREATE TABLE IF NOT EXISTS MEMBER (
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS CART(
 =======
 CREATE TABLE CART(
 >>>>>>> e07c1629 (feat: 사용자 인증 처리 구현)
+=======
+CREATE TABLE IF NOT EXISTS CART(
+>>>>>>> 58261c83 (refactor: fk까지 속성이 전이되도록 변경)
     id BIGINT NOT NULL AUTO_INCREMENT,
     member_id VARCHAR(255) NOT NULL,
     product_id VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
+<<<<<<< HEAD
 <<<<<<< HEAD
     FOREIGN KEY (member_id) REFERENCES MEMBER(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES PRODUCT(id) ON DELETE CASCADE
@@ -34,6 +39,10 @@ CREATE TABLE CART(
 =======
     FOREIGN KEY (member_id) REFERENCES MEMBER(id),
     FOREIGN KEY (product_id) REFERENCES PRODUCT(id)
+=======
+    FOREIGN KEY (member_id) REFERENCES MEMBER(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES PRODUCT(id) ON DELETE CASCADE
+>>>>>>> 58261c83 (refactor: fk까지 속성이 전이되도록 변경)
 );
 
 <<<<<<< HEAD
