@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class CartService {
 
+    public static final String PRODUCT_ID_ERROR_MESSAGE = "상품의 id가 올바르지 않습니다.";
+
     private final CartRepository cartRepository;
     private final ProductDao productDao;
 
@@ -38,7 +40,7 @@ public class CartService {
     public void addCartItem(Long productId, Long memberId) {
         Cart cart = cartRepository.getCartByMemberId(memberId);
         Product product = productDao.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 경로입니다"));
+                .orElseThrow(() -> new IllegalArgumentException(PRODUCT_ID_ERROR_MESSAGE));
         CartItem cartItem = new CartItem(product);
         cart.addItem(cartItem);
         cartRepository.save(cart);

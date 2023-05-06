@@ -15,11 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final BasicAuthorizationExtractor extractor;
+    private final BasicAuthorizationHeaderExtractor extractor;
     private final MemberService memberService;
 
 
-    public AuthenticationPrincipalArgumentResolver(BasicAuthorizationExtractor extractor, MemberService memberService) {
+    public AuthenticationPrincipalArgumentResolver(BasicAuthorizationHeaderExtractor extractor, MemberService memberService) {
         this.extractor = extractor;
         this.memberService = memberService;
     }

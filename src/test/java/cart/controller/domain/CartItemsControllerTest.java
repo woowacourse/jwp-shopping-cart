@@ -1,7 +1,8 @@
-package cart.controller.rest;
+package cart.controller.domain;
 
 import cart.auth.AuthenticationPrincipalArgumentResolver;
 import cart.auth.BasicAuthInterceptor;
+import cart.controller.domain.cart.CartItemsController;
 import cart.dto.LoginDto;
 import cart.service.CartService;
 import org.junit.jupiter.api.BeforeEach;

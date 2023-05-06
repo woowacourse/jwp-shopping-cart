@@ -1,4 +1,4 @@
-package cart.controller.rest;
+package cart.controller.domain.product;
 
 import cart.dto.request.ProductRequest;
 import cart.dto.request.ProductUpdateRequest;

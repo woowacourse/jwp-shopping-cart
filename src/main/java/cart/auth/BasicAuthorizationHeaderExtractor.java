@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 
 @Component
-public class BasicAuthorizationExtractor implements AuthorizationExtractor<LoginDto> {
+public class BasicAuthorizationHeaderExtractor implements AuthorizationHeaderExtractor<LoginDto> {
 
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";

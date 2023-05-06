@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class ProductService {
 
+    public static final String PRODUCT_ID_ERROR_MESSAGE = "상품의 id가 올바르지 않습니다.";
+
     private final ProductDao productDao;
 
     public ProductService(ProductDao productDao) {
@@ -37,7 +39,7 @@ public class ProductService {
 
     public ProductResponse getProduct(Long id) {
         Product product = productDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 경로입니다"));
+                .orElseThrow(() -> new IllegalArgumentException(PRODUCT_ID_ERROR_MESSAGE));
 
         return new ProductResponse(product);
     }

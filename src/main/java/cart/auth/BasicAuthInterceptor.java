@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class BasicAuthInterceptor implements HandlerInterceptor {
 
-    private final BasicAuthorizationExtractor extractor;
+    private final BasicAuthorizationHeaderExtractor extractor;
     private final MemberService memberService;
 
-    public BasicAuthInterceptor(BasicAuthorizationExtractor extractor, MemberService memberService) {
+    public BasicAuthInterceptor(BasicAuthorizationHeaderExtractor extractor, MemberService memberService) {
         this.extractor = extractor;
         this.memberService = memberService;
     }

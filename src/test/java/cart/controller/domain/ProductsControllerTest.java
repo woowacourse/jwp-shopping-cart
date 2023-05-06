@@ -1,7 +1,8 @@
-package cart.controller.rest;
+package cart.controller.domain;
 
 import cart.auth.AuthenticationPrincipalArgumentResolver;
 import cart.auth.BasicAuthInterceptor;
+import cart.controller.domain.product.ProductsController;
 import cart.dto.LoginDto;
 import cart.dto.request.ProductRequest;
 import cart.dto.request.ProductUpdateRequest;
