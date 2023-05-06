@@ -21,14 +21,14 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CartApiControllerTest {
+class CartProductApiControllerTest {
 
     private static final long PRODUCT_ID = 1L;
     private static final long MEMBER_ID = 1L;
 
     private static final String PASSWORD = "password";
     private static final String EMAIL = "email@naver.com";
-    private final String CART_API_URL = "/cart";
+    private final String CART_PRODUCT_API_URL = "/cart-products";
 
     @LocalServerPort
     private int port;
@@ -58,7 +58,7 @@ class CartApiControllerTest {
                     .log().all()
                     .accept(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .get(CART_API_URL)
+                    .get(CART_PRODUCT_API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .body("message", equalTo("Authorization Header가 존재하지 않습니다."));
@@ -72,7 +72,7 @@ class CartApiControllerTest {
                     .auth().oauth2("anyValue")
                     .accept(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .get(CART_API_URL)
+                    .get(CART_PRODUCT_API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .body("message", equalTo("Authorization Header는 'Basic '로 시작해야 합니다."));
@@ -86,7 +86,7 @@ class CartApiControllerTest {
                     .auth().preemptive().basic("anyValue" +EMAIL, PASSWORD )
                     .accept(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .get(CART_API_URL)
+                    .get(CART_PRODUCT_API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .body("message", equalTo("해당하는 email의 회원이 존재하지 않습니다."));
@@ -103,7 +103,7 @@ class CartApiControllerTest {
                     .auth().preemptive().basic(EMAIL, PASSWORD + "abc")
                     .accept(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .get(CART_API_URL)
+                    .get(CART_PRODUCT_API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .body("message", equalTo( "패스워드가 일치하지 않습니다."));
@@ -118,7 +118,7 @@ class CartApiControllerTest {
 
        givenLogin()
                 .when()
-                .get(CART_API_URL)
+                .get(CART_PRODUCT_API_URL)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -131,7 +131,7 @@ class CartApiControllerTest {
         givenLogin()
                 .body(new CartProductRequest(PRODUCT_ID))
                 .when()
-                .post(CART_API_URL)
+                .post(CART_PRODUCT_API_URL)
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -144,7 +144,7 @@ class CartApiControllerTest {
 
         givenLogin()
                 .when()
-                .delete(CART_API_URL + "/" + cartProductId)
+                .delete(CART_PRODUCT_API_URL + "/" + cartProductId)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

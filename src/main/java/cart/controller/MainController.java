@@ -44,8 +44,8 @@ public class MainController {
         return mav;
     }
 
-    @GetMapping("/myCart")
+    @GetMapping("/cart")
     public String cart() {
-        return "myCart";
+        return "cart";
     }
 }

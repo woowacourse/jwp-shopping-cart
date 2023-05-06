@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/cart")
-public class CartApiController {
+@RequestMapping("/cart-products")
+public class CartProductApiController {
 
     private final CartProductService cartProductService;
 
-    public CartApiController(CartProductService cartProductService) {
+    public CartProductApiController(CartProductService cartProductService) {
         this.cartProductService = cartProductService;
     }
 
