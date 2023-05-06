@@ -17,19 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Sql(scripts = {"classpath:test.sql"})
 class JdbcProductDaoTest {
 
-    private final RowMapper<Product> productRowMapper = (resultSet, rowNum) ->
-            new Product(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    resultSet.getInt("price"),
-                    resultSet.getString("image")
-            );
     private final JdbcProductDao jdbcProductDao;
 
-    private final JdbcTemplate jdbcTemplate;
-
     private JdbcProductDaoTest(@Autowired final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
         this.jdbcProductDao = new JdbcProductDao(jdbcTemplate);
     }
 
@@ -75,14 +65,13 @@ class JdbcProductDaoTest {
 
         jdbcProductDao.update(new Product(id, "ASH", 1000, "image"));
 
-        final Product product = jdbcTemplate.queryForObject("SELECT * FROM product WHERE id = ?", productRowMapper, id);
-
+        final Optional<Product> product = jdbcProductDao.findById(id);
         assertAll(
-                () -> assertThat(product).isNotNull(),
-                () -> assertThat(product.getId()).isEqualTo(id),
-                () -> assertThat(product.getName()).isEqualTo("ASH"),
-                () -> assertThat(product.getPrice()).isEqualTo(1000),
-                () -> assertThat(product.getImage()).isEqualTo("image")
+                () -> assertThat(product).isPresent(),
+                () -> assertThat(product.get().getId()).isEqualTo(id),
+                () -> assertThat(product.get().getName()).isEqualTo("ASH"),
+                () -> assertThat(product.get().getPrice()).isEqualTo(1000),
+                () -> assertThat(product.get().getImage()).isEqualTo("image")
         );
     }
 
@@ -93,6 +82,6 @@ class JdbcProductDaoTest {
 
         jdbcProductDao.deleteById(id);
 
-        assertThat(jdbcProductDao.findById(id)).isNull();
+        assertThat(jdbcProductDao.findById(id)).isEmpty();
     }
 }

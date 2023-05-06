@@ -70,12 +70,8 @@ class ProductServiceTest {
 
         productService.update(id, "애쉬", 2000, "image");
 
-        final Product product = productService.findAll().stream()
-                .filter(p -> p.getId() == id)
-                .findFirst()
-                .orElse(null);
+        final Product product = productService.findById(id);
         assertAll(
-                () -> assertThat(product).isNotNull(),
                 () -> assertThat(product.getId()).isEqualTo(id),
                 () -> assertThat(product.getName()).isEqualTo("애쉬"),
                 () -> assertThat(product.getPrice()).isEqualTo(2000),
@@ -90,10 +86,6 @@ class ProductServiceTest {
 
         productService.delete(id);
 
-        final Product product = productService.findAll().stream()
-                .filter(p -> p.getId() == id)
-                .findFirst()
-                .orElse(null);
-        assertThat(product).isNull();
+        assertThatThrownBy(() -> productService.findById(id)).isInstanceOf(IllegalArgumentException.class);
     }
 }

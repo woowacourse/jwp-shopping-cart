@@ -63,7 +63,6 @@ class CartServiceTest {
 
         cartService.delete(id);
 
-        final List<CartItem> cartItems = cartService.findByUserId(userId);
-        assertThat(cartItems.size()).isEqualTo(0);
+        assertThat(cartService.findByUserId(userId).size()).isEqualTo(0);
     }
 }
