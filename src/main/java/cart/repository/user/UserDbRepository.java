@@ -31,7 +31,8 @@ public class UserDbRepository implements UserRepository {
             Long id = resultSet.getLong("id");
             String email = resultSet.getString("email");
             String password = resultSet.getString("password");
-            return new User(id, email, password);
+            Long cartNo = id;
+            return new User(id, email, password, cartNo);
         };
     }
 

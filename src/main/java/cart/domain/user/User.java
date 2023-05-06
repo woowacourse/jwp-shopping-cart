@@ -7,6 +7,12 @@ public class User {
     private Long id;
     private final String email;
     private final String password;
+    private Long cartNo;
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
     public User(Long id, String email, String password) {
         this.id = id;
@@ -14,21 +20,11 @@ public class User {
         this.password = password;
     }
 
-    public User(String email, String password) {
+    public User(Long id, String email, String password, Long cartNo) {
+        this.id = id;
         this.email = email;
         this.password = password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
+        this.cartNo = cartNo;
     }
 
     @Override
@@ -46,5 +42,21 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(email);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Long getCartNo() {
+        return cartNo;
     }
 }
