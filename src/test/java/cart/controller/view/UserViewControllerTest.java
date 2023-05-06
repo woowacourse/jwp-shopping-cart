@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.view;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import cart.controller.AbstractProductControllerTest;
 import cart.domain.user.User;
 import cart.dto.UserResponse;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class UserViewControllerTest extends AbstractProductControllerTest {
                 new UserResponse("a@a.com", "password1"),
                 new UserResponse("b@b.com", "password2")
         );
-        
+
         //when
         mockMvc.perform(get("/settings"))
 

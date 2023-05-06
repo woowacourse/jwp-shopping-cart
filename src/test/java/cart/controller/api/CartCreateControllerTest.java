@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.controller.AbstractProductControllerTest;
 import cart.domain.user.User;
 import cart.dto.CartRequest;
 import cart.dto.CartResponse;

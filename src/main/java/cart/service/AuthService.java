@@ -3,7 +3,6 @@ package cart.service;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-import cart.controller.LoginFailException;
 import cart.domain.user.User;
 import cart.infrastructure.BasicAuthorizationExtractor;
 import cart.repository.UserRepository;

@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import static cart.domain.product.ProductFixture.NUNU_ID_PRODUCT;
 import static cart.domain.product.ProductFixture.ODO_ID_PRODUCT;
@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import cart.controller.AbstractProductControllerTest;
 import cart.domain.product.Product;
 import cart.dto.ProductResponse;
 import org.junit.jupiter.api.Test;

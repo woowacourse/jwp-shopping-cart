@@ -3,7 +3,6 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.controller.LoginFailException;
 import cart.domain.user.User;
 import cart.repository.StubUserRepository;
 import org.junit.jupiter.api.BeforeEach;

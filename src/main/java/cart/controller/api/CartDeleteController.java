@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import cart.service.CartDeleteService;
 import org.springframework.http.HttpStatus;

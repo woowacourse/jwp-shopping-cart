@@ -1,14 +1,15 @@
-package cart.controller;
+package cart.controller.api;
 
-import static cart.domain.product.ProductFixture.NUNU_ID_PRODUCT;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.controller.AbstractProductControllerTest;
+import cart.domain.product.Product;
+import cart.domain.product.ProductFixture;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.dto.RequestFixture;
@@ -17,24 +18,24 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings({"NonAsciiCharacters"})
-class ProductUpdateControllerTest extends AbstractProductControllerTest {
+class ProductCreateControllerTest extends AbstractProductControllerTest {
 
     @Test
-    void 상품_업데이트_테스트() throws Exception {
+    void 상품_생성_테스트() throws Exception {
         // given
-        given(productUpdateService.update(anyLong(), anyString(), anyString(), anyInt())).willReturn(NUNU_ID_PRODUCT);
+        final Product product = ProductFixture.NUNU_ID_PRODUCT;
+        given(productCreateService.create(anyString(), anyString(), anyInt())).willReturn(product);
         final ProductRequest productRequest = RequestFixture.NUNU_REQUEST;
         final String request = objectMapper.writeValueAsString(productRequest);
         final ProductResponse productResponse = ResponseFixture.NUNU_RESPONSE;
         final String result = objectMapper.writeValueAsString(productResponse);
-        final int id = 1;
 
         // when
-        mockMvc.perform(put("/products/" + id)
+        mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
                 // then
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json(result));
     }
 }
