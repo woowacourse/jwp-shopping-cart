@@ -41,20 +41,20 @@ class ProductCartServiceTest {
     @DisplayName("member를 기준으로 cart의 product를 반환한다")
     @Test
     void findAllMyProductCartTest() {
-        given(productCartDao.findAllByMember(any()))
+        given(productCartDao.findAllByMemberId(any()))
                 .willReturn(List.of(
                         new ProductCart(1L, 1L, 1L),
                         new ProductCart(2L, 2L, 1L),
                         new ProductCart(3L, 3L, 1L),
                         new ProductCart(4L, 4L, 1L)
                 ));
-        given(productDao.findById(anyLong()))
+        given(productDao.findByIds(any()))
                 .willReturn(
-                        Optional.of(new Product(1L, "boxster1", "https://boxster1.com", 10000)),
-                        Optional.of(new Product(2L, "boxster2", "https://boxster2.com", 20000)),
-                        Optional.of(new Product(3L, "boxster3", "https://boxster3.com", 30000)),
-                        Optional.of(new Product(4L, "boxster4", "https://boxster4.com", 40000))
-                );
+                        List.of(new Product(1L, "boxster1", "https://boxster1.com", 10000),
+                                new Product(2L, "boxster2", "https://boxster2.com", 20000),
+                                new Product(3L, "boxster3", "https://boxster3.com", 30000),
+                                new Product(4L, "boxster4", "https://boxster4.com", 40000)
+                        ));
         given(memberDao.findByEmail(any()))
                 .willReturn(Optional.of(new Member(1L, "boxster@email.com", "boxster")));
 

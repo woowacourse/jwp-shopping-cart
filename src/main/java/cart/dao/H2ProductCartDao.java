@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.entity.Member;
 import cart.entity.ProductCart;
 import java.util.Collections;
 import java.util.List;
@@ -63,25 +62,25 @@ public class H2ProductCartDao implements ProductCartDao {
     }
 
     @Override
-    public List<ProductCart> findAllByMember(Member member) {
+    public List<ProductCart> findAllByMemberId(Long memberId) {
         String sql = "SELECT * FROM product_cart WHERE member_id = :member_id";
-        Map<String, Long> parameter = Collections.singletonMap("member_id", member.getId());
+        Map<String, Long> parameter = Collections.singletonMap("member_id", memberId);
         return namedParameterJdbcTemplate.query(sql, parameter, productCartRowMapper);
     }
 
     @Override
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM product_cart WHERE id = :id";
-        Map<String, Long> parameter = Collections.singletonMap("id", id);
+    public void deleteByIdAndMemberId(Long id, Long memberId) {
+        String sql = "DELETE FROM product_cart WHERE id = :id and member_id = :member_id";
+        Map<String, Long> parameter = Map.of("id", id, "member_id", memberId);
         namedParameterJdbcTemplate.update(sql, parameter);
     }
 
     @Override
-    public boolean existByCartIdAndMember(Long cartId, Member member) {
+    public boolean existByCartIdAndMemberId(Long cartId, Long memberId) {
         String sql = "SELECT EXISTS(SELECT * FROM product_cart WHERE id = :id AND member_id = :member_id)";
         Map<String, Long> parameter = Map.of(
                 "id", cartId,
-                "member_id", member.getId()
+                "member_id", memberId
         );
         return namedParameterJdbcTemplate.queryForObject(sql, parameter, Boolean.class);
     }

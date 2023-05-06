@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.entity.Product;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -70,5 +71,17 @@ class H2ProductDaoTest {
         productDao.deleteById(gitchan.getId());
 
         assertThat(productDao.findById(gitchan.getId())).isEmpty();
+    }
+
+    @DisplayName("여러개의 cart의 product ID로 조회할 수 있다")
+    @Test
+    void findByIdsTest() {
+        Product gitchan = productDao.save(new Product("깃짱", "gitchan.img", 1000000000));
+        Product boxster = productDao.save(new Product("박스터", "boxster.img", 1000000000));
+
+        List<Product> products = productDao.findByIds(List.of(gitchan.getId(), boxster.getId(), gitchan.getId()));
+
+        assertThat(products).usingRecursiveComparison()
+                .isEqualTo(List.of(gitchan, boxster, gitchan));
     }
 }

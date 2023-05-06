@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.entity.Product;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class H2ProductDao implements ProductDao {
     }
 
     @Override
-    public Optional<Product> findById(long id) {
+    public Optional<Product> findById(Long id) {
         String sql = "SELECT * FROM product WHERE id = :id";
         Map<String, Long> parameter = Collections.singletonMap("id", id);
         return findProduct(sql, parameter);
@@ -76,9 +77,21 @@ public class H2ProductDao implements ProductDao {
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         String sql = "DELETE FROM product WHERE id = :id";
         Map<String, Long> parameter = Collections.singletonMap("id", id);
         namedParameterJdbcTemplate.update(sql, parameter);
+    }
+
+    @Override
+    public List<Product> findByIds(List<Long> ids) {
+        String sql = "SELECT * FROM product WHERE id = :id";
+        List<Product> products = new ArrayList<>();
+        for (Long productId : ids) {
+            Map<String, Long> parameter = Collections.singletonMap("id", productId);
+            Product product = namedParameterJdbcTemplate.queryForObject(sql, parameter, productRowMapper);
+            products.add(product);
+        }
+        return products;
     }
 }

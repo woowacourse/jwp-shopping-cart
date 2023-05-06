@@ -9,9 +9,11 @@ public interface ProductDao {
 
     List<Product> findAll();
 
-    Optional<Product> findById(long id);
+    Optional<Product> findById(Long id);
 
     void update(Product product);
 
-    void deleteById(long id);
+    void deleteById(Long id);
+
+    List<Product> findByIds(List<Long> productIds);
 }

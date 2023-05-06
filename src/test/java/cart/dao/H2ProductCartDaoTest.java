@@ -54,7 +54,7 @@ class H2ProductCartDaoTest {
         ProductCart productCart = new ProductCart(product.getId(), member.getId());
         ProductCart savedCart = productCartDao.save(productCart);
 
-        List<ProductCart> productCarts = productCartDao.findAllByMember(member);
+        List<ProductCart> productCarts = productCartDao.findAllByMemberId(member.getId());
         assertAll(
                 () -> assertThat(productCarts).hasSize(1),
                 () -> assertThat(productCarts).containsExactly(savedCart)
@@ -67,9 +67,9 @@ class H2ProductCartDaoTest {
         ProductCart productCart = new ProductCart(product.getId(), member.getId());
         ProductCart savedCart = productCartDao.save(productCart);
 
-        productCartDao.deleteById(savedCart.getId());
+        productCartDao.deleteByIdAndMemberId(savedCart.getId(), member.getId());
 
-        assertThat(productCartDao.findAllByMember(member)).isEmpty();
+        assertThat(productCartDao.findAllByMemberId(member.getId())).isEmpty();
     }
 
     @DisplayName("cart id 와 member를 가지고 cart를 찾아 있으면 true를 반환한다")
@@ -78,7 +78,7 @@ class H2ProductCartDaoTest {
         ProductCart productCart = new ProductCart(product.getId(), member.getId());
         ProductCart savedCart = productCartDao.save(productCart);
 
-        boolean result = productCartDao.existByCartIdAndMember(savedCart.getId(), member);
+        boolean result = productCartDao.existByCartIdAndMemberId(savedCart.getId(), member.getId());
 
         assertThat(result).isTrue();
     }

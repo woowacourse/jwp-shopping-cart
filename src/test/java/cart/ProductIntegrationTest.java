@@ -178,7 +178,7 @@ public class ProductIntegrationTest {
                 .statusCode(HttpStatus.CREATED.value())
                 .extract().as(ProductCartResponse.class);
 
-        assertThat(productCartDao.findAllByMember(member))
+        assertThat(productCartDao.findAllByMemberId(member.getId()))
                 .map(ProductCart::getId).containsExactly(response.getId());
     }
 
@@ -197,6 +197,6 @@ public class ProductIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(productCartDao.findAllByMember(member)).isEmpty();
+        assertThat(productCartDao.findAllByMemberId(member.getId())).isEmpty();
     }
 }

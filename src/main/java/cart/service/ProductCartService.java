@@ -12,7 +12,6 @@ import cart.entity.Product;
 import cart.entity.ProductCart;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +32,7 @@ public class ProductCartService {
     @Transactional(readOnly = true)
     public CartsResponse findAllMyProductCart(AuthMember authMember) {
         Member member = getAuthenticationedMember(authMember);
-        List<ProductCart> carts = productCartDao.findAllByMember(member);
+        List<ProductCart> carts = productCartDao.findAllByMemberId(member.getId());
         List<Long> cartIds = carts.stream()
                 .map(ProductCart::getId)
                 .collect(Collectors.toList());
@@ -53,12 +52,10 @@ public class ProductCartService {
     }
 
     private List<Product> getProducts(List<ProductCart> carts) {
-        return carts.stream()
+        List<Long> productIds = carts.stream()
                 .map(ProductCart::getProductId)
-                .map(productDao::findById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
                 .collect(Collectors.toList());
+        return productDao.findByIds(productIds);
     }
 
     @Transactional
@@ -73,9 +70,6 @@ public class ProductCartService {
     @Transactional
     public void deleteProductInMyCart(Long cartId, AuthMember authMember) {
         Member member = getAuthenticationedMember(authMember);
-        if (!productCartDao.existByCartIdAndMember(cartId, member)) {
-            throw new NoSuchElementException("장바구니에 물품이 없습니다");
-        }
-        productCartDao.deleteById(cartId);
+        productCartDao.deleteByIdAndMemberId(cartId, member.getId());
     }
 }
