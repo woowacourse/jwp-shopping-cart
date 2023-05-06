@@ -6,7 +6,9 @@ import cart.service.dto.ProductSaveDto;
 import cart.service.dto.ProductUpdateDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class ProductService {
 
@@ -15,7 +17,6 @@ public class ProductService {
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
-
 
     public void save(ProductSaveDto productSaveDto) {
         Product product = Product.createToSave(
@@ -40,6 +41,7 @@ public class ProductService {
         this.productRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<Product> findAll() {
         return this.productRepository.findAll();
     }
