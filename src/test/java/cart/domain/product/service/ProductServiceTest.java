@@ -9,9 +9,9 @@ import static org.mockito.BDDMockito.given;
 
 import cart.dao.ProductDao;
 import cart.domain.product.entity.Product;
-import cart.dto.ProductCreateRequest;
-import cart.dto.ProductResponse;
-import cart.dto.ProductUpdateRequest;
+import cart.domain.product.dto.ProductCreateRequest;
+import cart.domain.product.dto.ProductResponse;
+import cart.domain.product.dto.ProductUpdateRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

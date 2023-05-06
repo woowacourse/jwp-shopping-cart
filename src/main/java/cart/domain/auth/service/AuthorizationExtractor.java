@@ -1,6 +1,6 @@
 package cart.domain.auth.service;
 
-import cart.dto.MemberInformation;
+import cart.domain.member.dto.MemberInformation;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 

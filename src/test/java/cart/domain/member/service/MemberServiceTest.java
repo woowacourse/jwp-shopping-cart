@@ -7,9 +7,9 @@ import static org.mockito.BDDMockito.given;
 
 import cart.dao.MemberDao;
 import cart.domain.member.entity.Member;
-import cart.dto.MemberCreateRequest;
-import cart.dto.MemberCreateResponse;
-import cart.dto.MemberResponse;
+import cart.domain.member.dto.MemberCreateRequest;
+import cart.domain.member.dto.MemberCreateResponse;
+import cart.domain.member.dto.MemberResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

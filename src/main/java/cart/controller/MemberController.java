@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.common.EncodePassword;
 import cart.domain.member.service.MemberService;
-import cart.dto.MemberCreateRequest;
-import cart.dto.MemberCreateResponse;
+import cart.domain.member.dto.MemberCreateRequest;
+import cart.domain.member.dto.MemberCreateResponse;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

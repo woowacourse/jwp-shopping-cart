@@ -8,8 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.member.service.MemberService;
-import cart.dto.MemberCreateRequest;
-import cart.dto.MemberCreateResponse;
+import cart.domain.member.dto.MemberCreateRequest;
+import cart.domain.member.dto.MemberCreateResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.UnsupportedEncodingException;

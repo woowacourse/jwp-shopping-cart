@@ -2,9 +2,9 @@ package cart.controller;
 
 import cart.common.auth.AuthInfo;
 import cart.domain.cart.service.CartService;
-import cart.dto.CartCreateRequest;
-import cart.dto.CartResponse;
-import cart.dto.MemberInformation;
+import cart.domain.cart.dto.CartCreateRequest;
+import cart.domain.cart.dto.CartResponse;
+import cart.domain.member.dto.MemberInformation;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

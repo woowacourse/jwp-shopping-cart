@@ -2,9 +2,9 @@ package cart.domain.product.service;
 
 import cart.dao.ProductDao;
 import cart.domain.product.entity.Product;
-import cart.dto.ProductCreateRequest;
-import cart.dto.ProductResponse;
-import cart.dto.ProductUpdateRequest;
+import cart.domain.product.dto.ProductCreateRequest;
+import cart.domain.product.dto.ProductResponse;
+import cart.domain.product.dto.ProductUpdateRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

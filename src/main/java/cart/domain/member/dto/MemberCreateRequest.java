@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.domain.member.dto;
 
 import cart.domain.member.entity.Member;
 import javax.validation.constraints.Email;

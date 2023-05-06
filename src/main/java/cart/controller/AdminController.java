@@ -1,8 +1,8 @@
 package cart.controller;
 
 import cart.domain.product.service.ProductService;
-import cart.dto.ProductCreateRequest;
-import cart.dto.ProductUpdateRequest;
+import cart.domain.product.dto.ProductCreateRequest;
+import cart.domain.product.dto.ProductUpdateRequest;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

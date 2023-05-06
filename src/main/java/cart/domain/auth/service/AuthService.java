@@ -3,7 +3,7 @@ package cart.domain.auth.service;
 import cart.common.auth.AuthenticationException;
 import cart.dao.MemberDao;
 import cart.domain.member.entity.Member;
-import cart.dto.MemberInformation;
+import cart.domain.member.dto.MemberInformation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

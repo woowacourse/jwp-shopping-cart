@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import cart.common.auth.AuthenticationException;
 import cart.dao.MemberDao;
 import cart.domain.member.entity.Member;
-import cart.dto.MemberInformation;
+import cart.domain.member.dto.MemberInformation;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

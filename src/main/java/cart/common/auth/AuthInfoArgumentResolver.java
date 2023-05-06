@@ -1,7 +1,7 @@
 package cart.common.auth;
 
 import cart.domain.auth.service.AuthorizationExtractor;
-import cart.dto.MemberInformation;
+import cart.domain.member.dto.MemberInformation;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

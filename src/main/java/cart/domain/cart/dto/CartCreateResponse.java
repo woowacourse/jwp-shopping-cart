@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.domain.cart.dto;
 
 import cart.domain.cart.entity.Cart;
 import cart.domain.member.entity.Member;

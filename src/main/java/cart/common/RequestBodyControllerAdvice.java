@@ -1,6 +1,6 @@
 package cart.common;
 
-import cart.dto.MemberCreateRequest;
+import cart.domain.member.dto.MemberCreateRequest;
 import java.lang.reflect.Type;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;

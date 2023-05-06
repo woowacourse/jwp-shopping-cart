@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.domain.cart.dto;
 
 public class CartCreateRequest {
 
