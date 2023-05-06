@@ -1,4 +1,4 @@
-package cart.domain.user;
+package cart.domain.user.validator;
 
 import static java.lang.System.lineSeparator;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -39,10 +39,10 @@ class EmailValidatorTest {
     }
 
     @DisplayName("값이 비어있으면 예외가 발생한다.")
-    @ParameterizedTest
+    @ParameterizedTest(name = "비어있는 값 (\"{0}\")")
     @ValueSource(strings = {" ", "  "})
     @NullAndEmptySource
-    void shouldThrow(String inputEmail) {
+    void shouldThrowIllegalArgumentExceptionWhenInputNullOrBlankValue(String inputEmail) {
         assertThatThrownBy(() -> EmailValidator.validate(inputEmail))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이메일 입력이 비어있습니다.");

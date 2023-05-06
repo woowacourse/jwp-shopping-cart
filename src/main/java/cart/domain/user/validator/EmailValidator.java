@@ -1,4 +1,4 @@
-package cart.domain.user;
+package cart.domain.user.validator;
 
 import static java.lang.System.lineSeparator;
 
