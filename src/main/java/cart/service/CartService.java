@@ -31,7 +31,7 @@ public class CartService {
     public List<CartProduct> getCartItems(String userEmail) {
         User user = getUser(userEmail);
         Cart cart = cartRepository.findByNo(user.getCartNo());
-        return cart.getCartItems();
+        return cart.getCartProducts();
     }
 
     private User getUser(String userEmail) {

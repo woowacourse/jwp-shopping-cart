@@ -10,8 +10,8 @@ import cart.domain.cart.Cart;
 import cart.domain.cart.CartProduct;
 import cart.domain.product.Product;
 import cart.domain.user.User;
-import cart.dto.api.request.CartItemCreateRequest;
 import cart.dto.ProductDto;
+import cart.dto.api.request.CartItemCreateRequest;
 import cart.repository.cart.CartRepository;
 import cart.repository.product.ProductRepository;
 import cart.repository.user.UserRepository;
@@ -82,7 +82,7 @@ public class CartIntegrationTest {
         User user = createUser("rosie@wooteco.com");
         Cart cart = cartRepository.findByNo(user.getCartNo());
 
-        for (CartProduct cartProduct : cart.getCartItems()) {
+        for (CartProduct cartProduct : cart.getCartProducts()) {
             cartRepository.removeCartItem(cartProduct.getId());
         }
         List<Product> products = productRepository.findAll();
@@ -173,7 +173,7 @@ public class CartIntegrationTest {
                 .auth().preemptive().basic(VALID_EMAIL, VALID_PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .when().delete("/user/cartItems/" + cart.getCartItems().get(0).getId())
+                .when().delete("/user/cartItems/" + cart.getCartProducts().get(0).getId())
                 .then().log().all().extract();
         //then
         assertAll(

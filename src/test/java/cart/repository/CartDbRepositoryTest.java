@@ -64,7 +64,7 @@ class CartDbRepositoryTest {
         cartRepository.addCartItem(cart, cartProduct);
         //then
         Cart after = cartRepository.findByNo(user.getCartNo());
-        assertThat(after.getCartItems()).hasSize(cart.getCartItems().size() + 1);
+        assertThat(after.getCartProducts()).hasSize(cart.getCartProducts().size() + 1);
     }
 
     @Test
@@ -76,11 +76,11 @@ class CartDbRepositoryTest {
 
         Cart cart = cartRepository.findByNo(user.getCartNo());
         //when
-        Long cartItemId = cart.getCartItems().get(0).getId();
+        Long cartItemId = cart.getCartProducts().get(0).getId();
         cartRepository.removeCartItem(cartItemId);
         //then
         Cart after = cartRepository.findByNo(user.getCartNo());
-        assertThat(after.getCartItems()).hasSize(cart.getCartItems().size() - 1);
+        assertThat(after.getCartProducts()).hasSize(cart.getCartProducts().size() - 1);
     }
 
     private void addDummyProduct(User user) {

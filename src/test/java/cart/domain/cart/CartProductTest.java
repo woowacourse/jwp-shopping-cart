@@ -4,7 +4,6 @@ import static cart.factory.ProductFactory.createOtherProduct;
 import static cart.factory.ProductFactory.createProduct;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.cart.CartProduct;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

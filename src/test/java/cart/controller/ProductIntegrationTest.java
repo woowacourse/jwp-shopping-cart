@@ -8,8 +8,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.product.Product;
-import cart.dto.api.request.ProductCreateRequest;
 import cart.dto.ProductDto;
+import cart.dto.api.request.ProductCreateRequest;
 import cart.dto.api.request.ProductEditRequest;
 import cart.repository.product.ProductRepository;
 import io.restassured.RestAssured;

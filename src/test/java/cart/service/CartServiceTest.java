@@ -48,7 +48,7 @@ class CartServiceTest {
         CartProduct cartProduct = new CartProduct(product);
 
         BDDMockito.given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
-        BDDMockito.given(cartRepository.findByNo(user.getCartNo())).willReturn(Cart.of(user.getCartNo(), List.of(cartProduct)));
+        BDDMockito.given(cartRepository.findByNo(user.getCartNo())).willReturn(new Cart(user.getCartNo(), List.of(cartProduct)));
         //when
         List<CartProduct> cartProducts = cartService.getCartItems(email);
         //then
@@ -63,7 +63,7 @@ class CartServiceTest {
         Long productId = 1L;
         Product product = Product.from(productId, "피자", "imgurl", 10000);
         User user = UserFactory.createUser(email);
-        Cart cart = Cart.of(user.getCartNo(), List.of());
+        Cart cart = new Cart(user.getCartNo(), List.of());
         BDDMockito.given(productRepository.findById(productId)).willReturn(Optional.of(product));
         BDDMockito.given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
         BDDMockito.given(cartRepository.findByNo(user.getCartNo())).willReturn(cart);

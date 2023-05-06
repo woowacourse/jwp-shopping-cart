@@ -2,7 +2,6 @@ package cart.repository.cart;
 
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartProduct;
-import cart.domain.user.User;
 
 public interface CartRepository {
 

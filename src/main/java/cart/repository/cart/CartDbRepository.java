@@ -3,7 +3,6 @@ package cart.repository.cart;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartProduct;
 import cart.domain.product.Product;
-import cart.domain.user.User;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,7 +28,7 @@ public class CartDbRepository implements CartRepository {
 
         List<CartProduct> cartProducts = namedParameterJdbcTemplate.query(sql, Map.of("cartNo", cartNo),
                 getCartItemRowMapper());
-        return Cart.of(cartNo, cartProducts);
+        return new Cart(cartNo, cartProducts);
     }
 
     private RowMapper<CartProduct> getCartItemRowMapper() {
