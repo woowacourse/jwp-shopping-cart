@@ -2,20 +2,20 @@ package cart.entity;
 
 public class MemberEntity {
 
-    private int id;
+    private Integer id;
     private String email;
     private String password;
 
     public MemberEntity() {
     }
 
-    public MemberEntity(int id, String email, String password) {
+    public MemberEntity(Integer id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -27,7 +27,7 @@ public class MemberEntity {
         return password;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
