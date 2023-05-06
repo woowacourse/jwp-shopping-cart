@@ -1,5 +1,13 @@
 package cart.presentation.controller;
 
+import cart.business.domain.cart.CartItem;
+import cart.business.domain.cart.CartItemId;
+import cart.business.domain.member.MemberId;
+import cart.business.domain.product.Product;
+import cart.business.domain.product.ProductId;
+import cart.business.domain.product.ProductImage;
+import cart.business.domain.product.ProductName;
+import cart.business.domain.product.ProductPrice;
 import cart.business.service.CartService;
 import cart.business.service.MemberService;
 import cart.business.service.ProductService;
@@ -17,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -25,6 +33,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CartController.class)
@@ -44,12 +53,11 @@ class CartControllerTest {
     @MockBean
     private MemberService memberService;
 
-    private static String auth;
     private static String encodedAuth;
 
     @BeforeAll
     static void setup() {
-        auth = EMAIL + ":" + PASSWORD;
+        String auth = EMAIL + ":" + PASSWORD;
         encodedAuth = "Basic " + new String(Base64.getEncoder().encode(auth.getBytes(StandardCharsets.UTF_8)));
     }
 
@@ -76,17 +84,26 @@ class CartControllerTest {
     @DisplayName("/carts로 GET 요청을 보낼 수 있다")
     void test_read_request() throws Exception {
         // given
-        given(cartService.readAllCartItem(any())).willReturn(Collections.emptyList());
-        given(productService.readById(any())).willReturn(null);
-
         willDoNothing().given(memberService).validateExists(any());
+
+        given(cartService.readAllCartItem(any())).willReturn(
+                List.of(new CartItem(new CartItemId(1), new ProductId(2), new MemberId(3))));
+
+        given(productService.readById(any())).willReturn(
+                new Product(new ProductId(2), new ProductName("test"),
+                        new ProductImage("https://test.com"), new ProductPrice(1000))
+        );
 
         // when
         mockMvc.perform(get("/carts")
                         .header("Authorization", encodedAuth))
 
                 // then
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("test"))
+                .andExpect(jsonPath("$[0].url").value("https://test.com"))
+                .andExpect(jsonPath("$[0].price").value(1000));
     }
 
     @Test

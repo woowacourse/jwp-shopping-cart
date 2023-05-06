@@ -1,6 +1,10 @@
 package cart.presentation.controller;
 
 import cart.business.domain.product.Product;
+import cart.business.domain.product.ProductId;
+import cart.business.domain.product.ProductImage;
+import cart.business.domain.product.ProductName;
+import cart.business.domain.product.ProductPrice;
 import cart.business.service.ProductService;
 import cart.config.WebMvcConfiguration;
 import cart.presentation.adapter.AuthInterceptor;
@@ -17,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -25,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = ProductController.class,
@@ -65,13 +71,20 @@ class ProductControllerTest {
     @DisplayName("/product 로 GET 요청을 보낼 수 있다")
     void test_read_request() throws Exception {
         // given
-        given(productService.readAll()).willReturn(Collections.emptyList());
+        given(productService.readAll()).willReturn(List.of(
+                new Product(new ProductId(1), new ProductName("test"),
+                        new ProductImage("https://test.com"), new ProductPrice(1000))
+        ));
 
         // when
         mockMvc.perform(get("/product"))
 
                 // then
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("test"))
+                .andExpect(jsonPath("$[0].url").value("https://test.com"))
+                .andExpect(jsonPath("$[0].price").value(1000));
     }
 
     @Test
