@@ -1,6 +1,7 @@
 package shoppingbasket.product.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -116,8 +117,18 @@ public class ProductApiControllerTest {
 
     @Test
     void deleteTest() throws Exception {
+        when(productService.deleteProduct(anyInt())).thenReturn(1);
+
         this.mockMvc.perform(delete("/products/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteTest_nonExistId_fail() throws Exception {
+        int nonExistId = Integer.MAX_VALUE;
+
+        this.mockMvc.perform(delete("/products/" + nonExistId))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import shoppingbasket.product.entity.ProductEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -103,9 +104,10 @@ class JdbcTemplateProductDaoTest {
         final ProductEntity product = productDao.insert(productEntity);
         final int productId = product.getId();
 
-        final int deletedRowCount = productDao.delete(productId);
+        productDao.delete(productId);
 
-        assertThat(deletedRowCount).isOne();
+        assertThatThrownBy(() -> productDao.findById(productId))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
     @Test
