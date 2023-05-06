@@ -91,4 +91,22 @@ class JdbcTemplateCartDaoTest {
         assertThatThrownBy(() -> cartDao.findById(savedId))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
+
+    @Test
+    void selectCartByIdTest() {
+        final CartEntity savedCart = cartDao.insert(1, 1);
+        final Integer savedId = savedCart.getId();
+
+        final CartProductEntity cartProductEntity = cartDao.selectCartById(savedId);
+
+        assertThat(cartProductEntity.getId()).isEqualTo(savedId);
+    }
+
+    @Test
+    void selectCartByIdTest_nonExistId_fail() {
+        int nonExistId = Integer.MAX_VALUE;
+
+        assertThatThrownBy(() -> cartDao.selectCartById(nonExistId))
+                .isInstanceOf(EmptyResultDataAccessException.class);
+    }
 }
