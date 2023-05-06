@@ -32,7 +32,7 @@ public class CartController {
 
     @GetMapping("/carts/products")
     @ResponseBody
-    public List<Product> get(@Login Member member) {
+    public ResponseEntity<List<Product>> get(@Login Member member) {
         List<Cart> carts = cartService.findAll(member.getId());
         List<Product> products = new ArrayList<>();
 
@@ -40,7 +40,7 @@ public class CartController {
             products.add(productService.findById(cart.getProductId()));
         }
 
-        return products;
+        return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
     @GetMapping("/cart")
