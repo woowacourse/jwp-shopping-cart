@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.config.AuthenticationPrincipal;
+import cart.config.Auth;
 import cart.domain.cart.AuthInfo;
 import cart.dto.cart.CartItemDto;
 import cart.dto.cart.CartItemResponseDto;
@@ -29,7 +29,7 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponseDto>> items(@AuthenticationPrincipal AuthInfo authInfo) {
+    public ResponseEntity<List<CartItemResponseDto>> items(@Auth AuthInfo authInfo) {
         UserDto userDto = authService.findMemberByEmail(authInfo.getEmail());
         List<CartItemDto> cartItemDtos = cartService.findAllUserItems(userDto);
         List<CartItemResponseDto> response = cartItemDtos.stream()
@@ -40,7 +40,7 @@ public class CartController {
 
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CartItemResponseDto> addItem(@PathVariable("id") Long productId, @AuthenticationPrincipal AuthInfo authInfo) {
+    public ResponseEntity<CartItemResponseDto> addItem(@PathVariable("id") Long productId, @Auth AuthInfo authInfo) {
         UserDto userDto = authService.findMemberByEmail(authInfo.getEmail());
         CartItemDto dto = cartService.add(userDto, productId);
         CartItemResponseDto response = CartItemResponseDto.fromDto(dto);
