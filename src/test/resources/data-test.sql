@@ -1,4 +1,6 @@
 -- TODO: 기능 구현에 필요한 내용을 추가하거나 수정하세요.
+DROP ALL OBJECTS DELETE FILES;
+
 CREATE TABLE IF NOT EXISTS PRODUCT (
     id bigint NOT NULL AUTO_INCREMENT,
     name VARCHAR(32) NOT NULL,

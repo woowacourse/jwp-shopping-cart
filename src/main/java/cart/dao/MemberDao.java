@@ -44,4 +44,5 @@ public class MemberDao {
         String sql = "SELECT * FROM MEMBER WHERE email = ?";
         return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, email));
     }
+
 }

@@ -1,6 +1,5 @@
 package cart.controller.dto.response;
 
-import cart.entity.CartEntity;
 import cart.entity.ProductEntity;
 
 public class CartItemResponse {
