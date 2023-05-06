@@ -1,4 +1,4 @@
-package cart.exception.handler;
+package cart.controller;
 
 import cart.controller.dto.ExceptionResponse;
 import cart.exception.AuthException;
