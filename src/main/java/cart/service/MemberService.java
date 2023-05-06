@@ -6,6 +6,7 @@ import cart.dao.MemberEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -16,6 +17,7 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
+    @Transactional(readOnly = true)
     public List<MemberResponse> findAll() {
         List<MemberEntity> findMembers = memberDao.findAll();
 

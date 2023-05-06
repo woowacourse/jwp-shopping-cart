@@ -30,9 +30,10 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<CartResponse> findAll(final AuthMember requestMember) {
-        Member findMember = makeFinishedValidateExistMember(requestMember);
+        Optional<MemberEntity> findMemberEntity = memberDao.findMemberById(requestMember.getId());
+        Member findMember = makeFinishedValidateExistMember(findMemberEntity, requestMember);
 
         List<CartEntity> cartEntities = cartDao.findCartByMemberId(findMember.getId());
         return cartEntities.stream()
@@ -49,8 +50,8 @@ public class CartService {
     @Transactional
     public void addCart(final int productId, final AuthMember requestMember) {
         checkExistProduct(productId);
-
-        Member findMember = makeFinishedValidateExistMember(requestMember);
+        Optional<MemberEntity> findMemberEntity = memberDao.findMemberById(requestMember.getId());
+        Member findMember = makeFinishedValidateExistMember(findMemberEntity, requestMember);
         findMember.checkPassword(requestMember.getPassword());
 
         cartDao.addCart(makeCartEntity(productId, findMember));
@@ -58,7 +59,8 @@ public class CartService {
 
     @Transactional
     public void deleteCart(final int cartId, final AuthMember requestMember) {
-        makeFinishedValidateExistMember(requestMember);
+        Optional<MemberEntity> findMemberEntity = memberDao.findMemberById(requestMember.getId());
+        makeFinishedValidateExistMember(findMemberEntity, requestMember);
         cartDao.deleteById(cartId);
     }
 
@@ -80,8 +82,8 @@ public class CartService {
         return new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
     }
 
-    private Member makeFinishedValidateExistMember(final AuthMember requestMember) {
-        Optional<MemberEntity> findMember = memberDao.findMemberById(requestMember.getId());
+    private Member makeFinishedValidateExistMember(final Optional<MemberEntity> findMember,
+                                                   final AuthMember requestMember) {
         if (findMember.isEmpty()) {
             throw new IllegalArgumentException("해당 id 멤버가 없습니다. 다시 확인해주세요.");
         }
