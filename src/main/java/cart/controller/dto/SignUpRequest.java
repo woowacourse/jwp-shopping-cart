@@ -1,5 +1,6 @@
 package cart.controller.dto;
 
+import cart.service.dto.SignUpDto;
 import javax.validation.constraints.NotBlank;
 
 public class SignUpRequest {
@@ -15,6 +16,10 @@ public class SignUpRequest {
     }
 
     public SignUpRequest() {
+    }
+
+    public SignUpDto toSignUpDto() {
+        return new SignUpDto(email, password);
     }
 
     public String getEmail() {

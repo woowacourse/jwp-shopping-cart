@@ -1,11 +1,12 @@
 package cart.controller;
 
 import cart.auth.Auth;
-import cart.service.CartService;
 import cart.controller.dto.CartRequest;
 import cart.controller.dto.CartResponse;
+import cart.service.CartService;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<Void> addProductToCart(@RequestBody @Valid CartRequest cartRequest, @Auth Long customerId) {
-        long savedId = cartService.save(cartRequest, customerId);
+        long savedId = cartService.save(cartRequest.toCartDto(), customerId);
         return ResponseEntity.created(URI.create("/cart/" + savedId)).build();
     }
 
@@ -39,7 +40,10 @@ public class CartController {
 
     @GetMapping("/products")
     public ResponseEntity<List<CartResponse>> viewAllCartOfCustomer(@Auth Long customerId) {
-        List<CartResponse> cartResponses = cartService.findAllByCustomerId(customerId);
+        List<CartResponse> cartResponses = cartService.findAllByCustomerId(customerId)
+                .stream()
+                .map(CartResponse::fromDto)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(cartResponses);
     }
 

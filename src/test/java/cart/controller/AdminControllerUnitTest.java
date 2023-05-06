@@ -14,10 +14,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.auth.AuthInfo;
 import cart.auth.AuthService;
+import cart.controller.dto.ProductResponse;
 import cart.service.CustomerService;
 import cart.service.ProductService;
-import cart.controller.dto.ProductRequest;
-import cart.controller.dto.ProductResponse;
+import cart.service.dto.ProductDto;
+import cart.service.dto.ProductInfoDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -40,12 +41,12 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @WebMvcTest(AdminController.class)
 public class AdminControllerUnitTest {
 
-    private final ProductResponse cuteSeonghaDoll =
-            new ProductResponse(1, "https://avatars.githubusercontent.com/u/95729738?v=4",
+    private final ProductInfoDto cuteSeonghaDoll =
+            new ProductInfoDto(1, "https://avatars.githubusercontent.com/u/95729738?v=4",
                     "CuteSeonghaDoll", 25000);
 
-    private final ProductResponse cuteBaronDoll =
-            new ProductResponse(2, "https://avatars.githubusercontent.com/u/95729738?v=4",
+    private final ProductInfoDto cuteBaronDoll =
+            new ProductInfoDto(2, "https://avatars.githubusercontent.com/u/95729738?v=4",
                     "CuteBaronDoll", 250000);
 
     @Autowired
@@ -93,7 +94,7 @@ public class AdminControllerUnitTest {
     void registerProduct() throws Exception {
         // given
         String requestString = objectMapper.writeValueAsString(cuteSeonghaDoll);
-        given(productService.save(any(ProductRequest.class))).willReturn(1L);
+        given(productService.save(any(ProductDto.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/admin/product")
@@ -137,7 +138,7 @@ public class AdminControllerUnitTest {
         ProductResponse wrongCuteSeonghaDoll =
                 new ProductResponse(1, imgUrl, "cuteSeonghaDoll", 24000);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(productService.save(any(ProductRequest.class))).willReturn(1L);
+        given(productService.save(any(ProductDto.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/admin/product")
@@ -159,7 +160,7 @@ public class AdminControllerUnitTest {
         ProductResponse wrongCuteSeonghaDoll =
                 new ProductResponse(1, "tmpImg", name, 24000);
         String requestString = objectMapper.writeValueAsString(wrongCuteSeonghaDoll);
-        given(productService.save(any(ProductRequest.class))).willReturn(1L);
+        given(productService.save(any(ProductDto.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/admin/product")

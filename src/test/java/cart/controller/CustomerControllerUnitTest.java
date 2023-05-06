@@ -9,9 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import cart.auth.AuthService;
-import cart.service.CustomerService;
-import cart.controller.dto.CustomerResponse;
 import cart.controller.dto.SignUpRequest;
+import cart.service.CustomerService;
+import cart.service.dto.CustomerInfoDto;
+import cart.service.dto.SignUpDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -41,7 +42,7 @@ class CustomerControllerUnitTest {
         // given
         SignUpRequest signUpRequest = new SignUpRequest("baron@gmail.com", "password");
         String requestString = objectMapper.writeValueAsString(signUpRequest);
-        given(customerService.save(any(SignUpRequest.class))).willReturn(1L);
+        given(customerService.save(any(SignUpDto.class))).willReturn(1L);
 
         // when then
         mockMvc.perform(post("/settings/users")
@@ -55,8 +56,8 @@ class CustomerControllerUnitTest {
     @Test
     void viewAllCustomers() throws Exception {
         // given
-        CustomerResponse baron = new CustomerResponse(1L, "baron@gmail.com", "password");
-        CustomerResponse journey = new CustomerResponse(2L, "journey@gmail.com", "password");
+        CustomerInfoDto baron = new CustomerInfoDto(1L, "baron@gmail.com", "password");
+        CustomerInfoDto journey = new CustomerInfoDto(2L, "journey@gmail.com", "password");
         given(customerService.findAll()).willReturn(List.of(baron, journey));
 
         // when, then

@@ -1,5 +1,6 @@
 package cart.controller.dto;
 
+import cart.service.dto.CartDto;
 import javax.validation.constraints.NotNull;
 
 public class CartRequest {
@@ -12,6 +13,10 @@ public class CartRequest {
 
     public CartRequest(long productId) {
         this.productId = productId;
+    }
+
+    public CartDto toCartDto() {
+        return new CartDto(productId);
     }
 
     public long getProductId() {

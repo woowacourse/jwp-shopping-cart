@@ -1,6 +1,6 @@
 package cart.controller.dto;
 
-import cart.dao.entity.CustomerEntity;
+import cart.service.dto.CustomerInfoDto;
 
 public class CustomerResponse {
 
@@ -14,8 +14,8 @@ public class CustomerResponse {
         this.password = password;
     }
 
-    public static CustomerResponse fromEntity(final CustomerEntity customerEntity) {
-        return new CustomerResponse(customerEntity.getId(), customerEntity.getEmail(), customerEntity.getPassword());
+    public static CustomerResponse fromDto(final CustomerInfoDto customerInfoDto) {
+        return new CustomerResponse(customerInfoDto.getId(), customerInfoDto.getEmail(), customerInfoDto.getPassword());
     }
 
     public long getId() {

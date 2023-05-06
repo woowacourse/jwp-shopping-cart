@@ -5,6 +5,7 @@ import cart.controller.dto.ProductRequest;
 import cart.controller.dto.ProductResponse;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,21 +30,24 @@ public class AdminController {
 
     @GetMapping
     public String showAllProducts(Model model) {
-        List<ProductResponse> allProducts = productService.findAllProducts();
+        List<ProductResponse> allProducts = productService.findAllProducts()
+                .stream()
+                .map(ProductResponse::fromDto)
+                .collect(Collectors.toList());
         model.addAttribute("products", allProducts);
         return "admin";
     }
 
     @PostMapping("/product")
     public ResponseEntity<Void> registerProduct(@RequestBody @Valid ProductRequest productRequest) {
-        long savedId = productService.save(productRequest);
+        long savedId = productService.save(productRequest.toProductDto());
         return ResponseEntity.created(URI.create("/admin/product/" + savedId)).build();
     }
 
     @PutMapping("/product/{id}")
     public ResponseEntity<Void> modifyProduct(@RequestBody @Valid ProductRequest productRequest,
                                               @PathVariable long id) {
-        productService.modifyById(productRequest, id);
+        productService.modifyById(productRequest.toProductDto(), id);
         return ResponseEntity.ok().build();
     }
 

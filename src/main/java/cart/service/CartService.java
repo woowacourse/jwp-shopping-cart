@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.dao.CartDao;
-import cart.controller.dto.CartRequest;
-import cart.controller.dto.CartResponse;
+import cart.service.dto.CartDto;
+import cart.service.dto.CartInfoDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -16,18 +16,18 @@ public class CartService {
         this.cartDao = cartDao;
     }
 
-    public long save(final CartRequest cartRequest, final long customerId) {
-        boolean isProductAlreadyInCart = cartDao.isProductIdInCustomerCart(customerId, cartRequest.getProductId());
+    public long save(final CartDto cartDto, final long customerId) {
+        boolean isProductAlreadyInCart = cartDao.isProductIdInCustomerCart(customerId, cartDto.getProductId());
         if (isProductAlreadyInCart) {
             throw new DuplicateCartException();
         }
-        return cartDao.insert(customerId, cartRequest.getProductId());
+        return cartDao.insert(customerId, cartDto.getProductId());
     }
 
-    public List<CartResponse> findAllByCustomerId(final long customerId) {
+    public List<CartInfoDto> findAllByCustomerId(final long customerId) {
         return cartDao.findAllCartProductByCustomerId(customerId)
                 .stream()
-                .map(CartResponse::from)
+                .map(CartInfoDto::from)
                 .collect(Collectors.toList());
     }
 

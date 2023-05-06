@@ -4,7 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.controller.dto.CustomerResponse;
-import cart.controller.dto.SignUpRequest;
+import cart.service.dto.CustomerInfoDto;
+import cart.service.dto.SignUpDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
@@ -28,10 +29,10 @@ class CustomerServiceTest {
         String password = "password";
 
         // when
-        long savedId = customerService.save(new SignUpRequest(email, password));
+        long savedId = customerService.save(new SignUpDto(email, password));
 
         // then
-        CustomerResponse customer = customerService.findByEmail(email);
+        CustomerInfoDto customer = customerService.findByEmail(email);
         assertThat(customer)
                 .usingRecursiveComparison()
                 .ignoringFields("id")
@@ -44,11 +45,11 @@ class CustomerServiceTest {
         // given
         String email = "baron@gmail.com";
         String password = "password";
-        SignUpRequest signUpRequest = new SignUpRequest(email, password);
-        customerService.save(signUpRequest);
+        SignUpDto signUpDto = new SignUpDto(email, password);
+        customerService.save(signUpDto);
 
         // when, then
-        assertThatThrownBy(() -> customerService.save(signUpRequest))
+        assertThatThrownBy(() -> customerService.save(signUpDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 존재하는 이메일 입니다.");
     }
@@ -57,15 +58,15 @@ class CustomerServiceTest {
     @Test
     void findAllCustomers() {
         // given
-        long savedId1 = customerService.save(new SignUpRequest("baron@gmail.com", "password"));
-        long savedId2 = customerService.save(new SignUpRequest("joureny@gmail.com", "password"));
+        long savedId1 = customerService.save(new SignUpDto("baron@gmail.com", "password"));
+        long savedId2 = customerService.save(new SignUpDto("joureny@gmail.com", "password"));
 
         // when
-        List<CustomerResponse> customers = customerService.findAll();
+        List<CustomerInfoDto> customers = customerService.findAll();
 
         // then
         List<Long> Ids = customers.stream()
-                .map(CustomerResponse::getId)
+                .map(CustomerInfoDto::getId)
                 .collect(Collectors.toList());
         assertThat(Ids).containsExactly(savedId1, savedId2);
     }
@@ -74,7 +75,7 @@ class CustomerServiceTest {
     @Test
     void findIdByEmail() {
         // given
-        long savedId = customerService.save(new SignUpRequest("baron@gmail.com", "password"));
+        long savedId = customerService.save(new SignUpDto("baron@gmail.com", "password"));
 
         // when
         long id = customerService.findIdByEmail("baron@gmail.com");

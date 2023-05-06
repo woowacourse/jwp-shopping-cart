@@ -5,8 +5,8 @@ import cart.dao.CustomerDao;
 import cart.dao.entity.CustomerEntity;
 import cart.domain.Email;
 import cart.domain.Password;
-import cart.controller.dto.CustomerResponse;
-import cart.controller.dto.SignUpRequest;
+import cart.service.dto.CustomerInfoDto;
+import cart.service.dto.SignUpDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -20,9 +20,9 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public long save(final SignUpRequest signUpRequest) {
-        Email email = new Email(signUpRequest.getEmail());
-        Password password = new Password(signUpRequest.getPassword());
+    public long save(final SignUpDto signUpDto) {
+        Email email = signUpDto.getEmailDomain();
+        Password password = signUpDto.getPasswordDomain();
         validateEmailExistence(email);
         return customerDao.insert(CustomerEntity.from(email, password));
     }
@@ -34,9 +34,9 @@ public class CustomerService {
                 });
     }
 
-    public CustomerResponse findByEmail(final String email) {
+    public CustomerInfoDto findByEmail(final String email) {
         return customerDao.findByEmail(email)
-                .map(CustomerResponse::fromEntity)
+                .map(CustomerInfoDto::fromEntity)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일 입니다."));
     }
 
@@ -46,10 +46,10 @@ public class CustomerService {
                 .orElseThrow(UnauthorizedException::new);
     }
 
-    public List<CustomerResponse> findAll() {
+    public List<CustomerInfoDto> findAll() {
         return customerDao.findAll()
                 .stream()
-                .map(CustomerResponse::fromEntity)
+                .map(CustomerInfoDto::fromEntity)
                 .collect(Collectors.toList());
     }
 

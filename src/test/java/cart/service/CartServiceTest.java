@@ -3,8 +3,9 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.controller.dto.CartRequest;
 import cart.controller.dto.CartResponse;
+import cart.service.dto.CartDto;
+import cart.service.dto.CartInfoDto;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,10 +29,10 @@ class CartServiceTest {
     @Sql("/cart_initialize.sql")
     void saveAndFindCartItems() {
         // given
-        long cartId = cartService.save(new CartRequest(productId), customerId);
+        long cartId = cartService.save(new CartDto(productId), customerId);
 
         // when
-        List<CartResponse> cartItems = cartService.findAllByCustomerId(customerId);
+        List<CartInfoDto> cartItems = cartService.findAllByCustomerId(customerId);
 
         // then
         List<CartResponse> expectedItems = List.of(new CartResponse(cartId, "baron", "tempUrl", 2000));
@@ -44,10 +45,10 @@ class CartServiceTest {
     @Sql("/cart_initialize.sql")
     void exceptionWhenDuplicateProductInCart() {
         // given
-        long cartId = cartService.save(new CartRequest(productId), customerId);
+        long cartId = cartService.save(new CartDto(productId), customerId);
 
         // when, then
-        assertThatThrownBy(() -> cartService.save(new CartRequest(productId), customerId))
+        assertThatThrownBy(() -> cartService.save(new CartDto(productId), customerId))
                 .isInstanceOf(DuplicateCartException.class);
     }
 
@@ -56,7 +57,7 @@ class CartServiceTest {
     @Sql("/cart_initialize.sql")
     void deleteCartItem() {
         // given
-        long cartId = cartService.save(new CartRequest(productId), customerId);
+        long cartId = cartService.save(new CartDto(productId), customerId);
 
         // when
         cartService.deleteById(cartId);

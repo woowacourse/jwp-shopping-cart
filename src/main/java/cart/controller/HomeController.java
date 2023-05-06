@@ -3,6 +3,7 @@ package cart.controller;
 import cart.service.ProductService;
 import cart.controller.dto.ProductResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,10 @@ public class HomeController {
 
     @GetMapping("/")
     public String showAllProducts(Model model) {
-        List<ProductResponse> allProducts = productService.findAllProducts();
+        List<ProductResponse> allProducts = productService.findAllProducts()
+                .stream()
+                .map(ProductResponse::fromDto)
+                .collect(Collectors.toList());
         model.addAttribute("products", allProducts);
         return "index";
     }

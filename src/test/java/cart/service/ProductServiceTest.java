@@ -3,8 +3,8 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.controller.dto.ProductRequest;
-import cart.controller.dto.ProductResponse;
+import cart.service.dto.ProductDto;
+import cart.service.dto.ProductInfoDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
@@ -20,12 +20,12 @@ class ProductServiceTest {
     @Autowired
     private ProductService productService;
 
-    private final ProductRequest cuteSeonghaDoll =
-            new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
+    private final ProductDto cuteSeonghaDoll =
+            new ProductDto("https://avatars.githubusercontent.com/u/95729738?v=4",
                     "CuteSeonghaDoll", 25000);
 
-    private final ProductRequest cuteBaronDoll =
-            new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
+    private final ProductDto cuteBaronDoll =
+            new ProductDto("https://avatars.githubusercontent.com/u/95729738?v=4",
                     "CuteBaronDoll", 250000);
 
     @Test
@@ -36,9 +36,9 @@ class ProductServiceTest {
         long savedId2 = productService.save(cuteBaronDoll);
 
         // when
-        List<ProductResponse> products = productService.findAllProducts();
+        List<ProductInfoDto> products = productService.findAllProducts();
         List<Long> foundIds = products.stream()
-                .map(ProductResponse::getId)
+                .map(ProductInfoDto::getId)
                 .collect(Collectors.toList());
 
         // then
@@ -50,13 +50,13 @@ class ProductServiceTest {
     void modifyById() {
         // given
         long savedId = productService.save(cuteSeonghaDoll);
-        ProductRequest productToModify = cuteBaronDoll;
+        ProductDto productToModify = cuteBaronDoll;
 
         // when
         productService.modifyById(productToModify, savedId);
 
         // then
-        ProductResponse foundProduct = productService.findAllProducts().get(0);
+        ProductInfoDto foundProduct = productService.findAllProducts().get(0);
 
         assertAll(
                 () -> assertThat(foundProduct.getId()).isEqualTo(savedId),

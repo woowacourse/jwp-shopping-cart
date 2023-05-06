@@ -14,10 +14,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.auth.AuthInfo;
 import cart.auth.AuthService;
-import cart.service.CartService;
-import cart.service.CustomerService;
 import cart.controller.dto.CartRequest;
 import cart.controller.dto.CartResponse;
+import cart.service.CartService;
+import cart.service.CustomerService;
+import cart.service.dto.CartDto;
+import cart.service.dto.CartInfoDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -62,7 +64,7 @@ class CartControllerUnitTest {
     @Test
     void addProductToCart() throws Exception {
         // given
-        given(cartService.save(any(CartRequest.class), anyLong())).willReturn(1L);
+        given(cartService.save(any(CartDto.class), anyLong())).willReturn(1L);
         String requestString = objectMapper.writeValueAsString(new CartRequest(1L));
         // when, then
         mockMvc.perform(post("/cart")
@@ -77,8 +79,9 @@ class CartControllerUnitTest {
     @Test
     void viewAllProductsOfCustomer() throws Exception {
         // given
-        List<CartResponse> carts = List.of(new CartResponse(1L, "baron", "tmpUrl", 2000));
-        String responseString = objectMapper.writeValueAsString(carts);
+        List<CartInfoDto> carts = List.of(new CartInfoDto(1L, "baron", "tmpUrl", 2000));
+        List<CartResponse> cartResponses = List.of(new CartResponse(1L, "baron", "tmpUrl", 2000));
+        String responseString = objectMapper.writeValueAsString(cartResponses);
         given(cartService.findAllByCustomerId(anyLong())).willReturn(carts);
 
         // when, then

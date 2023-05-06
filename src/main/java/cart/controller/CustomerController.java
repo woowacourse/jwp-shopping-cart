@@ -5,6 +5,7 @@ import cart.controller.dto.CustomerResponse;
 import cart.controller.dto.SignUpRequest;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,13 +26,16 @@ public class CustomerController {
 
     @PostMapping("/users")
     public ResponseEntity<Void> signUp(@RequestBody SignUpRequest signUpRequest) {
-        long savedId = customerService.save(signUpRequest);
+        long savedId = customerService.save(signUpRequest.toSignUpDto());
         return ResponseEntity.created(URI.create("/settings/users/" + savedId)).build();
     }
 
     @GetMapping
     public String viewAllCustomers(Model model) {
-        List<CustomerResponse> customers = customerService.findAll();
+        List<CustomerResponse> customers = customerService.findAll()
+                .stream()
+                .map(CustomerResponse::fromDto)
+                .collect(Collectors.toList());
         model.addAttribute("members", customers);
         return "settings";
     }

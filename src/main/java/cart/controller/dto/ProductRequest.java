@@ -1,8 +1,6 @@
 package cart.controller.dto;
 
-import cart.domain.Price;
-import cart.domain.Product;
-import cart.domain.ProductName;
+import cart.service.dto.ProductDto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -26,9 +24,10 @@ public class ProductRequest {
     public ProductRequest() {
     }
 
-    public Product toProduct() {
-        return new Product(new ProductName(name), imgUrl, new Price(price));
+    public ProductDto toProductDto() {
+        return new ProductDto(imgUrl, name, price);
     }
+
     public String getName() {
         return name;
     }
