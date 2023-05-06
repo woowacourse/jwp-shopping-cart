@@ -67,7 +67,11 @@ public class CartApiController {
     public ResponseEntity<Void> removeCart(@AuthenticationPrincipal AuthInfo authInfo,
                                            @PathVariable int id) {
 
-        cartService.removeCart(id);
+        int deletedRowCount = cartService.removeCart(id);
+
+        if (deletedRowCount == 0) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.noContent().build();
     }
 }

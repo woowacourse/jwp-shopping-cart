@@ -35,8 +35,8 @@ public class  CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public void removeCart(final int cartId) {
-        cartDao.delete(cartId);
+    public int removeCart(final int cartId) {
+        return cartDao.delete(cartId);
     }
 
     public CartSelectResponseDto getCartById(final int cartId) {

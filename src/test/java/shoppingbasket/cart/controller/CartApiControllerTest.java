@@ -131,6 +131,19 @@ class CartApiControllerTest {
     }
 
     @Test
+    void deleteTest_nonExistId_fail() {
+        int nonExistId = Integer.MAX_VALUE;
+
+        RestAssured
+                .given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/cart/" + nonExistId)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     void getCartByIdTest() {
         final CartEntity savedCart = cartDao.insert(MEMBER_ID, 1);
         final Integer savedId = savedCart.getId();
