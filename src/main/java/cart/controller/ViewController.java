@@ -42,4 +42,9 @@ public class ViewController {
         model.addAttribute("users", users);
         return "users";
     }
+
+    @GetMapping("/carts/me")
+    public String viewCarts() {
+        return "cart";
+    }
 }

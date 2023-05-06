@@ -2,7 +2,7 @@ const addCartItem = (productId) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
-        window.location.href = '/settings';
+        window.location.href = '/users';
         return;
     }
 
@@ -23,7 +23,7 @@ const removeCartItem = (id) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
-        window.location.href = '/settings';
+        window.location.href = '/users';
         return;
     }
 

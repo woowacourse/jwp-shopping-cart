@@ -2,6 +2,7 @@ package cart.domain.user;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -31,5 +32,12 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public List<User> findAll() {
         return this.users;
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return this.users.stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst();
     }
 }

@@ -12,8 +12,8 @@
     <nav>
         <ul class="gnb-group">
             <li><a href="/">상품목록</a></li>
-            <li><a href="/cart">장바구니</a></li>
-            <li><a href="/settings">설정</a></li>
+            <li><a href="/carts/me">장바구니</a></li>
+            <li><a href="/users">회원</a></li>
             <li class="nav-admin"><a href="/admin">관리자</a></li>
         </ul>
     </nav>
@@ -26,16 +26,16 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/cart.js}"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const credentials = localStorage.getItem('credentials');
         if (!credentials) {
             alert('사용자 정보가 없습니다.');
-            window.location.href = '/settings';
+            window.location.href = '/users';
             return;
         }
 
         axios.request({
-            url: '',
+            url: '/carts/me/products',
             headers: {
                 'Authorization': `Basic ${credentials}`
             }

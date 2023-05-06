@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.domain.cart.Cart;
 import cart.domain.product.Product;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

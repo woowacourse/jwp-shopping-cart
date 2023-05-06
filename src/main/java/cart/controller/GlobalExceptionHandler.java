@@ -1,7 +1,9 @@
 package cart.controller;
 
+import cart.controller.auth.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -22,6 +24,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleException(IllegalArgumentException exception) {
         logger.info(exception.getClass().getSimpleName() + " - " + exception.getMessage(), exception);
         return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException(UnauthorizedException exception) {
+        logger.info(exception.getClass().getSimpleName() + " - " + exception.getMessage(), exception);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 
     @ExceptionHandler

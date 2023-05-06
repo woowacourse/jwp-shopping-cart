@@ -27,6 +27,10 @@ public class User {
         return new User(null, email, password, new UserPrivacy(name, phoneNumber));
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getEmail() {
         return this.email;
     }
@@ -41,6 +45,10 @@ public class User {
 
     public Optional<String> getPhoneNumber() {
         return this.userPrivacy.getPhoneNumber();
+    }
+
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
     }
 
     @Override

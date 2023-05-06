@@ -68,12 +68,11 @@ Admin 화면을 렌더링하여 반환합니다.
 > - [x] users.html 반환
 >   - [x] 등록된 모든 User 정보 렌더링
 
-### GET /carts/me
+### ✅ GET /carts/me
 나의 장바구니를 확인하고, 포함된 상품을 삭제할 수 있는 화면을 반환합니다.
 
 **구현 내용**
-> - [ ] cart.html 반환
->   - [ ] Cart에 포함된 모든 Product 정보 렌더링
+> - [x] cart.html 반환
 
 
 ## Product 관련 Admin 기능
@@ -195,16 +194,40 @@ Content-Type: application/json
 
 ## Cart 관련 기능
 
-### POST carts/add/{product_id}
+### ✅ GET carts/me/products
+로그인 된 사용자의 장바구니에 상품을 추가합니다.
+
+**구현 내용**
+> - [x] 로그인 된 사용자의 장바구니에 포함된 모든 상품 정보 반환
+>   - [x] 로그인 확인
+
+**Request example**
+```json
+GET carts/me/products HTTP/1.1
+Content-type: application/json; charset=UTF-8
+Host: localhost:8080
+Authorization: Basic ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
+```
+
+**Response example**
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+//TODO Response body example 추가하기
+```
+
+### POST carts/me/{product_id}
 로그인 된 사용자의 장바구니에 상품을 추가합니다.
 
 **구현 내용**
 > - [ ] 요청 받은 ID에 해당하는 Product를 Cart에 추가
+>   - [ ] 로그인 확인
 > - [ ] DB에 저장
 
 **Request example**
 ```json
-POST carts/{product_id} HTTP/1.1
+POST carts/me/{product_id} HTTP/1.1
 Content-type: application/json; charset=UTF-8
 Host: localhost:8080
 Authorization: Basic ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
@@ -216,16 +239,17 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 ```
 
-### DELETE carts/{product_id}
+### DELETE carts/me/{product_id}
 로그인 된 사용자의 장바구니에서 상품을 삭제합니다.
 
 **구현 사항**
 > - [ ] 요청 받은 ID에 해당하는 Product를 Cart에서 삭제
+>   - [ ] 로그인 확인
 > - [ ] DB에 저장
 
 **Request example**
 ```json
-DELETE carts/delete/{product_id} HTTP/1.1
+DELETE carts/me/{product_id} HTTP/1.1
 Content-type: application/json; charset=UTF-8
 Host: localhost:8080
 Authorization: Basic ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
