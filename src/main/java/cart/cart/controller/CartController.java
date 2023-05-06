@@ -1,7 +1,9 @@
 package cart.cart.controller;
 
 import cart.cart.dto.CartResponse;
+import cart.cart.dto.ExceptionResponse;
 import cart.cart.service.CartService;
+import cart.global.infrastructure.AuthorizationException;
 import cart.global.infrastructure.AuthorizationExtractor;
 import cart.member.dto.AuthInfo;
 import org.springframework.http.HttpStatus;
@@ -54,8 +56,18 @@ public class CartController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public String deleteCart(@PathVariable("id") Long cartId) {
-        cartService.deleteCartById(cartId);
+    public String deleteCart(@PathVariable("id") Long cartId, HttpServletRequest request) {
+        AuthInfo authInfo = authorizationExtractor.extract(request);
+
+        String email = authInfo.getEmail();
+        String password = authInfo.getPassword();
+
+        cartService.deleteCartById(cartId, email, password);
         return "cart";
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ExceptionResponse> handleAuthorizationException(AuthorizationException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(exception.getMessage()));
     }
 }
