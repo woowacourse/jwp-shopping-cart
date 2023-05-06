@@ -83,8 +83,6 @@ class ProductServiceTest {
     @Test
     void 상품을_수정한다() {
         // given
-        Mockito.when(productDao.findById(Mockito.any(Long.class)))
-                .thenReturn(Optional.ofNullable(PRODUCT_FIXTURE));
         Mockito.when(productDao.update(Mockito.any(Long.class), Mockito.any(Product.class)))
                 .thenReturn(1);
         final Long id = 1L;
@@ -111,8 +109,6 @@ class ProductServiceTest {
     @Test
     void 상품을_삭제한다() {
         // given
-        Mockito.when(productDao.findById(Mockito.any(Long.class)))
-                .thenReturn(Optional.ofNullable(PRODUCT_FIXTURE));
         Mockito.when(productDao.delete(Mockito.any(Long.class)))
                 .thenReturn(1);
         final Long id = 1L;

@@ -53,20 +53,20 @@ public class ProductService {
 
     @Transactional
     public int update(final Long id, final UpdateProductRequest updateProductRequest) {
-        final Optional<Product> productOptional = productDao.findById(id);
-        if (productOptional.isEmpty()) {
+        final Product product = updateProductRequest.toProduct();
+        final int updatedRow = productDao.update(id, product);
+        if (updatedRow == 0) {
             throw new ProductNotFoundException("존재하지 않는 상품입니다.");
         }
-        final Product product = updateProductRequest.toProduct();
-        return productDao.update(id, product);
+        return updatedRow;
     }
 
     @Transactional
     public int delete(final Long id) {
-        final Optional<Product> productOptional = productDao.findById(id);
-        if (productOptional.isEmpty()) {
+        final int affectedRow = productDao.delete(id);
+        if (affectedRow == 0) {
             throw new ProductNotFoundException("존재하지 않는 상품입니다.");
         }
-        return productDao.delete(id);
+        return affectedRow;
     }
 }
