@@ -25,7 +25,7 @@ public class CartController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addItem(@BasicAuthenticationPrincipal AuthInfo authInfo,
+    public ResponseEntity<Void> addCart(@BasicAuthenticationPrincipal AuthInfo authInfo,
                                         @RequestBody @Valid final CartRequest cartRequest) {
         cartService.saveCart(authInfo, cartRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -34,7 +34,7 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartResponse>> loadAllItem(@BasicAuthenticationPrincipal AuthInfo authInfo) {
+    public ResponseEntity<List<CartResponse>> loadAllCart(@BasicAuthenticationPrincipal AuthInfo authInfo) {
         List<CartResponse> allCart = cartService.loadAllCart(authInfo);
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
