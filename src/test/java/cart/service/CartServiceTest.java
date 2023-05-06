@@ -4,6 +4,7 @@ import cart.auth.MemberInfo;
 import cart.domain.Cart;
 import cart.domain.Product;
 import cart.dto.request.ProductRequestDto;
+import cart.dto.response.ProductDto;
 import cart.excpetion.CartException;
 import cart.repository.CartRepository;
 import cart.repository.ProductRepository;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -123,5 +125,23 @@ class CartServiceTest {
         verify(cartRepository, times(1)).save(any());
         verify(cartRepository, times(1)).getCartOf(anyInt());
         verify(productRepository, times(1)).findBy(anyInt());
+    }
+
+    @DisplayName("유저의 모든 장바구니 상품을 가져온다.")
+    @Test
+    void getProductsOf() {
+        //given
+        given(cartRepository.getCartOf(anyInt()))
+                .willReturn(new Cart(1, List.of(
+                                new Product(1, "name1", "image1", 1),
+                                new Product(2, "name2", "image2", 2)
+                        ))
+                );
+
+        //when
+        final List<ProductDto> userProducts = cartService.getProductsOf(new MemberInfo(1, "email"));
+
+        //then
+        assertThat(userProducts).hasSize(2);
     }
 }
