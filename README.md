@@ -136,7 +136,7 @@
 - [x] ExceptionHandler가 Exception.message를 이용할 수 있도록 수정
 - [x] UPDATE 요청의 응답으로 수정된 엔티티를 반환하도록 수정
 - [x] ProductValidator 네이밍 수정(ConstraintValidator 구현체로 생각할 여지 있음)
-- [ ] DTO 유효성 검사 서비스 or 영속성 계층에서 더블 체크?
+- [x] DTO 유효성 검사 서비스 or 영속성 계층에서 더블 체크?
 
 ### 궁금한 내용
 - [x] 컨트롤러에서 응답으로 엔티티 객체를 반환해도 될까?
