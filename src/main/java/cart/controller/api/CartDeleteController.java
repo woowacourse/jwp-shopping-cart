@@ -16,7 +16,7 @@ public class CartDeleteController {
         this.cartDeleteService = cartDeleteService;
     }
 
-    @DeleteMapping("carts/{id}")
+    @DeleteMapping("/carts/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteCart(@PathVariable final long id) {
         cartDeleteService.delete(id);
