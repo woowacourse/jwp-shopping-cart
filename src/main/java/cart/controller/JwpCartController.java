@@ -54,4 +54,9 @@ public class JwpCartController {
         model.addAttribute("members", response);
         return "settings";
     }
+
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
+    }
 }
