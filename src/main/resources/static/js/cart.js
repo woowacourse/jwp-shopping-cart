@@ -6,10 +6,16 @@ const addCartItem = (productId) => {
         return;
     }
 
-    axios.post(`/carts/${productId}`, "", {
+    const data = {
+        productId: productId
+    };
+
+    axios.post(`/carts`, data
+        , {
         headers: {
             'Authorization' : `Basic ${credentials}`
         },
+
     }).then((response) => {
         alert('장바구니에 담았습니다.');
     }).catch((error) => {
@@ -25,10 +31,13 @@ const removeCartItem = (id) => {
         return;
     }
 
-    axios.delete(`/carts/${id}`, {
+    axios.delete(`/carts`, {
         headers: {
             'Authorization' : `Basic ${credentials}`
         },
+        data: {
+            productId: id
+        }
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
