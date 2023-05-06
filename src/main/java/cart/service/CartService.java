@@ -3,8 +3,6 @@ package cart.service;
 import cart.domain.cart.Cart;
 import cart.domain.item.Item;
 import cart.domain.user.User;
-import cart.exception.cart.CartAlreadyExistsException;
-import cart.exception.cart.CartNotFoundException;
 import cart.exception.item.ItemNotFoundException;
 import cart.exception.user.UserNotFoundException;
 import cart.repository.CartRepository;
@@ -47,16 +45,10 @@ public class CartService {
                 .orElseThrow(() -> new ItemNotFoundException("등록하고자 하는 상품을 찾을 수 없습니다."));
         Cart cart = cartRepository.findCart(user);
 
-        validateAlreadyExistsItem(cart, item);
-        cartRepository.saveItem(cart, item);
+        cart.addItem(item);
+        cartRepository.save(cart);
 
         return ItemDto.from(item);
-    }
-
-    private void validateAlreadyExistsItem(Cart cart, Item item) {
-        if (cart.isExistsItem(item)) {
-            throw new CartAlreadyExistsException("이미 장바구니에 존재하는 상품입니다.");
-        }
     }
 
     @Transactional
@@ -67,14 +59,8 @@ public class CartService {
                 .orElseThrow(() -> new ItemNotFoundException("장바구니에서 일치하는 상품을 찾을 수 없습니다."));
 
         Cart cart = cartRepository.findCart(user);
-        validateNotExistsItem(cart, item);
+        cart.removeItem(item);
 
-        cartRepository.deleteCartItem(cart, item);
-    }
-
-    private void validateNotExistsItem(Cart cart, Item item) {
-        if (!cart.isExistsItem(item)) {
-            throw new CartNotFoundException("장바구니에 존재하지 않는 상품입니다.");
-        }
+        cartRepository.deleteCartItem(cart);
     }
 }

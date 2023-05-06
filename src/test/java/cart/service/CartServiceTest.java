@@ -1,5 +1,6 @@
 package cart.service;
 
+import static cart.fixture.DomainFactory.MAC_BOOK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -113,7 +114,7 @@ class CartServiceTest {
     @Test
     @DisplayName("이미 장바구니에 추가한 상품을 추가하면 예외가 발생한다")
     void insertCartFailWithAlreadyExistsItem() {
-        Item item = itemRepository.insert(new Item("a", "https://image.com", 10000));
+        Item item = itemRepository.insert(MAC_BOOK);
         cartService.addItem("a@a.com", item.getId());
 
         assertThatThrownBy(() -> cartService.addItem("a@a.com", item.getId()))

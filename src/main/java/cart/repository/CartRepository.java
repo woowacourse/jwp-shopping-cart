@@ -3,42 +3,50 @@ package cart.repository;
 import cart.domain.cart.Cart;
 import cart.domain.item.Item;
 import cart.domain.user.User;
-import cart.exception.cart.CartNotFoundException;
 import cart.repository.dao.CartDao;
 import cart.repository.dao.CartItemDao;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class CartRepository {
 
-    private static final int CORRECT_ROW_COUNT = 1;
-
+    private final ThreadLocal<List<Item>> caches;
     private final CartDao cartDao;
     private final CartItemDao cartItemDao;
 
     public CartRepository(CartDao cartDao, CartItemDao cartItemDao) {
         this.cartDao = cartDao;
         this.cartItemDao = cartItemDao;
+        caches = ThreadLocal.withInitial(ArrayList::new);
     }
 
-    public void saveItem(Cart cart, Item item) {
+    public void save(Cart cart) {
+        Item item = cart.findDifferentItem(caches.get());
         cartItemDao.insert(cart.getId(), item.getId());
+
+        caches.get()
+                .add(item);
     }
 
     public Cart findCart(User user) {
-        Long cartId = cartDao.findByEmail(user.getEmail())
-                .orElseGet(() -> cartDao.insert(user.getEmail()));
+        Long cartId = cartDao.findByUserId(user.getId());
         List<Item> cartItems = cartItemDao.findAllByCartId(cartId);
 
-        return new Cart(cartId, cartItems);
+        if (!caches.get().equals(cartItems)) {
+            caches.remove();
+            caches.set(cartItems);
+        }
+
+        return new Cart(cartId, new ArrayList<>(caches.get()));
     }
 
-    public void deleteCartItem(Cart cart, Item item) {
-        int delete = cartItemDao.delete(cart.getId(), item.getId());
+    public void deleteCartItem(Cart cart) {
+        Item deleteItem = cart.findDifferentItem(caches.get());
 
-        if (delete != CORRECT_ROW_COUNT) {
-            throw new CartNotFoundException("장바구니에 존재하지 않는 상품입니다.");
-        }
+        cartItemDao.delete(cart.getId(), deleteItem.getId());
+        caches.get()
+                .remove(deleteItem);
     }
 }

@@ -334,7 +334,7 @@ class JwpCartApplicationTests {
 
     @Nested
     @DisplayName("장바구니 CRD 테스트")
-    @Sql({"/truncate.sql", "/items.sql"})
+    @Sql({"/truncate.sql", "/items.sql", "/carts.sql"})
     class CartControllerCRDSuccessTest {
 
         private String basic;
@@ -396,7 +396,7 @@ class JwpCartApplicationTests {
 
         @Test
         @DisplayName("이미 추가한 상품을 장바구니에 다시 추가하면 BAD REQUEST를 반환한다.")
-        @Sql("/carts.sql")
+        @Sql("/cart-item.sql")
         void addCartFailWithAlreadyExistsItem() {
             AddCartRequest addCartRequest = new AddCartRequest(1L);
 

@@ -1,1 +1,1 @@
-INSERT INTO CART_ITEM(cart_id, item_id) VALUES(1, 1);
+INSERT INTO CARTS(user_id) VALUES(1);
