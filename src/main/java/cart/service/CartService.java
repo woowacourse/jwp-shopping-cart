@@ -41,7 +41,7 @@ public class CartService {
 
         List<ProductEntity> cartItems = carts.stream()
                 .map(cartEntity -> productDao.selectById(cartEntity.getProductId()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
 
         return cartItems.stream()
                 .map(product -> new ProductResponseDto(
