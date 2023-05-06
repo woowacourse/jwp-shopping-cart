@@ -23,5 +23,5 @@ CREATE TABLE cart
     member_id  BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
+    FOREIGN KEY (product_id) REFERENCES product (id) on delete cascade on update cascade
 );
