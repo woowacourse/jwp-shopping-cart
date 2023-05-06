@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.CartDao;
+import cart.dao.cart.CartDao;
 import cart.domain.Cart;
 import cart.dto.CartDto;
 import org.springframework.stereotype.Service;
