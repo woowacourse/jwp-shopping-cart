@@ -23,6 +23,6 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(final FormatterRegistry registry) {
-        WebMvcConfigurer.super.addFormatters(registry);
+        registry.addConverter(new PathVariableConverter());
     }
 }

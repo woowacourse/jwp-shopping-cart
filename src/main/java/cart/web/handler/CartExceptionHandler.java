@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class CartExceptionHandler {
@@ -17,11 +18,13 @@ public class CartExceptionHandler {
                 .body("존재하지 않는 자원입니다.");
     }
 
-    @ExceptionHandler(NumberFormatException.class)
-    public ResponseEntity<String> handleIllegalNumberFormatRequest() {
+    @ExceptionHandler
+    public ResponseEntity<String> handleMethodArgumentTypeMismatchException(
+            final MethodArgumentTypeMismatchException exception
+    ) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body("옳바르지 않은 숫자 형식입니다.");
+                .body(exception.getMostSpecificCause().getMessage());
     }
 
     @ExceptionHandler

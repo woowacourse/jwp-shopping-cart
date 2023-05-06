@@ -2,6 +2,7 @@ package cart.web.controller.cart;
 
 import cart.domain.cart.service.dto.AuthorizedCartUserDto;
 import cart.domain.cart.usecase.DeleteOneProductInCartUseCase;
+import cart.web.config.PathVariableId;
 import cart.web.config.auth.AuthorizedUser;
 import cart.web.dto.request.AuthorizedUserRequest;
 import org.springframework.http.HttpStatus;
@@ -23,12 +24,12 @@ public class DeleteProductInCartController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProductInCart(
             @AuthorizedUser final AuthorizedUserRequest request,
-            @PathVariable final Long productId
+            @PathVariable final PathVariableId productId
     ) {
         final AuthorizedCartUserDto authorizedCartUserDto =
                 new AuthorizedCartUserDto(request.getEmail(), request.getPassword());
 
-        deleteOneProductInCartService.deleteSingleProductInCart(authorizedCartUserDto, productId);
+        deleteOneProductInCartService.deleteSingleProductInCart(authorizedCartUserDto, productId.getId());
 
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
