@@ -43,7 +43,7 @@
 # 기록 📕
 
 <details>
-<summary> step 1 리팩토링 기록 </summary>
+<summary> step 1 리팩토링 기록 및 고민 </summary>
 <div>
 
 - [x] Service에 DTO 개념을 붙이고 싶지 않다. 반면 Controller에서도 도메인에 대한 결합도를 높이고 싶지는 않다. 두 방식은 모두 극단적이라 생각. 따라서 새로운 레이어 생성.
@@ -71,6 +71,25 @@
     - [x] 기본 null check 스타일에서 벗어나 깔끔한 코드 구성 가능
     - [x] 구현한 사람에 의도에 맞는 사용법
     - [x] https://www.daleseo.com/java8-optional-effective/
+
+</div>
+</details>
+
+<details>
+<summary> step 2 리팩토링 기록 및 고민 </summary>
+<div>
+
+- [x] Controller 에서 Service로 요청을 보낼 때 DomainConverter를 사용하고 있는데 고민이 듬.
+  - [x] 차라리 Service - Controller 간 DTO 사용이 낫지 않을까?
+  - [x] 하지만 DTO를 사용하는 경우 Service -> Controller DTO, Controller -> Service DTO.. 양방향 비용이 듬.
+    - [x] 추가로 각 레이어는 Mapper 까지 가지고 있어야 한다.
+  - [x] 결국 각 service마다 converter를 두는 쪽으로 리팩토링. 
+    - [x] 도메인 엔티티를 presentation Layer로 반환했을 때의 문제점은 뭘까? 추후 고민해보기.
+- [x] service 에서 정상 수행에 대한 테스트도 정의! 예외 케이스만 테스트하지 말자.
+- [x] 컨트롤러 테스트에서 jsonPath를 사용해봄.
+  - [x] service를 모킹 해 JSON 내용까지 검증. 
+    - [x] service의 순서를 조율하고 DTO로 매핑하는 작업도 엄연히 로직이므로 내용까지 검증되어야 함!
+
 
 </div>
 </details>
