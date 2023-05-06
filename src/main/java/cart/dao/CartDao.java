@@ -40,12 +40,17 @@ public class CartDao {
     }
 
     public List<CartData> findAll(final Long userId) {
-        System.out.println(userId);
         final String sql = "SELECT carts.id, items.name, items.image_url, items.price " +
                 "FROM items JOIN carts " +
                 "ON items.id = carts.item_id " +
                 "WHERE carts.user_id = :user_id";
         MapSqlParameterSource param = new MapSqlParameterSource("user_id", userId);
         return namedParameterJdbcTemplate.query(sql, param, cartDataRowMapper);
+    }
+
+    public void deleteBy(final Long cartId) {
+        final String sql = "DELETE FROM carts WHERE id = :cart_id";
+        MapSqlParameterSource param = new MapSqlParameterSource("cart_id", cartId);
+        namedParameterJdbcTemplate.update(sql, param);
     }
 }
