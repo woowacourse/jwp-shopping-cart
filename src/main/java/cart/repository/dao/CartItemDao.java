@@ -1,6 +1,6 @@
 package cart.repository.dao;
 
-import cart.repository.dao.entity.CartItemEntity;
+import cart.domain.item.Item;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +12,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class CartItemDao {
 
-    private final RowMapper<CartItemEntity> actorRowMapper = (resultSet, rowNum) -> new CartItemEntity(
+    private final RowMapper<Item> actorRowMapper = (resultSet, rowNum) -> new Item(
             resultSet.getLong("id"),
-            resultSet.getLong("cart_id"),
-            resultSet.getLong("item_id")
+            resultSet.getString("name"),
+            resultSet.getString("image_url"),
+            resultSet.getInt("price")
     );
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -37,8 +38,11 @@ public class CartItemDao {
         return key.longValue();
     }
 
-    public List<CartItemEntity> findAllByCartId(Long cartId) {
-        String sql = "SELECT id, cart_id, item_id FROM CART_ITEM WHERE cart_id = ?";
+    public List<Item> findAllByCartId(Long cartId) {
+        String sql = "SELECT i.id, i.name, i.image_url, i.price "
+                + "FROM CART_ITEM ci "
+                + "INNER JOIN ITEMS i ON i.id = ci.item_id "
+                + "WHERE cart_id = ?";
 
         return jdbcTemplate.query(sql, actorRowMapper, cartId);
     }

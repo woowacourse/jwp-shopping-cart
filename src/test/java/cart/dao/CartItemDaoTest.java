@@ -3,8 +3,8 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.domain.item.Item;
 import cart.repository.dao.CartItemDao;
-import cart.repository.dao.entity.CartItemEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,13 +36,15 @@ class CartItemDaoTest {
     @Test
     @DisplayName("장바구니의 모든 상품을 조회한다.")
     void findAllByCartIdSuccess() {
-        List<CartItemEntity> actual = cartItemDao.findAllByCartId(1L);
+        List<Item> actual = cartItemDao.findAllByCartId(1L);
 
         assertAll(
                 () -> assertThat(actual).hasSizeGreaterThanOrEqualTo(1),
                 () -> assertThat(actual.get(0).getId()).isPositive(),
-                () -> assertThat(actual.get(0).getCartId()).isEqualTo(1L),
-                () -> assertThat(actual.get(0).getItemId()).isPositive()
+                () -> assertThat(actual.get(0).getName()).isEqualTo("자전거1"),
+                () -> assertThat(actual.get(0).getImageUrl())
+                        .isEqualTo("https://www.altonsports.com/prdimg/get/21-INNOZEN24_P_01%281060X600%29.jpg"),
+                () -> assertThat(actual.get(0).getPrice()).isEqualTo(10_000)
         );
     }
 

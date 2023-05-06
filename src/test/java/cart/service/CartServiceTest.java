@@ -42,7 +42,7 @@ class CartServiceTest {
 
         userRepository = new UserRepository(userDao);
         itemRepository = new ItemRepository(itemDao);
-        cartRepository = new CartRepository(cartDao, itemDao, cartItemDao);
+        cartRepository = new CartRepository(cartDao, cartItemDao);
 
         cartService = new CartService(userRepository, itemRepository, cartRepository);
     }
