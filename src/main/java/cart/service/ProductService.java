@@ -21,6 +21,7 @@ public class ProductService {
         productDao.insert(product);
     }
 
+    @Transactional(readOnly = true)
     public List<Product> findAll() {
         return productDao.findAll();
     }
