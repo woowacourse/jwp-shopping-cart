@@ -1,5 +1,7 @@
 package cart.infratstructure;
 
+import static cart.infratstructure.AuthenticationAttribute.LOGIN_MEMBER_ID;
+
 import cart.domain.member.Member;
 import cart.domain.member.MemberService;
 import cart.dto.AuthInfo;
@@ -10,8 +12,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
-    // TODO 속성명 이넘으로 분리
-    private static final String LOGIN_MEMBER_ID = "LOGIN_MEMBER_ID";
     private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
     private final MemberService memberService;
 
@@ -35,7 +35,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             throw new AuthenticationException("잘못된 사용자 정보입니다");
         }
 
-        request.setAttribute(LOGIN_MEMBER_ID, member.getId());
+        request.setAttribute(LOGIN_MEMBER_ID.name(), member.getId());
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 }
