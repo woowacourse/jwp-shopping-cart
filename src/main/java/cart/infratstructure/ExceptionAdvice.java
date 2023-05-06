@@ -1,6 +1,7 @@
 package cart.infratstructure;
 
 import cart.dto.ErrorDto;
+import java.util.Arrays;
 import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,9 +22,8 @@ public class ExceptionAdvice {
                 .getAllErrors().stream()
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("예외 메시지 정보가 존재하지 않습니다."));
-        // TODO Null값일 경우 어떤 필드인지 알려주기
         log.error("MethodArgumentNotValid message={}", foundError.getDefaultMessage());
-        return new ErrorDto(foundError.getDefaultMessage());
+        return new ErrorDto(foundError.getDefaultMessage(), foundError.getField());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -59,6 +59,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     public ErrorDto handleException(Exception exception) {
         log.error(exception.getClass().getName() + " message={}", exception.getMessage());
+        log.error(Arrays.toString(exception.getStackTrace()));
         return new ErrorDto("internal server error");
     }
 }
