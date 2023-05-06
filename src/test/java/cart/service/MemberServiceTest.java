@@ -6,7 +6,6 @@ import cart.exception.customexceptions.DataNotFoundException;
 import cart.exception.customexceptions.NotUniqueValueException;
 import cart.exception.customexceptions.PasswordNotMatchException;
 import cart.repository.dao.memberDao.MemberDao;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("NonAsciiCharacters")
