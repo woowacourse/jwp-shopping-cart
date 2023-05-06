@@ -1,6 +1,6 @@
 package cart.config.util;
 
-import cart.exception.AuthPrincipalInValidException;
+import cart.exception.AuthTypeInValidException;
 import cart.exception.AuthorizationException;
 import cart.exception.InvalidCredentialLength;
 import cart.service.dto.MemberInfo;
@@ -38,7 +38,7 @@ public class BasicAuthExtractor {
 
     private static void validAuthType(final String header) {
         if (!header.toLowerCase().startsWith(AUTH_TYPE.toLowerCase())) {
-            throw new AuthPrincipalInValidException();
+            throw new AuthTypeInValidException();
         }
     }
 
