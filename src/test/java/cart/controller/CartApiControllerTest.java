@@ -78,7 +78,7 @@ class CartApiControllerTest {
                     .body("message", equalTo("Authorization Header는 'Basic '로 시작해야 합니다."));
         }
 
-        @DisplayName("해당하는 email의 member가 존재하지 않으면 404를 반환한다.")
+        @DisplayName("해당하는 email의 member가 존재하지 않으면 401를 반환한다.")
         @Test
         void login_fail_by_member_not_found() {
             given()
@@ -88,11 +88,11 @@ class CartApiControllerTest {
                     .when()
                     .get(CART_API_URL)
                     .then().log().all()
-                    .statusCode(HttpStatus.NOT_FOUND.value())
-                    .body("message", equalTo("해당하는 email의 member가 존재하지 않습니다."));
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .body("message", equalTo("해당하는 email의 회원이 존재하지 않습니다."));
         }
 
-        @DisplayName("전달받은 패스워드와 실제 멤버의 패스워드가 일치하지 않으면 403을 반환한다.")
+        @DisplayName("전달받은 패스워드와 실제 멤버의 패스워드가 일치하지 않으면 401을 반환한다.")
         @Test
         void login_fail_by_invalid_password() {
             saveProductAndMember(MEMBER_ID, PRODUCT_ID);
@@ -105,7 +105,7 @@ class CartApiControllerTest {
                     .when()
                     .get(CART_API_URL)
                     .then().log().all()
-                    .statusCode(HttpStatus.FORBIDDEN.value())
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .body("message", equalTo( "패스워드가 일치하지 않습니다."));
         }
     }

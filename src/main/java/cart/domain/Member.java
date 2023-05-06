@@ -1,7 +1,5 @@
 package cart.domain;
 
-import cart.exception.custom.InvalidPasswordException;
-
 public class Member {
 
     private Long id;
@@ -18,10 +16,8 @@ public class Member {
         this.password = password;
     }
 
-    public void validatePassword(String inputPassword) {
-        if (!password.equals(inputPassword)) {
-            throw new InvalidPasswordException();
-        }
+    public boolean isWrongPassword(String inputPassword) {
+        return !password.equals(inputPassword);
     }
 
     public Long getId() {

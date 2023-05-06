@@ -1,12 +1,11 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Member;
-import cart.exception.custom.ResourceNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +53,7 @@ class MemberDaoTest {
         Member given = new Member(EMAIL, PASSWORD);
         saveMember(given);
         //when
-        Member actual = memberDao.findByEmail(EMAIL);
+        Member actual = memberDao.findByEmail(EMAIL).get();
         //then
         assertAll(
                 () -> assertThat(actual).usingRecursiveComparison()
@@ -64,12 +63,12 @@ class MemberDaoTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 이메일의 유저를 요청한다.")
+    @DisplayName("존재하지 않는 이메일의 유저를 요청시 빈 값을 반환한다.")
     void find_by_email_fail_by_wrong_email() {
-        //when && then
-        assertThatThrownBy(() -> memberDao.findByEmail(EMAIL))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("해당하는 email의 member가 존재하지 않습니다.");
+        //when
+        Optional<Member> optionalMember = memberDao.findByEmail(EMAIL);
+        //then
+        assertThat(optionalMember.isEmpty()).isTrue();
     }
 
     private void saveMember(Member member) {

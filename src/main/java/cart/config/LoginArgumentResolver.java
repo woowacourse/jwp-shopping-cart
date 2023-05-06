@@ -1,9 +1,9 @@
 package cart.config;
 
 import cart.annotation.Login;
-import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.exception.custom.UnauthorizedException;
+import cart.service.AuthService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
@@ -18,10 +18,10 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_HEADER_PREFIX = "Basic ";
 
-    private final MemberDao memberDao;
+    private final AuthService authService;
 
-    public LoginArgumentResolver(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public LoginArgumentResolver(AuthService authService) {
+        this.authService = authService;
     }
 
     @Override
@@ -49,9 +49,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 
         String email = credentials[0];
         String password = credentials[1];
-        Member member = memberDao.findByEmail(email);
-        member.validatePassword(password);
-        return member;
+        return authService.findAuthInfo(email, password);
     }
 
     private String[] decodeByBase64(String authorization) {

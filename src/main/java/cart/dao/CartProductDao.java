@@ -32,8 +32,7 @@ public class CartProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(Long memberId,
-                     Long productId) {
+    public Long save(Long memberId, Long productId) {
         Map<String, Object> cartValues = new HashMap<>();
         cartValues.put("member_id", memberId);
         cartValues.put("product_id", productId);
