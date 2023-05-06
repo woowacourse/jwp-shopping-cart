@@ -1,4 +1,4 @@
-package cart.repository;
+package cart.dao;
 
 import cart.entity.MemberEntity;
 import cart.exception.MemberNotFoundException;

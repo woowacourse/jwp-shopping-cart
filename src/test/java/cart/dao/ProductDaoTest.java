@@ -1,4 +1,4 @@
-package cart.repository;
+package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

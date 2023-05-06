@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dto.MemberDto;
-import cart.repository.MemberDao;
+import cart.dao.MemberDao;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

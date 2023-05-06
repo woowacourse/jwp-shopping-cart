@@ -6,7 +6,7 @@ import cart.domain.Product;
 import cart.dto.ProductDto;
 import cart.entity.ProductEntity;
 import cart.exception.ProductNotFoundException;
-import cart.repository.ProductDao;
+import cart.dao.ProductDao;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

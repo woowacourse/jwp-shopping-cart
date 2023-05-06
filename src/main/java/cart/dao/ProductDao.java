@@ -1,4 +1,4 @@
-package cart.repository;
+package cart.dao;
 
 import cart.domain.Product;
 import cart.entity.ProductEntity;
@@ -60,6 +60,12 @@ public class ProductDao {
 
     public boolean existsById(Long id) {
         String sql = "SELECT COUNT(*) FROM PRODUCT WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
+        Integer integer = jdbcTemplate.queryForObject(sql, Integer.class, id);
+
+        if (integer == null) {
+            return false;
+        }
+
+        return integer > 0;
     }
 }
