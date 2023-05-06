@@ -51,4 +51,14 @@ public class Cart {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public void deleteProductById(long id) {
+        for (Product product : this.products) {
+            if (product.getId() == id) {
+                this.products.remove(product);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("해당 ID의 상품이 장바구니에 존재하지 않습니다.");
+    }
 }
