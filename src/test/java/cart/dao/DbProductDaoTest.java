@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class DbProductDaoTest {
     private static final Product PRODUCT_A = new Product("마우스", 10000, "image");
     private static final Product PRODUCT_B = new Product("키보드", 20000, "image2");
@@ -45,6 +43,7 @@ class DbProductDaoTest {
     @BeforeEach
     void setUp() {
         dbProductDao = new DbProductDao(dataSource);
+        jdbcTemplate.update("delete from product");
     }
 
     @Test
@@ -66,7 +65,6 @@ class DbProductDaoTest {
     @Test
     @DisplayName("저장된 모든 상품 데이터를 가져온다")
     void findAll() {
-        jdbcTemplate.update("delete from product");
         dbProductDao.save(PRODUCT_A);
         dbProductDao.save(PRODUCT_B);
 
