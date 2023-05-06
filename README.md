@@ -166,10 +166,10 @@ Content-Type: application/json
 > - [x] User 생성
 >   - [x] User 정보 유효성 검증
 >     - [x] email: email 형식에 맞아야 한다.
->     - [ ] password:
->       - [ ] 10자리 이상
->       - [ ] 영문자, 숫자, 특수문자를 모두 포함
->         - [ ] 특수문자는 "!@#$%^&*()"만 가능
+>     - [x] password:
+>       - [x] 10자리 이상
+>       - [x] 영문자, 숫자, 특수문자를 모두 포함
+>         - [x] 특수문자는 "!@#$%^&*()"만 가능
 > - [ ] DB에 저장
 
 **Request example**

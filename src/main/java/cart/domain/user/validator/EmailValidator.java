@@ -13,17 +13,17 @@ public class EmailValidator {
         isMatchWithPattern(email);
     }
 
+    private static void isNullOrBlank(String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("이메일 입력이 비어있습니다.");
+        }
+    }
+
     private static void isMatchWithPattern(String email) {
         boolean isValid = Pattern.matches(EMAIL_REGAX, email);
         if (!isValid) {
             throw new IllegalArgumentException("이메일 형식이 잘못되었습니다." + lineSeparator()
                     + "입력된 이메일: " + email);
-        }
-    }
-
-    private static void isNullOrBlank(String email) {
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("이메일 입력이 비어있습니다.");
         }
     }
 }
