@@ -1,7 +1,7 @@
 package cart.config;
 
 import cart.auth.Authentication;
-import cart.controller.dto.MemberRequest;
+import cart.controller.dto.MemberDto;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -33,6 +33,6 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
 
         String[] credentials = decodedString.split(DELIMITER);
 
-        return new MemberRequest(credentials[EMAIL_INDEX], credentials[PASSWORD_INDEX], credentials[NAME_INDEX]);
+        return new MemberDto(credentials[EMAIL_INDEX], credentials[PASSWORD_INDEX], credentials[NAME_INDEX]);
     }
 }

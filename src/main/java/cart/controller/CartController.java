@@ -3,7 +3,7 @@ package cart.controller;
 import cart.auth.Authentication;
 import cart.controller.dto.CartResponse;
 import cart.controller.dto.ItemResponse;
-import cart.controller.dto.MemberRequest;
+import cart.controller.dto.MemberDto;
 import cart.controller.dto.MemberResponse;
 import cart.service.CartService;
 import cart.service.MemberService;
@@ -30,9 +30,9 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemResponse>> findAllCarts(@Authentication MemberRequest memberRequest) {
-        MemberResponse findMember = memberService.findByEmailAndPassword(memberRequest.getEmail(),
-                memberRequest.getPassword());
+    public ResponseEntity<List<ItemResponse>> findAllCarts(@Authentication MemberDto memberDto) {
+        MemberResponse findMember = memberService.findByEmailAndPassword(memberDto.getEmail(),
+                memberDto.getPassword());
 
         List<ItemResponse> response = cartService.findAllByMemberId(findMember.getId());
         return ResponseEntity.ok(response);
@@ -40,9 +40,9 @@ public class CartController {
 
     @PostMapping("/{itemId}")
     public ResponseEntity<CartResponse> addItem(@PathVariable Long itemId,
-                                                @Authentication MemberRequest memberRequest) {
-        MemberResponse findMember = memberService.findByEmailAndPassword(memberRequest.getEmail(),
-                memberRequest.getPassword());
+                                                @Authentication MemberDto memberDto) {
+        MemberResponse findMember = memberService.findByEmailAndPassword(memberDto.getEmail(),
+                memberDto.getPassword());
 
         CartResponse cartResponse = cartService.save(findMember.getId(), itemId);
         return ResponseEntity.created(URI.create("/carts/" + cartResponse.getCartId()))
@@ -50,9 +50,9 @@ public class CartController {
     }
 
     @DeleteMapping("/{itemId}")
-    public ResponseEntity<Void> deleteItem(@PathVariable Long itemId, @Authentication MemberRequest memberRequest) {
-        MemberResponse findMember = memberService.findByEmailAndPassword(memberRequest.getEmail(),
-                memberRequest.getPassword());
+    public ResponseEntity<Void> deleteItem(@PathVariable Long itemId, @Authentication MemberDto memberDto) {
+        MemberResponse findMember = memberService.findByEmailAndPassword(memberDto.getEmail(),
+                memberDto.getPassword());
 
         cartService.delete(findMember.getId(), itemId);
         return ResponseEntity.noContent().build();
