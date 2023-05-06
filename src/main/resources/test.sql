@@ -27,4 +27,4 @@ CREATE TABLE cart
 
 INSERT INTO member (id, email, password) VALUES (1, 'test@email.com', '122345678');
 INSERT INTO product (id, name, price, image_url) VALUES (1, '오감자', 1000, 'https://contents.lotteon.com/itemimage/_v031708/LM/88/01/11/77/52/80/4_/00/1/LM8801117752804_001_1.jpg/dims/optimize/dims/resizemc/400x400');
-INSERT INTO cart (id, product_id, member_id) VALUES (1, 1, 1);
+INSERT INTO cart (product_id, member_id) VALUES (1, 1);
