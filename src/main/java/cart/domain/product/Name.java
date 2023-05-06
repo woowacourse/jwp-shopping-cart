@@ -3,7 +3,7 @@ package cart.domain.product;
 public class Name {
 
     private static final int MAX_NAME_LENGTH = 100;
-    private String name;
+    private final String name;
 
     public Name(final String name) {
         validateName(name);
