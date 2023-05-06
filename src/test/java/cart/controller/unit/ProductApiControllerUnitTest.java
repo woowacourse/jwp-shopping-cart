@@ -1,6 +1,7 @@
 package cart.controller.unit;
 
 import cart.controller.ProductApiController;
+import cart.service.MemberService;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +32,8 @@ class ProductApiControllerUnitTest {
 
     @MockBean
     private ProductService productService;
+    @MockBean
+    private MemberService memberService;
 
     private Map<String, String> valueByFields;
 

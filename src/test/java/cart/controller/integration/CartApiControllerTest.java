@@ -90,7 +90,7 @@ class CartApiControllerTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .body(containsString("no@woowahan.com 계정의 회원은 존재하지 않습니다."));
+                    .body(containsString("입력한 정보의 회원은 존재하지 않습니다."));
         }
     }
 
@@ -124,7 +124,7 @@ class CartApiControllerTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .body(containsString("no@woowahan.com 계정의 회원은 존재하지 않습니다."));
+                    .body(containsString("입력한 정보의 회원은 존재하지 않습니다."));
         }
     }
 
@@ -162,7 +162,7 @@ class CartApiControllerTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .body(containsString("no@woowahan.com 계정의 회원은 존재하지 않습니다."));
+                    .body(containsString("입력한 정보의 회원은 존재하지 않습니다."));
         }
     }
 

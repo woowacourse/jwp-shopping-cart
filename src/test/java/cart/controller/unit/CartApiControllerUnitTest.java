@@ -1,6 +1,7 @@
 package cart.controller.unit;
 
 import cart.controller.CartApiController;
+import cart.controller.authentication.AuthenticationInterceptor;
 import cart.domain.ProductEntity;
 import cart.dto.ResponseProductDto;
 import cart.service.CartService;
@@ -21,6 +22,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,11 +42,16 @@ class CartApiControllerUnitTest {
     private CartService cartService;
     @MockBean
     private ProductService productService;
+    @MockBean
+    private AuthenticationInterceptor authenticationInterceptor;
 
     @Test
     void 장바구니_상품을_읽는다() throws Exception {
         //given
-        given(productService.findByIds(any()))
+        given(authenticationInterceptor.preHandle(any(), any(), any()))
+                .willReturn(true);
+
+        given(cartService.findCartProducts(any()))
                 .willReturn(List.of(new ResponseProductDto(new ProductEntity(1L, "치킨", 10_000, "치킨 주소"))));
 
         //expect
@@ -54,7 +61,8 @@ class CartApiControllerUnitTest {
                 .andExpect(jsonPath("$[0].id").value(equalTo(1)))
                 .andExpect(jsonPath("$[0].name").value(equalTo("치킨")))
                 .andExpect(jsonPath("$[0].price").value(equalTo(10000)))
-                .andExpect(jsonPath("$[0].image").value(equalTo("치킨 주소")));
+                .andExpect(jsonPath("$[0].image").value(equalTo("치킨 주소")))
+                .andDo(print());
     }
 
     @Test
@@ -62,7 +70,8 @@ class CartApiControllerUnitTest {
         mockMvc.perform(post("/carts/{id}", 1)
                         .header("Authorization", "Basic " + ENCODED_CREDENTIALS)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @Test
@@ -70,6 +79,7 @@ class CartApiControllerUnitTest {
         mockMvc.perform(delete("/carts/{id}", 1)
                         .header("Authorization", "Basic " + ENCODED_CREDENTIALS)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 }
