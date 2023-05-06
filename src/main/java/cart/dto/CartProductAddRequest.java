@@ -2,16 +2,16 @@ package cart.dto;
 
 public class CartProductAddRequest {
 
-    private int productId;
+    private Integer productId;
 
     public CartProductAddRequest() {
     }
 
-    public CartProductAddRequest(int productId) {
+    public CartProductAddRequest(Integer productId) {
         this.productId = productId;
     }
 
-    public int getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 }
