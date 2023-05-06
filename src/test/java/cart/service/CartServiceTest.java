@@ -9,7 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,20 +24,20 @@ import static org.mockito.Mockito.when;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@ExtendWith(MockitoExtension.class)
 class CartServiceTest {
 
+    @Mock
     private CartDao cartDao;
-    private MemberDao memberDao;
-    private ProductDao productDao;
-    private CartService cartService;
 
-    @BeforeEach
-    void setUp() {
-        this.cartDao = Mockito.mock(CartDao.class);
-        this.memberDao = Mockito.mock(MemberDao.class);
-        this.productDao = Mockito.mock(ProductDao.class);
-        this.cartService = new CartService(cartDao, memberDao, productDao);
-    }
+    @Mock
+    private MemberDao memberDao;
+
+    @Mock
+    private ProductDao productDao;
+
+    @InjectMocks
+    private CartService cartService;
 
     @Test
     void 존재하지_않는_사용자가_장바구니를_보려할_때_예외를_던진다() {
@@ -80,7 +84,6 @@ class CartServiceTest {
 
     @Test
     void 존재하지_않는_사용자가_장바구니에_상품을_삭제할때_예외를_던진다() {
-
         Long productId = 1L;
         String email = "ehdgur4814@naver.com";
 

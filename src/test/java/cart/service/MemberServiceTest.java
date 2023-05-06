@@ -10,6 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
@@ -20,16 +24,14 @@ import static org.mockito.Mockito.when;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 
+    @Mock
     private MemberDao memberDao;
-    private MemberService memberService;
 
-    @BeforeEach
-    void setUp() {
-        memberDao = mock(MemberDao.class);
-        memberService = new MemberService(memberDao);
-    }
+    @InjectMocks
+    private MemberService memberService;
 
     @Test
     void 중복되는_이메일로_회원가입시_예외를_던진다() {
