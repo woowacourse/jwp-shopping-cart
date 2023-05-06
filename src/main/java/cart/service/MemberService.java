@@ -21,4 +21,9 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
+    public boolean isExistMember(String email) {
+        return memberDao.findByEmail(email)
+                .isPresent();
+    }
+
 }

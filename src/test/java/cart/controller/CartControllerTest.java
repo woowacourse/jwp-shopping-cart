@@ -17,6 +17,8 @@ public class CartControllerTest {
 
     private static final String EMAIL = "email1@email.com";
     private static final String PASSWORD = "email1";
+    private static final String UNAUTHORIZED_EMAIL = "email";
+    private static final String UNAUTHORIZED_PASSWORD = "password";
 
     @LocalServerPort
     private int port;
@@ -81,5 +83,28 @@ public class CartControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("message", is("존재하지 않는 cart id 입니다."));
+    }
+
+    @Test
+    @DisplayName("Authorization 헤더가 없는 경우 예외가 발생한다.")
+    void nonAuthorizationHeader() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/carts/products")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .body("message", is("권한이 없는 사용자입니다."));
+    }
+
+    @Test
+    @DisplayName("올바른 사용자가 아닌 경우 예외가 발생한다.")
+    void validateMember() {
+        RestAssured.given().log().all()
+                .auth().preemptive().basic(UNAUTHORIZED_EMAIL, UNAUTHORIZED_PASSWORD)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/carts/products")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .body("message", is("존재하지 않는 사용자입니다."));
     }
 }
