@@ -64,7 +64,7 @@ public class CartIntegrationTest {
                 .given().log().all()
                 .auth().preemptive().basic(VALID_EMAIL, VALID_PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/user/cartItems")
+                .when().get("/user/cart")
                 .then().log().all().extract();
 
         //then
@@ -102,7 +102,7 @@ public class CartIntegrationTest {
                 .given().log().all()
                 .auth().preemptive().basic(absentEmail, "xxx")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/user/cartItems")
+                .when().get("/user/cart")
                 .then().log().all().extract();
         //then
         assertAll(
@@ -121,7 +121,7 @@ public class CartIntegrationTest {
                 .given().log().all()
                 .auth().preemptive().basic("rosie@wooteco.com", "invalidPassword")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/user/cartItems")
+                .when().get("/user/cart")
                 .then().log().all().extract();
         //then
         assertAll(
@@ -143,7 +143,7 @@ public class CartIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
                 .body(cartItemCreateRequest)
-                .when().post("/user/cartItems")
+                .when().post("/user/cart")
                 .then().log().all().extract();
 
         //then
@@ -173,7 +173,7 @@ public class CartIntegrationTest {
                 .auth().preemptive().basic(VALID_EMAIL, VALID_PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .when().delete("/user/cartItems/" + cart.getCartProducts().get(0).getId())
+                .when().delete("/user/cart/" + cart.getCartProducts().get(0).getId())
                 .then().log().all().extract();
         //then
         assertAll(
@@ -187,7 +187,7 @@ public class CartIntegrationTest {
         RestAssured.with()
                 .auth().preemptive().basic(VALID_EMAIL, VALID_PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(cartItemCreateRequest).post("/user/cartItems");
+                .body(cartItemCreateRequest).post("/user/cart");
     }
 
     @Test
@@ -201,7 +201,7 @@ public class CartIntegrationTest {
                 .auth().preemptive().basic(VALID_EMAIL, VALID_PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .body(cartItemCreateRequest).post("/user/cartItems")
+                .body(cartItemCreateRequest).post("/user/cart")
                 .then().log().all().extract();
 
         String sessionId = response.response().sessionId();
@@ -219,7 +219,7 @@ public class CartIntegrationTest {
                 .auth().preemptive().basic(VALID_EMAIL, VALID_PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .body(cartItemCreateRequest).post("/user/cartItems")
+                .body(cartItemCreateRequest).post("/user/cart")
                 .then().extract();
 
         String sessionId = cookieResponse.response().getSessionId();
@@ -230,7 +230,7 @@ public class CartIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
                 .cookie("JSESSIONID", sessionId)
-                .when().get("/user/cartItems")
+                .when().get("/user/cart")
                 .then().log().all().extract();
 
         //then

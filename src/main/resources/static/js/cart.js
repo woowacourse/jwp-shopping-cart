@@ -1,4 +1,4 @@
-const cartBaseUrl = 'http://localhost:8080/user/cartItems';
+const cartBaseUrl = 'http://localhost:8080/user/cart';
 const addCartItem = (productId) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {

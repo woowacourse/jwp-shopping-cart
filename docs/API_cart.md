@@ -13,7 +13,7 @@
 ### 요청
 
 ```http request
-GET /user/cartProducts HTTP/1.1
+GET /user/cart HTTP/1.1
 Authorization: Basic ${BASE64_ENCODED_STRING}
 ```
 ### 응답
@@ -44,7 +44,7 @@ Authorization: Basic ${BASE64_ENCODED_STRING}
 ### 요청
 
 ```http request
-POST /user/cartProducts HTTP/1.1
+POST /user/cart HTTP/1.1
 Content-Type: application/json
 Authorization: Basic ${BASE64_ENCODED_STRING}
 ```
@@ -70,7 +70,7 @@ Authorization: Basic ${BASE64_ENCODED_STRING}
 ### 요청
 
 ```http request
-DELETE /user/cartProducts/{cartItemId} HTTP/1.1
+DELETE /user/cart/{cartItemId} HTTP/1.1
 Authorization: Basic ${BASE64_ENCODED_STRING}
 ```
 
