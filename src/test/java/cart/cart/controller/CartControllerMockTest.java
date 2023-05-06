@@ -54,7 +54,7 @@ public class CartControllerMockTest {
         AuthInfo authInfo = new AuthInfo(EMAIL, PASSWORD);
         when(authorizationExtractor.extract(any())).thenReturn(authInfo);
         mockMvc
-                .perform(get("/cart/all").with(SecurityMockMvcRequestPostProcessors.httpBasic(EMAIL,PASSWORD))
+                .perform(get("/cart/all").with(SecurityMockMvcRequestPostProcessors.httpBasic(EMAIL, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -64,7 +64,7 @@ public class CartControllerMockTest {
         AuthInfo authInfo = new AuthInfo(EMAIL, PASSWORD);
         when(authorizationExtractor.extract(any())).thenReturn(authInfo);
 
-        mockMvc.perform(post("/cart?productId=1").with(SecurityMockMvcRequestPostProcessors.httpBasic(EMAIL,PASSWORD)))
+        mockMvc.perform(post("/cart?productId=1").with(SecurityMockMvcRequestPostProcessors.httpBasic(EMAIL, PASSWORD)))
                 .andExpect(status().isCreated());
     }
 
@@ -73,7 +73,7 @@ public class CartControllerMockTest {
         AuthInfo authInfo = new AuthInfo(EMAIL, PASSWORD);
         when(authorizationExtractor.extract(any())).thenReturn(authInfo);
 
-        mockMvc.perform(delete("/cart/1").with(SecurityMockMvcRequestPostProcessors.httpBasic(EMAIL,PASSWORD))
+        mockMvc.perform(delete("/cart/1").with(SecurityMockMvcRequestPostProcessors.httpBasic(EMAIL, PASSWORD))
                         .accept(ContentType.HTML.toString()))
                 .andExpect(status().isNoContent());
     }

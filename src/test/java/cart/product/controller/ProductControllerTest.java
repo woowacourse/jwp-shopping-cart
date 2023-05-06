@@ -64,10 +64,6 @@ class ProductControllerTest {
 
 		@Test
 		void deleteProductsTest() {
-			ProductRequest productRequest = new ProductRequest("name", 1000L, "image");
-
-			saveProducts(productRequest);
-
 			when()
 				.delete("/products/1")
 				.then()
