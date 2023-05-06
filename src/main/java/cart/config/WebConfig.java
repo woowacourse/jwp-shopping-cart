@@ -22,13 +22,10 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new Base64AdminAccessInterceptor())
                 .addPathPatterns("/admin/products/**")
                 .order(Ordered.LOWEST_PRECEDENCE);
-
-        WebMvcConfigurer.super.addInterceptors(registry);
     }
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new Base64AuthArgumentResolver());
-        WebMvcConfigurer.super.addArgumentResolvers(resolvers);
     }
 }
