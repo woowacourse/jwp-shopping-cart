@@ -14,7 +14,9 @@ const addCartItem = (productId) => {
             'Authorization': `Basic ${credentials}`,
             'content-Type': 'application/json'
         },
-        data: productId
+        data: {
+            productId: productId
+        }
     }).then((response) => {
         alert('장바구니에 담았습니다.');
     }).catch((error) => {

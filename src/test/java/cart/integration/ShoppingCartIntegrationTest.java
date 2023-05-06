@@ -21,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ShoppingCartIntegrationTest {
@@ -96,6 +97,31 @@ public class ShoppingCartIntegrationTest {
             Assertions.assertThat(cartResponse.getId())
                     .isEqualTo(TEST_CART_RECORD.getId());
         }
+    }
+
+    @Test
+    @DisplayName("장바구니에 상품을 추가하는 기능 테스트")
+    void addProductTest() {
+        given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(AUTHORIZATION, "Basic " + encodeBase64(CREDENTIAL))
+                .body("{\"productId\": 1}")
+                .when()
+                .post("/cart/products")
+                .then()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("장바구니에 상품을 삭제하는 기능 테스트")
+    void removeProductTest() {
+        given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(AUTHORIZATION, "Basic " + encodeBase64(CREDENTIAL))
+                .when()
+                .delete("/cart/products/2")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     private static String encodeBase64(final String credential) {

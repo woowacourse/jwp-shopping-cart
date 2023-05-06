@@ -4,6 +4,7 @@ import cart.config.AuthMemberInfoPrincipal;
 import cart.service.ShoppingCartService;
 import cart.service.dto.CartResponse;
 import cart.service.dto.MemberInfo;
+import cart.service.dto.ProductIdRequest;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +33,9 @@ public class ShoppingCartController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addProduct(@RequestBody final Long productId,
+    public ResponseEntity<Void> addProduct(@RequestBody final ProductIdRequest productIdRequest,
                                            @AuthMemberInfoPrincipal final MemberInfo info) {
-        shoppingCartService.addCartProduct(info, productId);
+        shoppingCartService.addCartProduct(info, productIdRequest.getProductId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
