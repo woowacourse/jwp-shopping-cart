@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class ProductEntity {
 
     private static final int MAXIMUM_NAME_LENGTH = 50;
@@ -34,6 +36,23 @@ public class ProductEntity {
         if (image.length() > MAXIMUM_IMAGE_LENGTH) {
             throw new IllegalArgumentException("이미지 주소는 " + MAXIMUM_IMAGE_LENGTH + "자를 넘길 수 없습니다.");
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final ProductEntity that = (ProductEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(image, that.image);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, image);
     }
 
     public Long getId() {
