@@ -88,5 +88,23 @@ class UserControllerTest {
                             .content(requestJson))
                     .andExpect(status().isBadRequest());
         }
+
+        @DisplayName("비밀번호가 규칙에 맞지 않는 경우 Status Bad Request를 반환한다.")
+        @ParameterizedTest(name = "잘못된 값 (\"{0}\")")
+        @ValueSource(strings = {"123456789a", "abcdefghi!", "123456789!", "abc123!@#"})
+        void shouldResponseStatusBadRequestWhenPasswordDoesNotMatch(String inputPassword) throws Exception {
+            UserSaveRequest request = new UserSaveRequest(
+                    "email@test.test",
+                    inputPassword,
+                    "Test Name",
+                    "01012341234"
+            );
+            String requestJson = objectMapper.writeValueAsString(request);
+
+            mockMvc.perform(post("/users")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestJson))
+                    .andExpect(status().isBadRequest());
+        }
     }
 }
