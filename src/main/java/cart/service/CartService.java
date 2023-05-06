@@ -4,7 +4,7 @@ import cart.controller.dto.CartResponse;
 import cart.controller.dto.ItemResponse;
 import cart.dao.CartDao;
 import cart.dao.entity.ItemEntity;
-import cart.exception.CartDuplicateException;
+import cart.exception.CartException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class CartService {
     @Transactional
     public CartResponse save(Long memberId, Long itemId) {
         if (cartDao.findByMemberIdAndItemId(memberId, itemId).isPresent()) {
-            throw new CartDuplicateException(CART_DUPLICATE_MESSAGE);
+            throw new CartException(CART_DUPLICATE_MESSAGE);
         }
 
         Long savedId = cartDao.insert(memberId, itemId);

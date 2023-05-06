@@ -1,7 +1,7 @@
 package cart.domain;
 
 import cart.exception.LengthException;
-import cart.exception.PriceRangeException;
+import cart.exception.NumberRangeException;
 
 public class Item {
 
@@ -34,7 +34,7 @@ public class Item {
 
     private void validatePrice(int price) {
         if (price < MIN_PRICE || price > MAX_PRICE) {
-            throw new PriceRangeException(PRICE_ERROR_MESSAGE);
+            throw new NumberRangeException(PRICE_ERROR_MESSAGE);
         }
     }
 

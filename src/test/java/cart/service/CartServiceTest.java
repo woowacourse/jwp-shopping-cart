@@ -10,7 +10,7 @@ import cart.dao.ItemDao;
 import cart.dao.MemberDao;
 import cart.domain.Item;
 import cart.domain.Member;
-import cart.exception.CartDuplicateException;
+import cart.exception.CartException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,7 +57,7 @@ class CartServiceTest {
         cartDao.insert(memberId, itemId);
 
         assertThatThrownBy(() -> cartService.save(memberId, itemId))
-                .isInstanceOf(CartDuplicateException.class)
+                .isInstanceOf(CartException.class)
                 .hasMessageContaining("이미 장바구니에 추가된 상품입니다.");
     }
 

@@ -2,13 +2,13 @@ package cart.controller;
 
 import cart.controller.dto.ExceptionResponse;
 import cart.exception.AuthException;
-import cart.exception.CartDuplicateException;
+import cart.exception.CartException;
 import cart.exception.DataBaseSearchException;
 import cart.exception.ItemException;
 import cart.exception.ItemNotFoundException;
 import cart.exception.LengthException;
 import cart.exception.MemberException;
-import cart.exception.PriceRangeException;
+import cart.exception.NumberRangeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest().body(new ExceptionResponse(PATH_VARIABLE_ERROR_MESSAGE));
     }
 
-    @ExceptionHandler({LengthException.class, PriceRangeException.class})
+    @ExceptionHandler({LengthException.class, NumberRangeException.class})
     private ResponseEntity<ExceptionResponse> handleItemException(ItemException ex) {
         logger.warn(ex.getMessage());
         return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getMessage()));
@@ -81,8 +81,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponse(ex.getMessage()));
     }
 
-    @ExceptionHandler(CartDuplicateException.class)
-    private ResponseEntity<ExceptionResponse> handleCartDuplicateException(CartDuplicateException ex) {
+    @ExceptionHandler(CartException.class)
+    private ResponseEntity<ExceptionResponse> handleCartDuplicateException(CartException ex) {
         logger.warn(ex.getMessage());
         return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getMessage()));
     }

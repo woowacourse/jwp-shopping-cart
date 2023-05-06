@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.exception.LengthException;
-import cart.exception.PriceRangeException;
+import cart.exception.NumberRangeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,7 +34,7 @@ class ItemTest {
     @DisplayName("상품 가격이 10원 이상 1억 이하가 아니면 예외가 발생한다.")
     void createItemFailWithWrongPrice(int price) {
         assertThatThrownBy(() -> new Item("맥북", "http:image.url", price))
-                .isInstanceOf(PriceRangeException.class)
+                .isInstanceOf(NumberRangeException.class)
                 .hasMessage("상품의 금액은 최소 10원, 최대 1억원 까지 가능합니다.");
     }
 }
