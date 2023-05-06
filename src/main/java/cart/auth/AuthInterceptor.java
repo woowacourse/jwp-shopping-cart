@@ -21,7 +21,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String authHeader = request.getHeader(AUTHORIZATION);
         AuthInfo authInfo = authService.resolveAuthInfo(authHeader);
         if (customerService.isAbleToLogin(authInfo.getEmail(), authInfo.getPassword())) {

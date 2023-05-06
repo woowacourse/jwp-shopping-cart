@@ -1,7 +1,6 @@
 package cart.auth;
 
 import cart.service.CustomerService;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -28,8 +27,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory)
-            throws UnauthorizedException {
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String authHeader = webRequest.getHeader(AUTHORIZATION);
         String email = authService.resolveAuthInfo(authHeader).getEmail();
         return customerService.findIdByEmail(email);
