@@ -17,8 +17,13 @@ import org.springframework.test.context.jdbc.SqlGroup;
         @Sql("/schema.sql"),
         @Sql("/data.sql")
 })
-// TODO 사용자 정보 테스트 픽스쳐로 상수화
 public class CartItemIntegrationTest {
+
+    private static final String FIXTURE_MEMBER_1_EMAIL = "dummy@gmail.com";
+    private static final String FIXTURE_MEMBER_1_PASSWORD = "abcd1234";
+    private static final String FIXTURE_MEMBER_2_EMAIL = "dummy2@gmail.com";
+    private static final String FIXTURE_MEMBER_2_PASSWORD = "abcd5678";
+    private static final String FIXTURE_UNAUTHORIZED_EMAIL = "unauthorized@gmail.com";
 
     @LocalServerPort
     private int port;
@@ -36,7 +41,7 @@ public class CartItemIntegrationTest {
     void get() {
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("dummy@gmail.com", "abcd1234")
+                .auth().preemptive().basic(FIXTURE_MEMBER_1_EMAIL, FIXTURE_MEMBER_1_PASSWORD)
                 .when().get("/cartitems")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -47,7 +52,7 @@ public class CartItemIntegrationTest {
     void getUnauthorized() {
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("unauthorized@gmail.com", "abcd1234")
+                .auth().preemptive().basic(FIXTURE_UNAUTHORIZED_EMAIL, "abcd1234")
                 .when().get("/cartitems")
                 .then().log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
@@ -58,7 +63,7 @@ public class CartItemIntegrationTest {
     void create() {
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("dummy@gmail.com", "abcd1234")
+                .auth().preemptive().basic(FIXTURE_MEMBER_1_EMAIL, FIXTURE_MEMBER_1_PASSWORD)
                 .when().post("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -71,7 +76,7 @@ public class CartItemIntegrationTest {
 
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("dummy@gmail.com", "abcd1234")
+                .auth().preemptive().basic(FIXTURE_MEMBER_1_EMAIL, FIXTURE_MEMBER_1_PASSWORD)
                 .when().post("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -82,7 +87,7 @@ public class CartItemIntegrationTest {
     void createUnauthorized() {
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("unauthorized@gmail.com", "abcd1234")
+                .auth().preemptive().basic(FIXTURE_UNAUTHORIZED_EMAIL, "abcd1234")
                 .when().post("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
@@ -95,7 +100,7 @@ public class CartItemIntegrationTest {
 
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("dummy@gmail.com", "abcd1234")
+                .auth().preemptive().basic(FIXTURE_MEMBER_1_EMAIL, FIXTURE_MEMBER_1_PASSWORD)
                 .when().delete("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
@@ -108,7 +113,7 @@ public class CartItemIntegrationTest {
 
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("unauthorized@gmail.com", "abcd1234")
+                .auth().preemptive().basic(FIXTURE_UNAUTHORIZED_EMAIL, "abcd1234")
                 .when().delete("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
@@ -121,7 +126,7 @@ public class CartItemIntegrationTest {
 
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("dummy2@gmail.com", "abcd5678")
+                .auth().preemptive().basic(FIXTURE_MEMBER_2_EMAIL, FIXTURE_MEMBER_2_PASSWORD)
                 .when().delete("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.FORBIDDEN.value());
