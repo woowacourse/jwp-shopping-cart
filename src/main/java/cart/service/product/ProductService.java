@@ -17,6 +17,8 @@ import cart.service.product.dto.UpdateProductDto;
 @Transactional
 public class ProductService {
 
+	private static final int EXPECTED_ROW_COUNT = 1;
+
 	private final ProductDao productDao;
 	private final CartDao cartDao;
 
@@ -44,7 +46,7 @@ public class ProductService {
 		final Product product = new Product(updateProductDto);
 		final int updatedRow = productDao.updateById(product);
 
-		if (updatedRow != 1) {
+		if (updatedRow != EXPECTED_ROW_COUNT) {
 			throw new IllegalArgumentException("해당하는 상품이 없습니다.");
 		}
 
@@ -55,7 +57,7 @@ public class ProductService {
 		cartDao.deleteByProductId(id);
 		final int deletedProductRow = productDao.deleteById(id);
 
-		if (deletedProductRow != 1) {
+		if (deletedProductRow != EXPECTED_ROW_COUNT) {
 			throw new IllegalArgumentException("해당하는 상품이 없습니다.");
 		}
 	}

@@ -102,11 +102,9 @@ class CartDaoTest {
 		//given
 		final long userId = 1L;
 		final long productId = 1L;
-		final CartProductDto cartProductDto = cartDao.findByIds(userId, productId).get();
-		final Long cartId = cartProductDto.getId();
 
 		//when
-		cartDao.deleteByCartId(cartId);
+		cartDao.deleteByCartId(userId, productId);
 		final Optional<CartProductDto> result = cartDao.findByIds(userId, productId);
 
 		//then

@@ -14,6 +14,9 @@ import cart.service.cart.dto.CartDto;
 @Transactional
 public class CartService {
 
+	private static final int EXPECTED_ROW_COUNT = 1;
+	private static final int ADD_COUNT = 1;
+
 	private final CartDao cartDao;
 
 	public CartService(final CartDao cartDao) {
@@ -37,16 +40,18 @@ public class CartService {
 			.orElseThrow(() -> new IllegalArgumentException("해당하는 상품이 없습니다."));
 
 		cartDao.updateQuantityByCartId(cartProductDto.getId());
-		final Cart updatedCart = new Cart(cartProductDto.getId(), userId, productId, cartProductDto.getQuantity() + 1);
+		final Cart updatedCart = new Cart(cartProductDto.getId(), userId, productId,
+			cartProductDto.getQuantity() + ADD_COUNT);
 
 		return mapCartToCartDto(updatedCart);
 	}
 
 	public void deleteProduct(final Long userId, final Long productId) {
-		final CartProductDto cartProductDto = cartDao.findByIds(userId, productId)
-			.orElseThrow(() -> new IllegalArgumentException("해당하는 상품이 없습니다."));
+		final int deleteRow = cartDao.deleteByCartId(userId, productId);
 
-		cartDao.deleteByCartId(cartProductDto.getId());
+		if (deleteRow != EXPECTED_ROW_COUNT) {
+			throw new IllegalArgumentException("해당하는 상품이 없습니다.");
+		}
 	}
 
 	private CartDto mapCartToCartDto(final Cart cart) {

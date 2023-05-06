@@ -80,19 +80,19 @@ public class CartDao {
 		}
 	}
 
-	public void updateQuantityByCartId(final Long cartId) {
+	public int updateQuantityByCartId(final Long cartId) {
 		final String sql = "UPDATE cart SET quantity = quantity + 1 where id = ?";
-		jdbcTemplate.update(sql, cartId);
+		return jdbcTemplate.update(sql, cartId);
 	}
 
-	public void deleteByCartId(final Long cartId) {
-		final String sql = "DELETE FROM cart where id = ?";
+	public int deleteByCartId(final Long userId, final Long productId) {
+		final String sql = "DELETE FROM cart WHERE users_id = ? AND  product_id = ?";
 
-		jdbcTemplate.update(sql, cartId);
+		return jdbcTemplate.update(sql, userId, productId);
 	}
 
-	public void deleteByProductId(final Long productId) {
+	public int deleteByProductId(final Long productId) {
 		final String sql = "DELETE FROM cart where product_id = ?";
-		jdbcTemplate.update(sql, productId);
+		return jdbcTemplate.update(sql, productId);
 	}
 }
