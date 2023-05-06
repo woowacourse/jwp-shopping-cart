@@ -31,7 +31,9 @@ public class CartDao implements Dao<CartEntity> {
 
     @Override
     public CartEntity findById(final Long id) {
-        throw new UnsupportedOperationException();
+        final String sql = "SELECT * FROM cart WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(sql, cartRowMapper, id);
     }
 
     @Override
