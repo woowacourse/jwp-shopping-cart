@@ -68,7 +68,6 @@ public class CartDao {
 	public Optional<CartProductDto> findByIds(final Long userId, final Long productId) {
 		final String sql = "SELECT cart.id, product.name, product.image, product.price, cart.quantity "
 			+ "FROM cart "
-			+ "LEFT JOIN users ON cart.users_id = users.id "
 			+ "LEFT JOIN product ON cart.product_id = product.id "
 			+ "WHERE cart.users_id = ? AND cart.product_id = ?";
 
@@ -81,7 +80,7 @@ public class CartDao {
 		}
 	}
 
-	public void updateByCartId(final Long cartId) {
+	public void updateQuantityByCartId(final Long cartId) {
 		final String sql = "UPDATE cart SET quantity = quantity + 1 where id = ?";
 		jdbcTemplate.update(sql, cartId);
 	}

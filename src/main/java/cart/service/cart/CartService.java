@@ -36,7 +36,7 @@ public class CartService {
 		final CartProductDto cartProductDto = cartDao.findByIds(userId, productId)
 			.orElseThrow(() -> new IllegalArgumentException("해당하는 상품이 없습니다."));
 
-		cartDao.updateByCartId(cartProductDto.getId());
+		cartDao.updateQuantityByCartId(cartProductDto.getId());
 		final Cart updatedCart = new Cart(cartProductDto.getId(), userId, productId, cartProductDto.getQuantity() + 1);
 
 		return mapCartToCartDto(updatedCart);

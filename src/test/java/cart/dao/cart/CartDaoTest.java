@@ -90,7 +90,7 @@ class CartDaoTest {
 		final Long cartId = cartProductDto.getId();
 
 		//when
-		cartDao.updateByCartId(cartId);
+		cartDao.updateQuantityByCartId(cartId);
 		final CartProductDto result = cartDao.findByIds(userId, productId).get();
 
 		//then
