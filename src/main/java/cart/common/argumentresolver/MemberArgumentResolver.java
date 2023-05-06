@@ -1,8 +1,7 @@
 package cart.common.argumentresolver;
 
-import cart.exception.AuthException;
+import cart.common.auth.AuthHeaderExtractor;
 import cart.service.member.dto.MemberRequest;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -10,11 +9,19 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.List;
+
 @Component
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final String BASIC_TYPE = "Basic";
-    private static final String DELIMITER = ":";
+    private static final int PASSWORD_INDEX = 1;
+    private static final int EMAIL_INDEX = 0;
+
+    private final AuthHeaderExtractor authHeaderExtractor;
+
+    public MemberArgumentResolver(AuthHeaderExtractor authHeaderExtractor) {
+        this.authHeaderExtractor = authHeaderExtractor;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -23,22 +30,10 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String header = webRequest.getHeader("Authorization");
+        List<String> authorizationHeaderValues = authHeaderExtractor.extract(webRequest.getHeader("Authorization"));
 
-        if (header == null) {
-            throw new AuthException("올바르지 않은 인증 정보입니다.");
-        }
-        if (!header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
-            throw new AuthException("올바르지 않은 인증 방식입니다.");
-
-        }
-        String authValue = header.substring(BASIC_TYPE.length()).trim();
-        byte[] decodedAuthByteValue = Base64.decodeBase64(authValue);
-        String decodedAuthString = new String(decodedAuthByteValue);
-
-        String[] credentials = decodedAuthString.split(DELIMITER);
-        String email = credentials[0];
-        String password = credentials[1];
+        String email = authorizationHeaderValues.get(EMAIL_INDEX);
+        String password = authorizationHeaderValues.get(PASSWORD_INDEX);
 
         return new MemberRequest(email, password);
     }

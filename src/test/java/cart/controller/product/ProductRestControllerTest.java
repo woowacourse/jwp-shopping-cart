@@ -1,5 +1,6 @@
 package cart.controller.product;
 
+import cart.common.auth.AuthHeaderExtractor;
 import cart.controller.product.dto.ProductRequest;
 import cart.service.product.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +29,9 @@ class ProductRestControllerTest {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    AuthHeaderExtractor authHeaderExtractor;
 
     @Test
     void 저장_요청() throws Exception {
