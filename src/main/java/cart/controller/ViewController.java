@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Controller
-public class ItemViewController {
+public class ViewController {
 
     private final ItemService itemService;
     private final UserService userService;
 
-    public ItemViewController(ItemService itemService, UserService userService) {
+    public ViewController(ItemService itemService, UserService userService) {
         this.itemService = itemService;
         this.userService = userService;
     }
