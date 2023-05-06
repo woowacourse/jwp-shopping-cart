@@ -20,14 +20,18 @@ public class AuthService {
 
     public User getUser(final HttpServletRequest httpServletRequest) {
         final User user = basicAuthorizationExtractor.extract(httpServletRequest);
-        if (isValidLogin(user)) {
-            return user;
-        }
-        throw new LoginFailException();
+        validateLogin(user);
+        return user;
     }
 
-    private boolean isValidLogin(final User user) {
+    private void validateLogin(final User user) {
         final Optional<User> realUser = userRepository.findByEmail(user.getEmail());
-        return realUser.filter(user::equals).isPresent();
+        if (realUser.isEmpty()) {
+            throw new EmailNotFoundException();
+        }
+        if (realUser.get().equals(user)) {
+            return;
+        }
+        throw new PasswordMismatchException();
     }
 }

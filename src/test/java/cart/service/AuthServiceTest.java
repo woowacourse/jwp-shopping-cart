@@ -11,12 +11,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 class AuthServiceTest {
 
-    private StubUserRepository stubUserRepository;
     private AuthService authService;
 
     @BeforeEach
     void setUp() {
-        stubUserRepository = new StubUserRepository();
+        final StubUserRepository stubUserRepository = new StubUserRepository();
         authService = new AuthService(stubUserRepository);
     }
 
@@ -28,10 +27,18 @@ class AuthServiceTest {
     }
 
     @Test
-    void 유효하지_않은_로그인_테스트() {
+    void 존재하지_않는_아이디_테스트() {
         final MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader("Authorization", "Basic YkBhLmNvbTpwYXNzd29yZDI=");
+        request.addHeader("Authorization", "Basic YkBiLmNvbTpwYXNzd29yZDI=");
         assertThatThrownBy(() -> authService.getUser(request))
-                .isInstanceOf(LoginFailException.class);
+                .isInstanceOf(EmailNotFoundException.class);
+    }
+
+    @Test
+    void 패스워드_불일치_테스트() {
+        final MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZA==");
+        assertThatThrownBy(() -> authService.getUser(request))
+                .isInstanceOf(PasswordMismatchException.class);
     }
 }

@@ -20,6 +20,9 @@ public class StubUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByEmail(final Email email) {
-        return Optional.of(new User("a@a.com", "password1"));
+        if (email.equals(new Email("a@a.com"))) {
+            return Optional.of(new User("a@a.com", "password1"));
+        }
+        return Optional.empty();
     }
 }
