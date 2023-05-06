@@ -43,6 +43,10 @@ public class CartService {
                       .collect(Collectors.toList());
     }
 
+    public void deleteItem(final Long cartId) {
+        cartDao.deleteBy(cartId);
+    }
+
     private Long findIdByEmail(final AuthInfo authInfo) {
         Optional<User> findUser = userDao.findByEmail(authInfo.getEmail());
         User user = findUser.orElseThrow(() -> new NotFoundResultException("존재하지 않는 사용자 입니다."));
