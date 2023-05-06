@@ -143,4 +143,27 @@ class H2ProductRepositoryTest {
         //then
         assertThat(products).hasSize(1);
     }
+
+    @DisplayName("상품 1개를 ID로 조회한다.")
+    @Test
+    void shouldFindProductByIdWhenRequest() {
+
+        //given
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)", new String[]{"id"});
+            preparedStatement.setString(1, "사과");
+            preparedStatement.setLong(2, 100);
+            preparedStatement.setString(3, "domain.com");
+            return preparedStatement;
+        }, keyHolder);
+        long id = keyHolder.getKey().longValue();
+
+        //when
+        Product product = h2ProductRepository.findById(id).orElse(null);
+
+        //then
+        assertThat(product.getId()).isEqualTo(id);
+    }
 }
