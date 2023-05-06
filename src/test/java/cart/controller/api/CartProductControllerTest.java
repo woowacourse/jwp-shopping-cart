@@ -25,8 +25,7 @@ class CartProductControllerTest extends ApiControllerTest {
                 .auth().preemptive().basic(INITIAL_MEMBER_ONE.getEmail(), INITIAL_MEMBER_ONE.getPassword())
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(INITIAL_PRODUCT_ONE.getId())
-                .when().post(path)
+                .when().post(path + "/" + INITIAL_PRODUCT_ONE.getId())
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }

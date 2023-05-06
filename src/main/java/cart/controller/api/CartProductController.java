@@ -31,8 +31,8 @@ public class CartProductController {
         this.cartProductService = cartProductService;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> postCartProduct(@RequestBody final Long productId,
+    @PostMapping("/{productId}")
+    public ResponseEntity<Void> postCartProduct(@PathVariable final Long productId,
                                                 @AuthenticationPrincipal final Member member) {
         cartProductService.addCartProduct(productId, member.getEmail(), member.getPassword());
 
