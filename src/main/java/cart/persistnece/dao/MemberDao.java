@@ -1,6 +1,6 @@
-package cart.dao;
+package cart.persistnece.dao;
 
-import cart.domain.Member;
+import cart.persistnece.entity.Member;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;

@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.persistnece.entity;
 
 import cart.exception.custom.ArgumentNotValidException;
 import java.util.Objects;

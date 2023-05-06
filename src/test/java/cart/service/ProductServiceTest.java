@@ -10,11 +10,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import cart.dao.ProductDao;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.exception.custom.ArgumentNotValidException;
 import cart.exception.custom.ResourceNotFoundException;
+import cart.persistnece.dao.ProductDao;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

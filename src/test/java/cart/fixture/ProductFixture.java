@@ -1,6 +1,6 @@
 package cart.fixture;
 
-import cart.domain.Product;
+import cart.persistnece.entity.Product;
 
 public class ProductFixture {
 

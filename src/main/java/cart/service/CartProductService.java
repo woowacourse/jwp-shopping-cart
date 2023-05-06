@@ -2,10 +2,10 @@ package cart.service;
 
 import static java.util.stream.Collectors.toList;
 
-import cart.dao.CartProductDao;
-import cart.domain.CartProduct;
 import cart.dto.request.CartProductRequest;
 import cart.dto.response.CartProductResponse;
+import cart.persistnece.dao.CartProductDao;
+import cart.persistnece.entity.CartProduct;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

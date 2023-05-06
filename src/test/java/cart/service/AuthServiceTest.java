@@ -7,10 +7,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import cart.auth.Credential;
-import cart.dao.MemberDao;
-import cart.domain.Member;
 import cart.dto.request.AuthRequest;
 import cart.exception.custom.UnauthorizedException;
+import cart.persistnece.dao.MemberDao;
+import cart.persistnece.entity.Member;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

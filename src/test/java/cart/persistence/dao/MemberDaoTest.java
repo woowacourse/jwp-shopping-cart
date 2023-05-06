@@ -1,10 +1,11 @@
-package cart.dao;
+package cart.persistence.dao;
 
 import static cart.fixture.SqlFixture.MEMBER_INSERT_SQL_NO_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Member;
+import cart.persistnece.dao.MemberDao;
+import cart.persistnece.entity.Member;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -33,6 +34,7 @@ class MemberDaoTest {
     @BeforeEach
     void setUp() {
         memberDao = new MemberDao(dataSource);
+        jdbcTemplate.update("delete from member");
     }
 
     @Test

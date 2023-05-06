@@ -1,7 +1,7 @@
-package cart.dao;
+package cart.persistnece.dao;
 
-import cart.domain.CartProduct;
-import cart.domain.Product;
+import cart.persistnece.entity.CartProduct;
+import cart.persistnece.entity.Product;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

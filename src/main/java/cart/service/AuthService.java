@@ -1,10 +1,10 @@
 package cart.service;
 
 import cart.auth.Credential;
-import cart.dao.MemberDao;
-import cart.domain.Member;
 import cart.dto.request.AuthRequest;
 import cart.exception.custom.UnauthorizedException;
+import cart.persistnece.dao.MemberDao;
+import cart.persistnece.entity.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

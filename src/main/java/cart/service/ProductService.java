@@ -2,11 +2,11 @@ package cart.service;
 
 import static java.util.stream.Collectors.toList;
 
-import cart.dao.ProductDao;
-import cart.domain.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.exception.custom.ResourceNotFoundException;
+import cart.persistnece.dao.ProductDao;
+import cart.persistnece.entity.Product;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

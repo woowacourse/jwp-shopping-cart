@@ -1,4 +1,4 @@
-package cart.dao;
+package cart.persistence.dao;
 
 import static cart.fixture.ProductFixture.PRODUCT_A;
 import static cart.fixture.ProductFixture.PRODUCT_B;
@@ -6,8 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Product;
 import cart.exception.custom.ResourceNotFoundException;
+import cart.persistnece.dao.ProductDao;
+import cart.persistnece.entity.Product;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,6 +1,6 @@
 package cart.dto.request;
 
-import cart.domain.Product;
+import cart.persistnece.entity.Product;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 

@@ -1,10 +1,10 @@
 package cart.controller;
 
-import static cart.fixture.ProductRequestFixture.PRODUCT_REQUEST_A;
+import static cart.fixture.SqlFixture.MEMBER_INSERT_SQL_NO_ID;
+import static cart.fixture.SqlFixture.PRODUCT_INSERT_SQL_NO_ID;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.ProductDao;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.jsoup.Jsoup;
@@ -31,13 +31,12 @@ class MainControllerTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private ProductDao productDao;
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
         jdbcTemplate.update("delete from product");
+        jdbcTemplate.update("delete from member");
+        jdbcTemplate.update("delete from cart_product");
     }
 
     @DisplayName("admin 페이지로 접속시 모든 상품의 정보를 출력한다.")
@@ -80,8 +79,8 @@ class MainControllerTest {
     @Test
     void settings_page_print_all_members() {
         //given
-        jdbcTemplate.update("insert into MEMBER(email, password) " +
-                "values ('emailA@naver.com', 'passwordA'), ('emailB@kakao.com', 'passwordB')");
+        jdbcTemplate.update(MEMBER_INSERT_SQL_NO_ID, "email@naver.com", "password");
+        jdbcTemplate.update(MEMBER_INSERT_SQL_NO_ID, "email@kakao.com", "password");
         //when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -95,7 +94,7 @@ class MainControllerTest {
 
     private void createProductsByCount(int count) {
         for (int i = 0; i < count; i++) {
-            productDao.save(PRODUCT_REQUEST_A.toEntity());
+            jdbcTemplate.update(PRODUCT_INSERT_SQL_NO_ID, "name", 10000, "url");
         }
     }
 }

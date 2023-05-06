@@ -5,8 +5,8 @@ import static cart.fixture.SqlFixture.PRODUCT_INSERT_SQL;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-import cart.dao.CartProductDao;
 import cart.dto.request.CartProductRequest;
+import cart.persistnece.dao.CartProductDao;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,7 +1,7 @@
-package cart.dao;
+package cart.persistnece.dao;
 
-import cart.domain.Product;
 import cart.exception.custom.ResourceNotFoundException;
+import cart.persistnece.entity.Product;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

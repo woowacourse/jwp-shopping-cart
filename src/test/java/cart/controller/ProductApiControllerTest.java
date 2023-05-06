@@ -8,9 +8,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
-import cart.dao.ProductDao;
-import cart.domain.Product;
 import cart.dto.request.ProductRequest;
+import cart.persistnece.dao.ProductDao;
+import cart.persistnece.entity.Product;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;

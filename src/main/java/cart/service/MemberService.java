@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.dao.MemberDao;
-import cart.domain.Member;
+import cart.persistnece.dao.MemberDao;
+import cart.persistnece.entity.Member;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

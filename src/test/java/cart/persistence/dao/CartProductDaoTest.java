@@ -1,10 +1,11 @@
-package cart.dao;
+package cart.persistence.dao;
 
 import static cart.fixture.SqlFixture.MEMBER_INSERT_SQL;
 import static cart.fixture.SqlFixture.PRODUCT_INSERT_SQL;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.CartProduct;
+import cart.persistnece.dao.CartProductDao;
+import cart.persistnece.entity.CartProduct;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
