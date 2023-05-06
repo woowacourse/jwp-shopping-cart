@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import cart.dao.CartDao;
-import cart.dto.CartProductAddRequest;
-import cart.dto.CartProductRemoveRequest;
+import cart.dto.CartProductAddRequestDto;
+import cart.dto.CartProductRemoveRequestDto;
 import cart.entity.ProductEntity;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -38,7 +38,7 @@ class CartControllerTest {
     @DisplayName("장바구니에 상품 추가")
     @Test
     void addProductToCart() {
-        CartProductAddRequest addRequest = new CartProductAddRequest(2);
+        CartProductAddRequestDto addRequest = new CartProductAddRequestDto(2);
 
         RestAssured
                 .given().log().all()
@@ -57,7 +57,7 @@ class CartControllerTest {
     @DisplayName("장바구니에 있는 상품 제거")
     @Test
     void deleteProductFromCart() {
-        CartProductAddRequest addRequest = new CartProductAddRequest(2);
+        CartProductAddRequestDto addRequest = new CartProductAddRequestDto(2);
 
         RestAssured
                 .given().log().all()
@@ -68,7 +68,7 @@ class CartControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        CartProductRemoveRequest removeRequest = new CartProductRemoveRequest(2);
+        CartProductRemoveRequestDto removeRequest = new CartProductRemoveRequestDto(2);
 
         RestAssured
                 .given().log().all()
@@ -85,7 +85,7 @@ class CartControllerTest {
     @DisplayName("장바구니에 있는 상품 전체 조회")
     @Test
     void findAllProductInCart() {
-        CartProductAddRequest addRequest1 = new CartProductAddRequest(1);
+        CartProductAddRequestDto addRequest1 = new CartProductAddRequestDto(1);
 
         RestAssured
                 .given().log().all()
@@ -96,7 +96,7 @@ class CartControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        CartProductAddRequest addRequest2 = new CartProductAddRequest(2);
+        CartProductAddRequestDto addRequest2 = new CartProductAddRequestDto(2);
 
         RestAssured
                 .given().log().all()

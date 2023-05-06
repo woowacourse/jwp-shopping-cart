@@ -1,9 +1,9 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.dto.ProductAddRequest;
+import cart.dto.ProductAddRequestDto;
 import cart.dto.ProductDto;
-import cart.dto.ProductModifyRequest;
+import cart.dto.ProductModifyRequestDto;
 import cart.entity.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +18,8 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public int save(ProductAddRequest productAddRequest) {
-        return productDao.save(new ProductEntity(productAddRequest.getName(), productAddRequest.getImgUrl(), productAddRequest.getPrice()));
+    public int save(ProductAddRequestDto productAddRequestDto) {
+        return productDao.save(new ProductEntity(productAddRequestDto.getName(), productAddRequestDto.getImgUrl(), productAddRequestDto.getPrice()));
     }
 
     public List<ProductDto> findAll() {
@@ -29,13 +29,13 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public void update(ProductModifyRequest productModifyRequest, int id) {
+    public void update(ProductModifyRequestDto productModifyRequestDto, int id) {
         productDao.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 ID가 없습니다."));
         productDao.update(new ProductEntity(
                 id,
-                productModifyRequest.getName(),
-                productModifyRequest.getImgUrl(),
-                productModifyRequest.getPrice()));
+                productModifyRequestDto.getName(),
+                productModifyRequestDto.getImgUrl(),
+                productModifyRequestDto.getPrice()));
     }
 
     public void delete(int id) {

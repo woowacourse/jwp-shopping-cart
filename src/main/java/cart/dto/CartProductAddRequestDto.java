@@ -1,13 +1,13 @@
 package cart.dto;
 
-public class CartProductRemoveRequest {
+public class CartProductAddRequestDto {
 
     private Integer productId;
 
-    public CartProductRemoveRequest() {
+    public CartProductAddRequestDto() {
     }
 
-    public CartProductRemoveRequest(Integer productId) {
+    public CartProductAddRequestDto(Integer productId) {
         this.productId = productId;
     }
 

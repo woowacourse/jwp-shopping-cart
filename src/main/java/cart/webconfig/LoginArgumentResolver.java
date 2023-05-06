@@ -1,7 +1,7 @@
 package cart.webconfig;
 
 import cart.dao.MemberDao;
-import cart.dto.AuthInfo;
+import cart.infrastructure.AuthInfo;
 import cart.entity.MemberEntity;
 import cart.infrastructure.AuthorizationExtractor;
 import java.util.Optional;

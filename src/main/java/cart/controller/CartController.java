@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.dto.CartProductAddRequest;
-import cart.dto.CartProductRemoveRequest;
+import cart.dto.CartProductAddRequestDto;
+import cart.dto.CartProductRemoveRequestDto;
 import cart.dto.ProductDto;
 import cart.service.CartService;
 import cart.webconfig.AuthMemberId;
@@ -33,15 +33,15 @@ public class CartController {
 
     @PostMapping()
     public ResponseEntity<Object> addProductToCart(@AuthMemberId int memberId,
-                                                   @RequestBody CartProductAddRequest cartProductAddRequest) {
-        cartService.addProduct(memberId, cartProductAddRequest.getProductId());
+                                                   @RequestBody CartProductAddRequestDto cartProductAddRequestDto) {
+        cartService.addProduct(memberId, cartProductAddRequestDto.getProductId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping()
     public ResponseEntity<Object> removeProductFromCart(@AuthMemberId int memberId,
-                                                        @RequestBody CartProductRemoveRequest cartProductRemoveRequest) {
-        cartService.deleteProduct(memberId, cartProductRemoveRequest.getProductId());
+                                                        @RequestBody CartProductRemoveRequestDto cartProductRemoveRequestDto) {
+        cartService.deleteProduct(memberId, cartProductRemoveRequestDto.getProductId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
