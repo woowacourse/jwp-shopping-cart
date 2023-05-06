@@ -1,6 +1,6 @@
 package cart.config;
 
-import cart.auth.Infrastructure.BasicAuthorizationExtractor;
+import cart.auth.infrastructure.BasicAuthorizationExtractor;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;

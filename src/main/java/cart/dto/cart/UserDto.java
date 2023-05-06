@@ -15,10 +15,6 @@ public class UserDto {
         this.email = new Email(email);
     }
 
-    public static UserDto of(Long id, String email) {
-        return new UserDto(id, email);
-    }
-
     public static UserDto fromMemberEntity(MemberEntity entity) {
         return new UserDto(entity.getId(), entity.getEmail());
     }

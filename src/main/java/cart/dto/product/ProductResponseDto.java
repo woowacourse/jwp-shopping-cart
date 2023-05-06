@@ -15,10 +15,6 @@ public class ProductResponseDto {
         this.price = price;
     }
 
-    public static ProductResponseDto of(Long id, String name, String imgUrl, int price) {
-        return new ProductResponseDto(id, name, imgUrl, price);
-    }
-
     public static ProductResponseDto fromDto(ProductDto productDto) {
         return new ProductResponseDto(productDto.getId(), productDto.getName(), productDto.getImgUrl(), productDto.getPrice());
     }

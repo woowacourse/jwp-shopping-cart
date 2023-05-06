@@ -1,4 +1,4 @@
-package cart.auth.Infrastructure;
+package cart.auth.infrastructure;
 
 import cart.domain.cart.AuthInfo;
 import org.springframework.web.context.request.NativeWebRequest;
