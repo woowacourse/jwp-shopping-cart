@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.auth.AuthenticationException;
 import cart.dto.ErrorResponse;
+import java.util.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ControllerAdvice {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(NoSuchElementException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    }
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(MethodArgumentNotValidException e) {
