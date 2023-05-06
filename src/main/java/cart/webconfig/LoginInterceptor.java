@@ -3,7 +3,7 @@ package cart.webconfig;
 import cart.dao.MemberDao;
 import cart.dto.AuthInfo;
 import cart.entity.MemberEntity;
-import cart.infrastructure.BasicAuthorizationExtractor;
+import cart.infrastructure.AuthorizationExtractor;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,15 +14,16 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class LoginInterceptor implements HandlerInterceptor {
 
     private final MemberDao memberDao;
-    private final BasicAuthorizationExtractor authorizationExtractor;
+    private final AuthorizationExtractor authorizationExtractor;
 
-    public LoginInterceptor(MemberDao memberDao) {
+    public LoginInterceptor(MemberDao memberDao, AuthorizationExtractor extractor) {
         this.memberDao = memberDao;
-        this.authorizationExtractor = new BasicAuthorizationExtractor();
+        this.authorizationExtractor = extractor;
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
         AuthInfo authInfo = authorizationExtractor.extract(request);
         String email = authInfo.getEmail();
         String password = authInfo.getPassword();
