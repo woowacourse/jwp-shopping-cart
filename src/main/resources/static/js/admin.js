@@ -45,11 +45,8 @@ form.addEventListener('submit', (event) => {
 });
 
 const createProduct = (product) => {
-    axios.request({
-        url: '/products',
-        method: 'post',
-        data: product
-    }).then((response) => {
+    axios.post('/products', product
+    ).then((response) => {
         window.location.reload();
     }).catch((error) => {
         alert(error.response.data['errorMessage'])
@@ -59,11 +56,8 @@ const createProduct = (product) => {
 const updateProduct = (product) => {
     const {id} = product;
 
-    axios.request({
-        url: '/products/' + id,
-        method: 'put',
-        data: product
-    }).then((response) => {
+    axios.put('/products/' + id, product
+    ).then((response) => {
         window.location.reload();
     }).catch((error) => {
         alert(error.response.data['errorMessage'])
@@ -71,10 +65,8 @@ const updateProduct = (product) => {
 };
 
 const deleteProduct = (id) => {
-    axios.request({
-        url: '/products/' + id,
-        method: 'delete'
-    }).then((response) => {
+    axios.delete('/products/' + id,
+    ).then((response) => {
         window.location.reload();
     }).catch((error) => {
         alert(error.response.data['errorMessage'])
