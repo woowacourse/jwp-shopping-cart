@@ -1,7 +1,9 @@
 package cart.controller;
 
 import cart.domain.product.Product;
+import cart.domain.user.User;
 import cart.service.ProductService;
+import cart.service.UserService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ViewController {
 
     private final ProductService productService;
+    private final UserService userService;
 
-    public ViewController(ProductService productService) {
+    public ViewController(ProductService productService, UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -30,5 +34,12 @@ public class ViewController {
         final List<Product> products = productService.findAll();
         model.addAttribute("products", products);
         return "admin";
+    }
+
+    @GetMapping("/users")
+    public String viewUsers(final Model model) {
+        final List<User> users = userService.findAll();
+        model.addAttribute("users", users);
+        return "users";
     }
 }

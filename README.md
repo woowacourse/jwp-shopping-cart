@@ -37,7 +37,7 @@ CREATE TABLE product
     id        BIGINT       NOT NULL AUTO_INCREMENT,
     name      VARCHAR(50)  NOT NULL,
     price     BIGINT       NOT NULL,
-    image_url VARCHAR(500) NOT NULL,
+    image_url VARCHAR(500) NOT NULL,정
     PRIMARY KEY (id)
 );
 ```
@@ -61,12 +61,12 @@ Admin 화면을 렌더링하여 반환합니다.
 > - [x] admin.html 반환
 >     - [x] 등록된 모든 Product 정보 렌더링
 
-### GET /users
+### ✅ GET /users
 전체 사용자 정보를 확인하고, 특정 사용자의 계정으로 로그인할 수 있는 화면을 반환합니다.
 
 **구현 내용**
-> - [ ] users.html 반환
->   - [ ] 등록된 모든 User 정보 렌더링
+> - [x] users.html 반환
+>   - [x] 등록된 모든 User 정보 렌더링
 
 ### GET /carts/me
 나의 장바구니를 확인하고, 포함된 상품을 삭제할 수 있는 화면을 반환합니다.

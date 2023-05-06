@@ -30,6 +30,6 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public List<User> findAll() {
-        return null;
+        return this.users;
     }
 }
