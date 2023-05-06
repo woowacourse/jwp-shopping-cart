@@ -4,6 +4,7 @@ import cart.domain.product.service.dto.ProductCreationDto;
 import cart.domain.product.usecase.EnrollOneProductUseCase;
 import cart.web.dto.request.ProductCreationRequest;
 import cart.web.dto.response.ProductCreationResponse;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,8 @@ public class EnrollOneProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductCreationResponse> createProduct(@RequestBody final ProductCreationRequest request) {
+    public ResponseEntity<ProductCreationResponse> createProduct(
+            @RequestBody @Valid final ProductCreationRequest request) {
         final ProductCreationDto productCreationDto = toProductCreationDto(request);
 
         final Long savedProductId = enrollProductService.enroll(productCreationDto);

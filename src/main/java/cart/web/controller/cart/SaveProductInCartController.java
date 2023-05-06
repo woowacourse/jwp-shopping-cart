@@ -5,6 +5,7 @@ import cart.domain.cart.usecase.SaveOneProductInCartUseCase;
 import cart.web.config.auth.AuthorizedUser;
 import cart.web.dto.request.AuthorizedUserRequest;
 import cart.web.dto.request.ProductInCartAdditionRequest;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ public class SaveProductInCartController {
     @PostMapping
     public ResponseEntity<Void> addProductInCart(
             @AuthorizedUser final AuthorizedUserRequest request,
-            @RequestBody final ProductInCartAdditionRequest productId
+            @RequestBody @Valid final ProductInCartAdditionRequest productId
     ) {
         final AuthorizedCartUserDto authorizedCartUserDto =
                 new AuthorizedCartUserDto(request.getEmail(), request.getPassword());

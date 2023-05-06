@@ -4,6 +4,7 @@ import cart.domain.product.service.dto.ProductModificationDto;
 import cart.domain.product.usecase.FixProductInfoUseCase;
 import cart.web.dto.request.ProductModificationRequest;
 import cart.web.dto.response.ProductModificationResponse;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ public class FixOneProductInfoController {
 
     @PutMapping
     public ResponseEntity<ProductModificationResponse> updateProduct(
-            @RequestBody final ProductModificationRequest request) {
+            @RequestBody @Valid final ProductModificationRequest request) {
         final ProductModificationDto productModificationDto = new ProductModificationDto(
                 request.getId(),
                 request.getName(),
