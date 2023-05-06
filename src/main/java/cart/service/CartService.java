@@ -57,10 +57,8 @@ public class CartService {
         if (cartsOptional.isEmpty()) {
             return new ArrayList<>();
         }
-        final List<Product> products = cartsOptional.get().stream()
+        return cartsOptional.get().stream()
                 .map(cart -> productService.findById(cart.getProductId()))
-                .collect(Collectors.toUnmodifiableList());
-        return products.stream()
                 .map(CartResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
