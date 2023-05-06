@@ -7,6 +7,7 @@ import cart.service.dto.CartResponse;
 import cart.service.dto.MemberInfo;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ShoppingCartService {
@@ -26,12 +27,14 @@ public class ShoppingCartService {
         return shoppingCartRepository.findAllProduct(memberId);
     }
 
+    @Transactional
     public void addCartProduct(final MemberInfo memberInfo, final Long productId) {
         final Long memberId = memberRepository.findId(memberInfo)
                 .orElseThrow(MemberNotFoundException::new);
         shoppingCartRepository.addProduct(memberId, productId);
     }
 
+    @Transactional
     public void removeProduct(final Long cartId) {
         shoppingCartRepository.removeProduct(cartId);
     }

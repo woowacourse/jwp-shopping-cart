@@ -8,6 +8,7 @@ import cart.service.dto.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -24,11 +25,13 @@ public class ProductService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional
     public long createProduct(final ProductRequest request) {
         final Product savedProduct = productRepository.save(request.toProduct());
         return savedProduct.getId();
     }
 
+    @Transactional
     public void updateProduct(final Long id, final ProductRequest productRequest) {
         final int updatedCount = productRepository.update(productRequest.toProduct(id));
         validateProductNotFound(updatedCount);
@@ -40,6 +43,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public void deleteById(final long id) {
         productRepository.deleteById(id);
     }
