@@ -1,12 +1,13 @@
 package cart.controller.auth;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 import cart.service.dto.UserAuthDto;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 public class BasicTokenDecoder {
 
-    private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
