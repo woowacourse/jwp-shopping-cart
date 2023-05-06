@@ -19,10 +19,4 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void authorizeUser(String email, String password) {
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        if (!user.getPassword().equals(password)) {
-            throw new InvalidPasswordException();
-        }
-    }
 }

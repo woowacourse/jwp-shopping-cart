@@ -41,8 +41,9 @@ public class CartService {
     @Transactional
     public void addCartItem(String userEmail, Long productId) {
         User user = getUser(userEmail);
-        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
         Cart cart = cartRepository.findByNo(user.getCartNo());
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+
         cartRepository.addCartItem(cart, new CartProduct(product));
     }
 
