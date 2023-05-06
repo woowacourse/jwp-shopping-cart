@@ -9,9 +9,6 @@ public class ProductResponse {
     private Integer price;
     private String image;
 
-    public ProductResponse() {
-    }
-
     public ProductResponse(final Long id, final String name, final Integer price, final String image) {
         this.id = id;
         this.name = name;

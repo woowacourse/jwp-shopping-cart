@@ -9,9 +9,6 @@ public class CartResponse {
     private Integer price;
     private String image;
 
-    public CartResponse() {
-    }
-
     public CartResponse(final Long id, final String name, final Integer price, final String image) {
         this.id = id;
         this.name = name;
