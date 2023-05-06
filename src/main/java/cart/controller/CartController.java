@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.auth.AuthInfo;
 import cart.auth.resolver.BasicAuthenticationPrincipal;
+import cart.controller.dto.auth.AuthInfo;
 import cart.controller.dto.request.CartRequest;
 import cart.controller.dto.response.CartResponse;
 import cart.service.CartService;
@@ -39,5 +39,13 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(allCart);
+    }
+
+    @DeleteMapping("{cartId}")
+    public ResponseEntity<Void> deleteCart(@PathVariable final Long cartId) {
+        cartService.deleteItem(cartId);
+        return ResponseEntity.status(HttpStatus.OK)
+                             .location(URI.create("/"))
+                             .build();
     }
 }
