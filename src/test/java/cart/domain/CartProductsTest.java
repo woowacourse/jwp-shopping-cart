@@ -1,6 +1,6 @@
 package cart.domain;
 
-import static cart.factory.CartFactory.createCart;
+import static cart.factory.CartProductsFactory.createCart;
 import static cart.factory.ProductFactory.createProduct;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,28 +9,28 @@ import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class CartItemsTest {
+class CartProductsTest {
 
     @Test
     @DisplayName("카트를 생성할 수 있다.")
     void create_cart_success() {
         //given
-        final var cart = new CartItems(List.of());
+        final var cart = new CartProducts(List.of());
         //when
         //then
         assertThat(cart).isNotNull()
-                .isInstanceOf(CartItems.class);
+                .isInstanceOf(CartProducts.class);
     }
 
     @Test
     @DisplayName("상품을 추가할 수 있다.")
     void add_cart_item_success() {
         //given
-        CartItems cartItems = createCart();
+        CartProducts cartProducts = createCart();
         //when
-        CartItem newCartItem = new CartItem(createProduct());
-        cartItems.add(newCartItem);
+        CartProduct newCartProduct = new CartProduct(createProduct());
+        cartProducts.add(newCartProduct);
         //then
-        assertThat(cartItems).extracting("cartItems", InstanceOfAssertFactories.LIST).contains(newCartItem);
+        assertThat(cartProducts).extracting("cartItems", InstanceOfAssertFactories.LIST).contains(newCartProduct);
     }
 }

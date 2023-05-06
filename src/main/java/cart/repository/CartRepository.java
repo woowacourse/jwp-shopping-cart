@@ -1,7 +1,7 @@
 package cart.repository;
 
 import cart.domain.Cart;
-import cart.domain.CartItem;
+import cart.domain.CartProduct;
 import cart.domain.User;
 
 public interface CartRepository {
@@ -10,5 +10,5 @@ public interface CartRepository {
 
     void removeCartItem(Long CartItemId);
 
-    void addCartItem(Cart cart, CartItem cartItem);
+    void addCartItem(Cart cart, CartProduct cartProduct);
 }

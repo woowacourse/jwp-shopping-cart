@@ -34,15 +34,15 @@
         }
 
         axios.request({
-            url: 'http://localhost:8080/user/cartItems',
+            url: 'http://localhost:8080/user/cartProducts',
             headers: {
                 'Authorization': `Basic ${credentials}`
             }
         }).then((response) => {
-            const {data: cartItems} = response.data;
+            const {data: cartProducts} = response.data;
 
             let productElement = '';
-            cartItems.forEach(cartItem => {
+            cartProducts.forEach(cartItem => {
                 const { id, product } = cartItem;
                 console.log('id는 '+ id);
                 productElement += `

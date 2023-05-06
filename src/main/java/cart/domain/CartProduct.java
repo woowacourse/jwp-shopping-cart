@@ -2,15 +2,15 @@ package cart.domain;
 
 import java.util.Objects;
 
-public class CartItem {
+public class CartProduct {
     private Long id;
     private final Product product;
 
-    public CartItem(Product product) {
+    public CartProduct(Product product) {
         this.product = product;
     }
 
-    public CartItem(Long id, Product product) {
+    public CartProduct(Long id, Product product) {
         this.id = id;
         this.product = product;
     }
@@ -23,8 +23,8 @@ public class CartItem {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CartItem cartItem = (CartItem) o;
-        return Objects.equals(id, cartItem.id);
+        CartProduct cartProduct = (CartProduct) o;
+        return Objects.equals(id, cartProduct.id);
     }
 
     @Override

@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Cart;
-import cart.domain.CartItem;
+import cart.domain.CartProduct;
 import cart.domain.Product;
 import cart.domain.User;
 import cart.dto.CartItemCreateRequest;
@@ -17,7 +17,6 @@ import cart.repository.ProductRepository;
 import cart.repository.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.http.Cookie;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -83,14 +82,14 @@ public class CartIntegrationTest {
         User user = createUser("rosie@wooteco.com");
         Cart cart = cartRepository.findByUser(user);
 
-        for (CartItem cartItem : cart.getCartItems()) {
-            cartRepository.removeCartItem(cartItem.getId());
+        for (CartProduct cartProduct : cart.getCartItems()) {
+            cartRepository.removeCartItem(cartProduct.getId());
         }
         List<Product> products = productRepository.findAll();
 
-        cartRepository.addCartItem(cart, new CartItem(products.get(0)));
-        cartRepository.addCartItem(cart, new CartItem(products.get(1)));
-        cartRepository.addCartItem(cart, new CartItem(products.get(1)));
+        cartRepository.addCartItem(cart, new CartProduct(products.get(0)));
+        cartRepository.addCartItem(cart, new CartProduct(products.get(1)));
+        cartRepository.addCartItem(cart, new CartProduct(products.get(1)));
     }
 
     @Test

@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.domain.Cart;
-import cart.domain.CartItem;
+import cart.domain.CartProduct;
 import cart.domain.Product;
 import cart.domain.User;
 import cart.exception.ProductNotFoundException;
@@ -28,7 +28,7 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartItem> getCartItems(String userEmail) {
+    public List<CartProduct> getCartItems(String userEmail) {
         User user = getUser(userEmail);
         Cart cart = cartRepository.findByUser(user);
         return cart.getCartItems();
@@ -43,7 +43,7 @@ public class CartService {
         User user = getUser(userEmail);
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
         Cart cart = cartRepository.findByUser(user);
-        cartRepository.addCartItem(cart, new CartItem(product));
+        cartRepository.addCartItem(cart, new CartProduct(product));
     }
 
     @Transactional

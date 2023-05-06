@@ -1,7 +1,7 @@
 package cart.repository;
 
 import cart.domain.Cart;
-import cart.domain.CartItem;
+import cart.domain.CartProduct;
 import cart.domain.Product;
 import cart.domain.User;
 import java.util.List;
@@ -27,12 +27,12 @@ public class CartDbRepository implements CartRepository {
                 + "JOIN products p ON(c.product_id = p.id)"
                 + "WHERE cart_no = :userId";
 
-        List<CartItem> cartItems = namedParameterJdbcTemplate.query(sql, Map.of("userId", user.getId()),
+        List<CartProduct> cartProducts = namedParameterJdbcTemplate.query(sql, Map.of("userId", user.getId()),
                 getCartItemRowMapper());
-        return Cart.of(user, cartItems);
+        return Cart.of(user, cartProducts);
     }
 
-    private RowMapper<CartItem> getCartItemRowMapper() {
+    private RowMapper<CartProduct> getCartItemRowMapper() {
         return (resultSet, ignored) -> {
             Long id = resultSet.getLong("id");
             Long productId = resultSet.getLong("product_id");
@@ -40,7 +40,7 @@ public class CartDbRepository implements CartRepository {
             int price = resultSet.getInt("price");
             String imgUrl = resultSet.getString("img_url");
             Product product = Product.from(productId, name, imgUrl, price);
-            return new CartItem(id, product);
+            return new CartProduct(id, product);
         };
     }
 
@@ -51,9 +51,9 @@ public class CartDbRepository implements CartRepository {
     }
 
     @Override
-    public void addCartItem(Cart cart, CartItem cartItem) {
+    public void addCartItem(Cart cart, CartProduct cartProduct) {
         String sql = "INSERT INTO cart_products(cart_no, product_id) VALUES (:userId, :productId)";
         namedParameterJdbcTemplate.update(sql,
-                Map.of("userId", cart.getUser().getId(), "productId", cartItem.getProduct().getId()));
+                Map.of("userId", cart.getUser().getId(), "productId", cartProduct.getProduct().getId()));
     }
 }

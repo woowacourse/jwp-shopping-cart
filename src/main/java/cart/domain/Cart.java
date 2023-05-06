@@ -5,15 +5,15 @@ import java.util.Objects;
 
 public class Cart {
     private final User user;
-    private final CartItems cartItems;
+    private final CartProducts cartProducts;
 
-    public Cart(User user, CartItems cartItems) {
+    public Cart(User user, CartProducts cartProducts) {
         this.user = user;
-        this.cartItems = cartItems;
+        this.cartProducts = cartProducts;
     }
 
-    public static Cart of(User user, List<CartItem> cartItems) {
-        return new Cart(user, new CartItems(cartItems));
+    public static Cart of(User user, List<CartProduct> cartProducts) {
+        return new Cart(user, new CartProducts(cartProducts));
     }
 
     @Override
@@ -37,7 +37,7 @@ public class Cart {
         return user;
     }
 
-    public List<CartItem> getCartItems() {
-        return cartItems.getCartItems();
+    public List<CartProduct> getCartItems() {
+        return cartProducts.getCartItems();
     }
 }

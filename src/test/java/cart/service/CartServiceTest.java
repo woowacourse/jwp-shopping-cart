@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 
 import cart.domain.Cart;
-import cart.domain.CartItem;
-import cart.domain.CartItems;
+import cart.domain.CartProduct;
+import cart.domain.CartProducts;
 import cart.domain.Product;
 import cart.domain.User;
 import cart.factory.UserFactory;
@@ -46,14 +46,14 @@ class CartServiceTest {
         String email = "rosie@wooteco.com";
         User user = UserFactory.createUser(email);
         Product product = Product.from(1L, "라면", "imgimg", 10000);
-        CartItem cartItem = new CartItem(product);
+        CartProduct cartProduct = new CartProduct(product);
 
         BDDMockito.given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
-        BDDMockito.given(cartRepository.findByUser(user)).willReturn(new Cart(user, new CartItems(List.of(cartItem))));
+        BDDMockito.given(cartRepository.findByUser(user)).willReturn(Cart.of(user, List.of(cartProduct)));
         //when
-        List<CartItem> cartItems = cartService.getCartItems(email);
+        List<CartProduct> cartProducts = cartService.getCartItems(email);
         //then
-        assertThat(cartItems).contains(cartItem);
+        assertThat(cartProducts).contains(cartProduct);
     }
 
     @Test
@@ -73,7 +73,7 @@ class CartServiceTest {
         cartService.addCartItem(email, productId);
 
         //then
-        ArgumentCaptor<CartItem> cartItemCaptor = ArgumentCaptor.forClass(CartItem.class);
+        ArgumentCaptor<CartProduct> cartItemCaptor = ArgumentCaptor.forClass(CartProduct.class);
         Mockito.verify(cartRepository).addCartItem(eq(cart), cartItemCaptor.capture());
         Product expected = cartItemCaptor.getValue().getProduct();
         assertThat(expected).isEqualTo(product);

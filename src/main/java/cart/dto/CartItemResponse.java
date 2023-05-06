@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.CartItem;
+import cart.domain.CartProduct;
 
 public class CartItemResponse {
     private final Long id;
@@ -12,9 +12,9 @@ public class CartItemResponse {
         this.product = product;
     }
 
-    public static CartItemResponse from(CartItem cartItem) {
-        ProductDto productDto = ProductDto.from(cartItem.getProduct());
-        return new CartItemResponse(cartItem.getId(), productDto);
+    public static CartItemResponse from(CartProduct cartProduct) {
+        ProductDto productDto = ProductDto.from(cartProduct.getProduct());
+        return new CartItemResponse(cartProduct.getId(), productDto);
     }
 
     public Long getId() {

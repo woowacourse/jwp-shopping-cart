@@ -4,7 +4,7 @@ import static cart.factory.ProductFactory.createProduct;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Cart;
-import cart.domain.CartItem;
+import cart.domain.CartProduct;
 import cart.domain.Product;
 import cart.domain.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,9 +53,9 @@ class CartDbRepositoryTest {
         Cart cart = cartRepository.findByUser(user);
         productRepository.add(createProduct());
         Product product = productRepository.findAll().get(0);
-        CartItem cartItem = new CartItem(product);
+        CartProduct cartProduct = new CartProduct(product);
         //when
-        cartRepository.addCartItem(cart, cartItem);
+        cartRepository.addCartItem(cart, cartProduct);
         //then
         Cart after = cartRepository.findByUser(user);
         assertThat(after.getCartItems()).hasSize(cart.getCartItems().size() + 1);
@@ -81,7 +81,7 @@ class CartDbRepositoryTest {
         Cart cart = cartRepository.findByUser(user);
         productRepository.add(createProduct());
         Product product = productRepository.findAll().get(0);
-        CartItem cartItem = new CartItem(product);
-        cartRepository.addCartItem(cart, cartItem);
+        CartProduct cartProduct = new CartProduct(product);
+        cartRepository.addCartItem(cart, cartProduct);
     }
 }
