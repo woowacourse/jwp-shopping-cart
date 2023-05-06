@@ -24,14 +24,11 @@ import shoppingbasket.member.service.MemberService;
 public class CartApiController {
 
     private final CartService cartService;
-    private final MemberService memberService;
     private final BasicAuthorizationExtractor authorizationExtractor;
 
     public CartApiController(final CartService cartService,
-                             final MemberService memberService,
                              final BasicAuthorizationExtractor authorizationExtractor) {
         this.cartService = cartService;
-        this.memberService = memberService;
         this.authorizationExtractor = authorizationExtractor;
     }
 
