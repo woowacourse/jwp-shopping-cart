@@ -1,6 +1,8 @@
 package cart.dao;
 
 import cart.entity.User;
+import cart.exception.NoSuchDataException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -28,14 +30,19 @@ public class JdbcUserTableDao {
 
     public User findByEmail(final String userEmail) {
         final String sql = "SELECT * FROM user_table where user_email = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (rs, rowNUm) -> {
-                    return new User(
-                            rs.getLong("id"),
-                            rs.getString("user_email"),
-                            rs.getString("user_password")
-                    );
-                }, userEmail);
+        try{
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    (rs, rowNUm) -> {
+                        return new User(
+                                rs.getLong("id"),
+                                rs.getString("user_email"),
+                                rs.getString("user_password")
+                        );
+                    }, userEmail);
+        }catch(EmptyResultDataAccessException e){
+            throw new NoSuchDataException("해당 유저가 없습니다");
+        }
+
     }
 }

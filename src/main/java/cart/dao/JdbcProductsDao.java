@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.entity.Product;
-import cart.exception.NoSuchProductException;
+import cart.exception.NoSuchDataException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -55,7 +55,7 @@ public class JdbcProductsDao implements ProductsDao {
                 product.getId()
         );
         if (updatedCount == 0) {
-            throw new NoSuchProductException("해당 상품이 없습니다.");
+            throw new NoSuchDataException("해당 상품이 없습니다.");
         }
     }
 

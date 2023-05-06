@@ -1,5 +1,6 @@
 package cart.dao;
 
+import cart.exception.NoSuchDataException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,5 +31,13 @@ class JdbcUserTableDaoTest {
     @DisplayName("사용자 한명을 조회")
     void readOneTest() {
         Assertions.assertThat(jdbcUserTableDao.findByEmail("test1@test1.com").getEmail()).isEqualTo("test1@test1.com");
+    }
+
+    @Test
+    @DisplayName("없는 이메일 입력시 에러")
+    void notUser(){
+        Assertions.assertThatThrownBy(()->jdbcUserTableDao.findByEmail("t@test1.com"))
+                .isInstanceOf(NoSuchDataException.class)
+                .hasMessage("해당 유저가 없습니다");
     }
 }

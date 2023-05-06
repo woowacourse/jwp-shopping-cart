@@ -3,6 +3,7 @@ package cart.entity;
 import cart.entity.vo.Email;
 import cart.entity.vo.Id;
 import cart.entity.vo.Password;
+import cart.exception.NoAuthorizationUserException;
 
 public class User {
     private final Id id;
@@ -28,6 +29,12 @@ public class User {
     }
 
     public boolean authorization(final String email, final String password) {
-        return this.email.equals(email) & this.password.equals(password);
+        if(!this.email.equals(email)){
+            throw new NoAuthorizationUserException("이메일이 틀렸습니다");
+        }
+        if(!this.password.equals(password)){
+            throw new NoAuthorizationUserException("패스워드가 틀렸습니다");
+        }
+        return true;
     }
 }

@@ -1,6 +1,8 @@
 package cart.service;
 
 import cart.dao.JdbcUserTableDao;
+import cart.exception.NoAuthorizationUserException;
+import cart.exception.NoSuchDataException;
 import cart.service.dto.UserDto;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +30,7 @@ public class UserService {
     }
 
     public boolean authUser(final UserDto userDto) {
-        boolean check = jdbcUserTableDao.findByEmail(userDto.getEmail()).authorization(userDto.getEmail(), userDto.getPassword());
-        return check;
+        return jdbcUserTableDao.findByEmail(userDto.getEmail()).authorization(userDto.getEmail(), userDto.getPassword());
     }
 
     public Long findLoginUserId(final String email) {
