@@ -7,5 +7,4 @@ public class SqlFixture {
 
     public static final String MEMBER_INSERT_SQL = "insert into member(id, email, password) values (?, ?,?)";
     public static final String MEMBER_INSERT_SQL_NO_ID = "insert into member(email, password) values (?, ?)";
-
 }

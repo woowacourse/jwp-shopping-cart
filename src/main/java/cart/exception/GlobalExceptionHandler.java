@@ -51,7 +51,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<Object> handleExceptionInternal(ExceptionResponse response, HttpStatus status) {
-//        logger.error(String.format("message = %s, status = %s", response.getMessage(), status.toString()));
         return ResponseEntity.status(status).body(response);
     }
 }

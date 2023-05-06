@@ -83,7 +83,7 @@ class CartProductApiControllerTest {
         void login_fail_by_member_not_found() {
             given()
                     .log().all()
-                    .auth().preemptive().basic("anyValue" +EMAIL, PASSWORD )
+                    .auth().preemptive().basic("anyValue" + EMAIL, PASSWORD)
                     .accept(MediaType.APPLICATION_JSON_VALUE)
                     .when()
                     .get(CART_PRODUCT_API_URL)
@@ -106,7 +106,7 @@ class CartProductApiControllerTest {
                     .get(CART_PRODUCT_API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .body("message", equalTo( "패스워드가 일치하지 않습니다."));
+                    .body("message", equalTo("패스워드가 일치하지 않습니다."));
         }
     }
 
@@ -116,7 +116,7 @@ class CartProductApiControllerTest {
         saveProductAndMember(MEMBER_ID, PRODUCT_ID);
         cartProductDao.save(MEMBER_ID, PRODUCT_ID);
 
-       givenLogin()
+        givenLogin()
                 .when()
                 .get(CART_PRODUCT_API_URL)
                 .then().log().all()
@@ -125,7 +125,7 @@ class CartProductApiControllerTest {
 
     @DisplayName("정상적으로 로그인하여, 회원의 장바구니에 CartProduct를 추가한다.")
     @Test
-    void login_and_post_cart_product()  {
+    void login_and_post_cart_product() {
         saveProductAndMember(MEMBER_ID, PRODUCT_ID);
 
         givenLogin()
@@ -150,7 +150,7 @@ class CartProductApiControllerTest {
     }
 
     private void saveProductAndMember(Long memberId, Long productId) {
-        jdbcTemplate.update(MEMBER_INSERT_SQL, memberId,  EMAIL, PASSWORD);
+        jdbcTemplate.update(MEMBER_INSERT_SQL, memberId, EMAIL, PASSWORD);
         jdbcTemplate.update(PRODUCT_INSERT_SQL, productId, "name", 1000, "url");
     }
 

@@ -35,6 +35,7 @@ public class ProductDao {
         return insertActor.executeAndReturnKey(parameterSource).longValue();
     }
 
+    //TODO: Optional로 변경
     public Product findById(Long id) {
         String sql = "select * from product where id = ?";
         try {

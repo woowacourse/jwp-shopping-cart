@@ -52,7 +52,6 @@ class AuthServiceTest {
     }
 
 
-
     @DisplayName("해당하는 email의 회원이 존재하지 않는다면 예외를 반환한다.")
     @Test
     void throw_by_no_email_matching_member() {
@@ -74,7 +73,7 @@ class AuthServiceTest {
         when(memberDao.findByEmail(any()))
                 .thenReturn(member);
         //when && then
-        assertThatThrownBy(() -> authService.findCredential(new AuthRequest("email@naver.com", password +"any")))
+        assertThatThrownBy(() -> authService.findCredential(new AuthRequest("email@naver.com", password + "any")))
                 .isInstanceOf(UnauthorizedException.class)
                 .hasMessageContaining("패스워드가 일치하지 않습니다.");
     }
