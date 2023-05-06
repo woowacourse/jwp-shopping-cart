@@ -26,7 +26,7 @@ public class CartController {
     }
 
     @GetMapping()
-    public ResponseEntity<Object> findAllProductInCart(HttpServletRequest request) {
+    public ResponseEntity<List<ProductDto>> findAllProductInCart(HttpServletRequest request) {
         int memberId = (int) request.getAttribute("memberId");
 
         List<ProductDto> allProduct = cartService.findAllProduct(memberId);
