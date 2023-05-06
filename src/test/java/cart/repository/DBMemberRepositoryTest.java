@@ -69,9 +69,9 @@ class DBMemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("ID로 사용자 정보를 조회한다.")
-    void findById() {
-        Member member = memberRepository.findById(id1);
+    @DisplayName("Email과 Password로 사용자 정보를 조회한다.")
+    void findByEmailAndPassword() {
+        Member member = memberRepository.findByEmailAndPassword("email1", "password1");
         assertAll(
             () -> assertThat(member.getEmail()).isEqualTo("email1"),
             () -> assertThat(member.getPassword()).isEqualTo("password1")

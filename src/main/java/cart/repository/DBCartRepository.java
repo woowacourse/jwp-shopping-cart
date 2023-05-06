@@ -6,11 +6,12 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import cart.entity.Cart;
 import cart.entity.CartRepository;
-import cart.entity.Member;
 
+@Repository
 public class DBCartRepository implements CartRepository {
 
     private final JdbcTemplate jdbcTemplate;

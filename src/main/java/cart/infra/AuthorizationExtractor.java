@@ -11,7 +11,7 @@ public class AuthorizationExtractor {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
-    public AuthInfo extract(HttpServletRequest request) {
+    public static AuthInfo extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
         if (header == null) {

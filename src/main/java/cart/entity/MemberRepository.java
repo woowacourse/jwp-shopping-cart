@@ -5,7 +5,7 @@ import java.util.List;
 public interface MemberRepository {
     Long save(Member member);
 
-    Member findById(Long id);
+    Member findByEmailAndPassword(String email, String password);
 
     List<Member> findAll();
 

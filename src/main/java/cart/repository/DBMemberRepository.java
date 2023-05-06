@@ -35,15 +35,15 @@ public class DBMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member findById(Long id) {
-        String sql = "SELECT email, password FROM member WHERE id = ?";
+    public Member findByEmailAndPassword(String email, String password) {
+        String sql = "SELECT id, email, password FROM member WHERE email= ? AND password = ?";
 
         return jdbcTemplate.queryForObject(sql,
             (resultSet, rowNum) -> Member.of(
-                id,
+                resultSet.getLong("id"),
                 resultSet.getString("email"),
                 resultSet.getString("password")),
-            id);
+            email, password);
     }
 
     @Override
