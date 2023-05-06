@@ -1,5 +1,6 @@
 package cart.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class Cart {
     public Cart(final Integer memberId, final List<Product> products) {
         validate(memberId, products);
         this.memberId = memberId;
-        this.products = products;
+        this.products = new ArrayList<>(products);
     }
 
     private void validate(final Integer memberId, final List<Product> products) {
@@ -23,13 +24,6 @@ public class Cart {
         }
     }
 
-    public Integer getMemberId() {
-        return memberId;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
 
     public void add(final Product product) {
         checkDuplication(product);
@@ -48,5 +42,13 @@ public class Cart {
             return;
         }
         throw new IllegalStateException("장바구니에 없는 상품을 삭제할 수 없습니다.");
+    }
+
+    public Integer getMemberId() {
+        return memberId;
+    }
+
+    public List<Product> getProducts() {
+        return new ArrayList<>(products);
     }
 }
