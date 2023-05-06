@@ -25,8 +25,8 @@ public class CartService {
 
     @Transactional
     public Long save(final Long userId, final Long productId) {
-        userService.checkExistUserId(userId);
-        productService.checkExistProductId(productId);
+        userService.validateExistUserId(userId);
+        productService.validateExistProductId(productId);
 
         return cartDao.insert(userId, productId);
     }

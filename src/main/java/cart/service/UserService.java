@@ -34,7 +34,7 @@ public class UserService {
         return userDao.findAll();
     }
 
-    public void checkExistUserId(final Long id) {
+    public void validateExistUserId(final Long id) {
         if (userDao.findById(id).isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 사용자 id 입니다.");
         }
