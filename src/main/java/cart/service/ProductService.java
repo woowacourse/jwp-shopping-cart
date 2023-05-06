@@ -1,10 +1,10 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.dto.ProductDto;
-import cart.entity.ProductEntity;
 import cart.dto.ProductAddRequest;
+import cart.dto.ProductDto;
 import cart.dto.ProductModifyRequest;
+import cart.entity.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -30,16 +30,16 @@ public class ProductService {
     }
 
     public void update(ProductModifyRequest productModifyRequest, int id) {
-        int updateRowNumber = productDao.update(new ProductEntity(id, productModifyRequest.getName(), productModifyRequest.getImgUrl(), productModifyRequest.getPrice()));
-        if (updateRowNumber == 0) {
-            throw new IllegalArgumentException("해당하는 ID가 없습니다.");
-        }
+        productDao.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 ID가 없습니다."));
+        productDao.update(new ProductEntity(
+                id,
+                productModifyRequest.getName(),
+                productModifyRequest.getImgUrl(),
+                productModifyRequest.getPrice()));
     }
 
     public void delete(int id) {
-        int deleteRowNumber = productDao.delete(id);
-        if (deleteRowNumber == 0) {
-            throw new IllegalArgumentException("해당하는 ID가 없습니다.");
-        }
+        productDao.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 ID가 없습니다."));
+        productDao.delete(id);
     }
 }

@@ -49,16 +49,16 @@ public class ProductDao {
         return jdbcTemplate.query(sql, mapper);
     }
 
-    public int update(ProductEntity productEntity) {
+    public void update(ProductEntity productEntity) {
         String sql = "UPDATE product SET name=:name, imgUrl=:imgUrl, price=:price WHERE id=:id";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(productEntity);
-        return namedParameterJdbcTemplate.update(sql, namedParameters);
+        namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
-    public int delete(int id) {
+    public void delete(int id) {
         String sql = "DELETE FROM product WHERE id=:id";
         MapSqlParameterSource mapSqlParameters = new MapSqlParameterSource()
                 .addValue("id", id);
-        return namedParameterJdbcTemplate.update(sql, mapSqlParameters);
+        namedParameterJdbcTemplate.update(sql, mapSqlParameters);
     }
 }
