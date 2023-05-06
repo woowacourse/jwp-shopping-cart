@@ -3,6 +3,7 @@ package cart.service.product;
 import cart.entity.product.Product;
 import cart.entity.product.ProductDao;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductUpdateService {
@@ -13,6 +14,7 @@ public class ProductUpdateService {
         this.productDao = productDao;
     }
 
+    @Transactional
     public void updateProduct(Product product) {
         productDao.update(product);
     }

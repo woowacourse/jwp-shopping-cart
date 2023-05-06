@@ -5,6 +5,7 @@ import cart.entity.item.CartItemDao;
 import cart.entity.product.Product;
 import cart.entity.product.ProductDao;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ public class CartItemFindService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<Product> findCartItems(final long memberId) {
         final List<CartItem> cartItems = cartItemDao.findByMemberId(memberId);
         return cartItems.stream()
