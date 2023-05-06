@@ -21,7 +21,7 @@ insert into member (email, password)
 values ('hongSile@wooteco.com', 'hongSile');
 
 insert into member (email, password)
-values ('seovalue@wooteco.com', 'soevalue');
+values ('seovalue@wooteco.com', 'seovalue');
 
 -- cart 테스트 데이터
 insert into product_in_cart (member_id, product_id)
