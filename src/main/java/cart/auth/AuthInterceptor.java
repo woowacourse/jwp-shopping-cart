@@ -29,10 +29,4 @@ public class AuthInterceptor implements HandlerInterceptor {
         credentialThreadLocal.set(credential);
         return true;
     }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
-                                Exception ex) {
-        credentialThreadLocal.clear();
-    }
 }
