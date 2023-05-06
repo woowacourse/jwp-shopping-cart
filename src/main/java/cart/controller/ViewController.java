@@ -41,7 +41,7 @@ public class ViewController {
         return "settings";
     }
 
-    @GetMapping("/carts")
+    @GetMapping("/cart")
     public String showProductsInCart() {
         return "cart";
     }
