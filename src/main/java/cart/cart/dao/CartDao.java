@@ -41,6 +41,10 @@ public class CartDao {
         String sql = "INSERT INTO cart (product_id,member_id) VALUES (?,?)";
         jdbcTemplate.update(sql, productId, memberId);
     }
+    public Cart findCartByCartId(Long cartId) {
+        String sql = "SELECT * FROM cart join product on product.id = product_id join member on member.id = member_id where cart.id = ?";
+        return jdbcTemplate.queryForObject(sql,cartRowMapper, cartId);
+    }
 
     public List<Cart> findCartsByMemberId(Long memberId) {
         String sql = "SELECT * FROM cart join product on product.id = product_id join member on member.id = member_id where member.id = ?";
