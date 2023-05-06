@@ -1,4 +1,4 @@
-package cart.common.argumentResolver;
+package cart.common.argumentresolver;
 
 import cart.exception.AuthException;
 import cart.service.member.dto.MemberRequest;

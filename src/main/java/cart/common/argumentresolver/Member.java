@@ -1,4 +1,4 @@
-package cart.common.argumentResolver;
+package cart.common.argumentresolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

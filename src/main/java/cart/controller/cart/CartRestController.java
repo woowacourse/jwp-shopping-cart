@@ -1,6 +1,6 @@
 package cart.controller.cart;
 
-import cart.common.argumentResolver.Member;
+import cart.common.argumentresolver.Member;
 import cart.service.cart.CartService;
 import cart.service.cart.dto.ProductResponse;
 import cart.service.member.dto.MemberRequest;
@@ -22,7 +22,7 @@ public class CartRestController {
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<Object> createCart(@Member MemberRequest memberRequest, @PathVariable Long productId) {
+    public ResponseEntity<Void> createCart(@Member MemberRequest memberRequest, @PathVariable Long productId) {
         Long cartId = cartService.createCartItem(memberRequest.getEmail(), productId);
         return ResponseEntity.created(URI.create("carts/" + cartId)).build();
     }
