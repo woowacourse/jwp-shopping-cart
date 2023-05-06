@@ -1,6 +1,9 @@
 package cart.controller;
 
+import cart.auth.AuthenticationPrincipal;
 import cart.dto.CartItemDto;
+import cart.dto.auth.AuthInfo;
+import cart.exception.AuthorizationException;
 import cart.service.CartService;
 import java.net.URI;
 import java.util.List;
@@ -20,31 +23,37 @@ public class CartApiController {
 
     private final CartService cartService;
 
-    // TODO: 2023/05/06 productId 검증, member 검증, member 조회
     @PostMapping("/{productId}")
-    public ResponseEntity<Void> add(@PathVariable long productId) {
-        long memberId = 1L;
-        long cartId = cartService.add(memberId, productId);
+    public ResponseEntity<Void> add(@PathVariable long productId, @AuthenticationPrincipal AuthInfo authInfo) {
+        validateAuthInfo(authInfo);
+        long cartId = cartService.add(authInfo.getEmail(), productId);
         return ResponseEntity
                 .created(URI.create("/cart/" + cartId))
                 .build();
     }
 
-    // TODO: 2023/05/06 member 검증(권한), cartId 검증
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> delete(@PathVariable long cartId) {
-        cartService.delete(cartId);
-
+    public ResponseEntity<Void> delete(@PathVariable long cartId, @AuthenticationPrincipal AuthInfo authInfo) {
+        validateAuthInfo(authInfo);
+        cartService.delete(authInfo.getEmail(), cartId);
         return ResponseEntity
                 .ok()
                 .build();
     }
 
     @GetMapping("/items")
-    public ResponseEntity<List<CartItemDto>> findAll() {
-        List<CartItemDto> allItems = cartService.findAllByMemberId(1);
+    public ResponseEntity<List<CartItemDto>> findAll(@AuthenticationPrincipal AuthInfo authInfo) {
+        validateAuthInfo(authInfo);
+
+        List<CartItemDto> allItems = cartService.findAllByMemberId(authInfo.getEmail());
         return ResponseEntity
                 .ok()
                 .body(allItems);
+    }
+
+    public void validateAuthInfo(AuthInfo authInfo) {
+        if (authInfo == null) {
+            throw new AuthorizationException("사용자 인증이 필요합니다.");
+        }
     }
 }

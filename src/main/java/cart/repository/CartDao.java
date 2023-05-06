@@ -21,7 +21,7 @@ public class CartDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public long add(long memberId, long productId) {
+    public long add(final long memberId, final long productId) {
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         sqlParameterSource.addValue("member_id", memberId);
         sqlParameterSource.addValue("product_id", productId);
@@ -29,9 +29,9 @@ public class CartDao {
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
-    public void deleteById(long cartId) {
-        String sql = "DELETE FROM cart WHERE id = ?";
-        jdbcTemplate.update(sql, cartId);
+    public void deleteById(final long memberId, final long cartId) {
+        String sql = "DELETE FROM cart WHERE id = ? AND member_id = ?";
+        jdbcTemplate.update(sql, cartId, memberId);
     }
 
     public List<CartItemEntity> findAllByMemberId(final long memberId) {
@@ -50,5 +50,16 @@ public class CartDao {
                 .price(rs.getInt(3))
                 .imageUrl(rs.getString(4))
                 .build();
+    }
+
+    public Boolean existsById(final Long id) {
+        String sql = "SELECT COUNT(*) FROM cart WHERE id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+
+        if (count == null) {
+            return false;
+        }
+
+        return count > 0;
     }
 }

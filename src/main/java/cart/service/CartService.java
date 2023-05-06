@@ -1,29 +1,57 @@
 package cart.service;
 
 import cart.dto.CartItemDto;
+import cart.entity.MemberEntity;
+import cart.exception.CartNotFoundException;
+import cart.exception.ProductNotFoundException;
 import cart.repository.CartDao;
+import cart.repository.MemberDao;
+import cart.repository.ProductDao;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CartService {
 
     private final CartDao cartDao;
+    private final MemberDao memberDao;
+    private final ProductDao productDao;
 
-    public long add(long memberId, long productId) {
-        return cartDao.add(memberId, productId);
+    public long add(final String email, final long productId) {
+        MemberEntity member = memberDao.findIdByEmail(email);
+        validateProductId(productId);
+
+        return cartDao.add(member.getId(), productId);
     }
 
-    public void delete(final long cartId) {
-        cartDao.deleteById(cartId);
+    public void delete(final String email, final long cartId) {
+        MemberEntity member = memberDao.findIdByEmail(email);
+        validateCartId(cartId);
+
+        cartDao.deleteById(member.getId(), cartId);
     }
 
-    public List<CartItemDto> findAllByMemberId(long memberId) {
-        return cartDao.findAllByMemberId(memberId).stream()
+    public List<CartItemDto> findAllByMemberId(final String email) {
+        MemberEntity member = memberDao.findIdByEmail(email);
+        return cartDao.findAllByMemberId(member.getId()).stream()
                 .map(CartItemDto::from)
                 .collect(Collectors.toList());
+    }
+
+    private void validateProductId(final long productId) {
+        if (!productDao.existsById(productId)) {
+            throw new ProductNotFoundException("존재하지 않는 product id 입니다.");
+        }
+    }
+
+    private void validateCartId(final long cartId) {
+        if (!cartDao.existsById(cartId)) {
+            throw new CartNotFoundException("존재하지 않는 cart id 입니다.");
+        }
     }
 }
