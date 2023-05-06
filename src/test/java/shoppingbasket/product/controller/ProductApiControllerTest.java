@@ -89,12 +89,27 @@ public class ProductApiControllerTest {
 
     @Test
     void updateTest() throws Exception {
+        when(productService.updateProduct(any())).thenReturn(new ProductEntity(1, "name", 1000, "image"));
         final String imageUrl = "http://www.test.image.png";
 
         this.mockMvc.perform(put("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"id\": \"1\", \"name\": \"name\", \"image\": \"" + imageUrl + "\", \"price\": \"1000\"}"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateTest_nonExistId_fail() throws Exception {
+        final int nonExistId = Integer.MAX_VALUE;
+        final String imageUrl = "http://www.test.image.png";
+
+        this.mockMvc.perform(put("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{ \"id\": \"" + nonExistId + "\","
+                                + " \"name\": \"name\","
+                                + " \"image\": \"" + imageUrl + "\","
+                                + " \"price\": \"1000\"}"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

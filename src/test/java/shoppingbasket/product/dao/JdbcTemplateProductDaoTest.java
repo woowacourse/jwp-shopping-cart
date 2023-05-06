@@ -76,12 +76,11 @@ class JdbcTemplateProductDaoTest {
         final ProductEntity product = productDao.insert(productEntity);
         final int productId = product.getId();
 
-        final ProductEntity updateProduct = new ProductEntity(productId, "name2", 2000, "image2");
-        final int updatedRowCount = productDao.update(updateProduct);
-        final ProductEntity updatedProduct = productDao.findById(productId);
+        final ProductEntity originalProduct = new ProductEntity(productId, "name2", 2000, "image2");
+        final ProductEntity updatedProduct = productDao.update(originalProduct);
 
         assertSoftly(softly -> {
-            softly.assertThat(updatedRowCount).isEqualTo(1);
+            softly.assertThat(updatedProduct.getId()).isEqualTo(productId);
             softly.assertThat(updatedProduct.getName()).isEqualTo("name2");
             softly.assertThat(updatedProduct.getPrice()).isEqualTo(2000);
             softly.assertThat(updatedProduct.getImage()).isEqualTo("image2");
@@ -93,9 +92,9 @@ class JdbcTemplateProductDaoTest {
         int nonExistId = Integer.MAX_VALUE;
 
         final ProductEntity product = new ProductEntity(nonExistId, "name", 1000, "image");
-        final int updatedRowCount = productDao.update(product);
 
-        assertThat(updatedRowCount).isZero();
+        assertThatThrownBy(() -> productDao.update(product))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
     @Test
