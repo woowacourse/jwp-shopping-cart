@@ -21,10 +21,18 @@ public class MemberDto {
         return new MemberDto(member.getId(), member.getEmail(), member.getPassword());
     }
 
-    public static List<MemberDto> from(final List<Member> memberEntities) {
-        return memberEntities.stream()
+    public static List<MemberDto> from(final List<Member> members) {
+        return members.stream()
                 .map(MemberDto::from)
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public static MemberDto of(final String email, final String password) {
+        return new MemberDto(null, email, password);
+    }
+
+    public static Member toEntity(final MemberDto memberDto){
+        return Member.of(memberDto.getId(), memberDto.getEmail(), memberDto.getPassword());
     }
 
     public Long getId() {

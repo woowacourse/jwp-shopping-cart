@@ -11,4 +11,6 @@ public interface MemberDao {
     long insert(final Member member);
 
     Member selectByEmailAndPassword(final Member member);
+
+    Member selectByEmail(final String email);
 }

@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.auth.AuthenticatedMember;
 import cart.auth.AuthenticationPrincipal;
-import cart.dto.CartItemCreationDto;
 import cart.dto.request.CartItemCreationRequest;
 import cart.dto.response.CartItemResponse;
 import cart.service.CartItemManagementService;
@@ -33,20 +32,20 @@ public class CartItemController {
     public ResponseEntity<Void> postCartItems(@AuthenticationPrincipal AuthenticatedMember authenticatedMember,
                                               @Valid @RequestBody CartItemCreationRequest cartItemCreationRequest) {
         final Long productId = cartItemCreationRequest.getProductId();
-        final long id = cartItemManagementService.save(CartItemCreationDto.of(authenticatedMember.getId(), productId));
+        final long id = cartItemManagementService.save(authenticatedMember.getEmail(), productId);
         return ResponseEntity.created(URI.create("/cart/cart-items/" + id)).build();
     }
 
     @GetMapping
     public ResponseEntity<List<CartItemResponse>> getCartItems(@AuthenticationPrincipal AuthenticatedMember authenticatedMember) {
-        List<CartItemResponse> response = CartItemResponse.from(cartItemManagementService.findAllByMemberId(authenticatedMember.getId()));
+        List<CartItemResponse> response = CartItemResponse.from(cartItemManagementService.findAll(authenticatedMember.getEmail()));
         return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/{cartItemId}")
     public ResponseEntity<Void> deleteCartItems(@AuthenticationPrincipal AuthenticatedMember authenticatedMember,
                                                 @PathVariable Long cartItemId) {
-        cartItemManagementService.deleteById(cartItemId);
+        cartItemManagementService.delete(authenticatedMember.getEmail(), cartItemId);
         return ResponseEntity.noContent().build();
     }
 }

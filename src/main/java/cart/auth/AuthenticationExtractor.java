@@ -1,10 +1,10 @@
 package cart.auth;
 
-import cart.domain.entity.Member;
-import org.springframework.web.context.request.NativeWebRequest;
+import cart.dto.MemberDto;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface AuthenticationExtractor<T> {
-    String AUTHORIZATION = "Authorization";
 
-    Member extract(NativeWebRequest request);
+    MemberDto extract(HttpServletRequest httpServletRequest);
 }

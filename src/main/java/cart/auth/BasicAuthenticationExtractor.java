@@ -1,22 +1,26 @@
 package cart.auth;
 
 
-import cart.domain.entity.Member;
+import cart.dto.MemberDto;
+import cart.exception.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.NativeWebRequest;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
-public class BasicAuthenticationExtractor implements AuthenticationExtractor<Member> {
+public class BasicAuthenticationExtractor implements AuthenticationExtractor<MemberDto> {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
     @Override
-    public Member extract(NativeWebRequest request) {
-        String header = request.getHeader(AUTHORIZATION);
+    public MemberDto extract(HttpServletRequest httpServletRequest) {
+        String header = httpServletRequest.getHeader(AUTHORIZATION);
 
         if (header == null) {
-            return null;
+            throw new AuthenticationException("사용자 인증이 필요합니다.");
         }
 
         if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
@@ -28,10 +32,10 @@ public class BasicAuthenticationExtractor implements AuthenticationExtractor<Mem
             String email = credentials[0];
             String password = credentials[1];
 
-            return Member.of(email, password);
+            return MemberDto.of(email, password);
         }
 
-        return null;
+        throw new AuthenticationException("사용자 인증이 필요합니다.");
     }
 
 }

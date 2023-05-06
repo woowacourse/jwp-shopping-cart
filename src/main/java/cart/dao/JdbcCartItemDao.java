@@ -40,8 +40,8 @@ public class JdbcCartItemDao implements CartItemDao {
     }
 
     @Override
-    public int deleteById(final long id) {
-        final String sql = "DELETE FROM cart_item WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+    public int deleteByIdAndMemberId(final long id, final long memberId) {
+        final String sql = "DELETE FROM cart_item WHERE id = ? AND member_id = ?";
+        return jdbcTemplate.update(sql, id, memberId);
     }
 }

@@ -1,29 +1,22 @@
 package cart.auth;
 
-import cart.domain.entity.Member;
+import cart.dto.MemberDto;
 
 public class AuthenticatedMember {
-
-    private final long id;
     private final String email;
     private final String password;
 
-    public AuthenticatedMember(final long id, final String email, final String password) {
-        this.id = id;
+    private AuthenticatedMember(final String email, final String password) {
         this.email = email;
         this.password = password;
     }
 
-    public static AuthenticatedMember from(final Member member) {
-        return new AuthenticatedMember(member.getId(), member.getEmail(), member.getPassword());
+    public static AuthenticatedMember from(final MemberDto memberDto) {
+        return new AuthenticatedMember(memberDto.getEmail(), memberDto.getPassword());
     }
 
-    public static AuthenticatedMember of(final long id, final String email, final String password) {
-        return new AuthenticatedMember(id, email, password);
-    }
-
-    public long getId() {
-        return id;
+    public static AuthenticatedMember of(final String email, final String password) {
+        return new AuthenticatedMember(email, password);
     }
 
     public String getEmail() {

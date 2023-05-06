@@ -10,6 +10,6 @@ public interface CartItemDao {
 
     long insert(final CartItem cartItem);
 
-    int deleteById(final long id);
+    int deleteByIdAndMemberId(final long id, final long memberId);
 
 }
