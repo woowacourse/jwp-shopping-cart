@@ -17,7 +17,7 @@ public class AuthenticationService {
 
     public void checkAuthenticatedMember(final MemberDto memberDto) {
         Member member = memberDao.selectByEmailAndPassword(MemberDto.toEntity(memberDto));
-        if(member == null){
+        if (member == null) {
             throw new AuthenticationException("사용자 인증이 필요합니다.");
         }
     }

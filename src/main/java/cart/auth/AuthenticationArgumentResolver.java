@@ -1,6 +1,5 @@
 package cart.auth;
 
-import cart.domain.entity.Member;
 import cart.dto.MemberDto;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -10,8 +9,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
-
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {

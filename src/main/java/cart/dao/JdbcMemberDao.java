@@ -49,7 +49,7 @@ public class JdbcMemberDao implements MemberDao {
     public Member selectByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, memberEntityRowMapper,email);
+            return jdbcTemplate.queryForObject(sql, memberEntityRowMapper, email);
         } catch (EmptyResultDataAccessException exception) {
             return null;
         }

@@ -31,7 +31,7 @@ public class MemberDto {
         return new MemberDto(null, email, password);
     }
 
-    public static Member toEntity(final MemberDto memberDto){
+    public static Member toEntity(final MemberDto memberDto) {
         return Member.of(memberDto.getId(), memberDto.getEmail(), memberDto.getPassword());
     }
 

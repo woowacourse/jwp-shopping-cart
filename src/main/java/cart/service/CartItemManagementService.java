@@ -41,7 +41,7 @@ public class CartItemManagementService {
 
     private long findMemberId(final String memberEmail) {
         Member member = memberDao.selectByEmail(memberEmail);
-        if(member == null){
+        if (member == null) {
             throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
         }
         return member.getId();
