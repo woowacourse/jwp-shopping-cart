@@ -56,8 +56,8 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public int update(final ProductEntity productEntity) {
-        final String sql = "UPDATE product SET name = ?, image_url = ?, price = ?";
-        return jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImageUrl(), productEntity.getPrice());
+        final String sql = "UPDATE product SET name = ?, image_url = ?, price = ? WHERE product_id = ?";
+        return jdbcTemplate.update(sql, productEntity.getId(), productEntity.getName(), productEntity.getImageUrl(), productEntity.getPrice());
     }
 
     @Override
