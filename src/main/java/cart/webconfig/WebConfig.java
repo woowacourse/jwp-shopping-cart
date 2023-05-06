@@ -1,21 +1,21 @@
 package cart.webconfig;
 
+import java.util.List;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final LoginInterceptor loginInterceptor;
+    private final LoginArgumentResolver loginArgumentResolver;
 
-    public WebConfig(LoginInterceptor loginInterceptor) {
-        this.loginInterceptor = loginInterceptor;
+    public WebConfig(LoginArgumentResolver loginArgumentResolver) {
+        this.loginArgumentResolver = loginArgumentResolver;
     }
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/carts/**");
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(loginArgumentResolver);
     }
 }

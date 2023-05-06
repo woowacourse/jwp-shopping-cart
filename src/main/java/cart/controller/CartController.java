@@ -4,8 +4,8 @@ import cart.dto.CartProductAddRequest;
 import cart.dto.CartProductRemoveRequest;
 import cart.dto.ProductDto;
 import cart.service.CartService;
+import cart.webconfig.AuthMemberId;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,27 +26,21 @@ public class CartController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<ProductDto>> findAllProductInCart(HttpServletRequest request) {
-        int memberId = (int) request.getAttribute("memberId");
-
+    public ResponseEntity<List<ProductDto>> findAllProductInCart(@AuthMemberId int memberId) {
         List<ProductDto> allProduct = cartService.findAllProduct(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(allProduct);
     }
 
     @PostMapping()
-    public ResponseEntity<Object> addProductToCart(HttpServletRequest request,
+    public ResponseEntity<Object> addProductToCart(@AuthMemberId int memberId,
                                                    @RequestBody CartProductAddRequest cartProductAddRequest) {
-        int memberId = (int) request.getAttribute("memberId");
-
         cartService.addProduct(memberId, cartProductAddRequest.getProductId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping()
-    public ResponseEntity<Object> removeProductFromCart(HttpServletRequest request,
+    public ResponseEntity<Object> removeProductFromCart(@AuthMemberId int memberId,
                                                         @RequestBody CartProductRemoveRequest cartProductRemoveRequest) {
-        int memberId = (int) request.getAttribute("memberId");
-
         cartService.deleteProduct(memberId, cartProductRemoveRequest.getProductId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
