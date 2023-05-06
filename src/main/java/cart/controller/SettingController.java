@@ -18,7 +18,7 @@ public class SettingController {
 
     @GetMapping("/settings")
     public String getSettingPage(final Model model) {
-        List<MemberResponse> findAllMember = memberService.findAllMemberId();
+        List<MemberResponse> findAllMember = memberService.findAll();
         model.addAttribute("members", findAllMember);
         return "settings";
     }

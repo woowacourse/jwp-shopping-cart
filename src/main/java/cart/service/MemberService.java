@@ -16,7 +16,7 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public List<MemberResponse> findAllMemberId() {
+    public List<MemberResponse> findAll() {
         List<MemberEntity> findMembers = memberDao.findAll();
 
         return findMembers.stream()

@@ -32,7 +32,7 @@ class SettingControllerTest {
         final MemberResponse 로이 = new MemberResponse(2, "로이", "1234");
         final MemberResponse 제이미 = new MemberResponse(3, "제이미", "1234");
         final List<MemberResponse> list = List.of(우가, 로이, 제이미);
-        given(memberService.findAllMemberId()).willReturn(list);
+        given(memberService.findAll()).willReturn(list);
 
         mockMvc.perform(get("/settings"))
                 .andExpect(status().isOk())
