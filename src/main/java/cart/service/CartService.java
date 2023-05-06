@@ -3,7 +3,6 @@ package cart.service;
 import cart.auth.MemberInfo;
 import cart.domain.Cart;
 import cart.domain.Product;
-import cart.dto.request.ProductRequestDto;
 import cart.dto.response.ProductDto;
 import cart.excpetion.CartException;
 import cart.repository.CartRepository;
@@ -27,8 +26,8 @@ public class CartService {
         this.productRepository = productRepository;
     }
 
-    public void addProduct(final MemberInfo memberInfo, final ProductRequestDto productRequestDto) {
-        final Optional<Product> product = productRepository.findBy(productRequestDto.getProductId());
+    public void addProduct(final MemberInfo memberInfo, final int productId) {
+        final Optional<Product> product = productRepository.findBy(productId);
         if (product.isPresent()) {
             add(memberInfo, product.get());
             return;

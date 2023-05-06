@@ -31,7 +31,7 @@ class CartControllerTest {
         //given,when,then
         RestAssured
                 .given().log().all()
-                .when().post("/cart")
+                .when().post("/cart/1")
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
@@ -43,20 +43,20 @@ class CartControllerTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic("notExisingUserEmail", "None")
-                .when().post("/cart")
+                .when().post("/cart/1")
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
-    @DisplayName("로그인 정보가 유효하지만 body에 값이 없다면 예외가 발생한다")
+    @DisplayName("추가 요청에서 상품 ID를 숫자로 입력하지 않으면 예외가 발생한다")
     @Test
-    void addProduct_invalid_productInfoNotExist() {
+    void addProduct_invalid_notInteger() {
         //given,when,then
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EXITING_USER_EMAIL, USER_PASSWORD)
                 .contentType(ContentType.JSON)
-                .when().post("/cart")
+                .when().post("/cart/hello")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -64,16 +64,11 @@ class CartControllerTest {
     @DisplayName("로그인 정보가 유효하다면 상품 추가 요청을 완료한다")
     @Test
     void addProduct_valid() {
-        //given
-        final ProductRequestDto productRequestDto = new ProductRequestDto(1);
-
-        //when,then
+        //given, when,then
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EXITING_USER_EMAIL, USER_PASSWORD)
-                .contentType(ContentType.JSON)
-                .body(productRequestDto)
-                .when().post("/cart")
+                .when().post("/cart/1")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -81,10 +76,7 @@ class CartControllerTest {
     @DisplayName("로그인 한 유저가 해당 아이템을 가지고 있지 않다면 카트 삭제 요청은 실패한다")
     @Test
     void deleteProduct_invalid_nonexistenceProduct() {
-        //given
-        final ProductRequestDto productRequestDto = new ProductRequestDto(1);
-
-        //when, then
+        //given, when, then
         RestAssured
                 .given()
                 .auth().preemptive().basic(EXITING_USER_EMAIL, USER_PASSWORD)
@@ -102,9 +94,7 @@ class CartControllerTest {
         RestAssured
                 .given()
                 .auth().preemptive().basic(EXITING_USER_EMAIL, USER_PASSWORD)
-                .contentType(ContentType.JSON)
-                .body(productRequestDto)
-                .when().post("/cart")
+                .when().post("/cart/1")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
 

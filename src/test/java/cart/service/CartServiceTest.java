@@ -3,7 +3,6 @@ package cart.service;
 import cart.auth.MemberInfo;
 import cart.domain.Cart;
 import cart.domain.Product;
-import cart.dto.request.ProductRequestDto;
 import cart.dto.response.ProductDto;
 import cart.excpetion.CartException;
 import cart.repository.CartRepository;
@@ -32,7 +31,6 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class CartServiceTest {
 
-    private static final ProductRequestDto PRODUCT_DTO = new ProductRequestDto(1);
     private static final MemberInfo MEMBER_INFO = new MemberInfo(1, "email");
     private Cart defaultCart;
     @InjectMocks
@@ -59,7 +57,7 @@ class CartServiceTest {
         given(productRepository.findBy(anyInt())).willReturn(Optional.of(new Product(1, "a", "", 1)));
 
         //when,then
-        assertThatThrownBy(() -> cartService.addProduct(MEMBER_INFO, PRODUCT_DTO))
+        assertThatThrownBy(() -> cartService.addProduct(MEMBER_INFO, 1))
                 .isInstanceOf(CartException.class);
     }
 
@@ -71,7 +69,7 @@ class CartServiceTest {
                 .willReturn(Optional.empty());
 
         //when,then
-        assertThatThrownBy(() -> cartService.addProduct(MEMBER_INFO, PRODUCT_DTO)).isInstanceOf(CartException.class);
+        assertThatThrownBy(() -> cartService.addProduct(MEMBER_INFO, 1)).isInstanceOf(CartException.class);
     }
 
     @DisplayName("정상 요청 시 카트에 새로운 아이템을 넣는다")
@@ -86,7 +84,7 @@ class CartServiceTest {
         doNothing().when(cartRepository).save(any());
 
         //when
-        cartService.addProduct(MEMBER_INFO, new ProductRequestDto(newItemId));
+        cartService.addProduct(MEMBER_INFO, newItemId);
 
         //then
         verify(cartRepository, times(1)).save(any());

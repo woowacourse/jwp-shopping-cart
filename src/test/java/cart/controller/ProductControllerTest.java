@@ -34,7 +34,8 @@ class ProductControllerTest {
     @DisplayName("정상 요청을 테스트한다")
     void valid_create() {
         //given
-        final ProductCreateDto requestDto = new ProductCreateDto("test", "image.jpg", 100);
+        final ProductCreateDto requestDto = new ProductCreateDto("" +
+                "test", "image.jpg", 100);
 
         //when,then
         RestAssured.given().log().headers()
