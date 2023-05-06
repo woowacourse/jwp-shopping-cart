@@ -1,10 +1,10 @@
-package cart.controller.dto;
+package cart.service.dto;
 
 import cart.exception.ErrorCode;
-
 import java.util.List;
 
 public class ErrorResponse {
+
     private final ErrorCode errorCode;
     private final List<String> errorMessage;
 

@@ -1,13 +1,12 @@
 package cart.controller;
 
-import cart.controller.dto.ProductDto;
 import cart.service.ProductService;
+import cart.service.dto.ProductResponse;
+import java.util.List;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.List;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ShoppingController {
@@ -19,16 +18,20 @@ public class ShoppingController {
     }
 
     @GetMapping("/")
-    public String index(final Model model) {
-        final List<ProductDto> products = productService.getProducts();
-        model.addAttribute("products", products);
-        return "index";
+    public ModelAndView index() {
+        final List<ProductResponse> products = productService.getProducts();
+        final ModelAndView mv = new ModelAndView();
+        mv.setViewName("index");
+        mv.addObject("products", products);
+        return mv;
     }
 
-    @GetMapping("/{id}")
-    public String getProduct(@PathVariable Long id, final Model model) {
-        final ProductDto productDto = productService.getById(id);
-        model.addAttribute("product", productDto);
-        return "product";
+    @GetMapping("/{productId}")
+    public ModelAndView getProduct(@PathVariable Long productId) {
+        final ProductResponse productResponse = productService.getById(productId);
+        final ModelAndView mv = new ModelAndView();
+        mv.setViewName("product");
+        mv.addObject("product", productResponse);
+        return mv;
     }
 }
