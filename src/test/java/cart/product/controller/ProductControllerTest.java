@@ -54,7 +54,7 @@ class ProductControllerTest {
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.body(updatedRequest)
 				.when()
-				.put("/products/1")
+				.put("/products/3")
 				.then()
 				.log().all()
 				.statusCode(HttpStatus.OK.value())

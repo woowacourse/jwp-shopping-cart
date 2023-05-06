@@ -46,7 +46,7 @@ class ProductDaoTest {
 
 		// then
 		assertThat(all).isNotNull();
-		assertThat(all).hasSize(0);
+		assertThat(all).hasSize(3);
 	}
 
 	@Test
@@ -54,7 +54,7 @@ class ProductDaoTest {
 		// when
 		productDao.save(product);
 		List<Product> products = jdbcTemplate.query("SELECT * FROM PRODUCT", productRowMapper);
-		Product savedProduct = products.get(0);
+		Product savedProduct = products.get(3);
 
 		// then
 		assertThat(savedProduct.getName()).isEqualTo(this.product.getName());
