@@ -1,6 +1,6 @@
+DROP TABLE IF EXISTS cart;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS member;
-DROP TABLE IF EXISTS cart;
 
 CREATE TABLE product
 (
@@ -27,5 +27,5 @@ CREATE TABLE cart
     product_id INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (member_id) REFERENCES member(id),
-    FOREIGN KEY (product_id) REFERENCES product(id)
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
