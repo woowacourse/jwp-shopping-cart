@@ -5,6 +5,7 @@ import static cart.infratstructure.AuthenticationAttribute.LOGIN_MEMBER_ID;
 import cart.domain.member.Member;
 import cart.domain.member.MemberService;
 import cart.dto.AuthInfo;
+import cart.exception.AuthenticationException;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

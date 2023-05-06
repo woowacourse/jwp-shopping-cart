@@ -10,7 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import cart.domain.product.ProductService;
-import cart.infratstructure.MemberForbiddenException;
+import cart.exception.MemberForbiddenException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

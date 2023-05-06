@@ -2,7 +2,7 @@ package cart.domain.cartitem;
 
 import cart.domain.product.ProductService;
 import cart.dto.CartItemDto;
-import cart.infratstructure.MemberForbiddenException;
+import cart.exception.MemberForbiddenException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 

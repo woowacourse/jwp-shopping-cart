@@ -1,4 +1,4 @@
-package cart.infratstructure;
+package cart.exception;
 
 import cart.dto.ErrorDto;
 import java.util.Arrays;
