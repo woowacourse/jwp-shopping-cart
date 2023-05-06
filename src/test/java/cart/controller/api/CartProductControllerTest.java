@@ -1,19 +1,11 @@
 package cart.controller.api;
 
-import cart.dao.cart.CartDao;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 import static cart.DummyData.INITIAL_MEMBER_ONE;
 import static cart.DummyData.INITIAL_PRODUCT_ONE;
@@ -21,28 +13,11 @@ import static cart.DummyData.INITIAL_PRODUCT_TWO;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestDatabase
-@Sql("/reset-cart_product-data.sql")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-class CartProductControllerTest {
+class CartProductControllerTest extends ApiControllerTest {
 
     private static final String path = "/cart/products";
-
-    @Autowired
-    CartDao cartDao;
-
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
-    @LocalServerPort
-    int port;
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
 
     @Test
     void 유저가_상품을_담으면_상태코드_201을_반환하는지_확인한다() {

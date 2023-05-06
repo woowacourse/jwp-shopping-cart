@@ -8,23 +8,13 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static cart.DummyData.DUMMY_PRODUCT_ONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-class ProductCreationRequestTest {
-
-    private final String dummyName = DUMMY_PRODUCT_ONE.getName();
-    private final String dummyImageUrl = DUMMY_PRODUCT_ONE.getImageUrl();
-    private final Integer dummyPrice = DUMMY_PRODUCT_ONE.getPrice();
-    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private final Validator validator = factory.getValidator();
+class ProductCreationRequestTest extends ValidationTest {
 
     @Test
     void 제대로_된_데이터_형식이_들어오면_성공한다() {

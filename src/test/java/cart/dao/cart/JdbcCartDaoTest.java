@@ -1,31 +1,18 @@
 package cart.dao.cart;
 
+import cart.dao.DaoTest;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@Import(JdbcCartDao.class)
-@Sql("/reset-cart_product-data.sql")
-@JdbcTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-class JdbcCartDaoTest {
-
-    @Autowired
-    JdbcCartDao cartDao;
-
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+class JdbcCartDaoTest extends DaoTest {
 
     @Test
     void 장바구니_등록이_되는지_확인한다() {

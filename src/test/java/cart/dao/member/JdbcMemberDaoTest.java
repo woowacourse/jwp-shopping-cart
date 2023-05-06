@@ -1,15 +1,11 @@
 package cart.dao.member;
 
+import cart.dao.DaoTest;
 import cart.domain.member.Member;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
@@ -18,18 +14,9 @@ import static cart.DummyData.INITIAL_MEMBER_ONE;
 import static cart.DummyData.INITIAL_MEMBER_TWO;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@Import(JdbcMemberDao.class)
-@Sql("/reset-member-data.sql")
-@JdbcTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-class JdbcMemberDaoTest {
-
-    @Autowired
-    JdbcMemberDao memberDao;
-
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+class JdbcMemberDaoTest extends DaoTest {
 
     @Test
     void 멤버_데이터를_추가할_수_있는지_확인한다() {
