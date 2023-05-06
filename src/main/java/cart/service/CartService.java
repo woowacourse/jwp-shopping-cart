@@ -4,7 +4,6 @@ import cart.controller.exception.CartException;
 import cart.dao.CartDao;
 import cart.domain.Cart;
 import cart.domain.Member;
-import cart.domain.Product;
 import cart.dto.MemberDto;
 import cart.dto.response.CartResponse;
 import java.util.ArrayList;
@@ -32,28 +31,23 @@ public class CartService {
     @Transactional
     public int insert(final Long productId, final MemberDto memberDto) {
         final Member member = memberService.find(memberDto);
-        final Optional<Cart> cart = cartDao.find(productId, member.getId());
-        if (cart.isPresent()) {
-            throw new CartException("이미 장바구니에 존재하는 제품입니다.");
-        }
+        cartDao.find(productId, member.getId())
+                .orElseThrow(() -> new CartException("이미 장바구니에 존재하는 제품입니다."));
         return cartDao.insert(productId, member.getId());
     }
 
     @Transactional
     public int delete(final Long productId, final MemberDto memberDto) {
         final Member member = memberService.find(memberDto);
-        final Optional<Cart> cart = cartDao.find(productId, member.getId());
-        if (cart.isEmpty()) {
-            throw new CartException("존재하지 않는 제품입니다.");
-        }
-        return cartDao.delete(cart.get());
+        final Cart cart = cartDao.find(productId, member.getId())
+                .orElseThrow(() -> new CartException("존재하지 않는 제품입니다."));
+        return cartDao.delete(cart);
     }
 
     @Transactional(readOnly = true)
     public List<CartResponse> find(final MemberDto memberDto) {
         final Member member = memberService.find(memberDto);
-        final Long memberId = member.getId();
-        final Optional<List<Cart>> cartsOptional = cartDao.findAllByMemberId(memberId);
+        final Optional<List<Cart>> cartsOptional = cartDao.findAllByMemberId(member.getId());
         if (cartsOptional.isEmpty()) {
             return new ArrayList<>();
         }

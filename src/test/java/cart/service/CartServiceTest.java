@@ -44,12 +44,12 @@ class CartServiceTest {
     void 장바구니를_추가할_수_있다() {
         // given
         Mockito.when(cartDao.find(Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.empty());
+                .thenReturn(Optional.ofNullable(CART_FIXTURE));
         Mockito.when(cartDao.insert(Mockito.any(), Mockito.any()))
                 .thenReturn(1);
 
         // when
-        final int affectedRows = cartService.insert(1L, MEMBER_DTO_FIXTURE);
+        final int affectedRows = cartService.insert(2L, MEMBER_DTO_FIXTURE);
 
         // then
         assertThat(affectedRows).isOne();
@@ -59,7 +59,7 @@ class CartServiceTest {
     void 장바구니_물품은_중복될_수_없다() {
         // given
         Mockito.when(cartDao.find(Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.ofNullable(CART_FIXTURE));
+                .thenReturn(Optional.empty());
 
         // expect
         assertThatThrownBy(() -> cartService.insert(1L, MEMBER_DTO_FIXTURE))

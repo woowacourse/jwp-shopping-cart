@@ -36,10 +36,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public Member find(final MemberDto memberDto) {
-        final Optional<Member> memberOptional = memberDao.findByEmail(memberDto.getEmail());
-        if (memberOptional.isEmpty()) {
-            throw new MemberNotFoundException();
-        }
-        return memberOptional.get();
+        return memberDao.findByEmail(memberDto.getEmail())
+                .orElseThrow(MemberNotFoundException::new);
     }
 }
