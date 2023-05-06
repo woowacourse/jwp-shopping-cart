@@ -80,6 +80,17 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Id로 상품 존재여부를 검증한다")
+    void validateExistProductId() {
+        final long id = productService.save("이오", 1000, null);
+
+        assertAll(
+                () -> assertDoesNotThrow(() -> productService.validateExistProductId(id)),
+                () -> assertThatThrownBy(() -> productService.validateExistProductId(-1L)).isInstanceOf(IllegalArgumentException.class)
+        );
+    }
+
+    @Test
     @DisplayName("상품을 삭제한다")
     void delete() {
         final long id = productService.save("이오", 1000, null);

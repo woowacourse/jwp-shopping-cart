@@ -12,6 +12,8 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JdbcTest
@@ -51,5 +53,16 @@ public class UserServiceTest {
 
         assertThat(actual).extracting("email")
                 .containsExactly("test12@mail.com", "test34@mail.com");
+    }
+
+    @Test
+    @DisplayName("Id로 사용자 존재여부를 검증한다")
+    void validateExistsUserId() {
+        final long id = userService.save("test12@mail.com", "12121212");
+
+        assertAll(
+                () -> assertDoesNotThrow(() -> userService.validateExistUserId(id)),
+                () -> assertThatThrownBy(() -> userService.validateExistUserId(-1L)).isInstanceOf(IllegalArgumentException.class)
+        );
     }
 }

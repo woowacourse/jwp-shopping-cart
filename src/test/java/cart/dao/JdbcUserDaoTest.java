@@ -24,10 +24,29 @@ class JdbcUserDaoTest {
     }
 
     @Test
-    @DisplayName("Product 삽입 테스트")
+    @DisplayName("User 삽입 테스트")
     void insert() {
         final long id = jdbcUserDao.insert(new User("IO@mail.com", "testpassword"));
         assertThat(id).isPositive();
+    }
+
+    @Test
+    @DisplayName("User ID로 조회 테스트")
+    void findById() {
+        final String email1 = "IO@mail.com";
+        final long id1 = jdbcUserDao.insert(new User(email1, "testpassword"));
+        final String email2 = "ASH@mail.com";
+        final long id2 = jdbcUserDao.insert(new User(email2, "testpassword"));
+
+        final Optional<User> user1 = jdbcUserDao.findById(id1);
+        final Optional<User> user2 = jdbcUserDao.findById(id2);
+
+        assertAll(
+                () -> assertThat(user1).isPresent(),
+                () -> assertThat(user1.get().getEmail()).isEqualTo(email1),
+                () -> assertThat(user2).isPresent(),
+                () -> assertThat(user2.get().getEmail()).isEqualTo(email2)
+        );
     }
 
     @Test
