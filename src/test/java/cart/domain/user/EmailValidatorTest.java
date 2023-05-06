@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class EmailValidatorTest {
 
@@ -33,5 +36,15 @@ class EmailValidatorTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이메일 형식이 잘못되었습니다." + lineSeparator()
                         + "입력된 이메일: " + wrongEmail);
+    }
+
+    @DisplayName("값이 비어있으면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {" ", "  "})
+    @NullAndEmptySource
+    void shouldThrow(String inputEmail) {
+        assertThatThrownBy(() -> EmailValidator.validate(inputEmail))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이메일 입력이 비어있습니다.");
     }
 }
