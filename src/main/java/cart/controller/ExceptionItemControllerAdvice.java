@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.dto.ExceptionResponse;
+import cart.controller.dto.response.ExceptionResponse;
 import cart.exception.NotFoundResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package cart.controller.auth.dto;
+package cart.controller.dto.auth;
 
 public class AuthInfo {
     private String email;

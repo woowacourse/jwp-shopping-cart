@@ -1,4 +1,4 @@
-package cart.controller.auth.interceptor;
+package cart.auth.interceptor;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 

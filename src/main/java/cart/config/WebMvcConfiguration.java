@@ -1,7 +1,7 @@
-package cart.controller.config;
+package cart.config;
 
-import cart.controller.auth.interceptor.LoginInterceptor;
-import cart.controller.auth.resolver.BasicAuthenticationPrincipalArgumentResolver;
+import cart.auth.interceptor.LoginInterceptor;
+import cart.auth.resolver.BasicAuthenticationPrincipalArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

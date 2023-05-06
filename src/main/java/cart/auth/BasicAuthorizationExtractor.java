@@ -1,6 +1,6 @@
-package cart.controller.auth;
+package cart.auth;
 
-import cart.controller.auth.dto.AuthInfo;
+import cart.controller.dto.auth.AuthInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.servlet.http.HttpServletRequest;

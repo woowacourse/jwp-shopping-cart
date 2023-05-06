@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.controller.dto.UserRequest;
-import cart.controller.dto.UserResponse;
+import cart.controller.dto.request.UserRequest;
+import cart.controller.dto.response.UserResponse;
 import cart.dao.UserDao;
 import cart.domain.User;
 import cart.exception.NotFoundResultException;

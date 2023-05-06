@@ -1,9 +1,9 @@
 package cart.controller;
 
-import cart.controller.auth.dto.AuthInfo;
-import cart.controller.auth.resolver.BasicAuthenticationPrincipal;
-import cart.controller.dto.CartRequest;
-import cart.controller.dto.CartResponse;
+import cart.controller.dto.auth.AuthInfo;
+import cart.auth.resolver.BasicAuthenticationPrincipal;
+import cart.controller.dto.request.CartRequest;
+import cart.controller.dto.response.CartResponse;
 import cart.service.CartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

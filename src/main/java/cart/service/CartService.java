@@ -1,8 +1,8 @@
 package cart.service;
 
-import cart.controller.auth.dto.AuthInfo;
-import cart.controller.dto.CartRequest;
-import cart.controller.dto.CartResponse;
+import cart.controller.dto.auth.AuthInfo;
+import cart.controller.dto.request.CartRequest;
+import cart.controller.dto.response.CartResponse;
 import cart.dao.CartDao;
 import cart.dao.UserDao;
 import cart.domain.Cart;

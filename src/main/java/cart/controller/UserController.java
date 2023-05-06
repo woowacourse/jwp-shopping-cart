@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.controller.dto.UserRequest;
-import cart.controller.dto.UserResponse;
+import cart.controller.dto.request.UserRequest;
+import cart.controller.dto.response.UserResponse;
 import cart.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.controller.dto.ItemRequest;
-import cart.controller.dto.ItemResponse;
+import cart.controller.dto.request.ItemRequest;
+import cart.controller.dto.response.ItemResponse;
 import cart.dao.ItemDao;
 import cart.domain.ImageUrl;
 import cart.domain.Item;

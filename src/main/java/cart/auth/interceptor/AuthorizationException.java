@@ -1,4 +1,4 @@
-package cart.controller.auth.interceptor;
+package cart.auth.interceptor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
