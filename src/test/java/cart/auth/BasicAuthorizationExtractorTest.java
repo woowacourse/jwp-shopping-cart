@@ -9,6 +9,8 @@ import cart.exception.AuthException;
 import java.util.Base64;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class BasicAuthorizationExtractorTest {
 
@@ -39,16 +41,37 @@ class BasicAuthorizationExtractorTest {
                 .hasMessageContaining("인증 정보가 없습니다.");
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"Bearer ", "BasicGray ", " "})
     @DisplayName("헤더의 key 값이 basic 이외의 값이면 예외가 발생한다.")
-    void extractFailWithWrongHeader() {
+    void extractFailWithWrongHeader(String key) {
         String credential = "gray:hello@hello.com:password";
         String encodedCredential = new String(Base64.getEncoder().encode((credential.getBytes())));
-        String header = "Bearer " + encodedCredential;
+        String header = key + encodedCredential;
 
         assertThatThrownBy(() -> basicAuthorizationParser.extract(header))
                 .isInstanceOf(AuthException.class)
                 .hasMessageContaining("올바르지 않은 헤더입니다.");
     }
 
+    @Test
+    @DisplayName("헤더의 value 값이 null 이면 예외가 발생한다.")
+    void extractFailWithNull() {
+        String header = "Basic ";
+
+        assertThatThrownBy(() -> basicAuthorizationParser.extract(header))
+                .isInstanceOf(AuthException.class)
+                .hasMessageContaining("올바르지 않은 헤더입니다.");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"gray", "gray:hello@hello.com", "hello@hello.com:password"})
+    @DisplayName("헤더의 value 값이 형식에 맞지 않으면 예외가 발생한다.")
+    void extractFailWithWrongValue() {
+        String header = "Basic gray";
+
+        assertThatThrownBy(() -> basicAuthorizationParser.extract(header))
+                .isInstanceOf(AuthException.class)
+                .hasMessageContaining("올바르지 않은 헤더입니다.");
+    }
 }
