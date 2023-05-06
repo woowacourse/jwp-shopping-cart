@@ -10,9 +10,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     private final LoginInterceptor loginInterceptor;
+    private final AuthenticationArgumentResolver argumentResolver;
 
-    public WebMvcConfiguration(LoginInterceptor loginInterceptor) {
+    public WebMvcConfiguration(LoginInterceptor loginInterceptor, AuthenticationArgumentResolver argumentResolver) {
         this.loginInterceptor = loginInterceptor;
+        this.argumentResolver = argumentResolver;
     }
 
     @Override
@@ -23,6 +25,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthenticationArgumentResolver());
+        resolvers.add(argumentResolver);
     }
 }
