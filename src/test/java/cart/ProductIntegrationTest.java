@@ -6,7 +6,9 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
+import cart.dto.request.CreateCartRequest;
 import cart.dto.request.CreateProductRequest;
+import cart.dto.request.DeleteCartRequest;
 import cart.dto.request.UpdateProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -121,12 +123,12 @@ class ProductIntegrationTest {
     @Test
     void 상품을_삭제하면_상품_목록_페이지와_관리자_페이지에서_사라진다() {
         // given
-        final Long insertedId = productDao.insert(new Product("족발", 10_0000, "족발 사진"));
+        final Long productId = productDao.insert(new Product("족발", 10_0000, "족발 사진"));
 
         final Response deleteResponse = given()
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
-                .delete("/products/" + insertedId)
+                .delete("/products/" + productId)
                 .then()
                 .log().all()
                 .extract().response();
@@ -161,13 +163,13 @@ class ProductIntegrationTest {
     @Test
     void 등록한_상품을_수정하면_상품_목록_페이지와_관리자_페이지에서_수정된다() {
         // given
-        final Long insertedId = productDao.insert(new Product("치킨", 10_000, "치킨 사진"));
+        final Long productId = productDao.insert(new Product("치킨", 10_000, "치킨 사진"));
 
         final Response updateResponse = given()
                 .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new UpdateProductRequest("피자", 1_000, "피자 사진"))
                 .when()
-                .put("/products/" + insertedId)
+                .put("/products/" + productId)
                 .then()
                 .log().all()
                 .extract().response();
@@ -206,17 +208,21 @@ class ProductIntegrationTest {
 
         // when
         given()
-                .log().all().header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .log().all()
+                .header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CreateCartRequest(productId))
                 .when()
-                .post("/carts/" + productId)
+                .post("/carts")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
         // then
         final Response cartResponse = given()
-                .log().all().header("Authorization", "Basic " + TOKEN_FIXTURE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .log().all()
+                .header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/carts")
                 .then()
@@ -239,23 +245,30 @@ class ProductIntegrationTest {
 
         // when
         given()
-                .log().all().header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .log().all()
+                .header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .contentType(ContentType.JSON)
+                .body(new CreateCartRequest(productId))
                 .when()
-                .post("/carts/" + productId)
+                .post("/carts")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
         given()
-                .log().all().header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .log().all()
+                .header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .contentType(ContentType.JSON)
+                .body(new DeleteCartRequest(productId))
                 .when()
-                .delete("/carts/" + productId)
+                .delete("/carts")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.ACCEPTED.value());
 
         final Response cartResponse = given()
-                .log().all().header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .log().all()
+                .header("Authorization", "Basic " + TOKEN_FIXTURE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                 .get("/carts")

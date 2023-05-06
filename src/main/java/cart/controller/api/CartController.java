@@ -2,16 +2,19 @@ package cart.controller.api;
 
 import cart.auth.AuthPrincipal;
 import cart.dto.MemberDto;
+import cart.dto.request.CreateCartRequest;
+import cart.dto.request.DeleteCartRequest;
 import cart.dto.response.CartResponse;
 import cart.service.CartService;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,15 +33,15 @@ public class CartController {
         return ResponseEntity.ok(productResponses);
     }
 
-    @PostMapping("/carts/{productId}")
-    public ResponseEntity<Void> addCart(@PathVariable("productId") final Long productId, @AuthPrincipal final MemberDto memberDto) {
-        cartService.insert(productId, memberDto);
+    @PostMapping("/carts")
+    public ResponseEntity<Void> addCart(@AuthPrincipal final MemberDto memberDto, @RequestBody @Valid CreateCartRequest createCartRequest) {
+        cartService.insert(createCartRequest.getProductId(), memberDto);
         return ResponseEntity.created(URI.create("/carts")).build();
     }
 
-    @DeleteMapping("/carts/{productId}")
-    public ResponseEntity<Void> removeCart(@PathVariable("productId") final Long productId, @AuthPrincipal final MemberDto memberDto) {
-        cartService.delete(productId, memberDto);
+    @DeleteMapping("/carts")
+    public ResponseEntity<Void> removeCart(@AuthPrincipal final MemberDto memberDto, @RequestBody @Valid DeleteCartRequest deleteCartRequest) {
+        cartService.delete(deleteCartRequest.getProductId(), memberDto);
         return ResponseEntity.accepted().build();
     }
 }
