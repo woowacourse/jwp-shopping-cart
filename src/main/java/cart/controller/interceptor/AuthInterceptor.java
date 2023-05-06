@@ -1,5 +1,6 @@
-package cart.config;
+package cart.controller.interceptor;
 
+import cart.config.BasicAuthenticationExtractor;
 import cart.dto.MemberAuthDto;
 import cart.service.MemberService;
 import javax.servlet.http.HttpServletRequest;

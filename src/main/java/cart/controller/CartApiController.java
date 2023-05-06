@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.config.MemberId;
+import cart.controller.resolver.MemberId;
 import cart.dto.response.CartProductResponse;
 import cart.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;

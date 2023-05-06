@@ -1,5 +1,6 @@
-package cart.config;
+package cart.controller.resolver;
 
+import cart.config.BasicAuthenticationExtractor;
 import cart.dto.MemberAuthDto;
 import cart.entity.MemberEntity;
 import cart.service.MemberService;
