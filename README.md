@@ -214,7 +214,20 @@ Authorization: Basic ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
 HTTP/1.1 200 OK
 Content-Type: application/json
 
-//TODO Response body example 추가하기
+[
+    {
+        "id": 1,
+        "name": "자전거",
+        "price": 240000,
+        "imageUrl": "data:image/jpeg;base64,/9j/4AAQ"
+    },
+    {
+        "id": 2,
+        "name": "물통",
+        "price": 10000,
+        "imageUrl": "data:image/jpeg;base64,/38/KL9A"
+    }
+]
 ```
 
 ### POST carts/me/{product_id}
@@ -270,4 +283,12 @@ Content-Type: application/json
 
 ### admin.html & admin.js
 - URL: `localhost:8080/admin`
-- Product 조회, 추가, 수정, 삭제가 가능한 Admin 페이지
+- 상품 조회, 추가, 수정, 삭제가 가능한 Admin 페이지
+
+### members.html & members.js
+- URL: `localhost:8080/members`
+- 사용자 목록 조회 및 선택(로그인)이 가능한 페이지
+
+### cart.html & cart.js
+- URL: `localhost:8080/carts/me`
+- 장바구니에 담긴 상품을 조회할 수 있는 페이지
