@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
 
+    private static final int MINAFFECTEDROW = 1;
+
     private final ProductDao productDao;
     private final UserDao userDao;
     private final CartDao cartDao;
@@ -57,7 +59,10 @@ public class CartService {
         return cartDao.insert(new CartEntity(userId, productId));
     }
 
-    public int deleteCartItem(final int userId, final int productId) {
-        return cartDao.delete(userId, productId);
+    public void deleteCartItem(final int userId, final int productId) {
+        int affectedRow = cartDao.delete(userId, productId);
+        if (affectedRow < MINAFFECTEDROW) {
+            throw new IllegalArgumentException("장바구니에 존재하지 않는 상품입니다.");
+        }
     }
 }
