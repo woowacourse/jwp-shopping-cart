@@ -37,9 +37,11 @@ public class CartService {
     @Transactional
     public int delete(final Long productId, final MemberDto memberDto) {
         final Member member = memberService.find(memberDto);
-        final Cart cart = cartDao.find(productId, member.getId())
-                .orElseThrow(() -> new CartException("존재하지 않는 제품입니다."));
-        return cartDao.delete(cart);
+        final int deletedRow = cartDao.delete(productId, member.getId());
+        if (deletedRow == 0) {
+            throw new CartException("존재하지 않는 제품입니다.");
+        }
+        return deletedRow;
     }
 
     @Transactional(readOnly = true)

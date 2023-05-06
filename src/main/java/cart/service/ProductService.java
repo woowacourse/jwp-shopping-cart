@@ -60,10 +60,10 @@ public class ProductService {
 
     @Transactional
     public int delete(final Long id) {
-        final int affectedRow = productDao.delete(id);
-        if (affectedRow == 0) {
+        final int deletedRow = productDao.delete(id);
+        if (deletedRow == 0) {
             throw new ProductNotFoundException();
         }
-        return affectedRow;
+        return deletedRow;
     }
 }

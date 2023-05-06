@@ -71,7 +71,7 @@ class CartDaoTest {
         final Long memberId = simpleMemberInsert.executeAndReturnKey(MEMBER_FIXTURE).longValue();
 
         // when
-        cartDao.delete(new Cart(1L, productId, memberId));
+        cartDao.delete(productId, memberId);
 
         // then
         assertThat(cartDao.findAllByMemberId(memberId)).isEqualTo(Optional.ofNullable(List.of()));

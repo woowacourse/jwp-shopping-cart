@@ -70,9 +70,7 @@ class CartServiceTest {
     @Test
     void 장바구니를_삭제할_수_있다() {
         // given
-        Mockito.when(cartDao.find(Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.ofNullable(CART_FIXTURE));
-        Mockito.when(cartDao.delete(Mockito.any()))
+        Mockito.when(cartDao.delete(Mockito.anyLong(), Mockito.anyLong()))
                 .thenReturn(1);
 
         // when
@@ -84,10 +82,6 @@ class CartServiceTest {
 
     @Test
     void 존재하지_않는_물품_삭제시_예외가_발생한다() {
-        // given
-        Mockito.when(cartDao.find(Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.empty());
-
         // expect
         assertThatThrownBy(() -> cartService.delete(1L, MEMBER_DTO_FIXTURE))
                 .isInstanceOf(CartException.class)
