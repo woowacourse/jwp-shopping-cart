@@ -34,5 +34,4 @@ public class CaesarCipherTest {
                 .decrypt(CaesarCipher.encrypt(randomPassword)))
                 .isEqualTo(randomPassword);
     }
-
 }
