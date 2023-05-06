@@ -1,5 +1,8 @@
 package cart.domain.cartitem;
 
+import static cart.fixture.CartItemFixture.CART_ITEM_MEMBER1_PRODUCT1;
+import static cart.fixture.MemberFixture.MEMBER1;
+import static cart.fixture.ProductFixture.PRODUCT1;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -16,11 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class CartItemServiceTest {
-
-    private static final Long FIXTURE_MEMBER_ID = 1L;
-    private static final Long FIXTURE_PRODUCT_ID = 1L;
-    private static final Long FIXTURE_CART_ITEM_ID = 1L;
-    private static final CartItem FIXTURE_INSERT_CART_ITEM = new CartItem(FIXTURE_MEMBER_ID, FIXTURE_PRODUCT_ID);
 
     @Mock
     private CartItemDao cartItemDao;
@@ -39,21 +37,21 @@ class CartItemServiceTest {
     void add() {
         // given
         // when
-        cartItemService.add(FIXTURE_INSERT_CART_ITEM);
+        cartItemService.add(CART_ITEM_MEMBER1_PRODUCT1);
 
         // then
-        verify(cartItemDao).insert(FIXTURE_INSERT_CART_ITEM);
+        verify(cartItemDao).insert(CART_ITEM_MEMBER1_PRODUCT1);
     }
 
     @DisplayName("장바구니 아이템 등록 시 중복 정보가 있으면 예외를 던진다")
     @Test
     void addDuplicatedFail() {
         // given
-        when(cartItemDao.isDuplicated(FIXTURE_MEMBER_ID, FIXTURE_PRODUCT_ID)).thenReturn(true);
+        when(cartItemDao.isDuplicated(MEMBER1.getId(), PRODUCT1.getId())).thenReturn(true);
 
         // when
         // then
-        assertThatThrownBy(() -> cartItemService.add(FIXTURE_INSERT_CART_ITEM))
+        assertThatThrownBy(() -> cartItemService.add(CART_ITEM_MEMBER1_PRODUCT1))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -63,11 +61,11 @@ class CartItemServiceTest {
         // given
         doThrow(IllegalArgumentException.class)
                 .when(productService)
-                .validateIdExist(FIXTURE_PRODUCT_ID);
+                .validateIdExist(PRODUCT1.getId());
 
         // when
         // then
-        assertThatThrownBy(() -> cartItemService.add(FIXTURE_INSERT_CART_ITEM))
+        assertThatThrownBy(() -> cartItemService.add(CART_ITEM_MEMBER1_PRODUCT1))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -75,24 +73,25 @@ class CartItemServiceTest {
     @Test
     void delete() {
         // given
-        when(cartItemDao.findById(FIXTURE_CART_ITEM_ID)).thenReturn(Optional.of(FIXTURE_INSERT_CART_ITEM));
+        when(cartItemDao.findById(CART_ITEM_MEMBER1_PRODUCT1.getId())).thenReturn(
+                Optional.of(CART_ITEM_MEMBER1_PRODUCT1));
 
         // when
-        cartItemService.deleteById(FIXTURE_MEMBER_ID, FIXTURE_CART_ITEM_ID);
+        cartItemService.deleteById(MEMBER1.getId(), CART_ITEM_MEMBER1_PRODUCT1.getId());
 
         // then
-        verify(cartItemDao).deleteById(FIXTURE_CART_ITEM_ID);
+        verify(cartItemDao).deleteById(CART_ITEM_MEMBER1_PRODUCT1.getId());
     }
 
     @DisplayName("장바구니 아이템 삭제 시 DB에 해당하는 아이디가 없으면 예외를 던진다")
     @Test
     void deleteNotExistingIdFail() {
         // given
-        when(cartItemDao.findById(FIXTURE_CART_ITEM_ID)).thenReturn(Optional.empty());
+        when(cartItemDao.findById(CART_ITEM_MEMBER1_PRODUCT1.getId())).thenReturn(Optional.empty());
 
         // when
         // then
-        assertThatThrownBy(() -> cartItemService.deleteById(FIXTURE_MEMBER_ID, FIXTURE_CART_ITEM_ID))
+        assertThatThrownBy(() -> cartItemService.deleteById(MEMBER1.getId(), CART_ITEM_MEMBER1_PRODUCT1.getId()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

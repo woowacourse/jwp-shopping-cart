@@ -1,5 +1,9 @@
 package cart.domain.cartitem;
 
+import static cart.fixture.CartItemFixture.CART_ITEM_MEMBER1_PRODUCT1;
+import static cart.fixture.MemberFixture.MEMBER1;
+import static cart.fixture.ProductFixture.PRODUCT1;
+import static cart.fixture.ProductFixture.PRODUCT2;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dto.CartItemDto;
@@ -15,11 +19,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class H2CartItemDaoTest {
 
-    private static final Long FIXTURE_MEMBER_ID_1 = 1L;
-    private static final Long FIXTURE_PRODUCT_ID_1 = 1L;
-    private static final CartItem FIXTURE_INSERTED_CART_ITEM = new CartItem(FIXTURE_MEMBER_ID_1, FIXTURE_PRODUCT_ID_1);
-    private static final Long FIXTURE_PRODUCT_ID_2 = 2L;
-
     private final CartItemDao cartItemDao;
 
     @Autowired
@@ -32,7 +31,7 @@ class H2CartItemDaoTest {
     @Test
     void insert() {
         // given
-        CartItem inserted = cartItemDao.insert(FIXTURE_INSERTED_CART_ITEM);
+        CartItem inserted = cartItemDao.insert(CART_ITEM_MEMBER1_PRODUCT1);
 
         // when
         // then
@@ -44,16 +43,17 @@ class H2CartItemDaoTest {
     @Test
     void findByMemberId() {
         // given
-        CartItem inserted1 = cartItemDao.insert(FIXTURE_INSERTED_CART_ITEM);
-        CartItem inserted2 = cartItemDao.insert(new CartItem(FIXTURE_MEMBER_ID_1, FIXTURE_PRODUCT_ID_2));
+        CartItem inserted1 = cartItemDao.insert(CART_ITEM_MEMBER1_PRODUCT1);
+        CartItem inserted2 = cartItemDao.insert(new CartItem(MEMBER1.getId(), PRODUCT2.getId()));
 
-        // TODO 초기화 더미 데이터 상수화 시켜서 연동?
         // when
         // then
-        assertThat(cartItemDao.findByMemberId(FIXTURE_MEMBER_ID_1))
+        assertThat(cartItemDao.findByMemberId(MEMBER1.getId()))
                 .containsOnly(
-                        new CartItemDto(inserted1.getId(), "dummy", "https://ifh.cc/g/bQpAgl.jpg", 10000),
-                        new CartItemDto(inserted2.getId(), "dummy2", "https://ifh.cc/g/WldLmN.jpg", 20000)
+                        new CartItemDto(inserted1.getId(), PRODUCT1.getName(), PRODUCT1.getImageUrl(),
+                                PRODUCT1.getPrice()),
+                        new CartItemDto(inserted2.getId(), PRODUCT2.getName(), PRODUCT2.getImageUrl(),
+                                PRODUCT2.getPrice())
                 );
     }
 
@@ -61,7 +61,7 @@ class H2CartItemDaoTest {
     @Test
     void deleteById() {
         // given
-        CartItem inserted = cartItemDao.insert(FIXTURE_INSERTED_CART_ITEM);
+        CartItem inserted = cartItemDao.insert(CART_ITEM_MEMBER1_PRODUCT1);
 
         // when
         cartItemDao.deleteById(inserted.getId());

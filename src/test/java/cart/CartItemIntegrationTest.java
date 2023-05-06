@@ -1,5 +1,8 @@
 package cart;
 
+import static cart.fixture.MemberFixture.MEMBER1;
+import static cart.fixture.MemberFixture.MEMBER2;
+
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,10 +22,6 @@ import org.springframework.test.context.jdbc.SqlGroup;
 })
 public class CartItemIntegrationTest {
 
-    private static final String FIXTURE_MEMBER_1_EMAIL = "dummy@gmail.com";
-    private static final String FIXTURE_MEMBER_1_PASSWORD = "abcd1234";
-    private static final String FIXTURE_MEMBER_2_EMAIL = "dummy2@gmail.com";
-    private static final String FIXTURE_MEMBER_2_PASSWORD = "abcd5678";
     private static final String FIXTURE_UNAUTHORIZED_EMAIL = "unauthorized@gmail.com";
 
     @LocalServerPort
@@ -41,7 +40,7 @@ public class CartItemIntegrationTest {
     void get() {
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic(FIXTURE_MEMBER_1_EMAIL, FIXTURE_MEMBER_1_PASSWORD)
+                .auth().preemptive().basic(MEMBER1.getEmail(), MEMBER1.getPassword())
                 .when().get("/cartitems")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -63,7 +62,7 @@ public class CartItemIntegrationTest {
     void create() {
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic(FIXTURE_MEMBER_1_EMAIL, FIXTURE_MEMBER_1_PASSWORD)
+                .auth().preemptive().basic(MEMBER1.getEmail(), MEMBER1.getPassword())
                 .when().post("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -76,7 +75,7 @@ public class CartItemIntegrationTest {
 
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic(FIXTURE_MEMBER_1_EMAIL, FIXTURE_MEMBER_1_PASSWORD)
+                .auth().preemptive().basic(MEMBER1.getEmail(), MEMBER1.getPassword())
                 .when().post("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -100,7 +99,7 @@ public class CartItemIntegrationTest {
 
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic(FIXTURE_MEMBER_1_EMAIL, FIXTURE_MEMBER_1_PASSWORD)
+                .auth().preemptive().basic(MEMBER1.getEmail(), MEMBER1.getPassword())
                 .when().delete("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
@@ -126,7 +125,7 @@ public class CartItemIntegrationTest {
 
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic(FIXTURE_MEMBER_2_EMAIL, FIXTURE_MEMBER_2_PASSWORD)
+                .auth().preemptive().basic(MEMBER2.getEmail(), MEMBER2.getPassword())
                 .when().delete("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.FORBIDDEN.value());

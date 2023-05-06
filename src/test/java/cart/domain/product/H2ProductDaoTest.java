@@ -1,5 +1,6 @@
 package cart.domain.product;
 
+import static cart.fixture.ProductFixture.PRODUCT1;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
@@ -9,9 +10,15 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@SqlGroup({
+        @Sql("/schema.sql"),
+        @Sql("/data.sql")
+})
 class H2ProductDaoTest {
 
     private final ProductDao productDao;
@@ -38,27 +45,17 @@ class H2ProductDaoTest {
     @Test
     void update() {
         // given
-        Product product = new Product("도이치킨", "image1", 1000);
-        Product inserted = productDao.insert(product);
-
         // when
-        Product updated = new Product(inserted.getId(), "에밀치킨", "image2", 10000);
+        Product updated = new Product(PRODUCT1.getId(), "에밀치킨", "image2", 10000);
         productDao.update(updated);
 
         // then
-        assertThat(productDao.findById(inserted.getId()).get()).isEqualTo(updated);
+        assertThat(productDao.findById(PRODUCT1.getId()).get()).isEqualTo(updated);
     }
 
     @DisplayName("product를 id로 조회한다")
     @Test
     void findById() {
-        // given
-        Product product = new Product("도이치킨", "image1", 1000);
-
-        // when
-        Product inserted = productDao.insert(product);
-
-        // then
-        assertThat(productDao.findById(inserted.getId()).get()).isEqualTo(inserted);
+        assertThat(productDao.findById(PRODUCT1.getId()).get()).isEqualTo(PRODUCT1);
     }
 }
