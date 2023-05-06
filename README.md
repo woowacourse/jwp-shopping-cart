@@ -46,14 +46,28 @@ CREATE TABLE product
 
 **구현 내용**
 > - [x] index.html 반환
->     - [x] 등록된 모든 상품 정보 렌더링
+>     - [x] 등록된 모든 Product 정보 렌더링
 
 ### ✅ GET /admin
 Admin 화면을 렌더링하여 반환합니다.
 
 **구현 내용**
 > - [x] admin.html 반환
->     - [x] 등록된 모든 상품 정보 렌더링
+>     - [x] 등록된 모든 Product 정보 렌더링
+
+### GET /users
+전체 사용자 정보를 확인하고, 특정 사용자의 계정으로 로그인할 수 있는 화면을 반환합니다.
+
+**구현 내용**
+> - [ ] users.html 반환
+>   - [ ] 등록된 모든 User 정보 렌더링
+
+### GET /carts/me
+나의 장바구니를 확인하고, 포함된 상품을 삭제할 수 있는 화면을 반환합니다.
+
+**구현 내용**
+> - [ ] cart.html 반환
+>   - [ ] Cart에 포함된 모든 Product 정보 렌더링
 
 
 ## Product 관련 Admin 기능
@@ -72,8 +86,8 @@ Admin 화면을 렌더링하여 반환합니다.
 **Request example**
 ```json
 POST /products HTTP/1.1
-content-type: application/json; charset=UTF-8
-host: localhost:8080
+Content-type: application/json; charset=UTF-8
+Host: localhost:8080
 
 {
     "name": "자전거",
@@ -88,7 +102,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 ```
 
-### ✅ PUT /products/{id}
+### ✅ PUT /products/{product_id}
 특정 Product를 수정합니다.
 
 **구현 내용**
@@ -101,8 +115,8 @@ Content-Type: application/json
 **Request example**
 ```json
 PUT /products/1 HTTP/1.1
-content-type: application/json; charset=UTF-8
-host: localhost:8080
+Content-type: application/json; charset=UTF-8
+Host: localhost:8080
 
 // 3가지 필드 모두 Required
 {
@@ -118,7 +132,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 ```
 
-### ✅ DELETE /products/{id}
+### ✅ DELETE /products/{product_id}
 특정 Product를 삭제합니다.
 
 **구현 내용**
@@ -127,13 +141,93 @@ Content-Type: application/json
 **Request example**
 ```json
 DELETE /products/1 HTTP/1.1
-content-type: application/json; charset=UTF-8
-host: localhost:8080
+Content-type: application/json; charset=UTF-8
+Host: localhost:8080
 ```
 
 **Response example**
 ```json
 HTTP/1.1 204 No Content
+Content-Type: application/json
+```
+
+
+## User 관련 기능
+
+### POST /users
+회원을 등록합니다.
+
+**구현 내용**
+> - [ ] User 생성
+>   - [ ] User 정보 유효성 검증
+>     - [ ] email: email 형식에 맞아야 한다.
+>     - [ ] password:
+>       - [ ] 10자리 이상
+>       - [ ] 영문자, 숫자, 특수문자를 모두 포함
+>         - [ ] 특수문자는 "!@#$%^&*()"만 가능
+> - [ ] DB에 저장
+
+**Request example**
+```json
+POST /users HTTP/1.1
+Content-type: application/json; charset=UTF-8
+Host: localhost:8080
+        
+{
+    "email": "test@test.test", // Required
+    "password": 1234abcd!@, // Required
+    "name": "김철수", // Optional
+    "phone_number": "01012341234" // Optional
+}
+```
+
+**Response example**
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+## Cart 관련 기능
+
+### POST carts/add/{product_id}
+로그인 된 사용자의 장바구니에 상품을 추가합니다.
+
+**구현 내용**
+> - [ ] 요청 받은 ID에 해당하는 Product를 Cart에 추가
+> - [ ] DB에 저장
+
+**Request example**
+```json
+POST carts/{product_id} HTTP/1.1
+Content-type: application/json; charset=UTF-8
+Host: localhost:8080
+Authorization: Basic ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
+```
+
+**Response example**
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+### DELETE carts/{product_id}
+로그인 된 사용자의 장바구니에서 상품을 삭제합니다.
+
+**구현 사항**
+> - [ ] 요청 받은 ID에 해당하는 Product를 Cart에서 삭제
+> - [ ] DB에 저장
+
+**Request example**
+```json
+DELETE carts/delete/{product_id} HTTP/1.1
+Content-type: application/json; charset=UTF-8
+Host: localhost:8080
+Authorization: Basic ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
+```
+
+**Response example**
+```json
+HTTP/1.1 200 OK
 Content-Type: application/json
 ```
 
