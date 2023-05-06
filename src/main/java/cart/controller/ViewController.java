@@ -21,21 +21,21 @@ public class ViewController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public String showItemList(final Model model) {
         List<ItemResponse> items = itemService.loadAllItem();
         model.addAttribute("products", items);
         return "index";
     }
 
-    @GetMapping("/admin")
+    @GetMapping("admin")
     public String showAdmin(final Model model) {
         List<ItemResponse> items = itemService.loadAllItem();
         model.addAttribute("products", items);
         return "admin";
     }
 
-    @GetMapping("/settings")
+    @GetMapping("settings")
     public String showUserList(final Model model) {
         List<UserResponse> users = userService.loadAllUser();
         model.addAttribute("members", users);
