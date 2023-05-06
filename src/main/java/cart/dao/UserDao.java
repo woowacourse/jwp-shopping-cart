@@ -18,6 +18,7 @@ public class UserDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<User> actorRowMapper = (resultSet, rowNumber) -> new User.Builder()
+            .id(resultSet.getLong("id"))
             .email(resultSet.getString("email"))
             .password(resultSet.getString("password"))
             .build();
@@ -39,9 +40,19 @@ public class UserDao {
         return namedParameterJdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public Optional<User> findBy(final Long userId) {
+    public Optional<User> findById(final Long userId) {
         final String sql = "SELECT id, email, password FROM users WHERE id = :id";
         MapSqlParameterSource param = new MapSqlParameterSource("id", userId);
+        try {
+            return Optional.of(namedParameterJdbcTemplate.queryForObject(sql, param, actorRowMapper));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<User> findByEmail(final String email) {
+        final String sql = "SELECT id, email, password FROM users WHERE email = :email";
+        MapSqlParameterSource param = new MapSqlParameterSource("email", email);
         try {
             return Optional.of(namedParameterJdbcTemplate.queryForObject(sql, param, actorRowMapper));
         } catch (EmptyResultDataAccessException exception) {

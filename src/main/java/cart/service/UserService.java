@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public UserResponse loadUser(final Long userId) {
-        Optional<User> findUser = userDao.findBy(userId);
+        Optional<User> findUser = userDao.findById(userId);
         User user = findUser.orElseThrow(() -> new NotFoundResultException("존재하지 않는 사용자 입니다."));
         return UserResponse.from(user);
     }
@@ -52,7 +52,7 @@ public class UserService {
     }
 
     private void validateExistUser(Long userId) {
-        Optional<User> findUser = userDao.findBy(userId);
+        Optional<User> findUser = userDao.findById(userId);
         if (findUser.isEmpty()) {
             throw new NotFoundResultException("존재하지 않는 사용자 입니다.");
         }
