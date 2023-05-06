@@ -85,9 +85,8 @@ class JdbcTemplateCartDaoTest {
         final CartEntity savedCart = cartDao.insert(1, 1);
         final Integer savedId = savedCart.getId();
 
-        final int deletedRowCount = cartDao.delete(savedId);
+        cartDao.delete(savedId);
 
-        assertThat(deletedRowCount).isOne();
         assertThatThrownBy(() -> cartDao.findById(savedId))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }

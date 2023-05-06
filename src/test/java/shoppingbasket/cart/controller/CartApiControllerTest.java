@@ -18,7 +18,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import shoppingbasket.cart.dao.CartDao;
-import shoppingbasket.cart.dto.CartDeleteResponseDto;
 import shoppingbasket.cart.dto.CartSelectResponseDto;
 import shoppingbasket.cart.entity.CartEntity;
 
@@ -122,16 +121,13 @@ class CartApiControllerTest {
     void deleteTest() {
         final CartEntity savedCart = cartDao.insert(MEMBER_ID, 1);
 
-        final CartDeleteResponseDto response = RestAssured
-                .given().log().all()
-                .auth().preemptive().basic(EMAIL, PASSWORD)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/cart/" + savedCart.getId())
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract().as(CartDeleteResponseDto.class);
-
-        assertThat(response.getDeletedRowCount()).isOne();
+        RestAssured
+            .given().log().all()
+            .auth().preemptive().basic(EMAIL, PASSWORD)
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when().delete("/cart/" + savedCart.getId())
+            .then().log().all()
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
