@@ -69,5 +69,117 @@ CREATE TABLE cart_product
 ```
 
 ## API 문서
+### 1. 상품 관리
+#### [1] `GET` 상품 전체 조회
+- 요청
+  ```json
+  GET /products HTTP/1.1
+  ```
+- 응답
+  ```json
+  HTTP/1.1 200 OK
+  {
+    [
+      {
+        "id": 1,
+        "name": "mouse",
+        "image": "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg",
+        "price": 100000
+      },
+      {
+        "id": 2,
+        "name": "keyboard",
+        "image": "https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/2020/01/진혁.jpg?fit=770%2C418&ssl=1",
+        "price": 250000
+      }
+    ]
+  }
+  ```
+#### [2] `POST` 상품 등록
+- 요청
+  ```json
+  POST /products HTTP/1.1
+  Content-Type: application/json; charset=UTF-8
+  
+  {
+    "name": "mouse",
+    "image": "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg",
+    "price": 500000
+  }
+  ```
+- 응답
+  ```json
+  HTTP/1.1 201 CREATED
+  ```
 
-[API 문서 링크](https://70825.notion.site/API-f36d0bced7af47ef9c318ddadc35f96f)
+#### [3] `PATCH` 상품 수정
+- 요청
+  ```json
+  PATCH /products/:productId HTTP/1.1
+  Content-Type: application/json; charset=UTF-8
+  
+  {
+    "name": "keyboard",
+    "image": "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg",
+    "price": 1000000
+  }
+  ```
+- 응답
+  ```json
+  HTTP/1.1 204 NO CONTENT
+  ```
+
+#### [4] `DELETE` 상품 삭제
+- 요청
+  ```json
+  DELETE /products/1 HTTP/1.1
+  ```
+- 응답
+  ```json
+  HTTP/1.1 204 NO CONTENT
+  ```
+
+### 2. 장바구니
+
+#### [1] `GET` 장바구니 목록 조회
+- 요청
+  ```json
+  GET /cart/products HTTP/1.1
+  Authorizaiton: BASIC dGVzdEB0ZXN0LmNvbTp0ZXN0
+  ```
+- 응답
+  ```json
+  HTTP/1.1 200 OK
+  {
+    [
+      {
+        "id": 2,
+        "name": "keyboard",
+        "image": "https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/2020/01/진혁.jpg?fit=770%2C418&ssl=1",
+        "price": 250000
+      }
+    ]
+  }
+  ```
+#### [2] `POST` 장바구니 상품 추가
+- 요청
+  ```json
+  POST /cart/products/1 HTTP/1.1
+  Authorizaiton: BASIC dGVzdEB0ZXN0LmNvbTp0ZXN0
+  Content-Type: application/json
+  ```
+- 응답
+  ```json
+  HTTP/1.1 201 CREATED
+  ```
+#### [3] `DELETE` 장바구니 상품 제거
+- 요청
+  ```json
+  POST /cart/products/1 HTTP/1.1
+  Authorizaiton: BASIC dGVzdEB0ZXN0LmNvbTp0ZXN0
+  Content-Type: application/json
+  ```
+- 응답
+  ```json
+  HTTP/1.1 204 NO CONTENT
+  ```
