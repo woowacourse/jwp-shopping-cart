@@ -89,5 +89,5 @@ Cart API 요청 시 `Authorization : Basic Auth 필요`
 | 기능    | Method | URL                 | request body |
 |-------|-------|---------------------|--------------|
 | 생성    | POST  | /cart/products      | {productId}  |
-| 전체 조회 | GET   | /cart               | x            |
+| 전체 조회 | GET   | /cart/products      | x            |
 | 삭제    | DELETE | /cart/products/{id} | x            |

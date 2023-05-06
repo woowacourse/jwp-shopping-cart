@@ -1,15 +1,12 @@
 package cart.service;
 
-import cart.exception.AuthPrincipalInValidException;
+import cart.exception.MemberNotFoundException;
 import cart.repository.MemberRepository;
+import cart.service.dto.MemberInfo;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BasicAuthService implements AuthService {
-
-    private static final String BASIC_AUTH_PREFIX = "Basic";
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String DELIMITER = ":";
+public class BasicAuthService {
 
     private final MemberRepository memberRepository;
 
@@ -17,11 +14,9 @@ public class BasicAuthService implements AuthService {
         this.memberRepository = memberRepository;
     }
 
-    @Override
-    public void authorize(final String principal, final String credential) {
-        if (!principal.equals(BASIC_AUTH_PREFIX)) {
-            throw new AuthPrincipalInValidException();
+    public void authorize(final MemberInfo memberInfo) {
+        if (memberRepository.findId(memberInfo).isEmpty()) {
+            throw new MemberNotFoundException();
         }
-
     }
 }
