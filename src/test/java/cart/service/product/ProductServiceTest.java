@@ -1,8 +1,8 @@
 package cart.service.product;
 
-import cart.controller.product.dto.ProductRequest;
 import cart.fixture.ProductFixture;
 import cart.service.product.dto.ProductResponse;
+import cart.service.product.dto.ProductServiceRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ class ProductServiceTest {
 
     @Test
     void 상품을_저장한다() {
-        productService.create("image", "name", 1000);
+        productService.create(new ProductServiceRequest("name", "image", 1000));
 
         List<ProductResponse> products = productService.findAll();
 
@@ -56,12 +56,10 @@ class ProductServiceTest {
         Product ramyeon = RAMYEON;
         Long productId = productDao.save(ramyeon);
 
-        ProductRequest updateRequest = new ProductRequest("expectedUrl", "expected", 1000);
+        ProductServiceRequest updateRequest = new ProductServiceRequest("expectedUrl", "expected", 1000);
 
         ProductResponse updatedResponse = productService.update(
-                updateRequest.getName(),
-                updateRequest.getImageUrl(),
-                updateRequest.getPrice(),
+                updateRequest,
                 productId
         );
 
@@ -75,13 +73,11 @@ class ProductServiceTest {
     @Test
     void 존재하지_않는_상품정보를_수정하면_예외가_발생한다() {
         Long productId = 0L;
-        ProductRequest updateRequest = new ProductRequest("expectedUrl", "expected", 1000);
+        ProductServiceRequest updateRequest = new ProductServiceRequest("expectedUrl", "expected", 1000);
 
 
         assertThatThrownBy(() -> productService.update(
-                updateRequest.getName(),
-                updateRequest.getImageUrl(),
-                updateRequest.getPrice(),
+                updateRequest,
                 productId)
         )
                 .isInstanceOf(NoSuchElementException.class)

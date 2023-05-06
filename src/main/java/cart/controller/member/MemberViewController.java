@@ -1,5 +1,6 @@
 package cart.controller.member;
 
+import cart.controller.member.dto.MemberResponse;
 import cart.service.member.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -3,6 +3,7 @@ package cart.controller.product;
 import cart.controller.product.dto.ProductRequest;
 import cart.service.product.ProductService;
 import cart.service.product.dto.ProductResponse;
+import cart.service.product.dto.ProductServiceRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +23,15 @@ public class ProductRestController {
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody @Valid ProductRequest productRequest) {
-        Long productId = productService.create(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        ProductServiceRequest productServiceRequest = new ProductServiceRequest(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        Long productId = productService.create(productServiceRequest);
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductWebResponse> update(@RequestBody ProductRequest productRequest, @PathVariable Long id) {
-        ProductResponse updated = productService.update(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice(), id);
+        ProductServiceRequest productServiceRequest = new ProductServiceRequest(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        ProductResponse updated = productService.update(productServiceRequest, id);
         ProductWebResponse updateResponse = new ProductWebResponse(updated.getId(), updated.getName(), updated.getImageUrl(), updated.getPrice());
         return ResponseEntity.ok(updateResponse);
     }

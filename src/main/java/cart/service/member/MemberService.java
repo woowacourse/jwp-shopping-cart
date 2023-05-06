@@ -1,6 +1,7 @@
 package cart.service.member;
 
 import cart.service.member.dto.MemberResponse;
+import cart.service.member.dto.MemberServiceRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +17,9 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public long createMember(String email, String password) {
-        Member member = new Member(email, password);
-        memberDao.findByEmail(email).ifPresent((e) -> {
+    public long createMember(MemberServiceRequest memberServiceRequest) {
+        Member member = new Member(memberServiceRequest.getEmail(), memberServiceRequest.getPassword());
+        memberDao.findByEmail(member.getEmail()).ifPresent((e) -> {
             throw new IllegalArgumentException("해당 이메일은 이미 존재합니다.");
         });
         member = memberDao.save(member);

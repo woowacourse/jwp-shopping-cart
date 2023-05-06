@@ -1,6 +1,7 @@
 package cart.service.product;
 
 import cart.service.product.dto.ProductResponse;
+import cart.service.product.dto.ProductServiceRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +18,11 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public Long create(String productName, String productImageUrl, int productPrice) {
+    public Long create(ProductServiceRequest productServiceRequest) {
         Product product = new Product(
-                new ProductName(productName),
-                new ProductImage(productImageUrl),
-                new ProductPrice(productPrice)
+                new ProductName(productServiceRequest.getName()),
+                new ProductImage(productServiceRequest.getImageUrl()),
+                new ProductPrice(productServiceRequest.getPrice())
         );
         return productDao.save(product);
     }
@@ -34,13 +35,13 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public ProductResponse update(String productName, String productImageUrl, int productPrice, Long id) {
+    public ProductResponse update(ProductServiceRequest productRequest, Long id) {
         Product product = productDao.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다." + System.lineSeparator() + "id : " + id));
         Product newInfoProduct = product.replaceProduct(
-                new ProductName(productName),
-                new ProductImage(productImageUrl),
-                new ProductPrice(productPrice),
+                new ProductName(productRequest.getName()),
+                new ProductImage(productRequest.getImageUrl()),
+                new ProductPrice(productRequest.getPrice()),
                 id
         );
         Product updateProduct = productDao.update(newInfoProduct);

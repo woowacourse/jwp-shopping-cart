@@ -1,5 +1,6 @@
 package cart.service.cart;
 
+import cart.service.cart.dto.CartServiceRequest;
 import cart.service.member.Member;
 import cart.service.member.MemberDao;
 import cart.service.product.*;
@@ -43,7 +44,7 @@ class CartServiceTest {
         given(cartDao.addProduct(any()))
                 .willReturn(1L);
 
-        Long cartId = cartService.createCartItem("cyh6099@gmail.com", 1L);
+        Long cartId = cartService.createCartItem(new CartServiceRequest("cyh6099@gmail.com", 1L));
 
         Assertions.assertThat(cartId).isPositive();
     }
@@ -53,7 +54,7 @@ class CartServiceTest {
         given(memberDao.findByEmail(any()))
                 .willReturn(Optional.empty());
 
-        assertThatThrownBy(() -> cartService.createCartItem("cyh6099@gmail.com", 1L))
+        assertThatThrownBy(() -> cartService.createCartItem(new CartServiceRequest("cyh6099@gmail.com", 1L)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 유저입니다.");
     }
@@ -66,7 +67,7 @@ class CartServiceTest {
         given(productDao.findById(any()))
                 .willReturn(Optional.empty());
 
-        assertThatThrownBy(() -> cartService.createCartItem("cyh6099@gmail.com", 1L))
+        assertThatThrownBy(() -> cartService.createCartItem(new CartServiceRequest("cyh6099@gmail.com", 1L)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 상품입니다.");
     }
@@ -77,7 +78,7 @@ class CartServiceTest {
                 .willReturn(Optional.of(new Member(1L, "aa@aa.com", "qwer1234")));
 
 
-        assertThatThrownBy(() -> cartService.deleteCartItem("cyh6099@gmail.com", 1L))
+        assertThatThrownBy(() -> cartService.deleteCartItem(new CartServiceRequest("cyh6099@gmail.com", 1L)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 상품은 삭제할 수 없습니다.");
     }

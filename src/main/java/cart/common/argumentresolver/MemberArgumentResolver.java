@@ -1,7 +1,7 @@
 package cart.common.argumentresolver;
 
 import cart.common.auth.AuthHeaderExtractor;
-import cart.service.member.dto.MemberRequest;
+import cart.controller.member.dto.MemberRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

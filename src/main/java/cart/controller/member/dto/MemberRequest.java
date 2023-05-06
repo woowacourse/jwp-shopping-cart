@@ -1,18 +1,12 @@
-package cart.controller.member;
+package cart.controller.member.dto;
 
-public class MemberResponse {
-    private final Long id;
+public class MemberRequest {
     private final String email;
     private final String password;
 
-    public MemberResponse(Long id, String email, String password) {
-        this.id = id;
+    public MemberRequest(String email, String password) {
         this.email = email;
         this.password = password;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getEmail() {

@@ -1,5 +1,6 @@
 package cart.service.member;
 
+import cart.service.member.dto.MemberServiceRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,7 +30,7 @@ class MemberServiceTest {
         given(memberDao.save(any()))
                 .willReturn(new Member(1L, "cyh6099@gmail.com", "qwer1234"));
 
-        long createdMemberId = memberService.createMember("cyh6099@gmail.com", "qwer1234");
+        long createdMemberId = memberService.createMember(new MemberServiceRequest("cyh6099@gmail.com", "qwer1234"));
 
         assertThat(createdMemberId).isEqualTo(1L);
     }
@@ -40,7 +41,7 @@ class MemberServiceTest {
                 .willReturn(Optional.of(new Member(1L, "cyh6099@gamil.com", "qwer1234")));
 
         assertThatThrownBy(() ->
-                memberService.createMember("cyh6099@wooteco.com", "qwer1234"))
+                memberService.createMember(new MemberServiceRequest("cyh6099@wooteco.com", "qwer1234")))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 이메일은 이미 존재합니다.");
     }

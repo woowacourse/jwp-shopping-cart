@@ -6,7 +6,6 @@ import org.apache.http.HttpStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +19,7 @@ import java.util.Base64;
 
 import static io.restassured.RestAssured.given;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,7 +44,7 @@ public class CartRestControllerTest {
 
     @Test
     void 상품추가() throws Exception {
-        BDDMockito.given(cartService.createCartItem(any(), any()))
+        given(cartService.createCartItem(any()))
                 .willReturn(1L);
         String header = "Basic " + new String(Base64.getEncoder().encode("cyh6099@gmail.com:qwer1234".getBytes()));
         mockMvc.perform(MockMvcRequestBuilders.post("/carts/1")
@@ -66,7 +66,7 @@ public class CartRestControllerTest {
 
     @Test
     void 장바구니_상품을_삭제한다() {
-        doNothing().when(cartService).deleteCartItem(any(), any());
+        doNothing().when(cartService).deleteCartItem(any());
         given().log().all()
                 .auth().preemptive().basic("cyh6099@gmail.com", "qwer1234")
                 .when().delete("/carts/1")

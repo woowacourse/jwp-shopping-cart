@@ -1,9 +1,10 @@
 package cart.controller.cart;
 
 import cart.common.argumentresolver.Member;
+import cart.controller.member.dto.MemberRequest;
 import cart.service.cart.CartService;
+import cart.service.cart.dto.CartServiceRequest;
 import cart.service.cart.dto.ProductResponse;
-import cart.service.member.dto.MemberRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,19 +24,22 @@ public class CartRestController {
 
     @PostMapping("/{productId}")
     public ResponseEntity<Void> createCart(@Member MemberRequest memberRequest, @PathVariable Long productId) {
-        Long cartId = cartService.createCartItem(memberRequest.getEmail(), productId);
+        CartServiceRequest cartServiceRequest = new CartServiceRequest(memberRequest.getEmail(), productId);
+        Long cartId = cartService.createCartItem(cartServiceRequest);
         return ResponseEntity.created(URI.create("carts/" + cartId)).build();
     }
 
     @GetMapping("/items")
     public ResponseEntity<List<ProductResponse>> showCartItems(@Member MemberRequest memberRequest) {
-        List<ProductResponse> cartItems = cartService.findProductsByUserIdOnCart(memberRequest.getEmail());
+        CartServiceRequest cartServiceRequest = new CartServiceRequest(memberRequest.getEmail());
+        List<ProductResponse> cartItems = cartService.findProductsByUserIdOnCart(cartServiceRequest);
         return ResponseEntity.ok(cartItems);
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteCartItem(@Member MemberRequest memberRequest, @PathVariable int productId) {
-        cartService.deleteCartItem(memberRequest.getEmail(), (long) productId);
+    public ResponseEntity<Void> deleteCartItem(@Member MemberRequest memberRequest, @PathVariable long productId) {
+        CartServiceRequest cartServiceRequest = new CartServiceRequest(memberRequest.getEmail(), productId);
+        cartService.deleteCartItem(cartServiceRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -1,5 +1,6 @@
 package cart.service.cart;
 
+import cart.service.cart.dto.CartServiceRequest;
 import cart.service.cart.dto.ProductResponse;
 import cart.service.member.Member;
 import cart.service.member.MemberDao;
@@ -25,22 +26,22 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public Long createCartItem(String email, Long productId) {
-        Member member = memberDao.findByEmail(email).orElseThrow(
+    public Long createCartItem(CartServiceRequest cartServiceRequest) {
+        Member member = memberDao.findByEmail(cartServiceRequest.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
 
-        productDao.findById(productId).orElseThrow(
+        productDao.findById(cartServiceRequest.getProductId()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 상품입니다.")
         );
 
-        Cart cart = new Cart(productId, member.getId());
+        Cart cart = new Cart(cartServiceRequest.getProductId(), member.getId());
         return cartDao.addProduct(cart);
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> findProductsByUserIdOnCart(String email) {
-        Member member = memberDao.findByEmail(email).orElseThrow(
+    public List<ProductResponse> findProductsByUserIdOnCart(CartServiceRequest cartServiceRequest) {
+        Member member = memberDao.findByEmail(cartServiceRequest.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
         List<Product> products = cartDao.findProductsByUserId(member.getId());
@@ -49,12 +50,12 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteCartItem(String email, Long productId) {
-        Member member = memberDao.findByEmail(email).orElseThrow(
+    public void deleteCartItem(CartServiceRequest cartServiceRequest) {
+        Member member = memberDao.findByEmail(cartServiceRequest.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
 
-        Long cartId = cartDao.findOneCartItem(member, productId).orElseThrow(
+        Long cartId = cartDao.findOneCartItem(member, cartServiceRequest.getProductId()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 상품은 삭제할 수 없습니다.")
         );
         cartDao.deleteCartItem(cartId);

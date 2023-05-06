@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static cart.fixture.ProductFixture.CHICKEN_RESPONSE;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -83,7 +83,7 @@ class ProductRestControllerTest {
         ProductRequest request = new ProductRequest("img", "name", 1000);
         String jsonRequest = objectMapper.writeValueAsString(request);
 
-        given(productService.update(anyString(), anyString(), anyInt(), any())).willReturn(CHICKEN_RESPONSE);
+        given(productService.update(any(), any())).willReturn(CHICKEN_RESPONSE);
 
         mockMvc.perform(put("/products/{id}", 1L)
                         .content(jsonRequest)

@@ -1,5 +1,6 @@
 package cart.service.cart;
 
+import cart.service.cart.dto.CartServiceRequest;
 import cart.service.cart.dto.ProductResponse;
 import cart.service.member.Member;
 import cart.service.member.MemberDao;
@@ -42,14 +43,14 @@ public class CartServiceIntegrationTest {
         Long chickenId = productDao.save(products.get(0));
         Long pizzaId = productDao.save(products.get(1));
 
-        cartService.createCartItem(email, chickenId);
-        cartService.createCartItem(email, pizzaId);
+        cartService.createCartItem(new CartServiceRequest(email, chickenId));
+        cartService.createCartItem(new CartServiceRequest(email, pizzaId));
 
-        List<ProductResponse> productResponses = cartService.findProductsByUserIdOnCart(member.getEmail());
+        List<ProductResponse> productResponses = cartService.findProductsByUserIdOnCart(new CartServiceRequest(member.getEmail()));
 
         assertAll(
-                () -> assertThat(cartService.findProductsByUserIdOnCart(member.getEmail())).hasSize(2),
-                () -> assertThat(cartService.findProductsByUserIdOnCart(memberNoHaveCartItem.getEmail())).hasSize(0),
+                () -> assertThat(cartService.findProductsByUserIdOnCart(new CartServiceRequest(member.getEmail()))).hasSize(2),
+                () -> assertThat(cartService.findProductsByUserIdOnCart(new CartServiceRequest(memberNoHaveCartItem.getEmail()))).hasSize(0),
                 () -> assertThat(productResponses.get(0).getName()).isEqualTo(products.get(0).getName())
         );
     }
@@ -68,9 +69,9 @@ public class CartServiceIntegrationTest {
         Long chickenId = productDao.save(products.get(0));
         Long pizzaId = productDao.save(products.get(1));
 
-        cartService.createCartItem(email, chickenId);
-        cartService.createCartItem(email, pizzaId);
+        cartService.createCartItem(new CartServiceRequest(email, chickenId));
+        cartService.createCartItem(new CartServiceRequest(email, pizzaId));
 
-        Assertions.assertDoesNotThrow(() -> cartService.deleteCartItem(email, pizzaId));
+        Assertions.assertDoesNotThrow(() -> cartService.deleteCartItem(new CartServiceRequest(email, pizzaId)));
     }
 }
