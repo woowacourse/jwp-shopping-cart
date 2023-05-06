@@ -64,6 +64,7 @@ class ProductServiceTest {
 		@Test
 		void updateTest() {
 			//given
+
 			final SaveProductDto saveProductDto = new SaveProductDto("name", "image", 100);
 			final ProductDto productDto = productService.saveProducts(saveProductDto);
 			final Long id = productDto.getId();

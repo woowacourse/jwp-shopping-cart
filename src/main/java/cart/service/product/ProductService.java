@@ -6,8 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cart.dao.cart.CartDao;
+import cart.dao.product.ProductDao;
 import cart.domain.product.Product;
-import cart.domain.product.ProductRepository;
 import cart.service.product.dto.ProductDto;
 import cart.service.product.dto.SaveProductDto;
 import cart.service.product.dto.UpdateProductDto;
@@ -16,42 +17,47 @@ import cart.service.product.dto.UpdateProductDto;
 @Transactional
 public class ProductService {
 
-	private final ProductRepository productRepository;
+	private final ProductDao productDao;
+	private final CartDao cartDao;
 
-	public ProductService(final ProductRepository productRepository) {
-		this.productRepository = productRepository;
+	public ProductService(final ProductDao productDao, final CartDao cartDao) {
+		this.productDao = productDao;
+		this.cartDao = cartDao;
 	}
 
 	@Transactional(readOnly = true)
 	public List<ProductDto> findAll() {
-
-		return productRepository.findAll().stream()
+		return productDao.findAll().stream()
 			.map(this::mapProductToProductDto)
 			.collect(Collectors.toList());
 	}
 
 	public ProductDto saveProducts(final SaveProductDto saveProductDto) {
 		final Product product = new Product(saveProductDto);
-		final Product savedProduct = productRepository.saveProducts(product);
+		final long savedId = productDao.save(product);
+		product.setId(savedId);
 
-		return mapProductToProductDto(savedProduct);
+		return mapProductToProductDto(product);
 	}
 
 	public ProductDto updateProducts(final UpdateProductDto updateProductDto) {
-		productRepository.findById(updateProductDto.getId())
-			.orElseThrow(() -> new IllegalArgumentException("해당하는 상품이 없습니다."));
-
 		final Product product = new Product(updateProductDto);
-		final Product updatedProduct = productRepository.updateProducts(product);
+		final int updatedRow = productDao.updateById(product);
 
-		return mapProductToProductDto(updatedProduct);
+		if (updatedRow != 1) {
+			throw new IllegalArgumentException("해당하는 상품이 없습니다.");
+		}
+
+		return mapProductToProductDto(product);
 	}
 
 	public void deleteProductsById(final Long id) {
-		productRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException("해당하는 상품이 없습니다."));
+		cartDao.deleteByProductId(id);
+		final int deletedProductRow = productDao.deleteById(id);
 
-		productRepository.deleteProductsById(id);
+		if (deletedProductRow != 1) {
+			throw new IllegalArgumentException("해당하는 상품이 없습니다.");
+		}
 	}
 
 	private ProductDto mapProductToProductDto(final Product product) {

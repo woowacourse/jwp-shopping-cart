@@ -3,9 +3,7 @@ package cart.dao.product;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,8 +11,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.dao.product.dto.ProductCreateDTO;
-import cart.dao.product.dto.ProductUpdateDTO;
 import cart.domain.product.Product;
 
 @Component
@@ -43,42 +39,31 @@ public class ProductDao {
 	}
 
 	@Transactional
-	public long save(final ProductCreateDTO productCreateDTO) {
+	public long save(final Product product) {
 		final String sql = "INSERT INTO product (name, price, image) VALUES (?, ?, ?)";
 
 		final KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(sql, new String[] {"id"});
-			ps.setString(1, productCreateDTO.getName());
-			ps.setInt(2, productCreateDTO.getPrice());
-			ps.setString(3, productCreateDTO.getImage());
+			ps.setString(1, product.getName());
+			ps.setInt(2, product.getPrice());
+			ps.setString(3, product.getImage());
 			return ps;
 		}, keyHolder);
 
 		return (long)Objects.requireNonNull(keyHolder.getKeys()).get("id");
 	}
 
-	public Optional<Product> findById(final Long id) {
-		final String sql = "SELECT * FROM PRODUCT WHERE id = ?";
-
-		try {
-			final Product product = jdbcTemplate.queryForObject(sql, productRowMapper, id);
-			return Optional.ofNullable(product);
-		} catch (EmptyResultDataAccessException e) {
-			return Optional.empty();
-		}
-	}
-
-	public void updateById(final ProductUpdateDTO productUpdateDTO) {
+	public int updateById(final Product product) {
 		final String sql = "UPDATE product SET name = ?, price = ?, image = ? WHERE id = ?";
 
-		jdbcTemplate.update(sql, productUpdateDTO.getName(), productUpdateDTO.getPrice(),
-			productUpdateDTO.getImage(), productUpdateDTO.getId());
+		return jdbcTemplate.update(sql, product.getName(), product.getPrice(),
+			product.getImage(), product.getId());
 	}
 
-	public void deleteById(final Long id) {
+	public int deleteById(final Long id) {
 		final String sql = "DELETE FROM product where id = ?";
 
-		jdbcTemplate.update(sql, id);
+		return jdbcTemplate.update(sql, id);
 	}
 }
