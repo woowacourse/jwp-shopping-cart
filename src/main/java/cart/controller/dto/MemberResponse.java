@@ -3,6 +3,7 @@ package cart.controller.dto;
 import cart.entity.MemberEntity;
 
 public class MemberResponse {
+
     private final String email;
     private final String password;
 

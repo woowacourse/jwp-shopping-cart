@@ -33,7 +33,7 @@ class H2CartDaoTest {
     void save() {
         //given
         final CartEntity cartEntity = new CartEntity(3L, 13L);
-        final String sql = "select * from cart where id =?";
+        final String sql = "SELECT * FROM cart WHERE id =?";
 
         //when
         final Long id = cartDao.save(cartEntity);
@@ -56,7 +56,7 @@ class H2CartDaoTest {
     @Test
     void findProductsByMemberId() {
         //given
-        final String sql = "insert into cart (id, member_id, product_id) values (50, 60, 20)";
+        final String sql = "INSERT INTO cart (id, member_id, product_id) VALUES (50, 60, 20)";
         jdbcTemplate.update(sql);
 
         //when
@@ -75,14 +75,14 @@ class H2CartDaoTest {
     @Test
     void deleteById() {
         //given
-        final String sql = "insert into cart (id, member_id, product_id) values (5, 10, 20)";
+        final String sql = "INSERT INTO cart (id, member_id, product_id) VALUES (5, 10, 20)";
         jdbcTemplate.update(sql);
 
         //when
         cartDao.deleteById(5L);
 
         //then
-        final String sql2 = "select * from cart where id = 5";
+        final String sql2 = "SELECT * FROM cart WHERE id = 5";
         final List<CartEntity> cartEntities = jdbcTemplate.query(sql2, (rs, rowNum) -> new CartEntity(
                 rs.getLong("id"),
                 rs.getLong("member_id"),

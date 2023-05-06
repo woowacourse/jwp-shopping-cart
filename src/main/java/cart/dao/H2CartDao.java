@@ -24,8 +24,7 @@ public class H2CartDao implements CartDao {
 
     @Override
     public Long save(final CartEntity cartEntity) {
-        final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(
-                cartEntity);
+        final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(cartEntity);
         return jdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 

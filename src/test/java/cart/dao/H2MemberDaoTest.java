@@ -27,8 +27,8 @@ class H2MemberDaoTest {
 
     @Test
     void findAll() {
-        jdbcTemplate.update("INSERT INTO member (id, email, password) values (30, 'email5@email', 'password5')");
-        jdbcTemplate.update("INSERT INTO member (id, email, password) values (40, 'email54@email', 'password54')");
+        jdbcTemplate.update("INSERT INTO member (id, email, password) VALUES (30, 'email5@email', 'password5')");
+        jdbcTemplate.update("INSERT INTO member (id, email, password) VALUES (40, 'email54@email', 'password54')");
 
         final List<MemberEntity> members = memberDao.findAll();
         assertThat(members).hasSize(2);

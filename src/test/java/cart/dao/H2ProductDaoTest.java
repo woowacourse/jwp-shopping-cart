@@ -140,7 +140,7 @@ class H2ProductDaoTest {
     }
 
     private List<ProductEntity> getProducts() {
-        final String sql = "select * from product";
+        final String sql = "SELECT * FROM product";
         final List<ProductEntity> productEntities = jdbcTemplate.getJdbcOperations().query(sql, (resultSet, count) ->
                 new ProductEntity(
                         resultSet.getLong("id"),

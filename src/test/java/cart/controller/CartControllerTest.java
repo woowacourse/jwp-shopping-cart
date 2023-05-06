@@ -46,7 +46,7 @@ class CartControllerTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.update("INSERT INTO member (id, email, password) values (30, 'email5@email', 'password5')");
+        jdbcTemplate.update("INSERT INTO member (id, email, password) VALUES (30, 'email5@email', 'password5')");
         authHeader = "Basic " + new String(Base64.getEncoder().encode("email5@email:password5".getBytes()));
     }
 

@@ -16,7 +16,7 @@ public class H2MemberDao implements MemberDao {
 
     @Override
     public List<MemberEntity> findAll() {
-        final String sql = "select * from member";
+        final String sql = "SELECT * FROM member";
         return jdbcTemplate.query(sql, (resultSet, count) -> new MemberEntity(
                 resultSet.getLong("id"),
                 resultSet.getString("email"),

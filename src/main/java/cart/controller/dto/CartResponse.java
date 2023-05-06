@@ -1,6 +1,7 @@
 package cart.controller.dto;
 
 public class CartResponse {
+
     private final Long id;
     private final String name;
     private final String imageUrl;

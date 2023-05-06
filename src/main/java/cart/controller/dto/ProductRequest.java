@@ -16,7 +16,7 @@ public class ProductRequest {
     @Max(value = 1_000_000, message = "가격은 100만원보다 클 수 없습니다.")
     private final Integer price;
 
-    public ProductRequest(final String name, final String imageUrl, final int price) {
+    public ProductRequest(final String name, final String imageUrl, final Integer price) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
