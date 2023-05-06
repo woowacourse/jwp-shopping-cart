@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS product, member, cart;
 
 CREATE TABLE product
 (
