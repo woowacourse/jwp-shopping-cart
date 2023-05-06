@@ -1,5 +1,6 @@
-package cart.auth;
+package cart.service;
 
+import cart.auth.AuthDto;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import java.util.Optional;
