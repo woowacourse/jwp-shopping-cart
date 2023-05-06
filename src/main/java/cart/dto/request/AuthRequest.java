@@ -9,8 +9,12 @@ public class AuthRequest {
     private final String password;
 
     public AuthRequest(String[] authValues) {
-        this.email = authValues[EMAIL_INDEX];
-        this.password = authValues[PASSWORD_INDEX];
+        this(authValues[EMAIL_INDEX], authValues[PASSWORD_INDEX]);
+    }
+
+    public AuthRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public String getEmail() {

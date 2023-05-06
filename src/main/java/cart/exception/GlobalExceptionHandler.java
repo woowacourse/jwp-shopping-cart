@@ -17,8 +17,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllException() {
         ExceptionResponse response = new ExceptionResponse("서버가 응답할 수 없습니다.");
@@ -53,7 +51,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<Object> handleExceptionInternal(ExceptionResponse response, HttpStatus status) {
-        logger.error(String.format("message = %s, status = %s", response.getMessage(), status.toString()));
+//        logger.error(String.format("message = %s, status = %s", response.getMessage(), status.toString()));
         return ResponseEntity.status(status).body(response);
     }
 }

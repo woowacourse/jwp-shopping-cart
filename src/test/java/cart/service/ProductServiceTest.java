@@ -16,13 +16,13 @@ import cart.dto.response.ProductResponse;
 import cart.exception.custom.ArgumentNotValidException;
 import cart.exception.custom.ResourceNotFoundException;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -32,12 +32,8 @@ class ProductServiceTest {
     @Mock
     private ProductDao productDao;
 
+    @InjectMocks
     private ProductService productService;
-
-    @BeforeEach
-    void setUp() {
-        productService = new ProductService(productDao);
-    }
 
     @Nested
     @DisplayName("상품 저장할 때")
