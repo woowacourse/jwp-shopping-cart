@@ -3,6 +3,7 @@ package cart.infrastructure;
 import cart.dto.AuthInfo;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.HttpHeaders;
 
 public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthInfo>{
 
@@ -11,7 +12,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
 
     @Override
     public AuthInfo extract(HttpServletRequest request) {
-        String header = request.getHeader(AUTHORIZATION);
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (header == null) {
             return null;
