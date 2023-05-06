@@ -1,11 +1,8 @@
 package cart.web.controller.dto.request;
 
 public class AuthorizedUserRequest {
-    private String email;
-    private String password;
-
-    public AuthorizedUserRequest() {
-    }
+    private final String email;
+    private final String password;
 
     public AuthorizedUserRequest(final String email, final String password) {
         this.email = email;

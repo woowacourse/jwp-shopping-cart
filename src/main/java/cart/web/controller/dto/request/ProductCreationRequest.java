@@ -1,13 +1,10 @@
 package cart.web.controller.dto.request;
 
 public class ProductCreationRequest {
-    private String name;
-    private Integer price;
-    private String category;
-    private String imageUrl;
-
-    public ProductCreationRequest() {
-    }
+    private final String name;
+    private final Integer price;
+    private final String category;
+    private final String imageUrl;
 
     public ProductCreationRequest(final String name, final Integer price, final String category,
                                   final String imageUrl) {

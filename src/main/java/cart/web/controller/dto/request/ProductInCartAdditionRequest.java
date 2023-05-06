@@ -1,11 +1,11 @@
 package cart.web.controller.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public class ProductInCartAdditionRequest {
-    private Long productId;
+    private final Long productId;
 
-    public ProductInCartAdditionRequest() {
-    }
-
+    @JsonCreator
     public ProductInCartAdditionRequest(final Long productId) {
         this.productId = productId;
     }
