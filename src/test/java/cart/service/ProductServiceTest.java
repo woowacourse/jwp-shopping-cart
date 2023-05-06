@@ -83,7 +83,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void 없는_상품을_조회하는_경우_NoSuchElementException_을_던진다() {
+    void 없는_상품을_조회하는_경우_ProductNotFoundException_을_던진다() {
         // expect
         assertThatThrownBy(() -> productService.findById(Long.MAX_VALUE))
                 .isInstanceOf(ProductNotFoundException.class)
@@ -111,7 +111,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void 없는_상품을_수정하는_경우_NoSuchElementException_을_던진다() {
+    void 없는_상품을_수정하는_경우_ProductNotFoundException_을_던진다() {
         // given
         final Long id = Long.MAX_VALUE;
         final ProductUpdateRequest request = new ProductUpdateRequest("블랙캣", "cat.jpg", 100L);
@@ -136,7 +136,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void 없는_상품을_삭제하는_경우_NoSuchElementException_을_던진다() {
+    void 없는_상품을_삭제하는_경우_ProductNotFoundException_을_던진다() {
         // expect
         assertThatThrownBy(() -> productService.delete(Long.MAX_VALUE))
                 .isInstanceOf(ProductNotFoundException.class)
