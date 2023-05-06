@@ -25,7 +25,7 @@ public class ProductService {
         return productDao.selectAll();
     }
 
-    public int updateProduct(final ProductUpdateRequestDto productUpdateRequestDto) {
+    public ProductEntity updateProduct(final ProductUpdateRequestDto productUpdateRequestDto) {
         final ProductEntity product = ProductMapper.toEntity(productUpdateRequestDto);
         return productDao.update(product);
     }

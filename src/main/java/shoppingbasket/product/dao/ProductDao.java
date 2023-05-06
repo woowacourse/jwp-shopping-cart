@@ -10,7 +10,7 @@ public interface ProductDao {
 
     ProductEntity findById(int productId);
 
-    int update(ProductEntity product);
+    ProductEntity update(ProductEntity product);
 
     int delete(int productId);
 }

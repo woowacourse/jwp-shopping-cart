@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import shoppingbasket.product.dto.ProductInsertRequestDto;
 import shoppingbasket.product.dto.ProductUpdateRequestDto;
-import shoppingbasket.product.dto.ProductUpdateResponseDto;
 import shoppingbasket.product.entity.ProductEntity;
 import shoppingbasket.product.service.ProductService;
 
@@ -46,11 +45,13 @@ public class ProductApiController {
     }
 
     @PutMapping("/products")
-    public ResponseEntity<ProductUpdateResponseDto> updateProduct(@RequestBody @Valid ProductUpdateRequestDto product) {
-        final int updatedRowCount = productService.updateProduct(product);
-        final ProductUpdateResponseDto productUpdateResponseDto = new ProductUpdateResponseDto(updatedRowCount);
+    public ResponseEntity<ProductEntity> updateProduct(@RequestBody @Valid ProductUpdateRequestDto product) {
+        final ProductEntity updatedProduct = productService.updateProduct(product);
 
-        return ResponseEntity.ok(productUpdateResponseDto);
+        if (updatedProduct == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(updatedProduct);
     }
 
     @DeleteMapping("/products/{id}")
