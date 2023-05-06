@@ -20,7 +20,7 @@ public class CustomerDao {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("customer")
-                .usingGeneratedKeyColumns("id");
+                .usingGeneratedKeyColumns("customer_id");
     }
 
     public long insert(final CustomerEntity customerEntity) {
@@ -34,7 +34,7 @@ public class CustomerDao {
         try {
             CustomerEntity customerEntity = jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
                     new Builder()
-                            .id(rs.getLong("id"))
+                            .id(rs.getLong("customer_id"))
                             .email(rs.getString("email"))
                             .password(rs.getString("password"))
                             .build(), email);
@@ -48,14 +48,14 @@ public class CustomerDao {
         String sql = "SELECT * FROM customer";
         return jdbcTemplate.query(sql, (rs, rowNum) ->
             new CustomerEntity.Builder()
-                    .id(rs.getLong("id"))
+                    .id(rs.getLong("customer_id"))
                     .email(rs.getString("email"))
                     .password(rs.getString("password"))
                     .build());
     }
 
     public boolean isEmailAndPasswordExist(final String email, final String password) {
-        String sql = "SELECT EXISTS(SELECT id FROM customer WHERE email = ? AND password = ?) AS customer_id_exist";
+        String sql = "SELECT EXISTS(SELECT customer_id FROM customer WHERE email = ? AND password = ?) AS customer_id_exist";
         try {
             return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, new Object[]{email, password}, Boolean.class));
         } catch (EmptyResultDataAccessException exception) {

@@ -40,7 +40,7 @@ class CartDaoTest {
         String sql = "SELECT * FROM cart";
         List<CartEntity> carts = jdbcTemplate.query(sql, (rs, rowNum) ->
                 new CartEntity.Builder()
-                        .id(rs.getLong("id"))
+                        .id(rs.getLong("cart_id"))
                         .customerId(rs.getLong("customer_id"))
                         .productId(rs.getLong("product_id"))
                         .build());
@@ -66,7 +66,7 @@ class CartDaoTest {
         List<CartProductDto> cartProducts = cartDao.findAllCartProductByCustomerId(customerId);
 
         // then
-        List<CartProductDto> expectedCartProducts = List.of(new CartProductDto(cartId, name, price, imgUrl));
+        List<CartProductDto> expectedCartProducts = List.of(new CartProductDto(cartId, productId, customerId, name, price, imgUrl));
         assertThat(cartProducts).usingRecursiveComparison()
                 .isEqualTo(expectedCartProducts);
     }

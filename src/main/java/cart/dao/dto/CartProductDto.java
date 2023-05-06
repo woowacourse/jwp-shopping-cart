@@ -3,12 +3,16 @@ package cart.dao.dto;
 public class CartProductDto {
 
     private final long cartId;
+    private final long productId;
+    private final long customerId;
     private final String productName;
     private final int price;
     private final String imgUrl;
 
-    public CartProductDto(long cartId, String productName, int price, String imgUrl) {
+    public CartProductDto(long cartId, long productId, long customerId, String productName, int price, String imgUrl) {
         this.cartId = cartId;
+        this.productId = productId;
+        this.customerId = customerId;
         this.productName = productName;
         this.price = price;
         this.imgUrl = imgUrl;
@@ -16,12 +20,24 @@ public class CartProductDto {
 
     public static class Builder {
         private long cartId;
+        private long productId;
+        private long customerId;
         private String productName;
         private int price;
         private String imgUrl;
 
         public Builder id(long id) {
             this.cartId = id;
+            return this;
+        }
+
+        public Builder productId(long id) {
+            this.productId = id;
+            return this;
+        }
+
+        public Builder customerId(long id) {
+            this.customerId = id;
             return this;
         }
 
@@ -41,7 +57,7 @@ public class CartProductDto {
         }
 
         public CartProductDto build() {
-            return new CartProductDto(cartId, productName, price, imgUrl);
+            return new CartProductDto(cartId, productId, customerId, productName, price, imgUrl);
         }
     }
 
@@ -60,4 +76,13 @@ public class CartProductDto {
     public String getImgUrl() {
         return imgUrl;
     }
+
+    public long getProductId() {
+        return productId;
+    }
+
+    public long getCustomerId() {
+        return customerId;
+    }
+
 }
