@@ -41,7 +41,7 @@ class AdminControllerTest {
 
         //when
         //then
-        mockMvc.perform(post("/admin/products")
+        mockMvc.perform(post("/api/admin/products")
                 .content(request)
                 .contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
@@ -57,7 +57,7 @@ class AdminControllerTest {
 
         //when
         //then
-        mockMvc.perform(patch("/admin/products/1")
+        mockMvc.perform(patch("/api/admin/products/1")
                 .content(request)
                 .contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
@@ -70,7 +70,7 @@ class AdminControllerTest {
         //given
         //when
         //then
-        mockMvc.perform(delete("/admin/products/1"))
+        mockMvc.perform(delete("/api/admin/products/1"))
             .andDo(print())
             .andExpect(status().isNoContent());
     }

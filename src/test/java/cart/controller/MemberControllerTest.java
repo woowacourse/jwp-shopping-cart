@@ -51,7 +51,7 @@ class MemberControllerTest {
 
         //when
         //then
-        final MvcResult mvcResult = mockMvc.perform(post("/member")
+        final MvcResult mvcResult = mockMvc.perform(post("/api/member")
                 .content(jsonRequest)
                 .contentType(MediaType.APPLICATION_JSON))
             .andDo(print())

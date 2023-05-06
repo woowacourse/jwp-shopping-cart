@@ -64,7 +64,7 @@ class CartControllerTest {
 
         //when
         //then
-        final MvcResult mvcResult = mockMvc.perform(get("/cart")
+        final MvcResult mvcResult = mockMvc.perform(get("/api/cart")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authentication", "Basic sdfksajdfklsdf")
                 .accept(MediaType.APPLICATION_JSON))
@@ -94,7 +94,7 @@ class CartControllerTest {
 
         //when
         //then
-        mockMvc.perform(post("/cart?productId=1")
+        mockMvc.perform(post("/api/cart?productId=1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authentication", "Basic sdfksajdfklsdf")
                 .accept(MediaType.APPLICATION_JSON))
@@ -111,7 +111,7 @@ class CartControllerTest {
 
         //when
         //then
-        mockMvc.perform(delete("/cart?id=1")
+        mockMvc.perform(delete("/api/cart?id=1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authentication", "Basic sdfksajdfklsdf")
                 .accept(MediaType.APPLICATION_JSON))
