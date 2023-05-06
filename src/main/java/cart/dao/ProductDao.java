@@ -52,6 +52,18 @@ public class ProductDao {
         return namedParameterJdbcTemplate.query(sql, parameterSource, rowMapper);
     }
 
+    public boolean isNotExistProduct(final Long id) {
+        final String sql = "SELECT * FROM PRODUCT P WHERE P.id = ?";
+
+        final ProductEntity productEntity = jdbcTemplate.queryForObject(sql, rowMapper, id);
+
+        if (productEntity == null) {
+            return true;
+        }
+
+        return false;
+    }
+
     public void modify(final ProductEntity modifiedProductEntity) {
         final String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
 
