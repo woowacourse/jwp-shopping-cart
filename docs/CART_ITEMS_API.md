@@ -86,3 +86,14 @@ Authorization: Basic {credentials}
 ```http request
 HTTP/1.1 204
 ```
+
+## 응답 실패 메시지
+
+| error message                   | response status           |
+|---------------------------------|---------------------------|
+| internal server error           | 500 INTERNAL_SERVER_ERROR |
+| 사용자 정보가 존재하지 않습니다               | 401 UNAUTHORIZED          |
+| 잘못된 사용자 정보입니다                   | 401 UNAUTHORIZED          |
+| 사용자 정보와 장바구니 아이템 정보가 일치하지 않습니다. | 403 FORBIDDEN             |
+| 이미 장바구니에 담은 상품입니다               | 400 BAD REQUEST           |
+| 존재하지 않는 id입니다. value: {id}      | 400 BAD REQUEST           |

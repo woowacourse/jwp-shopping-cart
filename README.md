@@ -95,3 +95,5 @@
     - [x] Interceptor, ArgumentResolver 사용하여 중복 제거
     - [x] 통합 테스트 작성
         - [x] 테스트 픽스쳐 적용, 테스트 DB 초기데이터와 일치하도록 설정
+- [ ] snake case vs carmel case 통일
+- [ ] 예외메시지 형식 / 마침표 등 통일, 관리하기 쉽게 만들기
