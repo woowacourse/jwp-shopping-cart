@@ -34,12 +34,15 @@ public class CartRepository {
         Long cartId = cartDao.findByUserId(user.getId());
         List<Item> cartItems = cartItemDao.findAllByCartId(cartId);
 
+        refreshCaches(cartItems);
+        return new Cart(cartId, new ArrayList<>(caches.get()));
+    }
+
+    private void refreshCaches(final List<Item> cartItems) {
         if (!caches.get().equals(cartItems)) {
             caches.remove();
             caches.set(cartItems);
         }
-
-        return new Cart(cartId, new ArrayList<>(caches.get()));
     }
 
     public void deleteCartItem(Cart cart) {
