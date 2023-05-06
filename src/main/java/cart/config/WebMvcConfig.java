@@ -1,7 +1,9 @@
 package cart.config;
 
 import cart.auth.AuthenticationArgumentResolver;
+import cart.auth.AuthenticationExtractor;
 import java.util.List;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -13,6 +15,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthenticationArgumentResolver());
+        resolvers.add(new AuthenticationArgumentResolver(authenticationExtractor()));
+    }
+
+    @Bean
+    public AuthenticationExtractor authenticationExtractor() {
+        return new AuthenticationExtractor();
     }
 }
