@@ -129,11 +129,11 @@
 
 ### 2단계 리뷰 내용
 - [x] Argument Resolver를 활용한 인증
-- [ ] CREATED 상태를 보낼 때의 URI에 대한 고민
-- [ ] `CartService.getCartByMemberID` 네이밍 수정
-- [ ] Dto 기본 생성자 접근제어자 수정
-- [ ] CartEntity equals,hashcode 오버라이드 필요성에 대한 고민
-- [ ] ExceptionHandler가 Exception.message를 이용할 수 있도록 수정
+- [x] CREATED 상태를 보낼 때의 URI에 대한 고민
+- [x] `CartService.getCartByMemberID` 네이밍 수정
+- [x] Dto 기본 생성자 접근제어자 수정
+- [x] CartEntity equals,hashcode 오버라이드 필요성에 대한 고민
+- [x] ExceptionHandler가 Exception.message를 이용할 수 있도록 수정
 - [ ] UPDATE 요청의 응답으로 수정된 엔티티를 반환하도록 수정
 - [ ] ProductValidator 네이밍 수정(ConstraintValidator 구현체로 생각할 여지 있음)
 - [ ] DTO 유효성 검사 서비스 or 영속성 계층에서 더블 체크?

@@ -75,7 +75,7 @@ class CartApiControllerTest {
                 .extract();
         final String responseBody = response.body().asString();
 
-        assertThat(responseBody).isEqualTo("사용자를 선택한 뒤에 이용할 수 있는 기능입니다. 사용자를 선택해주세요.");
+        assertThat(responseBody).isEqualTo("사용자가 선택되지 않았습니다.");
     }
 
     @Test

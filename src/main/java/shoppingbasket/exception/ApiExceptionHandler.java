@@ -16,41 +16,46 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.badRequest()
+                .body(e.getMessage());
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handleEmptyResultDataAccess(DataAccessException e) {
-        return ResponseEntity.badRequest().body("존재하지 않는 데이터입니다.");
+        return ResponseEntity.badRequest()
+                .body(e.getMessage());
     }
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<String> handleDataAccessException(DataAccessException e) {
         logger.error("예기치 못한 DataAccessException 발생: " + e);
-        return ResponseEntity.badRequest().body("데이터를 찾아오는 과정에서 문제가 발생했습니다.");
+        return ResponseEntity.badRequest()
+                .body("데이터를 찾아오는 과정에서 문제가 발생했습니다.");
     }
 
     @ExceptionHandler(UnauthenticatedException.class)
     public ResponseEntity<String> handleUnauthenticated(UnauthenticatedException e) {
         return ResponseEntity.status(e.getHttpStatus())
-                .body("사용자를 선택한 뒤에 이용할 수 있는 기능입니다. 사용자를 선택해주세요.");
+                .body(e.getMessage());
     }
 
     @ExceptionHandler(PasswordMismatchException.class)
     public ResponseEntity<String> handlePasswordMismatch(PasswordMismatchException e) {
         return ResponseEntity.status(e.getHttpStatus())
-                .body("비밀번호가 일치하지 않습니다.");
+                .body(e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
 
-        return ResponseEntity.badRequest().body("잘못된 형식의 값이 입력됐습니다.");
+        return ResponseEntity.badRequest()
+                .body("잘못된 형식의 값이 입력됐습니다.");
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
         logger.error("예기치 못한 오류 발생: " + e);
-        return ResponseEntity.badRequest().body("예기치 못한 오류가 발생했습니다.");
+        return ResponseEntity.badRequest()
+                .body("예기치 못한 오류가 발생했습니다.");
     }
 }
