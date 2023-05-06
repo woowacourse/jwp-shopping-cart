@@ -15,7 +15,7 @@ class ProductNameTest {
     void shouldThrowExceptionWhenUrlIsNull() {
         assertThatThrownBy(() -> new ProductName(null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 상품 이름이 null입니다.");
+                .hasMessage("상품 이름이 null입니다.");
     }
 
     @DisplayName("상품 이름이 공백이면 예외를 반환한다.")
@@ -25,6 +25,6 @@ class ProductNameTest {
     void shouldThrowExceptionWhenUrlIsBlank(String inputName) {
         assertThatThrownBy(() -> new ProductName(inputName))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 상품 이름이 비어있습니다.");
+                .hasMessage("상품 이름이 비어있습니다.");
     }
 }
