@@ -9,8 +9,9 @@ public class FakeMemberDao implements MemberDao {
 
     private final List<Member> members = new ArrayList<>();
 
-    public void insert(final Member member) {
+    public Long insert(final Member member) {
         members.add(member);
+        return member.getId();
     }
 
     @Override
