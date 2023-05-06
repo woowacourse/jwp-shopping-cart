@@ -22,9 +22,10 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory) {
 
-        BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        String email = (String) request.getAttribute("email");
+        String password = (String) request.getAttribute("password");
 
-        return basicAuthorizationExtractor.extract(request);
+        return new AuthInfo(email, password);
     }
 }

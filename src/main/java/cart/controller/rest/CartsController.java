@@ -1,7 +1,6 @@
 package cart.controller.rest;
 
 import cart.auth.Auth;
-import cart.controller.exception.UncertifiedMemberException;
 import cart.dto.auth.AuthInfo;
 import cart.dto.response.CartResponse;
 import cart.dto.response.ItemResponse;
@@ -37,8 +36,6 @@ public class CartsController {
             @Auth AuthInfo authInfo,
             @RequestParam("product-id") Long productId) {
 
-        validateAuthorization(authInfo);
-
         Long memberId = membersService.readIdByEmail(authInfo.getEmail());
         ItemResponse itemResponse = cartService.createItem(memberId, productId);
 
@@ -52,8 +49,6 @@ public class CartsController {
 
     @GetMapping("/items")
     public ResponseEntity<CartResponse> readItemsByMember(@Auth AuthInfo authInfo) {
-        validateAuthorization(authInfo);
-
         Long memberId = membersService.readIdByEmail(authInfo.getEmail());
 
         CartResponse cartResponse = cartService.readAllItemsByMemberId(memberId);
@@ -61,20 +56,9 @@ public class CartsController {
     }
 
     @DeleteMapping("/items/{id}")
-    public ResponseEntity<Void> deleteItem(
-            @Auth AuthInfo authInfo,
-            @PathVariable("id") @NotNull Long itemId) {
-
-        validateAuthorization(authInfo);
-
+    public ResponseEntity<Void> deleteItem(@PathVariable("id") @NotNull Long itemId) {
         cartService.deleteItemById(itemId);
 
         return ResponseEntity.noContent().build();
-    }
-
-    private void validateAuthorization(AuthInfo authInfo) {
-        if (!membersService.isMemberCertified(authInfo)) {
-            throw new UncertifiedMemberException();
-        }
     }
 }
