@@ -61,12 +61,12 @@ Admin 화면을 렌더링하여 반환합니다.
 > - [x] admin.html 반환
 >     - [x] 등록된 모든 Product 정보 렌더링
 
-### ✅ GET /users
+### ✅ GET /members
 전체 사용자 정보를 확인하고, 특정 사용자의 계정으로 로그인할 수 있는 화면을 반환합니다.
 
 **구현 내용**
-> - [x] users.html 반환
->   - [x] 등록된 모든 User 정보 렌더링
+> - [x] members.html 반환
+>   - [x] 등록된 모든 Member 정보 렌더링
 
 ### ✅ GET /carts/me
 나의 장바구니를 확인하고, 포함된 상품을 삭제할 수 있는 화면을 반환합니다.
@@ -159,12 +159,12 @@ Content-Type: application/json
 
 ## User 관련 기능
 
-### POST /users
+### POST /members
 회원을 등록합니다.
 
 **구현 내용**
-> - [x] User 생성
->   - [x] User 정보 유효성 검증
+> - [x] Member 생성
+>   - [x] Member 정보 유효성 검증
 >     - [x] email: email 형식에 맞아야 한다.
 >     - [x] password:
 >       - [x] 10자리 이상
@@ -174,7 +174,7 @@ Content-Type: application/json
 
 **Request example**
 ```json
-POST /users HTTP/1.1
+POST /members HTTP/1.1
 Content-type: application/json; charset=UTF-8
 Host: localhost:8080
         

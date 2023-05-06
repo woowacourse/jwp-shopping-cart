@@ -1,27 +1,27 @@
 package cart.service.dto;
 
-import cart.controller.dto.UserSaveRequest;
+import cart.controller.dto.MemberSaveRequest;
 
-public class UserSaveDto {
+public class MemberSaveDto {
 
     private final String email;
     private final String password;
     private final String name;
     private final String phoneNumber;
 
-    private UserSaveDto(String email, String password, String name, String phoneNumber) {
+    private MemberSaveDto(String email, String password, String name, String phoneNumber) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
     }
 
-    public static UserSaveDto from(UserSaveRequest userSaveRequest) {
-        return new UserSaveDto(
-                userSaveRequest.getEmail(),
-                userSaveRequest.getPassword(),
-                userSaveRequest.getName(),
-                userSaveRequest.getPhoneNumber()
+    public static MemberSaveDto from(MemberSaveRequest memberSaveRequest) {
+        return new MemberSaveDto(
+                memberSaveRequest.getEmail(),
+                memberSaveRequest.getPassword(),
+                memberSaveRequest.getName(),
+                memberSaveRequest.getPhoneNumber()
         );
     }
 

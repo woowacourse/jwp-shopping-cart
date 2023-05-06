@@ -1,11 +1,11 @@
 package cart.service.dto;
 
-public class UserAuthDto {
+public class MemberAuthDto {
 
     private String email;
     private String password;
 
-    public UserAuthDto(String email, String password) {
+    public MemberAuthDto(String email, String password) {
         this.email = email;
         this.password = password;
     }

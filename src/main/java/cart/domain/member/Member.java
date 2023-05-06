@@ -1,30 +1,30 @@
-package cart.domain.user;
+package cart.domain.member;
 
-import cart.domain.user.validator.EmailValidator;
+import cart.domain.member.validator.EmailValidator;
 import java.util.Objects;
 import java.util.Optional;
 
-public class User {
+public class Member {
 
     private final Long id;
     private final String email;
     private final String password;
-    private final UserPrivacy userPrivacy;
+    private final MemberPrivacy memberPrivacy;
 
-    private User(Long id, String email, String password, UserPrivacy userPrivacy) {
+    private Member(Long id, String email, String password, MemberPrivacy memberPrivacy) {
         EmailValidator.validate(email);
         this.id = id;
         this.email = email;
         this.password = password;
-        this.userPrivacy = userPrivacy;
+        this.memberPrivacy = memberPrivacy;
     }
 
-    public static User create(Long id, String email, String password, String name, String phoneNumber) {
-        return new User(id, email, password, new UserPrivacy(name, phoneNumber));
+    public static Member create(Long id, String email, String password, String name, String phoneNumber) {
+        return new Member(id, email, password, new MemberPrivacy(name, phoneNumber));
     }
 
-    public static User createToSave(String email, String password, String name, String phoneNumber) {
-        return new User(null, email, password, new UserPrivacy(name, phoneNumber));
+    public static Member createToSave(String email, String password, String name, String phoneNumber) {
+        return new Member(null, email, password, new MemberPrivacy(name, phoneNumber));
     }
 
     public Long getId() {
@@ -40,11 +40,11 @@ public class User {
     }
 
     public Optional<String> getName() {
-        return this.userPrivacy.getName();
+        return this.memberPrivacy.getName();
     }
 
     public Optional<String> getPhoneNumber() {
-        return this.userPrivacy.getPhoneNumber();
+        return this.memberPrivacy.getPhoneNumber();
     }
 
     public boolean checkPassword(String password) {
@@ -59,8 +59,8 @@ public class User {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        User user = (User) o;
-        return Objects.equals(id, user.id);
+        Member member = (Member) o;
+        return Objects.equals(id, member.id);
     }
 
     @Override

@@ -1,16 +1,16 @@
-package cart.domain.user;
+package cart.domain.member;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class UserTest {
+class MemberTest {
 
     @DisplayName("ID, 이메일, 비밀번호, 이름, 휴대전화 번호를 가진 User를 생성한다.")
     @Test
     void shouldSuccessToCreateUserWhenRequest() {
-        assertDoesNotThrow(() -> User.create(
+        assertDoesNotThrow(() -> Member.create(
                 1L,
                 "test@test.com",
                 "1234abcd!@",
@@ -22,7 +22,7 @@ class UserTest {
     @DisplayName("ID, 이메일, 비밀번호, 휴대전화 번호를 가진 User를 생성한다.")
     @Test
     void shouldSuccessToCreateUserWhenCreateWithoutName() {
-        assertDoesNotThrow(() -> User.create(
+        assertDoesNotThrow(() -> Member.create(
                 1L,
                 "test@test.com",
                 "1234abcd!@",
@@ -34,7 +34,7 @@ class UserTest {
     @DisplayName("ID, 이메일, 비밀번호, 이름을 가진 User를 생성한다.")
     @Test
     void shouldSuccessToCreateUserWhenCreateWithoutPhoneNumber() {
-        assertDoesNotThrow(() -> User.create(
+        assertDoesNotThrow(() -> Member.create(
                 1L,
                 "test@test.com",
                 "1234abcd!@",
@@ -46,7 +46,7 @@ class UserTest {
     @DisplayName("ID, 이메일, 비밀번호를 가진 User를 생성한다.")
     @Test
     void shouldSuccessToCreateUserWhenCreateWithoutNameAndPhoneNumber() {
-        assertDoesNotThrow(() -> User.create(
+        assertDoesNotThrow(() -> Member.create(
                 1L,
                 "test@test.com",
                 "1234abcd!@",
@@ -58,7 +58,7 @@ class UserTest {
     @DisplayName("ID가 없는 User를 생성한다.")
     @Test
     void shouldSuccessToCreateUserWhenCreateWithoutId() {
-        assertDoesNotThrow(() -> User.createToSave(
+        assertDoesNotThrow(() -> Member.createToSave(
                 "test@test.com",
                 "1234abcd!@",
                 "김철수",

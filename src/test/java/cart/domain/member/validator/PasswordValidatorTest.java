@@ -1,4 +1,4 @@
-package cart.domain.user.validator;
+package cart.domain.member.validator;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

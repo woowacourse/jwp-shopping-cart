@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-public class UserSaveRequest {
+public class MemberSaveRequest {
 
     @NotNull(message = "이메일은 null일 수 없습니다.")
     @NotBlank(message = "이메일은 비어있을 수 없습니다.")
@@ -22,7 +22,7 @@ public class UserSaveRequest {
 
     private final String phoneNumber;
 
-    public UserSaveRequest(String email, String password, String name, String phoneNumber) {
+    public MemberSaveRequest(String email, String password, String name, String phoneNumber) {
         this.email = email;
         this.password = password;
         this.name = name;

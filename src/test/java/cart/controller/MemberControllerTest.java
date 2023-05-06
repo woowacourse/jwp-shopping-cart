@@ -3,8 +3,8 @@ package cart.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.controller.dto.UserSaveRequest;
-import cart.service.UserService;
+import cart.controller.dto.MemberSaveRequest;
+import cart.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,8 +18,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(UserController.class)
-class UserControllerTest {
+@WebMvcTest(MemberController.class)
+class MemberControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -28,7 +28,7 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private UserService userService;
+    private MemberService memberService;
 
     @DisplayName("POST /users 요청 시")
     @Nested
@@ -37,7 +37,7 @@ class UserControllerTest {
         @DisplayName("입력이 올바른 경우 Status OK를 반환한다.")
         @Test
         void shouldResponseStatusOkWhenRequestPostToUsers() throws Exception {
-            UserSaveRequest request = new UserSaveRequest(
+            MemberSaveRequest request = new MemberSaveRequest(
                     "email@test.test",
                     "1234abcd!@",
                     "Test Name",
@@ -45,7 +45,7 @@ class UserControllerTest {
             );
             String requestJson = objectMapper.writeValueAsString(request);
 
-            mockMvc.perform(post("/users")
+            mockMvc.perform(post("/members")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson))
                     .andExpect(status().isOk());
@@ -56,7 +56,7 @@ class UserControllerTest {
         @ValueSource(strings = {" ", "  "})
         @NullAndEmptySource
         void shouldResponseStatusBadRequestWhenEmailIsNullOrBlank(String inputEmail) throws Exception {
-            UserSaveRequest request = new UserSaveRequest(
+            MemberSaveRequest request = new MemberSaveRequest(
                     inputEmail,
                     "1234abcd!@",
                     "Test Name",
@@ -64,7 +64,7 @@ class UserControllerTest {
             );
             String requestJson = objectMapper.writeValueAsString(request);
 
-            mockMvc.perform(post("/users")
+            mockMvc.perform(post("/members")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson))
                     .andExpect(status().isBadRequest());
@@ -75,7 +75,7 @@ class UserControllerTest {
         @ValueSource(strings = {" ", "  "})
         @NullAndEmptySource
         void shouldResponseStatusBadRequestWhenPasswordIsNullOrBlank(String inputPassword) throws Exception {
-            UserSaveRequest request = new UserSaveRequest(
+            MemberSaveRequest request = new MemberSaveRequest(
                     "email@test.test",
                     inputPassword,
                     "Test Name",
@@ -83,7 +83,7 @@ class UserControllerTest {
             );
             String requestJson = objectMapper.writeValueAsString(request);
 
-            mockMvc.perform(post("/users")
+            mockMvc.perform(post("/members")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson))
                     .andExpect(status().isBadRequest());
@@ -93,7 +93,7 @@ class UserControllerTest {
         @ParameterizedTest(name = "잘못된 값 (\"{0}\")")
         @ValueSource(strings = {"123456789a", "abcdefghi!", "123456789!", "abc123!@#"})
         void shouldResponseStatusBadRequestWhenPasswordDoesNotMatch(String inputPassword) throws Exception {
-            UserSaveRequest request = new UserSaveRequest(
+            MemberSaveRequest request = new MemberSaveRequest(
                     "email@test.test",
                     inputPassword,
                     "Test Name",
@@ -101,7 +101,7 @@ class UserControllerTest {
             );
             String requestJson = objectMapper.writeValueAsString(request);
 
-            mockMvc.perform(post("/users")
+            mockMvc.perform(post("/members")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson))
                     .andExpect(status().isBadRequest());

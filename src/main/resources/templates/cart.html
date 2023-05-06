@@ -13,7 +13,7 @@
         <ul class="gnb-group">
             <li><a href="/">상품목록</a></li>
             <li><a href="/carts/me">장바구니</a></li>
-            <li><a href="/users">회원</a></li>
+            <li><a href="/members">회원</a></li>
             <li class="nav-admin"><a href="/admin">관리자</a></li>
         </ul>
     </nav>
@@ -30,7 +30,7 @@
         const credentials = localStorage.getItem('credentials');
         if (!credentials) {
             alert('사용자 정보가 없습니다.');
-            window.location.href = '/users';
+            window.location.href = '/members';
             return;
         }
 

@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.service.CartService;
-import cart.service.UserService;
+import cart.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -29,7 +29,7 @@ class CartControllerTest {
     private CartService cartService;
 
     @MockBean
-    private UserService userService;
+    private MemberService memberService;
 
     @DisplayName("GET /carts/me/products 요청 시")
     @Nested

@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.service.MemberService;
 import cart.service.ProductService;
-import cart.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ class ViewControllerTest {
     private ProductService productService;
 
     @MockBean
-    private UserService userService;
+    private MemberService memberService;
 
     @DisplayName("GET / - index.html 반환")
     @Test
@@ -48,13 +48,13 @@ class ViewControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("GET /users - users.html 반환")
+    @DisplayName("GET /members - members.html 반환")
     @Test
     void shouldViewUsersWhenRequestGetToUsers() throws Exception {
-        this.mockMvc.perform(get("/users"))
+        this.mockMvc.perform(get("/members"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", is("text/html;charset=UTF-8")))
-                .andExpect(view().name("users"))
+                .andExpect(view().name("members"))
                 .andDo(print());
     }
 

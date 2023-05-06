@@ -3,7 +3,7 @@ package cart.controller;
 import cart.controller.auth.BasicTokenDecoder;
 import cart.domain.product.Product;
 import cart.service.CartService;
-import cart.service.dto.UserAuthDto;
+import cart.service.dto.MemberAuthDto;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
@@ -27,8 +27,8 @@ public class CartController {
 
     @GetMapping("/me/products")
     public ResponseEntity<List<Product>> getProductsOfMyCart(HttpServletRequest request) {
-        UserAuthDto userAuthDto = BasicTokenDecoder.extract(request);
-        List<Product> products = this.cartService.findProductsInCartByUser(userAuthDto);
+        MemberAuthDto memberAuthDto = BasicTokenDecoder.extract(request);
+        List<Product> products = this.cartService.findProductsInCartByUser(memberAuthDto);
         return ResponseEntity.ok().body(products);
     }
 
@@ -37,8 +37,8 @@ public class CartController {
             HttpServletRequest request,
             @NotNull @PathVariable Long productId
     ) {
-        UserAuthDto userAuthDto = BasicTokenDecoder.extract(request);
-        this.cartService.addProductToCartById(userAuthDto, productId);
+        MemberAuthDto memberAuthDto = BasicTokenDecoder.extract(request);
+        this.cartService.addProductToCartById(memberAuthDto, productId);
         return ResponseEntity.ok().build();
     }
 
@@ -47,8 +47,8 @@ public class CartController {
             HttpServletRequest request,
             @NotNull @PathVariable Long productId
     ) {
-        UserAuthDto userAuthDto = BasicTokenDecoder.extract(request);
-        this.cartService.deleteProductFromCartById(userAuthDto, productId);
+        MemberAuthDto memberAuthDto = BasicTokenDecoder.extract(request);
+        this.cartService.deleteProductFromCartById(memberAuthDto, productId);
         return ResponseEntity.ok().build();
     }
 }
