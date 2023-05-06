@@ -3,13 +3,14 @@ package cart.domain.cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.CartDao;
-import cart.domain.cart.entity.Cart;
 import cart.dao.MemberDao;
-import cart.domain.member.entity.Member;
 import cart.dao.ProductDao;
+import cart.domain.cart.entity.Cart;
+import cart.domain.member.entity.Member;
 import cart.domain.product.entity.Product;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +30,21 @@ class CartDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    private CartDao cartDao;
+    private MemberDao memberDao;
+    private ProductDao productDao;
+
+    @BeforeEach
+    public void setUp() {
+        cartDao = new CartDao(jdbcTemplate);
+        memberDao = new MemberDao(jdbcTemplate);
+        productDao = new ProductDao(jdbcTemplate);
+    }
+
     @Test
     @DisplayName("장바구니에 상품을 저장한다.")
     public void testSave() {
         //given
-        final CartDao cartDao = new CartDao(jdbcTemplate);
-        final MemberDao memberDao = new MemberDao(jdbcTemplate);
-        final ProductDao productDao = new ProductDao(jdbcTemplate);
         final Member member = new Member(1L, "test@test.com", "password", LocalDateTime.now(),
             LocalDateTime.now());
         final Product product = new Product(1L, "product", 1000, "imageUrl", LocalDateTime.now(),
@@ -58,9 +67,6 @@ class CartDaoTest {
     @DisplayName("회원 별 장바구니를 조회한다.")
     public void testFindByMember() {
         //given
-        final CartDao cartDao = new CartDao(jdbcTemplate);
-        final MemberDao memberDao = new MemberDao(jdbcTemplate);
-        final ProductDao productDao = new ProductDao(jdbcTemplate);
         final Member member = new Member(1L, "test@test.com", "password", LocalDateTime.now(),
             LocalDateTime.now());
         final Product product = new Product(1L, "product", 1000, "imageUrl", LocalDateTime.now(),
@@ -84,9 +90,6 @@ class CartDaoTest {
     @DisplayName("장바구니에서 제외한다.")
     public void testDelete() {
         //given
-        final CartDao cartDao = new CartDao(jdbcTemplate);
-        final MemberDao memberDao = new MemberDao(jdbcTemplate);
-        final ProductDao productDao = new ProductDao(jdbcTemplate);
         final Member member = new Member(1L, "test@test.com", "password", LocalDateTime.now(),
             LocalDateTime.now());
         final Product product = new Product(1L, "product", 1000, "imageUrl", LocalDateTime.now(),
@@ -108,9 +111,6 @@ class CartDaoTest {
     @DisplayName("해당 장바구니가 존재하는지 확인한다.")
     public void testExists() {
         //given
-        final CartDao cartDao = new CartDao(jdbcTemplate);
-        final MemberDao memberDao = new MemberDao(jdbcTemplate);
-        final ProductDao productDao = new ProductDao(jdbcTemplate);
         final Member member = new Member(1L, "test@test.com", "password", LocalDateTime.now(),
             LocalDateTime.now());
         final Product product = new Product(1L, "product", 1000, "imageUrl", LocalDateTime.now(),
@@ -131,9 +131,6 @@ class CartDaoTest {
     @DisplayName("해당 장바구니가 존재하지 않는지 확인한다.")
     public void testExistsFail() {
         //given
-        final CartDao cartDao = new CartDao(jdbcTemplate);
-        final MemberDao memberDao = new MemberDao(jdbcTemplate);
-        final ProductDao productDao = new ProductDao(jdbcTemplate);
         final Member member = new Member(1L, "test@test.com", "password", LocalDateTime.now(),
             LocalDateTime.now());
         final Product product = new Product(1L, "product", 1000, "imageUrl", LocalDateTime.now(),

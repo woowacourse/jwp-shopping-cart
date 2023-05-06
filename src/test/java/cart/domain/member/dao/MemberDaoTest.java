@@ -7,6 +7,7 @@ import cart.domain.member.entity.Member;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,17 @@ class MemberDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    private MemberDao memberDao;
+
+    @BeforeEach
+    public void setUp() {
+        memberDao = new MemberDao(jdbcTemplate);
+    }
 
     @Test
     @DisplayName("이메일로 회원을 찾아온다.")
     public void testFindByEmail() {
         //given
-        final MemberDao memberDao = new MemberDao(jdbcTemplate);
         final String email = "email@email.com";
         final Member member = new Member(1L, email, "password", LocalDateTime.now(),
             LocalDateTime.now());
@@ -49,7 +55,6 @@ class MemberDaoTest {
     @DisplayName("존재하지 않는 회원을 찾는다.")
     public void testFindByEmailNull() {
         //given
-        final MemberDao memberDao = new MemberDao(jdbcTemplate);
         final String email = "email@email.com";
 
         //when
@@ -63,7 +68,6 @@ class MemberDaoTest {
     @DisplayName("모든 회원을 찾아온다.")
     public void testFindAll() {
         //given
-        final MemberDao memberDao = new MemberDao(jdbcTemplate);
         final Member member1 = new Member(1L, "email1@email.com", "password1", LocalDateTime.now(),
             LocalDateTime.now());
         final Member member2 = new Member(2L, "email2@email.com", "password2", LocalDateTime.now(),
