@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class CartProductService {
 
@@ -19,7 +20,6 @@ public class CartProductService {
         this.cartProductDao = cartProductDao;
     }
 
-    @Transactional
     public void save(Long memberId, CartProductRequest productIdRequest) {
         cartProductDao.save(memberId, productIdRequest.getProductId());
     }
@@ -32,7 +32,6 @@ public class CartProductService {
                 .collect(toList());
     }
 
-    @Transactional
     public void deleteById(Long cartProductId) {
         cartProductDao.deleteById(cartProductId);
     }

@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class ProductService {
 
@@ -20,7 +21,6 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    @Transactional
     public Long save(ProductRequest productRequest) {
         Product product = productRequest.toEntity();
         Long savedId = productDao.save(product);
@@ -42,13 +42,11 @@ public class ProductService {
                 .collect(toList());
     }
 
-    @Transactional
     public void deleteById(Long id) {
         int deleteCount = productDao.deleteById(id);
         hasNoMatchingResult(deleteCount);
     }
 
-    @Transactional
     public void updateById(Long id, ProductRequest productRequest) {
         Product product = productRequest.toEntity();
         int updateCount = productDao.updateById(id, product);
