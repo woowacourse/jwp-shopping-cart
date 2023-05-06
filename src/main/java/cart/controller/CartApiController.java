@@ -9,18 +9,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cart.config.auth.LoginUser;
 import cart.config.auth.dto.AuthUser;
+import cart.controller.dto.AddCartRequest;
 import cart.controller.dto.CartResponse;
 import cart.dao.cart.dto.CartProductDto;
 import cart.service.cart.CartService;
 import cart.service.cart.dto.CartDto;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/carts/products")
 public class CartApiController {
 
 	private final CartService cartService;
@@ -37,13 +39,15 @@ public class CartApiController {
 		return ResponseEntity.ok(cartProductDtos);
 	}
 
-	@PostMapping("/{productId}")
-	public ResponseEntity<CartResponse> addProduct(@PathVariable final Long productId, @LoginUser AuthUser authUser) {
+	@PostMapping
+	public ResponseEntity<CartResponse> addProduct(@RequestBody final AddCartRequest addCartRequest, @LoginUser AuthUser authUser) {
 		final Long userId = authUser.getId();
+		final Long productId = addCartRequest.getProductId();
+		System.out.println(productId);
 		final CartDto cartDto = cartService.addProduct(userId, productId);
 		final CartResponse cartResponse = new CartResponse(cartDto);
 
-		return ResponseEntity.created(URI.create("/cart-page")).body(cartResponse);
+		return ResponseEntity.created(URI.create("/cart")).body(cartResponse);
 	}
 
 	@PatchMapping("/{productId}")

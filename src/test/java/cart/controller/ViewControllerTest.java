@@ -58,7 +58,7 @@ class ViewControllerTest {
 	void displayCartPageTest() {
 		given()
 			.when()
-			.get("/cart-page")
+			.get("/cart")
 			.then()
 			.statusCode(HttpStatus.OK.value())
 			.contentType(ContentType.HTML);

@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
+import cart.controller.dto.AddCartRequest;
 import cart.controller.dto.CartResponse;
 import io.restassured.RestAssured;
 
@@ -45,12 +47,16 @@ class CartApiControllerTest {
 		@Test
 		@Sql(value = {"classpath:tearDown.sql", "classpath:setTest.sql"})
 		void AddCartTest() {
+			final AddCartRequest addCartRequest = new AddCartRequest(1L);
+
 			given().auth()
 				.preemptive()
 				.basic("test@test.com", "test")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.body(addCartRequest)
 				.log().all()
 				.when()
-				.post("/cart/{productId}", 1L)
+				.post("/carts/products")
 				.then()
 				.log().all()
 				.statusCode(HttpStatus.CREATED.value());
@@ -64,7 +70,7 @@ class CartApiControllerTest {
 				.basic("test@test.com", "test")
 				.log().all()
 				.when()
-				.patch("/cart/{productId}", 1L)
+				.patch("/carts/products/{productId}", 1L)
 				.then()
 				.log().all()
 				.statusCode(HttpStatus.OK.value()).extract().as(CartResponse.class);
@@ -80,7 +86,7 @@ class CartApiControllerTest {
 				.basic("test@test.com", "test")
 				.log().all()
 				.when()
-				.delete("/cart/{productId}", 1L)
+				.delete("/carts/products/{productId}", 1L)
 				.then()
 				.log().all()
 				.statusCode(HttpStatus.NO_CONTENT.value());

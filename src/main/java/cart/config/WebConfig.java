@@ -25,6 +25,6 @@ public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addViewControllers(final ViewControllerRegistry registry) {
-		registry.addViewController("/cart-page").setViewName("cart");
+		registry.addViewController("/cart").setViewName("cart");
 	}
 }
