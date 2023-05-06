@@ -7,7 +7,6 @@ import cart.domain.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,10 +23,10 @@ public class CartService {
     public void save(final String email, final Long productId) {
         Long memberId = memberDao.findByEmail(email);
 
-        Optional<Long> id = cartDao.existsByMemberIdAndProductId(memberId, productId);
-        if (id.isPresent()) {
-            throw new IllegalArgumentException("장바구니에 이미 담겨있는 상품입니다.");
-        }
+        cartDao.existsByMemberIdAndProductId(memberId, productId)
+                .ifPresent((action) -> {
+                    throw new IllegalArgumentException("장바구니에 이미 담겨있는 상품입니다.");
+                });
         cartDao.save(memberId, productId);
     }
 
