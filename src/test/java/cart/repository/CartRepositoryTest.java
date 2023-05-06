@@ -1,5 +1,7 @@
 package cart.repository;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -53,5 +55,29 @@ class CartRepositoryTest {
 
 		// then
 		Assertions.assertThat(carts.size()).isEqualTo(2);
+	}
+
+	@DisplayName("장바구니 상품 삭제 테스트")
+	@Test
+	void delete() {
+		// given
+		final MemberId memberId = memberRepository.insert(MEMBER);
+		final ProductId chickenId = productRepository.insert(CHICKEN);
+		final ProductId pizzaId = productRepository.insert(PIZZA);
+
+		// when
+		cartRepository.insert(memberId, chickenId);
+		cartRepository.insert(memberId, pizzaId);
+
+		cartRepository.deleteByMemberId(memberId, chickenId);
+		final List<Cart> carts = cartRepository.findAllByMemberId(memberId);
+		final Product remainProduct = productRepository.findByProductId(carts.get(0).getProductId());
+
+		// then
+		assertAll(
+			() -> assertEquals(carts.size(), 1),
+			() -> assertEquals(remainProduct.getName(), "피자")
+		);
+
 	}
 }

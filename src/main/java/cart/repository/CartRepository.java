@@ -2,7 +2,6 @@ package cart.repository;
 
 import java.util.List;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -17,6 +16,7 @@ import cart.domain.product.ProductId;
 
 @Repository
 public class CartRepository {
+	private static final int DELETED_COUNT = 1;
 	private final JdbcTemplate jdbcTemplate;
 	private final SimpleJdbcInsert jdbcInsert;
 
@@ -46,5 +46,12 @@ public class CartRepository {
 	public List<Cart> findAllByMemberId(final MemberId memberId) {
 		final String sql = "SELECT * FROM carts WHERE memberId = ?";
 		return jdbcTemplate.query(sql, cartRowMapper, memberId.getId());
+	}
+
+	public boolean deleteByMemberId(final MemberId memberId, final ProductId productId) {
+		final String sql = "DELETE FROM carts WHERE memberId = ? AND productId = ?";
+		final int deleteCount = jdbcTemplate.update(sql, memberId.getId(), productId.getId());
+
+		return deleteCount == DELETED_COUNT;
 	}
 }
