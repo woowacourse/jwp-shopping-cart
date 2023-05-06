@@ -16,6 +16,8 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor {
     private static final String BASIC_REGEX = "^Basic [A-Za-z0-9+/]+=*$";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
+    private static final int EMAIL_INDEX = 0;
+    private static final int PASSWORD_INDEX = 1;
     private static final int AUTHENTICATION_INFO_SIZE = 2;
 
     @Override
@@ -38,15 +40,13 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor {
 
     private AuthDto decode(final String token) {
         final String decodedToken = new String(Base64.decodeBase64(token));
-
-        final List<String> member = Arrays.stream(decodedToken.split(DELIMITER))
-                .collect(Collectors.toUnmodifiableList());
-        if (member.size() != AUTHENTICATION_INFO_SIZE) {
+        final String[] authInfo = decodedToken.split(DELIMITER);
+        if (authInfo.length != AUTHENTICATION_INFO_SIZE) {
             throw new AuthException("유효하지 않은 인증 정보입니다.");
         }
 
-        final String email = member.get(0);
-        final String password = member.get(1);
+        final String email = authInfo[EMAIL_INDEX];
+        final String password = authInfo[PASSWORD_INDEX];
 
         return new AuthDto(email, password);
     }
