@@ -80,15 +80,21 @@ public class CartDao {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 46ded3a7 (feat: 장바구니 상품 삭제)
     public void deleteById(final Long id) {
         String sql = "DELETE FROM CART WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
+<<<<<<< HEAD
 =======
 >>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
 =======
 >>>>>>> db0c1803 (feat: CartDao save 테스트)
 =======
 >>>>>>> 28a6d971 (feat: findAllByMemberId 구현)
+=======
+>>>>>>> 46ded3a7 (feat: 장바구니 상품 삭제)
 }

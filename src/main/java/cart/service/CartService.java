@@ -66,6 +66,7 @@ public class CartService {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     @Transactional
     public void delete(Long cartId) {
         cartDao.deleteById(cartId);
@@ -79,4 +80,11 @@ public class CartService {
 
 =======
 >>>>>>> 28a6d971 (feat: findAllByMemberId 구현)
+=======
+    @Transactional
+    public void delete(Long cartId) {
+        cartDao.deleteById(cartId);
+    }
+
+>>>>>>> 46ded3a7 (feat: 장바구니 상품 삭제)
 }

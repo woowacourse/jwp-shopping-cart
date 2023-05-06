@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/java/cart/controller/api/AdminApiController.java
 import org.springframework.web.bind.annotation.RestController;
 =======
@@ -31,6 +32,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 >>>>>>> 640c9e43 (refactor: 상품을 생성한다는 의미를 url에 포함):src/main/java/cart/controller/AdminController.java
 =======
 import org.springframework.web.bind.annotation.ResponseStatus;
+=======
+>>>>>>> 46ded3a7 (feat: 장바구니 상품 삭제)
 import org.springframework.web.bind.annotation.RestController;
 >>>>>>> 0606d2cf (refactor: View Controller와 ApiController 분리)
 
@@ -74,9 +77,9 @@ public class AdminApiController {
 >>>>>>> 640c9e43 (refactor: 상품을 생성한다는 의미를 url에 포함):src/main/java/cart/controller/AdminController.java
 =======
     @PostMapping("/product")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody @Valid final ProductCreateRequest request) {
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductCreateRequest request) {
         productService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/product/{id}")
@@ -99,6 +102,7 @@ public class AdminApiController {
     public ResponseEntity<Void> delete(
             @PathVariable final Long id
     ) {
+<<<<<<< HEAD
         productService.delete(id);
         return ResponseEntity.ok().build();
 =======
@@ -109,6 +113,8 @@ public class AdminApiController {
 
     @DeleteMapping("/product/{id}")
     public ResponseEntity<Void> delete(@PathVariable final Long id) {
+=======
+>>>>>>> 46ded3a7 (feat: 장바구니 상품 삭제)
         productService.delete(id);
 <<<<<<< HEAD
 >>>>>>> 0606d2cf (refactor: View Controller와 ApiController 분리)

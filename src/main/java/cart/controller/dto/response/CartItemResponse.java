@@ -48,8 +48,11 @@ public class CartItemResponse {
         return imageUrl;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 
 >>>>>>> 28a6d971 (feat: findAllByMemberId 구현)
+=======
+>>>>>>> 46ded3a7 (feat: 장바구니 상품 삭제)
 }

@@ -25,9 +25,13 @@ public class ApiControllerHandler {
         log.error("STATUS : {}", errorCode.getStatus());
         log.error("CODE : {}", errorCode.getCode());
 <<<<<<< HEAD
+<<<<<<< HEAD
         log.error("MESSAGE : {}", errorCode.getMessage());
 =======
 >>>>>>> 39f685c2 (refactor: Exception 클래스에서 에러 반환 값 선언)
+=======
+        log.error("MESSAGE : {}", errorCode.getMessage());
+>>>>>>> 46ded3a7 (feat: 장바구니 상품 삭제)
         return new ResponseEntity<>(
                 new ErrorResponse(
                         errorCode.getStatus(),

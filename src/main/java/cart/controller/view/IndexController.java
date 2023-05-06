@@ -19,10 +19,14 @@ public class IndexController {
 
     @GetMapping
 <<<<<<< HEAD
+<<<<<<< HEAD
     public String getIndexPage(final Model model) {
 =======
     public String index(final Model model) {
 >>>>>>> 2c4cb820 (refactor: 예외 수정 및 변수 추출)
+=======
+    public String getIndexPage(final Model model) {
+>>>>>>> 46ded3a7 (feat: 장바구니 상품 삭제)
         List<ProductResponse> responses = productService.findAll();
         model.addAttribute("products", responses);
         return "index";

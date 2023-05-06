@@ -36,6 +36,9 @@ public class AdminController {
 
     @GetMapping("/products")
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 46ded3a7 (feat: 장바구니 상품 삭제)
     public String getAdminPage(Model model) {
         List<ProductResponse> responses = productService.findAll();
         model.addAttribute("products", responses);

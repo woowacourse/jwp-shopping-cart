@@ -220,6 +220,7 @@ class CartDaoTest {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     private void saveProduct() {
         productDao.create(new ProductEntity(1L, "상품", "img", 1000));
 >>>>>>> db0c1803 (feat: CartDao save 테스트)
@@ -232,4 +233,17 @@ class CartDaoTest {
 
 =======
 >>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
+=======
+    @DisplayName("장바구니에 있는 상품을 삭제한다.")
+    @Test
+    void deleteById() {
+        // given
+        productDao.create(new ProductEntity(1L, "상품1", "img", 1000));
+        cartDao.save(1L, 1L);
+
+        // when
+        assertDoesNotThrow(() -> cartDao.deleteById(1L));
+    }
+
+>>>>>>> 46ded3a7 (feat: 장바구니 상품 삭제)
 }
