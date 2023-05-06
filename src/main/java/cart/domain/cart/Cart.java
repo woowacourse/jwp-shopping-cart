@@ -1,20 +1,19 @@
 package cart.domain.cart;
 
-import cart.domain.user.User;
 import java.util.List;
 import java.util.Objects;
 
 public class Cart {
-    private final User user;
+    private Long cartNo;
     private final CartProducts cartProducts;
 
-    public Cart(User user, CartProducts cartProducts) {
-        this.user = user;
+    public Cart(Long cartNo, CartProducts cartProducts) {
+        this.cartNo = cartNo;
         this.cartProducts = cartProducts;
     }
 
-    public static Cart of(User user, List<CartProduct> cartProducts) {
-        return new Cart(user, new CartProducts(cartProducts));
+    public static Cart of(Long cartNo, List<CartProduct> cartProducts) {
+        return new Cart(cartNo, new CartProducts(cartProducts));
     }
 
     @Override
@@ -26,16 +25,16 @@ public class Cart {
             return false;
         }
         Cart cart = (Cart) o;
-        return Objects.equals(user, cart.user);
+        return Objects.equals(cartNo, cart.cartNo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user);
+        return Objects.hash(cartNo);
     }
 
-    public User getUser() {
-        return user;
+    public Long getCartNo() {
+        return cartNo;
     }
 
     public List<CartProduct> getCartItems() {

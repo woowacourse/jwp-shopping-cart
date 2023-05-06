@@ -80,7 +80,7 @@ public class CartIntegrationTest {
         productRepository.add(createOtherProduct());
 
         User user = createUser("rosie@wooteco.com");
-        Cart cart = cartRepository.findByUser(user);
+        Cart cart = cartRepository.findByNo(user.getCartNo());
 
         for (CartProduct cartProduct : cart.getCartItems()) {
             cartRepository.removeCartItem(cartProduct.getId());
@@ -166,7 +166,7 @@ public class CartIntegrationTest {
         addCartItem();
 
         User user = userRepository.findByEmail(VALID_EMAIL).get();
-        Cart cart = cartRepository.findByUser(user);
+        Cart cart = cartRepository.findByNo(user.getCartNo());
         //when
         ExtractableResponse<Response> response = RestAssured
                 .given().log().all()

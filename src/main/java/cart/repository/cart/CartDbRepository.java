@@ -21,15 +21,15 @@ public class CartDbRepository implements CartRepository {
     }
 
     @Override
-    public Cart findByUser(User user) {
+    public Cart findByNo(Long cartNo) {
         String sql = "SELECT c.id, p.id as product_id, p.name as name, p.price as price, p.img_url as img_url "
                 + "FROM cart_products c "
                 + "JOIN products p ON(c.product_id = p.id)"
-                + "WHERE cart_no = :userId";
+                + "WHERE cart_no = :cartNo";
 
-        List<CartProduct> cartProducts = namedParameterJdbcTemplate.query(sql, Map.of("userId", user.getId()),
+        List<CartProduct> cartProducts = namedParameterJdbcTemplate.query(sql, Map.of("cartNo", cartNo),
                 getCartItemRowMapper());
-        return Cart.of(user, cartProducts);
+        return Cart.of(cartNo, cartProducts);
     }
 
     private RowMapper<CartProduct> getCartItemRowMapper() {
@@ -52,8 +52,8 @@ public class CartDbRepository implements CartRepository {
 
     @Override
     public void addCartItem(Cart cart, CartProduct cartProduct) {
-        String sql = "INSERT INTO cart_products(cart_no, product_id) VALUES (:userId, :productId)";
+        String sql = "INSERT INTO cart_products(cart_no, product_id) VALUES (:cartNo, :productId)";
         namedParameterJdbcTemplate.update(sql,
-                Map.of("userId", cart.getUser().getId(), "productId", cartProduct.getProduct().getId()));
+                Map.of("cartNo", cart.getCartNo(), "productId", cartProduct.getProduct().getId()));
     }
 }

@@ -6,7 +6,7 @@ import cart.domain.user.User;
 
 public interface CartRepository {
 
-    Cart findByUser(User user);
+    Cart findByNo(Long cartNo);
 
     void removeCartItem(Long CartItemId);
 

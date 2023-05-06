@@ -45,10 +45,10 @@ class CartDbRepositoryTest {
         //given
         User user = userRepository.findByEmail("rosie@wooteco.com").get();
         //when
-        Cart cart = cartRepository.findByUser(user);
+        Cart cart = cartRepository.findByNo(user.getCartNo());
         //then
         assertThat(cart).isNotNull();
-        assertThat(cart.getUser()).isEqualTo(user);
+        assertThat(cart.getCartNo()).isEqualTo(user.getCartNo());
     }
 
     @Test
@@ -56,14 +56,14 @@ class CartDbRepositoryTest {
     void add_cart_item_success() {
         //given
         User user = userRepository.findByEmail("rosie@wooteco.com").get();
-        Cart cart = cartRepository.findByUser(user);
+        Cart cart = cartRepository.findByNo(user.getCartNo());
         productRepository.add(createProduct());
         Product product = productRepository.findAll().get(0);
         CartProduct cartProduct = new CartProduct(product);
         //when
         cartRepository.addCartItem(cart, cartProduct);
         //then
-        Cart after = cartRepository.findByUser(user);
+        Cart after = cartRepository.findByNo(user.getCartNo());
         assertThat(after.getCartItems()).hasSize(cart.getCartItems().size() + 1);
     }
 
@@ -74,17 +74,17 @@ class CartDbRepositoryTest {
         User user = userRepository.findByEmail("rosie@wooteco.com").get();
         addDummyProduct(user);
 
-        Cart cart = cartRepository.findByUser(user);
+        Cart cart = cartRepository.findByNo(user.getCartNo());
         //when
         Long cartItemId = cart.getCartItems().get(0).getId();
         cartRepository.removeCartItem(cartItemId);
         //then
-        Cart after = cartRepository.findByUser(user);
+        Cart after = cartRepository.findByNo(user.getCartNo());
         assertThat(after.getCartItems()).hasSize(cart.getCartItems().size() - 1);
     }
 
     private void addDummyProduct(User user) {
-        Cart cart = cartRepository.findByUser(user);
+        Cart cart = cartRepository.findByNo(user.getCartNo());
         productRepository.add(createProduct());
         Product product = productRepository.findAll().get(0);
         CartProduct cartProduct = new CartProduct(product);

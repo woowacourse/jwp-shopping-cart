@@ -30,7 +30,7 @@ public class CartService {
     @Transactional(readOnly = true)
     public List<CartProduct> getCartItems(String userEmail) {
         User user = getUser(userEmail);
-        Cart cart = cartRepository.findByUser(user);
+        Cart cart = cartRepository.findByNo(user.getCartNo());
         return cart.getCartItems();
     }
 
@@ -42,7 +42,7 @@ public class CartService {
     public void addCartItem(String userEmail, Long productId) {
         User user = getUser(userEmail);
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
-        Cart cart = cartRepository.findByUser(user);
+        Cart cart = cartRepository.findByNo(user.getCartNo());
         cartRepository.addCartItem(cart, new CartProduct(product));
     }
 

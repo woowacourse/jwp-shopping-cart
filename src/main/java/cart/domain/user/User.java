@@ -18,6 +18,7 @@ public class User {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.cartNo = id;
     }
 
     public User(Long id, String email, String password, Long cartNo) {
