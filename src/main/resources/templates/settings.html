@@ -23,14 +23,16 @@
     <div class="cart-items">
         <div class="cart-item" th:each="member : ${members}">
             <div class="cart-item-info">
-                <div class="cart-item-memberName"><span th:text="${member.name}" ></span></div> <!-- 사용자 이름 -->
-                <div class="cart-item-name"><span th:text="${member.email}" ></span></div> <!-- 사용자 이메일 -->
-                <div class="cart-item-price"><span th:text="${member.password}" ></span></div> <!-- 사용자 비밀번호 -->
-                <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">Select</button>
+                <div class="cart-item-memberName"><span th:text="${member.name}"></span></div> <!-- 사용자 이름 -->
+                <div class="cart-item-name"><span th:text="${member.email}"></span></div> <!-- 사용자 이메일 -->
+                <div class="cart-item-price"><span th:text="${member.password}"></span></div> <!-- 사용자 비밀번호 -->
+                <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">
+                    Select
+                </button>
             </div>
         </div>
     </div>
 </div>
-<script th:src="@{/js/settings.js}"> </script>
+<script th:src="@{/js/settings.js}"></script>
 </body>
 </html>
