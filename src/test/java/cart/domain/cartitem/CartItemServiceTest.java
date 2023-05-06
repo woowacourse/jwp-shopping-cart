@@ -2,6 +2,7 @@ package cart.domain.cartitem;
 
 import static cart.fixture.CartItemFixture.CART_ITEM_MEMBER1_PRODUCT1;
 import static cart.fixture.MemberFixture.MEMBER1;
+import static cart.fixture.MemberFixture.MEMBER2;
 import static cart.fixture.ProductFixture.PRODUCT1;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doThrow;
@@ -9,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import cart.domain.product.ProductService;
+import cart.infratstructure.MemberForbiddenException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -93,5 +95,18 @@ class CartItemServiceTest {
         // then
         assertThatThrownBy(() -> cartItemService.deleteById(MEMBER1.getId(), CART_ITEM_MEMBER1_PRODUCT1.getId()))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("장바구니 아이템 삭제 시 사용자 아이디가 일치하지 않으면 예외를 던진다")
+    @Test
+    void deleteNotMatchingMemberId() {
+        // given
+        when(cartItemDao.findById(CART_ITEM_MEMBER1_PRODUCT1.getId())).thenReturn(
+                Optional.of(CART_ITEM_MEMBER1_PRODUCT1));
+
+        // when
+        // then
+        assertThatThrownBy(() -> cartItemService.deleteById(MEMBER2.getId(), CART_ITEM_MEMBER1_PRODUCT1.getId()))
+                .isInstanceOf(MemberForbiddenException.class);
     }
 }
