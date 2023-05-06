@@ -3,6 +3,7 @@ package cart.cart.service;
 import cart.cart.dao.CartDao;
 import cart.cart.dto.CartResponse;
 import cart.cart.entity.Cart;
+import cart.global.infrastructure.AuthorizationException;
 import cart.member.entity.Member;
 import cart.member.service.MemberService;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,12 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCartById(Long cartId) {
+    public void deleteCartById(Long cartId, String email, String password) {
+        Member member = memberService.selectMemberByEmailAndPassword(email, password);
+        Cart cart = cartDao.findCartByCartId(cartId);
+        if (!cart.getMember().equals(member)) {
+            throw new AuthorizationException("본인의 상품만 삭제할 수 있습니다");
+        }
         cartDao.deleteCartByCartId(cartId);
     }
 }
