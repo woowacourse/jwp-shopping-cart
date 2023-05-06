@@ -2,6 +2,7 @@ package cart.controller.dto;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 public class ProductRequest {
@@ -10,9 +11,10 @@ public class ProductRequest {
     private final String name;
     @NotBlank(message = "Url은 공백일 수 없습니다.")
     private final String imageUrl;
+    @NotNull
     @Positive(message = "가격은 0보다 커야 합니다.")
     @Max(value = 1_000_000, message = "가격은 100만원보다 클 수 없습니다.")
-    private final int price;
+    private final Integer price;
 
     public ProductRequest(final String name, final String imageUrl, final int price) {
         this.name = name;
