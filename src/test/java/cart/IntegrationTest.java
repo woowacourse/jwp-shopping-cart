@@ -3,10 +3,14 @@ package cart;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.dao.cart.CartDao;
+import cart.dao.member.MemberDao;
 import cart.dao.product.ProductDao;
+import cart.domain.cart.Cart;
 import cart.domain.product.Name;
 import cart.domain.product.Price;
 import cart.domain.product.Product;
+import cart.dto.cart.RequestCartDto;
 import cart.dto.product.RequestProductDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,10 +23,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductIntegrationTest {
+public class IntegrationTest {
 
     @Autowired
     private ProductDao productDao;
+
+    @Autowired
+    private MemberDao memberDao;
+
+    @Autowired
+    private CartDao cartDao;
 
     @LocalServerPort
     private int port;
@@ -134,5 +144,105 @@ public class ProductIntegrationTest {
                 .then()
                 .extract();
         assertThat(result.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    @DisplayName("장바구니 리스트 get 테스트")
+    void getCarts() {
+        final String email = "mango@wooteco.com";
+        final String password = "mangopassword";
+        final var result = given()
+                .auth().preemptive().basic(email, password)
+                .when()
+                .get("/carts")
+                .then()
+                .extract();
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("장바구니 create 테스트")
+    void createCart() {
+        final String email = "mango@wooteco.com";
+        final String password = "mangopassword";
+        final Long memberId = memberDao.findByEmailAndPassword(email, password).orElseThrow().getId();
+        final Long productId = productDao.findAll().get(0).getId();
+        final RequestCartDto requestCartDto = new RequestCartDto(productId);
+
+        final var result = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
+                .body(requestCartDto)
+                .when()
+                .post("/carts")
+                .then()
+                .extract();
+
+        final Cart cart = cartDao.findByMemberIdAndProductId(memberId, productId).orElseThrow();
+        assertThat(cart.getMemberId()).isEqualTo(memberId);
+        assertThat(cart.getProductId()).isEqualTo(productId);
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("장바구니 delete 테스트")
+    void deleteCart() {
+        final String email = "mango@wooteco.com";
+        final String password = "mangopassword";
+        final Long memberId = memberDao.findByEmailAndPassword(email, password).orElseThrow().getId();
+        final Long productId = productDao.findAll().get(0).getId();
+        if (cartDao.findByMemberIdAndProductId(memberId, productId).isEmpty()) {
+            cartDao.insert(new Cart(memberId, productId));
+        }
+
+        final var deleteResult = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
+                .when()
+                .delete("/carts/{productId}", productId)
+                .then()
+                .extract();
+
+        assertThat(cartDao.findByMemberIdAndProductId(memberId, productId)).isEmpty();
+        assertThat(deleteResult.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("Authorization 헤더에 잘못된 email이 들어가 있으면 401 Unauthorized를 반환한다.")
+    void unauthorizedTestWithInvalidEmail() {
+        final String email = "invalid@wooteco.com";
+        final String password = "mangopassword";
+        final var result = given()
+                .auth().preemptive().basic(email, password)
+                .when()
+                .get("/carts")
+                .then()
+                .extract();
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    @DisplayName("Authorization 헤더에 잘못된 password가 들어가 있으면 401 Unauthorized를 반환한다.")
+    void unauthorizedTestWithInvalidPassword() {
+        final String email = "mango@wooteco.com";
+        final String password = "invalid";
+        final var result = given()
+                .auth().preemptive().basic(email, password)
+                .when()
+                .get("/carts")
+                .then()
+                .extract();
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    @DisplayName("Authorization 헤더에 값이 없으면 401 Unauthorized를 반환한다.")
+    void unauthorizedTestWithEmptyHeader() {
+        final var result = given()
+                .when()
+                .get("/carts")
+                .then()
+                .extract();
+        assertThat(result.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 }
