@@ -1,7 +1,7 @@
 package cart.config.admin;
 
 import cart.config.auth.Base64AuthInterceptor;
-import cart.exception.customExceptions.AdminAccessException;
+import cart.exception.customexceptions.AdminAccessException;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.servlet.HandlerInterceptor;
 

@@ -1,6 +1,6 @@
 package cart.config.auth;
 
-import cart.exception.customExceptions.AdminAccessException;
+import cart.exception.customexceptions.AdminAccessException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;

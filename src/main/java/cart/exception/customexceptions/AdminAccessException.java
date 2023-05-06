@@ -1,4 +1,4 @@
-package cart.exception.customExceptions;
+package cart.exception.customexceptions;
 
 public class AdminAccessException extends RuntimeException {
 

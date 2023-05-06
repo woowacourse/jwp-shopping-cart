@@ -2,9 +2,9 @@ package cart.service;
 
 import cart.dto.MemberDto;
 import cart.entity.Member;
-import cart.exception.customExceptions.DataNotFoundException;
-import cart.exception.customExceptions.NotUniqueValueException;
-import cart.exception.customExceptions.PasswordNotMatchException;
+import cart.exception.customexceptions.DataNotFoundException;
+import cart.exception.customexceptions.NotUniqueValueException;
+import cart.exception.customexceptions.PasswordNotMatchException;
 import cart.repository.dao.memberDao.MemberDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
