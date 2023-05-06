@@ -6,7 +6,7 @@ const addCartItem = (productId) => {
         return;
     }
 
-    axios.post(`/cart/${productId}`, "", {
+    axios.post(`/carts/${productId}`, "", {
         headers: {
             'Authorization' : `Basic ${credentials}`
         },
@@ -25,7 +25,7 @@ const removeCartItem = (id) => {
         return;
     }
 
-    axios.delete(`/cart/${id}`, {
+    axios.delete(`/carts/${id}`, {
         headers: {
             'Authorization' : `Basic ${credentials}`
         },

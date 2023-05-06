@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/carts")
 public class CartController {
 
     private final CartService cartService;
@@ -23,7 +23,7 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("")
     public ResponseEntity<Object> findAllProductInCart(HttpServletRequest request) {
         int memberId = (int) request.getAttribute("memberId");
 
