@@ -16,10 +16,6 @@ public class Member {
         this.password = password;
     }
 
-    public boolean isWrongPassword(String inputPassword) {
-        return !password.equals(inputPassword);
-    }
-
     public Long getId() {
         return id;
     }

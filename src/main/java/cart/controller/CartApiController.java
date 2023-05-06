@@ -1,8 +1,8 @@
 package cart.controller;
 
 import cart.annotation.Auth;
+import cart.auth.Credential;
 import cart.dto.request.CartProductRequest;
-import cart.dto.request.Credential;
 import cart.dto.response.CartProductResponse;
 import cart.service.CartProductService;
 import java.net.URI;

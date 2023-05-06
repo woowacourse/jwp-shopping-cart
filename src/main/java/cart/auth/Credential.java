@@ -1,6 +1,5 @@
-package cart.dto.request;
+package cart.auth;
 
-//TODO 패키지 고민
 public class Credential {
 
     private final Long memberId;
@@ -11,6 +10,10 @@ public class Credential {
         this.memberId = memberId;
         this.email = email;
         this.password = password;
+    }
+
+    public boolean isWrongPassword(String inputPassword) {
+        return !password.equals(inputPassword);
     }
 
     public Long getMemberId() {
