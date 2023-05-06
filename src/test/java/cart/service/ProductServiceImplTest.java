@@ -34,7 +34,7 @@ class ProductServiceImplTest {
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("KIARA", 1000, "이미지");
-		final ProductId productId = productService.save(request);
+		final ProductId productId = productService.insert(request);
 
 		// then
 		assertThat(ProductId.from(1L)).isEqualTo(productId);
@@ -50,7 +50,7 @@ class ProductServiceImplTest {
 		given(productRepository.findAll()).willReturn(List.of(product));
 
 		final ProductUpdateRequest request = new ProductUpdateRequest("사과", 1000, "사과이미지");
-		productService.save(request);
+		productService.insert(request);
 
 		// when
 		final List<ProductResponse> findAll = productService.findAll();

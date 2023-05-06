@@ -23,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Transactional
 	@Override
-	public ProductId save(final ProductUpdateRequest request) {
+	public ProductId insert(final ProductUpdateRequest request) {
 		return productRepository.insert(new Product(request.getName(), request.getPrice(), request.getImage()));
 	}
 

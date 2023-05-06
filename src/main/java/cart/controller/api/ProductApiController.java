@@ -35,7 +35,7 @@ public class ProductApiController {
 
 	@PostMapping("/products")
 	public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductUpdateRequest request) {
-		final long save = productService.save(request).getId();
+		final long save = productService.insert(request).getId();
 		final URI uri = URI.create("/products/" + save);
 		return ResponseEntity.created(uri).build();
 	}

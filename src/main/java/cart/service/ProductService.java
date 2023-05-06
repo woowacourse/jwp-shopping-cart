@@ -7,7 +7,7 @@ import cart.service.request.ProductUpdateRequest;
 import cart.service.response.ProductResponse;
 
 public interface ProductService {
-	ProductId save(final ProductUpdateRequest request);
+	ProductId insert(final ProductUpdateRequest request);
 
 	List<ProductResponse> findAll();
 
