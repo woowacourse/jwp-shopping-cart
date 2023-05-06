@@ -4,6 +4,7 @@ import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -69,7 +70,11 @@ public class H2ProductRepository implements ProductRepository {
     @Override
     public Optional<Product> findById(Long id) {
         final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
-        Product product = jdbcTemplate.queryForObject(sql, rowMapper, id);
-        return Optional.ofNullable(product);
+        try {
+            Product product = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            return Optional.ofNullable(product);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

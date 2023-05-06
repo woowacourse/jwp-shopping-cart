@@ -166,4 +166,11 @@ class H2ProductRepositoryTest {
         //then
         assertThat(product.getId()).isEqualTo(id);
     }
+
+    @DisplayName("없는 ID로 조회하면 빈 값을 반환한다.")
+    @Test
+    void shouldReturnEmptyValueWhenFindByIdNotExist() {
+        // Product를 생성하지 않고 ID로 조회
+        assertThat(h2ProductRepository.findById(1L).isPresent()).isFalse();
+    }
 }
