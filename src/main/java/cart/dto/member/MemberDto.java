@@ -12,7 +12,7 @@ public class MemberDto {
     private final Email email;
     private final Password password;
 
-    public MemberDto(Long id, String email, String password) {
+    private MemberDto(Long id, String email, String password) {
         this.id = id;
         this.email = new Email(email);
         this.password = new Password(password);
@@ -35,6 +35,11 @@ public class MemberDto {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(id, email, password);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -44,11 +49,6 @@ public class MemberDto {
         }
         MemberDto memberDto = (MemberDto) o;
         return Objects.equals(id, memberDto.id) && Objects.equals(email, memberDto.email) && Objects.equals(password, memberDto.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, password);
     }
 
     @Override

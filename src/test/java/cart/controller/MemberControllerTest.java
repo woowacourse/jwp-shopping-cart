@@ -39,13 +39,19 @@ class MemberControllerTest {
     @MockBean
     MemberService memberService;
 
+    static Stream<Arguments> makeInvalidDto() {
+        return Stream.of(
+                Arguments.arguments(new MemberRequestDto("a".repeat(41) + "@email.com", "password")),
+                Arguments.arguments(new MemberRequestDto("email@email.com", "a".repeat(51))));
+    }
+
     @Test
     @DisplayName("회원을 추가한다.")
     void addMemberTest() throws Exception {
         String email = "a@a.com";
         String password = "password1";
         MemberRequestDto requestDto = new MemberRequestDto(email, password);
-        MemberDto expectDto = new MemberDto(1L, email, password);
+        MemberDto expectDto = MemberDto.fromEntity(new MemberEntity(1L, email, password));
 
         when(memberService.join(any(MemberRequestDto.class))).thenReturn(expectDto);
 
@@ -105,11 +111,5 @@ class MemberControllerTest {
         doNothing().when(memberService).deleteById(anyLong());
         mockMvc.perform(delete("/members/{id}", anyLong()))
                 .andExpect(status().isOk());
-    }
-
-    static Stream<Arguments> makeInvalidDto() {
-        return Stream.of(
-                Arguments.arguments(new MemberRequestDto("a".repeat(41) + "@email.com", "password")),
-                Arguments.arguments(new MemberRequestDto("email@email.com", "a".repeat(51))));
     }
 }
