@@ -3,10 +3,10 @@ package cart.service;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
 import cart.dao.ProductJdbcDao;
-import cart.domain.ImageUrl;
-import cart.domain.Name;
-import cart.domain.Price;
-import cart.domain.Product;
+import cart.domain.product.ImageUrl;
+import cart.domain.product.Name;
+import cart.domain.product.Price;
+import cart.domain.product.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequestDto;
 import cart.dto.ProductUpdateRequestDto;

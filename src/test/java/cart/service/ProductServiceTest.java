@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.ProductJdbcDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequestDto;
 import cart.dto.ProductUpdateRequestDto;

@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.dao.ProductJdbcDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.fixture.ProductFixture.BLACKCAT;
 import cart.fixture.ProductFixture.HERB;
 import org.hamcrest.Matcher;

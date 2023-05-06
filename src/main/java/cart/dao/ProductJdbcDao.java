@@ -1,9 +1,9 @@
 package cart.dao;
 
-import cart.domain.ImageUrl;
-import cart.domain.Name;
-import cart.domain.Price;
-import cart.domain.Product;
+import cart.domain.product.ImageUrl;
+import cart.domain.product.Name;
+import cart.domain.product.Price;
+import cart.domain.product.Product;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
