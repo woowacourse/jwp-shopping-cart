@@ -21,7 +21,7 @@ public class ProductRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody @Valid ProductRequest productRequest) {
+    public ResponseEntity<Void> create(@RequestBody @Valid ProductRequest productRequest) {
         Long productId = productService.create(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
@@ -34,7 +34,7 @@ public class ProductRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

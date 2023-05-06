@@ -34,7 +34,7 @@ public class CartRestController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Object> deleteCartItem(@Member MemberRequest memberRequest, @PathVariable int productId) {
+    public ResponseEntity<Void> deleteCartItem(@Member MemberRequest memberRequest, @PathVariable int productId) {
         cartService.deleteCartItem(memberRequest.getEmail(), (long) productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
