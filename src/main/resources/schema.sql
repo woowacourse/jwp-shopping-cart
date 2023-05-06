@@ -18,7 +18,7 @@ create table member
 -- 해당 테이블에 대해 고민해보기
 -- 1. PK를 고민해보기
 -- 2. FK를 고민해보기
-create table cart
+create table product_in_cart
 (
     id         BIGINT NOT NULL AUTO_INCREMENT,
     member_id  BIGINT NOT NULL,
