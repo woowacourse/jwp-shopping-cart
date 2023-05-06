@@ -41,10 +41,10 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<String> addProduct(
-            @RequestBody @Valid final CartItemCreationRequest productId,
-            @Authority final MemberIdRequest memberId
+            @RequestBody @Valid final CartItemCreationRequest cartItemCreationRequest,
+            @Authority final MemberIdRequest memberIdRequest
     ) {
-        cartCreateService.addProduct(productId, memberId);
+        cartCreateService.addProduct(cartItemCreationRequest, memberIdRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -67,10 +67,10 @@ public class CartController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(
-            @PathVariable("id") @NotNull(message = "아이디가 비어있습니다.") Long productId,
-            @Authority final MemberIdRequest memberId
+            @PathVariable("id") @NotNull(message = "아이디가 비어있습니다.") Long productIdRequest,
+            @Authority final MemberIdRequest memberIdRequest
     ) {
-        cartDeleteService.delete(memberId, productId);
+        cartDeleteService.delete(memberIdRequest, productIdRequest);
         return ResponseEntity.noContent().build();
     }
 }
