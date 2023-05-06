@@ -23,7 +23,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (authInfo == null) {
             throw new IllegalArgumentException("올바르지 않은 인증 정보입니다.");
         }
-        Integer memberId = memberService.findAndReturnId(DomainConverter.toMemberWithoutId(authInfo));
+        Integer memberId = memberService.findAndReturnId(MemberConverter.toEntity(authInfo));
         memberService.validateExists(memberId);
         return true;
     }

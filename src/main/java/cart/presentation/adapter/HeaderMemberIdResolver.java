@@ -28,6 +28,6 @@ public class HeaderMemberIdResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         AuthInfo authInfo = BasicAuthorizationExtractor.extract(request);
         Objects.requireNonNull(authInfo);
-        return DomainConverter.toMemberWithoutId(authInfo);
+        return MemberConverter.toEntity(authInfo);
     }
 }

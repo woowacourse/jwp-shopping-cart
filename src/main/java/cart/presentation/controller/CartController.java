@@ -5,7 +5,7 @@ import cart.business.service.CartService;
 import cart.business.service.MemberService;
 import cart.business.service.ProductService;
 import cart.config.ResolvedMember;
-import cart.presentation.adapter.DomainConverter;
+import cart.presentation.adapter.CartItemConverter;
 import cart.presentation.dto.CartItemDto;
 import cart.presentation.dto.CartItemIdDto;
 import cart.presentation.dto.ProductIdDto;
@@ -42,7 +42,7 @@ public class CartController {
     public ResponseEntity<Void> cartCreate(@ResolvedMember Member member,
                                            @Valid @RequestBody ProductIdDto productIdDto) {
         Integer memberId = memberService.findAndReturnId(member);
-        cartService.addCartItem(DomainConverter.toCartItemWithoutId(productIdDto.getId(), memberId));
+        cartService.addCartItem(CartItemConverter.toEntity(productIdDto.getId(), memberId));
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -51,7 +51,7 @@ public class CartController {
     public ResponseEntity<List<CartItemDto>> cartRead(@ResolvedMember Member member) {
         Integer memberId = memberService.findAndReturnId(member);
         List<CartItemDto> response = cartService.readAllCartItem(memberId).stream()
-                .map(cartItem -> DomainConverter.toCartItemDto(
+                .map(cartItem -> CartItemConverter.toDto(
                         productService.readById(cartItem.getProductId()),
                         cartItem.getId())
                 ).collect(Collectors.toList());

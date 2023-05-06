@@ -2,7 +2,7 @@ package cart.presentation.controller;
 
 
 import cart.business.service.ProductService;
-import cart.presentation.adapter.DomainConverter;
+import cart.presentation.adapter.ProductConverter;
 import cart.presentation.dto.ProductDto;
 import cart.presentation.dto.ProductIdDto;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> productCreate(@RequestBody @Valid ProductDto request) {
-        productService.create(DomainConverter.toProductWithoutId(request));
+        productService.create(ProductConverter.toEntityWithoutId(request));
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -40,7 +40,7 @@ public class ProductController {
     public ResponseEntity<List<ProductDto>> productRead() {
         List<ProductDto> response = productService.readAll()
                 .stream()
-                .map(DomainConverter::toProductDto)
+                .map(ProductConverter::toDto)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(response);
@@ -48,7 +48,7 @@ public class ProductController {
 
     @PutMapping
     public ResponseEntity<Void> productUpdate(@RequestBody @Valid ProductDto request) {
-        productService.update(DomainConverter.toProductWithId(request));
+        productService.update(ProductConverter.toEntityWithId(request));
 
         return ResponseEntity.noContent().build();
     }
