@@ -3,8 +3,8 @@ package cart.factory;
 import static cart.factory.ProductFactory.createOtherProduct;
 import static cart.factory.ProductFactory.createProduct;
 
-import cart.domain.CartItems;
 import cart.domain.CartItem;
+import cart.domain.CartItems;
 import java.util.List;
 
 public class CartFactory {
