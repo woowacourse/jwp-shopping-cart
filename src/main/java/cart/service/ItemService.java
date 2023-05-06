@@ -22,9 +22,9 @@ public class ItemService {
     @Transactional
     public ItemDto add(String name, String imageUrl, int price) {
         Item item = new Item(name, imageUrl, price);
-        Item savedItem = itemRepository.insert(item);
+        Item insertedItem = itemRepository.insert(item);
 
-        return ItemDto.from(savedItem);
+        return ItemDto.from(insertedItem);
     }
 
     public List<ItemDto> findAll() {
