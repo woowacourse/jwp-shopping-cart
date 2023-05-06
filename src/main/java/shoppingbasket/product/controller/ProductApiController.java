@@ -54,11 +54,13 @@ public class ProductApiController {
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<ProductUpdateResponseDto> deleteProduct(@PathVariable int id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
         final int deletedRowCount = productService.deleteProduct(id);
-        final ProductUpdateResponseDto productUpdateResponseDto = new ProductUpdateResponseDto(deletedRowCount);
 
-        return ResponseEntity.ok(productUpdateResponseDto);
+        if (deletedRowCount == 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 
 }
