@@ -23,13 +23,14 @@ classDiagram
 ```
 
 ## Database
+### Database 사용법
 - H2 Database 사용
   - DB 접근 방법
     - 1)`JwpCartApplication` 실행
     - 2)`localhost:8080/h2-console` 접속
     - 3)`application.properties` 참고하여 Login 정보 입력하고 `Connect`
-- DDL은 이하 기술
 
+### DDL
 ```sql
 CREATE TABLE product
 (
