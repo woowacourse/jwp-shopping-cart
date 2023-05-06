@@ -48,6 +48,13 @@ public class ExceptionAdvice {
         return new ErrorDto(exception.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(MemberForbiddenException.class)
+    public ErrorDto handleException(MemberForbiddenException exception) {
+        log.error("MemberForbiddenException message={}", exception.getMessage());
+        return new ErrorDto(exception.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorDto handleException(Exception exception) {

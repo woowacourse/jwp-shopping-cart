@@ -16,6 +16,11 @@ abstract class CartItemDao implements Dao<CartItem> {
     }
 
     @Override
+    public final boolean isExist(final Long id) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public final List<CartItem> findAll() {
         throw new UnsupportedOperationException();
     }

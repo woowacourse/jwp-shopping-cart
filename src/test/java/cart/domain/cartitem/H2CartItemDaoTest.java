@@ -40,17 +40,6 @@ class H2CartItemDaoTest {
                 .isEqualTo(inserted);
     }
 
-    @DisplayName("해당 아이디의 cartitem 존재 여부를 조회한다")
-    @Test
-    void isExist() {
-        assertThat(cartItemDao.isExist(-1L))
-                .isFalse();
-
-        CartItem inserted = cartItemDao.insert(FIXTURE_INSERTED_CART_ITEM);
-        assertThat(cartItemDao.isExist(inserted.getId()))
-                .isTrue();
-    }
-
     @DisplayName("해당 사용자 아이디의 cartitem을 모두 조회한다")
     @Test
     void findByMemberId() {
@@ -78,7 +67,7 @@ class H2CartItemDaoTest {
         cartItemDao.deleteById(inserted.getId());
 
         // then
-        assertThat(cartItemDao.isExist(inserted.getId()))
-                .isFalse();
+        assertThat(cartItemDao.findById(inserted.getId()).isEmpty())
+                .isTrue();
     }
 }

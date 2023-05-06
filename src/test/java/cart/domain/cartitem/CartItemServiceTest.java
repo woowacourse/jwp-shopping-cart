@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import cart.domain.product.ProductService;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -74,10 +75,10 @@ class CartItemServiceTest {
     @Test
     void delete() {
         // given
-        when(cartItemDao.isExist(FIXTURE_CART_ITEM_ID)).thenReturn(true);
+        when(cartItemDao.findById(FIXTURE_CART_ITEM_ID)).thenReturn(Optional.of(FIXTURE_INSERT_CART_ITEM));
 
         // when
-        cartItemService.deleteById(FIXTURE_CART_ITEM_ID);
+        cartItemService.deleteById(FIXTURE_MEMBER_ID, FIXTURE_CART_ITEM_ID);
 
         // then
         verify(cartItemDao).deleteById(FIXTURE_CART_ITEM_ID);
@@ -87,11 +88,11 @@ class CartItemServiceTest {
     @Test
     void deleteNotExistingIdFail() {
         // given
-        when(cartItemDao.isExist(FIXTURE_CART_ITEM_ID)).thenReturn(false);
+        when(cartItemDao.findById(FIXTURE_CART_ITEM_ID)).thenReturn(Optional.empty());
 
         // when
         // then
-        assertThatThrownBy(() -> cartItemService.deleteById(FIXTURE_CART_ITEM_ID))
+        assertThatThrownBy(() -> cartItemService.deleteById(FIXTURE_MEMBER_ID, FIXTURE_CART_ITEM_ID))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

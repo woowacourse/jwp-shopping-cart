@@ -17,6 +17,7 @@ import org.springframework.test.context.jdbc.SqlGroup;
         @Sql("/schema.sql"),
         @Sql("/data.sql")
 })
+// TODO 사용자 정보 테스트 픽스쳐로 상수화
 public class CartItemIntegrationTest {
 
     @LocalServerPort
@@ -63,6 +64,19 @@ public class CartItemIntegrationTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("로그인 사용자가 장바구니 아이템 중복 등록 시 BAD_REQUEST 응답코드를 반환한다")
+    @Test
+    void createDuplicated() {
+        jdbcTemplate.update("INSERT INTO cart_items (member_id, product_id) VALUES (1, 1)");
+
+        RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("dummy@gmail.com", "abcd1234")
+                .when().post("/cartitems/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("인증되지 않은 사용자가 장바구니 아이템 등록 시 UNAUTHORIZED 응답코드를 반환한다")
     @Test
     void createUnauthorized() {
@@ -98,5 +112,18 @@ public class CartItemIntegrationTest {
                 .when().delete("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @DisplayName("다른 사용자의 장바구니 아이템 삭제 시 FORBIDDEN 응답코드를 반환한다")
+    @Test
+    void deleteForbidden() {
+        jdbcTemplate.update("INSERT INTO cart_items (member_id, product_id) VALUES (1, 1)");
+
+        RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("dummy2@gmail.com", "abcd5678")
+                .when().delete("/cartitems/1")
+                .then().log().all()
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 }

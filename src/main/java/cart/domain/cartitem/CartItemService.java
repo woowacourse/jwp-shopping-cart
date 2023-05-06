@@ -2,6 +2,7 @@ package cart.domain.cartitem;
 
 import cart.domain.product.ProductService;
 import cart.dto.CartItemDto;
+import cart.infratstructure.MemberForbiddenException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -32,16 +33,17 @@ public class CartItemService {
         return cartItemDao.findByMemberId(id);
     }
 
-    public void deleteById(final Long id) {
-        // TODO 사용자 아이디 비교, 불일치 시 Forbidden 응답하게 하기
-        validateIdExist(id);
+    public void deleteById(final Long memberId, final Long id) {
+        validateIds(memberId, id);
         cartItemDao.deleteById(id);
     }
 
-    private void validateIdExist(Long id) {
-        if (cartItemDao.isExist(id)) {
-            return;
+    private void validateIds(final Long memberId, final Long id) {
+        CartItem cartItem = cartItemDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id입니다. value: " + id));
+
+        if (memberId != cartItem.getMemberId()) {
+            throw new MemberForbiddenException("사용자 정보와 장바구니 아이템 정보가 일치하지 않습니다.");
         }
-        throw new IllegalArgumentException("존재하지 않는 id입니다. value: " + id);
     }
 }

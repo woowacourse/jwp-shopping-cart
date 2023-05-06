@@ -4,6 +4,7 @@ import cart.dto.CartItemDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -46,18 +47,16 @@ public class H2CartItemDao extends CartItemDao {
     }
 
     @Override
-    public boolean isExist(final Long id) {
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
-                "SELECT EXISTS (SELECT id FROM cart_items WHERE id = ? limit 1) AS SUCCESS", Boolean.class, id));
-    }
-
-    @Override
     public Optional<CartItem> findById(final Long id) {
-        CartItem cartItem = jdbcTemplate.queryForObject(
-                "SELECT id, product_id, member_id "
-                        + "FROM cart_items "
-                        + "WHERE id = ?", CART_ITEM_ROW_MAPPER, id);
-        return Optional.ofNullable(cartItem);
+        try {
+            CartItem cartItem = jdbcTemplate.queryForObject(
+                    "SELECT id, product_id, member_id "
+                            + "FROM cart_items "
+                            + "WHERE id = ?", CART_ITEM_ROW_MAPPER, id);
+            return Optional.of(cartItem);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     @Override

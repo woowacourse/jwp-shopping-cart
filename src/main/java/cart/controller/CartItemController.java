@@ -41,8 +41,7 @@ public class CartItemController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id, @AuthenticationPrincipal Long loginMemberId) {
-        // TODO 삭제하려는 아이템이 해당 사용자 것인지 확인하기
-        cartItemService.deleteById(id);
+    public void delete(@PathVariable(value = "id") Long cartItemId, @AuthenticationPrincipal Long loginMemberId) {
+        cartItemService.deleteById(loginMemberId, cartItemId);
     }
 }
