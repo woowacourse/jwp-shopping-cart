@@ -12,6 +12,7 @@ import cart.domain.product.Product;
 import cart.domain.user.CartUser;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
@@ -84,10 +85,17 @@ public class CartRepositoryImpl implements CartRepository {
     public void deleteProductInCart(final CartUser cartUser, final Product product) {
         final CartUserEntity cartUserEntity = cartUserDao.findByEmail(cartUser.getUserEmail());
 
-        cartUserProductDao.deleteByCartUserIdAndProductId(
+        final int deleteCount = cartUserProductDao.deleteByCartUserIdAndProductId(
                 cartUserEntity.getId(),
                 product.getProductId()
         );
+
+        validateModification(deleteCount);
     }
 
+    private void validateModification(final int updateCount) {
+        if (updateCount < 1) {
+            throw new NoSuchElementException();
+        }
+    }
 }

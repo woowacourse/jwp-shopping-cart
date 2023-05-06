@@ -65,11 +65,11 @@ public class CartUserProductDao {
         return jdbcTemplate.query(findProductByCartUserIdQuery, (rs, rowNum) -> toCartUserProductEntity(rs));
     }
 
-    public void deleteByCartUserIdAndProductId(final Long cartUserId, final Long productId) {
+    public int deleteByCartUserIdAndProductId(final Long cartUserId, final Long productId) {
         final String deleteByCartUserIdAndProductIdQuery =
                 "DELETE FROM cart_user_product WHERE cart_user_id = ? AND product_id = ?";
 
-        jdbcTemplate.update(con -> {
+        return jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(deleteByCartUserIdAndProductIdQuery);
 
             preparedStatement.setLong(1, cartUserId);
