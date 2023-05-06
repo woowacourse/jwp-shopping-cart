@@ -31,8 +31,6 @@ public class CartService {
     @Transactional
     public int insert(final Long productId, final MemberDto memberDto) {
         final Member member = memberService.find(memberDto);
-        cartDao.find(productId, member.getId())
-                .orElseThrow(() -> new CartException("이미 장바구니에 존재하는 제품입니다."));
         return cartDao.insert(productId, member.getId());
     }
 

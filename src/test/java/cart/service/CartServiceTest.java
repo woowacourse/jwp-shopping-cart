@@ -43,8 +43,6 @@ class CartServiceTest {
     @Test
     void 장바구니를_추가할_수_있다() {
         // given
-        Mockito.when(cartDao.find(Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.ofNullable(CART_FIXTURE));
         Mockito.when(cartDao.insert(Mockito.any(), Mockito.any()))
                 .thenReturn(1);
 
@@ -56,15 +54,17 @@ class CartServiceTest {
     }
 
     @Test
-    void 장바구니_물품은_중복될_수_없다() {
+    void 장바구니_물품은_중복_가능하다() {
         // given
-        Mockito.when(cartDao.find(Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.empty());
+        Mockito.when(cartDao.insert(Mockito.any(), Mockito.any()))
+                .thenReturn(1);
+        final Long productId = 1L;
+
+        // when
+        final int insertedRow = cartService.insert(1L, MEMBER_DTO_FIXTURE);
 
         // expect
-        assertThatThrownBy(() -> cartService.insert(1L, MEMBER_DTO_FIXTURE))
-                .isInstanceOf(CartException.class)
-                .hasMessage("이미 장바구니에 존재하는 제품입니다.");
+        assertThat(cartService.insert(1L, MEMBER_DTO_FIXTURE)).isOne();
     }
 
     @Test
