@@ -1,4 +1,6 @@
+DROP TABLE IF EXISTS cart;
 DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS member;
 CREATE TABLE IF NOT EXISTS product
 (
     id      LONG            NOT NULL    AUTO_INCREMENT,
@@ -8,7 +10,6 @@ CREATE TABLE IF NOT EXISTS product
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS member;
 CREATE TABLE IF NOT EXISTS member
 (
     id          LONG            NOT NULL    AUTO_INCREMENT,
@@ -16,3 +17,14 @@ CREATE TABLE IF NOT EXISTS member
     password    VARCHAR(255)    NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS cart
+(
+    id              LONG    NOT NULL    AUTO_INCREMENT,
+    member_id       LONG    NOT NULL,
+    product_id      LONG    NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (member_id)     REFERENCES  MEMBER (id),
+    FOREIGN KEY (product_id)    REFERENCES  PRODUCT (id)
+);
+
