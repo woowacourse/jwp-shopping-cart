@@ -61,16 +61,16 @@
 - [ ] 장바구니 기능 구현
   - [ ] 장바구니 정보 관리 CRUD API 작성
     - [x] 장바구니 생성
-      - [x] POST /cart 요청과 매핑
+      - [x] POST /carts 요청과 매핑
       - [x] db에 저장한다
-    - [ ] 장바구니 목록 조회
-      - [ ] GET /cart 요청과 매핑
-      - [ ] db의 cart 목록을 전부 조회한다
+    - [x] 장바구니 목록 조회
+      - [x] GET /carts 요청과 매핑
+      - [x] db의 carts 목록을 전부 조회한다
     - [ ] 장바구니 수정
-      - [ ] PUT /cart 요청과 매핑
+      - [ ] PUT /carts 요청과 매핑
       - [ ] 특정 cart 정보를 수정한다
     - [ ] 장바구니 삭제
-      - [ ] DELETE /cart 요청과 매핑
+      - [ ] DELETE /carts 요청과 매핑
       - [ ] 특정 cart를 삭제한다
 - [ ] 장바구니 페이지 연동
   - [ ] cart.html 파일이 /cart url을 통해 접근되도록 설정
