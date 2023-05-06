@@ -23,21 +23,21 @@ public class CartService {
     private final ProductDao productDao;
 
     public long add(final String email, final long productId) {
-        MemberEntity member = memberDao.findIdByEmail(email);
+        MemberEntity member = memberDao.findByEmail(email);
         validateProductId(productId);
 
         return cartDao.add(member.getId(), productId);
     }
 
     public void delete(final String email, final long cartId) {
-        MemberEntity member = memberDao.findIdByEmail(email);
+        MemberEntity member = memberDao.findByEmail(email);
         validateCartId(cartId);
 
         cartDao.deleteById(member.getId(), cartId);
     }
 
     public List<CartItemDto> findAllByMemberId(final String email) {
-        MemberEntity member = memberDao.findIdByEmail(email);
+        MemberEntity member = memberDao.findByEmail(email);
         return cartDao.findAllByMemberId(member.getId()).stream()
                 .map(CartItemDto::from)
                 .collect(Collectors.toList());

@@ -20,7 +20,7 @@ public class MemberDao {
         return jdbcTemplate.query(sql, memberRowMapper());
     }
 
-    public MemberEntity findIdByEmail(final String email) {
+    public MemberEntity findByEmail(final String email) {
         String sql = "SELECT id, email, password FROM member WHERE email = ?";
         try {
             return jdbcTemplate.queryForObject(sql, memberRowMapper(), email);
