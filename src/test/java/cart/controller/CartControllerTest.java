@@ -36,8 +36,8 @@ class CartControllerTest {
     @MockBean
     private UserService userService;
 
-    @DisplayName("GET /cart/items")
     @Test
+    @DisplayName("GET /cart/items")
     void showCartItemList() throws Exception {
         final List<CartItem> cartItemResponse = List.of(new CartItem(1L, "치킨", 1000, null));
         final String result = objectMapper.writeValueAsString(cartItemResponse);
@@ -51,8 +51,8 @@ class CartControllerTest {
                 .andExpect(content().json(result));
     }
 
-    @DisplayName("POST /cart/items")
     @Test
+    @DisplayName("POST /cart/items")
     void createCartItem() throws Exception {
         final CartItemRequest cartItemRequest = new CartItemRequest(1L);
         final String request = objectMapper.writeValueAsString(cartItemRequest);
@@ -66,8 +66,8 @@ class CartControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("DELETE /cart/items/{id}")
     @Test
+    @DisplayName("DELETE /cart/items/{id}")
     void deleteCartItem() throws Exception {
         doNothing().when(cartService).delete(anyLong());
         final int id = 1;

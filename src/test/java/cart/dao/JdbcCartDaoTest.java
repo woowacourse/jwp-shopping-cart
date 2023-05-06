@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,13 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = {"classpath:test.sql"})
 public class JdbcCartDaoTest {
 
-    private final RowMapper<Product> productRowMapper = (resultSet, rowNum) ->
-            new Product(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    resultSet.getInt("price"),
-                    resultSet.getString("image")
-            );
     private final JdbcCartDao jdbcCartDao;
     private final JdbcProductDao jdbcProductDao;
     private final JdbcUserDao jdbcUserDao;
@@ -35,21 +27,21 @@ public class JdbcCartDaoTest {
 
     @Test
     @DisplayName("Cart 삽입 테스트")
-    void insertTest() {
-        final Long productId = jdbcProductDao.insert(new Product("name", 1, null));
-        final Long userId = jdbcUserDao.insert(new User("io@mail.com", "password"));
+    void insert() {
+        final long productId = jdbcProductDao.insert(new Product("name", 1, null));
+        final long userId = jdbcUserDao.insert(new User("io@mail.com", "password"));
 
-        final Long id = jdbcCartDao.insert(userId, productId);
+        final long id = jdbcCartDao.insert(userId, productId);
 
         assertThat(id).isPositive();
     }
 
     @Test
     @DisplayName("Cart UserId로 조회 테스트")
-    void findByIdTest() {
-        final Long productId1 = jdbcProductDao.insert(new Product("name", 1000, null));
-        final Long productId2 = jdbcProductDao.insert(new Product("name", 2000, null));
-        final Long userId = jdbcUserDao.insert(new User("io@mail.com", "password"));
+    void findById() {
+        final long productId1 = jdbcProductDao.insert(new Product("name", 1000, null));
+        final long productId2 = jdbcProductDao.insert(new Product("name", 2000, null));
+        final long userId = jdbcUserDao.insert(new User("io@mail.com", "password"));
 
         jdbcCartDao.insert(userId, productId1);
         jdbcCartDao.insert(userId, productId2);
@@ -59,11 +51,11 @@ public class JdbcCartDaoTest {
 
     @Test
     @DisplayName("cart 삭제 테스트")
-    void deleteTest() {
-        final Long productId = jdbcProductDao.insert(new Product("name", 1000, null));
-        final Long userId = jdbcUserDao.insert(new User("io@mail.com", "password"));
+    void delete() {
+        final long productId = jdbcProductDao.insert(new Product("name", 1000, null));
+        final long userId = jdbcUserDao.insert(new User("io@mail.com", "password"));
+        final long id = jdbcCartDao.insert(userId, productId);
 
-        final Long id = jdbcCartDao.insert(userId, productId);
         jdbcCartDao.deleteById(id);
 
         assertThat(jdbcCartDao.findByUserId(userId).size()).isEqualTo(0);

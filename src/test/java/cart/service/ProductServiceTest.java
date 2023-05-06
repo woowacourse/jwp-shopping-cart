@@ -36,7 +36,7 @@ class ProductServiceTest {
     @Test
     @DisplayName("Id로 상품을 조회한다")
     void findById() {
-        final Long id = productService.save("이오", 1000, null);
+        final long id = productService.save("이오", 1000, null);
 
         final Product actual = productService.findById(id);
 

@@ -22,12 +22,11 @@ public class HomeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private ProductService productService;
 
-    @DisplayName("GET /")
     @Test
+    @DisplayName("GET /")
     void getAdmin() throws Exception {
         final Product product1 = new Product("이오", 1000, null);
         final Product product2 = new Product("애쉬", 2000, null);

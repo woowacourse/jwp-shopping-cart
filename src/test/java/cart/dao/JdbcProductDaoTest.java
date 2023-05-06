@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Optional;
@@ -36,19 +35,20 @@ class JdbcProductDaoTest {
 
     @Test
     @DisplayName("Product 삽입 테스트")
-    void insertTest() {
-        final Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
+    void insert() {
+        final long id = jdbcProductDao.insert(new Product("IO", 10000, null));
         assertThat(id).isPositive();
     }
 
     @Test
     @DisplayName("Product Id로 조회 테스트")
-    void findByIdTest() {
-        final Long id1 = jdbcProductDao.insert(new Product("IO", 10000, null));
-        final Long id2 = jdbcProductDao.insert(new Product("ASH", 10000, null));
+    void findById() {
+        final long id1 = jdbcProductDao.insert(new Product("IO", 10000, null));
+        final long id2 = jdbcProductDao.insert(new Product("ASH", 10000, null));
 
         final Optional<Product> product1 = jdbcProductDao.findById(id1);
         final Optional<Product> product2 = jdbcProductDao.findById(id2);
+
         assertAll(
                 () -> assertThat(product1).isPresent(),
                 () -> assertThat(product1.get().getName()).isEqualTo("IO"),
@@ -59,7 +59,7 @@ class JdbcProductDaoTest {
 
     @Test
     @DisplayName("Product 조회 테스트")
-    void findAllTest() {
+    void findAll() {
         jdbcProductDao.insert(new Product("IO", 10000, null));
         jdbcProductDao.insert(new Product("ASH", 10000, null));
         jdbcProductDao.insert(new Product("BROWN", 10000, null));
@@ -70,8 +70,8 @@ class JdbcProductDaoTest {
 
     @Test
     @DisplayName("Product 갱신 테스트")
-    void updateTest() {
-        final Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
+    void update() {
+        final long id = jdbcProductDao.insert(new Product("IO", 10000, null));
 
         jdbcProductDao.update(new Product(id, "ASH", 1000, "image"));
 
@@ -88,8 +88,8 @@ class JdbcProductDaoTest {
 
     @Test
     @DisplayName("Product 삭제 테스트")
-    void deleteTest() {
-        final Long id = jdbcProductDao.insert(new Product("IO", 10000, null));
+    void delete() {
+        final long id = jdbcProductDao.insert(new Product("IO", 10000, null));
 
         jdbcProductDao.deleteById(id);
 

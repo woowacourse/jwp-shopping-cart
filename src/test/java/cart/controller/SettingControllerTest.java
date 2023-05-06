@@ -22,12 +22,11 @@ class SettingControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private UserService userService;
 
-    @DisplayName("GET /settings")
     @Test
+    @DisplayName("GET /settings")
     void getAdmin() throws Exception {
         final User user1 = new User("io@mail.com", "12121212");
         final User user2 = new User("ash@mail.com", "34343434");

@@ -23,12 +23,11 @@ public class ProductControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-
     @MockBean
     private ProductService productService;
 
-    @DisplayName("POST /product")
     @Test
+    @DisplayName("POST /product")
     void createProduct() throws Exception {
         final ProductRequest productRequest = new ProductRequest("이오", 1000, null);
         final String request = objectMapper.writeValueAsString(productRequest);
@@ -39,8 +38,8 @@ public class ProductControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("PUT /product/{id}")
     @Test
+    @DisplayName("PUT /product/{id}")
     void updateProduct() throws Exception {
         doNothing().when(productService).update(anyLong(), anyString(), anyInt(), anyString());
         final ProductRequest productRequest = new ProductRequest("애쉬", 2000, "image");
@@ -53,8 +52,8 @@ public class ProductControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("DELETE /product/{id}")
     @Test
+    @DisplayName("DELETE /product/{id}")
     void deleteProduct() throws Exception {
         doNothing().when(productService).delete(anyLong());
         final int id = 1;

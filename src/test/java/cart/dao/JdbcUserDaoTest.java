@@ -25,16 +25,16 @@ class JdbcUserDaoTest {
 
     @Test
     @DisplayName("Product 삽입 테스트")
-    void insertTest() {
-        final Long id = jdbcUserDao.insert(new User("IO@mail.com", "testpassword"));
+    void insert() {
+        final long id = jdbcUserDao.insert(new User("IO@mail.com", "testpassword"));
         assertThat(id).isPositive();
     }
 
     @Test
     @DisplayName("User Email로 조회 테스트")
-    void finByEmailTest() {
-        final Long id1 = jdbcUserDao.insert(new User("IO@mail.com", "testpassword"));
-        final Long id2 = jdbcUserDao.insert(new User("ASH@mail.com", "testpassword"));
+    void finByEmail() {
+        final long id1 = jdbcUserDao.insert(new User("IO@mail.com", "testpassword"));
+        final long id2 = jdbcUserDao.insert(new User("ASH@mail.com", "testpassword"));
 
         final Optional<User> user1 = jdbcUserDao.findByEmail("IO@mail.com");
         final Optional<User> user2 = jdbcUserDao.findByEmail("ASH@mail.com");
@@ -49,7 +49,7 @@ class JdbcUserDaoTest {
 
     @Test
     @DisplayName("User 조회 테스트")
-    void findAllTest() {
+    void findAll() {
         jdbcUserDao.insert(new User("IO@mail.com", "testpassword"));
         jdbcUserDao.insert(new User("ASH@mail.com", "testpassword"));
         jdbcUserDao.insert(new User("BROWN@mail.com", "testpassword"));

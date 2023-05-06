@@ -19,14 +19,6 @@ class ProductNameTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test
-    @DisplayName("이름의 길이가 0일 경우 예외 발생")
-    void nameEmpty() {
-        assertThatThrownBy(() -> new ProductName(""))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ProductName.NAME_LENGTH_ERROR_MESSAGE);
-    }
-
     @ParameterizedTest
     @DisplayName("이름의 길이가 0일 경우 예외 발생")
     @ValueSource(strings = {"", " "})

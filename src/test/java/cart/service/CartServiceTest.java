@@ -33,8 +33,8 @@ class CartServiceTest {
     @Test
     @DisplayName("상품을 저장한다")
     void save() {
-        final Long productId = productService.save("치킨", 1000, null);
-        final Long userId = userService.save("IO@mail.com", "12121212");
+        final long productId = productService.save("치킨", 1000, null);
+        final long userId = userService.save("IO@mail.com", "12121212");
 
         assertDoesNotThrow(() -> cartService.save(userId, productId));
     }
@@ -42,9 +42,9 @@ class CartServiceTest {
     @Test
     @DisplayName("사용자 ID로 장바구니의 물건을 조회한다.")
     void findByUserId() {
-        final Long productId1 = productService.save("치킨", 1000, null);
-        final Long productId2 = productService.save("피자", 1000, null);
-        final Long userId = userService.save("ASH@mail.com", "12121212");
+        final long productId1 = productService.save("치킨", 1000, null);
+        final long productId2 = productService.save("피자", 1000, null);
+        final long userId = userService.save("ASH@mail.com", "12121212");
         cartService.save(userId, productId1);
         cartService.save(userId, productId2);
 
@@ -57,9 +57,9 @@ class CartServiceTest {
     @Test
     @DisplayName("장바구니의 상품을 삭제한다")
     void delete() {
-        final Long productId = productService.save("치킨", 1000, null);
-        final Long userId = userService.save("ASH@mail.com", "12121212");
-        final Long id = cartService.save(userId, productId);
+        final long productId = productService.save("치킨", 1000, null);
+        final long userId = userService.save("ASH@mail.com", "12121212");
+        final long id = cartService.save(userId, productId);
 
         cartService.delete(id);
 
