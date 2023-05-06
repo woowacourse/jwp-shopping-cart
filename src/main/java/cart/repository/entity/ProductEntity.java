@@ -1,6 +1,7 @@
 package cart.repository.entity;
 
 import cart.domain.Product;
+import java.util.Objects;
 
 public class ProductEntity {
 
@@ -49,5 +50,23 @@ public class ProductEntity {
 
     public int getPrice() {
         return price;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final ProductEntity that = (ProductEntity) o;
+        return price == that.price && Objects.equals(id, that.id) && Objects.equals(name, that.name)
+                && Objects.equals(imageUrl, that.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, imageUrl, price);
     }
 }
