@@ -1,9 +1,12 @@
 package cart.controller.dto.response;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import cart.entity.CartEntity;
 >>>>>>> 28a6d971 (feat: findAllByMemberId 구현)
+=======
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
 import cart.entity.ProductEntity;
 
 public class CartItemResponse {

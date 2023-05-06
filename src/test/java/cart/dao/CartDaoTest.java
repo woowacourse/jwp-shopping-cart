@@ -2,9 +2,12 @@ package cart.dao;
 
 import cart.entity.CartEntity;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import cart.entity.MemberEntity;
 >>>>>>> db0c1803 (feat: CartDao save 테스트)
+=======
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
 import cart.entity.ProductEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,28 +15,40 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+<<<<<<< HEAD
 =======
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 >>>>>>> db0c1803 (feat: CartDao save 테스트)
+=======
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql("/data-test.sql")
+<<<<<<< HEAD
 =======
 
 @JdbcTest
 >>>>>>> db0c1803 (feat: CartDao save 테스트)
+=======
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
 class CartDaoTest {
 
     @Autowired
@@ -42,24 +57,31 @@ class CartDaoTest {
     private CartDao cartDao;
     private ProductDao productDao;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     private MemberDao memberDao;
 >>>>>>> db0c1803 (feat: CartDao save 테스트)
+=======
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
 
     @BeforeEach
     void setUp() {
         this.cartDao = new CartDao(jdbcTemplate);
         this.productDao = new ProductDao(jdbcTemplate);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         this.memberDao = new MemberDao(jdbcTemplate);
 >>>>>>> db0c1803 (feat: CartDao save 테스트)
+=======
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
     }
 
     @DisplayName("장바구니에 상품을 생성한다.")
     @Test
     void create() {
         // given
+<<<<<<< HEAD
 <<<<<<< HEAD
         productDao.create(new ProductEntity(1L, "상품", "img", 1000));
 
@@ -82,11 +104,14 @@ class CartDaoTest {
         cartDao.save(2L, 2L);
 =======
         saveMember();
+=======
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
         productDao.create(new ProductEntity(1L, "상품", "img", 1000));
 
         final Long memberId = 1L;
         final Long productId = 1L;
 
+<<<<<<< HEAD
         // when
         cartDao.save(memberId, productId);
 >>>>>>> db0c1803 (feat: CartDao save 테스트)
@@ -141,28 +166,31 @@ class CartDaoTest {
                 () -> Assertions.assertThat(responses.get(0).getMemberId()).isEqualTo(1L),
                 () -> Assertions.assertThat(responses.get(0).getProductId()).isEqualTo(1L)
         );
+=======
+        // when, then
+        assertDoesNotThrow(() -> cartDao.save(memberId, productId));
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
     }
 
     @DisplayName("장바구니에 있는 모든 상품을 조회한다.")
     @Test
     void findAll() {
         // given
-        saveMember();
         productDao.create(new ProductEntity(1L, "상품", "img", 1000));
         productDao.create(new ProductEntity(2L, "상품", "img", 1000));
 
         // when
-        cartDao.save(3L, 2L);
-        cartDao.save(4L, 3L);
+        cartDao.save(1L, 1L);
+        cartDao.save(2L, 2L);
 
         // then
         List<CartEntity> responses = cartDao.findAll();
         assertAll(
                 () -> Assertions.assertThat(responses).hasSize(2),
-                () -> Assertions.assertThat(responses.get(0).getMemberId()).isEqualTo(3L),
-                () -> Assertions.assertThat(responses.get(0).getProductId()).isEqualTo(2L),
-                () -> Assertions.assertThat(responses.get(1).getMemberId()).isEqualTo(4L),
-                () -> Assertions.assertThat(responses.get(1).getProductId()).isEqualTo(3L)
+                () -> Assertions.assertThat(responses.get(0).getMemberId()).isEqualTo(1L),
+                () -> Assertions.assertThat(responses.get(0).getProductId()).isEqualTo(1L),
+                () -> Assertions.assertThat(responses.get(1).getMemberId()).isEqualTo(2L),
+                () -> Assertions.assertThat(responses.get(1).getProductId()).isEqualTo(2L)
         );
     }
 
@@ -170,16 +198,15 @@ class CartDaoTest {
     @Test
     void findAllByMemberId() {
         // given
-        saveMember();
         productDao.create(new ProductEntity(1L, "상품1", "img", 1000));
         productDao.create(new ProductEntity(2L, "상품2", "img", 2000));
         productDao.create(new ProductEntity(3L, "상품3", "img", 3000));
 
 
         // when
-        cartDao.save(5L, 4L);
-        cartDao.save(5L, 5L);
-        List<ProductEntity> responses = cartDao.findAllByMemberId(5L);
+        cartDao.save(1L, 1L);
+        cartDao.save(1L, 2L);
+        List<ProductEntity> responses = cartDao.findAllByMemberId(1L);
 
         // then
         assertAll(
@@ -192,6 +219,7 @@ class CartDaoTest {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     private void saveProduct() {
         productDao.create(new ProductEntity(1L, "상품", "img", 1000));
 >>>>>>> db0c1803 (feat: CartDao save 테스트)
@@ -202,4 +230,6 @@ class CartDaoTest {
 >>>>>>> 28a6d971 (feat: findAllByMemberId 구현)
     }
 
+=======
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
 }

@@ -78,9 +78,13 @@ public class MemberDao {
         return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, email));
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> 1eb8f466 (feat: 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있다.)
 =======
 >>>>>>> ed825fb4 (feat: 장바구니에 상품 추가)
+=======
+
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
 }

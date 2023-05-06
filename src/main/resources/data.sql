@@ -36,6 +36,7 @@ CREATE TABLE CART(
     FOREIGN KEY (product_id) REFERENCES PRODUCT(id)
 );
 
+<<<<<<< HEAD
 -- INSERT INTO PRODUCT(name, price, image_url) values('맨유', 9999909, 'man united');
 
 <<<<<<< HEAD
@@ -46,3 +47,7 @@ INSERT INTO MEMBER(email, password) values('b@b.com', 'password2');
 -- INSERT INTO MEMBER(email, password) values('a@a.com', 'password1');
 -- INSERT INTO MEMBER(email, password) values('b@b.com', 'password2');
 >>>>>>> 28a6d971 (feat: findAllByMemberId 구현)
+=======
+INSERT INTO MEMBER(email, password) values('a@a.com', 'password1');
+INSERT INTO MEMBER(email, password) values('b@b.com', 'password2');
+>>>>>>> 339fefaa (feat: findAllByMemberId 테스트 및 테스트 전용 sql 파일 설정)
