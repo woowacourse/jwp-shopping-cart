@@ -73,4 +73,4 @@
 - [x] users
   - id, email, password를 가진다.
 - [x] carts
-  - num, userid, productid, quantity를 가진다.
+  - num, userid, productid를 가진다.
