@@ -60,8 +60,8 @@ public final class ExceptionAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponseDto(stringBuilder.toString()));
     }
 
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponseDto> handleException(final CustomException e) {
+    @ExceptionHandler(HttpException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(final HttpException e) {
         logger.error(e.getMessage());
         return ResponseEntity.status(e.getHttpStatus()).body(new ErrorResponseDto(e.getMessage()));
     }

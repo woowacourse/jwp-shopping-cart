@@ -2,12 +2,12 @@ package cart.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class CustomException extends RuntimeException {
+public class HttpException extends RuntimeException {
 
     private final HttpStatus httpStatus;
     private final String message;
 
-    public CustomException(final HttpStatus httpStatus, final String message) {
+    public HttpException(final HttpStatus httpStatus, final String message) {
         this.httpStatus = httpStatus;
         this.message = message;
     }
