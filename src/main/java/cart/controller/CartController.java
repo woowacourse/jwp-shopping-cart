@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.argumentresolver.AuthenticatedMember;
 import cart.entity.item.CartItem;
 import cart.entity.member.Member;
 import cart.entity.product.Product;
@@ -9,7 +10,6 @@ import cart.service.cart.CartItemFindService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -20,32 +20,26 @@ public class CartController {
     private final CartItemFindService findService;
     private final CartItemDeleteService deleteService;
 
-    public CartController(
-            final CartItemAddService addService,
-            final CartItemFindService findService,
-            final CartItemDeleteService deleteService) {
+    public CartController(final CartItemAddService addService, final CartItemFindService findService, final CartItemDeleteService deleteService) {
         this.addService = addService;
         this.findService = findService;
         this.deleteService = deleteService;
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> findItems(HttpServletRequest request) {
-        final Member authenticatedMember = (Member) request.getAttribute("authenticatedMember");
+    public ResponseEntity<List<Product>> findItems(@AuthenticatedMember Member authenticatedMember) {
         final List<Product> products = findService.findCartItems(authenticatedMember.getId());
         return ResponseEntity.ok().body(products);
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<CartItem> addItem(@PathVariable("productId") long productId, HttpServletRequest request) {
-        final Member authenticatedMember = (Member) request.getAttribute("authenticatedMember");
+    public ResponseEntity<CartItem> addItem(@PathVariable("productId") long productId, @AuthenticatedMember Member authenticatedMember) {
         final CartItem addedItem = addService.addItem(authenticatedMember.getId(), productId);
         return ResponseEntity.ok().body(addedItem);
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteItem(@PathVariable("productId") long productId, HttpServletRequest request) {
-        final Member authenticatedMember = (Member) request.getAttribute("authenticatedMember");
+    public ResponseEntity<Void> deleteItem(@PathVariable("productId") long productId, @AuthenticatedMember Member authenticatedMember) {
         deleteService.deleteItem(authenticatedMember.getId(), productId);
         return ResponseEntity.noContent().build();
     }
