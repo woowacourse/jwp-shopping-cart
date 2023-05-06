@@ -134,8 +134,8 @@
 - [x] Dto 기본 생성자 접근제어자 수정
 - [x] CartEntity equals,hashcode 오버라이드 필요성에 대한 고민
 - [x] ExceptionHandler가 Exception.message를 이용할 수 있도록 수정
-- [ ] UPDATE 요청의 응답으로 수정된 엔티티를 반환하도록 수정
-- [ ] ProductValidator 네이밍 수정(ConstraintValidator 구현체로 생각할 여지 있음)
+- [x] UPDATE 요청의 응답으로 수정된 엔티티를 반환하도록 수정
+- [x] ProductValidator 네이밍 수정(ConstraintValidator 구현체로 생각할 여지 있음)
 - [ ] DTO 유효성 검사 서비스 or 영속성 계층에서 더블 체크?
 
 ### 궁금한 내용

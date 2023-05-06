@@ -8,7 +8,7 @@ import javax.validation.constraints.PositiveOrZero;
 public class ProductUpdateRequestDto {
     @Positive
     private final int id;
-    @Pattern(regexp = ProductValidator.IMAGE_URL_REGEX)
+    @Pattern(regexp = ProductVerifier.IMAGE_URL_REGEX)
     private final String image;
     @NotBlank
     private final String name;

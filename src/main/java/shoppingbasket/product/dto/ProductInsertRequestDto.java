@@ -8,7 +8,7 @@ public class
 ProductInsertRequestDto {
     @NotBlank
     private final String name;
-    @Pattern(regexp = ProductValidator.IMAGE_URL_REGEX)
+    @Pattern(regexp = ProductVerifier.IMAGE_URL_REGEX)
     private final String image;
     @PositiveOrZero
     private final int price;
