@@ -1,6 +1,6 @@
 package cart.config;
 
-import cart.exception.AuthTypeNonBasicException;
+import cart.exception.AuthPrincipalInValidException;
 import cart.exception.AuthorizationException;
 import cart.exception.MemberNotFoundException;
 import cart.service.MemberService;
@@ -65,7 +65,7 @@ public class MemberInfoArgumentResolver implements HandlerMethodArgumentResolver
             throw new AuthorizationException();
         }
         if (!credential.startsWith(BASIC_AUTH_PREFIX)) {
-            throw new AuthTypeNonBasicException();
+            throw new AuthPrincipalInValidException();
         }
     }
 }
