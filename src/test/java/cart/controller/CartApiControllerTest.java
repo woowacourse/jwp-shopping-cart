@@ -49,7 +49,7 @@ class CartApiControllerTest {
 
     @Nested
     @DisplayName("[LOGIN TEST] - ")
-    class Login {
+    class Auth {
 
         @DisplayName("reqeust시 Authorization header가 없다면 401 반환한다.")
         @Test

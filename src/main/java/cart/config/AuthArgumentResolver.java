@@ -1,7 +1,8 @@
 package cart.config;
 
-import cart.annotation.Login;
-import cart.domain.Member;
+import cart.annotation.Auth;
+import cart.dto.request.AuthRequest;
+import cart.dto.request.Credential;
 import cart.exception.custom.UnauthorizedException;
 import cart.service.AuthService;
 import org.springframework.core.MethodParameter;
@@ -13,21 +14,21 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
+public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_HEADER_PREFIX = "Basic ";
 
     private final AuthService authService;
 
-    public LoginArgumentResolver(AuthService authService) {
+    public AuthArgumentResolver(AuthService authService) {
         this.authService = authService;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(Login.class) &&
-                parameter.getParameterType().equals(Member.class);
+        return parameter.hasParameterAnnotation(Auth.class) &&
+                parameter.getParameterType().equals(Credential.class);
     }
 
     @Override
@@ -45,15 +46,13 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
                     String.format("Authorization Header는 '%s'로 시작해야 합니다.", AUTHORIZATION_HEADER_PREFIX));
         }
 
-        String[] credentials = decodeByBase64(authorization);
-
-        String email = credentials[0];
-        String password = credentials[1];
-        return authService.findAuthInfo(email, password);
+        AuthRequest authRequest = decodeByBase64(authorization);
+        return authService.findCredential(authRequest);
     }
 
-    private String[] decodeByBase64(String authorization) {
+    private AuthRequest decodeByBase64(String authorization) {
         String encodedValue = authorization.replaceFirst(AUTHORIZATION_HEADER_PREFIX, "");
-        return new String(Base64Utils.decodeFromString(encodedValue)).split(":");
+        String[] authValues = new String(Base64Utils.decodeFromString(encodedValue)).split(":");
+        return new AuthRequest(authValues);
     }
 }

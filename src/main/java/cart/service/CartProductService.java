@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toList;
 
 import cart.dao.CartProductDao;
 import cart.domain.CartProduct;
-import cart.domain.Member;
 import cart.dto.request.CartProductRequest;
 import cart.dto.response.CartProductResponse;
 import java.util.List;
@@ -21,13 +20,13 @@ public class CartProductService {
     }
 
     @Transactional
-    public void save(Member member, CartProductRequest productIdRequest) {
-        cartProductDao.save(member.getId(), productIdRequest.getProductId());
+    public void save(Long memberId, CartProductRequest productIdRequest) {
+        cartProductDao.save(memberId, productIdRequest.getProductId());
     }
 
     @Transactional(readOnly = true)
-    public List<CartProductResponse> findAllByMember(Member member) {
-        List<CartProduct> cartProducts = cartProductDao.findAllByMemberId(member.getId());
+    public List<CartProductResponse> findAllByMemberId(Long memberId) {
+        List<CartProduct> cartProducts = cartProductDao.findAllByMemberId(memberId);
         return cartProducts.stream()
                 .map(CartProductResponse::new)
                 .collect(toList());

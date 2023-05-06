@@ -8,14 +8,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final LoginArgumentResolver loginArgumentResolver;
+    private final AuthArgumentResolver authArgumentResolver;
 
-    public WebConfig(LoginArgumentResolver loginArgumentResolver) {
-        this.loginArgumentResolver = loginArgumentResolver;
+    public WebConfig(AuthArgumentResolver authArgumentResolver) {
+        this.authArgumentResolver = authArgumentResolver;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(loginArgumentResolver);
+        resolvers.add(authArgumentResolver);
     }
 }
