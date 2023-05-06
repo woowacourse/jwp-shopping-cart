@@ -1,6 +1,7 @@
 package cart.service.product;
 
 import cart.fixture.ProductFixture;
+import cart.service.product.domain.Product;
 import cart.service.product.dto.ProductResponse;
 import cart.service.product.dto.ProductServiceRequest;
 import org.junit.jupiter.api.Assertions;

@@ -1,11 +1,11 @@
 package cart.persistence;
 
-import cart.service.cart.Cart;
-import cart.service.member.Member;
-import cart.service.product.Product;
-import cart.service.product.ProductImage;
-import cart.service.product.ProductName;
-import cart.service.product.ProductPrice;
+import cart.service.cart.domain.Cart;
+import cart.service.member.domain.Member;
+import cart.service.product.domain.Product;
+import cart.service.product.domain.ProductImage;
+import cart.service.product.domain.ProductName;
+import cart.service.product.domain.ProductPrice;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,9 +1,9 @@
 package cart.fixture;
 
-import cart.service.product.Product;
-import cart.service.product.ProductImage;
-import cart.service.product.ProductName;
-import cart.service.product.ProductPrice;
+import cart.service.product.domain.Product;
+import cart.service.product.domain.ProductImage;
+import cart.service.product.domain.ProductName;
+import cart.service.product.domain.ProductPrice;
 import cart.service.product.dto.ProductResponse;
 
 public class ProductFixture {

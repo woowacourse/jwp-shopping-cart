@@ -1,4 +1,4 @@
-package cart.service.cart;
+package cart.service.cart.domain;
 
 public class Cart {
     private Long id;

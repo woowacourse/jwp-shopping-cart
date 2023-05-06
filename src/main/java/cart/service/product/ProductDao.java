@@ -1,5 +1,7 @@
 package cart.service.product;
 
+import cart.service.product.domain.Product;
+
 import java.util.List;
 import java.util.Optional;
 

@@ -1,11 +1,12 @@
 package cart.service.cart;
 
+import cart.service.cart.domain.Cart;
 import cart.service.cart.dto.CartServiceRequest;
 import cart.service.cart.dto.ProductResponse;
-import cart.service.member.Member;
 import cart.service.member.MemberDao;
-import cart.service.product.Product;
+import cart.service.member.domain.Member;
 import cart.service.product.ProductDao;
+import cart.service.product.domain.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

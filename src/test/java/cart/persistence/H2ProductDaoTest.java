@@ -1,7 +1,11 @@
 package cart.persistence;
 
 import cart.controller.product.dto.ProductRequest;
-import cart.service.product.*;
+import cart.service.product.ProductDao;
+import cart.service.product.domain.Product;
+import cart.service.product.domain.ProductImage;
+import cart.service.product.domain.ProductName;
+import cart.service.product.domain.ProductPrice;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

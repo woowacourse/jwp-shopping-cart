@@ -1,12 +1,12 @@
 package cart.persistence;
 
-import cart.service.cart.Cart;
 import cart.service.cart.CartDao;
-import cart.service.member.Member;
-import cart.service.product.Product;
-import cart.service.product.ProductImage;
-import cart.service.product.ProductName;
-import cart.service.product.ProductPrice;
+import cart.service.cart.domain.Cart;
+import cart.service.member.domain.Member;
+import cart.service.product.domain.Product;
+import cart.service.product.domain.ProductImage;
+import cart.service.product.domain.ProductName;
+import cart.service.product.domain.ProductPrice;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;

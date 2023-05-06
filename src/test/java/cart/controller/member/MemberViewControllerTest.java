@@ -1,8 +1,8 @@
 package cart.controller.member;
 
-import cart.service.member.Member;
 import cart.service.member.MemberDao;
 import cart.service.member.MemberService;
+import cart.service.member.domain.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

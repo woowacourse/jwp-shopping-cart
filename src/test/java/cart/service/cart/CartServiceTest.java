@@ -1,9 +1,13 @@
 package cart.service.cart;
 
 import cart.service.cart.dto.CartServiceRequest;
-import cart.service.member.Member;
 import cart.service.member.MemberDao;
-import cart.service.product.*;
+import cart.service.member.domain.Member;
+import cart.service.product.ProductDao;
+import cart.service.product.domain.Product;
+import cart.service.product.domain.ProductImage;
+import cart.service.product.domain.ProductName;
+import cart.service.product.domain.ProductPrice;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

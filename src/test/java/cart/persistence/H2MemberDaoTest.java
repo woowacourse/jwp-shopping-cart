@@ -1,7 +1,7 @@
 package cart.persistence;
 
-import cart.service.member.Member;
 import cart.service.member.MemberDao;
+import cart.service.member.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

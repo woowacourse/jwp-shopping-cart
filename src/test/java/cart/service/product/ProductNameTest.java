@@ -1,5 +1,6 @@
 package cart.service.product;
 
+import cart.service.product.domain.ProductName;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -1,5 +1,9 @@
 package cart.service.product;
 
+import cart.service.product.domain.Product;
+import cart.service.product.domain.ProductImage;
+import cart.service.product.domain.ProductName;
+import cart.service.product.domain.ProductPrice;
 import cart.service.product.dto.ProductResponse;
 import cart.service.product.dto.ProductServiceRequest;
 import org.springframework.stereotype.Service;

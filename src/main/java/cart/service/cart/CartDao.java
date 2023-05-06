@@ -1,7 +1,8 @@
 package cart.service.cart;
 
-import cart.service.member.Member;
-import cart.service.product.Product;
+import cart.service.cart.domain.Cart;
+import cart.service.member.domain.Member;
+import cart.service.product.domain.Product;
 
 import java.util.List;
 import java.util.Optional;

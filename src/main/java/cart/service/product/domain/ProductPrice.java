@@ -1,4 +1,4 @@
-package cart.service.product;
+package cart.service.product.domain;
 
 public class ProductPrice {
     private static final int MAX_PRICE = 1_000_000_000;

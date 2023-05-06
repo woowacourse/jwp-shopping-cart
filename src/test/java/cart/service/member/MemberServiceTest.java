@@ -1,5 +1,6 @@
 package cart.service.member;
 
+import cart.service.member.domain.Member;
 import cart.service.member.dto.MemberServiceRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
