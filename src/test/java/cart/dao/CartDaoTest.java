@@ -28,6 +28,11 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 class CartDaoTest {
 
     private static final String[] GENERATED_ID_COLUMN = {"id"};
+    private static final String EMAIL = "huchu@woowahan.com";
+    private static final String PASSWORD = "1234567a!";
+    private static final String NAME = "치킨";
+    private static final int PRICE = 10_000;
+    private static final String IMAGE = "치킨 사진";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -41,41 +46,43 @@ class CartDaoTest {
     @Test
     void 데이터를_넣는다() {
         //given
-        final Long memberId = insertMember(new MemberEntity("huchu@woowahan.com", "1234567a!"));
-        final Long productId = insertProduct(new ProductEntity("치킨", 10_000, "치킨 사진"));
+        final Long memberId = insertMember(EMAIL, PASSWORD);
+        final Long productId = insertProduct(NAME, PRICE, IMAGE);
 
         //when
-        final Long id = cartDao.insert(new CartEntity(memberId, productId));
+        final Long id = cartDao.insert(new CartEntity(
+                new MemberEntity(memberId, EMAIL, PASSWORD),
+                new ProductEntity(productId, NAME, PRICE, IMAGE)));
 
         //then
         assertSoftly(softly -> {
             softly.assertThat(id).isNotNull();
             final CartEntity carEntity = cartDao.findById(id);
-            softly.assertThat(carEntity.getMemberId()).isEqualTo(memberId);
-            softly.assertThat(carEntity.getProductId()).isEqualTo(productId);
+            softly.assertThat(carEntity.getMember()).isEqualTo(new MemberEntity(memberId, EMAIL, PASSWORD));
+            softly.assertThat(carEntity.getProduct()).isEqualTo(new ProductEntity(productId, NAME, PRICE, IMAGE));
         });
     }
 
-    private Long insertMember(final MemberEntity memberEntity) {
+    private Long insertMember(final String email, final String password) {
         final String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(sql, GENERATED_ID_COLUMN);
-            preparedStatement.setString(1, memberEntity.getEmail());
-            preparedStatement.setString(2, memberEntity.getPassword());
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
             return preparedStatement;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    private Long insertProduct(final ProductEntity productEntity) {
+    private Long insertProduct(final String name, final Integer price, final String image) {
         final String sql = "INSERT INTO product (name, price, image) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(sql, GENERATED_ID_COLUMN);
-            preparedStatement.setString(1, productEntity.getName());
-            preparedStatement.setInt(2, productEntity.getPrice());
-            preparedStatement.setString(3, productEntity.getImage());
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, price);
+            preparedStatement.setString(3, image);
             return preparedStatement;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -84,26 +91,30 @@ class CartDaoTest {
     @Test
     void id로_데이터를_찾는다() {
         //given
-        final Long memberId = insertMember(new MemberEntity("huchu@woowahan.com", "1234567a!"));
-        final Long productId = insertProduct(new ProductEntity("치킨", 10_000, "치킨 사진"));
-        final Long id = cartDao.insert(new CartEntity(memberId, productId));
+        final Long memberId = insertMember(EMAIL, PASSWORD);
+        final Long productId = insertProduct(NAME, PRICE, IMAGE);
+        final Long id = cartDao.insert(new CartEntity(
+                new MemberEntity(memberId, EMAIL, PASSWORD),
+                new ProductEntity(productId, NAME, PRICE, IMAGE)));
 
         //when
         final CartEntity cartEntity = cartDao.findById(id);
 
         //then
         assertSoftly(softly -> {
-            softly.assertThat(cartEntity.getMemberId()).isEqualTo(memberId);
-            softly.assertThat(cartEntity.getProductId()).isEqualTo(productId);
+            softly.assertThat(cartEntity.getMember()).isEqualTo(new MemberEntity(memberId, EMAIL, PASSWORD));
+            softly.assertThat(cartEntity.getProduct()).isEqualTo(new ProductEntity(productId, NAME, PRICE, IMAGE));
         });
     }
 
     @Test
     void 사용자_id로_데이터를_찾는다() {
         //given
-        final Long memberId = insertMember(new MemberEntity("huchu@woowahan.com", "1234567a!"));
-        final Long productId = insertProduct(new ProductEntity("치킨", 10_000, "치킨 사진"));
-        final Long id = cartDao.insert(new CartEntity(memberId, productId));
+        final Long memberId = insertMember(EMAIL, PASSWORD);
+        final Long productId = insertProduct(NAME, PRICE, IMAGE);
+        final Long id = cartDao.insert(new CartEntity(
+                new MemberEntity(memberId, EMAIL, PASSWORD),
+                new ProductEntity(productId, NAME, PRICE, IMAGE)));
 
         //when
         final List<CartEntity> cartEntities = cartDao.findAllByMemberId(memberId);
@@ -113,17 +124,19 @@ class CartDaoTest {
             softly.assertThat(cartEntities).hasSize(1);
             final CartEntity cartEntity = cartEntities.get(0);
             softly.assertThat(cartEntity.getId()).isEqualTo(id);
-            softly.assertThat(cartEntity.getMemberId()).isEqualTo(memberId);
-            softly.assertThat(cartEntity.getProductId()).isEqualTo(productId);
+            softly.assertThat(cartEntity.getMember()).isEqualTo(new MemberEntity(memberId, EMAIL, PASSWORD));
+            softly.assertThat(cartEntity.getProduct()).isEqualTo(new ProductEntity(productId, NAME, PRICE, IMAGE));
         });
     }
 
     @Test
     void 사용자_id와_상품_id로_데이터를_삭제한다() {
         //given
-        final Long memberId = insertMember(new MemberEntity("huchu@woowahan.com", "1234567a!"));
-        final Long productId = insertProduct(new ProductEntity("치킨", 10_000, "치킨 사진"));
-        cartDao.insert(new CartEntity(memberId, productId));
+        final Long memberId = insertMember(EMAIL, PASSWORD);
+        final Long productId = insertProduct(NAME, PRICE, IMAGE);
+        cartDao.insert(new CartEntity(
+                new MemberEntity(memberId, EMAIL, PASSWORD),
+                new ProductEntity(productId, NAME, PRICE, IMAGE)));
 
         //when
         final int affectedRows = cartDao.delete(memberId, productId);

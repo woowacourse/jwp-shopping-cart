@@ -64,4 +64,8 @@ public class ProductService {
                 .map(ResponseProductDto::new)
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    public ProductEntity findById(final Long productId) {
+        return productDao.findById(productId);
+    }
 }

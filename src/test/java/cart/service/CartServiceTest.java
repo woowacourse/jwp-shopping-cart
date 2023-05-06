@@ -2,6 +2,9 @@ package cart.service;
 
 import cart.dao.CartDao;
 import cart.domain.CartEntity;
+import cart.domain.MemberEntity;
+import cart.domain.ProductEntity;
+import cart.dto.ResponseProductDto;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -22,6 +25,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CartServiceTest {
 
+    private static final MemberEntity MEMBER_ENTITY = new MemberEntity(1L, "huchu@woowahan.com", "1234567a!");
+    private static final ProductEntity PRODUCT_ENTITY = new ProductEntity(1L, "치킨", 10_000, "치킨 사진");
+
     @Mock
     private CartDao cartDao;
 
@@ -29,18 +35,21 @@ class CartServiceTest {
     private CartService cartService;
 
     @Test
-    void 사용자_id로_장바구니_상품_id_목록을_찾는다() {
+    void 회원의_장바구니_상품_목록을_찾는다() {
         //given
         when(cartDao.findAllByMemberId(any(Long.class)))
-                .thenReturn(List.of(new CartEntity(1L, 1L)));
+                .thenReturn(List.of(new CartEntity(MEMBER_ENTITY, PRODUCT_ENTITY)));
 
         //when
-        final List<Long> productIds = cartService.findProductIdsByMemberId(1L);
+        final List<ResponseProductDto> productIds = cartService.findCartProducts(MEMBER_ENTITY);
 
         //then
         assertSoftly(softly -> {
             softly.assertThat(productIds).hasSize(1);
-            softly.assertThat(productIds.get(0)).isEqualTo(1L);
+            final ResponseProductDto responseProductDto = productIds.get(0);
+            softly.assertThat(responseProductDto.getName()).isEqualTo(PRODUCT_ENTITY.getName());
+            softly.assertThat(responseProductDto.getPrice()).isEqualTo(PRODUCT_ENTITY.getPrice());
+            softly.assertThat(responseProductDto.getImage()).isEqualTo(PRODUCT_ENTITY.getImage());
         });
     }
 
@@ -51,7 +60,7 @@ class CartServiceTest {
                 .thenReturn(1L);
 
         //when
-        final Long id = cartService.insert(1L, 1L);
+        final Long id = cartService.insert(MEMBER_ENTITY, PRODUCT_ENTITY);
 
         //then
         assertThat(id).isEqualTo(1L);
@@ -64,7 +73,7 @@ class CartServiceTest {
                 .thenReturn(1);
 
         //when
-        final int affectedRows = cartService.delete(1L, 1L);
+        final int affectedRows = cartService.delete(MEMBER_ENTITY, PRODUCT_ENTITY);
 
         //then
         assertThat(affectedRows).isEqualTo(1);

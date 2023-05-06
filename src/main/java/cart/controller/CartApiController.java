@@ -2,6 +2,8 @@ package cart.controller;
 
 import cart.controller.authentication.AuthInfo;
 import cart.controller.authentication.AuthenticationPrincipal;
+import cart.domain.MemberEntity;
+import cart.domain.ProductEntity;
 import cart.dto.ResponseProductDto;
 import cart.service.CartService;
 import cart.service.MemberService;
@@ -25,23 +27,24 @@ public class CartApiController {
     }
 
     @GetMapping("/carts")
-    public List<ResponseProductDto> readCartItem(@AuthenticationPrincipal AuthInfo authInfo) {
-        final Long memberId = memberService.findIdByEmail(authInfo.getEmail());
-        final List<Long> productIds = cartService.findProductIdsByMemberId(memberId);
-        return productService.findByIds(productIds);
+    public List<ResponseProductDto> readCart(@AuthenticationPrincipal AuthInfo authInfo) {
+        final MemberEntity member = memberService.findByEmail(authInfo.getEmail());
+        return cartService.findCartProducts(member);
     }
 
     @PostMapping("/carts/{productId}")
-    public ResponseEntity<Void> createCartItem(@AuthenticationPrincipal AuthInfo authInfo, @PathVariable final Long productId) {
-        final Long memberId = memberService.findIdByEmail(authInfo.getEmail());
-        cartService.insert(memberId, productId);
+    public ResponseEntity<Void> createCart(@AuthenticationPrincipal AuthInfo authInfo, @PathVariable final Long productId) {
+        final MemberEntity member = memberService.findByEmail(authInfo.getEmail());
+        final ProductEntity product = productService.findById(productId);
+        cartService.insert(member, product);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/carts/{productId}")
-    public ResponseEntity<Void> deleteCartItem(@AuthenticationPrincipal AuthInfo authInfo, @PathVariable final Long productId) {
-        final Long memberId = memberService.findIdByEmail(authInfo.getEmail());
-        cartService.delete(memberId, productId);
+    public ResponseEntity<Void> deleteCart(@AuthenticationPrincipal AuthInfo authInfo, @PathVariable final Long productId) {
+        final MemberEntity member = memberService.findByEmail(authInfo.getEmail());
+        final ProductEntity product = productService.findById(productId);
+        cartService.delete(member, product);
         return ResponseEntity.ok().build();
     }
 }

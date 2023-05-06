@@ -2,6 +2,9 @@ package cart.service;
 
 import cart.dao.CartDao;
 import cart.domain.CartEntity;
+import cart.domain.MemberEntity;
+import cart.domain.ProductEntity;
+import cart.dto.ResponseProductDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,20 +21,21 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<Long> findProductIdsByMemberId(final Long memberId) {
-        final List<CartEntity> cartEntities = cartDao.findAllByMemberId(memberId);
+    public List<ResponseProductDto> findCartProducts(final MemberEntity member) {
+        final List<CartEntity> cartEntities = cartDao.findAllByMemberId(member.getId());
         return cartEntities.stream()
-                .map(CartEntity::getProductId)
+                .map(CartEntity::getProduct)
+                .map(ResponseProductDto::new)
                 .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional
-    public Long insert(final Long memberId, final Long productId) {
-        return cartDao.insert(new CartEntity(memberId, productId));
+    public Long insert(final MemberEntity member, final ProductEntity product) {
+        return cartDao.insert(new CartEntity(member, product));
     }
 
     @Transactional
-    public int delete(final Long memberId, final Long productId) {
-        return cartDao.delete(memberId, productId);
+    public int delete(final MemberEntity member, final ProductEntity product) {
+        return cartDao.delete(member.getId(), product.getId());
     }
 }
