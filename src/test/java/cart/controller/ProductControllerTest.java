@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 
 import java.util.Optional;
 
+import static cart.fixture.ProductEntityFixture.TEST_PRODUCT_BEAVER_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -40,7 +41,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("POST(/products)")
     void createProduct() {
-        final Integer Id = productJdbcDao.insert(new ProductEntity("비버", "a", 100L));
+        final Integer Id = productJdbcDao.insert(TEST_PRODUCT_BEAVER_ENTITY);
 
 
         RestAssured.given().log().all()
@@ -63,7 +64,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("PUT(/products)")
     void updateProduct() {
-        final Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 100L));
+        final Integer id = productJdbcDao.insert(TEST_PRODUCT_BEAVER_ENTITY);
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +86,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("DELETE(/products/)")
     void deleteProduct() {
-        final Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 100L));
+        final Integer id = productJdbcDao.insert(TEST_PRODUCT_BEAVER_ENTITY);
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)

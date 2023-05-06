@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import java.util.List;
 import java.util.Optional;
 
+import static cart.fixture.ProductEntityFixture.TEST_PRODUCT_BEAVER_ENTITY;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -77,7 +78,7 @@ class CartControllerTest {
     @Test
     @DisplayName("/cart/items/{product_id} delete요청 204을 응답한다.")
     void cartDeleteProduct() {
-        Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 1000L));
+        Integer id = productJdbcDao.insert(TEST_PRODUCT_BEAVER_ENTITY);
 
 
         ExtractableResponse<Response> response = RestAssured
@@ -90,7 +91,10 @@ class CartControllerTest {
 
         List<CartProductEntity> cartEntities = cartJdbcDao.findByMemberId(Long.valueOf(id));
 
-        Assertions.assertAll(() -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()), () -> assertThat(cartEntities.size()).isEqualTo(0));
+        Assertions.assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(cartEntities.size()).isEqualTo(0)
+        );
 
     }
 }

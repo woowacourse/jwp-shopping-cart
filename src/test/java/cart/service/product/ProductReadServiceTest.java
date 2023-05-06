@@ -1,6 +1,5 @@
 package cart.service.product;
 
-import cart.controller.dto.request.ProductCreationRequest;
 import cart.domain.dto.ProductDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
+import static cart.fixture.ProductRequestFixture.TEST_CREATION_MEMBER1;
+import static cart.fixture.ProductRequestFixture.TEST_CREATION_MEMBER2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -32,11 +33,9 @@ class ProductReadServiceTest {
 
     @Test
     void getAll() {
-        final ProductCreationRequest productCreationRequest1 = new ProductCreationRequest("비버", "SMALL_IMAGE", 100L);
-        final ProductCreationRequest productCreationRequest2 = new ProductCreationRequest("땡칠", "asdf", 100L);
 
-        productCreateService.save(productCreationRequest1);
-        productCreateService.save(productCreationRequest2);
+        productCreateService.save(TEST_CREATION_MEMBER2);
+        productCreateService.save(TEST_CREATION_MEMBER1);
 
         final List<ProductDto> productDtos = productReadService.getAll();
 
