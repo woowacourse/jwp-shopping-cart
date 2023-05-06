@@ -21,7 +21,7 @@ public class CartDao {
     }
 
     public List<ProductEntity> findAllByMemberId(int memberId) {
-        String sql = "SELECT id, p.name, p.imgUrl, p.price\n"
+        String sql = "SELECT p.id, p.name, p.imgUrl, p.price\n"
                 + "FROM cart AS c\n"
                 + "INNER JOIN product AS p\n"
                 + "ON c.product_id = p.id\n"

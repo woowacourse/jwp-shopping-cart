@@ -22,6 +22,10 @@ CREATE TABLE member
 
 CREATE TABLE cart
 (
+    id  INT NOT NULL AUTO_INCREMENT,
     member_id  INT NOT NULL,
-    product_id INT NOT NULL
+    product_id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (member_id) REFERENCES member(id),
+    FOREIGN KEY (product_id) REFERENCES product(id)
 );
