@@ -2,7 +2,6 @@ package cart.service;
 
 import cart.dao.member.JdbcMemberDao;
 import cart.domain.member.Member;
-import cart.dto.MemberResponse;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -36,7 +35,7 @@ class MemberServiceTest {
         final List<Member> data = List.of(INITIAL_MEMBER_ONE, INITIAL_MEMBER_TWO);
         when(memberDao.findAll()).thenReturn(data);
 
-        final List<MemberResponse> memberResponses = memberService.findAll();
+        final List<Member> memberResponses = memberService.findAll();
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(memberResponses.size()).isEqualTo(data.size());

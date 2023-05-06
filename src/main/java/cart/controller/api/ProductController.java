@@ -4,6 +4,7 @@ import cart.dto.ProductCreationRequest;
 import cart.dto.ProductModificationRequest;
 import cart.dto.ProductResponse;
 import cart.mapper.ProductMapper;
+import cart.mapper.ProductResponseMapper;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,8 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getProducts() {
-        return ResponseEntity.ok(productService.findAll());
+        final List<ProductResponse> productResponses = ProductResponseMapper.from(productService.findAll());
+        return ResponseEntity.ok(productResponses);
     }
 
     @PatchMapping("/{productId}")

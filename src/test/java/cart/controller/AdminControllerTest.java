@@ -1,8 +1,7 @@
 package cart.controller;
 
 import cart.auth.AuthenticationService;
-import cart.dto.ProductResponse;
-import cart.mapper.ProductResponseMapper;
+import cart.domain.product.Product;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -36,11 +35,10 @@ class AdminControllerTest {
 
     @Test
     void 상품_전체_목록을_조회하면_상태코드_200을_반환하는지_확인한다() throws Exception {
-        final ProductResponse response = ProductResponseMapper.from(INITIAL_PRODUCT_ONE);
-        final List<ProductResponse> responses = List.of(response);
+        final List<Product> products = List.of(INITIAL_PRODUCT_ONE);
 
         when(managementService.findAll())
-                .thenReturn(responses);
+                .thenReturn(products);
 
         mockMvc.perform(get(path))
                 .andExpect(status().isOk());

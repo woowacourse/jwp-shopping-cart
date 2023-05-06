@@ -24,8 +24,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberResponse> findAll() {
-        final List<Member> members = memberDao.findAll();
-        return MemberResponseMapper.from(members);
+    public List<Member> findAll() {
+        return memberDao.findAll();
     }
 }

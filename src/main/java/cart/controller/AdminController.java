@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.mapper.ProductResponseMapper;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,7 @@ public class AdminController {
 
     @GetMapping
     public ModelAndView admin(ModelAndView modelAndView) {
-        modelAndView.addObject("products", productService.findAll());
+        modelAndView.addObject("products", ProductResponseMapper.from(productService.findAll()));
         modelAndView.setViewName("admin");
         return modelAndView;
     }

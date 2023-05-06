@@ -1,5 +1,7 @@
 package cart.controller;
 
+import cart.mapper.MemberResponseMapper;
+import cart.mapper.ProductResponseMapper;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -22,7 +24,7 @@ public class HomeController {
 
     @GetMapping("/")
     public ModelAndView home(ModelAndView modelAndView) {
-        modelAndView.addObject("products", productService.findAll());
+        modelAndView.addObject("products", ProductResponseMapper.from(productService.findAll()));
         modelAndView.setViewName("index");
         return modelAndView;
     }
@@ -34,7 +36,7 @@ public class HomeController {
 
     @GetMapping("/settings")
     public ModelAndView settings(ModelAndView modelAndView) {
-        modelAndView.addObject("members", memberService.findAll());
+        modelAndView.addObject("members", MemberResponseMapper.from(memberService.findAll()));
         modelAndView.setViewName("settings");
         return modelAndView;
     }

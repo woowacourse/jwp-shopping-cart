@@ -3,6 +3,7 @@ package cart.controller.api;
 import cart.auth.AuthenticationPrincipal;
 import cart.domain.member.Member;
 import cart.dto.ProductResponse;
+import cart.mapper.ProductResponseMapper;
 import cart.service.CartProductService;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,9 @@ public class CartProductController {
     public ResponseEntity<List<ProductResponse>> getCartProduct(@AuthenticationPrincipal final Member member) {
         final List<Long> productIds = cartProductService.findAllProductIds(member.getEmail(), member.getPassword());
 
-        return ResponseEntity.ok(productService.findByIds(productIds));
+        final List<ProductResponse> productResponses = ProductResponseMapper.from(productService.findByIds(productIds));
+
+        return ResponseEntity.ok(productResponses);
     }
 
     @DeleteMapping("/{productId}")

@@ -2,7 +2,6 @@ package cart.service;
 
 import cart.dao.product.JdbcProductDao;
 import cart.domain.product.Product;
-import cart.dto.ProductResponse;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -40,17 +39,17 @@ class ProductServiceTest {
         final List<Product> data = List.of(INITIAL_PRODUCT_ONE, INITIAL_PRODUCT_TWO);
         when(productDao.findAll()).thenReturn(data);
 
-        final List<ProductResponse> productResponses = productService.findAll();
+        final List<Product> productResponses = productService.findAll();
 
         assertAll(
                 () -> assertThat(productResponses.size()).isEqualTo(data.size()),
                 () -> assertThat(productResponses.get(0).getId()).isEqualTo(INITIAL_PRODUCT_ONE.getId()),
                 () -> assertThat(productResponses.get(0).getName()).isEqualTo(INITIAL_PRODUCT_ONE.getName()),
-                () -> assertThat(productResponses.get(0).getImage()).isEqualTo(INITIAL_PRODUCT_ONE.getImageUrl()),
+                () -> assertThat(productResponses.get(0).getImageUrl()).isEqualTo(INITIAL_PRODUCT_ONE.getImageUrl()),
                 () -> assertThat(productResponses.get(0).getPrice()).isEqualTo(INITIAL_PRODUCT_ONE.getPrice()),
                 () -> assertThat(productResponses.get(1).getId()).isEqualTo(INITIAL_PRODUCT_TWO.getId()),
                 () -> assertThat(productResponses.get(1).getName()).isEqualTo(INITIAL_PRODUCT_TWO.getName()),
-                () -> assertThat(productResponses.get(1).getImage()).isEqualTo(INITIAL_PRODUCT_TWO.getImageUrl()),
+                () -> assertThat(productResponses.get(1).getImageUrl()).isEqualTo(INITIAL_PRODUCT_TWO.getImageUrl()),
                 () -> assertThat(productResponses.get(1).getPrice()).isEqualTo(INITIAL_PRODUCT_TWO.getPrice())
         );
     }
