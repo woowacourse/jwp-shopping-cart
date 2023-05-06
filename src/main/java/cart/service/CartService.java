@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.controller.dto.auth.AuthInfo;
-import cart.controller.dto.request.CartRequest;
 import cart.controller.dto.response.CartResponse;
 import cart.dao.CartDao;
 import cart.dao.UserDao;
@@ -26,11 +25,11 @@ public class CartService {
         this.userDao = userDao;
     }
 
-    public Long saveCart(final AuthInfo authInfo, final CartRequest cartRequest) {
+    public Long saveCart(final AuthInfo authInfo, final Long itemId) {
         Long userId = findIdByEmail(authInfo);
         Cart cart = new Cart.Builder()
                 .userId(userId)
-                .itemId(cartRequest.getItemId())
+                .itemId(itemId)
                 .build();
         return cartDao.save(cart);
     }

@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.auth.resolver.BasicAuthenticationPrincipal;
 import cart.controller.dto.auth.AuthInfo;
-import cart.controller.dto.request.CartRequest;
 import cart.controller.dto.response.CartResponse;
 import cart.service.CartService;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -24,10 +22,10 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping
+    @PostMapping("{itemId}")
     public ResponseEntity<Void> addCart(@BasicAuthenticationPrincipal AuthInfo authInfo,
-                                        @RequestBody @Valid final CartRequest cartRequest) {
-        cartService.saveCart(authInfo, cartRequest);
+                                        @PathVariable final Long itemId) {
+        cartService.saveCart(authInfo, itemId);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/"))
                              .build();
