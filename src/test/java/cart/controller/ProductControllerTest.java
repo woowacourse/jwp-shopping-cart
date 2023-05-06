@@ -33,9 +33,9 @@ class ProductControllerTest {
     @MockBean
     private ProductService productService;
 
-    @DisplayName("POST /admin/product 요청 시")
+    @DisplayName("POST /products 요청 시")
     @Nested
-    class postAdminProduct {
+    class postAdminProducts {
 
         @DisplayName("입력이 올바른 경우 Status OK를 반환한다.")
         @Test
@@ -49,9 +49,9 @@ class ProductControllerTest {
                     .andExpect(status().isOk());
         }
 
-        @DisplayName("이름이 공백인 경우 Status Bad Request를 반환한다.")
+        @DisplayName("이름이 비어있는 경우 Status Bad Request를 반환한다.")
         @ParameterizedTest(name = "비어있는 값 (\"{0}\")")
-        @ValueSource(strings = {" "})
+        @ValueSource(strings = {" ", "  "})
         @NullAndEmptySource
         void shouldResponseStatusBadRequestWhenNameIsBlank(String inputName) throws Exception {
             final ProductSaveRequest request = new ProductSaveRequest(inputName, 100, "domain.super.com");
@@ -91,9 +91,9 @@ class ProductControllerTest {
         }
     }
 
-    @DisplayName("PUT /admin/product/{id} 요청 시")
+    @DisplayName("PUT /products/{id} 요청 시")
     @Nested
-    class putAdminProduct {
+    class putAdminProducts {
 
         @DisplayName("입력이 올바른 경우 Status OK를 반환한다.")
         @Test
@@ -149,7 +149,7 @@ class ProductControllerTest {
         }
     }
 
-    @DisplayName("DELETE /admin/product/{id} 요청 시 Status No Content를 반환한다.")
+    @DisplayName("DELETE /products/{id} 요청 시 Status No Content를 반환한다.")
     @Test
     void shouldResponseStatusOkWhenRequestDeleteToProductId() throws Exception {
         mockMvc.perform(delete("/products/1")
