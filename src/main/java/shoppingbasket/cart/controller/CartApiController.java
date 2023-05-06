@@ -44,12 +44,21 @@ public class CartApiController {
         final CartEntity cart = cartService.addCart(authInfo.getEmail(), productId);
         final int savedId = cart.getId();
 
-        return ResponseEntity.created(URI.create("/shoppingbasket/" + savedId))
+        return ResponseEntity.created(URI.create("/cart/" + savedId))
                 .body(cart);
     }
 
+    @GetMapping("/cart/{id}")
+    public ResponseEntity<CartSelectResponseDto> getCartById(@AuthenticationPrincipal AuthInfo authInfo,
+                                                             @PathVariable int id) {
+
+        CartSelectResponseDto cartSelectResponseDto = cartService.getCartById(id);
+
+        return ResponseEntity.ok(cartSelectResponseDto);
+    }
+
     @GetMapping(value = "/cart", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CartSelectResponseDto>> getCart(@AuthenticationPrincipal AuthInfo authInfo) {
+    public ResponseEntity<List<CartSelectResponseDto>> getCarts(@AuthenticationPrincipal AuthInfo authInfo) {
         final String memberEmail = authInfo.getEmail();
         final List<CartSelectResponseDto> cartSelectResponse = cartService.getCartsByMemberEmail(memberEmail);
         return ResponseEntity.ok(cartSelectResponse);

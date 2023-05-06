@@ -40,4 +40,9 @@ public class  CartService {
         final int updatedRowCount = cartDao.delete(cartId);
         return new CartDeleteResponseDto(updatedRowCount);
     }
+
+    public CartSelectResponseDto getCartById(final int cartId) {
+        CartProductEntity cartProduct = cartDao.selectCartById(cartId);
+        return CartMapper.toDto(cartProduct);
+    }
 }

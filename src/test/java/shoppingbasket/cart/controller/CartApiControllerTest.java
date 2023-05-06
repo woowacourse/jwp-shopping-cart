@@ -133,4 +133,21 @@ class CartApiControllerTest {
 
         assertThat(response.getDeletedRowCount()).isOne();
     }
+
+    @Test
+    void getCartByIdTest() {
+        final CartEntity savedCart = cartDao.insert(MEMBER_ID, 1);
+        final Integer savedId = savedCart.getId();
+
+        final CartSelectResponseDto response = RestAssured
+                .given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/cart/" + savedId)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(CartSelectResponseDto.class);
+
+        assertThat(response.getId()).isEqualTo(savedId);
+    }
 }
