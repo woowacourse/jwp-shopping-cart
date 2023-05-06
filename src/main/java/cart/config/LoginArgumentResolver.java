@@ -36,11 +36,13 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         String authorization = webRequest.getHeader(AUTHORIZATION_HEADER);
 
         if (authorization == null) {
-            throw new UnauthorizedException("Authorization Header가 존재하지 않습니다.");
+            throw new UnauthorizedException(String.format("%s Header가 존재하지 않습니다.", AUTHORIZATION_HEADER));
         }
 
+
         if (!authorization.startsWith(AUTHORIZATION_HEADER_PREFIX)) {
-            throw new UnauthorizedException("Authorization Header는 'BASIC ****'과 같은 값으로 전달되어야 합니다.");
+            throw new UnauthorizedException(
+                    String.format("Authorization Header는 '%s'로 시작해야 합니다.", AUTHORIZATION_HEADER_PREFIX));
         }
 
         String[] credentials = decodeByBase64(authorization);
@@ -49,7 +51,6 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         String password = credentials[1];
         Member member = memberDao.findByEmail(email);
         member.validatePassword(password);
-
         return member;
     }
 

@@ -75,7 +75,7 @@ class CartApiControllerTest {
                     .get(CART_API_URL)
                     .then().log().all()
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .body("message", equalTo("Authorization Header는 'BASIC ****'과 같은 값으로 전달되어야 합니다."));
+                    .body("message", equalTo("Authorization Header는 'Basic '로 시작해야 합니다."));
         }
 
         @DisplayName("해당하는 email의 member가 존재하지 않으면 404를 반환한다.")
