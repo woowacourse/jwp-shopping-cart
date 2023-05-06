@@ -1,5 +1,7 @@
 package cart.controller;
 
+import static cart.fixture.SqlFixture.MEMBER_INSERT_SQL;
+import static cart.fixture.SqlFixture.PRODUCT_INSERT_SQL;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -21,8 +23,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CartApiControllerTest {
 
-    private static final String PRODUCT_INSERT_SQL = "insert into product(id, name, price, image_url) values (?,?,?,?)";
-    private static final String MEMBER_INSERT_SQL = "insert into member(id, email, password) values (?, ?,?)";
     private static final long PRODUCT_ID = 1L;
     private static final long MEMBER_ID = 1L;
 
@@ -43,7 +43,7 @@ class CartApiControllerTest {
     void setUp() {
         RestAssured.port = port;
         jdbcTemplate.update("delete from cart_product");
-        jdbcTemplate.update("delete from product");
+        jdbcTemplate.update(" delete from product");
         jdbcTemplate.update("delete from member");
     }
 

@@ -1,5 +1,6 @@
 package cart.dao;
 
+import static cart.fixture.SqlFixture.MEMBER_INSERT_SQL_NO_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -72,7 +73,6 @@ class MemberDaoTest {
     }
 
     private void saveMember(Member member) {
-        String sql = "insert into member(email, password) values (?,?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+        jdbcTemplate.update(MEMBER_INSERT_SQL_NO_ID, member.getEmail(), member.getPassword());
     }
 }

@@ -1,5 +1,7 @@
 package cart.dao;
 
+import static cart.fixture.SqlFixture.MEMBER_INSERT_SQL;
+import static cart.fixture.SqlFixture.PRODUCT_INSERT_SQL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.CartProduct;
@@ -16,8 +18,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CartProductDaoTest {
 
-    private static final String PRODUCT_INSERT_SQL = "insert into product(id, name, price, image_url) values (?,?,?,?)";
-    private static final String MEMBER_INSERT_SQL = "insert into member(id, email, password) values (?, ?,?)";
     private static final long PRODUCT_ID = 1L;
     private static final long MEMBER_ID = 1L;
 
