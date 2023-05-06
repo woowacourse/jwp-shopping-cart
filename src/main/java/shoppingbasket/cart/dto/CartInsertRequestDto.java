@@ -7,7 +7,7 @@ public class CartInsertRequestDto {
     @Positive
     private int productId;
 
-    public CartInsertRequestDto() {
+    private CartInsertRequestDto() {
     }
 
     public CartInsertRequestDto(final int productId) {

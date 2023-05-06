@@ -4,7 +4,7 @@ public class CartDeleteResponseDto {
 
     private int deletedRowCount;
 
-    public CartDeleteResponseDto() {
+    private CartDeleteResponseDto() {
     }
 
     public CartDeleteResponseDto(final int deletedRowCount) {

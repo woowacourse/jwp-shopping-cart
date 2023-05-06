@@ -6,7 +6,7 @@ public class CartSelectResponseDto {
     private int productPrice;
     private String productImage;
 
-    public CartSelectResponseDto() {
+    private CartSelectResponseDto() {
     }
 
     public CartSelectResponseDto(final int id,
