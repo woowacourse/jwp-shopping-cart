@@ -1,5 +1,6 @@
+### 상품 API
 
-###
+### 상품 추가 (Create)
 POST http://localhost:8080/product
 Content-Type: application/json
 
@@ -9,7 +10,7 @@ Content-Type: application/json
   "Image": null
 }
 
-###
+### 상품 정보 수정 (Update)
 PUT http://localhost:8080/product/1
 Content-Type: application/json
 
@@ -19,8 +20,8 @@ Content-Type: application/json
   "Image": null
 }
 
-###
+### 상품 삭제 (Delete)
 DELETE http://localhost:8080/product/1
 
-###
+### 전체 상품 조회
 GET http://localhost:8080/
