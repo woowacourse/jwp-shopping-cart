@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS CART_ITEM
 CREATE TABLE IF NOT EXISTS CARTS
 (
     id          BIGINT          AUTO_INCREMENT    NOT NULL,
-    user_email  VARCHAR(255)                      NOT NULL,
+    user_id     BIGINT                            NOT NULL,
 
     PRIMARY KEY (id)
 );
