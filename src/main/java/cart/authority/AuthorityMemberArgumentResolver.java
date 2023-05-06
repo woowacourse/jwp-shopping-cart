@@ -1,7 +1,7 @@
 package cart.authority;
 
 
-import cart.controller.dto.request.MemberIdRequest;
+import cart.controller.dto.request.MemberId;
 import cart.dao.MemberDao;
 import cart.entity.MemberEntity;
 import org.springframework.core.MethodParameter;
@@ -27,7 +27,7 @@ public class AuthorityMemberArgumentResolver implements HandlerMethodArgumentRes
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
         boolean hasAuthorityAnnotation = parameter.hasParameterAnnotation(Authority.class);
-        boolean hasMemberType = MemberIdRequest.class.isAssignableFrom(parameter.getParameterType());
+        boolean hasMemberType = MemberId.class.isAssignableFrom(parameter.getParameterType());
 
         return hasMemberType && hasAuthorityAnnotation;
     }
@@ -48,7 +48,7 @@ public class AuthorityMemberArgumentResolver implements HandlerMethodArgumentRes
         final Long memberId = memberDao.selectMemberId(memberEntity)
                 .orElseThrow(() -> new IllegalArgumentException("해당 이메일로 가입된 회원이 없습니다"));
 
-        return new MemberIdRequest(memberId);
+        return new MemberId(memberId);
     }
 
     private String getBasicToken(final NativeWebRequest webRequest) {

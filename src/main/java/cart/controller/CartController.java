@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.authority.Authority;
 import cart.controller.dto.request.CartItemCreationRequest;
-import cart.controller.dto.request.MemberIdRequest;
+import cart.controller.dto.request.MemberId;
 import cart.controller.dto.response.CartItemResponse;
 import cart.domain.dto.CartDto;
 import cart.domain.dto.ProductDto;
@@ -42,14 +42,14 @@ public class CartController {
     @PostMapping
     public ResponseEntity<String> addProduct(
             @RequestBody @Valid final CartItemCreationRequest cartItemCreationRequest,
-            @Authority final MemberIdRequest memberIdRequest
+            @Authority final MemberId memberId
     ) {
-        cartCreateService.addProduct(cartItemCreationRequest, memberIdRequest);
+        cartCreateService.addProduct(cartItemCreationRequest, memberId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponse>> findIdMemberId(@Authority final MemberIdRequest memberId) {
+    public ResponseEntity<List<CartItemResponse>> findIdMemberId(@Authority final MemberId memberId) {
         final List<CartDto> cartDtos = cartReadService.getProducts(memberId);
         final List<ProductDto> productDtos = productReadService.findById(cartDtos);
 
@@ -68,9 +68,9 @@ public class CartController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(
             @PathVariable("id") @NotNull(message = "아이디가 비어있습니다.") Long productIdRequest,
-            @Authority final MemberIdRequest memberIdRequest
+            @Authority final MemberId memberId
     ) {
-        cartDeleteService.delete(memberIdRequest, productIdRequest);
+        cartDeleteService.delete(memberId, productIdRequest);
         return ResponseEntity.noContent().build();
     }
 }

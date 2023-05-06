@@ -1,6 +1,6 @@
 package cart.service.cart;
 
-import cart.controller.dto.request.MemberIdRequest;
+import cart.controller.dto.request.MemberId;
 import cart.dao.CarProductDao;
 import cart.entity.CartProductEntity;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class CartDeleteService {
     }
 
 
-    public void delete(final MemberIdRequest memberId, final Long productId) {
+    public void delete(final MemberId memberId, final Long productId) {
         final CartProductEntity cartProductEntity = new CartProductEntity(productId, memberId.getId());
 
         carProductDao.deleteById(cartProductEntity);

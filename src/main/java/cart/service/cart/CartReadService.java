@@ -1,6 +1,6 @@
 package cart.service.cart;
 
-import cart.controller.dto.request.MemberIdRequest;
+import cart.controller.dto.request.MemberId;
 import cart.dao.CarProductDao;
 import cart.domain.dto.CartDto;
 import cart.entity.CartProductEntity;
@@ -20,7 +20,7 @@ public class CartReadService {
         this.carProductDao = carProductDao;
     }
 
-    public List<CartDto> getProducts(final MemberIdRequest memberId) {
+    public List<CartDto> getProducts(final MemberId memberId) {
         final List<CartProductEntity> cartEntities = carProductDao.findByMemberId(memberId.getId());
 
         return cartEntities.stream()
