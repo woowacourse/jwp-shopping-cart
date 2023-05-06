@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.domain.cartitem.CartItem;
 import cart.domain.cartitem.CartItemService;
-import cart.domain.member.MemberService;
 import cart.dto.CartItemDto;
 import cart.infratstructure.AuthenticationPrincipal;
 import java.util.List;
@@ -19,11 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/cartitems")
 public class CartItemController {
 
-    private final MemberService memberService;
     private final CartItemService cartItemService;
 
-    public CartItemController(final MemberService memberService, final CartItemService cartItemService) {
-        this.memberService = memberService;
+    public CartItemController(final CartItemService cartItemService) {
         this.cartItemService = cartItemService;
     }
 
