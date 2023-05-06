@@ -1,23 +1,25 @@
 package cart.auth;
 
+import cart.controller.exception.IncorrectAuthorizationMethodException;
+import cart.controller.exception.MissingAuthorizationHeaderException;
 import cart.dto.auth.AuthInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class BasicAuthorizationExtractor {
 
-    private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
     private static final int CREDENTIALS_EMAIL_INDEX = 0;
     public static final int CREDENTIALS_PASSWORD_INDEX = 1;
 
     public AuthInfo extract(HttpServletRequest request) {
-        String header = request.getHeader(AUTHORIZATION);
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (header == null) {
-            return null;
+            throw new MissingAuthorizationHeaderException();
         }
 
         if (header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
@@ -31,6 +33,6 @@ public class BasicAuthorizationExtractor {
             return new AuthInfo(email, password);
         }
 
-        return null;
+        throw new IncorrectAuthorizationMethodException();
     }
 }

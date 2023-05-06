@@ -1,6 +1,6 @@
 package cart.controller.rest;
 
-import cart.auth.AuthResolving;
+import cart.auth.Auth;
 import cart.controller.exception.UncertifiedMemberException;
 import cart.dto.auth.AuthInfo;
 import cart.dto.response.CartResponse;
@@ -34,7 +34,7 @@ public class CartsController {
 
     @PostMapping("/items")
     public ResponseEntity<ItemResponse> createItem(
-            @AuthResolving AuthInfo authInfo,
+            @Auth AuthInfo authInfo,
             @RequestParam("product-id") Long productId) {
 
         validateAuthorization(authInfo);
@@ -51,7 +51,7 @@ public class CartsController {
     }
 
     @GetMapping("/items")
-    public ResponseEntity<CartResponse> readItemsByMember(@AuthResolving AuthInfo authInfo) {
+    public ResponseEntity<CartResponse> readItemsByMember(@Auth AuthInfo authInfo) {
         validateAuthorization(authInfo);
 
         Long memberId = membersService.readIdByEmail(authInfo.getEmail());
@@ -62,7 +62,7 @@ public class CartsController {
 
     @DeleteMapping("/items/{id}")
     public ResponseEntity<Void> deleteItem(
-            @AuthResolving AuthInfo authInfo,
+            @Auth AuthInfo authInfo,
             @PathVariable("id") @NotNull Long itemId) {
 
         validateAuthorization(authInfo);

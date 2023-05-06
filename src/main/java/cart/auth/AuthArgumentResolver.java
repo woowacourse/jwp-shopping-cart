@@ -1,5 +1,6 @@
 package cart.auth;
 
+import cart.dto.auth.AuthInfo;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -11,15 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(AuthResolving.class);
+        return parameter.hasParameterAnnotation(Auth.class);
     }
 
     @Override
-    public Object resolveArgument(
+    public AuthInfo resolveArgument(
             MethodParameter parameter,
             ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest,
-            WebDataBinderFactory binderFactory) throws Exception {
+            WebDataBinderFactory binderFactory) {
 
         BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
