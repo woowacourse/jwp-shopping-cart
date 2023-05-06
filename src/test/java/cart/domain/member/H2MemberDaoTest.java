@@ -26,7 +26,6 @@ class H2MemberDaoTest {
     @DisplayName("모든 member를 조회한다")
     @Test
     void findAll() {
-        // TODO 저장하는 멤버 데이터 상수로 관리하기
         assertThat(memberDao.findAll())
                 .containsOnly(MEMBER1, MEMBER2);
     }
