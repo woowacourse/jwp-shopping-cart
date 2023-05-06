@@ -52,7 +52,7 @@
                             <img src="${cartItem.imgUrl}" alt="상품 이미지"/> <!-- 상품 이미지 -->
                             <div class="cart-item-name"><p>${cartItem.name}</p></div> <!-- 상품 이름 -->
                             <div class="cart-item-price"><p>${cartItem.price}원</p></div> <!-- 상품 가격 -->
-                            <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
+                            <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.cartId})">Delete</button>
                           </div>
                         </div>
                       `;
@@ -64,6 +64,7 @@
         });
 
     });
+
 
 </script>
 </body>

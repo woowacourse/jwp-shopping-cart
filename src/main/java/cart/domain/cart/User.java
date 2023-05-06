@@ -1,4 +1,4 @@
-package cart.auth;
+package cart.domain.cart;
 
 import cart.domain.member.Email;
 

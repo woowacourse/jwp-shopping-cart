@@ -1,30 +1,36 @@
 package cart.dto.cart;
 
+import cart.dto.product.ProductDto;
+
 import java.util.Objects;
 
 public class CartItemResponseDto {
-    private final Long id;
+
+    private final Long cartId;
+    private final Long productId;
     private final String name;
     private final String imgUrl;
     private final int price;
 
-    private CartItemResponseDto(Long id, String name, String imgUrl, int price) {
-        this.id = id;
+    private CartItemResponseDto(Long cartId, Long productId, String name, String imgUrl, int price) {
+        this.cartId = cartId;
+        this.productId = productId;
         this.name = name;
         this.imgUrl = imgUrl;
         this.price = price;
     }
 
-    public static CartItemResponseDto of(Long id, String name, String imgUrl, int price) {
-        return new CartItemResponseDto(id, name, imgUrl, price);
-    }
-
     public static CartItemResponseDto fromDto(CartItemDto cartItemDto) {
-        return new CartItemResponseDto(cartItemDto.getId(), cartItemDto.getName(), cartItemDto.getImgUrl(), cartItemDto.getPrice());
+        ProductDto productDto = cartItemDto.getProductDto();
+        return new CartItemResponseDto(cartItemDto.getId(), productDto.getId(), productDto.getName(), productDto.getImgUrl(), productDto.getPrice());
     }
 
-    public Long getId() {
-        return id;
+    public Long getCartId() {
+        return cartId;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
     public String getName() {
@@ -41,7 +47,7 @@ public class CartItemResponseDto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, imgUrl, price);
+        return Objects.hash(cartId, productId, name, imgUrl, price);
     }
 
     @Override
@@ -53,6 +59,17 @@ public class CartItemResponseDto {
             return false;
         }
         CartItemResponseDto that = (CartItemResponseDto) o;
-        return price == that.price && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(imgUrl, that.imgUrl);
+        return price == that.price && Objects.equals(cartId, that.cartId) && Objects.equals(productId, that.productId) && Objects.equals(name, that.name) && Objects.equals(imgUrl, that.imgUrl);
+    }
+
+    @Override
+    public String toString() {
+        return "CartItemResponseDto{" +
+                "cartId=" + cartId +
+                ", productId=" + productId +
+                ", name='" + name + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", price=" + price +
+                '}';
     }
 }

@@ -1,16 +1,16 @@
-package cart.auth;
+package cart.auth.Infrastructure;
 
+import cart.domain.cart.AuthInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.context.request.NativeWebRequest;
 
 public class BasicAuthorizationExtractor implements AuthorizationExtractor {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
     @Override
-    public AuthInfo extract(HttpServletRequest request) {
-        String header = request.getHeader(AUTHORIZATION);
+    public AuthInfo extract(NativeWebRequest webRequest) {
+        String header = webRequest.getHeader(AUTHORIZATION);
 
         if (header == null) {
             return null;

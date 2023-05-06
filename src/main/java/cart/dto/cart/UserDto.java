@@ -1,6 +1,7 @@
 package cart.dto.cart;
 
 import cart.domain.member.Email;
+import cart.entity.MemberEntity;
 
 import java.util.Objects;
 
@@ -9,9 +10,17 @@ public class UserDto {
     private final Long id;
     private final Email email;
 
-    public UserDto(Long id, String email) {
+    private UserDto(Long id, String email) {
         this.id = id;
         this.email = new Email(email);
+    }
+
+    public static UserDto of(Long id, String email) {
+        return new UserDto(id, email);
+    }
+
+    public static UserDto fromMemberEntity(MemberEntity entity) {
+        return new UserDto(entity.getId(), entity.getEmail());
     }
 
     public Long getId() {

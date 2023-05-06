@@ -1,5 +1,6 @@
-package cart.auth;
+package cart.service;
 
+import cart.dto.cart.UserDto;
 import cart.entity.MemberEntity;
 import cart.repository.MemberRepository;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,12 @@ public class AuthService {
         this.memberRepository = memberRepository;
     }
 
-    public User findMemberByEmail(String email) {
+    public UserDto findMemberByEmail(String email) {
         Optional<MemberEntity> nullableEntity = memberRepository.findByEmail(email);
-        if (nullableEntity.isEmpty()) {
-            throw new IllegalStateException("회원을 찾을 수 없습니다.");
+        if (nullableEntity.isPresent()) {
+            return UserDto.fromMemberEntity(nullableEntity.get());
         }
-        MemberEntity entity = nullableEntity.get();
-        return new User(entity.getId(), entity.getEmail());
+
+        throw new IllegalStateException("회원을 찾을 수 없습니다.");
     }
 }

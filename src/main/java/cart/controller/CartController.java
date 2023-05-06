@@ -1,18 +1,16 @@
 package cart.controller;
 
-import cart.auth.AuthService;
-import cart.auth.BasicAuthorizationExtractor;
-import cart.auth.User;
-import cart.auth.UserExtractor;
+import cart.config.AuthenticationPrincipal;
+import cart.domain.cart.AuthInfo;
 import cart.dto.cart.CartItemDto;
 import cart.dto.cart.CartItemResponseDto;
 import cart.dto.cart.UserDto;
+import cart.service.AuthService;
 import cart.service.CartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
 
@@ -31,11 +29,8 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponseDto>> items(HttpServletRequest request) {
-        UserExtractor userExtractor = new UserExtractor(new BasicAuthorizationExtractor(), authService);
-        User user = userExtractor.extract(request);
-        UserDto userDto = new UserDto(user.getId(), user.getEmail());
-
+    public ResponseEntity<List<CartItemResponseDto>> items(@AuthenticationPrincipal AuthInfo authInfo) {
+        UserDto userDto = authService.findMemberByEmail(authInfo.getEmail());
         List<CartItemDto> cartItemDtos = cartService.findAllUserItems(userDto);
         List<CartItemResponseDto> response = cartItemDtos.stream()
                 .map(CartItemResponseDto::fromDto)
@@ -45,15 +40,12 @@ public class CartController {
 
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CartItemResponseDto> addItem(@PathVariable("id") Long productId, HttpServletRequest request) {
-        UserExtractor userExtractor = new UserExtractor(new BasicAuthorizationExtractor(), authService);
-        User user = userExtractor.extract(request);
-        UserDto userDto = new UserDto(user.getId(), user.getEmail());
-
+    public ResponseEntity<CartItemResponseDto> addItem(@PathVariable("id") Long productId, @AuthenticationPrincipal AuthInfo authInfo) {
+        UserDto userDto = authService.findMemberByEmail(authInfo.getEmail());
         CartItemDto dto = cartService.add(userDto, productId);
         CartItemResponseDto response = CartItemResponseDto.fromDto(dto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .location(URI.create("/cart/items/" + response.getId()))
+                .location(URI.create("/cart/items/" + response.getProductId()))
                 .body(response);
     }
 
