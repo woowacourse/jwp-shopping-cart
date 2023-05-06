@@ -9,6 +9,8 @@ public class Member {
 
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
     private static final String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,12}$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
 
     private final Long id;
     private final String email;
@@ -31,8 +33,7 @@ public class Member {
             throw new InvalidMemberException("이메일은 공백을 입력할 수 없습니다.");
         }
 
-        Pattern pattern = Pattern.compile(EMAIL_REGEX);
-        Matcher matcher = pattern.matcher(email);
+        Matcher matcher = EMAIL_PATTERN.matcher(email);
         if (!matcher.matches()) {
             throw new InvalidMemberException("유효하지 않은 이메일 형식 입니다.");
         }
@@ -43,8 +44,7 @@ public class Member {
             throw new InvalidMemberException("패스워드는 공백을 입력할 수 없습니다.");
         }
 
-        Pattern pattern = Pattern.compile(PASSWORD_REGEX);
-        Matcher matcher = pattern.matcher(password);
+        Matcher matcher = PASSWORD_PATTERN.matcher(password);
         if (!matcher.matches()) {
             throw new InvalidMemberException("유효하지 않은 패스워드 입니다. " +
                     "최소 하나의 문자와 숫자로 이루어진 8자리 이상 12자리 이하의 패스워드를 입력해주세요.");

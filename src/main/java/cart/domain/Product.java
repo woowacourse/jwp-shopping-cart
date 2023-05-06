@@ -12,6 +12,7 @@ public class Product {
     private static final int MIN_PRICE = 1;
     private static final int MAX_PRICE = 100_000_000;
     private static final String URL_REGEX = "^((https?|ftp|file):\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$";
+    private static final Pattern URL_PATTERN = Pattern.compile(URL_REGEX);
 
     private final Long id;
     private final String name;
@@ -55,8 +56,7 @@ public class Product {
             throw new InvalidProductException("상품 사진의 url은 공백을 입력할 수 없습니다.");
         }
 
-        Pattern pattern = Pattern.compile(URL_REGEX);
-        Matcher matcher = pattern.matcher(imageUrl);
+        Matcher matcher = URL_PATTERN.matcher(imageUrl);
         if (!matcher.matches()) {
             throw new InvalidProductException("유효하지 않은 상품 사진 URL 입니다.");
         }
