@@ -69,8 +69,8 @@ class JdbcCartItemDaoTest {
     }
 
     @Nested
-    @DisplayName("장바구니에서 상품을 삭제하는 deleteById 메서드 테스트")
-    class DeleteByIdTest {
+    @DisplayName("장바구니에서 상품을 삭제하는 deleteByIdAndMemberId 메서드 테스트")
+    class DeleteByIdAndMemberIdTest {
 
         @DisplayName("장바구니에서 상품 삭제가 되면 1을 반환하는지 확인한다")
         @Test
@@ -78,7 +78,7 @@ class JdbcCartItemDaoTest {
             final CartItem cartItem = CartItem.of(1L, 1L);
             cartItemDao.insert(cartItem);
 
-            int deletedRow = cartItemDao.deleteById(1L);
+            int deletedRow = cartItemDao.deleteByIdAndMemberId(1L,1L);
 
             assertThat(deletedRow).isEqualTo(1);
         }
@@ -86,7 +86,7 @@ class JdbcCartItemDaoTest {
         @DisplayName("장바구니에서 상품 삭제가 되지 않으면 0을 반환하는지 확인한다")
         @Test
         void returnZeroWhenNothingHappenedTest() {
-            int deletedRow = cartItemDao.deleteById(3L);
+            int deletedRow = cartItemDao.deleteByIdAndMemberId(3L, 1L);
 
             assertThat(deletedRow).isEqualTo(0);
         }

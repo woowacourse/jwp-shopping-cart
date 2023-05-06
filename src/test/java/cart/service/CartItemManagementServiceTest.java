@@ -2,9 +2,10 @@ package cart.service;
 
 import cart.dao.JdbcCartItemDao;
 import cart.dao.JdbcProductDao;
+import cart.dao.MemberDao;
 import cart.domain.entity.CartItem;
+import cart.domain.entity.Member;
 import cart.domain.entity.Product;
-import cart.dto.CartItemCreationDto;
 import cart.dto.CartItemDetailsDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -36,9 +37,14 @@ class CartItemManagementServiceTest {
     @Mock
     JdbcProductDao productDao;
 
+    @Mock
+    MemberDao memberDao;
+
     @Nested
-    @DisplayName("사용자 id로 장바구니에 담긴 상품 목록을 조회하는 findAllByMemberId 메서드 테스트")
-    class FindAllByMemberIdTest {
+    @DisplayName("장바구니에 담긴 상품 목록을 조회하는 findAll 메서드 테스트")
+    class FindAllTest {
+
+        private final Member member = Member.of(1L, "irene@email.com", "password1");
 
         @DisplayName("장바구니 상품들을 가져와서 정보를 조합해 반환하는지 확인한다")
         @Test
@@ -50,11 +56,12 @@ class CartItemManagementServiceTest {
             final Product product1 = Product.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
             final Product product2 = Product.of(2L, "pizza", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 20000);
 
+            when(memberDao.selectByEmail(any())).thenReturn(member);
             when(cartItemDao.selectAllByMemberId(anyLong())).thenReturn(cartItemData);
             when(productDao.selectById(1L)).thenReturn(product1);
             when(productDao.selectById(2L)).thenReturn(product2);
 
-            final List<CartItemDetailsDto> cartItemDetailsDtos = managementService.findAllByMemberId(1L);
+            final List<CartItemDetailsDto> cartItemDetailsDtos = managementService.findAll(member.getEmail());
 
             assertAll(
                     () -> assertThat(cartItemDetailsDtos.size()).isEqualTo(2),
@@ -74,34 +81,40 @@ class CartItemManagementServiceTest {
     @DisplayName("장바구니에 상품을 추가하는 save 메서드 테스트")
     class SaveTest {
 
+        private final Member member = Member.of(1L, "irene@email.com", "password1");
+
         @DisplayName("장바구니에 상품이 추가되는지 확인한다")
         @Test
         void successTest() {
-            final CartItemCreationDto cartItem = CartItemCreationDto.of(1L, 1L);
+            when(memberDao.selectByEmail(any())).thenReturn(member);
             when(cartItemDao.insert(any())).thenReturn(1L);
 
-            assertDoesNotThrow(() -> managementService.save(cartItem));
+            assertDoesNotThrow(() -> managementService.save(member.getEmail(), 1L));
         }
     }
 
     @Nested
-    @DisplayName("장바구니에서 상품을 삭제하는 deleteById 메서드 테스트")
-    class DeleteByIdTest {
+    @DisplayName("장바구니에서 상품을 삭제하는 delete 메서드 테스트")
+    class DeleteTest {
+
+        private final Member member = Member.of(1L, "irene@email.com", "password1");
 
         @DisplayName("장바구니에서 상품이 삭제되는지 확인한다")
         @Test
         void successTest() {
-            when(cartItemDao.deleteById(anyLong())).thenReturn(1);
+            when(memberDao.selectByEmail(any())).thenReturn(member);
+            when(cartItemDao.deleteByIdAndMemberId(anyLong(), anyLong())).thenReturn(1);
 
-            assertDoesNotThrow(() -> managementService.deleteById(1L));
+            assertDoesNotThrow(() -> managementService.delete(member.getEmail(), 1L));
         }
 
         @DisplayName("장바구니에서 상품이 삭제되지 않으면 예외가 발생하는지 확인한다")
         @Test
         void failTest() {
-            when(cartItemDao.deleteById(anyLong())).thenReturn(0);
+            when(memberDao.selectByEmail(any())).thenReturn(member);
+            when(cartItemDao.deleteByIdAndMemberId(anyLong(), anyLong())).thenReturn(0);
 
-            assertThatThrownBy(() -> managementService.deleteById(3L))
+            assertThatThrownBy(() -> managementService.delete(member.getEmail(), 3L))
                     .isInstanceOf(IllegalArgumentException.class);
         }
     }
