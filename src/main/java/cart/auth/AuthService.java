@@ -19,7 +19,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public boolean isInvalidAuth(final AuthDto authDto) {
-        final Optional<Member> memberOptional = memberDao.find(authDto.toMember());
+        final Optional<Member> memberOptional = memberDao.findByEmailAndPassword(authDto.getEmail(), authDto.getPassword());
         return memberOptional.isEmpty();
     }
 }

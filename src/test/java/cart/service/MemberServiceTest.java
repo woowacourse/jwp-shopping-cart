@@ -53,7 +53,7 @@ class MemberServiceTest {
     @Test
     void 아이디와_비밀번호로_회원을_조회한다() {
         // given
-        Mockito.when(memberDao.findByEmail(Mockito.any()))
+        Mockito.when(memberDao.findByEmail(Mockito.anyString()))
                 .thenReturn(Optional.ofNullable(MEMBER_FIXTURE));
         final cart.dto.MemberDto memberDto = new cart.dto.MemberDto("gavi@woowahan.com", "1234");
 

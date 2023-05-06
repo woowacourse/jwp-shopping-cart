@@ -35,19 +35,19 @@ public class MemberDao {
         }
     }
 
-    public Optional<Member> find(final Member member) {
+    public Optional<Member> findByEmailAndPassword(final String email, final String password) {
         final String sql = "SELECT * FROM MEMBER WHERE email = ? and password = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, MAPPER, member.getEmail(), member.getPassword()).get(0));
+            return Optional.ofNullable(jdbcTemplate.query(sql, MAPPER, email, password).get(0));
         } catch (EmptyResultDataAccessException | DuplicateKeyException error) {
             return EMPTY;
         }
     }
 
-    public Optional<Member> findByEmail(final Member member) {
+    public Optional<Member> findByEmail(final String email) {
         final String sql = "SELECT * FROM MEMBER WHERE email = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, MAPPER, member.getEmail()).get(0));
+            return Optional.ofNullable(jdbcTemplate.query(sql, MAPPER, email).get(0));
         } catch (EmptyResultDataAccessException | DuplicateKeyException error) {
             return EMPTY;
         }
