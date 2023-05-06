@@ -13,6 +13,10 @@ public class SimpleResponse extends Response {
         return new SimpleResponse("400", message);
     }
 
+    public static SimpleResponse unAuthorized(String message) {
+        return new SimpleResponse("401", message);
+    }
+
     public static SimpleResponse internalServerError(String message) {
         return new SimpleResponse("500", message);
     }
