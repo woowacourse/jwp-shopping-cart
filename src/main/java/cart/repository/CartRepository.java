@@ -48,6 +48,16 @@ public class CartRepository {
 		return jdbcTemplate.query(sql, cartRowMapper, memberId.getId());
 	}
 
+	public List<Cart> findAllByEmail(final String email){
+		final String sql =
+			"SELECT * "
+			+ "FROM members m "
+				+ "JOIN carts c ON m.id = c.memberId "
+				+ "JOIN products p ON c.productId = p.id "
+				+ "WHERE m.email = ?";
+		return jdbcTemplate.query(sql, cartRowMapper, email);
+	}
+
 	public boolean deleteByMemberId(final MemberId memberId, final ProductId productId) {
 		final String sql = "DELETE FROM carts WHERE memberId = ? AND productId = ?";
 		final int deleteCount = jdbcTemplate.update(sql, memberId.getId(), productId.getId());
