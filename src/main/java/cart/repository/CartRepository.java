@@ -43,15 +43,6 @@ public class CartRepository {
 		return CartId.from(cartId);
 	}
 
-	public Cart findByCartId(final CartId cartId) {
-		final String sql = "SELECT * FROM carts WHERE id = ?";
-		try {
-			return jdbcTemplate.queryForObject(sql, cartRowMapper, cartId.getId());
-		} catch (EmptyResultDataAccessException e) {
-			return null;
-		}
-	}
-
 	public List<Cart> findAllByMemberId(final MemberId memberId) {
 		final String sql = "SELECT * FROM carts WHERE memberId = ?";
 		return jdbcTemplate.query(sql, cartRowMapper, memberId.getId());
