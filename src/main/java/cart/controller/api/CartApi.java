@@ -1,10 +1,10 @@
 package cart.controller.api;
 
-import cart.common.auth.AuthMember;
-import cart.config.auth.BasicAuth;
+import cart.controller.auth.BasicAuth;
 import cart.domain.cart.CartId;
 import cart.domain.product.ProductId;
 import cart.service.cart.CartService;
+import cart.service.request.AuthMember;
 import cart.service.response.ProductResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

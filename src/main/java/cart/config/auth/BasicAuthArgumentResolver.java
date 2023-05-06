@@ -1,7 +1,7 @@
 package cart.config.auth;
 
-import cart.common.auth.AuthInfo;
-import cart.common.auth.AuthService;
+import cart.controller.auth.BasicAuth;
+import cart.exception.BasicAuthException;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -16,10 +16,10 @@ public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver 
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String AUTHORIZATION_BASIC = "Basic ";
 
-    private final AuthService authService;
+    private final AuthChecker authChecker;
 
-    public BasicAuthArgumentResolver(final AuthService authService) {
-        this.authService = authService;
+    public BasicAuthArgumentResolver(final AuthChecker authChecker) {
+        this.authChecker = authChecker;
     }
 
     @Override
@@ -37,9 +37,9 @@ public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver 
         final String basicToken = webRequest.getHeader(HEADER_AUTHORIZATION);
         validate(basicToken);
 
-        final AuthInfo authInfo = new BasicAuthProvider().getAuthInfo(basicToken);
+        final AuthInfo authInfo = AuthInfo.from(basicToken);
 
-        return authService.login(authInfo.getEmail(), authInfo.getPassword());
+        return authChecker.login(authInfo.getEmail(), authInfo.getPassword());
     }
 
     private void validate(final String basicToken) {

@@ -1,6 +1,5 @@
 package cart.service.cart;
 
-import cart.common.auth.AuthMember;
 import cart.config.ServiceTestConfig;
 import cart.domain.cart.CartId;
 import cart.domain.member.Member;
@@ -12,6 +11,7 @@ import cart.repository.member.MemberJdbcRepository;
 import cart.repository.member.MemberRepository;
 import cart.repository.product.ProductJdbcRepository;
 import cart.repository.product.ProductRepository;
+import cart.service.request.AuthMember;
 import cart.service.response.ProductResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

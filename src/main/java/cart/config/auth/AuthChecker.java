@@ -1,15 +1,16 @@
-package cart.common.auth;
+package cart.config.auth;
 
-import cart.config.auth.AuthLoginException;
 import cart.domain.member.Member;
+import cart.exception.AuthLoginException;
 import cart.repository.member.MemberRepository;
+import cart.service.request.AuthMember;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthService {
+public class AuthChecker {
     private final MemberRepository memberRepository;
 
-    public AuthService(final MemberRepository memberRepository) {
+    public AuthChecker(final MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 

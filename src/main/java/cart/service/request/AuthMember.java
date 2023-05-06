@@ -1,4 +1,4 @@
-package cart.common.auth;
+package cart.service.request;
 
 import cart.domain.member.MemberId;
 

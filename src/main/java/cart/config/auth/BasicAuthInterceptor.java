@@ -1,5 +1,6 @@
 package cart.config.auth;
 
+import cart.exception.BasicAuthException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 

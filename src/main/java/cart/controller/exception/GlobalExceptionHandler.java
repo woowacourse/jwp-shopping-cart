@@ -1,7 +1,7 @@
 package cart.controller.exception;
 
-import cart.config.auth.AuthLoginException;
-import cart.config.auth.BasicAuthException;
+import cart.exception.AuthLoginException;
+import cart.exception.BasicAuthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

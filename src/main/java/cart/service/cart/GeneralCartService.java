@@ -1,11 +1,11 @@
 package cart.service.cart;
 
-import cart.common.auth.AuthMember;
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartId;
 import cart.domain.product.ProductId;
 import cart.repository.cart.CartRepository;
 import cart.repository.product.ProductRepository;
+import cart.service.request.AuthMember;
 import cart.service.response.ProductResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

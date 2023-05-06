@@ -1,8 +1,8 @@
 package cart.service.cart;
 
-import cart.common.auth.AuthMember;
 import cart.domain.cart.CartId;
 import cart.domain.product.ProductId;
+import cart.service.request.AuthMember;
 import cart.service.response.ProductResponse;
 
 import java.util.List;
