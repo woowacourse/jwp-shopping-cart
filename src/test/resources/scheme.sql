@@ -1,19 +1,17 @@
 CREATE TABLE IF NOT EXISTS PRODUCT
 (
-    id        BIGINT       NOT NULL AUTO_INCREMENT,
+    id        BIGINT AUTO_INCREMENT PRIMARY KEY,
     name      VARCHAR(30)  NOT NULL,
     image_url VARCHAR(max) NOT NULL,
-    price     INT          NOT NUll,
-    PRIMARY KEY (id)
-);
+    price     INT          NOT NUll
+    );
 
 CREATE TABLE IF NOT EXISTS MEMBER
 (
-    id       BIGINT       NOT NULL AUTO_INCREMENT,
-    email    VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id)
-);
+    id       BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email    VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+    );
 
 CREATE TABLE IF NOT EXISTS CART
 (
@@ -21,4 +19,3 @@ CREATE TABLE IF NOT EXISTS CART
     member_id  BIGINT NOT NULL,
     product_id BIGINT NOT NULL
 );
-
