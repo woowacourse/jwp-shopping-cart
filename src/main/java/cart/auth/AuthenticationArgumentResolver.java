@@ -4,6 +4,7 @@ import cart.entity.Member;
 import cart.service.MemberService;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.regex.Pattern;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -13,6 +14,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BASIC_PREFIX = "Basic ";
+    private static final String BASIC_DELIMITER = ":";
+    private static final String EMPTY = "";
+    private static final Pattern BASIC_CREDENTIAL_PATTERN = Pattern.compile("^Basic [A-Za-z0-9+/]+=*$");
 
     private final MemberService memberService;
 
@@ -29,7 +36,7 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String authorization = webRequest.getHeader("Authorization");
+        String authorization = webRequest.getHeader(AUTHORIZATION);
         validateCredentials(authorization);
         String[] emailAndName = extractBasicAuthInfo(authorization);
         return getMember(emailAndName);
@@ -47,21 +54,22 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
     }
 
     private void validateBasicAuth(String authorization) {
-        String regex = "^Basic [A-Za-z0-9+/]+=*$";
-
-        if (!authorization.matches(regex)) {
+        if (!BASIC_CREDENTIAL_PATTERN.matcher(authorization).matches()) {
             throw new AuthenticationException();
         }
     }
 
     private String[] extractBasicAuthInfo(String authorization) {
-        String credentials = authorization.replace("Basic ", "");
+        String credentials = authorization.replace(BASIC_PREFIX, EMPTY);
         byte[] decodedBytes = Base64.getDecoder().decode(credentials);
         String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
-        return decodedString.split(":");
+        return decodedString.split(BASIC_DELIMITER);
     }
 
     private Member getMember(String[] emailAndName) {
+        if (emailAndName.length != 2) {
+            throw new AuthenticationException();
+        }
         String email = emailAndName[0];
         String password = emailAndName[1];
         Member member = memberService.findMember(email);
