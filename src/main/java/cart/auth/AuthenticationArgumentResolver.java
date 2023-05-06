@@ -36,6 +36,6 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
             return memberService.find(authInfo.getEmail(), authInfo.getPassword());
         }
 
-       throw new UnAuthenticationException();
+        throw new UnAuthenticationException();
     }
 }

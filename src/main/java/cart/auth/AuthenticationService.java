@@ -25,10 +25,10 @@ public class AuthenticationService {
         if (member != null) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     public AuthInfo decryptBasic(final String header) {
         String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
         byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
@@ -37,7 +37,7 @@ public class AuthenticationService {
         String[] credentials = decodedString.split(DELIMITER);
         String email = credentials[EMAIL_INDEX];
         String password = credentials[PASSWORD_INDEX];
-        
+
         return new AuthInfo(email, password);
     }
 }
