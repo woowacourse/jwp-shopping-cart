@@ -1,5 +1,6 @@
 package cart.auth;
 
+import cart.auth.UnauthorizedException.Language;
 import cart.service.CustomerService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +27,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (customerService.isAbleToLogin(authInfo.getEmail(), authInfo.getPassword())) {
             return true;
         }
-        throw new UnauthorizedException();
+        throw new UnauthorizedException(Language.KO);
     }
 
     @Override

@@ -1,5 +1,8 @@
 package cart.domain;
 
+import cart.domain.exception.WrongPriceException;
+import cart.domain.exception.WrongPriceException.Language;
+
 public class Price {
 
     private static final int AMOUNT_LIMIT = 0;
@@ -15,7 +18,7 @@ public class Price {
         if (price > AMOUNT_LIMIT) {
             return;
         }
-        throw new IllegalArgumentException("가격은 0보다 커야합니다.");
+        throw new WrongPriceException(Language.KO);
     }
 
     public int getValue() {

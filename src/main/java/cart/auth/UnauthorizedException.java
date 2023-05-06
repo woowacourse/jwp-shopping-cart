@@ -6,9 +6,19 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
 public class UnauthorizedException extends RuntimeException {
 
-    private static final String MESSAGE = "로그인이 필요합니다.";
+    public UnauthorizedException(Language language) {
+        super(language.msg);
+    }
 
-    public UnauthorizedException() {
-        super(MESSAGE);
+    public enum Language {
+        EN("Login is required."),
+        KO("로그인이 필요합니다."),
+        NONE("");
+
+        private final String msg;
+
+        Language(String msg) {
+            this.msg = msg;
+        }
     }
 }

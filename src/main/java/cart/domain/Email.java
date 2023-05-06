@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.domain.exception.WrongEmailFormatException;
+import cart.domain.exception.WrongEmailFormatException.Language;
 import java.util.regex.Pattern;
 
 public class Email {
@@ -17,7 +19,7 @@ public class Email {
         if (EMAIL_PATTERN.matcher(email).matches()) {
             return;
         }
-        throw new IllegalArgumentException("이메일은 숫자, 알파벳 소문자, _로만 구성할 수 있습니다.");
+        throw new WrongEmailFormatException(Language.KO);
     }
 
     public String getEmail() {

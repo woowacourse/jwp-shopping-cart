@@ -1,5 +1,8 @@
 package cart.domain;
 
+import cart.domain.exception.WrongPasswordFormatException;
+import cart.domain.exception.WrongPasswordFormatException.Language;
+
 public class Password {
 
     private static final int MIN_LENGTH = 8;
@@ -14,7 +17,7 @@ public class Password {
 
     private void validate(final String password) {
         if (password.length() < MIN_LENGTH || password.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("비밀번호는 8글자 ~ 20글자 사이여야 합니다.");
+            throw new WrongPasswordFormatException(Language.KO);
         }
     }
 

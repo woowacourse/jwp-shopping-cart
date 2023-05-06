@@ -3,6 +3,8 @@ package cart.domain;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import cart.domain.exception.WrongEmailFormatException;
+import cart.domain.exception.WrongPriceException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -15,7 +17,7 @@ class EmailTest {
     void exceptionWhenWrongEmailFormat(String email) {
         // when, then
         assertThatThrownBy(() -> new Email(email))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(WrongEmailFormatException.class)
                 .hasMessageContaining("이메일은 숫자, 알파벳 소문자, _로만 구성할 수 있습니다.");
     }
 

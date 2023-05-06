@@ -2,6 +2,7 @@ package cart.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.domain.exception.WrongPriceException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -14,7 +15,7 @@ class PriceTest {
     void exceptionWhenWrongPrice(int price) {
         // when, then
         assertThatThrownBy(() -> new Price(price))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(WrongPriceException.class)
                 .hasMessageContaining("가격은 0보다 커야합니다.");
     }
 

@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import cart.controller.dto.CustomerResponse;
 import cart.service.dto.CustomerInfoDto;
 import cart.service.dto.SignUpDto;
+import cart.service.exception.InvalidEmailException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
@@ -50,8 +51,7 @@ class CustomerServiceTest {
 
         // when, then
         assertThatThrownBy(() -> customerService.save(signUpDto))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("이미 존재하는 이메일 입니다.");
+                .isInstanceOf(InvalidEmailException.class);
     }
 
     @DisplayName("전체 사용자 정보를 조회할 수 있다.")

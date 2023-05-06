@@ -2,6 +2,7 @@ package cart.domain;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+import cart.domain.exception.WrongPasswordFormatException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -13,7 +14,7 @@ class PasswordTest {
     @ValueSource(strings = {"abcdefg", "abcdefghijklmnopqrxtu"})
     void exceptionWhenWrongPassword(String password) {
         assertThatThrownBy(() -> new Password(password))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(WrongPasswordFormatException.class)
                 .hasMessageContaining("비밀번호는 8글자 ~ 20글자 사이여야 합니다.");
     }
 

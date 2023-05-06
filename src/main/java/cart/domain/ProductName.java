@@ -1,5 +1,8 @@
 package cart.domain;
 
+import cart.domain.exception.WrongProductNameException;
+import cart.domain.exception.WrongProductNameException.Language;
+
 public class ProductName {
 
     private final int MIN_LENGTH = 1;
@@ -14,7 +17,7 @@ public class ProductName {
 
     private void validate(final String name) {
         if (name.length() > MAX_LENGTH || name.length() < MIN_LENGTH) {
-            throw new IllegalArgumentException("상품명은 1글자 이상, 50글자 이하여야합니다.");
+            throw new WrongProductNameException(Language.KO);
         }
     }
 

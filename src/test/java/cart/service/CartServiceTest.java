@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import cart.controller.dto.CartResponse;
 import cart.service.dto.CartDto;
 import cart.service.dto.CartInfoDto;
+import cart.service.exception.DuplicateCartException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
