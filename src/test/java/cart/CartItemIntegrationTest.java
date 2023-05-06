@@ -41,6 +41,17 @@ public class CartItemIntegrationTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("인증되지 않은 사용자가 장바구니 아이템 조회 시 UNAUTHORIZED 응답코드를 반환한다")
+    @Test
+    void getUnauthorized() {
+        RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("unauthorized@gmail.com", "abcd1234")
+                .when().get("/cartitems")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
     @DisplayName("로그인 사용자의 장바구니 아이템 등록 시 CREATED 응답코드를 반환한다")
     @Test
     void create() {
@@ -50,6 +61,17 @@ public class CartItemIntegrationTest {
                 .when().post("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("인증되지 않은 사용자가 장바구니 아이템 등록 시 UNAUTHORIZED 응답코드를 반환한다")
+    @Test
+    void createUnauthorized() {
+        RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("unauthorized@gmail.com", "abcd1234")
+                .when().post("/cartitems/1")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("로그인 사용자의 장바구니 아이템 삭제 시 NO CONTENT 응답코드를 반환한다")
@@ -63,5 +85,18 @@ public class CartItemIntegrationTest {
                 .when().delete("/cartitems/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("인증되지 않은 사용자가 장바구니 아이템 삭제 시 UNAUTHORIZED 응답코드를 반환한다")
+    @Test
+    void deleteUnauthorized() {
+        jdbcTemplate.update("INSERT INTO cart_items (member_id, product_id) VALUES (1, 1)");
+
+        RestAssured
+                .given().log().all()
+                .auth().preemptive().basic("unauthorized@gmail.com", "abcd1234")
+                .when().delete("/cartitems/1")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 }

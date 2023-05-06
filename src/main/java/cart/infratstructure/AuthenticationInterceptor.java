@@ -24,16 +24,15 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             throws Exception {
         AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
         if (authInfo == null) {
-            // TODO 별도 예외 정의
-            throw new IllegalArgumentException("사용자 정보가 존재하지 않습니다");
+            throw new AuthenticationException("사용자 정보가 존재하지 않습니다");
         }
         String email = authInfo.getEmail();
         String password = authInfo.getPassword();
 
         Member member = memberService.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 사용자 정보입니다"));
+                .orElseThrow(() -> new AuthenticationException("잘못된 사용자 정보입니다"));
         if (!Objects.equals(password, member.getPassword())) {
-            throw new IllegalArgumentException("잘못된 사용자 정보입니다");
+            throw new AuthenticationException("잘못된 사용자 정보입니다");
         }
 
         request.setAttribute(LOGIN_MEMBER_ID, member.getId());

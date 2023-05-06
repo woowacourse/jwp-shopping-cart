@@ -41,6 +41,13 @@ public class ExceptionAdvice {
         return new ErrorDto(exception.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(AuthenticationException.class)
+    public ErrorDto handleException(AuthenticationException exception) {
+        log.error("AuthenticationException message={}", exception.getMessage());
+        return new ErrorDto(exception.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorDto handleException(Exception exception) {

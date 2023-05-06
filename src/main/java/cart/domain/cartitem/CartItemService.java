@@ -33,6 +33,7 @@ public class CartItemService {
     }
 
     public void deleteById(final Long id) {
+        // TODO 사용자 아이디 비교, 불일치 시 Forbidden 응답하게 하기
         validateIdExist(id);
         cartItemDao.deleteById(id);
     }
