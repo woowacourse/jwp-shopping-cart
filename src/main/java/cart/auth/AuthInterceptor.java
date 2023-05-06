@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.execption.AuthorizationException;
+import cart.exeception.AuthorizationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
