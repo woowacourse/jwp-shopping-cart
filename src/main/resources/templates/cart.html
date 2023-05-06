@@ -34,17 +34,13 @@
             return;
         }
 
-        axios.get({
-            url: '/carts',
-            headers: {
-                'Authorization': `Basic ${credentials}`
-            }
-        }).then((response) => {
-            const cartItems = response.data;
+        axios.get('/carts', {headers: {Authorization: `Basic ${credentials}`}})
+            .then((response) => {
+                const cartItems = response.data;
 
-            let productElement = '';
-            cartItems.forEach(cartItem => {
-                productElement += `
+                let productElement = '';
+                cartItems.forEach(cartItem => {
+                    productElement += `
                         <div class="cart-item">
                           <div class="cart-item-info">
                             <img src="${cartItem.product.imageUrl}" alt="이미지를 불러올 수 없습니다."/> <!-- 상품 이미지 -->
@@ -54,12 +50,13 @@
                           </div>
                         </div>
                       `;
-            });
+                });
 
-            document.querySelector('.cart-items').innerHTML = productElement;
-        }).catch((error) => {
-            console.error(error);
-        });
+                document.querySelector('.cart-items').innerHTML = productElement;
+            })
+            .catch((error) => {
+                console.error(error);
+            });
 
     });
 </script>

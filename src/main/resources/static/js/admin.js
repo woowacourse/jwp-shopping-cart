@@ -47,18 +47,17 @@ form.addEventListener('submit', (event) => {
 const createProduct = (product) => {
     try {
         validImage(product.imageUrl)
-        axios.post({
-            url: '/products',
-            data: product
-        }).then((response) => {
-            window.location.reload();
-        }).catch((error) => {
-            let errorMessages = '';
-            for (let message of error.response.data.messages) {
-                errorMessages += (message + '\n');
-            }
-            alert(errorMessages)
-        });
+        axios.post('/products', product)
+            .then((response) => {
+                window.location.reload();
+            })
+            .catch((error) => {
+                let errorMessages = '';
+                for (let message of error.response.data.messages) {
+                    errorMessages += (message + '\n');
+                }
+                alert(errorMessages)
+            });
     } catch (error) {
         alert(error.message)
     }
@@ -69,14 +68,13 @@ const updateProduct = (product) => {
         validImage(product.image)
         const {id} = product;
 
-        axios.put({
-            url: '/products/' + id,
-            data: product
-        }).then((response) => {
-            window.location.reload();
-        }).catch((error) => {
-            alert(error.response.data.messages)
-        });
+        axios.put('/products/' + id, product)
+            .then((response) => {
+                window.location.reload();
+            })
+            .catch((error) => {
+                alert(error.response.data.messages)
+            });
     } catch (error) {
         alert(error.message)
     }
@@ -90,11 +88,11 @@ const validImage = (imageUrl) => {
 };
 
 const deleteProduct = (id) => {
-    axios.delete({
-        url: '/products/' + id,
-    }).then((response) => {
-        window.location.reload();
-    }).catch((error) => {
-        alert(error.response.data.messages)
-    });
+    axios.delete('/products/' + id)
+        .then((response) => {
+            window.location.reload();
+        })
+        .catch((error) => {
+            alert(error.response.data.messages)
+        });
 };
