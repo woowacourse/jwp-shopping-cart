@@ -8,10 +8,10 @@ import cart.exception.MemberNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-public class LoginInterceptor extends HandlerInterceptorAdapter {
+public class LoginInterceptor implements HandlerInterceptor {
 
     private static final String AUTHORIZATION = "Authorization";
     private static final String MEMBER_ERROR_MESSAGE = "일치하는 회원이 없습니다.";
@@ -26,12 +26,11 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         AuthInfo authInfo = extractor.extract(request.getHeader(AUTHORIZATION));
         validate(authInfo);
 
-        return super.preHandle(request, response, handler);
+        return true;
     }
 
     private void validate(AuthInfo authInfo) {
