@@ -2,8 +2,6 @@ package cart.controller.api;
 
 import static io.restassured.RestAssured.given;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;

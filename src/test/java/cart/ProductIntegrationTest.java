@@ -11,6 +11,8 @@ import cart.dto.request.UpdateProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import io.restassured.response.ResponseBody;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -20,21 +22,35 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductIntegrationTest {
+    private static final String TOKEN_FIXTURE = "Z2F2aUB3b293YWhhbi5jb206MTIzNA==";
+    private static final SqlParameterSource PRODUCT_PARAMS = new MapSqlParameterSource()
+            .addValue("name", "치킨")
+            .addValue("price", 1000)
+            .addValue("image", "치킨 사진");
 
     @LocalServerPort
     private int port;
 
     @Autowired
+    private DataSource dataSource;
+
+    @Autowired
     private ProductDao productDao;
+
+    private SimpleJdbcInsert productJdbcInsert;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        productJdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("product").usingGeneratedKeyColumns("id");
     }
 
     @Test
@@ -180,6 +196,77 @@ class ProductIntegrationTest {
             softly.assertThat(userResponse.body().asString()).contains("피자", "1000", "피자 사진");
             softly.assertThat(adminResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(adminResponse.body().asString()).contains("피자", "1000", "피자 사진");
+        });
+    }
+
+    @Test
+    void 상품목록에서_담기를_누르면_장바구니에_상품이_추가된다() {
+        // given
+        final Long productId = productJdbcInsert.executeAndReturnKey(PRODUCT_PARAMS).longValue();
+
+        // when
+        given()
+                .log().all().header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .when()
+                .post("/carts/" + productId)
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
+        // then
+        final Response cartResponse = given()
+                .log().all().header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/carts")
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().response();
+        final ResponseBody cartResponseBody = cartResponse.body();
+
+        // then
+        assertSoftly(softly -> {
+            softly.assertThat(cartResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(cartResponseBody.asString()).contains("치킨", "1000", "치킨 사진");
+        });
+    }
+
+    @Test
+    void 장바구니에_추가_후_상품을_제거하면_장바구니에서_사라진다() {
+        // given
+        final Long productId = productJdbcInsert.executeAndReturnKey(PRODUCT_PARAMS).longValue();
+
+        // when
+        given()
+                .log().all().header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .when()
+                .post("/carts/" + productId)
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
+        given()
+                .log().all().header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .when()
+                .delete("/carts/" + productId)
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.ACCEPTED.value());
+
+        final Response cartResponse = given()
+                .log().all().header("Authorization", "Basic " + TOKEN_FIXTURE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/carts")
+                .then()
+                .log().all()
+                .extract().response();
+
+        // then
+        assertSoftly(softly -> {
+            softly.assertThat(cartResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(cartResponse.body().asString()).doesNotContain("치킨", "10000", "치킨 사진");
         });
     }
 }
