@@ -29,14 +29,14 @@ public class CartApiController {
 
     @GetMapping
     public ResponseEntity<List<CartProductResponse>> findCartProductsByMember(@Auth Credential credential) {
-        List<CartProductResponse> cartProducts = cartProductService.findAllByMemberId(credential.getId());
+        List<CartProductResponse> cartProducts = cartProductService.findAllByMemberId(credential.getMemberId());
         return ResponseEntity.status(HttpStatus.OK).body(cartProducts);
     }
 
     @PostMapping
     public ResponseEntity<Void> addCartProduct(@Auth Credential credential,
                                                @RequestBody CartProductRequest cartProductRequest) {
-        cartProductService.save(credential.getId(), cartProductRequest);
+        cartProductService.save(credential.getMemberId(), cartProductRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(URI.create("/product/" + cartProductRequest.getProductId()))
                 .build();

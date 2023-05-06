@@ -469,7 +469,6 @@ class ProductApiControllerTest {
                             is("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
         }
 
-
         @Test
         @DisplayName("존재하지 않는 상품 ID를 경로로 설정시 404를 반환한다.")
         void delete_fail_by_not_exists_product_id() {

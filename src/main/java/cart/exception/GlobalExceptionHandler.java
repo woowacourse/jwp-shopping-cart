@@ -17,16 +17,18 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleAllException(Exception exception) {
+    public ResponseEntity<Object> handleAllException() {
         ExceptionResponse response = new ExceptionResponse("서버가 응답할 수 없습니다.");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        return handleExceptionInternal(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ApplicationException.class)
-    public ResponseEntity<ExceptionResponse> handleApplicationException(ApplicationException exception) {
+    public ResponseEntity<Object> handleApplicationException(ApplicationException exception) {
         ExceptionResponse response = new ExceptionResponse(exception.getMessage());
-        return ResponseEntity.status(exception.status()).body(response);
+        return handleExceptionInternal(response, exception.status());
     }
 
     @Override
@@ -51,6 +53,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<Object> handleExceptionInternal(ExceptionResponse response, HttpStatus status) {
+        logger.error(String.format("message = %s, status = %s", response.getMessage(), status.toString()));
         return ResponseEntity.status(status).body(response);
     }
 }
