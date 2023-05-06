@@ -11,7 +11,7 @@ public class Member {
         this.password = password;
     }
 
-    public boolean isCorrectPassword(String password) {
+    public boolean isPasswordCorrect(String password) {
         return this.password.equals(password);
     }
 
