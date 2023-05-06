@@ -20,7 +20,7 @@ public class AdminController {
     }
 
     @GetMapping("/products")
-    public String admin(Model model) {
+    public String getAdminPage(Model model) {
         List<ProductResponse> responses = productService.findAll();
         model.addAttribute("products", responses);
         return "admin";
