@@ -41,8 +41,8 @@ public class ProductIntegrationTest {
         RestAssured.port = port;
     }
 
-    @Test
     @DisplayName("상품이 추가되었을 때 CREATED 응답 코드를 반환한다")
+    @Test
     void create() throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", "일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
@@ -61,9 +61,9 @@ public class ProductIntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("상품이 추가 실패 때 BAD REQUEST 응답 코드를 반환한다")
     @ParameterizedTest
     @ValueSource(strings = {" ", "", "일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일"})
-    @DisplayName("상품이 추가 실패 때 BAD REQUEST 응답 코드를 반환한다")
     void createFailName(String name) throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", name,
@@ -82,8 +82,8 @@ public class ProductIntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @Test
     @DisplayName("상품이 추가 실패 때 BAD REQUEST 응답 코드를 반환한다")
+    @Test
     void createFailUrl() throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", "name",
@@ -102,9 +102,9 @@ public class ProductIntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
+    @DisplayName("상품이 추가 실패 때 BAD REQUEST 응답 코드를 반환한다")
     @ParameterizedTest
     @ValueSource(ints = {-1, 1_000_000_001})
-    @DisplayName("상품이 추가 실패 때 BAD REQUEST 응답 코드를 반환한다")
     void createFailPrice(int price) throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", "name",
@@ -123,8 +123,8 @@ public class ProductIntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @Test
     @DisplayName("상품 수정 성공 시 NO CONTENT 응답 코드를 반환한다")
+    @Test
     void update() throws JSONException {
         Long id = insertProduct();
 
@@ -146,8 +146,8 @@ public class ProductIntegrationTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    @Test
     @DisplayName("상품 식제 성공 시 NO CONTENT 응답 코드를 반환한다")
+    @Test
     void delete() {
         Long id = insertProduct();
 

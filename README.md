@@ -37,8 +37,6 @@
     - [x] 관리자 상품 삭제 시 장바구니에 담긴 상품 정보 처리 (FK 참조 문제)
         - 일단 같이 삭제되게 만들기
         - 추후 삭제 여부 컬럼 만들어서 관리할 수도 있다.
-    - [ ] 사용자 인증 절차 리팩터링
-- [ ] 뷰 리졸버 활용
 
 ## API 명세
 
@@ -60,6 +58,8 @@
 ![image](https://user-images.githubusercontent.com/97426362/236440197-ab9a1102-6569-45db-9b3e-93a1407ce3ed.png)
 
 ## 코드리뷰 피드백 및 리팩터링 목록
+
+### 1단계
 
 - [x] @RestController의 반환 타입 코드 중복 수정
 - [x] 수정, 삭제 id 검증 로직 추가
@@ -86,5 +86,11 @@
 - [x] [REST API 관련 학습 및 자원 표기 방법 변경](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1184665185)
     - 더 넓은 의미에서 사용할 수 있는, 복수형으로 자원 표기하도록 RestController의 URI 변경함
 - [x] [현재 상황에서 서비스 계층 트랜잭션 어노테이션, read-only 옵션의 필요성](https://github.com/woowacourse/jwp-shopping-cart/pull/175#discussion_r1181093361)
+
+### 2단계
+
 - [x] 실행 테스트의 편의를 위해 더미 데이터 저장하기
 - [ ] DTO Null 검증 시 예외 메시지 구체화
+- [ ] 사용자 인증 절차 리팩터링
+    - [x] Interceptor, ArgumentResolver 사용하여 중복 제거
+    - [ ] 통합 테스트 작성

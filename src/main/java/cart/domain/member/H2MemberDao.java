@@ -2,6 +2,7 @@ package cart.domain.member;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -27,8 +28,12 @@ public class H2MemberDao extends MemberDao {
 
     @Override
     Optional<Member> findByEmail(final String email) {
-        Member member = jdbcTemplate.queryForObject("SELECT id, email, password FROM MEMBERS WHERE email = ?",
-                MEMBER_ROW_MAPPER, email);
-        return Optional.ofNullable(member);
+        try {
+            Member member = jdbcTemplate.queryForObject("SELECT id, email, password FROM MEMBERS WHERE email = ?",
+                    MEMBER_ROW_MAPPER, email);
+            return Optional.of(member);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 }

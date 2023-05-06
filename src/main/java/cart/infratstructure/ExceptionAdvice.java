@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.infratstructure;
 
 import cart.dto.ErrorDto;
 import javax.validation.ConstraintViolationException;
@@ -30,6 +30,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(ConstraintViolationException.class)
     public ErrorDto handleException(ConstraintViolationException exception) {
         log.error("ConstraintViolationException message={}", exception.getMessage());
+        exception.printStackTrace();
         return new ErrorDto(exception.getMessage());
     }
 
