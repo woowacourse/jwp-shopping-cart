@@ -24,8 +24,8 @@ public class CartService {
         return cartDao.findAll(memberId);
     }
 
-    public void delete(Long productId) {
-        cartDao.delete(productId);
+    public void delete(CartDto cartDto) {
+        cartDao.delete(cartDto);
     }
 
 }

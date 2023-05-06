@@ -11,6 +11,6 @@ public interface CartDao {
 
     void save(CartDto cartDto);
 
-    void delete(Long productId);
+    void delete(CartDto cartDto);
 }
 

@@ -36,10 +36,11 @@ public class DbCartDao implements CartDao {
         String sql = "insert into cart(member_id, product_id) values (?,?)";
         jdbcTemplate.update(sql, cartDto.getMemeberId(), cartDto.getProductId());
     }
+
     @Override
-    public void delete(Long productId) {
-        String sql = "delete from cart where product_id = ?";
-        jdbcTemplate.update(sql, productId);
+    public void delete(CartDto cartDto) {
+        String sql = "delete from cart where member_id = ? and product_id = ?";
+        jdbcTemplate.update(sql, cartDto.getMemeberId(), cartDto.getProductId());
     }
 
 }

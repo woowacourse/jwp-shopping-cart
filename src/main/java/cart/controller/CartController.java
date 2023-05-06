@@ -24,6 +24,7 @@ public class CartController {
 
     private final CartService cartService;
     private final ProductService productService;
+
     public CartController(CartService cartService, ProductService productService) {
         this.cartService = cartService;
         this.productService = productService;
@@ -57,7 +58,7 @@ public class CartController {
     @DeleteMapping("/carts/{productId}")
     @ResponseBody
     public ResponseEntity<String> delete(@PathVariable Long productId, @Login Member member) {
-        cartService.delete(productId);
+        cartService.delete(new CartDto(member.getId(), productId));
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
