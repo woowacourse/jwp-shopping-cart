@@ -36,6 +36,12 @@ public class InMemoryCartRepository implements CartRepository {
                         "userId: " + userId));
     }
 
+    @Override
+    public void update(Cart cart) {
+        this.carts.remove(cart);
+        this.carts.add(cart);
+    }
+
     private long getSerial() {
         this.serial += 1;
         return this.serial;

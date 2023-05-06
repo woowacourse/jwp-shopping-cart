@@ -45,4 +45,12 @@ public class ProductService {
     public List<Product> findAll() {
         return this.productRepository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public Product findById(Long productId) {
+        return this.productRepository.findById(productId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 상품 ID로 조회했습니다." + System.lineSeparator() +
+                        "입력한 ID: " + productId)
+        );
+    }
 }

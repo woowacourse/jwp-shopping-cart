@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.domain.cart.Cart;
 import cart.domain.cart.CartRepository;
 import cart.domain.product.Product;
 import cart.domain.user.User;
@@ -13,16 +14,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class CartService {
 
     private final UserService userService;
+    private final ProductService productService;
     private final CartRepository cartRepository;
 
-    public CartService(UserService userService, CartRepository cartRepository) {
+    public CartService(UserService userService, ProductService productService, CartRepository cartRepository) {
         this.userService = userService;
+        this.productService = productService;
         this.cartRepository = cartRepository;
     }
 
     public List<Product> findProductsInCartByUser(UserAuthDto userAuthDto) {
-        System.out.println("check");
         User signedUpUser = this.userService.signUp(userAuthDto);
         return this.cartRepository.findByUserId(signedUpUser.getId()).getProducts();
+    }
+
+    public void addProductToCartById(UserAuthDto userAuthDto, Long productId) {
+        User signedUpUser = this.userService.signUp(userAuthDto);
+        Product product = this.productService.findById(productId);
+        Cart cart = this.cartRepository.findByUserId(signedUpUser.getId());
+        cart.add(product);
+        this.cartRepository.update(cart);
     }
 }

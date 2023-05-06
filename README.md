@@ -221,8 +221,8 @@ Content-Type: application/json
 로그인 된 사용자의 장바구니에 상품을 추가합니다.
 
 **구현 내용**
-> - [ ] 요청 받은 ID에 해당하는 Product를 Cart에 추가
->   - [ ] 로그인 확인
+> - [x] 요청 받은 ID에 해당하는 Product를 Cart에 추가
+>   - [x] 로그인 확인
 > - [ ] DB에 저장
 
 **Request example**

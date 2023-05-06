@@ -1,6 +1,7 @@
 package cart.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.service.CartService;
@@ -41,10 +42,30 @@ class CartControllerTest {
                     .andExpect(status().isOk());
         }
 
-        @DisplayName("Authorization 헤더가 없으면 Status OK를 반환한다.")
+        @DisplayName("Authorization 헤더가 없으면 Status Unauthorized를 반환한다.")
         @Test
         void shouldResponseStatusUnauthorizedWhenRequestWithoutBasicToken() throws Exception {
             mockMvc.perform(get("/carts/me/products"))
+                    .andExpect(status().isUnauthorized());
+        }
+    }
+
+    @DisplayName("POST /carts/me/{productId} 요청 시")
+    @Nested
+    class postCartsMeProductId {
+
+        @DisplayName("ID와 Basic Token이 올바르면 Status OK를 반환한다.")
+        @Test
+        void shouldResponseStatusOkWhenRequestWithCorrectIdAndBasicToken() throws Exception {
+            mockMvc.perform(post("/carts/me/1")
+                            .header("Authorization", "Basic ZW1haWxAdGVzdC50ZXN0OjEyMzQ="))
+                    .andExpect(status().isOk());
+        }
+
+        @DisplayName("Authorization 헤더가 없으면 Status Unauthorized를 반환한다.")
+        @Test
+        void shouldResponseStatusUnauthorizedWhenRequestWithoutBasicToken() throws Exception {
+            mockMvc.perform(post("/carts/me/1"))
                     .andExpect(status().isUnauthorized());
         }
     }

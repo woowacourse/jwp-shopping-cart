@@ -20,7 +20,6 @@ public class InMemoryUserRepository implements UserRepository {
                 userToSave.getName().orElse(null),
                 userToSave.getPhoneNumber().orElse(null)
         ));
-        System.out.println("Saved id: " + serial);
         return this.serial;
     }
 

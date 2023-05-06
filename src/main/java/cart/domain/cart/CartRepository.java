@@ -5,4 +5,6 @@ public interface CartRepository {
     void create(long userId);
 
     Cart findByUserId(long userId);
+
+    void update(Cart cart);
 }
