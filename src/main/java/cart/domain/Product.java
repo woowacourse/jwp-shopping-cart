@@ -5,27 +5,30 @@ import cart.entity.ProductEntity;
 import java.util.Objects;
 
 public class Product {
-    private final Integer id;
+    private final Long id;
     private final String name;
-    private final String image;
-    private final Long price;
+    private final ProductImage image;
+    private final ProductPrice price;
 
-    public Product(final Integer id, final String name, final String image, final Long price) {
-        this.id = id;
+    public Product(final String name, final String image, final Long price) {
+        this.id = null;
         this.name = name;
-        this.image = image;
-        this.price = price;
+        this.image = new ProductImage(image);
+        this.price = new ProductPrice(price);
     }
 
-    public static ProductEntity of(final Integer id, final String name, final String image, final Long price) {
-        return new ProductEntity(id, name, image, price);
+    public Product(final Long id, final String name, final String image, final Long price) {
+        this.id = Long.valueOf(id);
+        this.name = name;
+        this.image = new ProductImage(image);
+        this.price = new ProductPrice(price);
     }
 
-    public static ProductEntity of(final String name, final String image, final Long price) {
-        return new ProductEntity(name, image, price);
+    public static Product from(final ProductEntity productEntity) {
+        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -34,11 +37,11 @@ public class Product {
     }
 
     public String getImage() {
-        return image;
+        return image.getImage();
     }
 
     public Long getPrice() {
-        return price;
+        return price.getPrice();
     }
 
     @Override

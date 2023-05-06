@@ -1,10 +1,13 @@
-package cart.dto;
+package cart.controller.dto.request;
 
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-public class ProductRequest {
+public class ProductUpdateRequest {
+    @NotNull(message = "아이디가 비어있습니다.")
+    private final Long id;
     @NotBlank(message = "이름이 비어있습니다.")
     private String name;
     @NotBlank(message = "이미지가 비어있습니다.")
@@ -16,13 +19,15 @@ public class ProductRequest {
     )
     private Long price;
 
-    public ProductRequest() {
-    }
-
-    public ProductRequest(final String name, final String image, final Long price) {
+    public ProductUpdateRequest(final Long id, final String name, final String image, final Long price) {
+        this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {

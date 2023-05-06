@@ -19,7 +19,7 @@ public class ProductJdbcDao implements ProductDao {
 
     private final RowMapper<ProductEntity> productEntityRowMapper = (rs, rowNum) ->
             new ProductEntity(
-                    rs.getInt("id"),
+                    rs.getLong("id"),
                     rs.getString("name"),
                     rs.getString("image"),
                     rs.getLong("price")
@@ -51,7 +51,7 @@ public class ProductJdbcDao implements ProductDao {
     }
 
     @Override
-    public void deleteById(final Integer id) {
+    public void deleteById(final Long id) {
         String sql = "delete from product where id = ?";
         try {
             jdbcTemplate.update(sql, id);
@@ -61,13 +61,12 @@ public class ProductJdbcDao implements ProductDao {
     }
 
     @Override
-    public Optional<ProductEntity> findById(final Integer id) {
+    public Optional<ProductEntity> findById(final Long id) {
         String sql = "select * from product where id = ?";
 
         try {
             ProductEntity productEntity = jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
             return Optional.of(productEntity);
-
         } catch (IncorrectResultSizeDataAccessException e) {
             return Optional.empty();
         }
@@ -81,7 +80,7 @@ public class ProductJdbcDao implements ProductDao {
                 sql,
                 (rs, rowNum) ->
                         new ProductEntity(
-                                rs.getInt("id"),
+                                rs.getLong("id"),
                                 rs.getString("name"),
                                 rs.getString("image"),
                                 rs.getLong("price")

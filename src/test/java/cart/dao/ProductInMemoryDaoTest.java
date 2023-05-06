@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 
 import java.util.Optional;
 
+import static cart.fixture.ProductEntityFixture.TEST_PRODUCT_BEAVER_ENTITY_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
@@ -20,8 +21,8 @@ class ProductInMemoryDaoTest {
     void setUp() {
         this.productInMemoryDao = new ProductInMemoryDao();
 
-        final ProductEntity productEntity = new ProductEntity(1, "비버", "A", 1000L);
-        insertedId = productInMemoryDao.insert(productEntity);
+
+        insertedId = productInMemoryDao.insert(TEST_PRODUCT_BEAVER_ENTITY_ID);
     }
 
     @Test
@@ -33,11 +34,10 @@ class ProductInMemoryDaoTest {
     @Test
     @DisplayName("수정 테스트")
     void update() {
-        final ProductEntity productEntity = new ProductEntity(1, "비버", "A", 100000L);
-        productInMemoryDao.update(productEntity);
+        productInMemoryDao.update(TEST_PRODUCT_BEAVER_ENTITY_ID);
 
-        final Optional<ProductEntity> byId = productInMemoryDao.findById(insertedId);
-        assertThat(byId.get().getPrice()).isEqualTo(100000L);
+        final Optional<ProductEntity> productEntityById = productInMemoryDao.findById(Long.valueOf(insertedId));
+        assertThat(productEntityById.get().getPrice()).isEqualTo(100000L);
     }
 
     @Test
@@ -45,7 +45,7 @@ class ProductInMemoryDaoTest {
     void deleteById() {
         System.out.println(insertedId);
 
-        productInMemoryDao.deleteById(insertedId);
+        productInMemoryDao.deleteById(Long.valueOf(insertedId));
 
         assertThat(productInMemoryDao.findAll().size()).isZero();
     }
@@ -53,17 +53,14 @@ class ProductInMemoryDaoTest {
     @Test
     @DisplayName("조회 테스트")
     void select() {
-        final ProductEntity expectEntity = new ProductEntity(1, "비버", "A", 1000L);
-        final Optional<ProductEntity> byId = productInMemoryDao.findById(insertedId);
+        final Optional<ProductEntity> byId = productInMemoryDao.findById(Long.valueOf(insertedId));
 
-        assertThat(byId.get()).isEqualTo(expectEntity);
+        assertThat(byId.get()).isEqualTo(TEST_PRODUCT_BEAVER_ENTITY_ID);
     }
 
     @Test
     @DisplayName("전체조회 테스트")
     void findAll() {
-        final ProductEntity expectEntity = new ProductEntity(1, "비버", "A", 1000L);
-
-        assertThat(productInMemoryDao.findAll()).containsOnly(expectEntity);
+        assertThat(productInMemoryDao.findAll()).containsOnly(TEST_PRODUCT_BEAVER_ENTITY_ID);
     }
 }

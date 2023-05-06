@@ -1,7 +1,8 @@
 package cart.controller;
 
+import cart.controller.dto.request.ProductCreationRequest;
+import cart.controller.dto.request.ProductUpdateRequest;
 import cart.dao.ProductJdbcDao;
-import cart.dto.ProductRequest;
 import cart.entity.ProductEntity;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType;
 
 import java.util.Optional;
 
+import static cart.fixture.ProductEntityFixture.TEST_PRODUCT_BEAVER_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -27,31 +29,30 @@ class ProductControllerTest {
     @LocalServerPort
     private int port;
 
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        RestAssured
-                .given()
-                .body(new ProductRequest("비버", "a", 100L))
-                .post("/products");
+//        RestAssured
+//                .given()
+//                .body(new ProductCreationRequest("비버", "a", 100))
+//                .post("/products");
     }
 
     @Test
     @DisplayName("POST(/products)")
     void createProduct() {
-        final Integer Id = productJdbcDao.insert(new ProductEntity("비버", "a", 100L));
+        final Integer Id = productJdbcDao.insert(TEST_PRODUCT_BEAVER_ENTITY);
 
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .body(new ProductRequest("비버", "a", 100L))
+                .body(new ProductCreationRequest("비버", "a", 100L))
                 .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 
-        final Optional<ProductEntity> ProductEntity = productJdbcDao.findById(Id);
+        final Optional<ProductEntity> ProductEntity = productJdbcDao.findById(Long.valueOf(Id));
 
         assertAll(
                 () -> assertThat(ProductEntity.get().getName()).isEqualTo("비버"),
@@ -61,19 +62,19 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("PUT(/products/{id})")
+    @DisplayName("PUT(/products)")
     void updateProduct() {
-        final Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 100L));
+        final Integer id = productJdbcDao.insert(TEST_PRODUCT_BEAVER_ENTITY);
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
-                .body(new ProductRequest("비버", "abc", 1000L))
-                .when().put("/products/" + id)
+                .body(new ProductUpdateRequest(Long.valueOf(id), "비버", "abc", 1000L))
+                .when().put("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 
-        final Optional<ProductEntity> productEntity = productJdbcDao.findById(id);
+        final Optional<ProductEntity> productEntity = productJdbcDao.findById(Long.valueOf(id));
 
         assertAll(
                 () -> assertThat(productEntity.get().getName()).isEqualTo("비버"),
@@ -83,18 +84,18 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE(/products/{id})")
+    @DisplayName("DELETE(/products/)")
     void deleteProduct() {
-        final Integer id = productJdbcDao.insert(new ProductEntity("비버", "a", 100L));
+        final Integer id = productJdbcDao.insert(TEST_PRODUCT_BEAVER_ENTITY);
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(ContentType.JSON)
                 .when().delete("/products/" + id)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
 
-        final Optional<ProductEntity> productEntity = productJdbcDao.findById(id);
+        final Optional<ProductEntity> productEntity = productJdbcDao.findById(Long.valueOf(id));
 
         assertThat(productEntity).isEmpty();
     }
