@@ -1,11 +1,11 @@
-package cart.controller;
+package cart.controller.authentication;
 
-public class Credentials {
+public class AuthInfo {
 
     private final String email;
     private final String password;
 
-    public Credentials(final String email, final String password) {
+    public AuthInfo(final String email, final String password) {
         this.email = email;
         this.password = password;
     }

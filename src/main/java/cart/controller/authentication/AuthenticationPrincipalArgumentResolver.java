@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.authentication;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -33,6 +33,6 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         final String email = values.get(0);
         final String password = values.get(1);
 
-        return new Credentials(email, password);
+        return new AuthInfo(email, password);
     }
 }

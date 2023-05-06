@@ -101,7 +101,7 @@
     - [x] 사용자 인증 정보
         - [x] Header : Authorization
         - [x] type : Basic
-        - [x] credentials : email:password (encoded with base64)
+        - [x] authInfo : email:password (encoded with base64)
 
 ## DB 테이블
 
