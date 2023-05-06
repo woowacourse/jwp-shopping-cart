@@ -3,13 +3,11 @@ package cart.dto;
 import cart.entity.ProductCart;
 
 public class ProductCartResponse {
-    private Long id;
+
+    private final Long id;
 
     public ProductCartResponse(Long id) {
         this.id = id;
-    }
-
-    public ProductCartResponse() {
     }
 
     public static ProductCartResponse from(ProductCart productCart) {

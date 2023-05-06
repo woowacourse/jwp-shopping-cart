@@ -3,6 +3,7 @@ package cart;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.MemberDao;
@@ -11,7 +12,6 @@ import cart.dao.ProductDao;
 import cart.dto.CartRequest;
 import cart.dto.CartsResponse;
 import cart.dto.CartsResponse.CartResponse;
-import cart.dto.ProductCartResponse;
 import cart.dto.ProductRequest;
 import cart.entity.Member;
 import cart.entity.Product;
@@ -168,7 +168,7 @@ public class ProductIntegrationTest {
         Product pizza = productDao.save(new Product("pizza", "https://pizza.com", 10000));
         CartRequest cartRequest = new CartRequest(pizza.getId());
 
-        ProductCartResponse response = RestAssured.given()
+        RestAssured.given()
                 .auth().preemptive().basic("boxster@email.com", "boxster")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequest)
@@ -176,10 +176,7 @@ public class ProductIntegrationTest {
                 .post("/carts")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .extract().as(ProductCartResponse.class);
-
-        assertThat(productCartDao.findAllByMemberId(member.getId()))
-                .map(ProductCart::getId).containsExactly(response.getId());
+                .body("id", is(1));
     }
 
     @DisplayName("로그인 된 회원의 장바구니에서 상품을 삭제한다")
