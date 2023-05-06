@@ -25,7 +25,7 @@ public class CartDbRepository implements CartRepository {
         String sql = "SELECT c.id, p.id as product_id, p.name as name, p.price as price, p.img_url as img_url "
                 + "FROM cart_products c "
                 + "JOIN products p ON(c.product_id = p.id)"
-                + "WHERE user_id = :userId";
+                + "WHERE cart_no = :userId";
 
         List<CartItem> cartItems = namedParameterJdbcTemplate.query(sql, Map.of("userId", user.getId()),
                 getCartItemRowMapper());
@@ -52,7 +52,7 @@ public class CartDbRepository implements CartRepository {
 
     @Override
     public void addCartItem(Cart cart, CartItem cartItem) {
-        String sql = "INSERT INTO cart_products(user_id, product_id) VALUES (:userId, :productId)";
+        String sql = "INSERT INTO cart_products(cart_no, product_id) VALUES (:userId, :productId)";
         namedParameterJdbcTemplate.update(sql,
                 Map.of("userId", cart.getUser().getId(), "productId", cartItem.getProduct().getId()));
     }
