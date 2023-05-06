@@ -1,8 +1,9 @@
-package cart.settings.dao;
+package cart.auth.dao;
 
-import cart.settings.domain.User;
-import cart.settings.dto.UserRequestDTO;
-import cart.settings.exceptions.NotFoundException;
+import cart.auth.domain.User;
+import cart.auth.dto.UserRequestDTO;
+import cart.common.exceptions.NotFoundException;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,11 +11,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public class JdbcUserDAO implements UserDAO {
-
+    
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<User> rowMapper = (rs, rowNum) -> {
@@ -23,15 +22,15 @@ public class JdbcUserDAO implements UserDAO {
         final String password = rs.getString("password");
         return User.of(id, email, password);
     };
-
+    
     public JdbcUserDAO(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("users")
                 .usingGeneratedKeyColumns("id");
     }
-
-
+    
+    
     @Override
     public boolean isExist(final UserRequestDTO userRequestDTO) {
         final String sql = "select count(*) from users where email = ?";
@@ -39,7 +38,7 @@ public class JdbcUserDAO implements UserDAO {
         final int count = this.jdbcTemplate.queryForObject(sql, Integer.class, email);
         return count > 0;
     }
-
+    
     @Override
     public User create(final UserRequestDTO userRequestDTO) {
         final SqlParameterSource params = new MapSqlParameterSource()
@@ -48,7 +47,7 @@ public class JdbcUserDAO implements UserDAO {
         final long id = this.simpleJdbcInsert.executeAndReturnKey(params).longValue();
         return new User(id, userRequestDTO.getEmail(), userRequestDTO.getPassword());
     }
-
+    
     @Override
     public User find(final UserRequestDTO userRequestDTO) {
         final String sql = "select id, email, password from users where email = ? and password = ?";
@@ -60,13 +59,13 @@ public class JdbcUserDAO implements UserDAO {
             throw new NotFoundException("User");
         }
     }
-
+    
     @Override
     public List<User> findAll() {
         final String sql = "select id, email, password from users";
         return this.jdbcTemplate.query(sql, this.rowMapper);
     }
-
+    
     @Override
     public void delete(final User user) {
         final String sql = "delete from users where id = ?";

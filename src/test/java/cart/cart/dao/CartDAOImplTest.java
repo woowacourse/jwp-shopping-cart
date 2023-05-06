@@ -2,7 +2,7 @@ package cart.cart.dao;
 
 import cart.cart.domain.Cart;
 import cart.cart.dto.CartRequestDTO;
-import cart.settings.exceptions.NotFoundException;
+import cart.common.exceptions.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

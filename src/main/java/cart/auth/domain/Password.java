@@ -1,4 +1,4 @@
-package cart.settings.domain;
+package cart.auth.domain;
 
 public class Password {
     

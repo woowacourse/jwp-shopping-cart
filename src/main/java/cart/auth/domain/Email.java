@@ -1,4 +1,4 @@
-package cart.settings.domain;
+package cart.auth.domain;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

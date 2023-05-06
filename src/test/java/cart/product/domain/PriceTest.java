@@ -19,9 +19,7 @@ class PriceTest {
     @Test
     @DisplayName("가격이 0보다 작으면 예외가 발생한다.")
     void validateNegative() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Price(-1000);
-        });
+        assertThrows(IllegalArgumentException.class, () -> new Price(-1000));
     }
     
 }

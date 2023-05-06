@@ -2,7 +2,7 @@ package cart.cart.dao;
 
 import cart.cart.domain.Cart;
 import cart.cart.dto.CartRequestDTO;
-import cart.settings.exceptions.NotFoundException;
+import cart.common.exceptions.NotFoundException;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,6 +13,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CartDAOImpl implements CartDAO {
     
+    public static final String USER_CART_NOT_FOUND_ERROR = "해당 유저의 장바구니가 없습니다.";
+    public static final String CART_NOT_FOUND_ERROR = "해당 카트를 찾을 수 없습니다.";
+    public static final String ITEM_NOT_FOUND_IN_CART_ERROR = "장바구니에 해당 상품이 없습니다.";
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     
@@ -40,33 +43,45 @@ public class CartDAOImpl implements CartDAO {
     }
     
     @Override
-    public Cart find(final CartRequestDTO cartRequestDTO) {
+    public Cart find(final CartRequestDTO cartRequestDTO) throws NotFoundException {
         final String sql = "select id, user_id, product_id from carts where user_id = ? and product_id = ?";
         final long userId = cartRequestDTO.getUserId();
         final long productId = cartRequestDTO.getProductId();
         try {
             return this.jdbcTemplate.queryForObject(sql, this.rowMapper, userId, productId);
         } catch (final Exception e) {
-            throw new NotFoundException("해당 상품이 존재하지 않습니다.");
+            throw new NotFoundException(ITEM_NOT_FOUND_IN_CART_ERROR);
         }
     }
     
     @Override
-    public List<Cart> findUserCart(final long userId) {
+    public List<Cart> findUserCart(final long userId) throws NotFoundException {
         final String sql = "select id, user_id, product_id from carts where user_id = ?";
-        return this.jdbcTemplate.query(sql, this.rowMapper, userId);
+        try {
+            return this.jdbcTemplate.query(sql, this.rowMapper, userId);
+        } catch (final Exception e) {
+            throw new NotFoundException(USER_CART_NOT_FOUND_ERROR);
+        }
     }
     
     @Override
     public void delete(final Cart cart) {
         final String sql = "delete from carts where id = ?";
         final long id = cart.getId();
-        this.jdbcTemplate.update(sql, id);
+        try {
+            this.jdbcTemplate.update(sql, id);
+        } catch (final Exception e) {
+            throw new NotFoundException(CART_NOT_FOUND_ERROR);
+        }
     }
     
     @Override
     public void clear(final long userId) {
         final String sql = "delete from carts where user_id = ?";
-        this.jdbcTemplate.update(sql, userId);
+        try {
+            this.jdbcTemplate.update(sql, userId);
+        } catch (final Exception e) {
+            throw new NotFoundException(USER_CART_NOT_FOUND_ERROR);
+        }
     }
 }
