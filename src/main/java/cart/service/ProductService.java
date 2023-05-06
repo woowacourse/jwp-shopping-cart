@@ -22,12 +22,8 @@ public class ProductService {
     public List<ProductResponseDto> findAll() {
         return productDao.selectAll()
                 .stream()
-                .map(this::toProductResponseDto)
+                .map(ProductResponseDto::new)
                 .collect(Collectors.toList());
-    }
-
-    private ProductResponseDto toProductResponseDto(Product product) {
-        return new ProductResponseDto(product);
     }
 
     public void add(ProductAddRequestDto productAddRequestDto) {
