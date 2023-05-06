@@ -1,7 +1,6 @@
 package shoppingbasket.cart.service;
 
 import shoppingbasket.cart.dao.CartDao;
-import shoppingbasket.cart.dto.CartDeleteResponseDto;
 import shoppingbasket.cart.dto.CartSelectResponseDto;
 import shoppingbasket.cart.entity.CartEntity;
 import shoppingbasket.cart.entity.CartProductEntity;
@@ -36,9 +35,8 @@ public class  CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public CartDeleteResponseDto removeCart(final int cartId) {
-        final int updatedRowCount = cartDao.delete(cartId);
-        return new CartDeleteResponseDto(updatedRowCount);
+    public void removeCart(final int cartId) {
+        cartDao.delete(cartId);
     }
 
     public CartSelectResponseDto getCartById(final int cartId) {

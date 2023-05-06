@@ -12,7 +12,7 @@ public interface CartDao {
 
     List<CartProductEntity> selectAllCartProductByMemberId(int memberId);
 
-    int delete(int cartId);
+    void delete(int cartId);
 
     CartProductEntity selectCartById(int cartId);
 }

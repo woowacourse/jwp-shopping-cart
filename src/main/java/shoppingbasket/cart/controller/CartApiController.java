@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import shoppingbasket.auth.AuthInfo;
 import shoppingbasket.auth.AuthenticationPrincipal;
 import shoppingbasket.auth.BasicAuthorizationExtractor;
-import shoppingbasket.cart.dto.CartDeleteResponseDto;
 import shoppingbasket.cart.dto.CartInsertRequestDto;
 import shoppingbasket.cart.dto.CartSelectResponseDto;
 import shoppingbasket.cart.entity.CartEntity;
@@ -65,10 +64,10 @@ public class CartApiController {
     }
 
     @DeleteMapping("/cart/{id}")
-    public ResponseEntity<CartDeleteResponseDto> removeCart(@AuthenticationPrincipal AuthInfo authInfo,
-                                                            @PathVariable int id) {
+    public ResponseEntity<Void> removeCart(@AuthenticationPrincipal AuthInfo authInfo,
+                                           @PathVariable int id) {
 
-        final CartDeleteResponseDto deleteResponseDto = cartService.removeCart(id);
-        return ResponseEntity.ok(deleteResponseDto);
+        cartService.removeCart(id);
+        return ResponseEntity.noContent().build();
     }
 }

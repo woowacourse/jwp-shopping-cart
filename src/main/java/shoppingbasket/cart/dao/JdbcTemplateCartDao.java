@@ -70,9 +70,9 @@ public class JdbcTemplateCartDao implements CartDao{
     };
 
     @Override
-    public int delete(final int cartId) {
+    public void delete(final int cartId) {
         String sql = "delete from cart where id = ?";
-        return jdbcTemplate.update(sql, cartId);
+        jdbcTemplate.update(sql, cartId);
     }
 
     @Override
