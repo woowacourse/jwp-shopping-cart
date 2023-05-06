@@ -63,7 +63,7 @@ class ProductDaoTest {
     @DisplayName("modify() : 저장된 물품을 수정할 수 있다.")
     void test_modify() throws Exception {
         //given
-        final Long id = 3L;
+        final Long id = 1L;
         final String name = "수정된 피자";
         final int price = 20000;
         final String imageUrl = "수정된 imageUrl";
@@ -91,7 +91,7 @@ class ProductDaoTest {
     @DisplayName("deleteById() : 저장된 물품을 삭제할 수 있다.")
     void test_deleteById() throws Exception {
         //given
-        final Long id = 3L;
+        final Long id = 1L;
 
         //when
         final int beforeSize = productDao.findAll().size();

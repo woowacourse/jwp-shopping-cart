@@ -1,6 +1,7 @@
 package cart.service.dto.product;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 public class ProductModifyRequest {
@@ -8,7 +9,7 @@ public class ProductModifyRequest {
     @NotBlank(message = "상품의 이름은 공백일 수 없습니다.")
     private String name;
 
-    @NotBlank
+    @NotNull
     @Positive(message = "상품의 가격은 0보다 커야 합니다.")
     private Integer price;
 

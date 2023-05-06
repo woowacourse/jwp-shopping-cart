@@ -62,8 +62,8 @@ class ProductControllerTest {
     @DisplayName("modifyProduct() : 물품을 수정할 수 있다.")
     void test_modifyProduct() throws Exception {
         //given
-        final Long id = 1L;
-        final String name = "피자";
+        final Long id = 2L;
+        final String name = "수정된 피자";
         final int price = 10000;
         final String imageUrl = "imageUrl";
 
