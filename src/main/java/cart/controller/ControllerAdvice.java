@@ -22,7 +22,7 @@ public class ControllerAdvice {
                 .body(e.getMessage());
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)가
+    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
