@@ -1,5 +1,6 @@
 package cart.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -66,6 +67,26 @@ class CartControllerTest {
         @Test
         void shouldResponseStatusUnauthorizedWhenRequestWithoutBasicToken() throws Exception {
             mockMvc.perform(post("/carts/me/1"))
+                    .andExpect(status().isUnauthorized());
+        }
+    }
+
+    @DisplayName("DELETE /carts/me/{productId} 요청 시")
+    @Nested
+    class deleteCartsMeProductId {
+
+        @DisplayName("ID와 Basic Token이 올바르면 Status OK를 반환한다.")
+        @Test
+        void shouldResponseStatusOkWhenRequestWithCorrectIdAndBasicToken() throws Exception {
+            mockMvc.perform(delete("/carts/me/1")
+                            .header("Authorization", "Basic ZW1haWxAdGVzdC50ZXN0OjEyMzQ="))
+                    .andExpect(status().isOk());
+        }
+
+        @DisplayName("Authorization 헤더가 없으면 Status Unauthorized를 반환한다.")
+        @Test
+        void shouldResponseStatusUnauthorizedWhenRequestWithoutBasicToken() throws Exception {
+            mockMvc.perform(delete("/carts/me/1"))
                     .andExpect(status().isUnauthorized());
         }
     }

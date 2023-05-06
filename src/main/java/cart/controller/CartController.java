@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,9 +33,22 @@ public class CartController {
     }
 
     @PostMapping("/me/{productId}")
-    public ResponseEntity<Void> addProductToMyCart(HttpServletRequest request, @NotNull @PathVariable Long productId) {
+    public ResponseEntity<Void> addProductToMyCart(
+            HttpServletRequest request,
+            @NotNull @PathVariable Long productId
+    ) {
         UserAuthDto userAuthDto = BasicTokenDecoder.extract(request);
         this.cartService.addProductToCartById(userAuthDto, productId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/me/{productId}")
+    public ResponseEntity<Void> deleteProductFromMyCart(
+            HttpServletRequest request,
+            @NotNull @PathVariable Long productId
+    ) {
+        UserAuthDto userAuthDto = BasicTokenDecoder.extract(request);
+        this.cartService.deleteProductFromCartById(userAuthDto, productId);
         return ResponseEntity.ok().build();
     }
 }

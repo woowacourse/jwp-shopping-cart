@@ -27,14 +27,11 @@ public class Cart {
         this.products.add(product);
     }
 
-    public void deleteProductById(long id) {
-        for (Product product : this.products) {
-            if (product.getId() == id) {
-                this.products.remove(product);
-                return;
-            }
+    public void delete(Product product) {
+        boolean isDeleted = this.products.remove(product);
+        if (!isDeleted) {
+            throw new IllegalArgumentException("해당 ID의 상품이 장바구니에 존재하지 않습니다.");
         }
-        throw new IllegalArgumentException("해당 ID의 상품이 장바구니에 존재하지 않습니다.");
     }
 
     public Long getId() {

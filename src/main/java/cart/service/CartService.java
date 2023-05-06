@@ -35,4 +35,12 @@ public class CartService {
         cart.add(product);
         this.cartRepository.update(cart);
     }
+
+    public void deleteProductFromCartById(UserAuthDto userAuthDto, Long productId) {
+        User signedUpUser = this.userService.signUp(userAuthDto);
+        Product product = this.productService.findById(productId);
+        Cart cart = this.cartRepository.findByUserId(signedUpUser.getId());
+        cart.delete(product);
+        this.cartRepository.update(cart);
+    }
 }

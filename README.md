@@ -243,8 +243,8 @@ Content-Type: application/json
 로그인 된 사용자의 장바구니에서 상품을 삭제합니다.
 
 **구현 사항**
-> - [ ] 요청 받은 ID에 해당하는 Product를 Cart에서 삭제
->   - [ ] 로그인 확인
+> - [x] 요청 받은 ID에 해당하는 Product를 Cart에서 삭제
+>   - [x] 로그인 확인
 > - [ ] DB에 저장
 
 **Request example**
