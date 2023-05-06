@@ -1,6 +1,6 @@
 package cart.factory;
 
-import cart.domain.User;
+import cart.domain.user.User;
 
 public class UserFactory {
     public static User createUser(String email) {

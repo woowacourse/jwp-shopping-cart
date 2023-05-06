@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.User;
-import cart.dto.ProductsReadResponse;
+import cart.domain.user.User;
+import cart.dto.api.response.ProductsReadResponse;
 import cart.service.AuthService;
 import cart.service.ProductService;
 import cart.service.UserService;

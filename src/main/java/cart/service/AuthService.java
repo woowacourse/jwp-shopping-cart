@@ -1,10 +1,10 @@
 package cart.service;
 
-import cart.domain.User;
+import cart.domain.user.User;
 import cart.dto.BasicCredentials;
 import cart.exception.InvalidPasswordException;
 import cart.exception.UserNotFoundException;
-import cart.repository.UserRepository;
+import cart.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -7,11 +7,11 @@ import static cart.factory.ProductRequestDtoFactory.createProductEditRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Product;
-import cart.dto.ProductCreateRequest;
-import cart.dto.ProductEditRequest;
-import cart.dto.ProductsReadResponse;
-import cart.repository.ProductRepository;
+import cart.domain.product.Product;
+import cart.dto.api.request.ProductCreateRequest;
+import cart.dto.api.request.ProductEditRequest;
+import cart.dto.api.response.ProductsReadResponse;
+import cart.repository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

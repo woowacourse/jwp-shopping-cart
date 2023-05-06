@@ -11,13 +11,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import cart.domain.Product;
-import cart.dto.ProductCreateRequest;
+import cart.domain.product.Product;
+import cart.dto.api.request.ProductCreateRequest;
 import cart.dto.ProductDto;
-import cart.dto.ProductEditRequest;
-import cart.dto.ProductsReadResponse;
+import cart.dto.api.request.ProductEditRequest;
+import cart.dto.api.response.ProductsReadResponse;
 import cart.exception.ProductNotFoundException;
-import cart.repository.ProductRepository;
+import cart.repository.product.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

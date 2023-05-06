@@ -1,11 +1,11 @@
 package cart.service;
 
-import cart.domain.Product;
-import cart.dto.ProductCreateRequest;
-import cart.dto.ProductEditRequest;
-import cart.dto.ProductsReadResponse;
+import cart.domain.product.Product;
+import cart.dto.api.request.ProductCreateRequest;
+import cart.dto.api.request.ProductEditRequest;
+import cart.dto.api.response.ProductsReadResponse;
 import cart.exception.ProductNotFoundException;
-import cart.repository.ProductRepository;
+import cart.repository.product.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.given;
 
-import cart.domain.User;
+import cart.domain.user.User;
 import cart.exception.InvalidPasswordException;
 import cart.exception.UserNotFoundException;
-import cart.repository.UserRepository;
+import cart.repository.user.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;

@@ -5,7 +5,8 @@ import static cart.factory.ProductFactory.createProduct;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
+import cart.repository.product.ProductDbRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

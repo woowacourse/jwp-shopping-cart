@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.UserCredentialResponse;
+import cart.dto.api.response.UserCredentialResponse;
 import cart.service.ProductService;
 import cart.service.UserService;
 import java.util.List;

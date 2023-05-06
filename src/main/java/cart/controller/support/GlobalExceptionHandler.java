@@ -1,6 +1,6 @@
 package cart.controller.support;
 
-import cart.dto.ApiErrorResponse;
+import cart.dto.api.response.ApiErrorResponse;
 import cart.exception.InvalidPasswordException;
 import cart.exception.ProductNotFoundException;
 import cart.exception.UserAccessDeniedException;

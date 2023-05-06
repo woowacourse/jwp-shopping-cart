@@ -1,14 +1,14 @@
 package cart.service;
 
-import cart.domain.Cart;
-import cart.domain.CartProduct;
-import cart.domain.Product;
-import cart.domain.User;
+import cart.domain.cart.Cart;
+import cart.domain.cart.CartProduct;
+import cart.domain.product.Product;
+import cart.domain.user.User;
 import cart.exception.ProductNotFoundException;
 import cart.exception.UserNotFoundException;
-import cart.repository.CartRepository;
-import cart.repository.ProductRepository;
-import cart.repository.UserRepository;
+import cart.repository.cart.CartRepository;
+import cart.repository.product.ProductRepository;
+import cart.repository.user.UserRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

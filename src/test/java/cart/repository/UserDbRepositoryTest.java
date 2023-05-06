@@ -3,7 +3,9 @@ package cart.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.User;
+import cart.domain.user.User;
+import cart.repository.user.UserDbRepository;
+import cart.repository.user.UserRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

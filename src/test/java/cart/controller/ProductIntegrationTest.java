@@ -7,11 +7,11 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Product;
-import cart.dto.ProductCreateRequest;
+import cart.domain.product.Product;
+import cart.dto.api.request.ProductCreateRequest;
 import cart.dto.ProductDto;
-import cart.dto.ProductEditRequest;
-import cart.repository.ProductRepository;
+import cart.dto.api.request.ProductEditRequest;
+import cart.repository.product.ProductRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
