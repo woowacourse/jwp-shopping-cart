@@ -2,14 +2,16 @@ package cart.dao.member;
 
 import cart.domain.Member;
 import cart.dto.MemeberDto;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class DbMemeberDao implements MemeberDao{
+public class DbMemeberDao implements MemeberDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -27,9 +29,14 @@ public class DbMemeberDao implements MemeberDao{
     }
 
     @Override
-    public Member findByEmail(String email) {
+    public Optional<Member> findByEmail(String email) {
         String sql = "select * from member where email = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, email);
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, email));
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
