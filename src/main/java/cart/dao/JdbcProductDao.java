@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcProductDao implements ProductDao {
@@ -38,12 +39,13 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public Product findById(final long id) {
+    public Optional<Product> findById(final long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, productRowMapper, id);
+            final Product product = jdbcTemplate.queryForObject(sql, productRowMapper, id);
+            return Optional.of(product);
         } catch (final IncorrectResultSizeDataAccessException exception) {
-            return null;
+            return Optional.empty();
         }
     }
 

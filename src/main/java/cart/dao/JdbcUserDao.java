@@ -10,10 +10,11 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcUserDao implements UserDao {
-    
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
     private final RowMapper<User> userRowMapper = (resultSet, rowNum) ->
@@ -37,22 +38,24 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public User findById(final Long id) {
+    public Optional<User> findById(final Long id) {
         final String sql = "SELECT * FROM user_list WHERE id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, userRowMapper, id);
+            final User user = jdbcTemplate.queryForObject(sql, userRowMapper, id);
+            return Optional.of(user);
         } catch (final IncorrectResultSizeDataAccessException exception) {
-            return null;
+            return Optional.empty();
         }
     }
 
     @Override
-    public User findByEmail(final String email) {
+    public Optional<User> findByEmail(final String email) {
         final String sql = "SELECT * FROM user_list WHERE email = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, userRowMapper, email);
+            final User user = jdbcTemplate.queryForObject(sql, userRowMapper, email);
+            return Optional.of(user);
         } catch (final IncorrectResultSizeDataAccessException exception) {
-            return null;
+            return Optional.empty();
         }
     }
 

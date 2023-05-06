@@ -24,11 +24,9 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findByEmail(final String email) {
-        final User user = userDao.findByEmail(email);
-        if (user == null) {
+        return userDao.findByEmail(email).orElseThrow(() -> {
             throw new IllegalArgumentException("존재하지 않는 사용자 email 입니다.");
-        }
-        return user;
+        });
     }
 
     @Transactional(readOnly = true)
@@ -37,7 +35,7 @@ public class UserService {
     }
 
     public void checkExistUserId(final Long id) {
-        if (userDao.findById(id) == null) {
+        if (userDao.findById(id).isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 사용자 id 입니다.");
         }
     }

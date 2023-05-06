@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -45,8 +47,14 @@ class JdbcProductDaoTest {
         final Long id1 = jdbcProductDao.insert(new Product("IO", 10000, null));
         final Long id2 = jdbcProductDao.insert(new Product("ASH", 10000, null));
 
-        assertThat(jdbcProductDao.findById(id1).getName()).isEqualTo("IO");
-        assertThat(jdbcProductDao.findById(id2).getName()).isEqualTo("ASH");
+        final Optional<Product> product1 = jdbcProductDao.findById(id1);
+        final Optional<Product> product2 = jdbcProductDao.findById(id2);
+        assertAll(
+                () -> assertThat(product1).isPresent(),
+                () -> assertThat(product1.get().getName()).isEqualTo("IO"),
+                () -> assertThat(product2).isPresent(),
+                () -> assertThat(product2.get().getName()).isEqualTo("ASH")
+        );
     }
 
     @Test

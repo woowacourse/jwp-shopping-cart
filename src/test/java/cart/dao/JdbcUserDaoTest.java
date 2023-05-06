@@ -8,7 +8,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Sql(scripts = {"classpath:test.sql"})
@@ -33,8 +36,15 @@ class JdbcUserDaoTest {
         final Long id1 = jdbcUserDao.insert(new User("IO@mail.com", "testpassword"));
         final Long id2 = jdbcUserDao.insert(new User("ASH@mail.com", "testpassword"));
 
-        assertThat(jdbcUserDao.findByEmail("IO@mail.com").getId()).isEqualTo(id1);
-        assertThat(jdbcUserDao.findByEmail("ASH@mail.com").getId()).isEqualTo(id2);
+        final Optional<User> user1 = jdbcUserDao.findByEmail("IO@mail.com");
+        final Optional<User> user2 = jdbcUserDao.findByEmail("ASH@mail.com");
+
+        assertAll(
+                () -> assertThat(user1).isPresent(),
+                () -> assertThat(user1.get().getId()).isEqualTo(id1),
+                () -> assertThat(user2).isPresent(),
+                () -> assertThat(user2.get().getId()).isEqualTo(id2)
+        );
     }
 
     @Test

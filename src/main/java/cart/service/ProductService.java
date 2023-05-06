@@ -24,7 +24,9 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Product findById(final Long id) {
-        return productDao.findById(id);
+        return productDao.findById(id).orElseThrow(() -> {
+            throw new IllegalArgumentException("존재하지 않는 상품 ID 입니다.");
+        });
     }
 
     @Transactional(readOnly = true)
@@ -40,7 +42,7 @@ public class ProductService {
     }
 
     public void checkExistProductId(final Long id) {
-        if (productDao.findById(id) == null) {
+        if (productDao.findById(id).isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 상품 id 입니다.");
         }
     }
