@@ -1,7 +1,7 @@
 package cart.auth.dao;
 
 import cart.auth.domain.User;
-import cart.auth.dto.UserRequestDTO;
+import cart.auth.dto.UserInfo;
 import cart.common.exceptions.NotFoundException;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,27 +32,27 @@ public class JdbcUserDAO implements UserDAO {
     
     
     @Override
-    public boolean isExist(final UserRequestDTO userRequestDTO) {
+    public boolean isExist(final UserInfo userInfo) {
         final String sql = "select count(*) from users where email = ?";
-        final String email = userRequestDTO.getEmail().getValue();
+        final String email = userInfo.getEmail().getValue();
         final int count = this.jdbcTemplate.queryForObject(sql, Integer.class, email);
         return count > 0;
     }
     
     @Override
-    public User create(final UserRequestDTO userRequestDTO) {
+    public User create(final UserInfo userInfo) {
         final SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("email", userRequestDTO.getEmail().getValue())
-                .addValue("password", userRequestDTO.getPassword().getValue());
+                .addValue("email", userInfo.getEmail().getValue())
+                .addValue("password", userInfo.getPassword().getValue());
         final long id = this.simpleJdbcInsert.executeAndReturnKey(params).longValue();
-        return new User(id, userRequestDTO.getEmail(), userRequestDTO.getPassword());
+        return new User(id, userInfo.getEmail(), userInfo.getPassword());
     }
     
     @Override
-    public User find(final UserRequestDTO userRequestDTO) {
+    public User find(final UserInfo userInfo) {
         final String sql = "select id, email, password from users where email = ? and password = ?";
-        final String email = userRequestDTO.getEmail().getValue();
-        final String password = userRequestDTO.getPassword().getValue();
+        final String email = userInfo.getEmail().getValue();
+        final String password = userInfo.getPassword().getValue();
         try {
             return this.jdbcTemplate.queryForObject(sql, this.rowMapper, email, password);
         } catch (final Exception e) {

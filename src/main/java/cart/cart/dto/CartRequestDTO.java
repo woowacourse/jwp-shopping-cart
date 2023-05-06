@@ -1,5 +1,8 @@
 package cart.cart.dto;
 
+import cart.auth.dto.UserResponseDTO;
+import cart.catalog.dto.ResponseProductDto;
+
 public class CartRequestDTO {
     
     private final long userId;
@@ -12,6 +15,10 @@ public class CartRequestDTO {
     
     public static CartRequestDTO of(final long userId, final long productId) {
         return new CartRequestDTO(userId, productId);
+    }
+    
+    public static CartRequestDTO from(final UserResponseDTO userResponseDTO, final ResponseProductDto responseProductDto) {
+        return new CartRequestDTO(userResponseDTO.getId(), responseProductDto.getId());
     }
     
     public long getUserId() {

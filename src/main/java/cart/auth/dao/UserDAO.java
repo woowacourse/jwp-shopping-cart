@@ -1,16 +1,16 @@
 package cart.auth.dao;
 
 import cart.auth.domain.User;
-import cart.auth.dto.UserRequestDTO;
+import cart.auth.dto.UserInfo;
 import java.util.List;
 
 public interface UserDAO {
     
-    boolean isExist(UserRequestDTO userRequestDTO);
+    boolean isExist(UserInfo userInfo);
     
-    User create(UserRequestDTO userRequestDTO);
+    User create(UserInfo userInfo);
     
-    User find(UserRequestDTO userRequestDTO);
+    User find(UserInfo userInfo);
     
     List<User> findAll();
     

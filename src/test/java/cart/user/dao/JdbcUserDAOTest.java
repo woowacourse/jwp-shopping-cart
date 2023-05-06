@@ -2,7 +2,7 @@ package cart.user.dao;
 
 import cart.auth.dao.JdbcUserDAO;
 import cart.auth.domain.User;
-import cart.auth.dto.UserRequestDTO;
+import cart.auth.dto.UserInfo;
 import cart.common.exceptions.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +23,7 @@ class JdbcUserDAOTest {
     void insert() {
         //given
         final int initialCount = this.jdbcUserDAO.findAll().size();
-        final var user = UserRequestDTO.of("test@test.com", "#test1234");
+        final var user = UserInfo.of("test@test.com", "#test1234");
         
         //when
         this.jdbcUserDAO.create(user);
@@ -40,11 +40,11 @@ class JdbcUserDAOTest {
     @DisplayName("유저 DB 저장 실패 테스트 - 중복 이메일")
     void insertFail() {
         //given
-        final UserRequestDTO user = UserRequestDTO.of("test@test.com", "#test1234");
+        final UserInfo user = UserInfo.of("test@test.com", "#test1234");
         this.jdbcUserDAO.create(user);
         
         //when
-        final UserRequestDTO duplicatedUser = UserRequestDTO.of("test@test.com", "#test1234");
+        final UserInfo duplicatedUser = UserInfo.of("test@test.com", "#test1234");
         final boolean exist = this.jdbcUserDAO.isExist(duplicatedUser);
         
         //then
@@ -55,12 +55,12 @@ class JdbcUserDAOTest {
     @DisplayName("유저 Password 테스트")
     void findByEmail() {
         //given
-        final UserRequestDTO user = UserRequestDTO.of("echo@test.com", "#test1234");
+        final UserInfo user = UserInfo.of("echo@test.com", "#test1234");
         
         //when
-        final UserRequestDTO userRequestDTO = UserRequestDTO.of("echo@test.com", "#test1235");
+        final UserInfo userInfo = UserInfo.of("echo@test.com", "#test1235");
         
         //then
-        Assertions.assertThrows(NotFoundException.class, () -> this.jdbcUserDAO.find(userRequestDTO));
+        Assertions.assertThrows(NotFoundException.class, () -> this.jdbcUserDAO.find(userInfo));
     }
 }

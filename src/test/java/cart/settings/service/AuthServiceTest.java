@@ -6,28 +6,29 @@ import cart.auth.dao.UserDAO;
 import cart.auth.domain.Email;
 import cart.auth.domain.Password;
 import cart.auth.domain.User;
-import cart.auth.dto.UserRequestDTO;
+import cart.auth.dto.UserInfo;
 import cart.auth.dto.UserResponseDTO;
+import cart.auth.service.AuthService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class SettingsServiceTest {
+class AuthServiceTest {
     
     static class fakeUserDAO implements UserDAO {
         
         @Override
-        public boolean isExist(final UserRequestDTO userRequestDTO) {
+        public boolean isExist(final UserInfo userInfo) {
             return false;
         }
         
         @Override
-        public User create(final UserRequestDTO userRequestDTO) {
+        public User create(final UserInfo userInfo) {
             return null;
         }
         
         @Override
-        public User find(final UserRequestDTO userRequestDTO) {
+        public User find(final UserInfo userInfo) {
             return null;
         }
         
@@ -41,6 +42,7 @@ class SettingsServiceTest {
         
         }
     }
+    
     public static final List<User> TEST_USERS = List.of(
             new User(1L, new Email("test1@test.com"), new Password("test1333#")),
             new User(2L, new Email("test2@test.com"), new Password("test2333#")),
@@ -51,7 +53,7 @@ class SettingsServiceTest {
     @DisplayName("서비스 findAllUsers 테스트")
     void findAllUsers() {
         //when
-        final SettingsService settingsService = new SettingsService(new fakeUserDAO());
+        final AuthService settingsService = new AuthService(new fakeUserDAO());
         final List<UserResponseDTO> users = settingsService.findAllUsers();
         
         //then
