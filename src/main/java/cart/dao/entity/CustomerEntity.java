@@ -1,5 +1,8 @@
 package cart.dao.entity;
 
+import cart.domain.Email;
+import cart.domain.Password;
+
 public class CustomerEntity {
 
     private final Long id;
@@ -10,6 +13,13 @@ public class CustomerEntity {
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public static CustomerEntity from(final Email email, final Password password) {
+        return new Builder()
+                .email(email.getEmail())
+                .password(password.getPassword())
+                .build();
     }
 
     public static class Builder {

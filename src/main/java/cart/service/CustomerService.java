@@ -24,7 +24,7 @@ public class CustomerService {
         Email email = new Email(signUpRequest.getEmail());
         Password password = new Password(signUpRequest.getPassword());
         validateEmailExistence(email);
-        return customerDao.insert(toCustomerEntity(email, password));
+        return customerDao.insert(CustomerEntity.from(email, password));
     }
 
     private void validateEmailExistence(final Email email) {
@@ -32,13 +32,6 @@ public class CustomerService {
                 .ifPresent(customer -> {
                     throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
                 });
-    }
-
-    private CustomerEntity toCustomerEntity(final Email email, final Password password) {
-        return new CustomerEntity.Builder()
-                .email(email.getEmail())
-                .password(password.getPassword())
-                .build();
     }
 
     public CustomerResponse findByEmail(final String email) {

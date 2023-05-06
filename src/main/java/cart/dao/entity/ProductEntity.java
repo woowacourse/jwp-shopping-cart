@@ -1,5 +1,7 @@
 package cart.dao.entity;
 
+import cart.domain.Product;
+
 public class ProductEntity {
 
     private final Long id;
@@ -12,6 +14,23 @@ public class ProductEntity {
         this.name = name;
         this.imgUrl = imgUrl;
         this.price = price;
+    }
+
+    public static ProductEntity ofDomain(final Product product) {
+        return new ProductEntity.Builder()
+                .price(product.getPriceToValue())
+                .name(product.getNameToString())
+                .imgUrl(product.getImgUrl())
+                .build();
+    }
+
+    public static ProductEntity fromDomainAndId(final Product product, final long id) {
+        return new ProductEntity.Builder()
+                .id(id)
+                .price(product.getPriceToValue())
+                .name(product.getNameToString())
+                .imgUrl(product.getImgUrl())
+                .build();
     }
 
     public static class Builder {

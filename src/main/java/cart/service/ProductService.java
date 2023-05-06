@@ -31,29 +31,12 @@ public class ProductService {
         Product product = new Product(new ProductName(productRequest.getName()),
                 productRequest.getImgUrl(),
                 new Price(productRequest.getPrice()));
-        return productDao.insert(productToEntity(product));
-    }
-
-    private ProductEntity productToEntity(final Product product) {
-        return new ProductEntity.Builder()
-                .price(product.getPriceToValue())
-                .name(product.getNameToString())
-                .imgUrl(product.getImgUrl())
-                .build();
+        return productDao.insert(ProductEntity.ofDomain(product));
     }
 
     public void modifyById(final ProductRequest productRequest, final long id) {
         Product product = productRequest.toProduct();
-        productDao.update(productToEntityWithId(product, id));
-    }
-
-    private ProductEntity productToEntityWithId(final Product product, final long id) {
-        return new ProductEntity.Builder()
-                .id(id)
-                .price(product.getPriceToValue())
-                .name(product.getNameToString())
-                .imgUrl(product.getImgUrl())
-                .build();
+        productDao.update(ProductEntity.fromDomainAndId(product, id));
     }
 
     public void removeById(final long id) {
