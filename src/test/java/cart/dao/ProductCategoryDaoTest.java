@@ -1,18 +1,16 @@
 package cart.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import cart.entity.ProductCategoryEntity;
 import cart.entity.product.ProductEntity;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 class ProductCategoryDaoTest {
@@ -30,9 +28,8 @@ class ProductCategoryDaoTest {
     }
 
     @Test
-    @DisplayName("상품 카테고리를 저장한다.")
-    void save() {
-        //given
+    @DisplayName("상품 ID에 대한 상품 카테고리 목록을 조회한다.")
+    void findAll() {
         final ProductEntity productEntity = new ProductEntity(
                 1L,
                 "name",
@@ -41,17 +38,14 @@ class ProductCategoryDaoTest {
                 "description"
         );
         final Long savedProductId = productDao.save(productEntity);
-        final ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity(savedProductId, 1L);
+        productCategoryDao.saveAll(List.of(new ProductCategoryEntity(savedProductId, 1L)));
 
-        //when
-        //then
-        assertThat(productCategoryDao.save(productCategoryEntity)).isNotNull();
+        assertThat(productCategoryDao.findAll(savedProductId)).hasSize(1);
     }
 
     @Test
-    @DisplayName("ID에 해당하는 상품 카테고리를 삭제한다.")
-    void delete() {
-        //given
+    @DisplayName("상품 카테고리를 모두 저장한다.")
+    void saveAll() {
         final ProductEntity productEntity = new ProductEntity(
                 1L,
                 "name",
@@ -60,40 +54,34 @@ class ProductCategoryDaoTest {
                 "description"
         );
         final Long savedProductId = productDao.save(productEntity);
-        final ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity(savedProductId, 1L);
-        final Long savedProductCategoryId = productCategoryDao.save(productCategoryEntity);
+        final List<ProductCategoryEntity> productCategoryEntities = List.of(
+                new ProductCategoryEntity(savedProductId, 1L),
+                new ProductCategoryEntity(savedProductId, 2L)
+        );
 
-        //when
-        productCategoryDao.delete(savedProductCategoryId);
-
-        //then
-        final List<ProductCategoryEntity> productCategoryEntities = productCategoryDao.findAll(savedProductId);
-        assertThat(productCategoryEntities).hasSize(0);
+        assertThat(productCategoryDao.saveAll(productCategoryEntities)).isEqualTo(2);
     }
 
-    @Nested
-    class FindAll {
 
-        @Test
-        @DisplayName("상품 ID에 대한 상품 카테고리 목록을 조회한다.")
-        void findAll() {
-            //given
-            final ProductEntity productEntity = new ProductEntity(
-                    1L,
-                    "name",
-                    "image_url",
-                    1000,
-                    "description"
-            );
-            final Long savedProductId = productDao.save(productEntity);
-            final ProductCategoryEntity productCategoryEntity = new ProductCategoryEntity(savedProductId, 1L);
-            productCategoryDao.save(productCategoryEntity);
+    @Test
+    @DisplayName("특정 상품 카테고리를 모두 삭제한다.")
+    void deleteAllByProductId() {
+        final ProductEntity productEntity = new ProductEntity(
+                1L,
+                "name",
+                "image_url",
+                1000,
+                "description"
+        );
+        final Long savedProductId = productDao.save(productEntity);
+        final List<ProductCategoryEntity> productCategoryEntities = List.of(
+                new ProductCategoryEntity(savedProductId, 1L),
+                new ProductCategoryEntity(savedProductId, 2L)
+        );
+        productCategoryDao.saveAll(productCategoryEntities);
 
-            //when
-            final List<ProductCategoryEntity> productCategoryEntities = productCategoryDao.findAll(savedProductId);
+        productCategoryDao.deleteAllByProductId(productEntity.getId());
 
-            //then
-            assertThat(productCategoryEntities).hasSize(1);
-        }
+        assertThat(productCategoryDao.findAll(productEntity.getId())).isEmpty();
     }
 }
