@@ -4,6 +4,7 @@ import cart.authorization.BasicAuthorization;
 import cart.controller.dto.ProductResponseDto;
 import cart.service.CartService;
 import cart.service.dto.UserDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,12 +35,18 @@ public class CartApiController {
     }
 
     @PostMapping("/{productId}")
-    public void addCart(@PathVariable Long productId, @BasicAuthorization UserDto userDto) {
+    public ResponseEntity addCart(@PathVariable Long productId, @BasicAuthorization UserDto userDto) {
         cartService.addCart(userDto.getId(), productId);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
     }
 
     @DeleteMapping("/{cartId}")
-    public void deleteCart(@PathVariable Long cartId) {
+    public ResponseEntity deleteCart(@PathVariable Long cartId) {
         cartService.deleteCart(cartId);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

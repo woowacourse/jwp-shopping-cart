@@ -12,9 +12,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
-@Sql({"classpath:truncateTable.sql", "classpath:userTestData.sql"})
+@Sql({"classpath:truncateTable.sql", "classpath:userTestData.sql","classpath:productsTestData.sql","classpath:cartTestData.sql"})
 public class CartApiControllerTest {
     @Autowired
     JdbcCartDao jdbcCartDao;
@@ -34,7 +35,7 @@ public class CartApiControllerTest {
                 .auth().preemptive().basic("test1@test1.com", "password1")
                 .when().delete("/carts/1")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
