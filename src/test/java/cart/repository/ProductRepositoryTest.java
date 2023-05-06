@@ -26,7 +26,9 @@ class ProductRepositoryTest {
 	@BeforeEach
 	void setUp() {
 		request = new ProductUpdateRequest("사과", 10000, "사과.png");
+		jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
 		jdbcTemplate.execute("TRUNCATE TABLE products RESTART IDENTITY");
+		jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
 	}
 
 	@DisplayName("전체 상품 조회 테스트")

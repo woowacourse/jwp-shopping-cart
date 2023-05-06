@@ -22,7 +22,9 @@ public class MemberRepositoryTest {
 
     @BeforeEach
     void setUp(){
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
         jdbcTemplate.execute("TRUNCATE TABLE members RESTART IDENTITY");
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
     }
 
     @DisplayName("회원 저장 테스트")
