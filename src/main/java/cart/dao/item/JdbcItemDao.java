@@ -1,7 +1,8 @@
-package cart.dao;
+package cart.dao.item;
 
-import cart.domain.Item;
+
 import cart.entity.ItemEntity;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcItemDao implements ItemDao {
@@ -19,19 +21,19 @@ public class JdbcItemDao implements ItemDao {
     public static final String KEY_COLUMN_NAME = "id";
 
     private final JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert simpleJdbcInsert;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
 
     public JdbcItemDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns(KEY_COLUMN_NAME)
                 .usingColumns("name", "item_url", "price");
     }
 
     @Override
-    public ItemEntity save(final Item item) {
+    public ItemEntity save(final ItemEntity item) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", item.getName())
                 .addValue("item_url", item.getImageUrl())
@@ -39,17 +41,21 @@ public class JdbcItemDao implements ItemDao {
 
         long itemId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        return new ItemEntity(itemId,item.getName(),item.getImageUrl(), item.getPrice());
+        return new ItemEntity(itemId, item.getName(), item.getImageUrl(), item.getPrice());
     }
 
     @Override
-    public List<ItemEntity> findAll() {
+    public Optional<List<ItemEntity>> findAll() {
         String sql = "select * from item";
 
-        return jdbcTemplate.query(sql, mapRow());
+        try {
+            return Optional.ofNullable(jdbcTemplate.query(sql, mapRow()));
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
-    public RowMapper<ItemEntity> mapRow() {
+    private RowMapper<ItemEntity> mapRow() {
         return (rs, rowNum) -> {
             Long id = rs.getLong(1);
             String name = rs.getString(2);
@@ -60,8 +66,18 @@ public class JdbcItemDao implements ItemDao {
         };
     }
 
+    public ItemEntity findById(Long id) {
+        String sql = "select * from item where id = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sql, mapRow(), id);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new IllegalArgumentException("요청하신 상품을 찾을 수 없습니다. 올바른 상품 ID를 입력해주세요.");
+        }
+    }
+
     @Override
-    public void update(final Long id, final Item item) {
+    public void update(final Long id, final ItemEntity item) {
         String sql = "update item set name = ?, item_url = ?, price = ? where id = ?";
 
         jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice(), id);

@@ -1,8 +1,8 @@
 .container {
-    max-width: 800px;
+    max-width: 850px;
 }
 
-.cart-item {
+.setting-member {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -14,38 +14,43 @@
     transition: all 0.3s ease-in-out;
 }
 
-.cart-item:hover {
+.setting-member:hover {
     box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.2);
     transform: translateY(-5px);
 }
 
-.cart-item-info {
+.setting-member-info {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    width: 100%;
+    width: 120%;
 }
 
-.cart-item-name {
+.setting-member-email {
     font-weight: 600;
     font-size: 18px;
     margin: 0 20px 0 0;
 }
 
-.cart-item-price {
+.setting-member-name {
     font-weight: 600;
     font-size: 20px;
     margin-right: 20px;
 }
 
-.cart-item img {
-    width: 80px;
-    height: 80px;
+.setting-member-phone-number {
+    font-weight: 600;
+    font-size: 20px;
     margin-right: 20px;
-    object-fit: cover;
 }
 
-.cart-item-delete {
+.setting-member-password {
+    font-weight: 600;
+    font-size: 20px;
+    margin-right: 20px;
+}
+
+.setting-member-delete {
     margin-left: auto;
     background-color: #c0392b;
     color: #fff;
@@ -59,6 +64,6 @@
     transition: all 0.3s ease-in-out;
 }
 
-.cart-item-delete:hover {
+.setting-member-delete:hover {
     background-color: #e74c3c;
 }

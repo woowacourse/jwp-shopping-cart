@@ -1,8 +1,10 @@
 package cart.dto;
 
 public enum ErrorCode {
+
     INVALID_INPUT_VALUE(400, "잘못된 입력값입니다. 다시 입력해주세요."),
-    INVALID_DATABASE_ACCESS(400, "데이터 베이스 접근 에러");
+    INVALID_DATABASE_ACCESS(400, "데이터 베이스 접근 에러"),
+    INTERNAL_SERVER(500, "예기치 않은 오류가 발생했습니다.");
 
     private final int status;
     private final String message;

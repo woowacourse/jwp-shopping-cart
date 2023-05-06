@@ -1,5 +1,10 @@
 package cart.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
 public class ResultResponse {
 
     private int status;
@@ -10,17 +15,5 @@ public class ResultResponse {
         this.status = resultCode.getStatus();
         this.message = resultCode.getMessage();
         this.data = data;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Object getData() {
-        return data;
     }
 }

@@ -1,12 +1,13 @@
 package cart.service;
 
-import cart.dao.ItemDao;
-import cart.domain.Item;
-import cart.dto.ItemResponse;
+import cart.dao.item.ItemDao;
+import cart.dto.item.ItemResponse;
 import cart.entity.ItemEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,14 +19,19 @@ public class ItemService {
         this.itemDao = itemDao;
     }
 
-    public ItemResponse save(Item item) {
+    public ItemResponse save(ItemEntity item) {
         ItemEntity save = itemDao.save(item);
         return new ItemResponse(save.getId(), save.getName(), save.getImageUrl(), save.getPrice());
     }
 
     public List<ItemResponse> findAll() {
-        List<ItemEntity> itemEntities = itemDao.findAll();
-        return convertItemsToItemResponses(itemEntities);
+        Optional<List<ItemEntity>> items = itemDao.findAll();
+
+        if(items.isEmpty()){
+            return Collections.emptyList();
+        }
+
+        return convertItemsToItemResponses(items.get());
     }
 
     private List<ItemResponse> convertItemsToItemResponses(final List<ItemEntity> itemEntities) {
@@ -34,11 +40,11 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    public void updateItem(Long itemId, Item item) {
+    public void update(Long itemId, ItemEntity item) {
         itemDao.update(itemId, item);
     }
 
-    public void deleteItem(Long itemId) {
+    public void delete(Long itemId) {
         itemDao.delete(itemId);
     }
 }
