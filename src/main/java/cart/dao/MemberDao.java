@@ -49,12 +49,12 @@ public class MemberDao {
         jdbcTemplate.update(sql);
     }
 
-    public MemberEntity findById(Long id) {
+    public MemberEntity findById(final Long id) {
         final String sql = "SELECT * FROM member WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_ROW_MAPPER, id);
     }
 
-    public MemberEntity findByEmail(String email) {
+    public MemberEntity findByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
         return jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_ROW_MAPPER, email);
     }
