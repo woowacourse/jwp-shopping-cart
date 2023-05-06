@@ -32,4 +32,9 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void delete(Long cartId) {
+        cartDao.deleteById(cartId);
+    }
+
 }

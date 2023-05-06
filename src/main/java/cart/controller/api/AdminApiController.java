@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -27,9 +26,9 @@ public class AdminApiController {
     }
 
     @PostMapping("/product")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody @Valid final ProductCreateRequest request) {
+    public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductCreateRequest request) {
         productService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/product/{id}")
@@ -42,7 +41,9 @@ public class AdminApiController {
     }
 
     @DeleteMapping("/product/{id}")
-    public ResponseEntity<Void> delete(@PathVariable final Long id) {
+    public ResponseEntity<Void> delete(
+            @PathVariable final Long id
+    ) {
         productService.delete(id);
         return ResponseEntity.ok().build();
     }

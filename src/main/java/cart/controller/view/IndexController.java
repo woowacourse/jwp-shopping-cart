@@ -18,7 +18,7 @@ public class IndexController {
     }
 
     @GetMapping
-    public String index(final Model model) {
+    public String getIndexPage(final Model model) {
         List<ProductResponse> responses = productService.findAll();
         model.addAttribute("products", responses);
         return "index";

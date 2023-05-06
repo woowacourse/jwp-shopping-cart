@@ -40,6 +40,4 @@ public class CartItemResponse {
     public String getImageUrl() {
         return imageUrl;
     }
-
-
 }

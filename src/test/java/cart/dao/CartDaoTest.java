@@ -93,4 +93,15 @@ class CartDaoTest {
         );
     }
 
+    @DisplayName("장바구니에 있는 상품을 삭제한다.")
+    @Test
+    void deleteById() {
+        // given
+        productDao.create(new ProductEntity(1L, "상품1", "img", 1000));
+        cartDao.save(1L, 1L);
+
+        // when
+        assertDoesNotThrow(() -> cartDao.deleteById(1L));
+    }
+
 }
