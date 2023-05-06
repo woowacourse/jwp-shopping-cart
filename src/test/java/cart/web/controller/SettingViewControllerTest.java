@@ -8,9 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import cart.domain.product.TestFixture;
-import cart.domain.user.service.CartUserService;
-import cart.domain.user.service.dto.CartUserDto;
+import cart.domain.user.service.dto.CartUserResponseDto;
+import cart.domain.user.usecase.FindAllCartUsersUseCase;
 import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
+import cart.web.controller.index.SettingViewController;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,15 +29,16 @@ class SettingViewControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    private CartUserService cartUserService;
+    private FindAllCartUsersUseCase findAllCartUserService;
 
 
     @DisplayName("/settings 경로 요청 시, settings.html을 반환한다.")
     @Test
     void loadSettingPage() throws Exception {
-        Mockito.when(cartUserService.getAllCartUsers())
+        Mockito.when(findAllCartUserService.getAllCartUsers())
                 .thenReturn(
-                        List.of(CartUserDto.from(TestFixture.CART_USER_A), CartUserDto.from(TestFixture.CART_USER_B)));
+                        List.of(CartUserResponseDto.from(TestFixture.CART_USER_A),
+                                CartUserResponseDto.from(TestFixture.CART_USER_B)));
 
         mockMvc.perform(get("/settings"))
                 .andExpect(status().isOk())

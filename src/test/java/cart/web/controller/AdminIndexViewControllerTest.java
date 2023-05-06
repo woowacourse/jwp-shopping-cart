@@ -9,9 +9,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import cart.domain.product.TestFixture;
-import cart.domain.product.service.ProductService;
-import cart.domain.product.service.dto.ProductDto;
+import cart.domain.product.service.FindAllProductService;
+import cart.domain.product.service.dto.ProductResponseDto;
 import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
+import cart.web.controller.index.AdminViewController;
+import cart.web.controller.index.IndexViewController;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,14 +31,15 @@ class AdminIndexViewControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    private ProductService productService;
+    private FindAllProductService findAllProductService;
 
 
     @DisplayName("루트 경로 요청시, index.html을 반환한다.")
     @Test
     void loadIndexPage() throws Exception {
-        Mockito.when(productService.getAllProducts())
-                .thenReturn(List.of(ProductDto.from(TestFixture.CHICKEN), ProductDto.from(TestFixture.PIZZA)));
+        Mockito.when(findAllProductService.getAllProducts())
+                .thenReturn(List.of(ProductResponseDto.from(TestFixture.CHICKEN),
+                        ProductResponseDto.from(TestFixture.PIZZA)));
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -48,11 +51,11 @@ class AdminIndexViewControllerTest {
     @DisplayName("/admin 요청시, admin.html을 반환한다.")
     @Test
     void loadAdminPage() throws Exception {
-        final List<ProductDto> expectedProducts = List.of(
-                ProductDto.from(TestFixture.PIZZA),
-                ProductDto.from(TestFixture.CHICKEN)
+        final List<ProductResponseDto> expectedProducts = List.of(
+                ProductResponseDto.from(TestFixture.PIZZA),
+                ProductResponseDto.from(TestFixture.CHICKEN)
         );
-        when(productService.getAllProducts())
+        when(findAllProductService.getAllProducts())
                 .thenReturn(expectedProducts);
 
         mockMvc.perform(get("/admin"))

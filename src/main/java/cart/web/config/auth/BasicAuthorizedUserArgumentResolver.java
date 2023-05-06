@@ -1,7 +1,7 @@
 package cart.web.config.auth;
 
-import cart.domain.user.service.UserAuthorizationVerifier;
-import cart.web.controller.dto.request.AuthorizedUserRequest;
+import cart.domain.user.service.BasicAuthorizationCartUserService;
+import cart.web.dto.request.AuthorizedUserRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -14,14 +14,14 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class BasicAuthorizedUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final AuthCredentialDecoder<AuthorizedUserRequest> authCredentialDecoder;
-    private final UserAuthorizationVerifier userAuthorizationVerifier;
+    private final BasicAuthorizationCartUserService basicAuthorizationCartUserService;
 
     public BasicAuthorizedUserArgumentResolver(
             final AuthCredentialDecoder<AuthorizedUserRequest> authCredentialDecoder,
-            final UserAuthorizationVerifier userAuthorizationVerifier
+            final BasicAuthorizationCartUserService basicAuthorizationCartUserService
     ) {
         this.authCredentialDecoder = authCredentialDecoder;
-        this.userAuthorizationVerifier = userAuthorizationVerifier;
+        this.basicAuthorizationCartUserService = basicAuthorizationCartUserService;
     }
 
     @Override
@@ -35,11 +35,11 @@ public class BasicAuthorizedUserArgumentResolver implements HandlerMethodArgumen
             final ModelAndViewContainer mavContainer,
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
-    ) throws Exception {
+    ) {
         final String credentialValue = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         final AuthorizedUserRequest authorizedUserRequest = authCredentialDecoder.decodeCredential(credentialValue);
 
-        userAuthorizationVerifier.verifyCartUser(authorizedUserRequest.getEmail(),
+        basicAuthorizationCartUserService.verifyCartUser(authorizedUserRequest.getEmail(),
                 authorizedUserRequest.getPassword());
 
         return authorizedUserRequest;

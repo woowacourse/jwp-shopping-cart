@@ -1,8 +1,8 @@
 package cart.web.handler;
 
+import cart.domain.user.exception.VerifyUserException;
 import cart.web.config.auth.exception.IllegalCredentialException;
 import java.util.NoSuchElementException;
-import javax.security.auth.login.LoginException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,7 +31,7 @@ public class CartExceptionHandler {
                 .body(exception.getMessage());
     }
 
-    @ExceptionHandler({LoginException.class, IllegalCredentialException.class})
+    @ExceptionHandler({VerifyUserException.class, IllegalCredentialException.class})
     public ResponseEntity<String> handleLoginException() {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)

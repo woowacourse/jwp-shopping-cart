@@ -1,7 +1,7 @@
 package cart.web.config.auth;
 
 import cart.web.config.auth.exception.IllegalCredentialException;
-import cart.web.controller.dto.request.AuthorizedUserRequest;
+import cart.web.dto.request.AuthorizedUserRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
