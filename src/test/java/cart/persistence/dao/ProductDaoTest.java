@@ -3,13 +3,12 @@ package cart.persistence.dao;
 import static cart.fixture.ProductFixture.PRODUCT_A;
 import static cart.fixture.ProductFixture.PRODUCT_B;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.exception.custom.ResourceNotFoundException;
 import cart.persistnece.dao.ProductDao;
 import cart.persistnece.entity.Product;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,7 @@ class ProductDaoTest {
         //given
         Long id = productDao.save(PRODUCT_A);
         //when
-        Product savedProduct = productDao.findById(id);
+        Product savedProduct = productDao.findById(id).get();
         //then
         assertAll(
                 () -> assertThat(savedProduct).usingRecursiveComparison()
@@ -57,12 +56,12 @@ class ProductDaoTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 id의 상품을 조회시 예외를 반환한다.")
+    @DisplayName("존재하지 않는 id의 상품을 조회시 empty를 반환한다.")
     void find_by_id_fail_by_no_id() {
-        //when && then
-        assertThatThrownBy(() -> productDao.findById(10000L))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("존재하지 않는 리소스입니다.");
+        //when
+        Optional<Product> actual = productDao.findById(Long.MAX_VALUE);
+        //then
+        assertThat(actual).isEmpty();
     }
 
     @Test
@@ -85,9 +84,7 @@ class ProductDaoTest {
         //when
         productDao.deleteById(id);
         //then
-        assertThatThrownBy(() -> productDao.findById(id))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("존재하지 않는 리소스입니다.");
+        assertThat(productDao.findById(id)).isEmpty();
     }
 
     @Test
@@ -98,7 +95,7 @@ class ProductDaoTest {
         //when
         productDao.updateById(id, PRODUCT_B);
         //then
-        Product actual = productDao.findById(id);
+        Product actual = productDao.findById(id).get();
         assertThat(actual).usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(PRODUCT_B);

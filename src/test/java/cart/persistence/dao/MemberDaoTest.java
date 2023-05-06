@@ -66,12 +66,12 @@ class MemberDaoTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 이메일의 유저를 요청시 빈 값을 반환한다.")
+    @DisplayName("존재하지 않는 이메일의 유저를 요청시 empty를 반환한다.")
     void find_by_email_fail_by_wrong_email() {
         //when
         Optional<Member> optionalMember = memberDao.findByEmail(EMAIL);
         //then
-        assertThat(optionalMember.isEmpty()).isTrue();
+        assertThat(optionalMember).isEmpty();
     }
 
     private void saveMember(Member member) {

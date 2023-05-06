@@ -16,6 +16,7 @@ import cart.exception.custom.ArgumentNotValidException;
 import cart.exception.custom.ResourceNotFoundException;
 import cart.persistnece.dao.ProductDao;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -98,7 +99,7 @@ class ProductServiceTest {
         void find_by_id_success() {
             //when
             when(productDao.findById(any()))
-                    .thenReturn(PRODUCT_A_HAS_ID);
+                    .thenReturn(Optional.of(PRODUCT_A_HAS_ID));
             ProductResponse actual = productService.findById(1L);
             //then
             assertThat(actual)
@@ -189,7 +190,7 @@ class ProductServiceTest {
             //when && then
             assertThatThrownBy(() -> productService.updateById(9999L, PRODUCT_REQUEST_A))
                     .isInstanceOf(ResourceNotFoundException.class)
-                    .hasMessage("존재하지 않는 리소스입니다.");
+                    .hasMessage("해당하는 id의 상품이 존재하지 않습니다.");
         }
     }
 
@@ -215,7 +216,7 @@ class ProductServiceTest {
             //when && then
             assertThatThrownBy(() -> productService.deleteById(1L))
                     .isInstanceOf(ResourceNotFoundException.class)
-                    .hasMessage("존재하지 않는 리소스입니다.");
+                    .hasMessage("해당하는 id의 상품이 존재하지 않습니다.");
         }
     }
 }

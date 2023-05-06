@@ -29,7 +29,8 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse findById(Long id) {
-        Product product = productDao.findById(id);
+        Product product = productDao.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("해당하는 id의 상품이 존재하지 않습니다."));
         return new ProductResponse(product);
     }
 
@@ -56,7 +57,7 @@ public class ProductService {
 
     private void hasNoMatchingResult(int count) {
         if (count == 0) {
-            throw new ResourceNotFoundException();
+            throw new ResourceNotFoundException("해당하는 id의 상품이 존재하지 않습니다.");
         }
     }
 }

@@ -55,7 +55,7 @@ class ProductApiControllerTest {
         @DisplayName("정상적으로 단일 상품을 조회한다.")
         void find_by_id_success() throws JsonProcessingException {
             Long id = productDao.save(PRODUCT_A);
-            Product findProduct = productDao.findById(id);
+            Product findProduct = productDao.findById(id).get();
             String expected = objectMapper.writeValueAsString(findProduct);
 
             given()
@@ -109,7 +109,7 @@ class ProductApiControllerTest {
                     .get(PRODUCT_API_URL + "/" + 100000L)
                     .then()
                     .log().all()
-                    .body("message", equalTo("존재하지 않는 리소스입니다."))
+                    .body("message", equalTo("해당하는 id의 상품이 존재하지 않습니다."))
                     .statusCode(HttpStatus.NOT_FOUND.value());
         }
     }
@@ -305,7 +305,7 @@ class ProductApiControllerTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.NOT_FOUND.value())
-                    .body("message", equalTo("존재하지 않는 리소스입니다."));
+                    .body("message", equalTo("해당하는 id의 상품이 존재하지 않습니다."));
         }
 
         @ParameterizedTest
@@ -480,7 +480,7 @@ class ProductApiControllerTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.NOT_FOUND.value())
-                    .body("message", equalTo("존재하지 않는 리소스입니다."));
+                    .body("message", equalTo("해당하는 id의 상품이 존재하지 않습니다."));
         }
     }
 }

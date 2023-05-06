@@ -1,8 +1,8 @@
 package cart.persistnece.dao;
 
-import cart.exception.custom.ResourceNotFoundException;
 import cart.persistnece.entity.Product;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,12 +36,13 @@ public class ProductDao {
     }
 
     //TODO: Optional로 변경
-    public Product findById(Long id) {
+    public Optional<Product> findById(Long id) {
         String sql = "select * from product where id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+            Product product = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            return Optional.of(product);
         } catch (EmptyResultDataAccessException exception) {
-            throw new ResourceNotFoundException();
+            return Optional.empty();
         }
     }
 
