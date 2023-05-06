@@ -7,9 +7,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.member.service.MemberService;
 import cart.domain.member.dto.MemberCreateRequest;
 import cart.domain.member.dto.MemberCreateResponse;
+import cart.domain.member.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.UnsupportedEncodingException;
@@ -60,10 +60,14 @@ class MemberControllerTest {
         final MemberCreateResponse result = jsonToObject(mvcResult,
             MemberCreateResponse.class);
 
-        assertThat(result.getId()).isEqualTo(expectedResponse.getId());
-        assertThat(result.getEmail()).isEqualTo(expectedResponse.getEmail());
-        assertThat(result.getCreatedAt()).isEqualTo(expectedResponse.getCreatedAt());
-        assertThat(result.getUpdatedAt()).isEqualTo(expectedResponse.getUpdatedAt());
+        assertThat(result)
+            .extracting("id", "email", "createdAt", "updatedAt")
+            .containsExactly(
+                expectedResponse.getId(),
+                expectedResponse.getEmail(),
+                expectedResponse.getCreatedAt(),
+                expectedResponse.getUpdatedAt()
+            );
     }
 
     private <T> T jsonToObject(final MvcResult result, final Class<T> valueType)

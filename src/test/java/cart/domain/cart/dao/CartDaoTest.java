@@ -51,7 +51,7 @@ class CartDaoTest {
         final List<Cart> products = cartDao.findByMember(savedMember);
         assertThat(products.size()).isEqualTo(1);
         assertThat(products.get(0).getMember().getId()).isEqualTo(result.getMember().getId());
-        assertThat(products.get(0).getMember().getId()).isEqualTo(result.getProduct().getId());
+        assertThat(products.get(0).getProduct().getId()).isEqualTo(result.getProduct().getId());
     }
 
     @Test

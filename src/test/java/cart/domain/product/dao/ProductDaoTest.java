@@ -36,9 +36,13 @@ class ProductDaoTest {
         final Product savedProduct = productDao.save(givenProduct);
 
         //then
-        assertThat(savedProduct.getName()).isEqualTo(givenProduct.getName());
-        assertThat(savedProduct.getPrice()).isEqualTo(givenProduct.getPrice());
-        assertThat(savedProduct.getImageUrl()).isEqualTo(givenProduct.getImageUrl());
+        assertThat(savedProduct)
+            .extracting("name", "price", "imageUrl")
+            .containsExactly(
+                givenProduct.getName(),
+                givenProduct.getPrice(),
+                givenProduct.getImageUrl()
+            );
         assertThat(savedProduct.getCreatedAt()).isNotNull();
         assertThat(savedProduct.getUpdatedAt()).isNotNull();
     }

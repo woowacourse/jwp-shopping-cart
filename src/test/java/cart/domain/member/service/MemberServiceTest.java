@@ -6,10 +6,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.MemberDao;
-import cart.domain.member.entity.Member;
 import cart.domain.member.dto.MemberCreateRequest;
 import cart.domain.member.dto.MemberCreateResponse;
 import cart.domain.member.dto.MemberResponse;
+import cart.domain.member.entity.Member;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -45,10 +45,14 @@ class MemberServiceTest {
         final MemberCreateResponse response = memberService.create(request);
 
         //then
-        assertThat(response.getId()).isEqualTo(member.getId());
-        assertThat(response.getEmail()).isEqualTo(member.getEmail());
-        assertThat(response.getCreatedAt()).isEqualTo(member.getCreatedAt());
-        assertThat(response.getUpdatedAt()).isEqualTo(member.getUpdatedAt());
+        assertThat(response)
+            .extracting("id", "email", "createdAt", "updatedAt")
+            .containsExactly(
+                member.getId(),
+                member.getEmail(),
+                member.getCreatedAt(),
+                member.getUpdatedAt()
+            );
     }
 
     @Test
@@ -83,8 +87,12 @@ class MemberServiceTest {
 
         //then
         for (int i = 0; i < result.size(); i++) {
-            assertThat(result.get(i).getEmail()).isEqualTo(members.get(i).getEmail());
-            assertThat(result.get(i).getPassword()).isEqualTo(members.get(i).getPassword());
+            assertThat(result.get(i))
+                .extracting("email", "password")
+                .containsExactly(
+                    members.get(i).getEmail(),
+                    members.get(i).getPassword()
+                );
         }
     }
 }

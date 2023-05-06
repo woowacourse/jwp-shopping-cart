@@ -8,13 +8,13 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.CartDao;
-import cart.domain.cart.entity.Cart;
 import cart.dao.MemberDao;
-import cart.domain.member.entity.Member;
 import cart.dao.ProductDao;
-import cart.domain.product.entity.Product;
 import cart.domain.cart.dto.CartCreateRequest;
 import cart.domain.cart.dto.CartCreateResponse;
+import cart.domain.cart.entity.Cart;
+import cart.domain.member.entity.Member;
+import cart.domain.product.entity.Product;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -59,9 +59,13 @@ class CartServiceTest {
         final CartCreateResponse cartCreateResponse = cartService.create(request);
 
         //then
-        assertThat(cartCreateResponse.getId()).isEqualTo(cart.getId());
-        assertThat(cartCreateResponse.getMember()).isEqualTo(cart.getMember());
-        assertThat(cartCreateResponse.getProduct()).isEqualTo(cart.getProduct());
+        assertThat(cartCreateResponse)
+            .extracting("id", "member", "product")
+            .containsExactly(
+                cart.getId(),
+                cart.getMember(),
+                cart.getProduct()
+            );
     }
 
     @Test

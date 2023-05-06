@@ -8,10 +8,10 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.ProductDao;
-import cart.domain.product.entity.Product;
 import cart.domain.product.dto.ProductCreateRequest;
 import cart.domain.product.dto.ProductResponse;
 import cart.domain.product.dto.ProductUpdateRequest;
+import cart.domain.product.entity.Product;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -44,12 +44,16 @@ class ProductServiceTest {
             new ProductCreateRequest("name", 1000, "imageUrl"));
 
         //then
-        assertThat(result.getId()).isEqualTo(savedProduct.getId());
-        assertThat(result.getName()).isEqualTo(savedProduct.getName());
-        assertThat(result.getPrice()).isEqualTo(savedProduct.getPrice());
-        assertThat(result.getImageUrl()).isEqualTo(savedProduct.getImageUrl());
-        assertThat(result.getCreatedAt()).isEqualTo(savedProduct.getCreatedAt());
-        assertThat(result.getUpdatedAt()).isEqualTo(savedProduct.getUpdatedAt());
+        assertThat(result)
+            .extracting("id", "name", "price", "imageUrl", "createdAt", "updatedAt")
+            .containsExactly(
+                savedProduct.getId(),
+                savedProduct.getName(),
+                savedProduct.getPrice(),
+                savedProduct.getImageUrl(),
+                savedProduct.getCreatedAt(),
+                savedProduct.getUpdatedAt()
+            );
     }
 
     @Test
