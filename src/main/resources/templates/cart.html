@@ -34,9 +34,8 @@
             return;
         }
 
-        axios.request({
+        axios.get({
             url: '/carts',
-            method: "GET",
             headers: {
                 'Authorization': `Basic ${credentials}`
             }

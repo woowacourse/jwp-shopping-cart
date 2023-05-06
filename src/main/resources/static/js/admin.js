@@ -47,9 +47,8 @@ form.addEventListener('submit', (event) => {
 const createProduct = (product) => {
     try {
         validImage(product.imageUrl)
-        axios.request({
+        axios.post({
             url: '/products',
-            method: "POST",
             data: product
         }).then((response) => {
             window.location.reload();
@@ -70,9 +69,8 @@ const updateProduct = (product) => {
         validImage(product.image)
         const {id} = product;
 
-        axios.request({
+        axios.put({
             url: '/products/' + id,
-            method: "PUT",
             data: product
         }).then((response) => {
             window.location.reload();
@@ -92,9 +90,8 @@ const validImage = (imageUrl) => {
 };
 
 const deleteProduct = (id) => {
-    axios.request({
+    axios.delete({
         url: '/products/' + id,
-        method: "DELETE"
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
