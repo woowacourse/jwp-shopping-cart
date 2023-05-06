@@ -36,6 +36,7 @@ public class CartService {
         cartDao.deleteById(member.getId(), cartId);
     }
 
+    @Transactional(readOnly = true)
     public List<CartItemDto> findAllByMemberId(final String email) {
         MemberEntity member = memberDao.findByEmail(email);
         return cartDao.findAllByMemberId(member.getId()).stream()
@@ -43,12 +44,14 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     private void validateProductId(final long productId) {
         if (!productDao.existsById(productId)) {
             throw new ProductNotFoundException("존재하지 않는 product id 입니다.");
         }
     }
 
+    @Transactional(readOnly = true)
     private void validateCartId(final long cartId) {
         if (!cartDao.existsById(cartId)) {
             throw new CartNotFoundException("존재하지 않는 cart id 입니다.");

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
     private final MemberDao memberDao;
 
+    @Transactional(readOnly = true)
     public List<MemberDto> findAll() {
         return memberDao.findAll().stream()
                 .map(MemberDto::fromEntity)
