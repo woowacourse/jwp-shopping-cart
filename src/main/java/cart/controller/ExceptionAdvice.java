@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.util.AuthenticationException;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -33,8 +34,13 @@ public class ExceptionAdvice {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<String> handleAuthenticationException(final AuthenticationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(final Exception e) {
+    public ResponseEntity<String> handleException() {
         return ResponseEntity.internalServerError().body(INTERNAL_SERVER_ERROR_MESSAGE);
     }
 }

@@ -2,7 +2,6 @@ package cart.util;
 
 import cart.dao.member.MemberDao;
 import cart.domain.member.Member;
-import java.util.NoSuchElementException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -38,7 +37,7 @@ public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver 
         final String[] credentials = extractHeader(webRequest);
 
         final Member member = memberDao.findByEmailAndPassword(credentials[0], credentials[1])
-                .orElseThrow(() -> new NoSuchElementException(NO_MEMBER_MESSAGE));
+                .orElseThrow(() -> new AuthenticationException(NO_MEMBER_MESSAGE));
         return member.getId();
     }
 
