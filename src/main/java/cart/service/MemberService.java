@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -30,21 +29,15 @@ public class MemberService {
                 memberDto.getName(),
                 CaesarCipher.encrypt(memberDto.getPassword()));
 
-        final Optional<Long> id = memberDao.save(member);
-        if (id.isEmpty()) {
-            throw new NotUniqueValueException("중복되는 email입니다. 다른 이메일을 입력해주세요.");
-        }
-        return id.get();
+        return memberDao.save(member)
+                .orElseThrow(() -> new NotUniqueValueException("중복되는 email입니다. 다른 이메일을 입력해주세요."));
     }
 
     @Transactional(readOnly = true)
     public MemberDto loginMember(final String email, final String password) {
-        final Optional<Member> findMember = memberDao.findByEmail(email);
-        if (findMember.isEmpty()) {
-            throw new DataNotFoundException("해당 사용자가 존재하지 않습니다.");
-        }
+        final Member member = memberDao.findByEmail(email)
+                .orElseThrow(() -> new DataNotFoundException("해당 사용자가 존재하지 않습니다."));
 
-        final Member member = findMember.get();
         final String encryptedPassword = member.getPassword();
         if (!encryptedPassword.equals(CaesarCipher.encrypt(password))) {
             throw new PasswordNotMatchException("비밀번호가 일치하지 않습니다.");
@@ -60,6 +53,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public List<MemberDto> findAllMember() {
         final List<Member> members = memberDao.findAll();
+
         return members.stream()
                 .map(member -> {
                     final String email = member.getEmail();

@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -32,11 +31,9 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public List<ProductDto> findAllCartProductByEmail(final String email) {
-        final Optional<Member> findMember = memberDao.findByEmail(email);
-        if (findMember.isEmpty()) {
-            throw new DataNotFoundException("해당 사용자가 존재하지 않습니다.");
-        }
-        final Member member = findMember.get();
+
+        final Member member = memberDao.findByEmail(email)
+                .orElseThrow(() -> new DataNotFoundException("해당 사용자가 존재하지 않습니다."));
 
         final List<Long> productIds = cartDao.findAllProductIdByMemberId(member.getId());
         if (productIds.isEmpty()) {
@@ -45,11 +42,8 @@ public class CartService {
 
         final List<ProductDto> products = new ArrayList<>();
         for (Long id : productIds) {
-            final Optional<Product> findProduct = productDao.findById(id);
-            if (findProduct.isEmpty()) {
-                throw new DataNotFoundException("해당 상품을 찾을 수 없습니다.");
-            }
-            final Product product = findProduct.get();
+            final Product product = productDao.findById(id)
+                    .orElseThrow(() -> new DataNotFoundException("해당 상품을 찾을 수 없습니다."));
             products.add(new ProductDto(
                     product.getId(),
                     product.getName(),
@@ -61,22 +55,16 @@ public class CartService {
     }
 
     public Long addProductInCart(final Long productId, final String email) {
-        final Optional<Member> findMember = memberDao.findByEmail(email);
-        if (findMember.isEmpty()) {
-            throw new DataNotFoundException("해당 사용자가 존재하지 않습니다.");
-        }
-        final Member member = findMember.get();
+        final Member member = memberDao.findByEmail(email)
+                .orElseThrow(() -> new DataNotFoundException("해당 사용자가 존재하지 않습니다."));
         final Cart cart = new Cart(member.getId(), productId);
-        final Long id = cartDao.save(cart);
-        return id;
+
+        return cartDao.save(cart);
     }
 
     public void deleteProductInCart(final Long productId, final String email) {
-        final Optional<Member> findMember = memberDao.findByEmail(email);
-        if (findMember.isEmpty()) {
-            throw new DataNotFoundException("해당 사용자가 존재하지 않습니다.");
-        }
-        final Member member = findMember.get();
+        final Member member = memberDao.findByEmail(email)
+                .orElseThrow(() -> new DataNotFoundException("해당 사용자가 존재하지 않습니다."));
         final int amountOfDeletedCart = cartDao.delete(member.getId(), productId);
         if (amountOfDeletedCart == 0) {
             throw new DataNotFoundException("해당 상품을 찾을 수 없습니다.");
