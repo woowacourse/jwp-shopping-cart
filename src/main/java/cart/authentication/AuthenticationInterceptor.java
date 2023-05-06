@@ -13,10 +13,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private final BasicAuthorizationExtractor extractor;
     private final AuthenticationValidator authValidator;
+    private final AuthInfoThreadLocal authInfoThreadLocal;
 
-    public AuthenticationInterceptor(BasicAuthorizationExtractor extractor, AuthenticationValidator authValidator) {
+    public AuthenticationInterceptor(BasicAuthorizationExtractor extractor, AuthenticationValidator authValidator,
+            AuthInfoThreadLocal authInfoThreadLocal) {
         this.extractor = extractor;
         this.authValidator = authValidator;
+        this.authInfoThreadLocal = authInfoThreadLocal;
     }
 
     @Override
@@ -26,7 +29,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         AuthInfo authInfo = extractor.extract(header);
 
         authValidator.validate(authInfo);
-        request.setAttribute(AUTH_INFO_KEY, authInfo);
+        authInfoThreadLocal.set(authInfo);
 
         return true;
     }
