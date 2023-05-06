@@ -9,7 +9,7 @@ import cart.dto.response.ProductResponse;
 import cart.entity.CategoryEntity;
 import cart.entity.ProductCategoryEntity;
 import cart.entity.product.ProductEntity;
-import cart.exception.ProductNotFoundException;
+import cart.exception.NotFoundException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -101,7 +101,7 @@ public class ProductService {
 
     private ProductEntity getProduct(final Long productId) {
         return productDao.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException("등록되지 않은 상품입니다."));
+                .orElseThrow(() -> new NotFoundException("등록되지 않은 상품입니다."));
     }
 
     @Transactional

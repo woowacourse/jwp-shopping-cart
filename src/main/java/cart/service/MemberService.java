@@ -4,7 +4,7 @@ import cart.dao.MemberDao;
 import cart.dto.MemberAuthDto;
 import cart.dto.response.MemberResponse;
 import cart.entity.MemberEntity;
-import cart.exception.MemberNotFoundException;
+import cart.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -30,6 +30,6 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberEntity findMember(final MemberAuthDto memberAuthDto) {
         return memberDao.findByEmailAndPassword(memberAuthDto.getEmail(), memberAuthDto.getPassword())
-                .orElseThrow(() -> new MemberNotFoundException("등록되지 않은 회원입니다."));
+                .orElseThrow(() -> new NotFoundException("등록되지 않은 회원입니다."));
     }
 }

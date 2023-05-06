@@ -2,9 +2,9 @@ package cart.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class MemberNotFoundException extends HttpException {
+public class NotFoundException extends HttpException {
 
-    public MemberNotFoundException(final String message) {
+    public NotFoundException(final String message) {
         super(HttpStatus.BAD_REQUEST, message);
     }
 }

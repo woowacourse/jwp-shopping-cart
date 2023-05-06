@@ -9,7 +9,7 @@ import cart.dao.MemberDao;
 import cart.dto.MemberAuthDto;
 import cart.dto.response.MemberResponse;
 import cart.entity.MemberEntity;
-import cart.exception.MemberNotFoundException;
+import cart.exception.NotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -74,7 +74,7 @@ class MemberServiceTest {
             given(memberDao.findByEmailAndPassword(any(), any())).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> memberService.findMember(memberAuthDto))
-                    .isInstanceOf(MemberNotFoundException.class)
+                    .isInstanceOf(NotFoundException.class)
                     .hasMessage("등록되지 않은 회원입니다.");
         }
     }

@@ -14,9 +14,8 @@ import cart.dao.ProductDao;
 import cart.dto.response.CartProductResponse;
 import cart.entity.CartEntity;
 import cart.entity.product.ProductEntity;
-import cart.exception.CartNotFoundException;
 import cart.exception.CartOwnerException;
-import cart.exception.ProductNotFoundException;
+import cart.exception.NotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -97,7 +96,7 @@ class CartServiceTest {
             given(productDao.findById(any())).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> cartService.putInCart(1L, 1L))
-                    .isInstanceOf(ProductNotFoundException.class)
+                    .isInstanceOf(NotFoundException.class)
                     .hasMessage("등록되지 않은 상품입니다.");
         }
     }
@@ -122,7 +121,7 @@ class CartServiceTest {
             given(cartDao.findById(any())).willReturn(Optional.empty());
 
             assertThatThrownBy(() -> cartService.removeCartItem(1L, 1L))
-                    .isInstanceOf(CartNotFoundException.class)
+                    .isInstanceOf(NotFoundException.class)
                     .hasMessage("등록되지 않은 장바구니 상품입니다.");
         }
 
