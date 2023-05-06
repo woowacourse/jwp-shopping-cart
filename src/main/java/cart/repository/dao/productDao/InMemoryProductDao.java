@@ -66,7 +66,7 @@ public class InMemoryProductDao implements ProductDao {
     }
 
     @Override
-    public int delete(final Long id) {
+    public int deleteById(final Long id) {
         removeProductByIdAndReturnIndex(id);
         return 1;
     }

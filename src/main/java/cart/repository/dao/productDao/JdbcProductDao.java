@@ -62,7 +62,7 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public int delete(final Long id) {
+    public int deleteById(final Long id) {
         final String sql = "delete from product where id = :id";
         final SqlParameterSource source = new MapSqlParameterSource("id", id);
         return template.update(sql, source);

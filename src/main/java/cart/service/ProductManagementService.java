@@ -54,7 +54,7 @@ public class ProductManagementService {
     }
 
     public void deleteProduct(final Long id) {
-        int amountOfDeletedProduct = productDao.delete(id);
+        int amountOfDeletedProduct = productDao.deleteById(id);
         if (amountOfDeletedProduct == 0) {
             throw new DataNotFoundException("해당 상품을 찾을 수 없습니다.");
         }

@@ -55,7 +55,7 @@ public class InMemoryProductDaoTest {
         final Product product = new Product("kokodak", "localhost:8080/test", 1000);
         inMemoryProductDao.save(product);
 
-        inMemoryProductDao.delete(1L);
+        inMemoryProductDao.deleteById(1L);
 
         assertThat(inMemoryProductDao.findAll()).isEmpty();
     }

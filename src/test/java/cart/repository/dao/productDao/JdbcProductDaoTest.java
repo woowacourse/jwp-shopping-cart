@@ -124,7 +124,7 @@ class JdbcProductDaoTest {
         Product product = new Product(name, imageUrl, price);
         Long id = productDao.save(product);
 
-        int amountOfProductDeleted = productDao.delete(id);
+        int amountOfProductDeleted = productDao.deleteById(id);
 
         assertThat(amountOfProductDeleted).isEqualTo(1);
     }

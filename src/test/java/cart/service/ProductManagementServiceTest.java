@@ -44,7 +44,7 @@ class ProductManagementServiceTest {
 
     @Test
     void 삭제시_해당_상품이_없는경우_예외를_던진다() {
-        when(productDao.delete(any()))
+        when(productDao.deleteById(any()))
                 .thenReturn(0);
 
         assertThatThrownBy(() -> productManagementService.deleteProduct(100L))
