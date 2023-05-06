@@ -1,8 +1,8 @@
 package cart.controller;
 
 import cart.service.CustomerService;
-import cart.service.dto.CustomerResponse;
-import cart.service.dto.SignUpRequest;
+import cart.controller.dto.CustomerResponse;
+import cart.controller.dto.SignUpRequest;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;

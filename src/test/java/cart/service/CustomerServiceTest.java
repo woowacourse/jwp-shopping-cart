@@ -3,8 +3,8 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.service.dto.CustomerResponse;
-import cart.service.dto.SignUpRequest;
+import cart.controller.dto.CustomerResponse;
+import cart.controller.dto.SignUpRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;

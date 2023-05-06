@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.dao.CartDao;
-import cart.service.dto.CartRequest;
-import cart.service.dto.CartResponse;
+import cart.controller.dto.CartRequest;
+import cart.controller.dto.CartResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

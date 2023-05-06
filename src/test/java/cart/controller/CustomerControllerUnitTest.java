@@ -10,8 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.auth.AuthService;
 import cart.service.CustomerService;
-import cart.service.dto.CustomerResponse;
-import cart.service.dto.SignUpRequest;
+import cart.controller.dto.CustomerResponse;
+import cart.controller.dto.SignUpRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

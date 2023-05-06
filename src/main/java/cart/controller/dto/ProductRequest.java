@@ -1,4 +1,4 @@
-package cart.service.dto;
+package cart.controller.dto;
 
 import cart.domain.Price;
 import cart.domain.Product;

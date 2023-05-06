@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.service.ProductService;
-import cart.service.dto.ProductResponse;
+import cart.controller.dto.ProductResponse;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

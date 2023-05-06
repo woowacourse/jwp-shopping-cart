@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.auth.Auth;
 import cart.service.CartService;
-import cart.service.dto.CartRequest;
-import cart.service.dto.CartResponse;
+import cart.controller.dto.CartRequest;
+import cart.controller.dto.CartResponse;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;

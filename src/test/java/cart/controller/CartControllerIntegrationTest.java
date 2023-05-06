@@ -3,7 +3,7 @@ package cart.controller;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 
-import cart.service.dto.CartRequest;
+import cart.controller.dto.CartRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
