@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import cart.domain.user.CartUser;
 import cart.domain.user.CartUserRepository;
 import cart.domain.user.UserEmail;
+import javax.security.auth.login.LoginException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,6 @@ class UserAuthorizationVerifierTest {
 
         assertThatThrownBy(() ->
                 userAuthorizationVerifier.verifyCartUser(givenEmail, wrongPassword)
-        ).isInstanceOf(IllegalArgumentException.class);
+        ).isInstanceOf(LoginException.class);
     }
 }
