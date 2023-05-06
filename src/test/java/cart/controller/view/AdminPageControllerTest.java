@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.view;
 
 import static org.mockito.BDDMockito.willReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import cart.controller.view.HomeController;
 import cart.dto.ProductDto;
 import cart.entity.ProductEntity;
 import cart.service.ProductService;
@@ -18,8 +17,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(HomeController.class)
-class HomeControllerTest {
+
+@WebMvcTest(AdminPageController.class)
+class AdminPageControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -28,8 +28,8 @@ class HomeControllerTest {
     ProductService productService;
 
     @Test
-    @DisplayName("메인 페이지를 보여준다.")
-    void indexPage() throws Exception {
+    @DisplayName("관리자 페이지를 보여준다.")
+    void adminPage() throws Exception {
         // given
         List<ProductDto> allProducts = List.of(
                 ProductDto.fromEntity(
@@ -46,9 +46,9 @@ class HomeControllerTest {
                 .findAllProducts();
 
         // expected
-        mockMvc.perform(get("/"))
+        mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("products", allProducts))
-                .andExpect(view().name("index"));
+                .andExpect(view().name("admin"));
     }
 }
