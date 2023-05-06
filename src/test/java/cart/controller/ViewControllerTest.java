@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.domain.User;
 import cart.dto.ProductsReadResponse;
+import cart.service.AuthService;
 import cart.service.ProductService;
 import cart.service.UserService;
 import java.util.List;
@@ -32,6 +33,9 @@ class ViewControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @MockBean
+    AuthService authService;
 
     @Test
     @DisplayName("Home을 반환한다.")

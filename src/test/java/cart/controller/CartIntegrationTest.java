@@ -156,8 +156,7 @@ public class CartIntegrationTest {
     private CartItemCreateRequest createCartItemRequestWithProduct() {
         Product product = createProduct();
         productRepository.add(product);
-        CartItemCreateRequest cartItemCreateRequest = new CartItemCreateRequest(product.getId());
-        return cartItemCreateRequest;
+        return new CartItemCreateRequest(product.getId());
     }
 
     @Test
