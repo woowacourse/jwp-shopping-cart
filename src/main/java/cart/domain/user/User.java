@@ -1,5 +1,7 @@
 package cart.domain.user;
 
+import cart.domain.user.validator.EmailValidator;
+import java.util.Objects;
 import java.util.Optional;
 
 public class User {
@@ -10,6 +12,7 @@ public class User {
     private final UserPrivacy userPrivacy;
 
     private User(Long id, String email, String password, UserPrivacy userPrivacy) {
+        EmailValidator.validate(email);
         this.id = id;
         this.email = email;
         this.password = password;
@@ -38,5 +41,22 @@ public class User {
 
     public Optional<String> getPhoneNumber() {
         return this.userPrivacy.getPhoneNumber();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return id.equals(user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

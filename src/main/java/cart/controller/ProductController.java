@@ -27,8 +27,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> saveProduct(
-            @Valid @RequestBody final ProductSaveRequest productSaveRequest) {
+    public ResponseEntity<Void> saveProduct(@Valid @RequestBody final ProductSaveRequest productSaveRequest) {
         this.productService.save(ProductSaveDto.from(productSaveRequest));
         return ResponseEntity.ok().build();
     }
@@ -37,7 +36,8 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(
             @Valid @RequestBody final ProductUpdateRequest productUpdateRequest,
-            @NotNull @PathVariable Long id) {
+            @NotNull @PathVariable Long id
+    ) {
         this.productService.update(ProductUpdateDto.createWithIdAndRequest(id, productUpdateRequest));
         return ResponseEntity.ok().build();
     }

@@ -9,12 +9,17 @@ Admin 사용자는 판매할 상품을 등록하거나, 수정, 삭제할 수 �
 ```mermaid
 classDiagram
     Web Environment <--> ViewController
-    Web Environment <--> ProductController
-    ProductController --> ProductService
-    ProductService --> ProductRepository
     class ViewController {
         화면을 호출
     }
+    
+    Web Environment <--> ProductController
+    ProductController --> ProductService
+    ProductService --> ProductRepository
+    
+    Web Environment <--> UserController
+    UserController --> UserService
+    UserService --> UserRepository
 ```
 
 ## Database
@@ -37,7 +42,7 @@ CREATE TABLE product
 ```
 
 
-# 기능 구현 목록
+# API 명세 및 기능 구현 목록
 
 ## 화면 렌더링 관련 기능
 
@@ -158,9 +163,9 @@ Content-Type: application/json
 회원을 등록합니다.
 
 **구현 내용**
-> - [ ] User 생성
->   - [ ] User 정보 유효성 검증
->     - [ ] email: email 형식에 맞아야 한다.
+> - [x] User 생성
+>   - [x] User 정보 유효성 검증
+>     - [x] email: email 형식에 맞아야 한다.
 >     - [ ] password:
 >       - [ ] 10자리 이상
 >       - [ ] 영문자, 숫자, 특수문자를 모두 포함
@@ -177,7 +182,7 @@ Host: localhost:8080
     "email": "test@test.test", // Required
     "password": 1234abcd!@, // Required
     "name": "김철수", // Optional
-    "phone_number": "01012341234" // Optional
+    "phoneNumber": "01012341234" // Optional
 }
 ```
 
