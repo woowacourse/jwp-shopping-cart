@@ -1,7 +1,7 @@
 package cart.web.controller.product;
 
 import cart.domain.product.service.dto.ProductModificationDto;
-import cart.domain.product.usecase.FixProductInfoUseCase;
+import cart.domain.product.usecase.FixOneProductInfoUseCase;
 import cart.web.dto.request.ProductModificationRequest;
 import cart.web.dto.response.ProductModificationResponse;
 import javax.validation.Valid;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin")
 @RestController
 public class FixOneProductInfoController {
-    private final FixProductInfoUseCase fixProductInfoService;
+    private final FixOneProductInfoUseCase fixProductInfoService;
 
-    public FixOneProductInfoController(final FixProductInfoUseCase fixProductInfoService) {
+    public FixOneProductInfoController(final FixOneProductInfoUseCase fixProductInfoService) {
         this.fixProductInfoService = fixProductInfoService;
     }
 
@@ -31,7 +31,7 @@ public class FixOneProductInfoController {
                 request.getImageUrl()
         );
 
-        fixProductInfoService.fixProductInfo(productModificationDto);
+        fixProductInfoService.fixSingleProductInfo(productModificationDto);
 
         return ResponseEntity
                 .ok(new ProductModificationResponse(request));

@@ -14,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 @Service
-public class FindProductProductsInCartService implements FindAllProductsInCartUseCase {
+public class FindAllProductsInCartService implements FindAllProductsInCartUseCase {
 
     private final CartRepository cartRepository;
     private final CartUserRepository cartUserRepository;
 
-    public FindProductProductsInCartService(final CartRepository cartRepository,
-                                            final CartUserRepository cartUserRepository) {
+    public FindAllProductsInCartService(final CartRepository cartRepository,
+                                        final CartUserRepository cartUserRepository) {
         this.cartRepository = cartRepository;
         this.cartUserRepository = cartUserRepository;
     }

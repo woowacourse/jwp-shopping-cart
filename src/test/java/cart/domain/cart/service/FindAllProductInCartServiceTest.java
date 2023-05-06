@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-class FindProductInCartServiceTest {
+class FindAllProductInCartServiceTest {
 
     @Autowired
     private FindAllProductsInCartUseCase findProductInCartService;

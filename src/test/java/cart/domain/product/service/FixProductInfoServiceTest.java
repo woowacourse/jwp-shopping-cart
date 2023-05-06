@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 class FixProductInfoServiceTest {
 
     @Autowired
-    private FixProductInfoService fixProductInfoService;
+    private FixOneProductInfoService fixProductInfoService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -39,7 +39,7 @@ class FixProductInfoServiceTest {
                 "chicken.com"
         );
 
-        fixProductInfoService.fixProductInfo(updatedProduct);
+        fixProductInfoService.fixSingleProductInfo(updatedProduct);
 
         final List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(1);

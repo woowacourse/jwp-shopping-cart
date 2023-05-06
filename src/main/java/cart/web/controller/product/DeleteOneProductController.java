@@ -1,6 +1,6 @@
 package cart.web.controller.product;
 
-import cart.domain.product.usecase.DeleteProductUseCase;
+import cart.domain.product.usecase.DeleteOneProductUseCase;
 import cart.web.config.PathVariableId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin")
 @RestController
 public class DeleteOneProductController {
-    private final DeleteProductUseCase deleteProductService;
+    private final DeleteOneProductUseCase deleteProductService;
 
-    public DeleteOneProductController(final DeleteProductUseCase deleteProductService) {
+    public DeleteOneProductController(final DeleteOneProductUseCase deleteProductService) {
         this.deleteProductService = deleteProductService;
     }
 
     @DeleteMapping("/{deleteId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable final PathVariableId deleteId) {
-        deleteProductService.delete(deleteId.getId());
+        deleteProductService.deleteSingleProductById(deleteId.getId());
 
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

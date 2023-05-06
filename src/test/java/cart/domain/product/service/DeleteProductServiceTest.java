@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 class DeleteProductServiceTest {
 
     @Autowired
-    private DeleteProductService deleteProductService;
+    private DeleteOneProductService deleteProductService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -30,7 +30,7 @@ class DeleteProductServiceTest {
         final Long savedId = productRepository.save(pizza);
         assertThat(productRepository.findAll()).hasSize(1);
 
-        deleteProductService.delete(savedId);
+        deleteProductService.deleteSingleProductById(savedId);
 
         final List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(0);

@@ -15,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-class EnrollProductServiceTest {
+class EnrollOneProductServiceTest {
 
     @Autowired
-    private EnrollProductService enrollProductService;
+    private EnrollOneProductService enrollOneProductService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -33,7 +33,7 @@ class EnrollProductServiceTest {
                 "www.domino-pizza.com"
         );
 
-        enrollProductService.enroll(pizza);
+        enrollOneProductService.enroll(pizza);
 
         final List<Product> allProducts = productRepository.findAll();
         assertThat(allProducts).hasSize(1);

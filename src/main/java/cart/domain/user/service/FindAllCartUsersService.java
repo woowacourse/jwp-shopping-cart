@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 @Service
-public class FindAllCartUserService implements FindAllCartUsersUseCase {
+public class FindAllCartUsersService implements FindAllCartUsersUseCase {
     private final CartUserRepository cartUserRepository;
 
-    public FindAllCartUserService(final CartUserRepository cartUserRepository) {
+    public FindAllCartUsersService(final CartUserRepository cartUserRepository) {
         this.cartUserRepository = cartUserRepository;
     }
 

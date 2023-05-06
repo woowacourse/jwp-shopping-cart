@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class EnrollProductService implements EnrollOneProductUseCase {
+public class EnrollOneProductService implements EnrollOneProductUseCase {
     private final ProductRepository productRepository;
 
-    public EnrollProductService(final ProductRepository productRepository) {
+    public EnrollOneProductService(final ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

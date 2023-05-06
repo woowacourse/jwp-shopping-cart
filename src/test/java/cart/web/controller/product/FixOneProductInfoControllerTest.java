@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import cart.domain.product.service.dto.ProductResponseDto;
-import cart.domain.product.usecase.FixProductInfoUseCase;
+import cart.domain.product.usecase.FixOneProductInfoUseCase;
 import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
 import cart.web.dto.request.ProductModificationRequest;
 import io.restassured.RestAssured;
@@ -32,7 +32,7 @@ class FixOneProductInfoControllerTest {
     }
 
     @MockBean
-    private FixProductInfoUseCase fixProductService;
+    private FixOneProductInfoUseCase fixProductService;
 
 
     @DisplayName("Product를 수정할 수 있다.")
@@ -42,7 +42,7 @@ class FixOneProductInfoControllerTest {
                 new ProductModificationRequest(1L, "Chicken", 18_000, "FOOD", "image.com");
         final ProductResponseDto response =
                 new ProductResponseDto(1L, "Chicken", 18_000, "FOOD", "image.com");
-        when(fixProductService.fixProductInfo(any())).thenReturn(response);
+        when(fixProductService.fixSingleProductInfo(any())).thenReturn(response);
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

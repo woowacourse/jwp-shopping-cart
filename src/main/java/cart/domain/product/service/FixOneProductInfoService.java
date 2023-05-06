@@ -4,21 +4,21 @@ import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
 import cart.domain.product.service.dto.ProductModificationDto;
 import cart.domain.product.service.dto.ProductResponseDto;
-import cart.domain.product.usecase.FixProductInfoUseCase;
+import cart.domain.product.usecase.FixOneProductInfoUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class FixProductInfoService implements FixProductInfoUseCase {
+public class FixOneProductInfoService implements FixOneProductInfoUseCase {
     private final ProductRepository productRepository;
 
-    public FixProductInfoService(final ProductRepository productRepository) {
+    public FixOneProductInfoService(final ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
     @Override
-    public ProductResponseDto fixProductInfo(final ProductModificationDto productDto) {
+    public ProductResponseDto fixSingleProductInfo(final ProductModificationDto productDto) {
         final Product product = productDto.toProduct();
         productRepository.update(product);
 

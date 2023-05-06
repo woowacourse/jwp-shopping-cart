@@ -4,7 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 
-import cart.domain.product.usecase.DeleteProductUseCase;
+import cart.domain.product.usecase.DeleteOneProductUseCase;
 import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,12 +29,12 @@ class DeleteOneProductControllerTest {
     }
 
     @MockBean
-    private DeleteProductUseCase deleteProductService;
+    private DeleteOneProductUseCase deleteProductService;
 
     @DisplayName("Product id로 상품을 삭제 할 수 있다.")
     @Test
     void deleteProduct() {
-        doNothing().when(deleteProductService).delete(anyLong());
+        doNothing().when(deleteProductService).deleteSingleProductById(anyLong());
 
         given().log().all()
                 .when().accept(MediaType.APPLICATION_JSON_VALUE)
