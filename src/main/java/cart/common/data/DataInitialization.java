@@ -1,9 +1,9 @@
 package cart.common.data;
 
-import cart.domain.member.Member;
-import cart.domain.product.Product;
-import cart.repository.member.MemberRepository;
-import cart.repository.product.ProductRepository;
+import cart.member.domain.Member;
+import cart.member.repository.MemberRepository;
+import cart.product.domain.Product;
+import cart.product.repository.ProductRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

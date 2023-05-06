@@ -1,9 +1,9 @@
 package cart.config.auth;
 
-import cart.domain.member.Member;
+import cart.common.auth.request.AuthMember;
 import cart.exception.AuthLoginException;
-import cart.repository.member.MemberRepository;
-import cart.service.request.AuthMember;
+import cart.member.domain.Member;
+import cart.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 @Service

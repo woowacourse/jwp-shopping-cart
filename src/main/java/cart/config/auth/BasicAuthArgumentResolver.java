@@ -1,6 +1,6 @@
 package cart.config.auth;
 
-import cart.controller.auth.BasicAuth;
+import cart.common.auth.annotation.BasicAuth;
 import cart.exception.BasicAuthException;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
