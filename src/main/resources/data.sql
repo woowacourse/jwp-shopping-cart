@@ -9,7 +9,7 @@ CREATE TABLE product
 CREATE TABLE member
 (
     id       bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    email    varchar(255)       NOT NULL,
+    email    varchar(255)       NOT NULL UNIQUE,
     password varchar(255)       NOT NULL
 );
 

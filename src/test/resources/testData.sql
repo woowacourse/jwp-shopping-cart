@@ -19,7 +19,7 @@ VALUES ('keyboard', 'https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/
 CREATE TABLE member
 (
     id       bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    email    varchar(255)       NOT NULL,
+    email    varchar(255)       NOT NULL UNIQUE,
     password varchar(255)       NOT NULL
 );
 
