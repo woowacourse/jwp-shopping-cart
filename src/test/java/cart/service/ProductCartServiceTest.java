@@ -6,6 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
+import cart.auth.AuthMember;
+import cart.dao.MemberDao;
 import cart.dao.ProductCartDao;
 import cart.dao.ProductDao;
 import cart.dto.CartsResponse;
@@ -26,12 +28,14 @@ class ProductCartServiceTest {
     private ProductCartService productCartService;
     private ProductCartDao productCartDao;
     private ProductDao productDao;
+    private MemberDao memberDao;
 
     @BeforeEach
     void setUp() {
         productCartDao = Mockito.mock(ProductCartDao.class);
         productDao = Mockito.mock(ProductDao.class);
-        productCartService = new ProductCartService(productCartDao, productDao);
+        memberDao = Mockito.mock(MemberDao.class);
+        productCartService = new ProductCartService(productCartDao, productDao, memberDao);
     }
 
     @DisplayName("member를 기준으로 cart의 product를 반환한다")
@@ -51,9 +55,11 @@ class ProductCartServiceTest {
                         Optional.of(new Product(3L, "boxster3", "https://boxster3.com", 30000)),
                         Optional.of(new Product(4L, "boxster4", "https://boxster4.com", 40000))
                 );
+        given(memberDao.findByEmail(any()))
+                .willReturn(Optional.of(new Member(1L, "boxster@email.com", "boxster")));
 
         CartsResponse cartsResponse = productCartService.findAllMyProductCart(
-                new Member(1L, "boxster@email.com", "boxster"));
+                new AuthMember("boxster@email.com", "boxster"));
         assertAll(
                 () -> assertThat(cartsResponse.getCartResponses()).map(CartResponse::getId)
                         .contains(1L, 2L, 3L, 4L),
@@ -68,8 +74,10 @@ class ProductCartServiceTest {
                 .willReturn(Optional.of(new Product(1L, "boxster", "https://boxster.com", 10000)));
         given(productCartDao.save(any()))
                 .willReturn(new ProductCart(1L, 1L, 1L));
+        given(memberDao.findByEmail(any()))
+                .willReturn(Optional.of(new Member(1L, "email@email.com", "password")));
 
-        ProductCartResponse response = productCartService.addCart(1L, new Member(1L, "email@email.com", "password"));
+        ProductCartResponse response = productCartService.addCart(1L, new AuthMember("email@email.com", "password"));
 
         assertThat(response.getId()).isEqualTo(1L);
     }

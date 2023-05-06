@@ -1,10 +1,10 @@
 package cart.controller;
 
+import cart.auth.AuthMember;
 import cart.auth.AuthPrincipal;
 import cart.dto.CartRequest;
 import cart.dto.CartsResponse;
 import cart.dto.ProductCartResponse;
-import cart.entity.Member;
 import cart.service.ProductCartService;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
@@ -27,17 +27,17 @@ public class ProductCartController {
     }
 
     @GetMapping
-    public ResponseEntity<CartsResponse> findMyCart(@AuthPrincipal Member member) {
-        CartsResponse cartsResponse = productCartService.findAllMyProductCart(member);
+    public ResponseEntity<CartsResponse> findMyCart(@AuthPrincipal AuthMember authMember) {
+        CartsResponse cartsResponse = productCartService.findAllMyProductCart(authMember);
         return ResponseEntity.ok(cartsResponse);
     }
 
     @PostMapping
     public ResponseEntity<ProductCartResponse> addMyCart(
             @RequestBody CartRequest cartRequest,
-            @AuthPrincipal Member member
+            @AuthPrincipal AuthMember authMember
     ) {
-        ProductCartResponse response = productCartService.addCart(cartRequest.getProductId(), member);
+        ProductCartResponse response = productCartService.addCart(cartRequest.getProductId(), authMember);
         return ResponseEntity.created(URI.create("/carts/" + response.getId()))
                 .body(response);
     }
@@ -45,9 +45,9 @@ public class ProductCartController {
     @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> deleteMyCart(
             @PathVariable Long cartId,
-            @AuthPrincipal Member member
+            @AuthPrincipal AuthMember authMember
     ) {
-        productCartService.deleteProductInMyCart(cartId, member);
+        productCartService.deleteProductInMyCart(cartId, authMember);
         return ResponseEntity.noContent().build();
     }
 }

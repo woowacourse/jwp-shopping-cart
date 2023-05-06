@@ -6,8 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.auth.AuthenticationArgumentResolver;
-import cart.config.WebMvcConfig;
 import cart.dto.MemberResponse;
 import cart.dto.ProductResponse;
 import cart.service.MemberService;
@@ -18,16 +16,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan.Filter;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
 
 
-@WebMvcTest(controllers = PageController.class,
-        excludeFilters = {
-                @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {WebMvcConfig.class,
-                        AuthenticationArgumentResolver.class})
-        })
+@WebMvcTest(PageController.class)
 class PageControllerTest {
 
     @Autowired

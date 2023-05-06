@@ -1,18 +1,14 @@
 package cart.auth;
 
-import cart.entity.Member;
-import cart.service.MemberService;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.regex.Pattern;
 import org.springframework.core.MethodParameter;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-@Component
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String AUTHORIZATION = "Authorization";
@@ -21,15 +17,9 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
     private static final String EMPTY = "";
     private static final Pattern BASIC_CREDENTIAL_PATTERN = Pattern.compile("^Basic [A-Za-z0-9+/]+=*$");
 
-    private final MemberService memberService;
-
-    public AuthenticationArgumentResolver(MemberService memberService) {
-        this.memberService = memberService;
-    }
-
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.withContainingClass(Member.class)
+        return parameter.withContainingClass(AuthMember.class)
                 .hasParameterAnnotation(AuthPrincipal.class);
     }
 
@@ -66,16 +56,12 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
         return decodedString.split(BASIC_DELIMITER);
     }
 
-    private Member getMember(String[] emailAndName) {
+    private AuthMember getMember(String[] emailAndName) {
         if (emailAndName.length != 2) {
             throw new AuthenticationException();
         }
         String email = emailAndName[0];
         String password = emailAndName[1];
-        Member member = memberService.findMember(email);
-        if (!member.matchingPassword(password)) {
-            throw new AuthenticationException();
-        }
-        return member;
+        return new AuthMember(email, password);
     }
 }

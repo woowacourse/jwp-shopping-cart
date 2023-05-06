@@ -1,5 +1,8 @@
 package cart.service;
 
+import cart.auth.AuthMember;
+import cart.auth.AuthenticationException;
+import cart.dao.MemberDao;
 import cart.dao.ProductCartDao;
 import cart.dao.ProductDao;
 import cart.dto.CartsResponse;
@@ -19,14 +22,17 @@ public class ProductCartService {
 
     private final ProductCartDao productCartDao;
     private final ProductDao productDao;
+    private final MemberDao memberDao;
 
-    public ProductCartService(ProductCartDao productCartDao, ProductDao productDao) {
+    public ProductCartService(ProductCartDao productCartDao, ProductDao productDao, MemberDao memberDao) {
         this.productCartDao = productCartDao;
         this.productDao = productDao;
+        this.memberDao = memberDao;
     }
 
     @Transactional(readOnly = true)
-    public CartsResponse findAllMyProductCart(Member member) {
+    public CartsResponse findAllMyProductCart(AuthMember authMember) {
+        Member member = getAuthenticationedMember(authMember);
         List<ProductCart> carts = productCartDao.findAllByMember(member);
         List<Long> cartIds = carts.stream()
                 .map(ProductCart::getId)
@@ -35,6 +41,15 @@ public class ProductCartService {
         List<Product> products = getProducts(carts);
 
         return CartsResponse.of(products, cartIds);
+    }
+
+    private Member getAuthenticationedMember(AuthMember authMember) {
+        Member member = memberDao.findByEmail(authMember.getEmail())
+                .orElseThrow(AuthenticationException::new);
+        if (!member.matchingPassword(authMember.getPassword())) {
+            throw new AuthenticationException();
+        }
+        return member;
     }
 
     private List<Product> getProducts(List<ProductCart> carts) {
@@ -47,17 +62,17 @@ public class ProductCartService {
     }
 
     @Transactional
-    public ProductCartResponse addCart(Long productId, Member member) {
+    public ProductCartResponse addCart(Long productId, AuthMember authMember) {
+        Member member = getAuthenticationedMember(authMember);
         Product product = productDao.findById(productId)
-                .orElseThrow(() -> {
-                    throw new NoSuchElementException("해당 상품이 없습니다");
-                });
+                .orElseThrow(() -> new NoSuchElementException("해당 상품이 없습니다"));
         ProductCart savedProductCart = productCartDao.save(new ProductCart(product.getId(), member.getId()));
         return ProductCartResponse.from(savedProductCart);
     }
 
     @Transactional
-    public void deleteProductInMyCart(Long cartId, Member member) {
+    public void deleteProductInMyCart(Long cartId, AuthMember authMember) {
+        Member member = getAuthenticationedMember(authMember);
         if (!productCartDao.existByCartIdAndMember(cartId, member)) {
             throw new NoSuchElementException("장바구니에 물품이 없습니다");
         }
