@@ -22,8 +22,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         AuthInfo authInfo = authorizationExtractor.extract(request);
         String email = authInfo.getEmail();
         String password = authInfo.getPassword();
@@ -33,6 +32,6 @@ public class LoginInterceptor implements HandlerInterceptor {
             request.setAttribute("memberId", member.get().getId());
             return true;
         }
-        return false;
+        throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
     }
 }
