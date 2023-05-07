@@ -1,6 +1,6 @@
 package cart.web.dto.request;
 
-import cart.web.exception.IllegalPathVariableTypeException;
+import cart.exception.IllegalPathVariableTypeException;
 
 public class PathVariableId {
     private static final int MIN_PATH_VARIABLE_ID = 1;

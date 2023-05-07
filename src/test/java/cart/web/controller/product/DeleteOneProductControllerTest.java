@@ -4,7 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 
-import cart.domain.product.usecase.DeleteOneProductUseCase;
+import cart.product.usecase.DeleteOneProductUseCase;
 import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;

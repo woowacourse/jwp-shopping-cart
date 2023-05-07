@@ -1,6 +1,6 @@
 package cart.web.config.auth;
 
-import cart.domain.user.service.BasicAuthorizationCartUserService;
+import cart.user.usecase.BasicAuthorizationCartUserUseCase;
 import cart.web.dto.request.AuthorizedUserRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -14,11 +14,11 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class BasicAuthorizedUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final AuthCredentialDecoder<AuthorizedUserRequest> authCredentialDecoder;
-    private final BasicAuthorizationCartUserService basicAuthorizationCartUserService;
+    private final BasicAuthorizationCartUserUseCase basicAuthorizationCartUserService;
 
     public BasicAuthorizedUserArgumentResolver(
             final AuthCredentialDecoder<AuthorizedUserRequest> authCredentialDecoder,
-            final BasicAuthorizationCartUserService basicAuthorizationCartUserService
+            final BasicAuthorizationCartUserUseCase basicAuthorizationCartUserService
     ) {
         this.authCredentialDecoder = authCredentialDecoder;
         this.basicAuthorizationCartUserService = basicAuthorizationCartUserService;

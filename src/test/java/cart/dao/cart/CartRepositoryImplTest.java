@@ -2,16 +2,17 @@ package cart.dao.cart;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.product.ProductDao;
-import cart.dao.product.ProductEntity;
-import cart.dao.user.CartUserDao;
-import cart.dao.user.CartUserEntity;
-import cart.dao.user.userproduct.CartUserProductDao;
-import cart.domain.cart.Cart;
-import cart.domain.cart.CartRepository;
-import cart.domain.product.Product;
+import cart.cart.domain.Cart;
+import cart.cart.domain.CartRepository;
+import cart.cart.persistence.CartRepositoryImpl;
+import cart.cart.persistence.CartUserProductDao;
 import cart.domain.product.TestFixture;
-import cart.domain.user.CartUser;
+import cart.product.domain.Product;
+import cart.product.persistence.ProductDao;
+import cart.product.persistence.ProductEntity;
+import cart.user.domain.CartUser;
+import cart.user.persistence.CartUserDao;
+import cart.user.persistence.CartUserEntity;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

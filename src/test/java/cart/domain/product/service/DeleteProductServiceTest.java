@@ -2,9 +2,10 @@ package cart.domain.product.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.product.Product;
-import cart.domain.product.ProductRepository;
 import cart.domain.product.TestFixture;
+import cart.product.domain.Product;
+import cart.product.domain.ProductRepository;
+import cart.product.service.DeleteOneProductService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

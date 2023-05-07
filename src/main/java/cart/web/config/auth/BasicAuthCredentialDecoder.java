@@ -1,7 +1,7 @@
 package cart.web.config.auth;
 
+import cart.exception.IllegalAuthorizationPrefixException;
 import cart.web.dto.request.AuthorizedUserRequest;
-import cart.web.exception.IllegalAuthorizationPrefixException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 

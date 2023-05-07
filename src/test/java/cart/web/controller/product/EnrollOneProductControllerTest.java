@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import cart.domain.product.usecase.EnrollOneProductUseCase;
+import cart.product.usecase.EnrollOneProductUseCase;
 import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
 import cart.web.dto.request.ProductCreationRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;

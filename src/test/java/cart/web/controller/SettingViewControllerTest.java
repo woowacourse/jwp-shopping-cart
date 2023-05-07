@@ -8,10 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import cart.domain.product.TestFixture;
-import cart.domain.user.service.dto.CartUserResponseDto;
-import cart.domain.user.usecase.FindAllCartUsersUseCase;
+import cart.user.service.dto.CartUserResponseDto;
+import cart.user.usecase.FindAllCartUsersUseCase;
 import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
-import cart.web.controller.index.SettingViewController;
+import cart.web.index.SettingViewController;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -2,13 +2,15 @@ package cart.dao.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.product.ImageUrl;
-import cart.domain.product.Product;
-import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductId;
-import cart.domain.product.ProductName;
-import cart.domain.product.ProductPrice;
 import cart.domain.product.TestFixture;
+import cart.product.domain.ImageUrl;
+import cart.product.domain.Product;
+import cart.product.domain.ProductCategory;
+import cart.product.domain.ProductId;
+import cart.product.domain.ProductName;
+import cart.product.domain.ProductPrice;
+import cart.product.persistence.ProductDao;
+import cart.product.persistence.ProductRepositoryImpl;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

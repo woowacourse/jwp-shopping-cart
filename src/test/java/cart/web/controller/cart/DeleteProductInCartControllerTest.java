@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 
-import cart.domain.cart.usecase.DeleteOneProductInCartUseCase;
+import cart.cart.usecase.DeleteOneProductInCartUseCase;
 import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;

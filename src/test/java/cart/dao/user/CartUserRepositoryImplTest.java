@@ -2,8 +2,10 @@ package cart.dao.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.user.CartUser;
-import cart.domain.user.UserEmail;
+import cart.user.domain.CartUser;
+import cart.user.domain.UserEmail;
+import cart.user.persistence.CartUserDao;
+import cart.user.persistence.CartUserRepositoryImpl;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;

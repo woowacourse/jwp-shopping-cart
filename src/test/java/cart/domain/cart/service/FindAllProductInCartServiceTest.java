@@ -2,15 +2,15 @@ package cart.domain.cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.cart.CartRepository;
-import cart.domain.cart.service.dto.AuthorizedCartUserDto;
-import cart.domain.cart.usecase.FindAllProductsInCartUseCase;
-import cart.domain.product.Product;
-import cart.domain.product.ProductRepository;
+import cart.cart.domain.CartRepository;
+import cart.cart.service.dto.AuthorizedCartUserDto;
+import cart.cart.usecase.FindAllProductsInCartUseCase;
 import cart.domain.product.TestFixture;
-import cart.domain.product.service.dto.ProductResponseDto;
-import cart.domain.user.CartUser;
-import cart.domain.user.CartUserRepository;
+import cart.product.domain.Product;
+import cart.product.domain.ProductRepository;
+import cart.product.service.dto.ProductResponseDto;
+import cart.user.domain.CartUser;
+import cart.user.domain.CartUserRepository;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

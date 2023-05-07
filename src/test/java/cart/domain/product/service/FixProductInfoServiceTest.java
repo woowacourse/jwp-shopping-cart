@@ -2,11 +2,12 @@ package cart.domain.product.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.product.Product;
-import cart.domain.product.ProductCategory;
-import cart.domain.product.ProductRepository;
 import cart.domain.product.TestFixture;
-import cart.domain.product.service.dto.ProductModificationDto;
+import cart.product.domain.Product;
+import cart.product.domain.ProductCategory;
+import cart.product.domain.ProductRepository;
+import cart.product.service.FixOneProductInfoService;
+import cart.product.service.dto.ProductModificationDto;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 
-import cart.domain.cart.usecase.SaveOneProductInCartUseCase;
+import cart.cart.usecase.SaveOneProductInCartUseCase;
 import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
 import cart.web.dto.request.ProductInCartAdditionRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;

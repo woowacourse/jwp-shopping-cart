@@ -2,10 +2,11 @@ package cart.domain.user.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.domain.user.CartUser;
-import cart.domain.user.CartUserRepository;
-import cart.domain.user.UserEmail;
-import cart.web.exception.VerifyUserException;
+import cart.exception.VerifyUserException;
+import cart.user.domain.CartUser;
+import cart.user.domain.CartUserRepository;
+import cart.user.domain.UserEmail;
+import cart.user.service.BasicAuthorizationCartUserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

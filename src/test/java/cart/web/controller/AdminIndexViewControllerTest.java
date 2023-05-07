@@ -9,11 +9,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import cart.domain.product.TestFixture;
-import cart.domain.product.service.FindAllProductService;
-import cart.domain.product.service.dto.ProductResponseDto;
+import cart.product.service.FindAllProductService;
+import cart.product.service.dto.ProductResponseDto;
 import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
-import cart.web.controller.index.AdminViewController;
-import cart.web.controller.index.IndexViewController;
+import cart.web.index.AdminViewController;
+import cart.web.index.IndexViewController;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

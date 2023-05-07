@@ -2,14 +2,14 @@ package cart.domain.cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.cart.CartRepository;
-import cart.domain.cart.service.dto.AuthorizedCartUserDto;
-import cart.domain.cart.usecase.DeleteOneProductInCartUseCase;
-import cart.domain.product.Product;
-import cart.domain.product.ProductRepository;
+import cart.cart.domain.CartRepository;
+import cart.cart.service.dto.AuthorizedCartUserDto;
+import cart.cart.usecase.DeleteOneProductInCartUseCase;
 import cart.domain.product.TestFixture;
-import cart.domain.user.CartUser;
-import cart.domain.user.CartUserRepository;
+import cart.product.domain.Product;
+import cart.product.domain.ProductRepository;
+import cart.user.domain.CartUser;
+import cart.user.domain.CartUserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,13 @@
 package cart.domain.product;
 
-import cart.domain.user.CartUser;
-import cart.domain.user.UserEmail;
+import cart.product.domain.ImageUrl;
+import cart.product.domain.Product;
+import cart.product.domain.ProductCategory;
+import cart.product.domain.ProductId;
+import cart.product.domain.ProductName;
+import cart.product.domain.ProductPrice;
+import cart.user.domain.CartUser;
+import cart.user.domain.UserEmail;
 
 public class TestFixture {
     public static final Product PIZZA = new Product(

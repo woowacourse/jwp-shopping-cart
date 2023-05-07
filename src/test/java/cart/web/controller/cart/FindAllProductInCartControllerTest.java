@@ -5,9 +5,9 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import cart.domain.cart.usecase.FindAllProductsInCartUseCase;
+import cart.cart.usecase.FindAllProductsInCartUseCase;
 import cart.domain.product.TestFixture;
-import cart.domain.product.service.dto.ProductResponseDto;
+import cart.product.service.dto.ProductResponseDto;
 import cart.web.config.auth.BasicAuthorizedUserArgumentResolver;
 import io.restassured.RestAssured;
 import java.util.List;
