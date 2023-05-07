@@ -20,10 +20,9 @@ public class MemberDao {
         return jdbcTemplate.query(sql, mapper);
     }
 
-    public int findByEmail(String email) {
-        final String sql = "SELECT * FROM member WHERE email = ?";
+    public List<MemberEntity> findByEmailWithPassword(String email, String password) {
+        final String sql = "SELECT * FROM member WHERE email = ? AND password = ?";
         BeanPropertyRowMapper<MemberEntity> mapper = BeanPropertyRowMapper.newInstance(MemberEntity.class);
-        List<MemberEntity> result = jdbcTemplate.query(sql, mapper, email);
-        return result.get(0).getId();
+        return jdbcTemplate.query(sql, mapper, email, password);
     }
 }

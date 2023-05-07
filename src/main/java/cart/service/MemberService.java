@@ -3,6 +3,8 @@ package cart.service;
 import cart.dao.MemberDao;
 import cart.dto.entity.MemberEntity;
 import cart.dto.response.MemberResponse;
+import cart.exception.CustomException;
+import cart.exception.ErrorCode;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -24,5 +26,13 @@ public class MemberService {
                         memberEntity.getPassword())
                 )
                 .collect(Collectors.toList());
+    }
+
+    public MemberEntity findByEmailWithPassword(String email, String password) {
+        List<MemberEntity> member = memberDao.findByEmailWithPassword(email, password);
+        if (member.size() == 0) {
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        return member.get(0);
     }
 }

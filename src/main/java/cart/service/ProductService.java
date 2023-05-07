@@ -59,4 +59,12 @@ public class ProductService {
             throw new CustomException(ErrorCode.ID_NOT_FOUND);
         }
     }
+
+    public ProductEntity findById(int productId) {
+        List<ProductEntity> product = productDao.findById(productId);
+        if (product.size() == 0) {
+            throw new CustomException(ErrorCode.ID_NOT_FOUND);
+        }
+        return product.get(0);
+    }
 }

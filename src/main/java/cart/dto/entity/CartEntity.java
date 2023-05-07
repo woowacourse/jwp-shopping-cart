@@ -8,6 +8,11 @@ public class CartEntity {
     public CartEntity() {
     }
 
+    public CartEntity(int member_id, int product_id) {
+        this.member_id = member_id;
+        this.product_id = product_id;
+    }
+
     public CartEntity(int id, int member_id, int product_id) {
         this.id = id;
         this.member_id = member_id;

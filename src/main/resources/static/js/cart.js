@@ -5,10 +5,8 @@ const addCartItem = (productId) => {
         window.location.href = '/settings';
         return;
     }
-
-    // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
-    axios.request({
-        url: '',
+    data = null;
+    axios.post(`carts/${productId}`, data, {
         headers: {
             'Authorization': `Basic ${credentials}`
         }
@@ -16,6 +14,7 @@ const addCartItem = (productId) => {
         alert('장바구니에 담았습니다.');
     }).catch((error) => {
         console.error(error);
+        window.alert(error.response.data.detail);
     });
 }
 

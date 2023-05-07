@@ -9,10 +9,12 @@ public enum ErrorCode {
     PRICE_NOT_BLANK("P003", "상품가격 데이터 누락", "상품가격은 필수 입력 값입니다."),
     PRICE_MIN_VALUE("P004", "최소 값 기준치 미달", "상품가격은 0 이상이어야 합니다."),
 
-    // DataBase,
+    // DataBase
     ID_NOT_FOUND("D001", "데이터 조회 실패", "일치하는 ID가 없습니다."),
 
+    // Auth
     AUTHORIZATION_NOT_FOUND("A001", "인증 오류", "인증이 실패하였습니다."),
+    MEMBER_NOT_FOUND("A002", "회원 정보 조회 실패", "회원 정보 조회에 실패하였습니다."),
 
     UNKNOWN("A001", "정의되지 않은 오류", "정의되지 않은 오류입니다."),
     ;
