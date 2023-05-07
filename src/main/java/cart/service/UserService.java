@@ -8,12 +8,14 @@ import cart.domain.Password;
 import cart.domain.User;
 import cart.exception.NotFoundResultException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserService {
 
     private final UserDao userDao;
@@ -30,6 +32,7 @@ public class UserService {
         return userDao.save(user);
     }
 
+    @Transactional(readOnly = true)
     public List<UserResponse> loadAllUser() {
         List<User> users = userDao.findAll();
         return users.stream()
@@ -37,6 +40,7 @@ public class UserService {
                     .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public UserResponse loadUser(final Long userId) {
         Optional<User> findUser = userDao.findById(userId);
         User user = findUser.orElseThrow(() -> new NotFoundResultException("존재하지 않는 사용자 입니다."));

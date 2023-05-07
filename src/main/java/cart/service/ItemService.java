@@ -9,12 +9,14 @@ import cart.domain.Name;
 import cart.domain.Price;
 import cart.exception.NotFoundResultException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ItemService {
 
     private final ItemDao itemDao;
@@ -23,6 +25,7 @@ public class ItemService {
         this.itemDao = itemDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ItemResponse> loadAllItem() {
         List<Item> allItem = itemDao.findAll();
         return allItem.stream()
@@ -30,6 +33,7 @@ public class ItemService {
                       .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ItemResponse loadItem(final Long itemId) {
         Optional<Item> findItem = itemDao.findBy(itemId);
         Item item = findItem.orElseThrow(() -> new NotFoundResultException("존재하지 않는 아이템 입니다."));

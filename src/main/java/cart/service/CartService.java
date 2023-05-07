@@ -9,12 +9,14 @@ import cart.domain.CartData;
 import cart.domain.User;
 import cart.exception.NotFoundResultException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CartService {
 
     private final CartDao cartDao;
@@ -34,6 +36,7 @@ public class CartService {
         return cartDao.save(cart);
     }
 
+    @Transactional(readOnly = true)
     public List<CartResponse> loadAllCart(final AuthInfo authInfo) {
         Long userId = findIdByEmail(authInfo);
         List<CartData> allCart = cartDao.findAll(userId);
