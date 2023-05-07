@@ -87,8 +87,7 @@ class JwpCartApplicationTests {
 
     @DisplayName("GET / 요청 정상 응답")
     @Test
-    void contextLoads() throws Exception {
-
+    void contextLoadsView() throws Exception {
         mockMvc.perform(get("/"))
                .andExpect(model().attribute("products", EXPECTED_PRODUCTS))
                .andExpect(view().name("index"))
@@ -97,7 +96,7 @@ class JwpCartApplicationTests {
 
     @DisplayName("GET /admin 요청 정상 응답")
     @Test
-    void getRequestAdmin() throws Exception {
+    void getRequestAdminView() throws Exception {
         mockMvc.perform(get("/admin"))
                .andExpect(model().attribute("products", EXPECTED_PRODUCTS))
                .andExpect(view().name("admin"))
@@ -106,7 +105,7 @@ class JwpCartApplicationTests {
 
     @DisplayName("GET /settings 요청 정상 응답")
     @Test
-    void getRequestSetting() throws Exception {
+    void getRequestSettingView() throws Exception {
         mockMvc.perform(get("/settings"))
                .andExpect(model().attribute("members", EXPECTED_MEMBERS))
                .andExpect(view().name("settings"))
@@ -115,7 +114,7 @@ class JwpCartApplicationTests {
 
     @DisplayName("GET /cart 요청 정상 응답")
     @Test
-    void getRequestCart() throws Exception {
+    void getRequestCartView() throws Exception {
         mockMvc.perform(get("/cart"))
                .andExpect(view().name("cart"))
                .andExpect(status().isOk());
@@ -338,5 +337,85 @@ class JwpCartApplicationTests {
                    .then()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
                    .body(containsString("존재하지 않는 사용자 입니다."));
+    }
+
+    @DisplayName("POST /carts/itemId 요청 정상 응답")
+    @Test
+    void postRequestCart() {
+        String email = "test1@gmail.com";
+        String password = "test1pw1234";
+        RestAssured.given()
+                   .auth()
+                   .preemptive()
+                   .basic(email, password)
+                   .when()
+                   .post("/carts/1")
+                   .then()
+                   .statusCode(HttpStatus.CREATED.value())
+                   .header("Location", "/");
+    }
+
+    @DisplayName("POST /carts/itemId 요청 예외 응답")
+    @Test
+    void postRequestCartException() {
+        String email = "test1@gmail.com";
+        String password = "test1pw1234";
+        RestAssured.given()
+                   .auth()
+                   .preemptive()
+                   .basic(email, password)
+                   .when()
+                   .post("/carts/100")
+                   .then()
+                   .statusCode(HttpStatus.BAD_REQUEST.value())
+                   .body(containsString("존재하지 않는 아이템 입니다."));
+    }
+
+    @DisplayName("GET /carts 요청 정상 응답")
+    @Test
+    void getRequestAllCart() {
+        String email = "test1@gmail.com";
+        String password = "test1pw1234";
+        RestAssured.given()
+                   .auth()
+                   .preemptive()
+                   .basic(email, password)
+                   .when()
+                   .get("/carts")
+                   .then()
+                   .statusCode(HttpStatus.OK.value())
+                   .body("size()", is(2));
+    }
+
+    @DisplayName("DELETE /carts/{cartId} 요청 정상 응답")
+    @Test
+    void deleteRequestCart() {
+        String email = "test1@gmail.com";
+        String password = "test1pw1234";
+        RestAssured.given()
+                   .auth()
+                   .preemptive()
+                   .basic(email, password)
+                   .when()
+                   .delete("/carts/1")
+                   .then()
+                   .statusCode(HttpStatus.OK.value())
+                   .header("Location", "/");
+    }
+
+    @DisplayName("DELETE /carts/{cartId} 요청 예외 응답")
+    @Test
+    void deleteRequestCartException() {
+        String email = "test1@gmail.com";
+        String password = "test1pw1234";
+        RestAssured.given()
+                   .auth()
+                   .preemptive()
+                   .basic(email, password)
+                   .when()
+                   .delete("/carts/100")
+                   .then()
+                   .statusCode(HttpStatus.BAD_REQUEST.value())
+                   .body(containsString("존재하지 않는 장바구니 아이템 입니다."));
     }
 }
