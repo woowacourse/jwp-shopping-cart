@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.controller.dto.AddCartItemRequest;
-import cart.controller.dto.DeleteCartItemRequest;
 import cart.dao.CartDao;
 import cart.dao.H2ProductDao;
 import cart.entity.CartEntity;
@@ -109,13 +108,9 @@ class CartControllerTest {
 
         final CartEntity cartEntity = new CartEntity(30L, 100L);
         final Long cartId = cartDao.save(cartEntity);
-        DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(cartId);
-        final String body = objectMapper.writeValueAsString(deleteCartItemRequest);
 
-        mockMvc.perform(delete("/carts/products")
+        mockMvc.perform(delete("/carts/"+cartId)
                         .header(HttpHeaders.AUTHORIZATION, authHeader)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body)
                 )
                 .andExpect(status().isNoContent());
     }
