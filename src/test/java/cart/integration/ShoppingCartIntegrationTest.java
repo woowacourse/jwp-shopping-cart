@@ -3,6 +3,7 @@ package cart.integration;
 
 import static cart.fixture.CartFixture.TEST_CART_RECORD;
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.service.dto.CartResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,8 +12,10 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.codec.binary.Base64;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ShoppingCartIntegrationTest {
@@ -82,6 +86,7 @@ public class ShoppingCartIntegrationTest {
                     .statusCode(HttpStatus.NOT_FOUND.value());
         }
 
+        @Sql("/shoppingCartData.sql")
         @Test
         @DisplayName("모든 인증정보가 유효한 경우")
         void success() throws JsonProcessingException {
@@ -92,13 +97,15 @@ public class ShoppingCartIntegrationTest {
                     .then()
                     .statusCode(HttpStatus.OK.value())
                     .extract();
-            final CartResponse cartResponse = mapCartResponse(response);
+            final List<CartResponse> cartResponses = mapCartResponses(response);
 
-            Assertions.assertThat(cartResponse.getId())
-                    .isEqualTo(TEST_CART_RECORD.getId());
+            assertThat(cartResponses)
+                    .extracting(CartResponse::getId)
+                    .containsExactly(TEST_CART_RECORD.getId());
         }
     }
 
+    @Sql("/shoppingCartData.sql")
     @Test
     @DisplayName("장바구니에 상품을 추가하는 기능 테스트")
     void addProductTest() {
@@ -112,6 +119,7 @@ public class ShoppingCartIntegrationTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @Sql("/shoppingCartData.sql")
     @Test
     @DisplayName("장바구니에 상품을 삭제하는 기능 테스트")
     void removeProductTest() {
@@ -119,7 +127,7 @@ public class ShoppingCartIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(AUTHORIZATION, "Basic " + encodeBase64(CREDENTIAL))
                 .when()
-                .delete("/cart/products/2")
+                .delete("/cart/products/1")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -129,11 +137,12 @@ public class ShoppingCartIntegrationTest {
         return new String(bytes);
     }
 
-    private static CartResponse mapCartResponse(final ExtractableResponse<Response> response)
+    private static List<CartResponse> mapCartResponses(final ExtractableResponse<Response> response)
             throws JsonProcessingException {
         final String jsonResponse = response.asString();
         final ObjectMapper objectMapper = new ObjectMapper();
         final CartResponse[] cartResponses = objectMapper.readValue(jsonResponse, CartResponse[].class);
-        return cartResponses[0];
+        return Arrays.stream(cartResponses)
+                .collect(Collectors.toUnmodifiableList());
     }
 }

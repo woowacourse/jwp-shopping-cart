@@ -27,7 +27,6 @@ class ShoppingCartServiceTest {
     @Autowired
     private ShoppingCartService shoppingCartService;
 
-    //TODO : service에서 테스트할 때 통합으로 할지 mock으로 할지 고민해보기
     @Test
     @DisplayName("memberInfo로 장바구니에 담은 product들 조회")
     public void findAllTest() {
