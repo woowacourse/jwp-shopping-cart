@@ -51,12 +51,11 @@ public class ProductResponse {
             return false;
         }
         final ProductResponse that = (ProductResponse) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
-                && Objects.equals(price, that.price) && Objects.equals(imageUrl, that.imageUrl);
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, imageUrl);
+        return Objects.hash(id);
     }
 }

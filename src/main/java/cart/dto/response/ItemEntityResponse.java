@@ -1,6 +1,7 @@
 package cart.dto.response;
 
 import cart.dto.application.ItemEntityDto;
+import java.util.Objects;
 
 public class ItemEntityResponse {
     private final long id;
@@ -29,5 +30,22 @@ public class ItemEntityResponse {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final ItemEntityResponse that = (ItemEntityResponse) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

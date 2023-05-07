@@ -1,6 +1,7 @@
 package cart.dto.application;
 
 import cart.dto.request.ProductRequest;
+import java.util.Objects;
 
 public class ProductEntityDto {
 
@@ -40,5 +41,22 @@ public class ProductEntityDto {
 
     public ProductDto getProduct() {
         return product;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final ProductEntityDto that = (ProductEntityDto) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
