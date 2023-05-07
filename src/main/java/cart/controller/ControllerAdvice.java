@@ -1,11 +1,11 @@
 package cart.controller;
 
+import cart.argumentresolver.UnAuthenticatedMemberException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,15 +32,10 @@ public class ControllerAdvice {
                 .body(e.getMessage());
     }
 
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException e, HttpServletResponse response) {
-        if (e.getStatus() == HttpStatus.UNAUTHORIZED) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Unauthorized");
-        }
+    @ExceptionHandler(UnAuthenticatedMemberException.class)
+    public ResponseEntity<String> handleUnAuthenticatedMemberException(UnAuthenticatedMemberException e, HttpServletResponse response) {
         return ResponseEntity
-                .status(e.getStatus())
-                .build();
+                .status(HttpStatus.UNAUTHORIZED)
+                .body("Unauthorized");
     }
 }

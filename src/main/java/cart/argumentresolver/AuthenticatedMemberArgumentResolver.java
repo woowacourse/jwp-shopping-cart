@@ -4,8 +4,6 @@ import cart.entity.member.Member;
 import cart.entity.member.MemberDao;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -44,13 +42,13 @@ public class AuthenticatedMemberArgumentResolver implements HandlerMethodArgumen
         final boolean isBasicAuthentication = authorization != null && authorization.toLowerCase().startsWith(BASIC_TYPE_PREFIX.toLowerCase());
 
         if (!isBasicAuthentication) {
-            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+            throw new UnAuthenticatedMemberException("로그인 해 주세요!");
         }
 
         final Member authenticatedMember = findMemberFromAuthentication(authorization);
 
         if (authenticatedMember == null) {
-            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
+            throw new UnAuthenticatedMemberException("로그인 해 주세요!");
         }
 
         return authenticatedMember;
