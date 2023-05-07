@@ -31,11 +31,11 @@ public class JdbcProductsDao implements ProductsDao {
     }
 
     @Override
-    public Long create(final String name, final int price, final String image) {
+    public Long create(final Product product) {
         final MapSqlParameterSource parameterMap = new MapSqlParameterSource()
-                .addValue("product_name", name)
-                .addValue("product_price", price)
-                .addValue("product_image", image);
+                .addValue("product_name", product.getName())
+                .addValue("product_price", product.getPrice())
+                .addValue("product_image", product.getImageUrl());
 
         return simpleJdbcInsert.executeAndReturnKey(parameterMap).longValue();
     }

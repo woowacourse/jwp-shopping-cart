@@ -47,7 +47,7 @@ class JdbcProductsDaoTest {
         final String image = "http://test.com/image/source";
 
         // when
-        final Long createdId = productsDao.create(name, price, image);
+        final Long createdId = productsDao.create(new Product(name, price, image));
 
         // then
         final Map<String, Object> actual = jdbcTemplate.queryForMap("SELECT * FROM products WHERE id = ?", createdId);

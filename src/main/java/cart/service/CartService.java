@@ -26,7 +26,7 @@ public class CartService {
 
     public long addProductToUser(final String userEmail, final long productId) {
         productsDao.findById(productId);
-        return cartDao.insert(new Email(userEmail), productId);
+        return cartDao.create(new Cart(new Email(userEmail), productId));
     }
 
 

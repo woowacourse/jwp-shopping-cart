@@ -37,10 +37,10 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
-    public long insert(final Email email, final long productId) {
+    public long create(final Cart cart) {
         final MapSqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("user_email", email.getValue())
-                .addValue("product_id", productId);
+                .addValue("user_email", cart.getUserEmail().getValue())
+                .addValue("product_id", cart.getProductId());
 
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }

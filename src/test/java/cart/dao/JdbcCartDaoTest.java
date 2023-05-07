@@ -51,7 +51,7 @@ class JdbcCartDaoTest {
         final Product product = findFirstProduct();
 
         // when
-        final long insertedCartId = cartDao.insert(testUserEmail, product.getId());
+        final long insertedCartId = cartDao.create(new Cart(testUserEmail, product.getId()));
 
         // then
         final Map<String, Object> result = jdbcTemplate.queryForMap("SELECT * FROM cart_added_product WHERE id = ?", insertedCartId);

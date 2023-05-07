@@ -10,25 +10,26 @@ public class Product {
     private int price;
     private String imageUrl;
 
+    public Product(final String name, final int price, final String imageUrl) {
+        validateFields(name, price, imageUrl);
+        this.id = null;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     public Product(final Long id, final String name, final int price, final String imageUrl) {
-        validateFields(id, name, price, imageUrl);
+        validateFields(name, price, imageUrl);
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    private void validateFields(final Long id, final String name, final int price, final String imageUrl) {
-        validateId(id);
+    private void validateFields(final String name, final int price, final String imageUrl) {
         validateName(name);
         validatePrice(price);
         validateImageUrl(imageUrl);
-    }
-
-    private void validateId(final Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("id값이 null입니다.");
-        }
     }
 
     private void validateName(final String name) {

@@ -8,6 +8,12 @@ public class Cart {
     private final Email userEmail;
     private final long productId;
 
+    public Cart(final Email userEmail, final long productId) {
+        this.id = null;
+        this.userEmail = userEmail;
+        this.productId = productId;
+    }
+
     public Cart(final Long id, final Email userEmail, final long productId) {
         this.id = id;
         this.userEmail = userEmail;

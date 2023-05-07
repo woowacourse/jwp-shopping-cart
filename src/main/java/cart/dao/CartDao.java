@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface CartDao {
 
-    long insert(final Email email, final long productId);
+    long create(final Cart cart);
 
     Cart findById(final long id);
 
