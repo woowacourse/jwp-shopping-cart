@@ -2,7 +2,7 @@ package cart.mvcconfig;
 
 import cart.auth.infrastructure.BasicAuthorizationExtractor;
 import cart.dto.UserAuthInfo;
-import cart.exception.UserAuthentificationException;
+import cart.exception.UserAuthenticationException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ public class UserAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         UserAuthInfo userAuthInfo = basicAuthorizationExtractor.extract(request);
         if (userAuthInfo == null) {
-            throw new UserAuthentificationException("사용자 권한이 없습니다");
+            throw new UserAuthenticationException("사용자 권한이 없습니다");
         }
         return true;
     }

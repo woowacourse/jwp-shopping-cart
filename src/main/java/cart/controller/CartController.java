@@ -11,6 +11,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@RequestMapping("/carts")
 public class CartController {
 
     private final CartService cartService;
@@ -19,7 +20,7 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/carts")
+    @GetMapping
     public ResponseEntity<List<CartProductResponse>> getCartView(
             @AuthenticationPrincipal String email) {
         List<CartProductResponse> products = cartService.readCart(email);
@@ -27,7 +28,7 @@ public class CartController {
         return ResponseEntity.ok(products);
     }
 
-    @PostMapping("/carts/product")
+    @PostMapping("/product")
     public ResponseEntity<Void> addCartItem(
             @AuthenticationPrincipal String email, @RequestBody ProductId productId) {
 
@@ -36,7 +37,7 @@ public class CartController {
         return ResponseEntity.created(URI.create("/carts/product/" + cartId)).build();
     }
 
-    @DeleteMapping("/carts/product/{id}")
+    @DeleteMapping("/product/{id}")
     public ResponseEntity<Void> deleteCartItem(@PathVariable Long id) {
         cartService.deleteCartItem(id);
 

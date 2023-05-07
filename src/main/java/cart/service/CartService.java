@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
 
-    private static final int EXPECTED_SIZE = 1;
+    private static final int EXPECTED_COUNT_OF_AFFECTED_ROWS = 1;
 
     private final ProductDao productDao;
     private final UserDao userDao;
@@ -47,14 +47,14 @@ public class CartService {
     public void updateProduct(final long id, final ProductRequest productRequest) {
         final ProductEntity productEntity =
                 new ProductEntity(id, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        if (productDao.update(productEntity) != EXPECTED_SIZE) {
-            throw new EmptyResultDataAccessException(EXPECTED_SIZE);
+        if (productDao.update(productEntity) != EXPECTED_COUNT_OF_AFFECTED_ROWS) {
+            throw new EmptyResultDataAccessException(EXPECTED_COUNT_OF_AFFECTED_ROWS);
         }
     }
 
     public void deleteProduct(final long id) {
-        if (productDao.deleteById(id) != EXPECTED_SIZE) {
-            throw new EmptyResultDataAccessException(EXPECTED_SIZE);
+        if (productDao.deleteById(id) != EXPECTED_COUNT_OF_AFFECTED_ROWS) {
+            throw new EmptyResultDataAccessException(EXPECTED_COUNT_OF_AFFECTED_ROWS);
         }
     }
 
@@ -81,8 +81,8 @@ public class CartService {
     }
 
     public void deleteCartItem(final Long id) {
-        if (cartDao.deleteById(id) != EXPECTED_SIZE) {
-            throw new EmptyResultDataAccessException(EXPECTED_SIZE);
+        if (cartDao.deleteById(id) != EXPECTED_COUNT_OF_AFFECTED_ROWS) {
+            throw new EmptyResultDataAccessException(EXPECTED_COUNT_OF_AFFECTED_ROWS);
         }
     }
 }

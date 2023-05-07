@@ -20,8 +20,8 @@ public class CartControllerAdvice {
         return ResponseEntity.badRequest().body(errorMessage);
     }
 
-    @ExceptionHandler({UserAuthentificationException.class})
-    public ResponseEntity<String> handleAuthentificationException(final UserAuthentificationException e) {
+    @ExceptionHandler({UserAuthenticationException.class})
+    public ResponseEntity<String> handleAuthentificationException(final UserAuthenticationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
