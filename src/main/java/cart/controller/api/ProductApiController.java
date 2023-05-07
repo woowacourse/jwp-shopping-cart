@@ -23,11 +23,7 @@ import cart.service.ProductService;
 public class ProductApiController {
 	private final ProductService productService;
 
-	public ProductApiController(final ProductService productService) {
-		this.productService = productService;
-	}
-
-	@GetMapping("/products")
+	@GetMapping
 	public ResponseEntity<List<ProductResponse>> getProducts() {
 		final List<ProductResponse> products = productService.findAll();
 		return ResponseEntity.ok(products);
