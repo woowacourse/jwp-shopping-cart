@@ -6,7 +6,7 @@ const addCartItem = (productId) => {
         return;
     }
 
-    axios.post('/carts/' + productId, {productId: productId}, {headers: {Authorization: `Basic ${credentials}`}})
+    axios.post('/carts/', {productId: productId}, {headers: {Authorization: `Basic ${credentials}`}})
         .then((response) => {
             alert('장바구니에 담았습니다.');
         })
