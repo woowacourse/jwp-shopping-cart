@@ -40,7 +40,6 @@ public class H2CartDao implements CartDao {
 
     private final RowMapper<CartItem> cartItemRowMapper = (resultSet, rowNum) ->
             new CartItem(
-                    resultSet.getLong("id"),
                     new Product(
                             resultSet.getLong("product_id"),
                             new ProductName(resultSet.getString("name")),
