@@ -31,7 +31,7 @@ public class H2CartDao implements CartDao {
     @Override
     public List<CartResponse> findProductsByMemberId(final Long id) {
         final String sql = "SELECT cart.id AS id, product.name AS name, product.image_url AS image_url, product.price AS price "
-                        + "FROM cart LEFT JOIN product ON cart.product_id = product.id "
+                        + "FROM cart INNER JOIN product ON cart.product_id = product.id "
                         + "WHERE cart.member_id = ?";
         return jdbcTemplate.query(sql, (resultSet, count) -> new CartResponse(
                 resultSet.getLong("id"),
