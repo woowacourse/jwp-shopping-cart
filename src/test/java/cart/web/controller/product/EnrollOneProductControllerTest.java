@@ -14,6 +14,7 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -32,6 +33,9 @@ class EnrollOneProductControllerTest {
         RestAssured.port = port;
     }
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private EnrollOneProductUseCase enrollProductService;
 
@@ -48,7 +52,7 @@ class EnrollOneProductControllerTest {
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ObjectMapper().writeValueAsBytes(request))
+                .body(objectMapper.writeValueAsBytes(request))
                 .when().post("/admin")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())

@@ -14,6 +14,7 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -32,8 +33,12 @@ class SaveProductInCartControllerTest {
         RestAssured.port = port;
     }
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private SaveOneProductInCartUseCase saveOneProductInCartUseCase;
+
 
     @DisplayName("사용자 장바구니에 상품을 등록 할 수 있다.")
     @Test
@@ -44,7 +49,7 @@ class SaveProductInCartControllerTest {
         given().log().all()
                 .auth().preemptive().basic("a@a.com", "password1")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ObjectMapper().writeValueAsBytes(request))
+                .body(objectMapper.writeValueAsBytes(request))
                 .when().post("/cart")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
