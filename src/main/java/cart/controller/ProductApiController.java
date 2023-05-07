@@ -20,19 +20,19 @@ public class ProductApiController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final RequestCreateProductDto requestCreateProductDto) {
         cartService.insert(requestCreateProductDto);
-        return ResponseEntity.created(URI.create("/product")).build();
+        return ResponseEntity.created(URI.create("/products")).build();
     }
 
-    @PutMapping("/product/{id}")
+    @PutMapping("/products/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable final Long id, @RequestBody final RequestUpdateProductDto requestUpdateProductDto) {
         cartService.update(id, requestUpdateProductDto);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable final Long id) {
         cartService.delete(id);
         return ResponseEntity.ok().build();
