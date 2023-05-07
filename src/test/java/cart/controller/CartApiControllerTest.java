@@ -53,6 +53,17 @@ class CartApiControllerTest {
     }
 
     @Test
+    @DisplayName("/cart/{productId}로 POST 요청을 보낼 때, 사용자 인증 정보가 없으면 HTTP 401 코드를 응답한다.")
+    void add_unAuthorized() {
+        long productId = 1L;
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/cart/" + productId)
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
     @DisplayName("/cart/{cartId}로 DELETE 요청을 보내면 HTTP 200 코드와 함께 카트에 담긴 상품이 삭제되어야 한다.")
     void delete_success() {
         long cartId = 1L;
@@ -77,6 +88,18 @@ class CartApiControllerTest {
     }
 
     @Test
+    @DisplayName("/cart/{cartId}로 사용자 인증 정보 없이 DELETE 요청을 보내면, HTTP 401 코드로 응답한다.")
+    void delete_unAuthorized() {
+        long cartId = 2L;
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/cart/" + cartId)
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+
+    @Test
     @DisplayName("/cart/items로 GET 요청을 보내면 HTTP 200 코드와 함께 카트에 담긴 모든 상품을 응답해야 한다.")
     void findAll_success() {
         RestAssured.given().log().all()
@@ -89,5 +112,15 @@ class CartApiControllerTest {
                 .body("id", equalTo(1),
                         "name", equalTo("오감자"),
                         "price", equalTo(1000));
+    }
+
+    @Test
+    @DisplayName("/cart/items로 사용자 인증 정보 없이 GET 요청을 보내면 HTTP 401 코드로 응답한다.")
+    void findAll_unAuthorized() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/cart/items")
+                .then().log().all()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 }
