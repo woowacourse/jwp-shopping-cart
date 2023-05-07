@@ -21,7 +21,7 @@ public class CartProductResponse {
         this.price = price;
     }
     
-    public static CartProductResponse from(final Long cartId, final ProductResponse product) {
+    public static CartProductResponse of(final Long cartId, final ProductResponse product) {
         return new CartProductResponse(cartId, product.getName(), product.getImageUrl(), product.getPrice());
     }
 }

@@ -10,7 +10,6 @@ import cart.product.dao.ProductDao;
 import cart.product.domain.Product;
 import cart.product.dto.ProductResponse;
 import io.restassured.RestAssured;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -110,8 +109,8 @@ class CartControllerIntegratedTest {
         // then
         final ProductResponse firstProduct = new ProductResponse(2L, "product2", "b.com", 2000);
         final ProductResponse secondProduct = new ProductResponse(3L, "product3", "c.com", 3000);
-        final CartProductResponse expectFirstCartProduct = CartProductResponse.from(2L, firstProduct);
-        final CartProductResponse expectSecondCartProduct = CartProductResponse.from(4L, secondProduct);
+        final CartProductResponse expectFirstCartProduct = CartProductResponse.of(2L, firstProduct);
+        final CartProductResponse expectSecondCartProduct = CartProductResponse.of(4L, secondProduct);
         assertThat(products).containsExactly(expectFirstCartProduct, expectSecondCartProduct);
     }
     

@@ -102,8 +102,8 @@ class CartControllerTest {
                 .extract().jsonPath().getList("", CartProductResponse.class);
         
         // then
-        final CartProductResponse expectFirstCartProduct = CartProductResponse.from(2L, firstProduct);
-        final CartProductResponse expectSecondCartProduct = CartProductResponse.from(4L, secondProduct);
+        final CartProductResponse expectFirstCartProduct = CartProductResponse.of(2L, firstProduct);
+        final CartProductResponse expectSecondCartProduct = CartProductResponse.of(4L, secondProduct);
         assertAll(
                 () -> assertThat(products).containsExactly(expectFirstCartProduct, expectSecondCartProduct),
                 () -> then(cartService).should(inOrder).findByMemberRequest(any()),

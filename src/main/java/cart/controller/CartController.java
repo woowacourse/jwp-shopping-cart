@@ -38,7 +38,7 @@ public class CartController {
     
     private List<CartProductResponse> parseCartProductResponses(final List<CartResponse> cartResponses, final List<ProductResponse> products) {
         return IntStream.range(0, cartResponses.size())
-                .mapToObj(cartCount -> CartProductResponse.from(cartResponses.get(cartCount).getId(), products.get(cartCount)))
+                .mapToObj(cartCount -> CartProductResponse.of(cartResponses.get(cartCount).getId(), products.get(cartCount)))
                 .collect(Collectors.toUnmodifiableList());
     }
     
