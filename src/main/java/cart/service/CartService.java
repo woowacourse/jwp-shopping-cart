@@ -3,7 +3,6 @@ package cart.service;
 import cart.auth.AuthInfo;
 import cart.dao.CartDao;
 import cart.dto.entity.CartEntity;
-import cart.dto.entity.MemberEntity;
 import cart.dto.entity.ProductEntity;
 import cart.dto.response.CartResponse;
 import cart.exception.CustomException;
@@ -14,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CartService {
+    public static final int ZERO = 0;
+
     private final CartDao cartDao;
     private final ProductService productService;
     private final MemberService memberService;
@@ -25,12 +26,8 @@ public class CartService {
     }
 
     public List<CartResponse> findAllByEmailWithPassword(AuthInfo authInfo) {
-        MemberEntity member = memberService.findByEmailWithPassword(
-                authInfo.getEmail(),
-                authInfo.getPassword()
-        );
-
-        List<CartEntity> carts = cartDao.findByMemberId(member.getId());
+        int memberId = memberService.findByEmailWithPassword(authInfo.getEmail(), authInfo.getPassword());
+        List<CartEntity> carts = cartDao.findByMemberId(memberId);
 
         return carts.stream()
                 .map(cartEntity -> {
@@ -39,22 +36,35 @@ public class CartService {
                             cartEntity.getId(),
                             product.getName(),
                             product.getImgUrl(),
-                            product.getPrice());
+                            product.getPrice(),
+                            cartEntity.getCount()
+                    );
                 })
                 .collect(Collectors.toList());
     }
 
     public int save(AuthInfo authInfo, int productId) {
-        MemberEntity member = memberService.findByEmailWithPassword(
-                authInfo.getEmail(),
-                authInfo.getPassword()
-        );
-        return cartDao.save(new CartEntity(member.getId(), productId));
+        List<CartEntity> cartByProduct = cartDao.findByProductId(productId);
+
+        if (cartByProduct.size() == ZERO) {
+            int memberId = memberService.findByEmailWithPassword(authInfo.getEmail(), authInfo.getPassword());
+            return cartDao.save(new CartEntity(memberId, productId));
+        }
+
+        updateCount(productId, cartByProduct.get(0).getCount() + 1);
+        return cartByProduct.get(0).getId();
+    }
+
+    private void updateCount(int productId, int productCount) {
+        int updateRowNumber = cartDao.updateCount(productCount, productId);
+        if (updateRowNumber == ZERO) {
+            throw new CustomException(ErrorCode.ID_NOT_FOUND);
+        }
     }
 
     public void delete(int id) {
         int deleteRowNumber = cartDao.delete(id);
-        if (deleteRowNumber == 0) {
+        if (deleteRowNumber == ZERO) {
             throw new CustomException(ErrorCode.ID_NOT_FOUND);
         }
     }

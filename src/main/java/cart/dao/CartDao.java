@@ -28,12 +28,26 @@ public class CartDao {
         return jdbcTemplate.query(sql, mapper, memberId);
     }
 
+    public List<CartEntity> findByProductId(int productId) {
+        final String sql = "SELECT * FROM cart WHERE product_id = ?";
+        BeanPropertyRowMapper<CartEntity> mapper = BeanPropertyRowMapper.newInstance(CartEntity.class);
+        return jdbcTemplate.query(sql, mapper, productId);
+    }
+
     public int save(CartEntity cartEntity) {
         GeneratedKeyHolder keyholder = new GeneratedKeyHolder();
-        final String sql = "INSERT INTO cart (member_id, product_id) VALUES (:member_id, :product_id)";
+        final String sql = "INSERT INTO cart (member_id, product_id, count) VALUES (:member_id, :product_id, :count)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(cartEntity);
         namedParameterJdbcTemplate.update(sql, namedParameters, keyholder, new String[]{"id"});
         return keyholder.getKey().intValue();
+    }
+
+    public int updateCount(int productCount, int productId) {
+        final String sql = "UPDATE cart SET count=:count WHERE product_id = :product_id";
+        MapSqlParameterSource mapSqlParameters = new MapSqlParameterSource()
+                .addValue("count", productCount)
+                .addValue("product_id", productId);
+        return namedParameterJdbcTemplate.update(sql, mapSqlParameters);
     }
 
     public int delete(int id) {

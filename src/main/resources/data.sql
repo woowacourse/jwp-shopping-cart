@@ -26,6 +26,7 @@ VALUES ('a@a.com', 'password1'),
 CREATE TABLE cart
 (
     id         INT NOT NULL AUTO_INCREMENT,
+    count      INT NOT NULL,
     member_id  INT NOT NULL,
     product_id INT NOT NULL,
     PRIMARY KEY (id),

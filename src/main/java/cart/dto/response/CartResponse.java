@@ -5,15 +5,17 @@ public class CartResponse {
     private String name;
     private String imgUrl;
     private int price;
+    private int count;
 
     public CartResponse() {
     }
 
-    public CartResponse(int id, String name, String imgUrl, int price) {
+    public CartResponse(int id, String name, String imgUrl, int price, int count) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
         this.price = price;
+        this.count = count;
     }
 
     public int getId() {
@@ -30,5 +32,9 @@ public class CartResponse {
 
     public int getPrice() {
         return price;
+    }
+
+    public int getCount() {
+        return count;
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
-    public static final int UPDATE_QUERY_NUMBER = 0;
+    public static final int ZERO = 0;
 
     private final ProductDao productDao;
 
@@ -48,21 +48,21 @@ public class ProductService {
                 productRequest.getImgUrl(),
                 productRequest.getPrice());
         int updateRowNumber = productDao.update(productEntity);
-        if (updateRowNumber == UPDATE_QUERY_NUMBER) {
+        if (updateRowNumber == ZERO) {
             throw new CustomException(ErrorCode.ID_NOT_FOUND);
         }
     }
 
     public void delete(int id) {
         int deleteRowNumber = productDao.delete(id);
-        if (deleteRowNumber == UPDATE_QUERY_NUMBER) {
+        if (deleteRowNumber == ZERO) {
             throw new CustomException(ErrorCode.ID_NOT_FOUND);
         }
     }
 
     public ProductEntity findById(int productId) {
         List<ProductEntity> product = productDao.findById(productId);
-        if (product.size() == 0) {
+        if (product.size() == ZERO) {
             throw new CustomException(ErrorCode.ID_NOT_FOUND);
         }
         return product.get(0);

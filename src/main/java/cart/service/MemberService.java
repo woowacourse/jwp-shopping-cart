@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
+    public static final int ZERO = 0;
+
     private final MemberDao memberDao;
 
     public MemberService(MemberDao memberDao) {
@@ -28,11 +30,11 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
-    public MemberEntity findByEmailWithPassword(String email, String password) {
+    public int findByEmailWithPassword(String email, String password) {
         List<MemberEntity> member = memberDao.findByEmailWithPassword(email, password);
-        if (member.size() == 0) {
+        if (member.size() == ZERO) {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
-        return member.get(0);
+        return member.get(0).getId();
     }
 }
