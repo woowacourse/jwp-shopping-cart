@@ -1,10 +1,11 @@
 package cart.controller.unit;
 
 import cart.controller.ProductApiController;
+import cart.dto.RequestCreateProductDto;
+import cart.dto.RequestUpdateProductDto;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -13,9 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,39 +33,27 @@ class ProductApiControllerUnitTest {
     @MockBean
     private MemberService memberService;
 
-    private Map<String, String> valueByFields;
-
-    @BeforeEach
-    void setUp() {
-        valueByFields = new HashMap<>();
-    }
-
     @Test
     void 상품을_생성한다() throws Exception {
         // given
-        valueByFields.put("name", "치킨");
-        valueByFields.put("price", "10000");
-        valueByFields.put("image", "치킨 주소");
+        final RequestCreateProductDto productDto = new RequestCreateProductDto("치킨", 10_000, "치킨 주소");
 
         // expect
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(valueByFields)))
+                        .content(mapper.writeValueAsString(productDto)))
                 .andExpect(status().isCreated());
     }
 
     @Test
     void 상품을_수정한다() throws Exception {
         // given
-        valueByFields.put("id", "1");
-        valueByFields.put("name", "치킨");
-        valueByFields.put("price", "10000");
-        valueByFields.put("image", "치킨 주소");
+        final RequestUpdateProductDto productDto = new RequestUpdateProductDto(1L, "치킨", 10_000, "치킨 주소");
 
         // expect
         mockMvc.perform(put("/products/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(valueByFields)))
+                        .content(mapper.writeValueAsString(productDto)))
                 .andExpect(status().isOk());
     }
 
