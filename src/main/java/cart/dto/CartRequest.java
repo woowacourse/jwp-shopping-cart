@@ -5,7 +5,6 @@ import javax.validation.constraints.NotNull;
 
 public class CartRequest {
     @NotNull
-    @NotEmpty
     private Long productId;
 
     public CartRequest() {
