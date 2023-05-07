@@ -2,7 +2,7 @@ package cart.domain.product;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Objects;
+import org.springframework.util.Assert;
 
 public class ImageUrl {
     private static final String JPG_FORMAT = ".jpg";
@@ -33,9 +33,7 @@ public class ImageUrl {
     }
 
     private static void validateBlank(String url) {
-        if (Objects.isNull(url) || url.isBlank()) {
-            throw new IllegalArgumentException("URL은 빈 값이 될 수 없습니다.");
-        }
+        Assert.hasText(url, "URL은 빈 값이 될 수 없습니다.");
     }
 
     private static void validateLength(String url) {

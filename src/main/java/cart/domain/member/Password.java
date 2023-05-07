@@ -1,6 +1,6 @@
 package cart.domain.member;
 
-import java.util.Objects;
+import org.springframework.util.Assert;
 
 public class Password {
     private static final int MIN_PASSWORD_LENGTH = 4;
@@ -19,9 +19,7 @@ public class Password {
     }
 
     private void validateBlank(String password) {
-        if (Objects.isNull(password) || password.isBlank()) {
-            throw new IllegalArgumentException("비밀번호는 빈 값이 될 수 없습니다.");
-        }
+        Assert.hasText(password, "비밀번호는 빈 값이 될 수 없습니다.");
     }
 
     private void validateLength(String password) {

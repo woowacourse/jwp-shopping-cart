@@ -1,6 +1,6 @@
 package cart.domain.product;
 
-import java.util.Objects;
+import org.springframework.util.Assert;
 
 public class ProductName {
     private static final int MAX_NAME_LENGTH = 10;
@@ -17,9 +17,7 @@ public class ProductName {
     }
 
     private void validateNull(String name) {
-        if (Objects.isNull(name) || name.isBlank()) {
-            throw new IllegalArgumentException("상품의 이름은 빈 값이 될 수 없습니다.");
-        }
+        Assert.hasText(name, "상품의 이름은 빈 값이 될 수 없습니다.");
     }
 
     private void validateLength(String name) {
