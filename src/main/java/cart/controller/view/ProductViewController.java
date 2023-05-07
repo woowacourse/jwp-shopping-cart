@@ -8,13 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import cart.service.response.ProductResponse;
 import cart.service.ProductService;
-import cart.service.ProductServiceImpl;
 
 @Controller
 public class ProductViewController {
 	private final ProductService productService;
 
-	public ProductViewController(ProductServiceImpl productService) {
+	public ProductViewController(ProductService productService) {
 		this.productService = productService;
 	}
 

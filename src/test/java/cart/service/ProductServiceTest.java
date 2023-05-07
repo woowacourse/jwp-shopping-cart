@@ -19,12 +19,12 @@ import cart.service.request.ProductUpdateRequest;
 import cart.service.response.ProductResponse;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceImplTest {
+class ProductServiceTest {
 	@Mock
 	ProductRepository productRepository;
 
 	@InjectMocks
-	ProductServiceImpl productService;
+	ProductService productService;
 
 	@DisplayName("상품 저장 테스트")
 	@Test

@@ -20,13 +20,13 @@ import cart.repository.MemberRepository;
 import cart.service.request.MemberUpdateRequest;
 
 @ExtendWith(MockitoExtension.class)
-class MemberServiceImplTest {
+class MemberServiceTest {
 
 	@Mock
 	MemberRepository memberRepository;
 
 	@InjectMocks
-	MemberServiceImpl memberService;
+	MemberService memberService;
 
 	@DisplayName("회원 저장 테스트")
 	@Test
