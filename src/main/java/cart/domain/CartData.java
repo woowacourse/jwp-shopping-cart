@@ -3,11 +3,11 @@ package cart.domain;
 public class CartData {
 
     private final Long id;
-    private final String name;
-    private final String imageUrl;
-    private final Integer price;
+    private final Name name;
+    private final ImageUrl imageUrl;
+    private final Price price;
 
-    public CartData(Long id, String name, String imageUrl, Integer price) {
+    public CartData(Long id, Name name, ImageUrl imageUrl, Price price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -19,14 +19,14 @@ public class CartData {
     }
 
     public String getName() {
-        return name;
+        return name.getValue();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUrl.getValue();
     }
 
     public Integer getPrice() {
-        return price;
+        return price.getValue();
     }
 }

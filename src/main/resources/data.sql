@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS USERS
 (
     id       BIGINT      NOT NULL AUTO_INCREMENT,
     email    VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(15) NOT NULL,
+    password VARCHAR(20) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS CARTS
     user_id BIGINT NOT NULL,
     item_id BIGINT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES USERS (id),
-    FOREIGN KEY (item_id) REFERENCES ITEMS (id)
+    FOREIGN KEY (user_id) REFERENCES USERS (id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES ITEMS (id) ON DELETE CASCADE
 );
 
 INSERT INTO items (name, image_url, price)

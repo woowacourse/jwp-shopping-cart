@@ -1,5 +1,7 @@
 package cart.dao;
 
+import cart.domain.Email;
+import cart.domain.Password;
 import cart.domain.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,8 +21,8 @@ public class UserDao {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<User> actorRowMapper = (resultSet, rowNumber) -> new User.Builder()
             .id(resultSet.getLong("id"))
-            .email(resultSet.getString("email"))
-            .password(resultSet.getString("password"))
+            .email(new Email(resultSet.getString("email")))
+            .password(new Password(resultSet.getString("password")))
             .build();
 
     public UserDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {

@@ -3,6 +3,8 @@ package cart.service;
 import cart.controller.dto.request.UserRequest;
 import cart.controller.dto.response.UserResponse;
 import cart.dao.UserDao;
+import cart.domain.Email;
+import cart.domain.Password;
 import cart.domain.User;
 import cart.exception.NotFoundResultException;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,8 @@ public class UserService {
 
     public Long saveUser(final UserRequest userRequest) {
         User user = new User.Builder()
-                .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
+                .email(new Email(userRequest.getEmail()))
+                .password(new Password(userRequest.getPassword()))
                 .build();
         return userDao.save(user);
     }
@@ -45,8 +47,8 @@ public class UserService {
         validateExistUser(userId);
         User user = new User.Builder()
                 .id(userId)
-                .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
+                .email(new Email(userRequest.getEmail()))
+                .password(new Password(userRequest.getPassword()))
                 .build();
         userDao.update(user);
     }

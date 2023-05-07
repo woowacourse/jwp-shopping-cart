@@ -3,8 +3,8 @@ package cart.domain;
 public class User {
 
     private final Long id;
-    private final String email;
-    private final String password;
+    private final Email email;
+    private final Password password;
 
     private User(Builder builder) {
         this.id = builder.id;
@@ -16,10 +16,18 @@ public class User {
         return id;
     }
 
+    public String getEmail() {
+        return email.getValue();
+    }
+
+    public String getPassword() {
+        return password.getValue();
+    }
+
     public static class Builder {
         private Long id;
-        private String email;
-        private String password;
+        private Email email;
+        private Password password;
 
         public Builder() {
         }
@@ -29,12 +37,12 @@ public class User {
             return this;
         }
 
-        public Builder email(String value) {
+        public Builder email(Email value) {
             email = value;
             return this;
         }
 
-        public Builder password(String value) {
+        public Builder password(Password value) {
             password = value;
             return this;
         }
@@ -42,13 +50,5 @@ public class User {
         public User build() {
             return new User(this);
         }
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 }

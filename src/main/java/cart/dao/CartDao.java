@@ -1,7 +1,6 @@
 package cart.dao;
 
-import cart.domain.Cart;
-import cart.domain.CartData;
+import cart.domain.*;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,15 +15,11 @@ import java.util.List;
 public class CartDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final RowMapper<Cart> cartRowMapper = (resultSet, rowNumber) -> new Cart.Builder()
-            .userId(resultSet.getLong("user_id"))
-            .itemId(resultSet.getLong("item_id"))
-            .build();
     private final RowMapper<CartData> cartDataRowMapper = (resultSet, rowNumber) -> new CartData(
             resultSet.getLong("id"),
-            resultSet.getString("name"),
-            resultSet.getString("image_url"),
-            resultSet.getInt("price")
+            new Name(resultSet.getString("name")),
+            new ImageUrl(resultSet.getString("image_url")),
+            new Price(resultSet.getInt("price"))
     );
 
     public CartDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
