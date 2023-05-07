@@ -15,9 +15,9 @@ class CartProductsTest {
     @Test
     void 같은_상품이_여러번_추가되면_예외() {
         final CartProducts cartProducts = new CartProducts();
-        cartProducts.add(product);
+        cartProducts.add(product.getProductId());
 
-        assertThatThrownBy(() -> cartProducts.add(product))
+        assertThatThrownBy(() -> cartProducts.add(product.getProductId()))
                 .isInstanceOf(AlreadyAddedProductException.class)
                 .hasMessage("이미 장바구니에 담긴 상품입니다.");
     }

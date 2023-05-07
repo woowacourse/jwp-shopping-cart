@@ -21,6 +21,10 @@ public class ProductQueryService {
         return productRepository.findAll();
     }
 
+    public List<Product> findAllByIds(final List<Long> ids) {
+        return productRepository.findAllById(ids);
+    }
+
     public Optional<Product> findById(final Long id) {
         return productRepository.findById(id);
     }

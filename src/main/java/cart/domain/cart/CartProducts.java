@@ -1,9 +1,10 @@
 package cart.domain.cart;
 
-import cart.domain.product.Product;
+import cart.domain.product.ProductId;
 import cart.exception.AlreadyAddedProductException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CartProducts {
 
@@ -17,11 +18,11 @@ public class CartProducts {
         this.cartProducts = cartProducts;
     }
 
-    public void add(final Product product) {
-        if (cartProducts.stream().anyMatch(cartProduct -> cartProduct.getProduct().equals(product))) {
+    public void add(final ProductId productId) {
+        if (cartProducts.stream().anyMatch(cartProduct -> cartProduct.getProductId().equals(productId))) {
             throw new AlreadyAddedProductException("이미 장바구니에 담긴 상품입니다.");
         }
-        cartProducts.add(new CartProduct(product));
+        cartProducts.add(new CartProduct(productId));
     }
 
     public void delete(final Long cartProductId) {
@@ -30,5 +31,11 @@ public class CartProducts {
 
     public List<CartProduct> getCartProducts() {
         return cartProducts;
+    }
+
+    public List<Long> getProductIds() {
+        return cartProducts.stream()
+                .map(cartProduct -> cartProduct.getProductId().getValue())
+                .collect(Collectors.toList());
     }
 }

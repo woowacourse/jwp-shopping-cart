@@ -35,7 +35,7 @@ class H2CartRepositoryTest {
     private void setUp(final JdbcTemplate jdbcTemplate) {
         userRepository = new H2UserRepository(jdbcTemplate);
         productRepository = new H2ProductRepository(jdbcTemplate);
-        cartRepository = new H2CartRepository(jdbcTemplate, productRepository);
+        cartRepository = new H2CartRepository(jdbcTemplate);
     }
 
     @BeforeEach
@@ -66,7 +66,7 @@ class H2CartRepositoryTest {
     @Test
     void 카트_저장_테스트_카트_상품_추가() {
         final Cart cart = new Cart(user.getUserId());
-        cart.addProduct(product);
+        cart.addProduct(product.getProductId());
 
         final Cart result = cartRepository.save(cart);
 
@@ -78,8 +78,6 @@ class H2CartRepositoryTest {
                 () -> assertThat(findResult.get().getCartProducts().getCartProducts()).hasSize(1),
                 () -> assertThat(findResult.get().getUserId()).isEqualTo(user.getUserId()),
                 () -> assertThat(findResult.get().getCartId()).isEqualTo(result.getCartId()),
-                () -> assertThat(findResult.get().getCartProducts().getCartProducts().get(0).getProduct()).isEqualTo(
-                        product),
                 () -> assertThat(findResult.get().getCartProducts().getCartProducts().get(0).getCartProductId())
                         .isEqualTo(result.getCartProducts().getCartProducts().get(0).getCartProductId())
         );
@@ -93,7 +91,7 @@ class H2CartRepositoryTest {
         @BeforeEach
         void setUp() {
             final Cart newCart = new Cart(user.getUserId());
-            newCart.addProduct(product);
+            newCart.addProduct(product.getProductId());
 
             cart = cartRepository.save(newCart);
         }
@@ -108,9 +106,6 @@ class H2CartRepositoryTest {
                     () -> assertThat(findResult.get().getCartProducts().getCartProducts()).hasSize(1),
                     () -> assertThat(findResult.get().getUserId()).isEqualTo(user.getUserId()),
                     () -> assertThat(findResult.get().getCartId()).isEqualTo(cart.getCartId()),
-                    () -> assertThat(
-                            findResult.get().getCartProducts().getCartProducts().get(0).getProduct()).isEqualTo(
-                            product),
                     () -> assertThat(findResult.get().getCartProducts().getCartProducts().get(0).getCartProductId())
                             .isEqualTo(cart.getCartProducts().getCartProducts().get(0).getCartProductId())
             );

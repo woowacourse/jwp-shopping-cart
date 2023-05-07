@@ -2,6 +2,7 @@ package cart.dto.cart;
 
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartProduct;
+import cart.domain.product.Product;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,11 +16,10 @@ public class FindCartResponse {
         this.products = products;
     }
 
-    public static FindCartResponse from(final Cart cart) {
-        final List<ProductResponse> productResponses = cart.getCartProducts()
-                .getCartProducts().stream()
-                .map(ProductResponse::from)
-                .collect(Collectors.toList());
+    public static FindCartResponse of(final Cart cart, final List<Product> products) {
+        final List<ProductResponse> productResponses = ProductResponse.of(
+                cart.getCartProducts().getCartProducts(),
+                products);
 
         return new FindCartResponse(cart.getCartId().getValue(), productResponses);
     }
@@ -49,14 +49,29 @@ public class FindCartResponse {
             this.price = price;
         }
 
-        private static ProductResponse from(final CartProduct cartProduct) {
+        private static List<ProductResponse> of(final List<CartProduct> cartProducts,
+                final List<Product> products) {
+            return cartProducts.stream()
+                    .map(cartProduct -> toProductResponse(products, cartProduct))
+                    .collect(Collectors.toList());
+        }
+
+        private static ProductResponse toProductResponse(final List<Product> products, final CartProduct cartProduct) {
+            final Product product = filterProduct(products, cartProduct);
             return new ProductResponse(
                     cartProduct.getCartProductId().getValue(),
-                    cartProduct.getProduct().getProductId().getValue(),
-                    cartProduct.getProduct().getProductName(),
-                    cartProduct.getProduct().getProductImage().getValue(),
-                    cartProduct.getProduct().getProductPrice().getValue()
+                    product.getProductId().getValue(),
+                    product.getProductName(),
+                    product.getProductImage().getValue(),
+                    product.getProductPrice().getValue()
             );
+        }
+
+        private static Product filterProduct(final List<Product> products, final CartProduct cartProduct) {
+            return products.stream()
+                    .filter(p -> p.getProductId().equals(cartProduct.getProductId()))
+                    .findAny()
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
         }
 
         public Long getId() {

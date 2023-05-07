@@ -41,7 +41,7 @@ public class AddCartResponse {
         }
 
         private static ProductResponse from(final CartProduct cartProduct) {
-            return new ProductResponse(cartProduct.getProduct().getProductId().getValue());
+            return new ProductResponse(cartProduct.getProductId().getValue());
         }
 
         public long getId() {

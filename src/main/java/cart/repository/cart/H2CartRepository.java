@@ -2,17 +2,13 @@ package cart.repository.cart;
 
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartProduct;
-import cart.domain.product.Product;
-import cart.domain.user.User;
 import cart.domain.user.UserId;
 import cart.entiy.cart.CartEntity;
 import cart.entiy.cart.CartEntityId;
 import cart.entiy.cart.CartProductEntity;
 import cart.entiy.user.UserEntityId;
-import cart.exception.ProductNotFoundException;
 import cart.repository.cart.dao.CartDao;
 import cart.repository.cart.dao.CartProductDao;
-import cart.repository.product.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,13 +20,10 @@ public class H2CartRepository implements CartRepository {
 
     private final CartDao cartDao;
     private final CartProductDao cartProductDao;
-    private final ProductRepository productRepository;
 
-    public H2CartRepository(final JdbcTemplate jdbcTemplate,
-            final ProductRepository productRepository) {
+    public H2CartRepository(final JdbcTemplate jdbcTemplate) {
         cartDao = new CartDao(jdbcTemplate);
         cartProductDao = new CartProductDao(jdbcTemplate);
-        this.productRepository = productRepository;
     }
 
     @Override
@@ -63,7 +56,7 @@ public class H2CartRepository implements CartRepository {
         return new CartProductEntity(
                 cartProduct.getCartProductId(),
                 cartEntityId,
-                cartProduct.getProduct().getProductId()
+                cartProduct.getProductId()
         );
     }
 
@@ -76,32 +69,11 @@ public class H2CartRepository implements CartRepository {
         return Optional.of(findCart(userId, cartEntity));
     }
 
-    private Cart findCart(final User user, final CartEntity cartEntity) {
-        final List<CartProductEntity> updatedCartProductEntities = cartProductDao.findAllByCartId(
-                cartEntity.getCartId());
-        final List<Product> products = productRepository.findAll();
-        final List<CartProduct> cartProducts = updatedCartProductEntities.stream()
-                .map(cartProductEntity -> findCartProduct(cartProductEntity, products))
-                .collect(Collectors.toList());
-        return new Cart(cartEntity.getCartId().toDomain(), user.getUserId(), cartProducts);
-    }
-
     private Cart findCart(final UserId userId, final CartEntity cartEntity) {
-        final List<CartProductEntity> updatedCartProductEntities = cartProductDao.findAllByCartId(
-                cartEntity.getCartId());
-        final List<Product> products = productRepository.findAll();
-        final List<CartProduct> cartProducts = updatedCartProductEntities.stream()
-                .map(cartProductEntity -> findCartProduct(cartProductEntity, products))
+        final List<CartProduct> updatedCartProductEntities = cartProductDao.findAllByCartId(
+                        cartEntity.getCartId()).stream()
+                .map(CartProductEntity::toDomain)
                 .collect(Collectors.toList());
-        return new Cart(cartEntity.getCartId().toDomain(), userId, cartProducts);
-    }
-
-    private CartProduct findCartProduct(final CartProductEntity cartProductEntity,
-            final List<Product> products) {
-        return products.stream()
-                .filter(p -> p.getProductId().equals(cartProductEntity.getProductEntityId().toDomain()))
-                .findAny()
-                .map(product -> new CartProduct(cartProductEntity.getCartProductEntityId().toDomain(), product))
-                .orElseThrow(() -> new ProductNotFoundException("해당 상품을 찾을 수 없습니다."));
+        return new Cart(cartEntity.getCartId().toDomain(), userId, updatedCartProductEntities);
     }
 }

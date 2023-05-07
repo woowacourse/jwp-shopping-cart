@@ -3,11 +3,14 @@ package cart.controller.cart;
 import cart.auth.info.AuthInfo;
 import cart.auth.resolver.Authentication;
 import cart.domain.cart.Cart;
+import cart.domain.product.Product;
 import cart.dto.cart.AddCartResponse;
 import cart.dto.cart.AddProductRequest;
 import cart.dto.cart.FindCartResponse;
 import cart.service.cart.CartCommandService;
 import cart.service.cart.CartQueryService;
+import cart.service.product.ProductQueryService;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartApiController {
 
     private final CartCommandService cartCommandService;
+    private final ProductQueryService productQueryService;
     private final CartQueryService cartQueryService;
 
-    public CartApiController(final CartCommandService cartCommandService, final CartQueryService cartQueryService) {
+    public CartApiController(final CartCommandService cartCommandService,
+            final ProductQueryService productQueryService,
+            final CartQueryService cartQueryService) {
         this.cartCommandService = cartCommandService;
+        this.productQueryService = productQueryService;
         this.cartQueryService = cartQueryService;
     }
 
@@ -39,7 +46,8 @@ public class CartApiController {
     @GetMapping("/carts")
     public ResponseEntity<FindCartResponse> findCart(@Authentication final AuthInfo authInfo) {
         final Cart cart = cartQueryService.findByEmail(authInfo.getEmail());
-        return ResponseEntity.ok(FindCartResponse.from(cart));
+        final List<Product> products = productQueryService.findAllByIds(cart.getCartProducts().getProductIds());
+        return ResponseEntity.ok(FindCartResponse.of(cart, products));
     }
 
     @DeleteMapping("/carts/{cartProductId}")

@@ -1,26 +1,26 @@
 package cart.domain.cart;
 
-import cart.domain.product.Product;
+import cart.domain.product.ProductId;
 
 public class CartProduct {
 
     private final CartProductId cartProductId;
-    private final Product product;
+    private final ProductId productId;
 
-    public CartProduct(final Product product) {
-        this(new CartProductId(), product);
+    public CartProduct(final ProductId productId) {
+        this(new CartProductId(), productId);
     }
 
-    public CartProduct(final CartProductId cartProductId, final Product product) {
+    public CartProduct(final CartProductId cartProductId, final ProductId productId) {
         this.cartProductId = cartProductId;
-        this.product = product;
+        this.productId = productId;
     }
 
     public CartProductId getCartProductId() {
         return cartProductId;
     }
 
-    public Product getProduct() {
-        return product;
+    public ProductId getProductId() {
+        return productId;
     }
 }

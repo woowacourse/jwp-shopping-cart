@@ -44,7 +44,7 @@ public class CartCommandService {
         final Product product = productQueryService.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다."));
 
-        cart.addProduct(product);
+        cart.addProduct(product.getProductId());
         return cartRepository.save(cart);
     }
 

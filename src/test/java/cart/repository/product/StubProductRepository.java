@@ -50,4 +50,16 @@ public class StubProductRepository implements ProductRepository {
     public void deleteById(final Long id) {
         productMap.remove(id);
     }
+
+    @Override
+    public List<Product> findAllById(final List<Long> ids) {
+        final List<Product> products = new ArrayList<>();
+        for (final Long id : ids) {
+            final Product product = productMap.get(id);
+            if (product != null) {
+                products.add(product);
+            }
+        }
+        return products;
+    }
 }

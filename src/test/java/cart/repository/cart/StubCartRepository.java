@@ -23,7 +23,8 @@ public class StubCartRepository implements CartRepository {
         final var CartProducts = cart.getCartProducts().getCartProducts();
         final ArrayList<CartProduct> cartProducts = new ArrayList<>();
         for (final CartProduct cartProduct : CartProducts) {
-            cartProducts.add(new CartProduct(new CartProductId(maxCartProductId), cartProduct.getProduct()));
+            cartProducts.add(
+                    new CartProduct(new CartProductId(maxCartProductId), cartProduct.getProductId()));
             maxCartProductId++;
         }
         maxId++;

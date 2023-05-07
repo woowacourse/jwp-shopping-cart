@@ -88,4 +88,17 @@ public class H2ProductRepository implements ProductRepository {
             throw new ProductInCartDeleteException("상품이 장바구니에 존재합니다. 장바구니에서 먼저 삭제해주세요.");
         }
     }
+
+    @Override
+    public List<Product> findAllById(final List<Long> ids) {
+        final String inParams = ids.stream()
+                .map(id -> "?")
+                .collect(Collectors.joining(","));
+        final String sql = String.format(
+                "SELECT product_id, name, image, price FROM PRODUCT WHERE product_id IN (%s)", inParams);
+        return jdbcTemplate.query(sql, productEntityRowMapper, ids.toArray())
+                .stream()
+                .map(ProductEntity::toDomain)
+                .collect(Collectors.toList());
+    }
 }

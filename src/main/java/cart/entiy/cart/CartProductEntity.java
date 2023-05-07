@@ -1,5 +1,6 @@
 package cart.entiy.cart;
 
+import cart.domain.cart.CartProduct;
 import cart.domain.cart.CartProductId;
 import cart.domain.product.ProductId;
 import cart.entiy.product.ProductEntityId;
@@ -45,5 +46,9 @@ public class CartProductEntity {
 
     public ProductEntityId getProductEntityId() {
         return productEntityId;
+    }
+
+    public CartProduct toDomain() {
+        return new CartProduct(cartProductEntityId.toDomain(), productEntityId.toDomain());
     }
 }
