@@ -3,7 +3,7 @@ package cart;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.catalog.dto.RequestProductDto;
+import cart.catalog.dto.ProductRequestDTO;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,10 +39,10 @@ public class ProductIntegrationTest {
     
     @Test
     public void create() {
-        final RequestProductDto requestProductDto = new RequestProductDto("망고", "http://mango", 1000);
+        final ProductRequestDTO productRequestDTO = new ProductRequestDTO("망고", "http://mango", 1000);
         final var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestProductDto)
+                .body(productRequestDTO)
                 .when()
                 .post("/admin/products")
                 .then()
@@ -53,10 +53,10 @@ public class ProductIntegrationTest {
     
     @Test
     public void putProduct() {
-        final RequestProductDto requestProductDto = new RequestProductDto("에코", "http://echo", 1000);
+        final ProductRequestDTO productRequestDTO = new ProductRequestDTO("에코", "http://echo", 1000);
         final var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestProductDto)
+                .body(productRequestDTO)
                 .when()
                 .put("/admin/products/1")
                 .then()
@@ -67,7 +67,7 @@ public class ProductIntegrationTest {
         System.out.println("productLiteral = " + productLiteral);
         final String name = JsonPath.with(productLiteral).getString("name");
         
-        assertThat(name).isEqualTo(requestProductDto.getName());
+        assertThat(name).isEqualTo(productRequestDTO.getName());
         assertThat(result.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
     
@@ -87,10 +87,10 @@ public class ProductIntegrationTest {
     @Test
     @DisplayName("에러 발생시 400코드 반환 테스트")
     void errorTest() {
-        final RequestProductDto requestProductDto = new RequestProductDto("333333에코3333333", "http://echo", 1000);
+        final ProductRequestDTO productRequestDTO = new ProductRequestDTO("333333에코3333333", "http://echo", 1000);
         final var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(requestProductDto)
+                .body(productRequestDTO)
                 .when()
                 .put("/admin/products/1")
                 .then()

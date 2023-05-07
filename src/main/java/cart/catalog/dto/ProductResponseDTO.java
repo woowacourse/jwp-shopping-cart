@@ -2,22 +2,22 @@ package cart.catalog.dto;
 
 import cart.catalog.domain.Product;
 
-public class ResponseProductDto {
+public class ProductResponseDTO {
     
     private final String name;
     private final String image;
     private final int price;
     private final long id;
     
-    public ResponseProductDto(final long id, final String name, final String image, final int price) {
+    public ProductResponseDTO(final long id, final String name, final String image, final int price) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
     }
     
-    public static ResponseProductDto create(final Product product) {
-        return new ResponseProductDto(product.getId(), product.getName().getValue(), product.getImage(),
+    public static ProductResponseDTO create(final Product product) {
+        return new ProductResponseDTO(product.getId(), product.getName().getValue(), product.getImage(),
                 product.getPrice().getValue());
     }
     

@@ -1,12 +1,12 @@
 package cart.catalog.dto;
 
-public class RequestProductDto {
+public class ProductRequestDTO {
     
     private final String name;
     private final String image;
     private final int price;
     
-    public RequestProductDto(final String name, final String image, final int price) {
+    public ProductRequestDTO(final String name, final String image, final int price) {
         this.name = name;
         this.image = image;
         this.price = price;

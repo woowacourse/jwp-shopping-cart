@@ -1,6 +1,6 @@
 package cart.catalog.domain;
 
-import cart.catalog.dto.RequestProductDto;
+import cart.catalog.dto.ProductRequestDTO;
 
 public class Product {
     
@@ -22,15 +22,15 @@ public class Product {
         this.id = id;
     }
     
-    public static Product create(final RequestProductDto requestProductDto) {
-        return new Product(new Name(requestProductDto.getName()), requestProductDto.getImage(), new Price(
-                requestProductDto.getPrice()));
+    public static Product create(final ProductRequestDTO productRequestDTO) {
+        return new Product(new Name(productRequestDTO.getName()), productRequestDTO.getImage(), new Price(
+                productRequestDTO.getPrice()));
     }
     
-    public Product update(final RequestProductDto requestProductDto) {
-        final Name name = new Name(requestProductDto.getName());
-        final Price price = new Price(requestProductDto.getPrice());
-        return new Product(this.id, name, requestProductDto.getImage(), price);
+    public Product update(final ProductRequestDTO productRequestDTO) {
+        final Name name = new Name(productRequestDTO.getName());
+        final Price price = new Price(productRequestDTO.getPrice());
+        return new Product(this.id, name, productRequestDTO.getImage(), price);
     }
     
     public long getId() {

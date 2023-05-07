@@ -6,7 +6,7 @@ import cart.catalog.dao.CatalogDao;
 import cart.catalog.domain.Name;
 import cart.catalog.domain.Price;
 import cart.catalog.domain.Product;
-import cart.catalog.dto.ResponseProductDto;
+import cart.catalog.dto.ProductResponseDTO;
 import cart.catalog.service.CatalogService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +55,7 @@ class CatalogServiceTest {
         final FakeCatalogDao fakeProductDao = new FakeCatalogDao();
         final CatalogService catalogService = new CatalogService(fakeProductDao);
         
-        final List<ResponseProductDto> responseDtos = catalogService.display();
+        final List<ProductResponseDTO> responseDtos = catalogService.display();
         
         assertEquals(responseDtos.get(0).getName(), "망고");
         assertEquals(responseDtos.get(0).getImage(), "http://mango");

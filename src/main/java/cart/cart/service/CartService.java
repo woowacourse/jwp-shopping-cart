@@ -4,7 +4,7 @@ import cart.cart.dao.CartDAO;
 import cart.cart.domain.Cart;
 import cart.cart.dto.CartRequestDTO;
 import cart.catalog.dao.CatalogDao;
-import cart.catalog.dto.ResponseProductDto;
+import cart.catalog.dto.ProductResponseDTO;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,12 @@ public class CartService {
         this.catalogDao = catalogDao;
     }
     
-    public List<ResponseProductDto> findUserCart(final long userId) {
+    public List<ProductResponseDTO> findUserCart(final long userId) {
         final List<Cart> carts = this.cartDAO.findUserCart(userId);
         return carts.stream()
                 .map(Cart::getProductId)
                 .map(this.catalogDao::findByID)
-                .map(ResponseProductDto::create)
+                .map(ProductResponseDTO::create)
                 .collect(Collectors.toList());
     }
     

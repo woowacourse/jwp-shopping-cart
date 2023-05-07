@@ -1,7 +1,7 @@
 package cart.cart.dto;
 
 import cart.auth.dto.UserResponseDTO;
-import cart.catalog.dto.ResponseProductDto;
+import cart.catalog.dto.ProductResponseDTO;
 
 public class CartRequestDTO {
     
@@ -17,8 +17,9 @@ public class CartRequestDTO {
         return new CartRequestDTO(userId, productId);
     }
     
-    public static CartRequestDTO from(final UserResponseDTO userResponseDTO, final ResponseProductDto responseProductDto) {
-        return new CartRequestDTO(userResponseDTO.getId(), responseProductDto.getId());
+    public static CartRequestDTO from(final UserResponseDTO userResponseDTO,
+            final ProductResponseDTO productResponseDTO) {
+        return new CartRequestDTO(userResponseDTO.getId(), productResponseDTO.getId());
     }
     
     public long getUserId() {

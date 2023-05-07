@@ -1,7 +1,7 @@
 package cart.admin.controller;
 
-import cart.catalog.dto.RequestProductDto;
-import cart.catalog.dto.ResponseProductDto;
+import cart.catalog.dto.ProductRequestDTO;
+import cart.catalog.dto.ProductResponseDTO;
 import cart.catalog.service.CatalogService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -26,21 +26,21 @@ public class AdminController {
     }
     
     @GetMapping("/products")
-    public ResponseEntity<List<ResponseProductDto>> display() {
-        final List<ResponseProductDto> items = this.catalogService.display();
+    public ResponseEntity<List<ProductResponseDTO>> display() {
+        final List<ProductResponseDTO> items = this.catalogService.display();
         return ResponseEntity.status(HttpStatus.OK).body(items);
     }
     
     @PostMapping("/products")
-    public ResponseEntity<Void> create(@RequestBody final RequestProductDto requestProductDto) {
-        this.catalogService.create(requestProductDto);
+    public ResponseEntity<Void> create(@RequestBody final ProductRequestDTO productRequestDTO) {
+        this.catalogService.create(productRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     
     @PutMapping("/products/{id}")
-    public ResponseEntity<ResponseProductDto> update(@PathVariable final long id,
-            @RequestBody final RequestProductDto requestProductDto) {
-        final ResponseProductDto updatedProduct = this.catalogService.update(id, requestProductDto);
+    public ResponseEntity<ProductResponseDTO> update(@PathVariable final long id,
+            @RequestBody final ProductRequestDTO productRequestDTO) {
+        final ProductResponseDTO updatedProduct = this.catalogService.update(id, productRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(updatedProduct);
     }
     

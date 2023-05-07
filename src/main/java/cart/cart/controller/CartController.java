@@ -7,7 +7,7 @@ import cart.auth.infrastructure.BasicAuthorizationExtractor;
 import cart.auth.service.AuthService;
 import cart.cart.dto.CartRequestDTO;
 import cart.cart.service.CartService;
-import cart.catalog.dto.ResponseProductDto;
+import cart.catalog.dto.ProductResponseDTO;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,9 +29,9 @@ public class CartController {
     }
     
     @GetMapping("/cart/items")
-    public ResponseEntity<List<ResponseProductDto>> cart(@AuthenticationPrincipal final UserInfo userInfo) {
+    public ResponseEntity<List<ProductResponseDTO>> cart(@AuthenticationPrincipal final UserInfo userInfo) {
         final UserResponseDTO userResponseDTO = this.authService.findUser(userInfo);
-        final List<ResponseProductDto> userCart = this.cartService.findUserCart(userResponseDTO.getId());
+        final List<ProductResponseDTO> userCart = this.cartService.findUserCart(userResponseDTO.getId());
         return ResponseEntity.ok().body(userCart);
     }
     
