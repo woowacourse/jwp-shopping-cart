@@ -50,7 +50,7 @@ class ProductApiControllerUnitTest {
         valueByFields.put("image", "치킨 주소");
 
         // expect
-        mockMvc.perform(post("/admin/product")
+        mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(valueByFields)))
                 .andExpect(status().isCreated());
@@ -65,7 +65,7 @@ class ProductApiControllerUnitTest {
         valueByFields.put("image", "치킨 주소");
 
         // expect
-        mockMvc.perform(put("/admin/product/{id}", 1)
+        mockMvc.perform(put("/products/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(valueByFields)))
                 .andExpect(status().isOk());
@@ -73,7 +73,7 @@ class ProductApiControllerUnitTest {
 
     @Test
     void 상품을_삭제한다() throws Exception {
-        mockMvc.perform(delete("/admin/product/{id}", "1"))
+        mockMvc.perform(delete("/products/{id}", "1"))
                 .andExpect(status().isOk());
     }
 }

@@ -10,7 +10,6 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/admin")
 public class ProductApiController {
 
     private final ProductService productService;
@@ -19,19 +18,19 @@ public class ProductApiController {
         this.productService = productService;
     }
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final RequestCreateProductDto requestCreateProductDto) {
         productService.insert(requestCreateProductDto);
-        return ResponseEntity.created(URI.create("/product")).build();
+        return ResponseEntity.created(URI.create("/products")).build();
     }
 
-    @PutMapping("/product/{id}")
+    @PutMapping("/products/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable("id") Long id, @RequestBody @Valid final RequestUpdateProductDto requestUpdateProductDto) {
         productService.update(id, requestUpdateProductDto);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
         productService.delete(id);
         return ResponseEntity.ok().build();
