@@ -1,7 +1,10 @@
 package cart.controller.rest;
 
+import cart.domain.cart.Item;
+import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.persistence.CartDao;
+import cart.persistence.MembersDao;
 import cart.persistence.ProductsDao;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,9 +73,15 @@ class CartsIntegrationTest {
     void deleteItemTest() {
         ProductsDao productsDao = applicationContext.getBean("h2ProductsDao", ProductsDao.class);
         Long createdProductId = productsDao.create(new Product("테스트", 1000, "http://testtest"));
+        Product product = productsDao.findById(createdProductId);
+
+        MembersDao membersDao = applicationContext.getBean("h2MembersDao", MembersDao.class);
+        Member member = membersDao.findById(MEMBER_ID);
+
+        Item item = new Item(member, product);
 
         CartDao cartDao = applicationContext.getBean("h2CartDao", CartDao.class);
-        Long createdItemId = cartDao.createItem(MEMBER_ID, createdProductId);
+        Long createdItemId = cartDao.saveItem(item);
 
         RestAssured.given()
                 .auth().preemptive().basic(EMAIL, PASSWORD)

@@ -1,6 +1,8 @@
 package cart.persistence;
 
 import cart.domain.cart.Item;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -19,14 +21,13 @@ public class H2CartDao implements CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public Long createItem(Long memberId, Long productId) {
+    public Long saveItem(Item item) {
         String sql = "INSERT INTO CART(member_id, product_id) VALUES(?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setLong(1, memberId);
-            ps.setLong(2, productId);
+            ps.setLong(1, item.getMemberId());
+            ps.setLong(2, item.getProductId());
             return ps;
         }, keyHolder);
 
@@ -34,22 +35,26 @@ public class H2CartDao implements CartDao {
     }
 
     @Override
-    public Item findItemById(Long id) {
-        String sql = "SELECT id, member_id, product_id FROM CART WHERE id=?";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new Item(
-                resultSet.getLong("id"),
-                resultSet.getLong("member_id"),
-                resultSet.getLong("product_id")
-        ), id);
-    }
-
-    @Override
     public List<Item> findAllItemsByMemberId(Long memberId) {
-        String sql = "SELECT id, member_id, product_id FROM CART WHERE member_id=?";
+        String sql = "SELECT * " +
+                "FROM (SELECT * FROM CART WHERE member_id=?) AS FILTERED_CART " +
+                "JOIN MEMBER ON FILTERED_CART.member_id = MEMBER.id " +
+                "JOIN PRODUCT ON FILTERED_CART.product_id = PRODUCT.id";
+
+
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Item(
                 resultSet.getLong("id"),
-                resultSet.getLong("member_id"),
-                resultSet.getLong("product_id")
+                new Member(
+                        resultSet.getLong("MEMBER.id"),
+                        resultSet.getString("email"),
+                        resultSet.getString("password")
+                ),
+                new Product(
+                        resultSet.getLong("Product.id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt("price"),
+                        resultSet.getString("image_url")
+                )
         ), memberId);
     }
 

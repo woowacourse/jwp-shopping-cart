@@ -1,15 +1,17 @@
 package cart.domain.cart;
 
+import cart.domain.member.Member;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
 
-    private final Long memberId;
+    private final Member member;
     private final List<Item> items;
 
-    public Cart(Long memberId, List<Item> items) {
-        this.memberId = memberId;
+    public Cart(Member member, List<Item> items) {
+        this.member = member;
         this.items = new ArrayList<>();
 
         if (items.size() > 0) {
@@ -21,8 +23,8 @@ public class Cart {
         return items.contains(item);
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
     public List<Item> getItems() {

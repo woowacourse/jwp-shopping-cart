@@ -7,9 +7,7 @@ import java.util.List;
 
 public interface CartDao {
 
-    Long createItem(Long memberId, Long productId);
-
-    Item findItemById(Long id);
+    Long saveItem(Item item);
 
     List<Item> findAllItemsByMemberId(Long memberId);
 

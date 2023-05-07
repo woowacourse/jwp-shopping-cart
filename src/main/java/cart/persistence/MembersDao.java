@@ -11,4 +11,6 @@ public interface MembersDao {
     boolean isMemberCertified(String email, String password);
 
     Long findIdByEmail(String email);
+
+    Member findById(Long memberId);
 }

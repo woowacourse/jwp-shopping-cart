@@ -1,5 +1,7 @@
 package cart.domain.product;
 
+import java.util.Objects;
+
 public class Price {
 
     public static final int MAXIMUM_PRICE = 1_000_000;
@@ -20,5 +22,18 @@ public class Price {
 
     public int getAmount() {
         return amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Price price = (Price) o;
+        return amount == price.amount;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(amount);
     }
 }

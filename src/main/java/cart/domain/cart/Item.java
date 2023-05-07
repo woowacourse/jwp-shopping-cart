@@ -1,33 +1,44 @@
 package cart.domain.cart;
 
+import cart.domain.member.Member;
+import cart.domain.product.Product;
+
 import java.util.Objects;
 
 public class Item {
 
     private final Long id;
-    private final Long memberId;
-    private final Long productId;
+    private final Member member;
+    private final Product product;
 
-    public Item(Long memberId, Long productId) {
-        this(null, memberId, productId);
+    public Item(Member member, Product product) {
+        this(null, member, product);
     }
 
-    public Item(Long id, Long memberId, Long productId) {
+    public Item(Long id, Member member, Product product) {
         this.id = id;
-        this.memberId = memberId;
-        this.productId = productId;
+        this.member = member;
+        this.product = product;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
+    }
+
+    public long getMemberId() {
+        return member.getId();
+    }
+
+    public long getProductId() {
+        return product.getId();
     }
 
     @Override
@@ -35,11 +46,12 @@ public class Item {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
-        return Objects.equals(memberId, item.memberId) && Objects.equals(productId, item.productId);
+        return Objects.equals(member, item.getMember())
+                && Objects.equals(product, item.getProduct());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(memberId, productId);
+        return Objects.hash(member, product);
     }
 }

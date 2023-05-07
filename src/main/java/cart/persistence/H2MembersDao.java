@@ -17,8 +17,9 @@ public class H2MembersDao implements MembersDao {
 
     @Override
     public List<Member> findAll() {
-        String sql = "SELECT email, password FROM MEMBER";
+        String sql = "SELECT id, email, password FROM MEMBER";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Member(
+                resultSet.getLong("id"),
                 resultSet.getString("email"),
                 resultSet.getString("password")
         ));
@@ -37,6 +38,16 @@ public class H2MembersDao implements MembersDao {
     public Long findIdByEmail(String email) {
         String sql = "SELECT id FROM MEMBER WHERE email=?";
         return jdbcTemplate.queryForObject(sql, Long.class, email);
+    }
+
+    @Override
+    public Member findById(Long memberId) {
+        String sql = "SELECT id, email, password FROM MEMBER WHERE id=?";
+        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new Member(
+                resultSet.getLong("id"),
+                resultSet.getString("email"),
+                resultSet.getString("password")
+        ), memberId);
     }
 
 }
