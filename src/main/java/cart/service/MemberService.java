@@ -18,8 +18,6 @@ public class MemberService {
     public List<MemberResponse> findAll() {
         List<MemberEntity> members = memberDao.findAll();
 
-        System.out.println();
-
         return members.stream()
                 .map(memberEntity -> new MemberResponse(
                         memberEntity.getEmail(),

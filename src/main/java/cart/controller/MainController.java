@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller()
+@Controller
 @RequestMapping("/")
 public class MainController {
     private final ProductService productService;
@@ -21,7 +21,7 @@ public class MainController {
         this.memberService = memberService;
     }
 
-    @GetMapping()
+    @GetMapping
     public String home(Model model) {
         List<ProductResponse> products = productService.findAll();
         model.addAttribute("products", products);

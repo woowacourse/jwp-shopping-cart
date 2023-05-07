@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller()
+@Controller
 @RequestMapping("/products")
 public class ProductController {
     private final ProductService productService;
@@ -27,7 +27,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<ProductResponse>> productList() {
         List<ProductResponse> response = productService.findAll();
 
@@ -36,7 +36,7 @@ public class ProductController {
                 .body(response);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Map<String, Integer>> productAdd(
             @Validated @RequestBody ProductRequest productRequest) {
         int productId = productService.save(productRequest);

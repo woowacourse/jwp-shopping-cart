@@ -20,10 +20,6 @@ public class ErrorResponse {
         return new ErrorResponse(errorCode.getCode(), errorCode.getMessage(), errorCode.getDetail());
     }
 
-    public static ErrorResponse of(ErrorCode errorCode, String message) {
-        return new ErrorResponse(errorCode.getCode(), errorCode.getMessage(), message);
-    }
-
     public String getCode() {
         return code;
     }

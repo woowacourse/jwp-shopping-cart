@@ -34,7 +34,7 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleServerException(Exception e) {
-        ErrorResponse response = ErrorResponse.of(ErrorCode.UNKNOWN, e.getMessage());
+        ErrorResponse response = ErrorResponse.from(ErrorCode.UNKNOWN);
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
