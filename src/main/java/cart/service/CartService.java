@@ -81,12 +81,9 @@ public class CartService {
         validateAffectedRowsCount(affectedRows);
     }
 
-    public List<ResponseProductDto> findCartProductsByMember(final AuthInfo authInfo) {
+    public List<ProductEntity> findCartProductsByMember(final AuthInfo authInfo) {
         final Long memberId = memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
-        final List<ProductEntity> productEntities = cartDao.findProductsByMemberId(memberId);
-        return productEntities.stream()
-                .map(ResponseProductDto::transferEntityToDto)
-                .collect(Collectors.toList());
+        return cartDao.findProductsByMemberId(memberId);
     }
 
     public void addProductToCart(final Long memberId, final Long productId) {

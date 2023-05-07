@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.dao.entity.MemberEntity;
 import cart.dto.response.ResponseMemberDto;
 import cart.dto.response.ResponseProductDto;
 import cart.service.CartService;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ViewController {
@@ -37,7 +39,10 @@ public class ViewController {
 
     @GetMapping("/settings")
     public String getMembers(final Model model) {
-        final List<ResponseMemberDto> responseMemberDtos = memberService.findAll();
+        final List<MemberEntity> memberEntities = memberService.findAll();
+        final List<ResponseMemberDto> responseMemberDtos = memberEntities.stream()
+                .map(ResponseMemberDto::transferEntityToDto)
+                .collect(Collectors.toList());
         model.addAttribute("members", responseMemberDtos);
         return "settings";
     }

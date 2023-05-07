@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.dao.entity.ProductEntity;
 import cart.dto.auth.AuthInfo;
 import cart.dto.response.ResponseProductDto;
 import cart.service.CartService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class CartApiController {
@@ -25,7 +27,10 @@ public class CartApiController {
 
     @GetMapping("/carts")
     public ResponseEntity<List<ResponseProductDto>> getProducts(@AuthenticationPrincipal final AuthInfo authInfo) {
-        final List<ResponseProductDto> cartProductsByMember = cartService.findCartProductsByMember(authInfo);
+        final List<ProductEntity> productEntities = cartService.findCartProductsByMember(authInfo);
+        final List<ResponseProductDto> cartProductsByMember = productEntities.stream()
+                .map(ResponseProductDto::transferEntityToDto)
+                .collect(Collectors.toList());
         return ResponseEntity.ok().body(cartProductsByMember);
     }
 
