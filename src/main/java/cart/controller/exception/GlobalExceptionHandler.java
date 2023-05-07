@@ -1,5 +1,6 @@
 package cart.controller.exception;
 
+import cart.ui.AuthorizationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.naming.AuthenticationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,11 @@ public class GlobalExceptionHandler {
         });
 
         return ResponseEntity.badRequest().body(errorMessageByFields);
+    }
+
+    @ExceptionHandler({AuthenticationException.class, AuthorizationException.class})
+    public ResponseEntity<String> handleAuthenticationException(final AuthenticationException exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

@@ -5,11 +5,11 @@ import cart.dto.response.ResponseProductDto;
 import cart.infrastructure.BasicAuthorizationExtractor;
 import cart.service.CartService;
 import cart.service.MemberService;
+import cart.ui.AuthenticationPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -26,23 +26,20 @@ public class CartApiController {
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<ResponseProductDto>> getProducts(final HttpServletRequest request) {
-        final AuthInfo authIfo = basicAuthorizationExtractor.extract(request);
-        final List<ResponseProductDto> cartProductsByMember = cartService.findCartProductsByMember(authIfo);
+    public ResponseEntity<List<ResponseProductDto>> getProducts(@AuthenticationPrincipal final AuthInfo authInfo) {
+        final List<ResponseProductDto> cartProductsByMember = cartService.findCartProductsByMember(authInfo);
         return ResponseEntity.ok().body(cartProductsByMember);
     }
 
-    @PutMapping("/cart/{id}")
-    public ResponseEntity<Void> addProductToCart(@PathVariable final Long id, final HttpServletRequest request) {
-        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+    @PutMapping("/carts/{id}")
+    public ResponseEntity<Void> addProductToCart(@PathVariable final Long id, @AuthenticationPrincipal final AuthInfo authInfo) {
         final Long memberId = memberService.findIdByAuthInfo(authInfo);
         cartService.addProductToCart(memberId, id);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/cart/{id}")
-    public ResponseEntity<Void> deleteProductFromCart(@PathVariable final Long id, final HttpServletRequest request) {
-        final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+    @DeleteMapping("/carts/{id}")
+    public ResponseEntity<Void> deleteProductFromCart(@PathVariable final Long id, @AuthenticationPrincipal final AuthInfo authInfo) {
         final Long memberId = memberService.findIdByAuthInfo(authInfo);
         cartService.deleteProductFromCart(memberId, id);
         return ResponseEntity.ok().build();

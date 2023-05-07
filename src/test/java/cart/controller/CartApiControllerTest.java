@@ -57,7 +57,7 @@ class CartApiControllerTest {
         ExtractableResponse<Response> response = given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when().get("/carts")
-                .then()
+                .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
 
@@ -73,8 +73,8 @@ class CartApiControllerTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().put("/cart/" + productId)
-                .then()
+                .when().put("/carts/" + productId)
+                .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -88,7 +88,7 @@ class CartApiControllerTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().put("/cart/" + productId)
+                .when().put("/carts/" + productId)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();
@@ -104,7 +104,7 @@ class CartApiControllerTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().delete("/cart/" + productId)
+                .when().delete("/carts/" + productId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
@@ -121,7 +121,7 @@ class CartApiControllerTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().delete("/cart/" + productId)
+                .when().delete("/carts/" + productId)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();
