@@ -11,25 +11,29 @@ public class Product {
     private final Image image;
     private final Price price;
 
-    public Product(final String productName, final String productImage, final int productPrice) {
-        this(null, productName, productImage, productPrice);
-    }
-
-    public Product(final Long productId, final Product product) {
-        this(productId, product.productName, product.image, product.price);
-    }
-
-    public Product(final Long productId, final String productName, final String productImage, final int productPrice) {
-        this(productId, productName, new Image(productImage), new Price(productPrice));
-    }
-
-    public Product(final Long productId, final String productName, final Image image,
+    public Product(final ProductId productId, final String productName, final Image image,
             final Price price) {
         validateName(productName);
-        this.productId = new ProductId(productId);
+        this.productId = productId;
         this.productName = productName;
         this.image = image;
         this.price = price;
+    }
+
+    public Product(final String productName, final String productImage, final int productPrice) {
+        this(new ProductId(), productName, productImage, productPrice);
+    }
+
+    public Product(final Long productId, final Product other) {
+        this(new ProductId(productId), other.productName, other.image, other.price);
+    }
+
+    public Product(final Long productId, final String productName, final String productImage, final int productPrice) {
+        this(new ProductId(productId), productName, new Image(productImage), new Price(productPrice));
+    }
+
+    public Product(final ProductId id, final String name, final String image, final int price) {
+        this(id, name, new Image(image), new Price(price));
     }
 
     private void validateName(final String productName) {

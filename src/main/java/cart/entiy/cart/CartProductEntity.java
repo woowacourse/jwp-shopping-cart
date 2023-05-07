@@ -1,54 +1,46 @@
 package cart.entiy.cart;
 
+import cart.domain.cart.CartId;
 import cart.domain.cart.CartProduct;
 import cart.domain.cart.CartProductId;
 import cart.domain.product.ProductId;
-import cart.entiy.product.ProductEntityId;
 
 public class CartProductEntity {
 
-    private final CartProductEntityId cartProductEntityId;
-    private final CartEntityId cartEntityId;
-    private final ProductEntityId productEntityId;
-
-    public CartProductEntity(final CartProductEntityId cartProductEntityId,
-            final CartEntityId cartEntityId,
-            final ProductEntityId productEntityId) {
-        this.cartProductEntityId = cartProductEntityId;
-        this.cartEntityId = cartEntityId;
-        this.productEntityId = productEntityId;
-    }
+    private final CartProductId cartProductId;
+    private final CartId cartId;
+    private final ProductId productId;
 
     public CartProductEntity(final CartProductId cartProductId,
-            final CartEntityId cartEntityId,
+            final CartId cartId,
             final ProductId productId) {
-        this(CartProductEntityId.from(cartProductId),
-                cartEntityId,
-                ProductEntityId.from(productId));
+        this.cartProductId = cartProductId;
+        this.cartId = cartId;
+        this.productId = productId;
     }
 
-    public CartProductEntity(final Long cartProductEntityId,
-            final Long cartEntityId,
-            final Long productEntityId) {
-        this(new CartProductEntityId(cartProductEntityId),
-                new CartEntityId(cartEntityId),
-                new ProductEntityId(productEntityId));
+    public CartProductEntity(final Long cartProductId,
+            final Long cartId,
+            final Long productId) {
+        this(new CartProductId(cartProductId),
+                new CartId(cartId),
+                new ProductId(productId));
     }
 
 
-    public CartEntityId getCartEntityId() {
-        return cartEntityId;
+    public CartId getCartEntityId() {
+        return cartId;
     }
 
-    public CartProductEntityId getCartProductEntityId() {
-        return cartProductEntityId;
+    public CartProductId getCartProductEntityId() {
+        return cartProductId;
     }
 
-    public ProductEntityId getProductEntityId() {
-        return productEntityId;
+    public ProductId getProductEntityId() {
+        return productId;
     }
 
     public CartProduct toDomain() {
-        return new CartProduct(cartProductEntityId.toDomain(), productEntityId.toDomain());
+        return new CartProduct(cartProductId, productId);
     }
 }

@@ -1,12 +1,11 @@
 package cart.repository.cart;
 
 import cart.domain.cart.Cart;
+import cart.domain.cart.CartId;
 import cart.domain.cart.CartProduct;
 import cart.domain.user.UserId;
 import cart.entiy.cart.CartEntity;
-import cart.entiy.cart.CartEntityId;
 import cart.entiy.cart.CartProductEntity;
-import cart.entiy.user.UserEntityId;
 import cart.repository.cart.dao.CartDao;
 import cart.repository.cart.dao.CartProductDao;
 import java.util.List;
@@ -46,23 +45,23 @@ public class H2CartRepository implements CartRepository {
     }
 
     private List<CartProductEntity> toCartProductEntities(final List<CartProduct> cartProducts,
-            final CartEntityId cartEntityId) {
+            final CartId cartEntityId) {
         return cartProducts.stream()
                 .map(cartProduct -> toCartProductEntity(cartEntityId, cartProduct))
                 .collect(Collectors.toList());
     }
 
-    private CartProductEntity toCartProductEntity(final CartEntityId cartEntityId, final CartProduct cartProduct) {
+    private CartProductEntity toCartProductEntity(final CartId cartId, final CartProduct cartProduct) {
         return new CartProductEntity(
                 cartProduct.getCartProductId(),
-                cartEntityId,
+                cartId,
                 cartProduct.getProductId()
         );
     }
 
     @Override
     public Optional<Cart> findByUserId(final UserId userId) {
-        final CartEntity cartEntity = cartDao.findByUserId(UserEntityId.from(userId));
+        final CartEntity cartEntity = cartDao.findByUserId(userId);
         if (cartEntity == null) {
             return Optional.empty();
         }
@@ -74,6 +73,6 @@ public class H2CartRepository implements CartRepository {
                         cartEntity.getCartId()).stream()
                 .map(CartProductEntity::toDomain)
                 .collect(Collectors.toList());
-        return new Cart(cartEntity.getCartId().toDomain(), userId, updatedCartProductEntities);
+        return new Cart(cartEntity.getCartId(), userId, updatedCartProductEntities);
     }
 }

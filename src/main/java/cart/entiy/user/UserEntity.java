@@ -1,26 +1,28 @@
 package cart.entiy.user;
 
 import cart.domain.user.User;
+import cart.domain.user.UserId;
 
 public class UserEntity {
 
-    private final UserEntityId userId;
+    private final UserId userId;
     private final String email;
     private final String password;
 
-    public UserEntity(final Long userId, final UserEntity userEntity) {
-        this(new UserEntityId(userId), userEntity.email, userEntity.password);
-    }
-
-    public UserEntity(final UserEntityId userId, final String email, final String password) {
+    public UserEntity(final UserId userId, final String email, final String password) {
         this.userId = userId;
         this.email = email;
         this.password = password;
     }
 
+    public UserEntity(final Long userId, final UserEntity userEntity) {
+        this(new UserId(userId), userEntity.email, userEntity.password);
+    }
+
+
     public static UserEntity from(final User user) {
         return new UserEntity(
-                new UserEntityId(user.getUserId()),
+                user.getUserId(),
                 user.getEmail().getValue(),
                 user.getPassword().getValue());
     }
@@ -29,7 +31,7 @@ public class UserEntity {
         return new User(userId.getValue(), email, password);
     }
 
-    public UserEntityId getUserId() {
+    public UserId getUserId() {
         return userId;
     }
 

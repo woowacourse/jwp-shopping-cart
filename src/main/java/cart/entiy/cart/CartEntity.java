@@ -1,38 +1,36 @@
 package cart.entiy.cart;
 
 import cart.domain.cart.Cart;
-import cart.entiy.user.UserEntityId;
+import cart.domain.cart.CartId;
+import cart.domain.user.UserId;
 
 public class CartEntity {
 
-    private final CartEntityId cartId;
-    private final UserEntityId userEntity;
+    private final CartId cartId;
+    private final UserId userId;
 
-    public CartEntity(final CartEntityId cartId, final UserEntityId userEntity) {
+    public CartEntity(final CartId cartId, final UserId userId) {
         this.cartId = cartId;
-        this.userEntity = userEntity;
+        this.userId = userId;
     }
 
-    public CartEntity(final Long cartEntityId, final Long userEntityId) {
-        this(new CartEntityId(cartEntityId), new UserEntityId(userEntityId));
+    public CartEntity(final Long cartId, final Long userId) {
+        this(new CartId(cartId), new UserId(userId));
     }
 
-    public CartEntity(final Long cartEntityId, final CartEntity other) {
-        this(new CartEntityId(cartEntityId), other.userEntity);
+    public CartEntity(final Long cartId, final CartEntity other) {
+        this(new CartId(cartId), other.userId);
     }
 
     public static CartEntity from(final Cart cart) {
-        return new CartEntity(
-                CartEntityId.from(cart.getCartId()),
-                UserEntityId.from(cart.getUserId())
-        );
+        return new CartEntity(cart.getCartId(), cart.getUserId());
     }
 
-    public CartEntityId getCartId() {
+    public CartId getCartId() {
         return cartId;
     }
 
-    public UserEntityId getUserEntityId() {
-        return userEntity;
+    public UserId getUserId() {
+        return userId;
     }
 }

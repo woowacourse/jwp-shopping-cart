@@ -3,10 +3,10 @@ package cart.repository.cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import cart.domain.cart.CartId;
 import cart.domain.product.ProductFixture;
 import cart.domain.user.User;
 import cart.entiy.cart.CartEntity;
-import cart.entiy.cart.CartEntityId;
 import cart.entiy.cart.CartProductEntity;
 import cart.repository.product.H2ProductRepository;
 import cart.repository.product.ProductRepository;
@@ -53,7 +53,7 @@ class CartProductDaoTest {
         final CartProductEntity cartProductEntity = new CartProductEntity(null, cartId, productId);
         cartProductDao.insertAll(List.of(cartProductEntity));
 
-        final List<CartProductEntity> result = cartProductDao.findAllByCartId(new CartEntityId(cartId));
+        final List<CartProductEntity> result = cartProductDao.findAllByCartId(new CartId(cartId));
 
         assertAll(
                 () -> assertThat(result).hasSize(1),
@@ -72,7 +72,7 @@ class CartProductDaoTest {
 
         @Test
         void 조회_테스트() {
-            final List<CartProductEntity> result = cartProductDao.findAllByCartId(new CartEntityId(cartId));
+            final List<CartProductEntity> result = cartProductDao.findAllByCartId(new CartId(cartId));
 
             assertAll(
                     () -> assertThat(result).hasSize(1),
@@ -84,9 +84,9 @@ class CartProductDaoTest {
 
         @Test
         void 제거_테스트() {
-            cartProductDao.deleteAllByCartId(new CartEntityId(cartId));
+            cartProductDao.deleteAllByCartId(new CartId(cartId));
 
-            final List<CartProductEntity> result = cartProductDao.findAllByCartId(new CartEntityId(cartId));
+            final List<CartProductEntity> result = cartProductDao.findAllByCartId(new CartId(cartId));
 
             assertThat(result).isEmpty();
         }

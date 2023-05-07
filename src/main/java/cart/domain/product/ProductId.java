@@ -10,6 +10,10 @@ public class ProductId {
         this.value = value;
     }
 
+    public ProductId() {
+        this(null);
+    }
+
     public Long getValue() {
         return value;
     }

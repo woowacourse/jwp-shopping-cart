@@ -1,8 +1,8 @@
 package cart.repository.user;
 
 import cart.domain.user.User;
+import cart.domain.user.UserId;
 import cart.entiy.user.UserEntity;
-import cart.entiy.user.UserEntityId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 public class H2UserRepository implements UserRepository {
 
     private final RowMapper<UserEntity> userEntityRowMapper = (rs, rowNum) -> new UserEntity(
-            new UserEntityId(rs.getLong("member_id")),
+            new UserId(rs.getLong("member_id")),
             rs.getString("email"),
             rs.getString("password"));
 

@@ -1,6 +1,6 @@
 package cart.repository.cart.dao;
 
-import cart.entiy.cart.CartEntityId;
+import cart.domain.cart.CartId;
 import cart.entiy.cart.CartProductEntity;
 import java.util.List;
 import java.util.Map;
@@ -36,11 +36,11 @@ public class CartProductDao {
         simpleJdbcInsert.executeBatch(parameters);
     }
 
-    public void deleteAllByCartId(final CartEntityId cartId) {
+    public void deleteAllByCartId(final CartId cartId) {
         jdbcTemplate.update("DELETE FROM cart_product WHERE cart_id = ?", cartId.getValue());
     }
 
-    public List<CartProductEntity> findAllByCartId(final CartEntityId cartId) {
+    public List<CartProductEntity> findAllByCartId(final CartId cartId) {
         return jdbcTemplate.query("SELECT cart_product_id,cart_id,product_id FROM cart_product WHERE cart_id = ?",
                 rowMapper,
                 cartId.getValue()
