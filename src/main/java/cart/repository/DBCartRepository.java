@@ -38,19 +38,16 @@ public class DBCartRepository implements CartRepository {
 
     @Override
     public List<CartEntity> findByUserId(Long userId) {
-        String sql = "SELECT cart.id, member.id, product.id " +
-                "FROM cart " +
-                "JOIN member ON cart.member_id = member.id " +
-                "JOIN product ON cart.product_id = product.id " +
-                "WHERE member.id = ?";
+        String sql = "SELECT id, member_id, product_id " +
+                "FROM cart WHERE member_id = ?";
         return jdbcTemplate.query(sql, cartEntityMaker(), userId);
     }
 
     private static RowMapper<CartEntity> cartEntityMaker() {
         return (rs, rowNum) -> {
-            Long id = rs.getLong("cart.id");
-            Long memberId = rs.getLong("member.id");
-            Long productId = rs.getLong("product.id");
+            Long id = rs.getLong("id");
+            Long memberId = rs.getLong("member_id");
+            Long productId = rs.getLong("product_id");
 
             return new CartEntity(id, memberId, productId);
         };
