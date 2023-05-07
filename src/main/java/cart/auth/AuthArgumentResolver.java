@@ -1,4 +1,4 @@
-package cart.config;
+package cart.auth;
 
 import cart.auth.infrastructure.BasicAuthorizationExtractor;
 import org.springframework.core.MethodParameter;
