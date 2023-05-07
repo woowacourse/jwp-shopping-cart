@@ -14,6 +14,8 @@ import java.util.List;
 @Service
 public class CartService {
 
+    private static final int DEFAULT_COUNT = 1;
+
     private final ProductDao productDao;
     private final CartDao cartDao;
     private final CartRepository cartRepository;
@@ -30,7 +32,7 @@ public class CartService {
             throw new IllegalStateException("제품 아이디가 없습니다.");
         }
 
-        cartDao.create(userResponse.getId(), productId);
+        cartDao.create(userResponse.getId(), productId, DEFAULT_COUNT);
     }
 
     public List<CartItemResponse> findCartItemsByUser(UserResponse userResponse) {

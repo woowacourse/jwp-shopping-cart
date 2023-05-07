@@ -46,7 +46,7 @@ class CartControllerTest {
 
         userDao.create(new UserEntity(null, email, password));
         productDao.create(new ProductEntity(null, "product1", "test", 1000));
-        cartDao.create(1L, 1L);
+        cartDao.create(1L, 1L, 1);
     }
 
     @DisplayName("장바구니 페이지 접속")

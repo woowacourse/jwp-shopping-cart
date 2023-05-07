@@ -40,8 +40,9 @@ class CartDaoTest {
     public void create() {
         Long newUserId = 2L;
         Long newProductId = 2L;
+        Integer newCount = 1;
 
-        cartDao.create(newUserId, newProductId);
+        cartDao.create(newUserId, newProductId, newCount);
 
         int count = JdbcTestUtils.countRowsInTableWhere(
                 jdbcTemplate, "CART", "USER_ID = " + newUserId + " AND PRODUCT_ID = " + newProductId

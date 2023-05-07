@@ -9,17 +9,15 @@ import java.util.List;
 @Repository
 public class CartDao {
 
-    private static final int DEFAULT_COUNT = 1;
-
     private final JdbcTemplate jdbcTemplate;
 
     public CartDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void create(Long userId, Long productId) {
+    public void create(Long userId, Long productId, Integer count) {
         String sql = "INSERT INTO CART (USER_ID, PRODUCT_ID, COUNT) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, userId, productId, DEFAULT_COUNT);
+        jdbcTemplate.update(sql, userId, productId, count);
     }
 
     public List<CartItemEntity> findByUserId(Long id) {

@@ -43,6 +43,7 @@ public class CartServiceTest {
         // given
         UserResponse userResponse = new UserResponse(1L, "user@test.com", "password");
         Long productId = 1L;
+        Integer count = 1;
 
         when(productDao.existById(productId)).thenReturn(true);
 
@@ -50,7 +51,7 @@ public class CartServiceTest {
         cartService.addCart(userResponse, productId);
 
         // then
-        verify(cartDao, times(1)).create(userResponse.getId(), productId);
+        verify(cartDao, times(1)).create(userResponse.getId(), productId, count);
     }
 
     @DisplayName("ProductId가 유효하지 않은 경우 카트아이템 추가 테스트")
@@ -59,6 +60,7 @@ public class CartServiceTest {
         // given
         UserResponse userResponse = new UserResponse(1L, "user@test.com", "password");
         Long productId = 1L;
+        Integer count = 1;
 
         when(productDao.existById(productId)).thenReturn(false);
 
@@ -67,7 +69,7 @@ public class CartServiceTest {
                 () -> cartService.addCart(userResponse, productId));
         assertEquals("제품 아이디가 없습니다.", exception.getMessage());
 
-        verify(cartDao, never()).create(userResponse.getId(), productId);
+        verify(cartDao, never()).create(userResponse.getId(), productId, count);
     }
 
     @DisplayName("유저가 가진 장바구니 아이템 조회")
