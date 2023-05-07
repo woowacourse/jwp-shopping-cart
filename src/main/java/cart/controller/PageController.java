@@ -41,4 +41,9 @@ public class PageController {
         return "settings";
     }
 
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
+    }
+
 }
