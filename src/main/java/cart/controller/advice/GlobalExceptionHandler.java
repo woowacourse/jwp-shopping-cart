@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.advice;
 
 import cart.exception.dto.ExceptionResponse;
 import lombok.RequiredArgsConstructor;

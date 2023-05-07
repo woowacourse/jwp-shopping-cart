@@ -1,6 +1,6 @@
 package cart.config;
 
-import cart.controller.GlobalExceptionHandler;
+import cart.controller.advice.GlobalExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;

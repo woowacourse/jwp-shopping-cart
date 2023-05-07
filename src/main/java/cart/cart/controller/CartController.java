@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.cart.controller;
 
 import cart.auth.AuthSubject;
 import cart.cart.dto.CartProductResponse;
