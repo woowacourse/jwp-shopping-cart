@@ -1,11 +1,11 @@
 package cart.service;
 
-import cart.domain.Product;
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
-import cart.dto.ProductsResponseDto;
+import cart.domain.product.Product;
+import cart.dto.api.request.ProductCreateRequest;
+import cart.dto.api.request.ProductEditRequest;
+import cart.dto.api.response.ProductsReadResponse;
 import cart.exception.ProductNotFoundException;
-import cart.repository.ProductRepository;
+import cart.repository.product.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,22 +20,22 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductsResponseDto findAll() {
+    public ProductsReadResponse findAll() {
         List<Product> products = productRepository.findAll();
-        return ProductsResponseDto.from(products);
+        return ProductsReadResponse.from(products);
     }
 
     @Transactional
-    public void createProduct(final ProductCreateRequestDto productCreateRequestDto) {
-        Product product = Product.from(productCreateRequestDto.getName(), productCreateRequestDto.getImgUrl(), productCreateRequestDto.getPrice());
+    public void createProduct(final ProductCreateRequest productCreateRequest) {
+        Product product = Product.from(productCreateRequest.getName(), productCreateRequest.getImgUrl(), productCreateRequest.getPrice());
 
         productRepository.add(product);
     }
 
     @Transactional
-    public void editProduct(final Long id, final ProductEditRequestDto productEditRequestDto) {
+    public void editProduct(final Long id, final ProductEditRequest productEditRequest) {
         Product product = findProductById(id);
-        product.edit(productEditRequestDto.getName(), productEditRequestDto.getImgUrl(), productEditRequestDto.getPrice());
+        product.edit(productEditRequest.getName(), productEditRequest.getImgUrl(), productEditRequest.getPrice());
 
         productRepository.update(product);
     }

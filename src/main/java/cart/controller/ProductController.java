@@ -1,13 +1,12 @@
 package cart.controller;
 
-import cart.dto.ApiResponse;
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
-import cart.dto.ProductsResponseDto;
+import cart.dto.api.request.ProductCreateRequest;
+import cart.dto.api.request.ProductEditRequest;
+import cart.dto.api.response.ApiResponse;
+import cart.dto.api.response.ProductsReadResponse;
 import cart.service.ProductService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,29 +29,29 @@ public class ProductController {
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
-    public ApiResponse<ProductsResponseDto> findProducts() {
+    public ApiResponse<ProductsReadResponse> findProducts() {
         return ApiResponse.of(HttpStatus.OK, productService.findAll());
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ApiResponse createProduct(@RequestBody @Valid final ProductCreateRequestDto productCreateRequestDto) {
-        productService.createProduct(productCreateRequestDto);
+    public ApiResponse<Void> createProduct(@RequestBody @Valid final ProductCreateRequest productCreateRequest) {
+        productService.createProduct(productCreateRequest);
 
         return ApiResponse.from(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ApiResponse editProduct(@PathVariable final Long id, @RequestBody @Valid final ProductEditRequestDto productEditRequestDto) {
-        productService.editProduct(id, productEditRequestDto);
+    public ApiResponse<Void> editProduct(@PathVariable final Long id, @RequestBody @Valid final ProductEditRequest productEditRequest) {
+        productService.editProduct(id, productEditRequest);
 
         return ApiResponse.from(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ApiResponse deleteProduct(@PathVariable final Long id) {
+    public ApiResponse<Void> deleteProduct(@PathVariable final Long id) {
         productService.deleteById(id);
 
         return ApiResponse.from(HttpStatus.OK);

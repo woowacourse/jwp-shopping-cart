@@ -2,6 +2,10 @@
 
 ---
 
+## API 명세서
+
+[바로가기](docs/API.md)
+
 ## 기능 구현 목록
 
 - [x] 상품 목록 페이지 연동
@@ -13,91 +17,73 @@
     - [x] 상품 목록 조회 API
     - [x] 상품 수정 API
     - [x] 상품 삭제 API
+      - [x] 해당 상품을 참조하는 장바구니 아이템이 있을 경우 장바구니 아이템을 먼저 지워주기.
+- [x] 사용자 관리 페이지
+  - [x] 모든 사용자 정보 조회 기능
+  - [x] 사용자 설정 페이지 연동
+- [x] 장바구니 기능 API
+  - [x] 사용자 정보를 Header의 `Authorization` 필드에서 얻는다.
+    - 인증 방식은 Basic 인증이다.
+    - credentials: `email:password` 형식이다. base64로 디코딩하여 사용한다.
+  - [x] 장바구니 상품 추가 API
+    - 상품 아이디로 장바구니 아이템을 추가할 수 있다.
+  - [x] 장바구니 상품 제거 API
+    - 추가된 장바구니 아이템 id로 삭제할 수 있다. 
+    - [x] 장바구니에 없는 아이템일 경우 예외가 발생한다.
+  - [x] 장바구니 목록 조회 API
 - [x] 관리자 도구 페이지 연동
 - [x] 프론트 뷰와 연결
+
 
 ## 도메인
 
 - [x] 상품 도메인 모델 정의하기
-    - [x] 상품의 가격은 음수가 될 수 없다.
-    - [x] 이름은 공백이 될 수 없다.
-    - [x] 상품은 식별자를 가진다.
-      - [x] 식별자가 같으면 동일한 상품이다. 
+  - [x] 상품의 가격은 음수가 될 수 없다.
+  - [x] 이름은 공백이 될 수 없다.
+- [x] 사용자 모델 정의하기
+  - [x] 유저의 식별자는 이메일이다.
+  - [x] email, password 를 갖는다.
+  - [x] **장바구니를 갖는다.**
+- [x] 장바구니 모델 정의하기
+  - [x] 장바구니 아이템을 가질 수 있다.
+  - [x] 같은 상품을 여러 개 가질 수 있다.
+- [x] 장바구니 아이템 모델 정의하기
+  - [x] 식별자를 가지고 있어야한다.
+  - [x] 상품을 가지고 있어야한다.
 
-## 상품 기본 정보
+## 데이터베이스
 
-- 상품 ID
-- 상품 이름
-- 상품 이미지
-- 상품 가격
+### DDL
 
----
-
-# API 스펙
-
-# 상품 조회 GET`/products`
-
-## 요청
-
-## 응답
-200
-
-```json
-{
-  "products": [
-    {
-      "id": 1,
-      "name": "피자",
-      "imgUrl": "img",
-      "price": 10000
-    },
-    {
-      "id": 2,
-      "name": "치킨",
-      "imgUrl": "img",
-      "price": 10000
-    }
-  ]
-}
+#### product: 상품 정보 저장 테이블
+```sql
+CREATE TABLE IF NOT EXISTS products
+(
+  id      BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name    VARCHAR(45) NOT NULL,
+  price   INT         NOT NULL,
+  img_url CLOB(10K) NOT NULL
+);
 ```
 
-# 상품 추가  POST`/products`
+#### user: 회원 정보 저장 테이블
 
-## 요청
-
-```json
-{
-  "name": "이름",
-  "price": 10000,
-  "imgUrl": "dfowf"
-}
+```sql
+CREATE TABLE IF NOT EXISTS users(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
+  );
 ```
 
-## 응답
-
-201
-
-# 상품 수정 PUT `/products/{id}`
-
-## 요청
-
-```json
-{
-  "name": "이름",
-  "price": 10000,
-  "imgUrl": "dfowf"
-}
+#### cart_product: 장바구니 정보 저장 테이블
+```sql
+CREATE TABLE IF NOT EXISTS cart_products
+(
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  cart_no BIGINT NOT NULL,
+  product_id BIGINT NOT NULL,
+  FOREIGN KEY (cart_no) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
 ```
-
-## 응답
-
-200
-
-# 상품 삭제 DELETE `/products/{id}`
-
-## 요청
-
-
-## 응답
-
-200

@@ -7,11 +7,11 @@ import static cart.factory.ProductRequestDtoFactory.createProductEditRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Product;
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
-import cart.dto.ProductsResponseDto;
-import cart.repository.ProductRepository;
+import cart.domain.product.Product;
+import cart.dto.api.request.ProductCreateRequest;
+import cart.dto.api.request.ProductEditRequest;
+import cart.dto.api.response.ProductsReadResponse;
+import cart.repository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class ProductServiceTest {
         productRepository.add(otherProduct);
 
         // when
-        ProductsResponseDto result = productService.findAll();
+        ProductsReadResponse result = productService.findAll();
 
         // then
         assertAll(
@@ -52,13 +52,13 @@ public class ProductServiceTest {
     @DisplayName("상품을 저장한다.")
     void crete_product_success() {
         // given
-        ProductCreateRequestDto req = createProductCreateRequest();
+        ProductCreateRequest req = createProductCreateRequest();
 
         // when
         productService.createProduct(req);
 
         // then
-        ProductsResponseDto result = productService.findAll();
+        ProductsReadResponse result = productService.findAll();
         assertAll(
                 () -> assertThat(result.getProducts().get(0).getName()).isEqualTo(req.getName()),
                 () -> assertThat(result.getProducts().get(0).getPrice()).isEqualTo(req.getPrice()),
@@ -72,7 +72,7 @@ public class ProductServiceTest {
         // given
         Product product = createProduct();
         productRepository.add(product);
-        ProductEditRequestDto req = createProductEditRequest();
+        ProductEditRequest req = createProductEditRequest();
 
         // when
         productService.editProduct(product.getId(), req);
@@ -97,7 +97,7 @@ public class ProductServiceTest {
         productService.deleteById(id);
 
         // then
-        ProductsResponseDto result = productService.findAll();
+        ProductsReadResponse result = productService.findAll();
         assertThat(result.getProducts().size()).isEqualTo(0);
     }
 }

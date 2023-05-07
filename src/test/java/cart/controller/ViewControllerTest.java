@@ -7,11 +7,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dto.ProductsResponseDto;
+import cart.domain.user.User;
+import cart.dto.api.response.ProductsReadResponse;
+import cart.service.AuthService;
 import cart.service.ProductService;
+import cart.service.UserService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,14 +28,20 @@ class ViewControllerTest {
     @MockBean
     ProductService productService;
 
+    @MockBean
+    UserService userService;
+
     @Autowired
     MockMvc mockMvc;
+
+    @MockBean
+    AuthService authService;
 
     @Test
     @DisplayName("Home을 반환한다.")
     void returns_home_view() throws Exception {
         // given
-        ProductsResponseDto expected = ProductsResponseDto.from(List.of(createProduct()));
+        ProductsReadResponse expected = ProductsReadResponse.from(List.of(createProduct()));
         given(productService.findAll()).willReturn(expected);
 
         // when & then
@@ -45,7 +55,7 @@ class ViewControllerTest {
     @DisplayName("Admin을 반환한다.")
     void returns_admin_view() throws Exception {
         // given
-        ProductsResponseDto expected = ProductsResponseDto.from(List.of(createProduct()));
+        ProductsReadResponse expected = ProductsReadResponse.from(List.of(createProduct()));
         given(productService.findAll()).willReturn(expected);
 
         // when & then
@@ -58,6 +68,13 @@ class ViewControllerTest {
     @Test
     @DisplayName("Settings를 반환한다.")
     void returns_settings_view() throws Exception {
+        // given
+        User user = new User("rosie@google.com", "password");
+        User otherUser = new User("poz@wooteco.com", "1234");
+        List<User> users = List.of(user, otherUser);
+        BDDMockito.given(userService.findAllUser())
+                        .willReturn(users);
+
         // when & then
         mockMvc.perform(get("/settings"))
                 .andExpect(status().isOk())

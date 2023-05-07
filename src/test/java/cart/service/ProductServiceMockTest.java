@@ -11,13 +11,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import cart.domain.Product;
-import cart.dto.ProductCreateRequestDto;
-import cart.dto.ProductEditRequestDto;
-import cart.dto.ProductResponseDto;
-import cart.dto.ProductsResponseDto;
+import cart.domain.product.Product;
+import cart.dto.ProductDto;
+import cart.dto.api.request.ProductCreateRequest;
+import cart.dto.api.request.ProductEditRequest;
+import cart.dto.api.response.ProductsReadResponse;
 import cart.exception.ProductNotFoundException;
-import cart.repository.ProductRepository;
+import cart.repository.product.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,7 +49,7 @@ class ProductServiceMockTest {
         given(productRepository.findAll()).willReturn(givenProducts);
 
         // when
-        ProductsResponseDto result = productService.findAll();
+        ProductsReadResponse result = productService.findAll();
 
         // then
         List<Long> givenProductIds = givenProducts.stream()
@@ -57,7 +57,7 @@ class ProductServiceMockTest {
                 .collect(Collectors.toList());
 
         List<Long> resultIds = result.getProducts().stream()
-                .map(ProductResponseDto::getId)
+                .map(ProductDto::getId)
                 .collect(Collectors.toList());
 
         assertAll(
@@ -70,7 +70,7 @@ class ProductServiceMockTest {
     @DisplayName("상품을 추가한다.")
     void create_product_success() {
         // given
-        ProductCreateRequestDto req = createProductCreateRequest();
+        ProductCreateRequest req = createProductCreateRequest();
 
         // when
         productService.createProduct(req);
@@ -87,7 +87,7 @@ class ProductServiceMockTest {
         Product product = Product.from(id, "치킨", "imgUrl", 1000);
         given(productRepository.findById(id)).willReturn(Optional.of(product));
 
-        ProductEditRequestDto req = createProductEditRequest();
+        ProductEditRequest req = createProductEditRequest();
         // when
         productService.editProduct(id, req);
 
