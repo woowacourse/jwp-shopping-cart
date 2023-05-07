@@ -7,6 +7,7 @@ import cart.domain.cart.usecase.FindAllProductsInCartUseCase;
 import cart.domain.product.service.dto.ProductResponseDto;
 import cart.domain.user.CartUser;
 import cart.domain.user.CartUserRepository;
+import cart.web.exception.NoSuchDataExistException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,8 @@ public class FindAllProductsInCartService implements FindAllProductsInCartUseCas
 
     @Override
     public List<ProductResponseDto> findAllProductsInCart(final AuthorizedCartUserDto userDto) {
-        final CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
+        final CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(NoSuchDataExistException::new);
         final Cart cartByCartUser = cartRepository.findCartByCartUser(cartUser);
 
         return cartByCartUser.getProducts()

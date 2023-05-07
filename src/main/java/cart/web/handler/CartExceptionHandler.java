@@ -1,8 +1,8 @@
 package cart.web.handler;
 
-import cart.domain.user.exception.VerifyUserException;
-import cart.web.config.auth.exception.IllegalCredentialException;
-import java.util.NoSuchElementException;
+import cart.web.exception.IllegalAuthorizationPrefixException;
+import cart.web.exception.NoSuchDataExistException;
+import cart.web.exception.VerifyUserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,12 +11,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestControllerAdvice
 public class CartExceptionHandler {
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> handleIllegalResourceAccess() {
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body("존재하지 않는 자원입니다.");
-    }
 
     @ExceptionHandler
     public ResponseEntity<String> handleMethodArgumentTypeMismatchException(
@@ -28,17 +22,26 @@ public class CartExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<String> handleNoSuchDataExistException(
+            final NoSuchDataExistException exception
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler
     public ResponseEntity<String> handleIllegalArgumentRequest(final IllegalArgumentException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
 
-    @ExceptionHandler({VerifyUserException.class, IllegalCredentialException.class})
-    public ResponseEntity<String> handleLoginException() {
+    @ExceptionHandler({VerifyUserException.class, IllegalAuthorizationPrefixException.class})
+    public ResponseEntity<String> handleAuthorizationException(final RuntimeException exception) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body("유효하지 않은 인증 정보 입니다.");
+                .body(exception.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

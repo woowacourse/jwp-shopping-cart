@@ -2,8 +2,9 @@ package cart.dao.product;
 
 import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
+import cart.web.exception.NoSuchDataExistException;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
@@ -60,17 +61,17 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Product findById(final Long productId) {
+    public Optional<Product> findById(final Long productId) {
         final ProductEntity productEntity = productDao.findById(productId);
 
-        return productEntity.toProduct();
+        return Optional.of(productEntity.toProduct());
     }
 
     private void validateExistProduct(final Long id) {
         final int count = productDao.countById(id);
 
         if (count < 1) {
-            throw new NoSuchElementException();
+            throw new NoSuchDataExistException();
         }
     }
 }

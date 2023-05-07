@@ -10,9 +10,9 @@ import cart.domain.cart.Cart;
 import cart.domain.cart.CartRepository;
 import cart.domain.product.Product;
 import cart.domain.user.CartUser;
+import cart.web.exception.NoSuchDataExistException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
@@ -95,7 +95,7 @@ public class CartRepositoryImpl implements CartRepository {
 
     private void validateModification(final int updateCount) {
         if (updateCount < 1) {
-            throw new NoSuchElementException();
+            throw new NoSuchDataExistException();
         }
     }
 }

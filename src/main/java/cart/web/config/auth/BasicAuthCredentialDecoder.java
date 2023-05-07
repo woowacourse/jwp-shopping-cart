@@ -1,7 +1,7 @@
 package cart.web.config.auth;
 
-import cart.web.config.auth.exception.IllegalCredentialException;
 import cart.web.dto.request.AuthorizedUserRequest;
+import cart.web.exception.IllegalAuthorizationPrefixException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +25,6 @@ public class BasicAuthCredentialDecoder implements AuthCredentialDecoder<Authori
             return new AuthorizedUserRequest(email, password);
         }
 
-        throw new IllegalCredentialException();
+        throw new IllegalAuthorizationPrefixException("인증 타입의 스킴이 유효하지 않습니다.");
     }
 }

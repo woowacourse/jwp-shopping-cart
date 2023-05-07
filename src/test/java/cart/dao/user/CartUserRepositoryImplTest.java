@@ -44,7 +44,7 @@ class CartUserRepositoryImplTest {
                 + "values ('a@a.com', 'password1'),\n"
                 + "       ('b@b.com', 'password2');");
 
-        final CartUser user = cartUserRepository.findByEmail(findTargetEmail);
+        final CartUser user = cartUserRepository.findByEmail(findTargetEmail).get();
 
         assertThat(user).isNotNull();
         assertThat(user.getUserEmail()).isEqualTo(findTargetEmail);
@@ -61,7 +61,7 @@ class CartUserRepositoryImplTest {
 
         cartUserRepository.save(cartUser);
 
-        final CartUser user = cartUserRepository.findByEmail(email);
+        final CartUser user = cartUserRepository.findByEmail(email).get();
 
         assertThat(user).isNotNull();
         assertThat(user.getUserEmail()).isEqualTo(email);

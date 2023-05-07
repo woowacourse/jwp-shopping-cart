@@ -7,6 +7,7 @@ import cart.domain.product.Product;
 import cart.domain.product.ProductRepository;
 import cart.domain.user.CartUser;
 import cart.domain.user.CartUserRepository;
+import cart.web.exception.NoSuchDataExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +28,10 @@ public class SaveOneProductInCartService implements SaveOneProductInCartUseCase 
 
     @Override
     public void addSingleProductInCart(final AuthorizedCartUserDto userDto, final Long productId) {
-        final CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail());
-        final Product product = productRepository.findById(productId);
+        final CartUser cartUser = cartUserRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(NoSuchDataExistException::new);
+        final Product product = productRepository.findById(productId)
+                .orElseThrow(NoSuchDataExistException::new);
 
         cartRepository.addProductInCart(cartUser, product);
     }

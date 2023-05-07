@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import cart.domain.user.CartUser;
 import cart.domain.user.CartUserRepository;
 import cart.domain.user.UserEmail;
-import cart.domain.user.exception.VerifyUserException;
+import cart.web.exception.VerifyUserException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,10 +4,8 @@ import cart.domain.user.CartUser;
 import cart.domain.user.CartUserRepository;
 import cart.domain.user.UserEmail;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.function.Supplier;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,10 +18,10 @@ public class CartUserRepositoryImpl implements CartUserRepository {
     }
 
     @Override
-    public CartUser findByEmail(final String email) {
-        final CartUserEntity cartUserEntity = validateIsNotEmptyResult(() -> cartUserDao.findByEmail(email));
+    public Optional<CartUser> findByEmail(final String email) {
+        final CartUserEntity cartUserEntity = cartUserDao.findByEmail(email);
 
-        return toCartUser(cartUserEntity);
+        return Optional.of(toCartUser(cartUserEntity));
     }
 
     @Override
@@ -50,13 +48,5 @@ public class CartUserRepositoryImpl implements CartUserRepository {
                 UserEmail.from(cartUserEntity.getEmail()),
                 cartUserEntity.getCartPassword()
         );
-    }
-
-    private <T> T validateIsNotEmptyResult(final Supplier<T> findQuery) {
-        try {
-            return findQuery.get();
-        } catch (final EmptyResultDataAccessException e) {
-            throw new NoSuchElementException();
-        }
     }
 }

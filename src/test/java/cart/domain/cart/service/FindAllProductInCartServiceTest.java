@@ -59,6 +59,6 @@ class FindAllProductInCartServiceTest {
 
     private Product saveProductAndGet(final Product product) {
         final Long savedId = productRepository.save(product);
-        return productRepository.findById(savedId);
+        return productRepository.findById(savedId).get();
     }
 }
