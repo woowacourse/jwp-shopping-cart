@@ -17,7 +17,7 @@ import cart.dto.ProductRequest;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+class ProductControllerTest {
 
     @LocalServerPort
     int port;
@@ -52,7 +52,7 @@ class AdminControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productRequest)
-            .when().post("/admin/products")
+            .when().post("/products")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value());
     }
@@ -65,7 +65,7 @@ class AdminControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productRequest)
-            .when().post("/admin/products")
+            .when().post("/products")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -78,7 +78,7 @@ class AdminControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productRequest)
-            .when().put("/admin/products/1")
+            .when().put("/products/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -91,7 +91,7 @@ class AdminControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productRequest)
-            .when().put("/admin/products/1")
+            .when().put("/products/1")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -100,7 +100,7 @@ class AdminControllerTest {
     @DisplayName("상품을 삭제한다.")
     void deleteProduct() {
         RestAssured.given().log().all()
-            .when().delete("/admin/products/1")
+            .when().delete("/products/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }

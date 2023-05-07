@@ -1,62 +1,49 @@
 package cart.controller;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
 import cart.service.JwpCartService;
 
-@Controller
-public class AdminController {
+@RequestMapping("/products")
+@RestController
+public class ProductController {
 
     private final JwpCartService jwpCartService;
 
-    public AdminController(JwpCartService jwpCartService) {
+    public ProductController(JwpCartService jwpCartService) {
         this.jwpCartService = jwpCartService;
     }
 
-    @GetMapping("/admin")
-    public String admin(Model model) {
-        List<ProductResponse> all = jwpCartService.findAllProducts();
-        model.addAttribute("products", all);
-        return "admin";
-    }
-
-    @PostMapping("/admin/products")
-    @ResponseBody
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequest productRequest) {
         jwpCartService.addProduct(productRequest);
-        return ResponseEntity.created(URI.create("/admin/products")).build();
+        return ResponseEntity.created(URI.create("/products")).build();
     }
 
-    @PutMapping("/admin/products/{id}")
-    @ResponseBody
-    public ResponseEntity<Void> updateProduct(@PathVariable("id") Long id,
+    @PutMapping("{id}")
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id,
         @RequestBody @Valid ProductRequest productRequest) {
         jwpCartService.updateProductById(productRequest, id);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/admin/products/{id}")
-    @ResponseBody
-    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         jwpCartService.deleteProductById(id);
         return ResponseEntity.ok().build();
     }
