@@ -64,6 +64,7 @@ public class UserDaoTest {
     @Test
     void selectByEmail() {
         assertThat(userDao.selectBy(EMAIL_0CHIL))
+                .get()
                 .extracting("email", "password")
                 .containsExactly(
                         EMAIL_0CHIL, PASSWORD_0CHIL

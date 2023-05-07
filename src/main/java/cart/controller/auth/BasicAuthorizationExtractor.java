@@ -1,4 +1,4 @@
-package cart.infra;
+package cart.controller.auth;
 
 import javax.servlet.http.HttpServletRequest;
 

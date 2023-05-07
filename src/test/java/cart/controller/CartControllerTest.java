@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,11 +48,11 @@ class CartControllerTest {
     @BeforeEach
     void setUp() {
         given(userDao.selectBy(anyString()))
-                .willThrow(new EmptyResultDataAccessException(1));
+                .willReturn(Optional.empty());
         given(userDao.selectBy(eq(EMAIL)))
-                .willReturn(new UserDto(USER_ID, EMAIL, PASSWORD));
+                .willReturn(Optional.of(new UserDto(USER_ID, EMAIL, PASSWORD)));
         given(userDao.selectBy(eq(OTHER_EMAIL)))
-                .willReturn(new UserDto(OTHER_USER_ID, OTHER_EMAIL, PASSWORD));
+                .willReturn(Optional.of(new UserDto(OTHER_USER_ID, OTHER_EMAIL, PASSWORD)));
 
         given(cartService.getCartItemsOf(any()))
                 .willReturn(Collections.emptyList());

@@ -9,9 +9,9 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import cart.controller.auth.dto.AuthInfo;
+import cart.controller.auth.exception.InvalidAuthenticationException;
 import cart.dao.UserDao;
 import cart.dao.dto.UserDto;
-import cart.infra.BasicAuthorizationExtractor;
 
 public class AuthorizedUserIdArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -31,7 +31,9 @@ public class AuthorizedUserIdArgumentResolver implements HandlerMethodArgumentRe
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         AuthInfo authInfo = BasicAuthorizationExtractor.extract(request);
-        UserDto userDto = userDao.selectBy(authInfo.getEmail());
-        return userDto.getId();
+
+        return userDao.selectBy(authInfo.getEmail())
+                .map(UserDto::getId)
+                .orElseThrow(InvalidAuthenticationException::new);
     }
 }

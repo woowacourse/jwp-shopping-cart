@@ -5,17 +5,14 @@ import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import cart.controller.auth.dto.AuthInfo;
-import cart.controller.auth.exception.AuthenticateFailException;
-import cart.controller.auth.exception.EmptyAuthenticationException;
+import cart.controller.auth.exception.IllegalAuthenticationException;
 import cart.controller.auth.exception.InvalidAuthenticationException;
 import cart.dao.UserDao;
 import cart.dao.dto.UserDto;
-import cart.infra.BasicAuthorizationExtractor;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
@@ -32,31 +29,28 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         validateHas(authInfo);
         validateHasEmailAndPasswordIn(authInfo);
 
-        try {
-            final UserDto userDto = userDao.selectBy(authInfo.getEmail());
-            validatePasswordMatches(authInfo, userDto);
-        } catch (EmptyResultDataAccessException exception) {
-            throw new InvalidAuthenticationException();
-        }
+        UserDto userDto = userDao.selectBy(authInfo.getEmail())
+                .orElseThrow(InvalidAuthenticationException::new);
+        validatePasswordMatches(authInfo, userDto);
 
         return true;
     }
 
     private void validateHas(AuthInfo authInfo) {
         if (Objects.isNull(authInfo)) {
-            throw new EmptyAuthenticationException();
+            throw new IllegalAuthenticationException();
         }
     }
 
     private void validateHasEmailAndPasswordIn(AuthInfo authInfo) {
         if (!StringUtils.hasLength(authInfo.getEmail()) || !StringUtils.hasLength(authInfo.getPassword())) {
-            throw new InvalidAuthenticationException();
+            throw new IllegalAuthenticationException();
         }
     }
 
     private void validatePasswordMatches(AuthInfo authInfo, UserDto userDto) {
         if (!Objects.equals(authInfo.getPassword(), userDto.getPassword())) {
-            throw new AuthenticateFailException();
+            throw new InvalidAuthenticationException();
         }
     }
 }

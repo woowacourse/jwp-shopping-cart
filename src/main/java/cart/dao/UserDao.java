@@ -1,7 +1,10 @@
 package cart.dao;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -9,7 +12,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import cart.dao.dto.UserDto;
-import cart.domain.User;
 
 @Repository
 public class UserDao {
@@ -58,16 +60,27 @@ public class UserDao {
         );
     }
 
-    public UserDto selectBy(String email) {
-        String sql = "SELECT id, email, password FROM users WHERE email = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (rs, rowNum) -> new UserDto(
-                        rs.getInt("id"),
-                        rs.getString("email"),
-                        rs.getString("password")
-                ),
-                email
-        );
+    public Optional<UserDto> selectBy(String email) {
+        return handleDataAccessExceptionOf(() -> {
+            String sql = "SELECT id, email, password FROM users WHERE email = ?";
+
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    (rs, rowNum) -> new UserDto(
+                            rs.getInt("id"),
+                            rs.getString("email"),
+                            rs.getString("password")
+                    ),
+                    email
+            );
+        });
+    }
+
+    private <T> Optional<T> handleDataAccessExceptionOf(Supplier<T> supplier) {
+        try {
+            return Optional.ofNullable(supplier.get());
+        } catch (DataAccessException exception) {
+            return Optional.empty();
+        }
     }
 }
