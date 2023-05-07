@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.dto.cart.UserDto;
 import cart.entity.MemberEntity;
+import cart.exception.AuthorizationException;
 import cart.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,6 @@ public class AuthService {
             return UserDto.fromMemberEntity(nullableEntity.get());
         }
 
-        throw new IllegalStateException("회원을 찾을 수 없습니다.");
+        throw new AuthorizationException("회원을 찾을 수 없습니다.");
     }
 }
