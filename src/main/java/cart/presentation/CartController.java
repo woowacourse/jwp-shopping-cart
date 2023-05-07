@@ -1,20 +1,21 @@
 package cart.presentation;
 
+import cart.auth.AuthService;
+import cart.auth.BasicAuthorizationExtractor;
+import cart.auth.dto.AuthInfo;
 import cart.business.CartProductService;
 import cart.business.CartService;
 import cart.entity.Product;
-import cart.presentation.dto.CartProductRequest;
-import cart.presentation.dto.CartRequest;
-import cart.presentation.dto.CartResponse;
 import cart.presentation.dto.ProductResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.naming.AuthenticationException;
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,34 +25,36 @@ public class CartController {
 
     private final CartProductService cartProductService;
     private final CartService cartService;
+    private BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
+    private AuthService authService;
 
-    public CartController(CartProductService cartProductService, CartService cartService) {
+    public CartController(CartProductService cartProductService, CartService cartService, AuthService authService) {
         this.cartProductService = cartProductService;
         this.cartService = cartService;
+        this.authService = authService;
     }
 
-    @PostMapping(path = "/cart")
-    public ResponseEntity<Integer> createCart(@RequestBody CartRequest cartRequest) {
-        return ResponseEntity.created(URI.create("/carts"))
-                .body(cartService.create(cartRequest));
+    // 인증안에 이미 header로 memberId 혹은 email(중복 없으니까)을 주지 않을까? 이것만 알면 cart의 id를 알 필요 없을 것 같은데... 흠 ㅠ...ㅠㅜ....
+    @PostMapping(path = "/cart/products/{product_id}")
+    public ResponseEntity<Integer> insertProductInCart(HttpServletRequest request,
+                                                       @PathVariable(value = "product_id") Integer productId) throws AuthenticationException {
+        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+        String email = authInfo.getEmail();
+        String password = authInfo.getPassword();
+        Integer memberId = cartService.findMemberByEmail(email).get().getId();
+
+        if (authService.checkInvalidLogin(email, password)) {
+            throw new AuthenticationException("유효하지 않은 로그인 요청입니다.");
+        }
+
+        return ResponseEntity.created(URI.create("/cart/products/" + productId))
+                .body(cartProductService.create(productId, memberId));
     }
 
-    @PostMapping(path = "/cart/products/{id}")
-    public ResponseEntity<Integer> insertProductInCart(@RequestBody CartProductRequest cartProductRequest) {
-        return ResponseEntity.created(URI.create("/cart/product"))
-                .body(cartProductService.create(cartProductRequest));
-    }
-
-    @GetMapping(path = "/cart/{id}")
-    public ResponseEntity<CartResponse> readProductsByMemberId(@PathVariable Integer memberId) {
-        CartResponse cartResponse = new CartResponse(memberId, memberId,
-                cartService.findProductsByMemberId(memberId));
-
-        return ResponseEntity.ok(cartResponse);
-    }
-
-    @GetMapping(path = "/cart/products/{id}")
-    public ResponseEntity<List<ProductResponse>> readProducts(@PathVariable Integer memberId) {
+    @GetMapping(path = "/cart/products")
+    public ResponseEntity<List<ProductResponse>> readProducts(HttpServletRequest request) throws AuthenticationException {
+        String email = checkValidLogin(request);
+        Integer memberId = cartService.findMemberByEmail(email).get().getId();
         List<Product> products = cartService.findProductsByMemberId(memberId);
 
         List<ProductResponse> response = products.stream()
@@ -64,8 +67,23 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping(path = "/cart/product/{id}")
-    public ResponseEntity<Integer> delete(@PathVariable Integer productId) {
+    @DeleteMapping(path = "/cart/products/{product_id}")
+    public ResponseEntity<Integer> delete(HttpServletRequest request,
+                                          @PathVariable(value = "product_id") Integer productId) throws AuthenticationException {
+        checkValidLogin(request);
+
         return ResponseEntity.ok().body(cartProductService.delete(productId));
+    }
+
+    private String checkValidLogin(HttpServletRequest request) throws AuthenticationException {
+        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+        String email = authInfo.getEmail();
+        String password = authInfo.getPassword();
+
+        if (authService.checkInvalidLogin(email, password)) {
+            throw new AuthenticationException("유효하지 않은 로그인 요청입니다.");
+        }
+
+        return email;
     }
 }

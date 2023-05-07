@@ -1,14 +1,11 @@
 package cart.persistence;
 
-import cart.entity.Cart;
+import cart.entity.Member;
 import cart.entity.Product;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,44 +18,21 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Integer insert(Cart cart) {
-        String sql = "INSERT INTO CART (member_id) VALUES(?)";
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setInt(1, cart.getMemberId());
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().intValue();
-    }
-
-    public List<Cart> findAll() {
-        String sql = "SELECT * FROM CART";
-
-        return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> {
-                    int id = resultSet.getInt("id");
-                    int memberId = resultSet.getInt("member_id");
-
-                    return new Cart(id, memberId);
-                });
-    }
-
     public List<Product> findAllProductsByMemberId(Integer memberId) {
-        //todo: 쿼리문 질문
-        String query = "SELECT p.* FROM Cart c JOIN Product p ON c.product_id = p.id WHERE c.member_id = ?";
-        return jdbcTemplate.query(query, new Object[]{memberId}, new BeanPropertyRowMapper<>(Product.class));
-    }
+        String query = "SELECT p.* " +
+                "FROM CART c " +
+                "JOIN CART_PRODUCT cp ON c.id = cp.cart_id " +
+                "JOIN PRODUCT p ON p.id = cp.product_id " +
+                "WHERE c.member_id = ?";
 
-    public void findSameCartExist(Cart cart) {
-        final var query = "SELECT COUNT(*) FROM CART WHERE member_id = ?";
-        int count = jdbcTemplate.queryForObject(query, Integer.class, cart.getMemberId());
+        return jdbcTemplate.query(query, (resultSet, rowNum) -> {
+            int id = resultSet.getInt("id");
+            String name = resultSet.getString("name");
+            String url = resultSet.getString("url");
+            int price = resultSet.getInt("price");
 
-        if (count > 0) {
-            throw new IllegalArgumentException("장바구니가 이미 존재합니다.");
-        }
+            return new Product(id, name, url, price);
+        }, memberId);
     }
 
     public Integer remove(Integer memberId) {
@@ -66,10 +40,20 @@ public class CartDao {
         return jdbcTemplate.update(query, memberId);
     }
 
-    public Optional<Cart> findByMemberId(Integer memberId) {
-        final var query = "SELECT * FROM CART WHERE member_id = ?";
-        Cart cart = jdbcTemplate.queryForObject(query, Cart.class, memberId);
+    public Optional<Member> findByEmail(String email) {
+        final var query = "SELECT * FROM MEMBER WHERE email = ?";
+        Member member = jdbcTemplate.queryForObject(query, getMemberRowMapper(), email);
 
-        return Optional.of(cart);
+        return Optional.of(member);
+    }
+
+    private RowMapper<Member> getMemberRowMapper() {
+        return (resultSet, rowNum) -> {
+            int id = resultSet.getInt("id");
+            String mail = resultSet.getString("email");
+            String password = resultSet.getString("password");
+
+            return new Member(id, mail, password);
+        };
     }
 }

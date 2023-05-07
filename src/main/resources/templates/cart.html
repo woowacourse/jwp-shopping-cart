@@ -35,7 +35,7 @@
         }
 
         axios.request({
-            url: '/cart',
+            url: '/cart/products',
             headers: {
                 'Authorization': `Basic ${credentials}`
             }
@@ -48,9 +48,9 @@
                 productElement += `
                         <div class="cart-item">
                           <div class="cart-item-info">
-                            <img src="" alt=""/> <!-- 상품 이미지 -->
-                            <div class="cart-item-name" th:text="${cartItem.name}"></div> <!-- 상품 이름 -->
-                            <div class="cart-item-price" th:text="${cartItem.price}></div> <!-- 상품 가격 -->
+                            <img src="${cartItem.url}" alt=""/> <!-- 상품 이미지 -->
+                            <div class="cart-item-name">${cartItem.name}</div> <!-- 상품 이름 -->
+                            <div class="cart-item-price">${cartItem.price}</div><!-- 상품 가격 -->
                             <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
                           </div>
                         </div>
@@ -63,6 +63,11 @@
         });
 
     });
+
+
+
+
+
 
 
 </script>

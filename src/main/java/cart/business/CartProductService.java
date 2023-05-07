@@ -2,7 +2,6 @@ package cart.business;
 
 import cart.entity.CartProduct;
 import cart.persistence.CartProductDao;
-import cart.presentation.dto.CartProductRequest;
 import cart.presentation.dto.CartProductResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +18,8 @@ public class CartProductService {
     }
 
     @Transactional
-    public Integer create(CartProductRequest request) {
-
-        CartProduct cartProduct = makeCartProductFromRequest(request);
+    public Integer create(Integer productId, Integer memberId) {
+        CartProduct cartProduct = makeCartProductFromRequest(productId, memberId);
 
         return cartProductDao.insert(cartProduct);
     }
@@ -36,8 +34,8 @@ public class CartProductService {
         return cartProductDao.remove(id);
     }
 
-    private CartProduct makeCartProductFromRequest(CartProductRequest request) {
-        return new CartProduct(null, request.getProductId(), request.getCartId());
+    private CartProduct makeCartProductFromRequest(Integer productId, Integer memberId) {
+        return new CartProduct(null, productId, memberId);
     }
 
     private CartProduct makeCartProductFromResponse(CartProductResponse response) {
