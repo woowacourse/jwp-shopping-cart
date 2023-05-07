@@ -7,7 +7,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Base64;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BasicAuthExtractorTest {
 
@@ -72,7 +75,7 @@ class BasicAuthExtractorTest {
         BasicAuthExtractor extractor = new BasicAuthExtractor();
 
         //then
-        assertThrows(IllegalArgumentException.class, ()->extractor.extract(request));
+        assertThrows(IllegalArgumentException.class, () -> extractor.extract(request));
     }
 
     @DisplayName("헤더의 값이 null인 경우")
@@ -82,6 +85,6 @@ class BasicAuthExtractorTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
 
         //when, then
-        assertThrows(IllegalArgumentException.class, ()->request.addHeader("Authorization", null));
+        assertThrows(IllegalArgumentException.class, () -> request.addHeader("Authorization", null));
     }
 }
