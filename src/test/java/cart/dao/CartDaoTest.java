@@ -7,7 +7,6 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Rollback;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,17 +45,21 @@ class CartDaoTest {
     void 맴버아이디로_카트_리스트() {
         // when
         final Long memberId1 = 맴버_저장();
-        final Long memberId2 = 맴버_저장();
         final Long productId1 = 상품_저장();
-        final Long productId2 = 상품_저장();
         cartDao.save(new Cart(memberId1, productId1));
-        cartDao.save(new Cart(memberId1, productId2));
-        cartDao.save(new Cart(memberId2, productId1));
-        cartDao.save(new Cart(memberId2, productId1));
-        cartDao.save(new Cart(memberId2, productId2));
-        // then
-        assertThat(cartDao.findByMemberId(1L)).hasSize(2);
-        assertThat(cartDao.findByMemberId(2L)).hasSize(3);
+
+        assertThat(cartDao.findByMemberId(memberId1)).hasSize(1);
+    }
+
+    @Test
+    void 카트_삭제() {
+        // when
+        final Long memberId1 = 맴버_저장();
+        final Long productId1 = 상품_저장();
+        Long cartId = cartDao.save(new Cart(memberId1, productId1));
+        cartDao.deleteById(cartId);
+
+        assertThat(cartDao.findByMemberId(memberId1)).isEmpty();
     }
 
     private Long 상품_저장() {

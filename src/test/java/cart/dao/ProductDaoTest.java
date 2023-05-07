@@ -68,7 +68,7 @@ class ProductDaoTest {
         final Long id = productDao.save(new Product("말링", "채채", 10000));
 
         // when
-        productDao.update(new Product(id, "수정이미지", "수정이미지", 3000));
+        productDao.update(id,new Product( "수정이미지", "수정이미지", 3000));
 
         // then
         assertThat(productDao.findById(id).get().getName())
