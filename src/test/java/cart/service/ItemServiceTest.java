@@ -21,7 +21,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-// TODO: 2023/04/26 서비스 테스트가 할게 없음 -> Mockito를 쓰는게 맞을까?
 @ExtendWith(MockitoExtension.class)
 class ItemServiceTest {
 
