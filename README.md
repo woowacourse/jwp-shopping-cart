@@ -153,4 +153,72 @@ Content-Type: application/json
 }
 ```
 
+## Cart
+
+### 장바구니 조회 : GET
+
+**Request**
+
+```http request
+GET /carts HTTP/1.1
+Host: localhost:8080
+Authorization: Basic YUBhLmNvbTpwYXNzd29yZDE=
+```
+
+**Response**
+
+```http request
+HTTP/1.1 200
+Content-Type: application/json
+[
+    {
+        "id": 1,
+        "name": "치킨",
+        "imgUrl": "https://barunchicken.com/wp-content/uploads/2022/07/%EA%B3%A8%EB%93%9C%EC%B9%98%ED%82%A8-2.jpg",
+        "price": 11000,
+        "count": 1
+    }
+]
+```
+
+### 장바구니에 상품 추가 : POST
+
+**Request**
+
+```http request
+POST /carts/1 HTTP/1.1
+Host: localhost:8080
+Authorization: Basic YUBhLmNvbTpwYXNzd29yZDE=
+```
+
+**Response**
+
+```http request
+HTTP/1.1 200
+Content-Type: application/json
+{
+    "id": 1
+}
+```
+
+### 장바구니 상품 삭제 : DELETE
+
+**Request**
+
+```http request
+DELETE /carts/1 HTTP/1.1
+Host: localhost:8080
+Authorization: Basic YUBhLmNvbTpwYXNzd29yZDE=
+```
+
+**Response**
+
+```http request
+HTTP/1.1 200
+Content-Type: application/json
+{
+    "status": "success"
+}
+```
+
 --- 
