@@ -7,6 +7,7 @@ import cart.dto.request.RequestUpdateProductDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -26,6 +27,9 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductIntegrationTest {
 
+    private static final String EMAIL = "a@a.com";
+    private static final String PASSWORD = "password1";
+
     @LocalServerPort
     private int port;
 
@@ -35,6 +39,10 @@ class ProductIntegrationTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+    }
+
+    @AfterEach
+    void afterEach() {
     }
 
     @Test
@@ -67,6 +75,7 @@ class ProductIntegrationTest {
     void 상품을_등록하면_상품_목록_페이지와_관리자_페이지에_추가된다() {
         // given
         final Response createResponse = given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 10_000, "치킨 사진"))
                 .when()
@@ -77,6 +86,7 @@ class ProductIntegrationTest {
 
         // when
         final Response userResponse = given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
                 .get("/")
@@ -85,6 +95,7 @@ class ProductIntegrationTest {
                 .extract().response();
 
         final Response adminResponse = given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
                 .get("/")
@@ -114,6 +125,7 @@ class ProductIntegrationTest {
         );
 
         final Response deleteResponse = given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
                 .delete("/products/" + insertedId)
@@ -123,6 +135,7 @@ class ProductIntegrationTest {
 
         // when
         final Response userResponse = given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
                 .get("/")
@@ -131,6 +144,7 @@ class ProductIntegrationTest {
                 .extract().response();
 
         final Response adminResponse = given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
                 .get("/")
@@ -160,6 +174,7 @@ class ProductIntegrationTest {
         );
 
         final Response updateResponse = given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new RequestUpdateProductDto("피자", 1_000, "피자 사진"))
                 .when()
@@ -170,6 +185,7 @@ class ProductIntegrationTest {
 
         // when
         final Response userResponse = given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
                 .get("/")
@@ -178,6 +194,7 @@ class ProductIntegrationTest {
                 .extract().response();
 
         final Response adminResponse = given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().accept(MediaType.TEXT_HTML_VALUE)
                 .when()
                 .get("/")

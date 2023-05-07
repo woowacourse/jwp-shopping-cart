@@ -35,6 +35,9 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductApiControllerTest {
 
+    private static final String EMAIL = "a@a.com";
+    private static final String PASSWORD = "password1";
+
     @LocalServerPort
     int port;
 
@@ -49,6 +52,7 @@ class ProductApiControllerTest {
     @Test
     void 상품을_등록할_수_있다() {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 10_000, "치킨 사진"))
                 .when()
@@ -62,6 +66,7 @@ class ProductApiControllerTest {
     @NullAndEmptySource
     void 빈_상품을_등록할_수_없다(final String name) {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto(name, 10_000, "치킨 사진"))
                 .when()
@@ -77,6 +82,7 @@ class ProductApiControllerTest {
         final String overName = "가비".repeat(50);
 
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto(overName, 10_000, "치킨 사진"))
                 .when()
@@ -91,6 +97,7 @@ class ProductApiControllerTest {
     @NullSource
     void 가격이_빈_상품을_등록할_수_없다(final Integer price) {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
                 .when()
@@ -105,6 +112,7 @@ class ProductApiControllerTest {
     @ValueSource(ints = {Integer.MAX_VALUE, Integer.MIN_VALUE})
     void 유효한_가격_범위를_넘긴_상품은_등록할_수_없다(final Integer price) {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
                 .when()
@@ -119,6 +127,7 @@ class ProductApiControllerTest {
     @NullAndEmptySource
     void 이미지_주소가_없는_상품을_등록할_수_없다(final String image) {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 1_000, image))
                 .when()
@@ -134,6 +143,7 @@ class ProductApiControllerTest {
         final String image = "후추".repeat(2001);
 
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 1_000, image))
                 .when()
@@ -149,6 +159,7 @@ class ProductApiControllerTest {
         final Long insertedId = insertProduct("치킨", 1_000, "치킨 사진");
 
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestUpdateProductDto("피자", 10_000, "피자 사진"))
                 .when()
@@ -179,6 +190,7 @@ class ProductApiControllerTest {
     @Test
     void 존재하지_않는_id의_상품은_수정할_수_없다() {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestUpdateProductDto("치킨", 10_000, "치킨 사진"))
                 .when()
@@ -193,6 +205,7 @@ class ProductApiControllerTest {
         final Long insertedId = insertProduct("치킨", 1_000, "치킨 사진");
 
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all()
                 .when()
                 .delete("/products/" + insertedId)
@@ -204,6 +217,7 @@ class ProductApiControllerTest {
     @Test
     void 존재하지_않는_id의_상품은_삭제할_수_없다() {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all()
                 .when()
                 .delete("/products/" + 0)
