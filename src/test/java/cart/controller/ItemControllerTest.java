@@ -106,7 +106,7 @@ class ItemControllerTest {
         verify(mockController, times(1)).updateItem(anyLong(), any());
     }
 
-    @DisplayName("DELETE /items/{itemsId} 요청 시 deleteItem 메서드가 호출된다")
+    @DisplayName("DELETE /items/{itemId} 요청 시 deleteItem 메서드가 호출된다")
     @Test
     void deleteItemMappingURL() throws Exception {
         //given
@@ -133,7 +133,7 @@ class ItemControllerTest {
         );
     }
 
-    @DisplayName("아이템 조회시  ResponseEntity<List<ItemResponse>>를 응답한다")
+    @DisplayName("아이템 조회 시 ResponseEntity<List<ItemResponse>>를 응답한다")
     @Test
     void loadAllItem() {
         //given
@@ -154,7 +154,7 @@ class ItemControllerTest {
         );
     }
 
-    @DisplayName("아이템 조회시 ResponseEntity<ItemResponse>를 응답한다")
+    @DisplayName("아이템 조회 시 ResponseEntity<ItemResponse>를 응답한다")
     @Test
     void loadItem() {
         //given
