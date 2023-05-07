@@ -31,6 +31,9 @@ public class CartRepositoryImpl implements CartRepository {
 
     @Override
     public Long addProductInCart(final CartUser cartUser, final Product product) {
+        if (isNotExistCartUser(cartUser.getUserEmail())) {
+            throw new NoSuchDataExistException("존재 하지 않는 사용자입니다.");
+        }
         final CartUserEntity cartEntity = cartUserDao.findByEmail(cartUser.getUserEmail());
 
         final CartUserProductEntity cartUserProductEntity =
@@ -41,6 +44,9 @@ public class CartRepositoryImpl implements CartRepository {
 
     @Override
     public Cart findCartByCartUser(final CartUser cartUser) {
+        if (isNotExistCartUser(cartUser.getUserEmail())) {
+            throw new NoSuchDataExistException("존재 하지 않는 사용자의 장바구니입니다.");
+        }
         final CartUserEntity cartUserEntity = cartUserDao.findByEmail(cartUser.getUserEmail());
         final List<ProductEntity> productEntities = cartUserProductDao.findProductByCartUserId(cartUserEntity.getId());
 
@@ -97,5 +103,14 @@ public class CartRepositoryImpl implements CartRepository {
         if (updateCount < 1) {
             throw new NoSuchDataExistException();
         }
+    }
+
+    private boolean isNotExistCartUser(final String email) {
+        final int count = cartUserDao.countByEmail(email);
+
+        if (count < 1) {
+            return true;
+        }
+        return false;
     }
 }

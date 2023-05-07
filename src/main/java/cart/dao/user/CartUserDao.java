@@ -20,6 +20,12 @@ public class CartUserDao {
                 .usingGeneratedKeyColumns("cart_user_id");
     }
 
+    public int countByEmail(final String email) {
+        final String countByEmailQuery = "SELECT count(*) FROM cart_user WHERE email = ?";
+
+        return jdbcTemplate.queryForObject(countByEmailQuery, Integer.class, email);
+    }
+
     public CartUserEntity findByEmail(final String email) {
         final String findByEmailQuery = "SELECT * FROM cart_user WHERE email = ?";
 

@@ -34,9 +34,9 @@ public class ProductDao {
     }
 
     public int countById(final Long id) {
-        final String findAllQuery = "SELECT count(*) FROM product WHERE product_id = ?";
+        final String countByIdQuery = "SELECT count(*) FROM product WHERE product_id = ?";
 
-        return jdbcTemplate.queryForObject(findAllQuery, Integer.class, id);
+        return jdbcTemplate.queryForObject(countByIdQuery, Integer.class, id);
     }
 
 

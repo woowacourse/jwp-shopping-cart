@@ -39,13 +39,19 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public void deleteById(final Long id) {
-        validateExistProduct(id);
+        if (isNotExistProduct(id)) {
+            throw new NoSuchDataExistException("삭제하려는 데이터가 존재하지 않습니다.");
+        }
 
         productDao.deleteById(id);
     }
 
     @Override
     public Product update(final Product product) {
+        if (isNotExistProduct(product.getProductId())) {
+            throw new NoSuchDataExistException("수정하려는 대상이 존재하지 않습니다.");
+        }
+
         final ProductEntity productEntity = new ProductEntity(
                 product.getProductId(),
                 product.getName(),
@@ -54,7 +60,6 @@ public class ProductRepositoryImpl implements ProductRepository {
                 product.getImageUrl()
         );
 
-        validateExistProduct(product.getProductId());
         productDao.update(productEntity);
 
         return product;
@@ -62,16 +67,21 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Optional<Product> findById(final Long productId) {
+        if (isNotExistProduct(productId)) {
+            return Optional.empty();
+        }
+
         final ProductEntity productEntity = productDao.findById(productId);
 
         return Optional.of(productEntity.toProduct());
     }
 
-    private void validateExistProduct(final Long id) {
+    private boolean isNotExistProduct(final Long id) {
         final int count = productDao.countById(id);
 
         if (count < 1) {
-            throw new NoSuchDataExistException();
+            return true;
         }
+        return false;
     }
 }

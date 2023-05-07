@@ -19,6 +19,10 @@ public class CartUserRepositoryImpl implements CartUserRepository {
 
     @Override
     public Optional<CartUser> findByEmail(final String email) {
+        if (isNotExistCartUser(email)) {
+            return Optional.empty();
+        }
+
         final CartUserEntity cartUserEntity = cartUserDao.findByEmail(email);
 
         return Optional.of(toCartUser(cartUserEntity));
@@ -48,5 +52,14 @@ public class CartUserRepositoryImpl implements CartUserRepository {
                 UserEmail.from(cartUserEntity.getEmail()),
                 cartUserEntity.getCartPassword()
         );
+    }
+
+    private boolean isNotExistCartUser(final String email) {
+        final int count = cartUserDao.countByEmail(email);
+
+        if (count < 1) {
+            return true;
+        }
+        return false;
     }
 }

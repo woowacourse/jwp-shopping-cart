@@ -1,12 +1,11 @@
 package cart.dao.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.domain.user.CartUser;
 import cart.domain.user.UserEmail;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +26,14 @@ class CartUserRepositoryImplTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @DisplayName("사용자 이메일로 사용자 조회시 존재하지 않으면 예외 발생")
+    @DisplayName("사용자 이메일로 사용자 조회시 존재하지 않으면 null을 반환 한다.")
     @Test
     void findByEmailFailureNotExist() {
         final String findTargetEmail = "a@a.com";
 
-        assertThatThrownBy(() -> cartUserRepository.findByEmail(findTargetEmail))
-                .isInstanceOf(NoSuchElementException.class);
+        final Optional<CartUser> user = cartUserRepository.findByEmail(findTargetEmail);
+
+        assertThat(user.isEmpty()).isTrue();
     }
 
     @DisplayName("사용자 이메일로 사용자 조회 테스트")
