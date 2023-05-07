@@ -5,46 +5,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import cart.auth.Auth;
 import cart.auth.AuthInfo;
 import cart.controller.dto.CartResponse;
-import cart.controller.dto.ProductResponse;
 import cart.dao.CartDao;
-import cart.dao.ProductDao;
 import cart.domain.Product;
 
-@Controller
+@RestController
 public class CartController {
 
-    private final ProductDao productDao;
     private final CartDao cartDao;
 
-    public CartController(final ProductDao productDao, final CartDao cartDao) {
-        this.productDao = productDao;
+    public CartController(final CartDao cartDao) {
         this.cartDao = cartDao;
-    }
-
-    @GetMapping("/")
-    public String findAllProducts(final Model model) {
-        List<Product> products = productDao.findAll();
-        List<ProductResponse> productResponses = products.stream()
-                .map(ProductResponse::from)
-                .collect(Collectors.toList());
-        model.addAttribute("products", productResponses);
-
-        return "index";
-    }
-
-    @GetMapping("/cart")
-    public String renderCart() {
-        return "cart";
     }
 
     @PostMapping("/cart/products/{productId}")
@@ -68,6 +47,6 @@ public class CartController {
     public ResponseEntity<Void> removeProduct(@PathVariable final Long cartId) {
         cartDao.deleteCartItemById(cartId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

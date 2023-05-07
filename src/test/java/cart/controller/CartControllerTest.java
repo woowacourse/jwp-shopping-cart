@@ -16,12 +16,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
+import cart.auth.BasicAuthorizationExtractor;
 import cart.dao.CartDao;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 
+@Import(BasicAuthorizationExtractor.class)
 @WebMvcTest(CartController.class)
 class CartControllerTest {
 
@@ -33,6 +36,9 @@ class CartControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private BasicAuthorizationExtractor basicAuthorizationExtractor;
 
     @DisplayName("'/'로 GET 요청을 했을 때 index template을 반환한다.")
     @Test
@@ -51,4 +57,19 @@ class CartControllerTest {
                 .andExpect(model().attribute("products", hasItem(hasProperty("price", is(10000)))))
                 .andExpect(view().name("index"));
     }
+
+//    @DisplayName("ff")
+//    @Test
+//    void postTest() throws Exception {
+//        // given
+//        given(basicAuthorizationExtractor.extract(any(HttpServletRequest.class)))
+//                .willReturn(new AuthInfo("jeomxon@gmail.com", "password1"));
+//
+//        // when
+//
+//        // then
+//        mockMvc.perform(post("/cart/products/{productId}", 1)
+//                        .header("Authorization", "Basic amVvbXhvbkBnbWFpbC5jb206cGFzc3dvcmQx=="))
+//                .andExpect(status().isCreated());
+//    }
 }

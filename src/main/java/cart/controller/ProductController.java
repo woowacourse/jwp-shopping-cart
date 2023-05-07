@@ -5,18 +5,18 @@ import java.net.URI;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import cart.controller.dto.ProductRequest;
 import cart.dao.ProductDao;
 
-@Controller
+@RestController
 @RequestMapping("/products")
 public class ProductController {
 
@@ -44,6 +44,6 @@ public class ProductController {
     public ResponseEntity<Void> removeProduct(@PathVariable final Long productId) {
         productDao.deleteById(productId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
