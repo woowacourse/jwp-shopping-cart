@@ -9,15 +9,14 @@ public class AuthenticationExtractor {
     private static final String BASIC_DELIMITER = ":";
     private static final String EMPTY = "";
     private static final Pattern BASIC_CREDENTIAL_PATTERN = Pattern.compile("^Basic [A-Za-z0-9+/]+=*$");
+    private static final int EMAIL = 0;
+    private static final int PASSWORD = 1;
 
     public AuthMember extractAuthInfo(String authentication) {
         validateCredentials(authentication);
         String[] emailAndPassword = extractBasicAuthInfo(authentication);
-        if (emailAndPassword.length != 2) {
-            throw new AuthenticationException();
-        }
-        String email = emailAndPassword[0];
-        String password = emailAndPassword[1];
+        String email = emailAndPassword[EMAIL];
+        String password = emailAndPassword[PASSWORD];
         return new AuthMember(email, password);
     }
 
@@ -40,7 +39,23 @@ public class AuthenticationExtractor {
 
     private String[] extractBasicAuthInfo(String authorization) {
         String credentials = authorization.replace(BASIC_PREFIX, EMPTY);
-        String decodedString = new String(Base64.getDecoder().decode(credentials));
-        return decodedString.split(BASIC_DELIMITER);
+        String decodedString = decodeCredentials(credentials);
+        String[] emailAndPassword = decodedString.split(BASIC_DELIMITER);
+        validateLength(emailAndPassword);
+        return emailAndPassword;
+    }
+
+    private String decodeCredentials(String credentials) {
+        try {
+            return new String(Base64.getDecoder().decode(credentials));
+        } catch (IllegalArgumentException e) {
+            throw new AuthenticationException();
+        }
+    }
+
+    private void validateLength(String[] emailAndPassword) {
+        if (emailAndPassword.length != 2) {
+            throw new AuthenticationException();
+        }
     }
 }
