@@ -5,7 +5,6 @@ import cart.dto.cart.CartItemDto;
 import cart.dto.cart.UserDto;
 import cart.entity.CartEntity;
 import cart.entity.ProductEntity;
-import cart.exception.AuthorizationException;
 import cart.repository.CartRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -28,14 +27,14 @@ public class CartService {
     }
 
     @Transactional
-    public CartItemDto add(UserDto userDto, Long productId) {
+    public CartItemDto addItem(UserDto userDto, Long productId) {
         User user = new User(userDto.getId(), userDto.getEmail());
         CartEntity entity = new CartEntity(null, user.getId(), productId);
-        CartEntity savedEntity = cartRepository.save(entity);
         Optional<ProductEntity> nullableProductEntity = productRepository.findById(entity.getProductId());
         if (nullableProductEntity.isEmpty()) {
-            throw new AuthorizationException("회원이 존재하지 않습니다.");
+            throw new IllegalArgumentException("상품이 존재하지 않습니다.");
         }
+        CartEntity savedEntity = cartRepository.save(entity);
         ProductEntity productEntity = nullableProductEntity.get();
 
         return CartItemDto.fromCartIdAndProductEntity(savedEntity.getId(), productEntity);

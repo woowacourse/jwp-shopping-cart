@@ -42,7 +42,7 @@ public class CartController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CartItemResponseDto> addItem(@PathVariable("id") Long productId, @Auth AuthInfo authInfo) {
         UserDto userDto = authService.findMemberByEmail(authInfo.getEmail());
-        CartItemDto dto = cartService.add(userDto, productId);
+        CartItemDto dto = cartService.addItem(userDto, productId);
         CartItemResponseDto response = CartItemResponseDto.fromDto(dto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(URI.create("/cart/items/" + response.getProductId()))
