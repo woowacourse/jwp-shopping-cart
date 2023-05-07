@@ -44,7 +44,7 @@ public class DbMemberDao implements MemberDao {
 
     @Override
     public List<Member> findAll() {
-        final String sql = "SELECT * FROM member";
+        final String sql = "SELECT id, email, password FROM member";
         return jdbcTemplate.query(sql, memberRowMapper);
     }
 
@@ -59,7 +59,7 @@ public class DbMemberDao implements MemberDao {
         if (foundMember.isEmpty()) {
             return Optional.empty();
         }
-        final String sql = "SELECT * FROM member WHERE email = :email";
+        final String sql = "SELECT id, email, password FROM member WHERE email = :email";
         final Map<String, String> parameters = Collections.singletonMap("email", email);
         return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, parameters, memberRowMapper));
     }

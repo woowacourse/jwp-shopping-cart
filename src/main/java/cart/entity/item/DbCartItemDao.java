@@ -35,7 +35,7 @@ public class DbCartItemDao implements CartItemDao {
 
     @Override
     public List<CartItem> findByMemberId(final long memberId) {
-        final String sql = "SELECT * FROM cart WHERE member_id = :member_id";
+        final String sql = "SELECT id, member_id, product_id FROM cart WHERE member_id = :member_id";
         final Map<String, Long> parameters = Collections.singletonMap("member_id", memberId);
         return namedParameterJdbcTemplate.query(sql, parameters, (resultSet, rowNum) -> new CartItem(
                 resultSet.getLong("id"),

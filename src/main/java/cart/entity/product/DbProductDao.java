@@ -44,13 +44,13 @@ public class DbProductDao implements ProductDao {
 
     @Override
     public List<Product> findAll() {
-        String sql = "SELECT * FROM product";
+        String sql = "SELECT id, name, img_url, price FROM product";
         return jdbcTemplate.query(sql, productRowMapper);
     }
 
     @Override
     public Product findById(long id) {
-        String sql = "SELECT * FROM product WHERE id = :id";
+        String sql = "SELECT id, name, img_url, price FROM product WHERE id = :id";
         Map<String, Long> parameter = Collections.singletonMap("id", id);
         return namedParameterJdbcTemplate.queryForObject(sql, parameter, productRowMapper);
     }
