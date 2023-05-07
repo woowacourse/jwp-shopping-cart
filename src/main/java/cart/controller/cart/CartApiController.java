@@ -1,12 +1,12 @@
 package cart.controller.cart;
 
-import cart.auth.info.AuthInfo;
-import cart.auth.resolver.Authentication;
 import cart.domain.cart.Cart;
 import cart.domain.product.Product;
 import cart.dto.cart.AddCartResponse;
 import cart.dto.cart.AddProductRequest;
 import cart.dto.cart.FindCartResponse;
+import cart.resolver.AuthInfo;
+import cart.resolver.Authentication;
 import cart.service.cart.CartCommandService;
 import cart.service.cart.CartQueryService;
 import cart.service.product.ProductQueryService;

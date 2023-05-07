@@ -1,4 +1,4 @@
-package cart.auth.filter;
+package cart.filter;
 
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 

@@ -1,8 +1,8 @@
-package cart.auth.config;
+package cart.config;
 
-import cart.auth.filter.AuthenticationFilter;
-import cart.auth.resolver.AuthenticationResolver;
+import cart.filter.AuthenticationFilter;
 import cart.repository.user.UserRepository;
+import cart.resolver.AuthenticationResolver;
 import java.util.List;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

@@ -1,8 +1,7 @@
-package cart.auth.resolver;
+package cart.resolver;
 
 import static org.apache.tomcat.util.codec.binary.Base64.decodeBase64;
 
-import cart.auth.info.AuthInfo;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;

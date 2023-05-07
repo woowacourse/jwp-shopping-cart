@@ -1,4 +1,4 @@
-package cart.auth.info;
+package cart.resolver;
 
 public class AuthInfo {
 
