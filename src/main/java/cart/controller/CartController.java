@@ -10,6 +10,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,18 @@ public class CartController {
 
         Map<String, Integer> response = new HashMap<>();
         response.put("id", cartId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @DeleteMapping("/carts/{id}")
+    public ResponseEntity<Map<String, String>> cartRemove(@PathVariable int id) {
+        cartService.delete(id);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "success");
 
         return ResponseEntity
                 .status(HttpStatus.OK)

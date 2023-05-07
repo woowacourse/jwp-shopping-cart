@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -33,5 +34,11 @@ public class CartDao {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(cartEntity);
         namedParameterJdbcTemplate.update(sql, namedParameters, keyholder, new String[]{"id"});
         return keyholder.getKey().intValue();
+    }
+
+    public int delete(int id) {
+        final String sql = "DELETE FROM cart WHERE id=:id";
+        MapSqlParameterSource mapSqlParameters = new MapSqlParameterSource().addValue("id", id);
+        return namedParameterJdbcTemplate.update(sql, mapSqlParameters);
     }
 }
