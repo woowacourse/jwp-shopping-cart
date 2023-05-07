@@ -1,7 +1,7 @@
 package cart.database.dao;
 
 import cart.entity.ProductEntity;
-import cart.validator.DefaultValidator;
+import cart.validator.CostumeDefaultValidator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,13 +11,15 @@ import java.util.List;
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final CostumeDefaultValidator costumeDefaultValidator;
 
-    public ProductDao(JdbcTemplate jdbcTemplate) {
+    public ProductDao(JdbcTemplate jdbcTemplate, CostumeDefaultValidator costumeDefaultValidator) {
         this.jdbcTemplate = jdbcTemplate;
+        this.costumeDefaultValidator = costumeDefaultValidator;
     }
 
     public void create(ProductEntity entity) {
-        DefaultValidator.validate(entity);
+        costumeDefaultValidator.validate(entity);
         String sql = "INSERT INTO PRODUCT (name, price, image_url) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, entity.getName(), entity.getPrice(), entity.getImageUrl());
     }
@@ -34,7 +36,7 @@ public class ProductDao {
     }
 
     public void updateById(Long id, ProductEntity entity) {
-        DefaultValidator.validate(entity);
+        costumeDefaultValidator.validate(entity);
         String sql = "UPDATE PRODUCT SET(name, price, image_url) = (?, ?, ?) WHERE id = ?";
         jdbcTemplate.update(sql, entity.getName(), entity.getPrice(), entity.getImageUrl(), id);
     }

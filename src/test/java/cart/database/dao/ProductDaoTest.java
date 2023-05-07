@@ -4,6 +4,7 @@ import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
 import cart.convertor.ProductEntityConvertor;
 import cart.entity.ProductEntity;
+import cart.validator.CostumeDefaultValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ class ProductDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    private CostumeDefaultValidator costumeDefaultValidator = new CostumeDefaultValidator();
     private ProductEntityConvertor productEntityConvertor = new ProductEntityConvertor();
     private ProductDao productDao;
     private String name;
@@ -33,7 +35,7 @@ class ProductDaoTest {
 
     @BeforeEach
     void setUp() {
-        this.productDao = new ProductDao(jdbcTemplate);
+        this.productDao = new ProductDao(jdbcTemplate, costumeDefaultValidator);
 
         name = "temp";
         imageUrl = "temp_img";
