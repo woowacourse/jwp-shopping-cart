@@ -14,8 +14,6 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
     private final UserService userService;
 
-    private static final String AUTHORIZATION = "Authorization";
-
     public LoginCheckInterceptor(final UserService userService) {
         this.userService = userService;
     }

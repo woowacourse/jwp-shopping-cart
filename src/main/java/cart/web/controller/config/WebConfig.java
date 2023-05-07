@@ -29,6 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(loginCheckInterceptor)
                 .order(1)
-                .addPathPatterns("/cart/*");
+                .addPathPatterns("/cart/**")
+                .excludePathPatterns("/cart");
     }
 }

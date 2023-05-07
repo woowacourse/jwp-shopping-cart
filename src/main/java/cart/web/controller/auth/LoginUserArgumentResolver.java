@@ -26,13 +26,11 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
         return parameter.hasParameterAnnotation(AuthorizedUser.class);
-//        final boolean hasUserType = User.class.isAssignableFrom(parameter.getParameterType());
-//        return hasLoginAnnotation && hasUserType;
     }
 
     @Override
-    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
-                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) throws Exception {
+    public User resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
+                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final User user = BasicAuthorizationExtractor.extract(request);
         final String userEmailValue = Objects.requireNonNull(user).getUserEmailValue();
