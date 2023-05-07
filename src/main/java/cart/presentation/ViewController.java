@@ -61,9 +61,10 @@ public class ViewController {
 
     @GetMapping("/cart")
     public String cart(Model model) {
-
-        List<CartResponse> carts = cartService.read().stream().map(cart -> new CartResponse(cart.getId(), cart.getMemberId(), cartService.findProductsByMemberId(cart.getMemberId()))).collect(Collectors.toList());
-        model.addAttribute("cart", carts);
+        List<CartResponse> carts = cartService.read()
+                .stream()
+                .map(cart -> new CartResponse(cart.getId(), cart.getMemberId(), cartService.findProductsByMemberId(cart.getMemberId()))).collect(Collectors.toList());
+        model.addAttribute("credentials", carts);
         return "cart";
     }
 }

@@ -20,11 +20,11 @@ public class MemberDao {
     }
 
     public Integer insert(Member member) {
-        java.lang.String sql = "INSERT into MEMBER (email, password) values(?, ?)";
+        String sql = "INSERT INTO MEMBER (email, password) values(?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new java.lang.String[]{"id"});
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, member.getEmail());
             ps.setString(2, member.getPassword());
             return ps;
@@ -47,7 +47,7 @@ public class MemberDao {
     }
 
     public Integer update(Integer id, Member member) {
-        java.lang.String sql = "UPDATE MEMBER SET email = ?, password = ? WHERE id = ?";
+        String sql = "UPDATE MEMBER SET email = ?, password = ? WHERE id = ?";
         return jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), id);
     }
 
@@ -58,7 +58,7 @@ public class MemberDao {
     }
 
 
-    public void findSameProductExist(Member member) {
+    public void findSameMemberExist(Member member) {
         final var query = "SELECT COUNT(*) FROM MEMBER WHERE email = ? AND password = ?";
         int count = jdbcTemplate.queryForObject(query, Integer.class, member.getEmail(), member.getPassword());
 

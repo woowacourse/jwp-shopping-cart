@@ -8,7 +8,23 @@ CREATE TABLE IF NOT EXISTS PRODUCT (
 
 CREATE TABLE IF NOT EXISTS MEMBER(
     id          BIGINT UNSIGNED     NOT NULL AUTO_INCREMENT,
-    email        VARCHAR(50)         NOT NULL,
-    password       VARCHAR(50)         NOT NULL,
+    email       VARCHAR(50)         NOT NULL,
+    password    VARCHAR(50)         NOT NULL,
     PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS CART(
+    id          BIGINT UNSIGNED     NOT NULL AUTO_INCREMENT,
+    member_id   BIGINT UNSIGNED     NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (member_id) REFERENCES MEMBER (id)
+);
+
+CREATE TABLE IF NOT EXISTS CART_PRODUCT(
+    id              BIGINT UNSIGNED     NOT NULL AUTO_INCREMENT,
+    product_id      BIGINT UNSIGNED     NOT NULL,
+    cart_id         BIGINT UNSIGNED     NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (product_id) REFERENCES PRODUCT (id),
+    FOREIGN KEY (cart_id) REFERENCES CART (id)
 );
