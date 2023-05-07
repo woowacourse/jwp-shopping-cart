@@ -1,5 +1,7 @@
 package cart.exception;
 
+import static org.springframework.http.HttpStatus.*;
+
 import cart.exception.auth.AuthException;
 import cart.exception.cart.CartException;
 import cart.exception.dto.ExceptionResponse;
@@ -45,16 +47,16 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMissingPathVariable(final MissingPathVariableException ex,
-            final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
+    protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex,
+            HttpHeaders headers, HttpStatus status, WebRequest request) {
         logger.info("MissingPathVariable : ", ex);
 
         return ResponseEntity.badRequest().body(new ExceptionResponse("존재하지 않는 상품입니다."));
     }
 
     @Override
-    protected ResponseEntity<Object> handleTypeMismatch(final TypeMismatchException ex, final HttpHeaders headers,
-            final HttpStatus status, final WebRequest request) {
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
+            HttpStatus status, WebRequest request) {
         logger.info("TypeMismatch : ", ex);
 
         return ResponseEntity.badRequest().body(new ExceptionResponse("잘못된 경로입니다."));
@@ -62,11 +64,12 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
-            final HttpRequestMethodNotSupportedException ex,
-            final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
+            HttpRequestMethodNotSupportedException ex,
+            HttpHeaders headers, HttpStatus status, WebRequest request) {
         logger.info("HttpRequestMethodNotSupported : ", ex);
 
-        return ResponseEntity.badRequest().body(new ExceptionResponse("정상적인 경로로 다시 시도해주세요."));
+        return ResponseEntity.status(METHOD_NOT_ALLOWED)
+                .body(new ExceptionResponse("정상적인 경로로 다시 시도해주세요."));
     }
 
     @ExceptionHandler(ItemException.class)
