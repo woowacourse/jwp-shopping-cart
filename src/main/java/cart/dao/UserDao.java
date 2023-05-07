@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.Email;
 import cart.domain.Password;
 import cart.domain.User;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -33,8 +34,12 @@ public class UserDao {
         final String sql = "INSERT INTO users(email, password) VALUES(:email, :password)";
         BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(user);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(sql, params, keyHolder);
-        return (Long) keyHolder.getKey();
+        try {
+            namedParameterJdbcTemplate.update(sql, params, keyHolder);
+            return (Long) keyHolder.getKey();
+        } catch (DuplicateKeyException exception) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        }
     }
 
     public List<User> findAll() {

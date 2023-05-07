@@ -26,8 +26,8 @@ class UserDaoTest {
             .email(new Email(resultSet.getString("email")))
             .password(new Password(resultSet.getString("password")))
             .build();
-    private UserDao userDao;
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final UserDao userDao;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
     UserDaoTest(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -35,7 +35,7 @@ class UserDaoTest {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    @DisplayName("아이템을 저장한다.")
+    @DisplayName("사용자를 저장한다.")
     @Test
     void save() {
         // given
@@ -57,6 +57,18 @@ class UserDaoTest {
                 .password(new Password("testPassword"))
                 .build()
         );
+    }
+
+    @DisplayName("이미 존재하는 이메일의 사용자를 저장한다")
+    @Test
+    void saveAlreadyExistEmail() {
+        // given
+        User user = new User.Builder()
+                .email(new Email("test1@gmail.com"))
+                .password(new Password("testPassword"))
+                .build();
+        // when
+        assertThatThrownBy(() -> userDao.save(user)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("사용자의 전체 목록을 조회한다")
