@@ -8,24 +8,6 @@ public class Cart {
     private final Long userId;
     private final Long itemId;
 
-    private Cart(Builder builder) {
-        this.id = builder.id;
-        this.userId = builder.userId;
-        this.itemId = builder.itemId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public Long getItemId() {
-        return itemId;
-    }
-
     public static class Builder {
         private Long id;
         private Long userId;
@@ -52,6 +34,34 @@ public class Cart {
         public Cart build() {
             return new Cart(this);
         }
+    }
+
+    private Cart(Builder builder) {
+        validate(builder);
+        this.id = builder.id;
+        this.userId = builder.userId;
+        this.itemId = builder.itemId;
+    }
+
+    private void validate(Builder builder) {
+        if (builder.userId == null) {
+            throw new IllegalArgumentException("사용자 아이디는 빈 값일 수 없습니다.");
+        }
+        if (builder.itemId == null) {
+            throw new IllegalArgumentException("상품 아이디는 빈 값일 수 없습니다.");
+        }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public Long getItemId() {
+        return itemId;
     }
 
     @Override
