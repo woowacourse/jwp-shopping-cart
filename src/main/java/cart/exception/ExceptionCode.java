@@ -8,7 +8,11 @@ public enum ExceptionCode {
     NO_AUTHORIZATION_HEADER("인증 헤더가 없습니다."),
     AUTHORIZATION_FAIL("잘못된 사용자입니다."),
     EMPTY_REQUEST("요청이 없거나 공백입니다."),
-    NO_DATA("해당하는 데이터가 없습니다.");
+    NO_DATA("해당하는 데이터가 없습니다."),
+    ILLEGAL_ARGUMENT("부적절한 입력입니다."),
+    INVALID_ID("ID가 양의 정수가 아닙니다."),
+    INVALID_EMAIL("이메일이 올바르지 않습니다."),
+    INVALID_PASSWORD("비밀번호가 올바르지 않습니다.");
 
     private String message;
 

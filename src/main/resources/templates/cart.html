@@ -5,14 +5,14 @@
     <title>장바구니</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/base.css}">
-    <link rel="stylesheet" th:href="@{/css/cart.css}">
+    <link rel="stylesheet" th:href="@{/css/cartItem.css}">
 </head>
 <body>
 <header class="gnb">
     <nav>
         <ul class="gnb-group">
             <li><a href="/">상품목록</a></li>
-            <li><a href="/cart">장바구니</a></li>
+            <li><a href="/cartItem">장바구니</a></li>
             <li><a href="/settings">설정</a></li>
             <li class="nav-admin"><a href="/admin">관리자</a></li>
         </ul>
@@ -20,11 +20,11 @@
 </header>
 <div class="container">
     <h1>장바구니</h1>
-    <div class="cart-items">
+    <div class="cartItem-items">
     </div>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script th:src="@{/js/cart.js}"></script>
+<script th:src="@{/js/cartItem.js}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const credentials = localStorage.getItem('credentials');
@@ -35,7 +35,7 @@
         }
 
         axios.request({
-            url: '/cartItems',
+            url: '/cartItem-items',
             headers: {
                 'Authorization': `Basic ${credentials}`
             }
@@ -46,18 +46,18 @@
             // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
             cartItems.forEach(cartItem => {
                 productElement += `
-                        <div class="cart-item">
-                          <div class="cart-item-info">
+                        <div class="cartItem-item">
+                          <div class="cartItem-item-info">
                             <img src="${cartItem.imgUrl}" alt=""/> <!-- 상품 이미지 -->
-                            <div class="cart-item-name">${cartItem.name}</div> <!-- 상품 이름 -->
-                            <div class="cart-item-price">${cartItem.price}</div> <!-- 상품 가격 -->
-                            <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
+                            <div class="cartItem-item-name">${cartItem.name}</div> <!-- 상품 이름 -->
+                            <div class="cartItem-item-price">${cartItem.price}</div> <!-- 상품 가격 -->
+                            <button type="submit" id="delete-btn" class="cartItem-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
                           </div>
                         </div>
                       `;
             });
 
-            document.querySelector('.cart-items').innerHTML = productElement;
+            document.querySelector('.cartItem-items').innerHTML = productElement;
         }).catch((error) => {
             console.error(error);
         });

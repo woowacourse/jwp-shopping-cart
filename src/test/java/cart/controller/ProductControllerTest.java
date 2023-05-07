@@ -34,17 +34,6 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("관리자 페이지를 조회한다.")
-    void admin() {
-        RestAssured.given().log().all()
-            .accept(MediaType.TEXT_HTML_VALUE)
-            .when().get("/admin")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .contentType(MediaType.TEXT_HTML_VALUE);
-    }
-
-    @Test
     @DisplayName("상품을 추가한다.")
     void addProduct() {
         ProductRequest productRequest = new ProductRequest("리오", "http://asdf.asdf", 3000);

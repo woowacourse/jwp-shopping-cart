@@ -1,6 +1,5 @@
 package cart.dto;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class CartRequest {

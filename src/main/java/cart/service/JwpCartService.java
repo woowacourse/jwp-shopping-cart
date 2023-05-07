@@ -15,8 +15,8 @@ import cart.dto.CartResponse;
 import cart.dto.MemberResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
-import cart.entity.Cart;
-import cart.entity.CartRepository;
+import cart.entity.CartItem;
+import cart.entity.CartItemRepository;
 import cart.entity.Member;
 import cart.entity.MemberRepository;
 import cart.entity.Product;
@@ -30,19 +30,19 @@ public class JwpCartService {
 
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
-    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
 
     public JwpCartService(ProductRepository productRepository, MemberRepository memberRepository,
-        CartRepository cartRepository) {
+        CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
-        this.cartRepository = cartRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
     @PostConstruct
     private void setUp() {
-        addMember("email1", "password1");
-        addMember("email2", "password2");
+        addMember("email1@email.com", "password1");
+        addMember("email2@email.com", "password2");
         addProduct(new ProductRequest("asdf", "http://www.naver.com", 1234));
         addProduct(new ProductRequest("qwer", "http://www.naver.com", 1234));
     }
@@ -83,7 +83,7 @@ public class JwpCartService {
 
     @Transactional
     public void deleteProductById(Long id) {
-        cartRepository.deleteByProductID(id);
+        cartItemRepository.deleteByProductID(id);
         productRepository.deleteById(id);
 
     }
@@ -104,14 +104,14 @@ public class JwpCartService {
     @Transactional
     public void addProductToCart(AuthInfo authInfo, CartRequest cartRequest) {
         Member member = memberRepository.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
-        cartRepository.save(Cart.of(null, member.getId(), cartRequest.getProductId()));
+        cartItemRepository.save(CartItem.of(null, member.getId(), cartRequest.getProductId()));
     }
 
     @Transactional
     public void deleteProductFromCart(AuthInfo authInfo, Long id) {
         Member member = memberRepository.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
-        if (Objects.equals(member.getId(), cartRepository.findById(id).getMemberId())) {
-            cartRepository.deleteById(id);
+        if (Objects.equals(member.getId(), cartItemRepository.findById(id).getMemberId())) {
+            cartItemRepository.deleteById(id);
             return;
         }
         throw new DomainException(ExceptionCode.AUTHORIZATION_FAIL);
@@ -119,7 +119,7 @@ public class JwpCartService {
 
     public List<CartResponse> findAllCartItems(AuthInfo authInfo) {
         Long memberId = memberRepository.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword()).getId();
-        return cartRepository.findAll(memberId)
+        return cartItemRepository.findAll(memberId)
             .stream()
             .map(cart -> new CartResponse(cart, productRepository.findById(cart.getProductId())))
             .collect(Collectors.toList());

@@ -1,6 +1,5 @@
 package cart.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -15,7 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import cart.service.JwpCartService;
 
 @WebMvcTest
-class HomeControllerTest {
+class PageControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -24,7 +23,7 @@ class HomeControllerTest {
 
     @Test
     @DisplayName("상품 목록 페이지를 조회한다.")
-    void index() throws Exception{
+    void index() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/")
             )
@@ -32,4 +31,33 @@ class HomeControllerTest {
             .andExpect(status().isOk());
     }
 
+    @Test
+    @DisplayName("관리자 페이지를 조회한다.")
+    void admin() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/admin")
+            )
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("설정 페이지를 조회한다.")
+    void settings() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/settings")
+            )
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("장바구니 페이지를 조회한다.")
+    void cart() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/cart")
+            )
+            .andDo(print())
+            .andExpect(status().isOk());
+    }
 }

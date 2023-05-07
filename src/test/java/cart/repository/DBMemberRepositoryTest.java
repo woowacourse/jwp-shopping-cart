@@ -41,8 +41,8 @@ class DBMemberRepositoryTest {
             .withTableName("member")
             .usingGeneratedKeyColumns("id");
 
-        Member member1 = Member.of(null, "email1", "password1");
-        Member member2 = Member.of(null, "email2", "password2");
+        Member member1 = Member.of(null, "email1@email.com", "password1");
+        Member member2 = Member.of(null, "email2@email.com", "password2");
 
         Map<String, Object> map1 = Map.of(
             "email", member1.getEmail(),
@@ -60,7 +60,7 @@ class DBMemberRepositoryTest {
     @Test
     @DisplayName("사용자 정보를 DB에 저장한다.")
     void save() {
-        Member member = Member.of(null, "email3", "password3");
+        Member member = Member.of(null, "email3@email.com", "password3");
         Long id3 = memberRepository.save(member);
 
         String sql = "SELECT * FROM member";
@@ -71,9 +71,9 @@ class DBMemberRepositoryTest {
     @Test
     @DisplayName("Email과 Password로 사용자 정보를 조회한다.")
     void findByEmailAndPassword() {
-        Member member = memberRepository.findByEmailAndPassword("email1", "password1");
+        Member member = memberRepository.findByEmailAndPassword("email1@email.com", "password1");
         assertAll(
-            () -> assertThat(member.getEmail()).isEqualTo("email1"),
+            () -> assertThat(member.getEmail()).isEqualTo("email1@email.com"),
             () -> assertThat(member.getPassword()).isEqualTo("password1")
         );
 
@@ -88,7 +88,7 @@ class DBMemberRepositoryTest {
     @Test
     @DisplayName("ID에 해당하는 사용자 정보를 수정한다.")
     void updateById() {
-        Member member1 = Member.of(id2, "email4", "password4");
+        Member member1 = Member.of(id2, "email4@email.com", "password4");
         memberRepository.updateById(member1, id2);
 
         String sql = "SELECT id, email, password FROM member WHERE id = ?";
@@ -113,5 +113,4 @@ class DBMemberRepositoryTest {
         String sql = "SELECT * FROM member";
         assertThat(jdbcTemplate.query(sql, (rs, rn) -> rs).size()).isEqualTo(1);
     }
-
 }

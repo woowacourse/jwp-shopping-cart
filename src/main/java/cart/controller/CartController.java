@@ -24,12 +24,12 @@ import cart.infra.AuthorizationExtractor;
 import cart.infra.CartRequestExtractor;
 import cart.service.JwpCartService;
 
-@RequestMapping("/cartItems")
+@RequestMapping("/cart-items")
 @RestController
-public class CartItemsController {
+public class CartController {
     private final JwpCartService jwpCartService;
 
-    public CartItemsController(JwpCartService jwpCartService) {
+    public CartController(JwpCartService jwpCartService) {
         this.jwpCartService = jwpCartService;
     }
 
@@ -44,7 +44,7 @@ public class CartItemsController {
         CartRequest cartRequest = CartRequestExtractor.extract(httpServletRequest);
 
         jwpCartService.addProductToCart(authInfo, cartRequest);
-        return ResponseEntity.created(URI.create("/cartItems")).build();
+        return ResponseEntity.created(URI.create("/cart-items")).build();
     }
 
     @GetMapping

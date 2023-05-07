@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.entity.Cart;
+import cart.entity.CartItem;
 import cart.entity.Product;
 
 public class CartResponse {
@@ -9,8 +9,8 @@ public class CartResponse {
     private final String imgUrl;
     private final int price;
 
-    public CartResponse(Cart cart, Product product) {
-        this.id = cart.getId();
+    public CartResponse(CartItem cartItem, Product product) {
+        this.id = cartItem.getId();
         this.name = product.getName();
         this.imgUrl = product.getImgUrl();
         this.price = product.getPrice();

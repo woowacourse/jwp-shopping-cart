@@ -23,6 +23,11 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body(ExceptionCode.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionCode> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(ExceptionCode.ILLEGAL_ARGUMENT);
+    }
+
     @ExceptionHandler(SQLDataException.class)
     public ResponseEntity<ExceptionCode> handleDataException(SQLDataException e) {
         return ResponseEntity.badRequest().body(ExceptionCode.NO_DATA);
