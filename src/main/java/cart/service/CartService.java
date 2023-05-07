@@ -2,7 +2,6 @@ package cart.service;
 
 import cart.dao.CartDao;
 import cart.dao.H2CartDao;
-import cart.domain.Cart;
 import cart.dto.request.CartRequest;
 import cart.dto.response.CartResponse;
 import cart.entity.CartEntity;
@@ -26,7 +25,7 @@ public class CartService {
 
     public CartResponse create(CartRequest cartRequest, long memberId) {
         validateExist(cartRequest, memberId);
-        Cart cart = cartMapper.requestToCart(cartRequest);
+        CartEntity cart = cartMapper.requestToCartEntity(memberId, cartRequest);
 
         CartEntity save = cartDao.save(cart, cartRequest.getProductId(), memberId)
                 .orElseThrow(() -> new ResourceNotFoundException("데이터가 정상적으로 저장되지 않았습니다." + System.lineSeparator() + "사용자 id : " + memberId));

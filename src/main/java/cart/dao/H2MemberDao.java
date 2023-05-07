@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Member;
 import cart.entity.MemberEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,7 +37,8 @@ public class H2MemberDao implements MemberDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Optional<MemberEntity> save(Member member) {
+    @Override
+    public Optional<MemberEntity> save(MemberEntity member) {
         Map<String, Object> parameterSource = new HashMap<>();
 
         parameterSource.put("name", member.getName());
@@ -51,12 +51,14 @@ public class H2MemberDao implements MemberDao {
         return findById(id);
     }
 
+    @Override
     public MemberEntity update(MemberEntity entity) {
         String sql = "UPDATE member SET email = ?, password = ?, name = ?, phone = ?, updated_at = ? WHERE id = ?";
         jdbcTemplate.update(sql, entity.getEmail(), entity.getPassword(), entity.getName(), entity.getPhone(), entity.getUpdatedAt(), entity.getId());
         return entity;
     }
 
+    @Override
     public Optional<MemberEntity> findById(Long id) {
         String sql = "SELECT * FROM member WHERE id = ?";
         try {
@@ -66,16 +68,19 @@ public class H2MemberDao implements MemberDao {
         }
     }
 
+    @Override
     public List<MemberEntity> findAll() {
         String sql = "SELECT * FROM member";
         return jdbcTemplate.query(sql, memberEntityRowMapper);
     }
 
+    @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM member WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
+    @Override
     public Optional<MemberEntity> findByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = ?";
         try {

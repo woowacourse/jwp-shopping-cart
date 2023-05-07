@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Member;
 import cart.entity.MemberEntity;
 
 import java.util.List;
@@ -8,7 +7,7 @@ import java.util.Optional;
 
 public interface MemberDao {
 
-    Optional<MemberEntity> save(Member member);
+    Optional<MemberEntity> save(MemberEntity member);
 
     MemberEntity update(MemberEntity entity);
 

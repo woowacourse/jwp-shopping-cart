@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.domain.Cart;
 import cart.entity.CartEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,7 +39,7 @@ public class H2CartDao implements CartDao {
     }
 
     @Override
-    public Optional<CartEntity> save(Cart cart, long productId, long memberId) {
+    public Optional<CartEntity> save(CartEntity cart, long productId, long memberId) {
         Map<String, Object> parameterSource = new HashMap<>();
 
         parameterSource.put("member_id", memberId);

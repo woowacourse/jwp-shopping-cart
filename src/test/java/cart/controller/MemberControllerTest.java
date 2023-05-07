@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dao.MemberDao;
+import cart.dao.H2MemberDao;
 import cart.dto.request.MemberRequest;
 import cart.fixture.MemberFixture;
 import cart.service.MemberService;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @WebMvcTest(MemberController.class)
-@Import({MemberDao.class})
+@Import({H2MemberDao.class})
 @MockBean(JdbcTemplate.class)
 class MemberControllerTest {
 

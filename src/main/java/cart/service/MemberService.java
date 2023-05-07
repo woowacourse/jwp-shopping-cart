@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.dao.MemberDao;
-import cart.domain.Member;
 import cart.dto.request.MemberRequest;
 import cart.dto.response.MemberResponse;
 import cart.entity.MemberEntity;
@@ -24,7 +23,7 @@ public class MemberService {
     }
 
     public MemberResponse create(MemberRequest memberRequest) {
-        Member member = memberMapper.requestToMember(memberRequest);
+        MemberEntity member = memberMapper.requestToEntity(memberRequest);
         MemberEntity created = memberDao.save(member)
                 .orElseThrow(() -> new ResourceNotFoundException("데이터가 정상적으로 저장되지 않았습니다."));
         return memberMapper.entityToResponse(created);
