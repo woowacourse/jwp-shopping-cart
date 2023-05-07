@@ -40,4 +40,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> authorizationException(final AuthorizationException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> exceptionException() {
+        return ResponseEntity.internalServerError().body("알 수 없는 오류가 발생했습니다.");
+    }
 }
