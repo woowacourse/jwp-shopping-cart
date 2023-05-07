@@ -1,4 +1,7 @@
-package cart.global.exception;
+package cart.global.exception.product;
+
+import cart.global.exception.common.CartException;
+import cart.global.exception.common.ExceptionStatus;
 
 public class ProductNotFoundException extends CartException {
 

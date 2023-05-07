@@ -1,7 +1,7 @@
 package cart.global.exception.auth;
 
-import cart.global.exception.CartException;
-import cart.global.exception.ExceptionStatus;
+import cart.global.exception.common.CartException;
+import cart.global.exception.common.ExceptionStatus;
 
 public class AuthorizationNotFoundException extends CartException {
 

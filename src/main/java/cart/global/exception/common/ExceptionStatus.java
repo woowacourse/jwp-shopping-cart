@@ -1,4 +1,4 @@
-package cart.global.exception;
+package cart.global.exception.common;
 
 import org.springframework.http.HttpStatus;
 

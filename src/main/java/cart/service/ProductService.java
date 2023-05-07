@@ -3,7 +3,7 @@ package cart.service;
 import cart.dao.product.ProductDao;
 import cart.dao.product.ProductEntity;
 import cart.domain.product.Product;
-import cart.global.exception.ProductNotFoundException;
+import cart.global.exception.product.ProductNotFoundException;
 import cart.service.dto.product.ProductModifyRequest;
 import cart.service.dto.product.ProductRegisterRequest;
 import cart.service.dto.product.ProductSearchResponse;

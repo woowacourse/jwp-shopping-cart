@@ -1,5 +1,6 @@
-package cart.global.exception;
+package cart.global.exception.common;
 
+import cart.global.exception.product.ProductNotFoundException;
 import cart.global.exception.response.ErrorResponse;
 import java.util.List;
 import org.springframework.http.HttpStatus;

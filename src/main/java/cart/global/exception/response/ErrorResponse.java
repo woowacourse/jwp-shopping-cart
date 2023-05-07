@@ -1,6 +1,6 @@
 package cart.global.exception.response;
 
-import cart.global.exception.ExceptionStatus;
+import cart.global.exception.common.ExceptionStatus;
 import java.util.HashMap;
 import java.util.Map;
 
