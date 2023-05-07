@@ -3,7 +3,7 @@ package cart.domain.member;
 public class Email {
 
     private static final int MAX_EMAIL_LENGTH = 254;
-    public final String email;
+    private final String email;
 
     public Email(final String email) {
         validateEmail(email);
