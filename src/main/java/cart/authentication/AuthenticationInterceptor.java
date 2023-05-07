@@ -6,6 +6,7 @@ import cart.controller.dto.AuthInfo;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
@@ -30,5 +31,11 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         authInfoThreadLocal.set(authInfo);
 
         return true;
+    }
+
+    @Override
+    public void postHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
+            final ModelAndView modelAndView) throws Exception {
+        authInfoThreadLocal.remove();
     }
 }

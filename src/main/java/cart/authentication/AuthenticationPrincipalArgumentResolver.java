@@ -29,7 +29,6 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         if (authInfo == null) {
             throw new NotSignInException("로그인이 필요한 기능입니다.");
         }
-        authInfoThreadLocal.remove();
         return authInfo;
     }
 }
