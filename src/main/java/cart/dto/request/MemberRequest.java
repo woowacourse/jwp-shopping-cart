@@ -8,18 +8,15 @@ public class MemberRequest {
     private static final String PHONE_REGEX = "\\d{3}-\\d{4}-\\d{4}";
 
     @Email(message = "이메일 형식이여야합니다.")
-    private String email;
+    private final String email;
 
-    private String password;
+    private final String password;
 
     @NotNull(message = "이름은 비어있을 수 없습니다.")
-    private String name;
+    private final String name;
 
     @Pattern(regexp = PHONE_REGEX, message = "전화번호 형태는 다음과 같습니다. '010-1234-5678'")
-    private String phone;
-
-    public MemberRequest() {
-    }
+    private final String phone;
 
     public MemberRequest(String email, String password, String name, String phone) {
         this.email = email;

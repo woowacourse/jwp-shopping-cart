@@ -5,12 +5,9 @@ import javax.validation.constraints.Positive;
 public class CartRequest {
 
     @Positive(message = "상품 아이디는 1 이상입니다.")
-    private Long productId;
+    private final Long productId;
 
-    private int count = 1;
-
-    public CartRequest() {
-    }
+    private final int count;
 
     public CartRequest(long productId, int count) {
         this.productId = productId;
