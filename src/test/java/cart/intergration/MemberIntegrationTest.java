@@ -38,10 +38,7 @@ class MemberIntegrationTest {
     @DisplayName("회원을 등록하고, 회원의 조회가 정상적으로 돼야 한다.")
     void saveMemberAndFindMembers() throws Exception {
         // given
-        MemberSignupRequest request = new MemberSignupRequest("glen@naver.com", "123456");
-        mockMvc.perform(post(MEMBER_PATH + "/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
+        signupMember(new MemberSignupRequest("glen@naver.com", "123456"));
 
         // expect
         mockMvc.perform(get(MEMBER_PATH)
@@ -52,14 +49,18 @@ class MemberIntegrationTest {
                 .andExpect(jsonPath("$.result[0].password").value("123456"));
     }
 
+    private void signupMember(MemberSignupRequest request) throws Exception {
+        mockMvc.perform(post(MEMBER_PATH + "/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+    }
+
     @Test
     @DisplayName("회원을 등록하고, 같은 이메일로 등록하면 400번대 HTTP 상태 코드가 반환되어야 한다.")
     void saveMember_existsEmail() throws Exception {
         // given
         MemberSignupRequest request = new MemberSignupRequest("glen@naver.com", "123456");
-        mockMvc.perform(post(MEMBER_PATH + "/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
+        signupMember(request);
 
         // expect
         mockMvc.perform(post(MEMBER_PATH + "/signup")

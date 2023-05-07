@@ -45,12 +45,7 @@ class ProductIntegrationTest {
     @DisplayName("상품을 등록하고, 상품의 조회가 정상적으로 돼야 한다.")
     void saveProductAndFindProducts() throws Exception {
         // given
-        ProductCreateRequest request = new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png");
-        MvcResult mvcResult = mockMvc.perform(post(PRODUCT_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andReturn();
-        int productId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.result.productId");
+        int productId = createProductAndReturnProductId(new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png"));
 
         // expect
         mockMvc.perform(get(PRODUCT_PATH)
@@ -63,16 +58,19 @@ class ProductIntegrationTest {
                 .andExpect(jsonPath("$.result[0].imageUrl").value("https://image.com/image.png"));
     }
 
-    @Test
-    @DisplayName("상품을 등록하고, 삭제한 뒤 상품을 조회하면 상품이 없어야 한다.")
-    void saveProductAndDeleteProductAndFindProducts() throws Exception {
-        // given
-        ProductCreateRequest request = new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png");
+    private int createProductAndReturnProductId(ProductCreateRequest request) throws Exception {
         MvcResult mvcResult = mockMvc.perform(post(PRODUCT_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andReturn();
-        int productId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.result.productId");
+        return JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.result.productId");
+    }
+
+    @Test
+    @DisplayName("상품을 등록하고, 삭제한 뒤 상품을 조회하면 상품이 없어야 한다.")
+    void saveProductAndDeleteProductAndFindProducts() throws Exception {
+        // given
+        int productId = createProductAndReturnProductId(new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png"));
 
         // when
         mockMvc.perform(delete(PRODUCT_PATH + "/" + productId)
@@ -89,12 +87,7 @@ class ProductIntegrationTest {
     @DisplayName("상품을 등록하고, 수정한 뒤 상품을 조회하면 수정이 반영되어야 한다.")
     void saveProductAndUpdateProductAndFindProducts() throws Exception {
         // given
-        ProductCreateRequest createRequest = new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png");
-        MvcResult mvcResult = mockMvc.perform(post(PRODUCT_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createRequest)))
-                .andReturn();
-        int productId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.result.productId");
+        int productId = createProductAndReturnProductId(new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png"));
 
         // when
         ProductUpdateRequest updateRequest = new ProductUpdateRequest("글렌리벳", 20000, "https://image.com/image2.png");
@@ -187,12 +180,7 @@ class ProductIntegrationTest {
     @MethodSource("invalidProductName")
     void updateProduct_invalidProductName(String displayName, String productName) throws Exception {
         // given
-        MvcResult mvcResult = mockMvc.perform(post(PRODUCT_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(
-                                new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png"))))
-                .andReturn();
-        int productId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.result.productId");
+        int productId = createProductAndReturnProductId(new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png"));
 
         ProductUpdateRequest request = new ProductUpdateRequest(productName, 10000, "https://image.com/image.png");
 
@@ -208,12 +196,7 @@ class ProductIntegrationTest {
     @MethodSource("invalidPrice")
     void updateProduct_invalidPrice(String displayName, int price) throws Exception {
         // given
-        MvcResult mvcResult = mockMvc.perform(post(PRODUCT_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(
-                                new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png"))))
-                .andReturn();
-        int productId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.result.productId");
+        int productId = createProductAndReturnProductId(new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png"));
 
         ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕", price, "https://image.com/image.png");
 
@@ -229,12 +212,7 @@ class ProductIntegrationTest {
     @MethodSource("invalidImageUrl")
     void updateProduct_invalidImageUrl(String displayName, String imageUrl) throws Exception {
         // given
-        MvcResult mvcResult = mockMvc.perform(post(PRODUCT_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(
-                                new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png"))))
-                .andReturn();
-        int productId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.result.productId");
+        int productId = createProductAndReturnProductId(new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png"));
 
         ProductUpdateRequest request = new ProductUpdateRequest("글렌피딕", 10000, imageUrl);
 
@@ -250,12 +228,7 @@ class ProductIntegrationTest {
     @DisplayName("상품이 장바구니에 담겨있으면 상품을 삭제할 수 없다.")
     void deleteProduct_productInCart() throws Exception {
         // given
-        MvcResult mvcResult = mockMvc.perform(post(PRODUCT_PATH)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(
-                                new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png"))))
-                .andReturn();
-        int productId = JsonPath.read(mvcResult.getResponse().getContentAsString(), "$.result.productId");
+        int productId = createProductAndReturnProductId(new ProductCreateRequest("글렌피딕", 10000, "https://image.com/image.png"));
 
         mockMvc.perform(post("/members" + "/signup")
                 .contentType(MediaType.APPLICATION_JSON)
