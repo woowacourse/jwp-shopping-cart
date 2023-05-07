@@ -10,11 +10,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 @Configuration
-public class Config implements WebMvcConfigurer {
+public class AuthConfig implements WebMvcConfigurer {
 
     private final AuthInterceptor authInterceptor;
 
-    public Config(final AuthInterceptor authInterceptor) {
+    public AuthConfig(final AuthInterceptor authInterceptor) {
         this.authInterceptor = authInterceptor;
     }
 
