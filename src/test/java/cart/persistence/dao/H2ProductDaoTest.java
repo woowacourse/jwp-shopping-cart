@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
@@ -18,6 +19,13 @@ import org.springframework.jdbc.support.KeyHolder;
 class H2ProductDaoTest {
 
     private final ProductDao productDao;
+
+    private final RowMapper<ProductEntity> rowMapper = (resultSet, rowNumber) -> ProductEntity.create(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getLong("price"),
+            resultSet.getString("image_url")
+    );
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -32,15 +40,9 @@ class H2ProductDaoTest {
     void shouldSaveProductWhenRequest() {
         final ProductEntity productEntityToSave = ProductEntity.createToSave("changer", 10, "domain.com");
         final long productId = this.productDao.save(productEntityToSave);
-        final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
 
-        final ProductEntity productEntityFromDb = jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNumber) -> ProductEntity.create(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getLong("price"),
-                        resultSet.getString("image_url"))
-                , productId);
+        final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
+        final ProductEntity productEntityFromDb = jdbcTemplate.queryForObject(sql, rowMapper, productId);
 
         assertAll(
                 () -> assertThat(productEntityFromDb.getName()).isEqualTo("changer"),
@@ -91,15 +93,8 @@ class H2ProductDaoTest {
 
         //when
         this.productDao.update(productEntityToUpdate);
-
-        ProductEntity productEntityAfterUpdate = jdbcTemplate.queryForObject(
-                "SELECT id, name, price, image_url FROM product WHERE id = ?",
-                (resultSet, rowNumber) -> ProductEntity.create(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getLong("price"),
-                        resultSet.getString("image_url")
-                ), productId);
+        String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
+        ProductEntity productEntityAfterUpdate = jdbcTemplate.queryForObject(sql, rowMapper, productId);
 
         //then
         assertAll(
@@ -131,14 +126,8 @@ class H2ProductDaoTest {
         //when
         this.productDao.deleteById(id);
 
-        List<ProductEntity> productEntities = jdbcTemplate.query(
-                "SELECT id, name, price, image_url FROM product",
-                (resultSet, rowNumber) -> ProductEntity.create(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getLong("price"),
-                        resultSet.getString("image_url")
-                ));
+        String sql = "SELECT id, name, price, image_url FROM product";
+        List<ProductEntity> productEntities = jdbcTemplate.query(sql, rowMapper);
 
         //then
         assertThat(productEntities).hasSize(1);

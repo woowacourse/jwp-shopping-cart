@@ -157,10 +157,10 @@ Content-Type: application/json
 ```
 
 
-## User 관련 기능
+## Member 관련 기능
 
 ### POST /members
-회원을 등록합니다.
+사용자를 등록합니다.
 
 **구현 내용**
 > - [x] Member 생성
@@ -170,7 +170,7 @@ Content-Type: application/json
 >       - [x] 10자리 이상
 >       - [x] 영문자, 숫자, 특수문자를 모두 포함
 >         - [x] 특수문자는 "!@#$%^&*()"만 가능
-> - [ ] DB에 저장
+> - [x] DB에 저장
 
 **Request example**
 ```json

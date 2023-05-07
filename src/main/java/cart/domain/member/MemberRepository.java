@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface MemberRepository {
 
-    Long save(Member member);
+    Long save(Member memberToSave);
 
     List<Member> findAll();
 
