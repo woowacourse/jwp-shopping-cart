@@ -2,6 +2,7 @@ package cart.cart.dao;
 
 import cart.cart.domain.Cart;
 import cart.cart.dto.CartRequestDTO;
+import cart.common.exceptions.InvalidInputException;
 import cart.common.exceptions.NotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,6 +19,7 @@ public class CartDAOImpl implements CartDAO {
     public static final String CART_NOT_FOUND_ERROR = "해당 카트를 찾을 수 없습니다.";
     public static final String ITEM_NOT_FOUND_IN_CART_ERROR = "장바구니에 해당 상품이 없습니다.";
     public static final String TABLE_NAME = "cart_items";
+    public static final String NO_USER_OR_PRODUCT_ERROR = "존재하지 않는 유저 혹은 상품입니다.";
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -40,8 +42,12 @@ public class CartDAOImpl implements CartDAO {
         final MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("user_id", cartRequestDTO.getUserId())
                 .addValue("product_id", cartRequestDTO.getProductId());
-        final long id = this.simpleJdbcInsert.executeAndReturnKey(param).longValue();
-        return Cart.of(id, cartRequestDTO.getUserId(), cartRequestDTO.getProductId());
+        try {
+            final long id = this.simpleJdbcInsert.executeAndReturnKey(param).longValue();
+            return Cart.of(id, cartRequestDTO.getUserId(), cartRequestDTO.getProductId());
+        } catch (final Exception e) {
+            throw new InvalidInputException(NO_USER_OR_PRODUCT_ERROR);
+        }
     }
 
     @Override

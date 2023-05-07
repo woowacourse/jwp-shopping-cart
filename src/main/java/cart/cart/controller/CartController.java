@@ -29,7 +29,7 @@ public class CartController {
     }
     
     @GetMapping("/cart/items")
-    public ResponseEntity<List<ProductResponseDTO>> cart(@AuthenticationPrincipal final UserInfo userInfo) {
+    public ResponseEntity<List<ProductResponseDTO>> getCart(@AuthenticationPrincipal final UserInfo userInfo) {
         final UserResponseDTO userResponseDTO = this.authService.findUser(userInfo);
         final List<ProductResponseDTO> userCart = this.cartService.findUserCart(userResponseDTO.getId());
         return ResponseEntity.ok().body(userCart);
