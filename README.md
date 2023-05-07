@@ -12,11 +12,11 @@
 - [x] 관리자 도구 페이지 연동
   - /admin url로 접근할 경우 관리자 도구 페이지를 조회할 수 있어야 합니다.
 - [x] 설정 페이지 연등
-  - /settings url로 접근할 경우 설정 페이지를 조회할 수 있어야 한다.
+  - /settings url로 접근할 경우 설정 페이지를 조회할 수 있어야 합니다.
 - [x] 장바구니 기능 구현
-  - [x] 장바구니에 상품을 추가할 수 있어야 한다.
-  - [x] 장바구니에서 상품을 제거할 수 있어야 한다.
-  - [x] 장바구니 목록을 조회할 수 있어야 한다.
+  - [x] 장바구니에 상품을 추가할 수 있어야 합니다.
+  - [x] 장바구니에서 상품을 제거할 수 있어야 합니다.
+  - [x] 장바구니 목록을 조회할 수 있어야 합니다.
 
 ## API
 
@@ -37,6 +37,25 @@
 |:-----------:|:-------------------------:|
 | HTTP STATUS |       201(CREATED)        |
 | BODY |                           |
+
+
+#### 조회
+
+- request
+
+|     URL     |                /products                |
+|:-----------:|:---------------------------------------:|
+| HTTP METHOD |                   GET                   |
+|   HEADER    |  |
+|    BODY     |                                         |
+
+- response
+
+|   HEADER    |                                  |
+|:-----------:|:--------------------------------:|
+| HTTP STATUS |             200(OK)              |
+| BODY | List<ProductResponse> : products |
+
 
 
 #### 수정
@@ -76,11 +95,29 @@
 ### cart
 
 
+#### 조회
+
+- request
+
+|     URL     |             /carts/products             |
+|:-----------:|:---------------------------------------:|
+| HTTP METHOD |                   GET                   |
+|   HEADER    | AUTHORIZATION : Basic ${email:password} |
+|    BODY     |                        |
+
+- response
+
+|   HEADER    |                       |
+|:-----------:|:---------------------:|
+| HTTP STATUS |        200(OK)        |
+| BODY | List<CartResponse> : products |
+
+
 #### 생성
 
 - request
 
-|     URL     |                 /carts                  |
+|     URL     |             /carts/products             |
 |:-----------:|:---------------------------------------:|
 | HTTP METHOD |                  POST                   |
 |   HEADER    | AUTHORIZATION : Basic ${email:password} |
@@ -97,11 +134,11 @@
 
 - request
 
-|     URL     |                 /carts                  |
+|     URL     |             /carts/{cartId}             |
 |:---:|:---------------------------------------:|
 | HTTP METHOD |                 DELETE                  |
 |   HEADER    | AUTHORIZATION : Basic ${email:password} |
-| BODY |             Long: productId             |
+| BODY |                                         |
 
 - response
 
