@@ -2,6 +2,7 @@ package cart.controller;
 
 import static org.hamcrest.Matchers.is;
 
+
 import cart.dto.ProductAddRequestDto;
 import cart.dto.ProductModifyRequestDto;
 import io.restassured.RestAssured;
@@ -13,8 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class ProductControllerTest {
 
     @LocalServerPort
