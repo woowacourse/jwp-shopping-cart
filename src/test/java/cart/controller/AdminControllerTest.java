@@ -180,19 +180,6 @@ class AdminControllerTest extends ProductSteps {
             // then
             assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         }
-
-        @Test
-        void 상품_삭제_테스트에_실패한다() {
-            // when
-            final ExtractableResponse<Response> response = 상품을_삭제한다(1000L);
-
-            // then
-            assertAll(
-                    () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
-                    () -> assertThat(getErrorMessage(response))
-                            .contains("상품을 찾을 수 없습니다.")
-            );
-        }
     }
 
     private String getErrorMessage(final ExtractableResponse<Response> restAssuredResponse) {

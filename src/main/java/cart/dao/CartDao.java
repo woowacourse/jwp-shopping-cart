@@ -40,8 +40,8 @@ public class CartDao {
         return jdbcTemplate.update(sql, params);
     }
 
-    public int deleteByProductId(final Long productId) {
+    public void deleteByProductId(final Long productId) {
         final String sql = "DELETE FROM cart WHERE product_id = :productId";
-        return jdbcTemplate.update(sql, Collections.singletonMap("productId", productId));
+        jdbcTemplate.update(sql, Collections.singletonMap("productId", productId));
     }
 }

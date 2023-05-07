@@ -4,6 +4,7 @@ import cart.auth.excpetion.AuthorizeException;
 import cart.dto.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.IncorrectUpdateSemanticsDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,8 +45,8 @@ public class GlobalControllerAdvice {
         return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ErrorResponse> handleNoSuchElementException(final NoSuchElementException exception) {
+    @ExceptionHandler({NoSuchElementException.class, IncorrectUpdateSemanticsDataAccessException.class})
+    public ResponseEntity<ErrorResponse> handleNoSuchElementException(final Exception exception) {
         final String errorMessage = exception.getMessage();
         logger.error("error : {}", errorMessage);
 

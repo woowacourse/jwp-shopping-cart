@@ -6,16 +6,15 @@ import cart.dao.ProductDao;
 import cart.dto.ProductResponse;
 import cart.dto.ProductSaveRequest;
 import cart.dto.ProductUpdateRequest;
-import cart.respository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.IncorrectUpdateSemanticsDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -26,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class ProductServiceTest {
 
     private ProductService productService;
-    private ProductRepository productRepository;
     private ProductDao productDao;
     private CartDao cartDao;
 
@@ -37,9 +35,8 @@ class ProductServiceTest {
     void init() {
         cartDao = new CartDao(jdbcTemplate);
         productDao = new ProductDao(jdbcTemplate);
-        productRepository = new ProductRepository(productDao, cartDao);
 
-        productService = new ProductService(productRepository, new ProductMapper());
+        productService = new ProductService(productDao, cartDao, new ProductMapper());
     }
 
     @Test
@@ -72,15 +69,6 @@ class ProductServiceTest {
             final List<ProductResponse> results = productService.findAll();
             assertThat(results).isEmpty();
         }
-
-        @Test
-        void id가_없는_상품을_삭제하려면_에러를_반환한다() {
-            // when, then
-            final Long noneSavedId = 100L;
-
-            assertThatThrownBy(() -> productService.delete(noneSavedId))
-                    .isInstanceOf(NoSuchElementException.class);
-        }
     }
 
     @Nested
@@ -112,7 +100,7 @@ class ProductServiceTest {
 
             // when, then
             assertThatThrownBy(() -> productService.update(noneSavedId, request))
-                    .isInstanceOf(NoSuchElementException.class);
+                    .isInstanceOf(IncorrectUpdateSemanticsDataAccessException.class);
         }
     }
 

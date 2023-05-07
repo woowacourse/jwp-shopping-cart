@@ -49,11 +49,11 @@ public class ProductDao {
         );
     }
 
-    public int delete(Long id) {
+    public void delete(Long id) {
         final String sql = "DELETE FROM product WHERE id = :id";
 
         final Map<String, Long> params = Collections.singletonMap("id", id);
-        return jdbcTemplate.update(sql, params);
+        jdbcTemplate.update(sql, params);
     }
 
     public int update(Long id, Product product) {
