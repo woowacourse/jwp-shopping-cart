@@ -30,6 +30,11 @@ public class ViewController {
         return "index";
     }
 
+    @GetMapping("/cart")
+    public String readCarts() {
+        return "cart";
+    }
+
     @GetMapping("/settings")
     public String getMembers(final Model model) {
         final List<ResponseMemberDto> responseMemberDtos = memberService.findAll();

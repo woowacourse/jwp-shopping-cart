@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.dto.auth.AuthInfo;
 import cart.dto.response.ResponseProductDto;
-import cart.infrastructure.BasicAuthorizationExtractor;
 import cart.service.CartService;
 import cart.service.MemberService;
 import cart.ui.AuthenticationPrincipal;
@@ -17,7 +16,6 @@ public class CartApiController {
 
     private final CartService cartService;
     private final MemberService memberService;
-    private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
 
     @Autowired
     public CartApiController(final CartService cartService, final MemberService memberService) {
