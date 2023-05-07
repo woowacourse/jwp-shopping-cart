@@ -23,8 +23,6 @@ CREATE TABLE IF NOT EXISTS cart
     id              LONG    NOT NULL    AUTO_INCREMENT,
     member_id       LONG    NOT NULL,
     product_id      LONG    NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (member_id)     REFERENCES  MEMBER (id),
-    FOREIGN KEY (product_id)    REFERENCES  PRODUCT (id)
+    PRIMARY KEY (id)
 );
 
