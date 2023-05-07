@@ -46,6 +46,7 @@ public class CartService {
     }
 
     public void deleteItem(final Long cartId) {
+        validateExistCart(cartId);
         cartDao.deleteBy(cartId);
     }
 
@@ -53,5 +54,12 @@ public class CartService {
         Optional<User> findUser = userDao.findByEmail(authInfo.getEmail());
         User user = findUser.orElseThrow(() -> new NotFoundResultException("존재하지 않는 사용자 입니다."));
         return user.getId();
+    }
+
+    private void validateExistCart(Long cartId) {
+        Optional<List<Cart>> findCart = cartDao.findBy(cartId);
+        if (findCart.isEmpty()) {
+            throw new NotFoundResultException("존재하지 않는 아이템 입니다.");
+        }
     }
 }

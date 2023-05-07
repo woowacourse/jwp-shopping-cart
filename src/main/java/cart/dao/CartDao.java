@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.*;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,11 +11,17 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CartDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final RowMapper<Cart> cartRowMapper = (resultSet, rowNumber) -> new Cart.Builder()
+            .id(resultSet.getLong("id"))
+            .userId(resultSet.getLong("user_id"))
+            .itemId(resultSet.getLong("item_id"))
+            .build();
     private final RowMapper<CartData> cartDataRowMapper = (resultSet, rowNumber) -> new CartData(
             resultSet.getLong("id"),
             new Name(resultSet.getString("name")),
@@ -41,6 +48,16 @@ public class CartDao {
                 "WHERE carts.user_id = :user_id";
         MapSqlParameterSource param = new MapSqlParameterSource("user_id", userId);
         return namedParameterJdbcTemplate.query(sql, param, cartDataRowMapper);
+    }
+
+    public Optional<List<Cart>> findBy(final Long cartId) {
+        final String sql = "SELECT id, user_id, item_id FROM carts WHERE id = :id";
+        MapSqlParameterSource param = new MapSqlParameterSource("id", cartId);
+        try {
+            return Optional.of(namedParameterJdbcTemplate.query(sql, param, cartRowMapper));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public void deleteBy(final Long cartId) {
