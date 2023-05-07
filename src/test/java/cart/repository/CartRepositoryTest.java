@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import cart.domain.cart.Cart;
+import cart.domain.cart.CartId;
 import cart.domain.member.Member;
 import cart.domain.member.MemberId;
 import cart.domain.product.Product;
@@ -92,10 +93,10 @@ class CartRepositoryTest {
 		final ProductId pizzaId = productRepository.insert(PIZZA);
 
 		// when
-		cartRepository.insert(memberId, chickenId);
+		final CartId cartId = cartRepository.insert(memberId, chickenId);
 		cartRepository.insert(memberId, pizzaId);
 
-		cartRepository.deleteById(memberId, chickenId);
+		cartRepository.deleteById(memberId, cartId.getId());
 		final List<Cart> carts = cartRepository.findAllByMemberId(memberId);
 		final Product remainProduct = productRepository.findByProductId(carts.get(0).getProductId());
 

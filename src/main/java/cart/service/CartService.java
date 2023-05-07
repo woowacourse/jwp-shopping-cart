@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cart.domain.cart.CartId;
 import cart.domain.member.Member;
-import cart.domain.member.MemberId;
 import cart.domain.product.Product;
 import cart.domain.product.ProductId;
 import cart.repository.CartRepository;
@@ -47,8 +46,9 @@ public class CartService {
 	}
 
 	@Transactional
-	public void deleteById(final MemberId memberId, final ProductId productId){
-		final boolean isDelete = cartRepository.deleteById(memberId, productId);
+	public void deleteById(final String email, final long cartId) {
+		final Member member = memberRepository.findByEmail(email);
+		final boolean isDelete = cartRepository.deleteById(member.getId(), cartId);
 
 		if (!isDelete) {
 			throw new IllegalStateException("상품 삭제에 실패했습니다.");

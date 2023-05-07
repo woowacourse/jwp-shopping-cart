@@ -58,9 +58,9 @@ public class CartRepository {
 		return jdbcTemplate.query(sql, cartRowMapper, email);
 	}
 
-	public boolean deleteById(final MemberId memberId, final ProductId productId) {
-		final String sql = "DELETE FROM carts WHERE memberId = ? AND productId = ?";
-		final int deleteCount = jdbcTemplate.update(sql, memberId.getId(), productId.getId());
+	public boolean deleteById(final MemberId memberId, final long cartId) {
+		final String sql = "DELETE FROM carts WHERE id = ? AND memberId = ?";
+		final int deleteCount = jdbcTemplate.update(sql, cartId, memberId.getId());
 
 		return deleteCount == DELETED_COUNT;
 	}
