@@ -21,8 +21,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        validateHeader(webRequest);
-        String header = webRequest.getHeader("Authorization");
+        String header = getValidateHeader(webRequest);
         String basicHeaderValue = header.substring(AUTHENTICATION_HEADER_NAME.length()).trim();
         byte[] decodedHeaderValue = Base64.decodeBase64(basicHeaderValue);
 
@@ -55,11 +54,12 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         }
     }
 
-    private void validateHeader(final NativeWebRequest webRequest) {
+    private String getValidateHeader(final NativeWebRequest webRequest) {
         String authorizationHeader = webRequest.getHeader("Authorization");
         validateHasAuthorizationHeader(authorizationHeader);
         String basicHeaderValue = authorizationHeader.substring("Basic".length()).trim();
         validateHasBasicHeaderValue(basicHeaderValue);
+        return authorizationHeader;
     }
 
     private void validateHasBasicHeaderValue(final String basicHeaderValue) {
