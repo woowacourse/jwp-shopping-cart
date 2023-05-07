@@ -4,8 +4,12 @@ public class ProductIdRequest {
 
     private final Long productId;
 
-    public ProductIdRequest() {
-        productId = null;
+    private ProductIdRequest() {
+        this(null);
+    }
+
+    private ProductIdRequest(final Long productId) {
+        this.productId = productId;
     }
 
     public Long getProductId() {
