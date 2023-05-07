@@ -8,7 +8,6 @@ import cart.controller.exception.CartException;
 import cart.dao.CartDao;
 import cart.domain.Cart;
 import cart.dto.MemberDto;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -44,27 +43,27 @@ class CartServiceTest {
     void 장바구니를_추가할_수_있다() {
         // given
         Mockito.when(cartDao.insert(Mockito.any(), Mockito.any()))
-                .thenReturn(1);
+                .thenReturn(1L);
 
         // when
-        final int affectedRows = cartService.insert(2L, MEMBER_DTO_FIXTURE);
+        final Long insertedId = cartService.insert(2L, MEMBER_DTO_FIXTURE);
 
         // then
-        assertThat(affectedRows).isOne();
+        assertThat(insertedId).isOne();
     }
 
     @Test
     void 장바구니_물품은_중복_가능하다() {
         // given
         Mockito.when(cartDao.insert(Mockito.any(), Mockito.any()))
-                .thenReturn(1);
+                .thenReturn(1L);
         final Long productId = 1L;
 
         // when
-        final int insertedRow = cartService.insert(1L, MEMBER_DTO_FIXTURE);
+        final Long cartId = cartService.insert(1L, MEMBER_DTO_FIXTURE);
 
         // expect
-        assertThat(cartService.insert(1L, MEMBER_DTO_FIXTURE)).isOne();
+        assertThat(cartService.insert(1L, MEMBER_DTO_FIXTURE)).isNotNull();
     }
 
     @Test

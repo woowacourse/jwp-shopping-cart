@@ -218,7 +218,6 @@ class ProductIntegrationTest {
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
-        // then
         final Response cartResponse = given()
                 .log().all()
                 .header("Authorization", "Basic " + TOKEN_FIXTURE)

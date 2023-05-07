@@ -35,8 +35,8 @@ public class CartController {
 
     @PostMapping("/carts")
     public ResponseEntity<Void> addCart(@AuthPrincipal final MemberDto memberDto, @RequestBody @Valid CreateCartRequest createCartRequest) {
-        cartService.insert(createCartRequest.getProductId(), memberDto);
-        return ResponseEntity.created(URI.create("/carts")).build();
+        final Long id = cartService.insert(createCartRequest.getProductId(), memberDto);
+        return ResponseEntity.created(URI.create("/carts/" + id)).build();
     }
 
     @DeleteMapping("/carts")

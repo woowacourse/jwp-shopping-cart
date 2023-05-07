@@ -29,7 +29,7 @@ public class CartService {
     }
 
     @Transactional
-    public int insert(final Long productId, final MemberDto memberDto) {
+    public Long insert(final Long productId, final MemberDto memberDto) {
         final Member member = memberService.find(memberDto);
         return cartDao.insert(productId, member.getId());
     }

@@ -58,10 +58,13 @@ class CartDaoTest {
         final Long memberId = simpleMemberInsert.executeAndReturnKey(MEMBER_FIXTURE).longValue();
 
         // when
-        final int insertedId = cartDao.insert(productId, memberId);
+        final Long insertedId = cartDao.insert(productId, memberId);
 
         // then
-        assertThat(insertedId).isOne();
+        final Optional<Cart> cartOptional = cartDao.find(productId, memberId);
+        assertSoftly(softly -> {
+            softly.assertThat(cartOptional.get()).isNotNull();
+        });
     }
 
     @Test
