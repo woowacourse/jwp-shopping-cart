@@ -67,4 +67,10 @@ public class UserDao {
         BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(user);
         namedParameterJdbcTemplate.update(sql, params);
     }
+
+    public void deleteBy(final Long userId) {
+        final String sql = "DELETE FROM users WHERE id = :id";
+        MapSqlParameterSource param = new MapSqlParameterSource("id", userId);
+        namedParameterJdbcTemplate.update(sql, param);
+    }
 }
