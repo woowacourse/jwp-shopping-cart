@@ -1,9 +1,10 @@
 package cart.controller;
 
 import cart.argumentresolver.AuthenticatedMember;
+import cart.dto.CartItemResponse;
+import cart.dto.ProductResponse;
 import cart.entity.item.CartItem;
 import cart.entity.member.Member;
-import cart.entity.product.Product;
 import cart.service.cart.CartItemAddService;
 import cart.service.cart.CartItemDeleteService;
 import cart.service.cart.CartItemFindService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/carts")
@@ -27,15 +29,18 @@ public class CartController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> findItems(@AuthenticatedMember Member authenticatedMember) {
-        final List<Product> products = findService.findCartItems(authenticatedMember.getId());
+    public ResponseEntity<List<ProductResponse>> findItems(@AuthenticatedMember Member authenticatedMember) {
+        final List<ProductResponse> products = findService.findCartItems(authenticatedMember.getId()).stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
         return ResponseEntity.ok().body(products);
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<CartItem> addItem(@PathVariable("productId") long productId, @AuthenticatedMember Member authenticatedMember) {
+    public ResponseEntity<CartItemResponse> addItem(@PathVariable("productId") long productId, @AuthenticatedMember Member authenticatedMember) {
         final CartItem addedItem = addService.addItem(authenticatedMember.getId(), productId);
-        return ResponseEntity.ok().body(addedItem);
+        final CartItemResponse cartItem = CartItemResponse.from(addedItem);
+        return ResponseEntity.ok().body(cartItem);
     }
 
     @DeleteMapping("/{productId}")
