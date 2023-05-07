@@ -13,14 +13,14 @@ public class ProductRequest {
     @NotNull(message = "가격은 비어있을 수 없습니다.")
     private final Integer price;
 
-    private ProductRequest() {
-        this(null, null, null);
-    }
-
     public ProductRequest(final String name, final String imageUrl, final Integer price) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
+    }
+
+    private ProductRequest() {
+        this(null, null, null);
     }
 
     public Product toProduct(final long id) {

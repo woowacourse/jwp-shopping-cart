@@ -5,14 +5,13 @@ public class CartResponse {
     private final Long id;
     private final ProductResponse productResponse;
 
-    private CartResponse() {
-        id = null;
-        productResponse = null;
-    }
-
     public CartResponse(final Long id, final ProductResponse productResponse) {
         this.id = id;
         this.productResponse = productResponse;
+    }
+
+    private CartResponse() {
+        this(null, null);
     }
 
     public Long getId() {

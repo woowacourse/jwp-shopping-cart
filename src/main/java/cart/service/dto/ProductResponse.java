@@ -10,18 +10,15 @@ public class ProductResponse {
     private final String imageUrl;
     private final Integer price;
 
-    private ProductResponse() {
-        id = null;
-        name = null;
-        imageUrl = null;
-        price = null;
-    }
-
     public ProductResponse(final Long id, final String name, final String imageUrl, final Integer price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
+    }
+
+    private ProductResponse() {
+        this(null, null, null, null);
     }
 
     public static ProductResponse from(final Product product) {
