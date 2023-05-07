@@ -9,10 +9,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.controller.dto.AddCartItemRequest;
+import cart.controller.dto.DeleteCartItemRequest;
 import cart.dao.CartDao;
 import cart.dao.H2ProductDao;
 import cart.entity.CartEntity;
 import cart.entity.ProductEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Base64;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
@@ -41,6 +45,9 @@ class CartControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private String authHeader;
 
@@ -82,7 +89,11 @@ class CartControllerTest {
 
     @Test
     void addProduct() throws Exception {
-        final MvcResult mvcResult = mockMvc.perform(post("/carts/products/20")
+        AddCartItemRequest addCartItemRequest = new AddCartItemRequest(20L);
+        final String body = objectMapper.writeValueAsString(addCartItemRequest);
+        final MvcResult mvcResult = mockMvc.perform(post("/carts/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body)
                         .header(HttpHeaders.AUTHORIZATION, authHeader))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists(HttpHeaders.LOCATION))
@@ -90,7 +101,7 @@ class CartControllerTest {
 
         final String location = mvcResult.getResponse().getHeader(HttpHeaders.LOCATION);
 
-        assertThat(location).contains("/carts/");
+        assertThat(location).contains("/carts/products/");
     }
 
     @Test
@@ -98,9 +109,14 @@ class CartControllerTest {
 
         final CartEntity cartEntity = new CartEntity(30L, 100L);
         final Long cartId = cartDao.save(cartEntity);
+        DeleteCartItemRequest deleteCartItemRequest = new DeleteCartItemRequest(cartId);
+        final String body = objectMapper.writeValueAsString(deleteCartItemRequest);
 
-        mockMvc.perform(delete("/carts/" + cartId)
-                        .header(HttpHeaders.AUTHORIZATION, authHeader))
+        mockMvc.perform(delete("/carts/products")
+                        .header(HttpHeaders.AUTHORIZATION, authHeader)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body)
+                )
                 .andExpect(status().isNoContent());
     }
 }
