@@ -26,7 +26,7 @@ const removeCartItem = (id) => {
         return;
     }
 
-    axios.request('/cart/products/' + id, {
+    axios.delete('/cart/products/' + id, {
         headers: {
             'Authorization': `Basic ${credentials}`
         }

@@ -23,11 +23,11 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getProducts(@Auth final AuthInfo authInfo) {
-        List<ProductResponse> productByEmail = cartService.findByEmail(authInfo.getEmail());
+        List<ProductResponse> productResponses = cartService.findByEmail(authInfo.getEmail());
 
         return ResponseEntity
                 .ok()
-                .body(productByEmail);
+                .body(productResponses);
     }
 
     @PostMapping

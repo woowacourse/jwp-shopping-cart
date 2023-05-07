@@ -1,17 +1,42 @@
 package cart.exception;
 
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                LocalDateTime.now(),
+                ex.getMessage()
+        );
+        return ResponseEntity
+                .badRequest()
+                .body(exceptionResponse);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(final HttpRequestMethodNotSupportedException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                LocalDateTime.now(),
+                ex.getMessage()
+        );
+        return ResponseEntity
+                .badRequest()
+                .body(exceptionResponse);
+    }
 
     @ExceptionHandler(BasicAuthException.class)
     public ResponseEntity<ExceptionResponse> handleBasicAuthException(final BasicAuthException exception) {
@@ -25,23 +50,11 @@ public class GlobalExceptionHandler {
                 .body(exceptionResponse);
     }
 
-    @ExceptionHandler({InvalidProductException.class, InvalidMemberException.class})
-    public ResponseEntity<ExceptionResponse> handleInvalidDomainException(final Exception exception) {
+    @ExceptionHandler(InvalidDomainException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidDomainException(final InvalidDomainException exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 LocalDateTime.now(),
                 exception.getMessage()
-        );
-
-        return ResponseEntity
-                .badRequest()
-                .body(exceptionResponse);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(
-                LocalDateTime.now(),
-                Objects.requireNonNull(exception.getBindingResult().getFieldError()).getDefaultMessage()
         );
 
         return ResponseEntity
