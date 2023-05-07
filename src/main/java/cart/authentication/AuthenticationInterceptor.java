@@ -9,8 +9,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
-    static final String AUTH_INFO_KEY = "authInfo";
-
     private final BasicAuthorizationExtractor extractor;
     private final AuthenticationValidator authValidator;
     private final AuthInfoThreadLocal authInfoThreadLocal;
