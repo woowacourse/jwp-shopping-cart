@@ -1,16 +1,17 @@
 package cart.event.user;
 
 import cart.domain.user.User;
+import cart.domain.user.UserId;
 
 public class UserRegisteredEvent {
 
-    private final User user;
+    private final UserId userId;
 
     public UserRegisteredEvent(final User user) {
-        this.user = user;
+        userId = user.getUserId();
     }
 
-    public User getUser() {
-        return user;
+    public UserId getUser() {
+        return userId;
     }
 }

@@ -31,7 +31,7 @@ public class CartCommandService {
 
     @EventListener(UserRegisteredEvent.class)
     public void createCart(final UserRegisteredEvent userRegisteredEvent) {
-        final Cart cart = new Cart(userRegisteredEvent.getUser().getUserId());
+        final Cart cart = new Cart(userRegisteredEvent.getUser());
         cartRepository.save(cart);
     }
 
