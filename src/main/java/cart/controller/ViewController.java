@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.dao.entity.MemberEntity;
+import cart.dao.entity.ProductEntity;
 import cart.dto.response.ResponseMemberDto;
 import cart.dto.response.ResponseProductDto;
 import cart.service.CartService;
@@ -27,7 +28,8 @@ public class ViewController {
 
     @GetMapping("/")
     public String readProducts(final Model model) {
-        final List<ResponseProductDto> responseProductDtos = cartService.findAll();
+        final List<ProductEntity> productEntities = cartService.findAll();
+        List<ResponseProductDto> responseProductDtos = transferProductEntityToDto(productEntities);
         model.addAttribute("products", responseProductDtos);
         return "index";
     }
@@ -49,8 +51,19 @@ public class ViewController {
 
     @GetMapping("/admin")
     public String getAdminProducts(final Model model) {
-        final List<ResponseProductDto> responseProductDtos = cartService.findAll();
+        final List<ProductEntity> productEntities = cartService.findAll();
+        List<ResponseProductDto> responseProductDtos = transferProductEntityToDto(productEntities);
         model.addAttribute("products", responseProductDtos);
         return "admin";
+    }
+
+    private List<ResponseProductDto> transferProductEntityToDto(List<ProductEntity> productEntities) {
+        return productEntities.stream()
+                .map(entity -> new ResponseProductDto(
+                        entity.getId(),
+                        entity.getName(),
+                        entity.getPrice(),
+                        entity.getImage())
+                ).collect(Collectors.toUnmodifiableList());
     }
 }

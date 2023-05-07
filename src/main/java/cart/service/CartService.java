@@ -5,17 +5,17 @@ import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.dao.entity.CartEntity;
 import cart.dao.entity.ProductEntity;
+import cart.domain.Cart;
+import cart.domain.Product;
 import cart.dto.auth.AuthInfo;
 import cart.dto.request.RequestCreateProductDto;
 import cart.dto.request.RequestUpdateProductDto;
-import cart.dto.response.ResponseProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -34,15 +34,8 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<ResponseProductDto> findAll() {
-        final List<ProductEntity> productEntities = productDao.selectAll();
-        return productEntities.stream()
-                .map(entity -> new ResponseProductDto(
-                        entity.getId(),
-                        entity.getName(),
-                        entity.getPrice(),
-                        entity.getImage())
-                ).collect(Collectors.toUnmodifiableList());
+    public List<ProductEntity> findAll() {
+        return productDao.findAll();
     }
 
     @Transactional
@@ -86,25 +79,33 @@ public class CartService {
         return cartDao.findProductsByMemberId(memberId);
     }
 
+    @Transactional
     public void addProductToCart(final Long memberId, final Long productId) {
-        if (cartDao.hasSameProduct(memberId, productId)) {
-            throw new IllegalArgumentException("카트에 이미 존재하는 상품입니다.");
-        }
-        final CartEntity cartEntity = new CartEntity.Builder()
+        final List<ProductEntity> productEntities = cartDao.findProductsByMemberId(memberId);
+
+        final Cart cart = Cart.from(productEntities);
+        final Product addingProduct = new Product(productDao.findById(productId).get());
+        cart.addProduct(addingProduct);
+
+        cartDao.insert(new CartEntity.Builder()
                 .memberId(memberId)
                 .productId(productId)
-                .build();
-        cartDao.insert(cartEntity);
+                .build()
+        );
     }
 
+    @Transactional
     public void deleteProductFromCart(final Long memberId, final Long productId) {
-        if (!cartDao.hasSameProduct(memberId, productId)) {
-            throw new IllegalArgumentException("카트에 존재하지 않는 상품입니다.");
-        }
-        final CartEntity cartEntity = new CartEntity.Builder()
+        final List<ProductEntity> productEntities = cartDao.findProductsByMemberId(memberId);
+
+        final Cart cart = Cart.from(productEntities);
+        final Product deletingProduct = new Product(productDao.findById(productId).get());
+        cart.deleteProduct(deletingProduct);
+
+        cartDao.deleteProduct(new CartEntity.Builder()
                 .memberId(memberId)
                 .productId(productId)
-                .build();
-        cartDao.deleteProduct(cartEntity);
+                .build()
+        );
     }
 }

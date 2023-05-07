@@ -23,7 +23,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ProductEntity> selectAll() {
+    public List<ProductEntity> findAll() {
         final String sql = "SELECT * FROM PRODUCT";
         return jdbcTemplate.query(sql, getProductRowMapper());
     }
