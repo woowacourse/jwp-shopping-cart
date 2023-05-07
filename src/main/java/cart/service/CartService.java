@@ -53,6 +53,7 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    @Transactional(readOnly = true)
     public List<CartItem> getCartItemsOf(Integer userId) {
         User user = getUserFrom(userDao.selectBy(userId));
         Cart cart = cartRepository.getCartOf(user);
