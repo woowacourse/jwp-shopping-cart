@@ -1,4 +1,4 @@
-# jwp-shopping-cart
+# jwp-shopping-shoppingbasket
 
 ## 상품 목록 페이지 연동
 - index.html 파일을 이용하여 상품 목록이 노출되는 페이지를 완성합니다. 
@@ -26,7 +26,7 @@
 
 ## 요구사항 외 추가 적용 요소
 - [x] 예외처리
-- [ ] 테스트 작성
+- [x] 테스트 작성
   - [x] 컨트롤러
     - [x] 조회: 상태 코드, 응답 Body 검증
     - [x] 뷰 반환: 상태 코드, 모델 attribute 검증
@@ -38,7 +38,7 @@
     - [x] 조회: 삽입한 데이터가 잘 들어갔는지
     - [x] 수정: 수정 전후 데이터 비교
     - [x] 삭제: 실제로 데이터가 삭제됐는지
-- [ ] Spring Validation
+- [x] Spring Validation
 
 
 ### 궁금한 내용
@@ -48,3 +48,116 @@
 - 처음에 생각한 API 설계는 CRUD를 다루는 것이라고 생각해 따로 CartApiController로 분리해주었는데 View 반환은 Api가 아닌가 하는 의문점
 - 현재 컨트롤러 테스트는 상태 코드와 응답값만 검증하고 있고, DB에 실제로 변경사항(삽입,수정,삭제)이 반영되는지는 검증하지 않고 있다. 실제 변경사항 검증은 Dao 테스트에 맡기고, 컨트롤러는 이정도의 테스트만 진행해도 괜찮을지?
 - 실제로 없는 id의 행을 update 할 때, 변경사항이 전혀 없고 예외도 발생하지 않는 것을 확인함. 클라이언트는 수정이 되었을 거라고 예상할텐데 이를 정상적인 흐름으로 봐도 될지? 또는 예외처리를 통해 잘못된 요청이 들어오고 있다고 알려야될지?
+
+
+## 2단계
+
+### 기능 구현 전 리팩토링
+- [x] 삽입/수정/삭제가 반환값을 가지도록 하고, 해당 반환값이 컨트롤러까지 전달되도록 수정
+- [x] 단건 조회 API 생성
+- [x] 변경된 반환값에 따른 테스트 실행
+- [x] DTO - Entity Mapper 클래스 생성
+- [x] 불필요한 @Autowired 생략
+- [x] @Valid를 활용한 유효성 검증
+- [x] API URL 설계 다시 하기
+
+## 장바구니 기능
+
+### 사용자 기능 구현
+- [x] 사용자 기본 정보: email, password
+  - [x] DB 테이블 설계
+    - ```sql
+      CREATE TABLE MEMBERS
+      (
+        id          INT     NOT NULL AUTO_INCREMENT,
+        email       VARCHAR NOT NULL UNIQUE,
+        password    VARCHAR NOT NULL,
+        PRIMARY KEY(id)
+      );
+      ```
+
+### 사용자 설정 페이지 연동
+- [x] `settings.html` 파일을 이용해서 사용자를 선택하는 기능을 구현합니다.
+- [x] `/settings` url로 접근할 경우 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있습니다.
+  - DB에 저장된 사용자 정보 모두 가져오기
+- [x] 사용자 설정 페이지에서 사용자를 선택하면, 이후 요청에 선택한 사용자의 인증 정보가 포함됩니다.
+  - DB에서 특정 사용자 정보 가져오기
+
+### 장바구니 기능 구현
+- [x] 장바구니와 관련된 아래 기능을 구현합니다.
+  - [x] 장바구니에 상품 추가 (CREATE)
+    - `insert into member_product(member_id, product_id) values(?, ?)`
+  - [x] 장바구니에 담긴 상품 제거 (DELETE)
+    - `delete from member_product where id = ?`
+  - [x] 장바구니 목록 조회 (READ)
+    - `select * from member_product`
+  - [x] DB 테이블 설계
+    - 사용자:상품 = M:N 관계이므로, 중간 테이블 생성 
+    - ```sql
+      CREATE TABLE CART
+      (
+        id          INT NOT NULL AUTO_INCREMENT,
+        member_id     INT NOT NULL,
+        product_id  INT NOT NULL,
+        PRIMARY KEY(id),
+        FOREIGN KEY(member_id)  REFERENCES MEMBERS(id)  ON DELETE CASCADE,
+        FOREIGN KEY(product_id) REFERENCES PRODUCTS(id) ON DELETE CASCADE
+      )
+      ```
+- [x] 사용자 정보는 요청 Header의 Authorization 필드를 사용해 인증 처리를 하여 얻습니다. 
+  - [x] 인증 방식은 Basic 인증을 사용합니다
+    - type: Basic
+    - credentials : email:password를 base64로 인코딩한 문자열
+    - ex) email@email.com:password -> ZW1haWxAZW1haWwuY29tOnBhc3N3b3Jk
+  - [x] Header에서 Authorization 필드 값 가져오기
+  - [x] Request로 넘어온 credentials 디코딩해서 사용자 알아내기
+    - 뷰에서 인코딩한 값이 넘어오는지 확인
+
+### 장바구니 페이지 연동
+- [x] 장바구니 상품 추가
+  - [x] 1단계에서 구현한 상품 목록 페이지(/)에서 담기 버튼을 통해 상품을 장바구니에 추가할 수 있습니다.
+- [x] 장바구니 목록 조회 및 제거
+  - [x] shoppingbasket.html 파일과 장바구니 관련 API를 이용하여 장바구니 페이지를 완성합니다.
+  - [x] `/shoppingbasket` url로 접근할 경우 장바구니 페이지를 조회할 수 있어야 합니다.
+  - [x] 장바구니 목록을 확인하고 상품을 제거하는 기능을 동작하게 만듭니다.
+
+### 리팩토링
+- [x] 깨진 테스트 복구
+- [x] 테스트 작성
+- [x] 코드 일관성
+- [ ] AOP?..
+
+### 2단계 리뷰 내용
+- [x] Argument Resolver를 활용한 인증
+- [x] CREATED 상태를 보낼 때의 URI에 대한 고민
+- [x] `CartService.getCartByMemberID` 네이밍 수정
+- [x] Dto 기본 생성자 접근제어자 수정
+- [x] CartEntity equals,hashcode 오버라이드 필요성에 대한 고민
+- [x] ExceptionHandler가 Exception.message를 이용할 수 있도록 수정
+- [x] UPDATE 요청의 응답으로 수정된 엔티티를 반환하도록 수정
+- [x] ProductValidator 네이밍 수정(ConstraintValidator 구현체로 생각할 여지 있음)
+- [x] DTO 유효성 검사 서비스 or 영속성 계층에서 더블 체크?
+
+### 궁금한 내용
+- [x] 컨트롤러에서 응답으로 엔티티 객체를 반환해도 될까?
+  - 필요 이상의 많은 정보를 전달하게 된다면 응답용 DTO를 반환하는 게 맞는 것 같다. 그렇지 않다면 굳이 DTO로 보내지 않는 것이 나은 것 같다.
+- [ ] 상품 추가 요청에 대한 컨트롤러의 응답으로 엔티티를 반환하도록 했다. 이때 상태 코드는 CREATED로 설정하며, location 헤더에 단건 조회 API URL을 담았다. 프론트 쪽에서는 이 응답을 보고 단건 조회 API를 담았다는 것을 바로 알기 힘들 것 같다.
+  - 왜냐하면, 어떤 HTTP 요청을 보내야 되는지에 대한 정보 없이, URI만 있기 때문이다. URI를 이렇게 담아서 보내는 것이 맞는지, 올바르게 사용한 것인지 궁금하다.
+  - 지금처럼 단건 조회 API 경로를 담아서 응답할 경우, 해당 객체 자체를 응답할 필요는 없을까?
+- [ ] 상품 추가의 결과로 엔티티를 반환하고 있다. 하지만 업데이트와 삭제의 결과로는 변경된 row 수를 반환하고 있다. 일관성이 없는 것일까? 프론트엔드에서 필요로 하는 정보를 주는 게 최우선이고, 일관성은 그 다음으로 중요한 것일까?
+- [ ] 상품에 대한 RequestDto에 입력값 검증을 추가하였다. 이때, image는 요구사항에 맞게 URL로만 입력 가능하게 @Pattern을 사용했다. update,insert 요청 시에 공통적으로 검증할 필요가 있기 때문에 Validator 클래스를 따로 빼주었다. 처음엔 ProductRequestDto와 같은 부모 클래스를 만들까 고민했는데, 괜찮은 선택이었을까?
+  - 이미지를 url로 받는 것은 변할 수 있는 비즈니스 로직인데 도메인 객체를 만드는 게 좋았을까?
+- [ ] @WebMvcTest에서 JdbcTemplate, Dao를 통해 DB 변경사항을 검증하려 했더니 의존성 주입이 안 되는 것을 확인함. 이럴 때는 @SpringBootTest로 전환을 해야 될지? 다른 방법은 무엇?
+- [x] 왜 필드가 하나인 DTO는 빈 생성자 없이 데이터 바인딩이 안 될까? (Reqeust의 Body로 넘어온 값)
+  - Request Data를 객체에 바인딩해주는 것은 ArgumentResolver의 역할이다. 이때 역직렬화를 위해 기본 생성자가 필요하다. 하지만 기본 생성자가 없어도, Jackson이 @JsonCreator를 알아서 넣어준다.(@JsonCreator는 역직렬화에 필요한 정보 담고 있음) 그렇지만 필드가 하나인 객체에는 @JsonCreator를 자동으로 생성해주지 않는다. 그 이유는 레거시 코드를 지원하기 위함이라고 한다. (그 뒤의 원리까지는 모르겠음)
+- [ ] data.sql 파일을 전체 주석 처리했더니, Bean 생성 과정에서 오류가 발생하는데 이유가 뭘까?
+- [ ] @WebMvcTest에서 @Controller, @RestController의 의존성을 모두 추가해줘야 하는가?
+- [ ] JdbcTest에서 Dao가 의존성 주입받지 못하는 이유 
+- [ ] carDataTest.sql에서 truncate를 했을 때 auto_increment값이 유지되는 이유
+- [ ] 컨트롤러 테스트에서 조회 기능 테스트를 하기 위해, Dao로 값을 저장한 뒤 테스트 진행해도 될까?
+
+---
+
+- [ ] ArgumentResolver가 PW 검사를 하기 위해 MemberService를 의존해도 괜찮을까? MemberService 의존이 많이 발생하는 것 같아서 궁금하다.
+- [ ] CartApiController의 Delete처럼 인증 확인만 하고, 그 외에는 MemberEntity를 필요로 하지 않는 경우에는 매개변수로 받기만 하고, 사용하지 않아도 괜찮을까?
+- [ ] CartApiController가 MemberService를 의존하며, 회원 조회를 마친 뒤에 CartService로 넘기기 vs 요청으로 받은 Email만 CartService에 넘기고, CartService에서 MemberService를 통해 회원 조회하기 
