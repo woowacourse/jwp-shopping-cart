@@ -68,6 +68,19 @@ class CartControllerTest {
     }
 
     @Test
+    void showCartWithoutHeader() throws Exception {
+        mockMvc.perform(get("/carts"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void showCartWithInvalidHeader() throws Exception {
+        mockMvc.perform(get("/carts")
+                        .header(HttpHeaders.AUTHORIZATION, "basemfds:pass"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void addProduct() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(post("/carts/20")
                         .header(HttpHeaders.AUTHORIZATION, authHeader))

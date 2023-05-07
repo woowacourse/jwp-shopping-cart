@@ -1,5 +1,6 @@
 package cart.auth;
 
+import java.util.Objects;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ public class BasicCredentialExtractor {
     private static final int PASSWORD_INDEX = 1;
 
     public Credential extractMemberInfo(final String authInfo) {
-        if ((authInfo.startsWith(BASIC_TYPE))) {
+        if (Objects.nonNull(authInfo) && authInfo.startsWith(BASIC_TYPE)) {
             final String authHeaderValue = authInfo.substring(BASIC_TYPE.length()).trim();
             final String decodedAuthValue = new String(Base64.decodeBase64(authHeaderValue));
             final String[] credentials = decodedAuthValue.split(DELIMITER);
