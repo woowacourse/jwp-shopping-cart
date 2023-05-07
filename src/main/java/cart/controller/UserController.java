@@ -51,7 +51,7 @@ public class UserController {
                                            @RequestBody @Valid final UserRequest userRequest) {
         userService.updateUser(userId, userRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                             .location(URI.create("/"))
+                             .location(URI.create("/settings"))
                              .build();
     }
 
@@ -59,7 +59,7 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable final Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.OK)
-                             .location(URI.create("/"))
+                             .location(URI.create("/settings"))
                              .build();
     }
 }
