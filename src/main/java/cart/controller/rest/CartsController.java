@@ -1,11 +1,10 @@
 package cart.controller.rest;
 
 import cart.auth.Auth;
-import cart.dto.auth.AuthInfo;
+import cart.domain.member.Member;
 import cart.dto.response.CartResponse;
 import cart.dto.response.ItemResponse;
 import cart.service.CartService;
-import cart.service.MembersService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,20 +23,17 @@ import java.net.URI;
 public class CartsController {
 
     private final CartService cartService;
-    private final MembersService membersService;
 
-    public CartsController(CartService cartService, MembersService membersService) {
+    public CartsController(CartService cartService) {
         this.cartService = cartService;
-        this.membersService = membersService;
     }
 
     @PostMapping("/items")
     public ResponseEntity<ItemResponse> createItem(
-            @Auth AuthInfo authInfo,
+            @Auth Member member,
             @RequestParam("product-id") Long productId) {
 
-        Long memberId = membersService.readIdByEmail(authInfo.getEmail());
-        ItemResponse itemResponse = cartService.createItem(memberId, productId);
+        ItemResponse itemResponse = cartService.createItem(member.getId(), productId);
 
         URI createdUri = ServletUriComponentsBuilder
                 .fromPath("/items/{id}")
@@ -48,10 +44,9 @@ public class CartsController {
     }
 
     @GetMapping("/items")
-    public ResponseEntity<CartResponse> readItemsByMember(@Auth AuthInfo authInfo) {
-        Long memberId = membersService.readIdByEmail(authInfo.getEmail());
+    public ResponseEntity<CartResponse> readItemsByMember(@Auth Member member) {
+        CartResponse cartResponse = cartService.readAllItemsByMemberId(member.getId());
 
-        CartResponse cartResponse = cartService.readAllItemsByMemberId(memberId);
         return ResponseEntity.ok().body(cartResponse);
     }
 

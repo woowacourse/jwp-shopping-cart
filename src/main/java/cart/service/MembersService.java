@@ -31,8 +31,4 @@ public class MembersService {
     public boolean isMemberCertified(AuthInfo authInfo) {
         return membersDao.isMemberCertified(authInfo.getEmail(), authInfo.getPassword());
     }
-
-    public Long readIdByEmail(String email) {
-        return membersDao.findIdByEmail(email);
-    }
 }
