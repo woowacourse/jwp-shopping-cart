@@ -42,4 +42,12 @@ public class ExceptionAdvice {
                 .badRequest()
                 .body(response);
     }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<Response> handle(AuthorizationException e) {
+        Response response = SimpleResponse.unAuthorized(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(response);
+    }
 }
