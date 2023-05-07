@@ -1,6 +1,6 @@
 package cart.configuration;
 
-import cart.authentication.AuthInfoThreadLocal;
+import cart.authentication.AuthInfoStore;
 import cart.authentication.AuthenticationInterceptor;
 import cart.authentication.AuthenticationPrincipalArgumentResolver;
 import cart.authentication.AuthenticationValidator;
@@ -37,7 +37,7 @@ public class WebConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    AuthInfoThreadLocal authInfoThreadLocal() {
-        return new AuthInfoThreadLocal();
+    AuthInfoStore authInfoThreadLocal() {
+        return new AuthInfoStore();
     }
 }

@@ -12,13 +12,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private final BasicAuthorizationExtractor extractor;
     private final AuthenticationValidator authValidator;
-    private final AuthInfoThreadLocal authInfoThreadLocal;
+    private final AuthInfoStore authInfoStore;
 
     public AuthenticationInterceptor(BasicAuthorizationExtractor extractor, AuthenticationValidator authValidator,
-            AuthInfoThreadLocal authInfoThreadLocal) {
+            AuthInfoStore authInfoStore) {
         this.extractor = extractor;
         this.authValidator = authValidator;
-        this.authInfoThreadLocal = authInfoThreadLocal;
+        this.authInfoStore = authInfoStore;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         AuthInfo authInfo = extractor.extract(header);
 
         authValidator.validate(authInfo);
-        authInfoThreadLocal.set(authInfo);
+        authInfoStore.set(authInfo);
 
         return true;
     }
@@ -36,6 +36,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
             final ModelAndView modelAndView) throws Exception {
-        authInfoThreadLocal.remove();
+        authInfoStore.remove();
     }
 }

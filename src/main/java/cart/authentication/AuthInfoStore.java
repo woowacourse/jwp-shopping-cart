@@ -2,7 +2,7 @@ package cart.authentication;
 
 import cart.controller.dto.AuthInfo;
 
-public class AuthInfoThreadLocal {
+public class AuthInfoStore {
 
     private final ThreadLocal<AuthInfo> localAuthInfo = new ThreadLocal<>();
 
