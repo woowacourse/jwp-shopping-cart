@@ -5,8 +5,8 @@ import cart.dao.CartDao;
 import cart.dto.entity.CartEntity;
 import cart.dto.entity.ProductEntity;
 import cart.dto.response.CartResponse;
-import cart.exception.CustomException;
 import cart.exception.ErrorCode;
+import cart.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -58,14 +58,14 @@ public class CartService {
     private void updateCount(int productId, int productCount) {
         int updateRowNumber = cartDao.updateCount(productCount, productId);
         if (updateRowNumber == ZERO) {
-            throw new CustomException(ErrorCode.ID_NOT_FOUND);
+            throw new NotFoundException(ErrorCode.ID_NOT_FOUND);
         }
     }
 
     public void delete(int id) {
         int deleteRowNumber = cartDao.delete(id);
         if (deleteRowNumber == ZERO) {
-            throw new CustomException(ErrorCode.ID_NOT_FOUND);
+            throw new NotFoundException(ErrorCode.ID_NOT_FOUND);
         }
     }
 }

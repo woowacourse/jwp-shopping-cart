@@ -3,7 +3,7 @@ package cart.service;
 import cart.dao.MemberDao;
 import cart.dto.entity.MemberEntity;
 import cart.dto.response.MemberResponse;
-import cart.exception.CustomException;
+import cart.exception.AuthorizationException;
 import cart.exception.ErrorCode;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +33,7 @@ public class MemberService {
     public int findByEmailWithPassword(String email, String password) {
         List<MemberEntity> member = memberDao.findByEmailWithPassword(email, password);
         if (member.size() == ZERO) {
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+            throw new AuthorizationException(ErrorCode.MEMBER_NOT_FOUND);
         }
         return member.get(0).getId();
     }

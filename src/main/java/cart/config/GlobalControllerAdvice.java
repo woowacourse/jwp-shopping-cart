@@ -1,8 +1,9 @@
 package cart.config;
 
 import cart.dto.response.ErrorResponse;
-import cart.exception.CustomException;
+import cart.exception.AuthorizationException;
 import cart.exception.ErrorCode;
+import cart.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,17 +24,26 @@ public class GlobalControllerAdvice {
                 .body(response);
     }
 
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(CustomException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException e) {
         ErrorResponse response = ErrorResponse.from(e.getErrorCode());
 
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException e) {
+        ErrorResponse response = ErrorResponse.from(e.getErrorCode());
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(response);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleServerException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleServerException() {
         ErrorResponse response = ErrorResponse.from(ErrorCode.UNKNOWN);
 
         return ResponseEntity

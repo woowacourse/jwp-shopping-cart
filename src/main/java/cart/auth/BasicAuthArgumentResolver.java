@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.exception.CustomException;
+import cart.exception.AuthorizationException;
 import cart.exception.ErrorCode;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
@@ -25,7 +25,7 @@ public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver 
         String header = webRequest.getHeader(AUTHORIZATION);
 
         if (header == null) {
-            throw new CustomException(ErrorCode.AUTHORIZATION_NOT_FOUND);
+            throw new AuthorizationException(ErrorCode.AUTHORIZATION_NOT_FOUND);
         }
 
         String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
