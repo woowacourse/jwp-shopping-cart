@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface CartRepository {
 
-    Long insert(User user, Long productId);
+    List<CartProduct> findAllByUser1(User user);
 
-    List<CartProduct> findAllByUser(User user);
+    List<CartProduct> findAllByUser2(User user);
 
-    void delete(User user, Long cartProductId);
+    Long insert(Long userId, Long productId);
+
+    void delete(Long cartProductId);
 }

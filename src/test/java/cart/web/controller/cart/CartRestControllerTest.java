@@ -59,7 +59,7 @@ class CartRestControllerTest {
     @Test
     void deleteProduct() throws Exception {
         // given
-        doNothing().when(cartService).delete(any(), any());
+        doNothing().when(cartService).delete(any());
 
         // when, then
         mockMvc.perform(delete("/cart/1").header("Authorization", COOKIE_VALUE))
@@ -79,7 +79,7 @@ class CartRestControllerTest {
                 new CartProduct(2L, products.get(1))
         );
 
-        when(cartService.getCartProducts(any())).thenReturn(cartProducts);
+        when(cartService.getCartProducts2(any())).thenReturn(cartProducts);
 
         // when
         mockMvc.perform(get("/cart/all").header("Authorization", COOKIE_VALUE))

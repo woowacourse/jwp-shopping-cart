@@ -23,26 +23,27 @@ public class CartService {
         this.cartRepository = cartRepository;
     }
 
+    public List<CartProduct> getCartProducts1(final User userRequest) {
+        final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getUserEmailValue());
+        final User user = userOptional.orElseThrow(() -> new UserNotFoundException(userRequest.getUserEmailValue()));
+
+        return cartRepository.findAllByUser1(user);
+    }
+
+    public List<CartProduct> getCartProducts2(final User userRequest) {
+        final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getUserEmailValue());
+        final User user = userOptional.orElseThrow(() -> new UserNotFoundException(userRequest.getUserEmailValue()));
+
+        return cartRepository.findAllByUser2(user);
+    }
+
     @Transactional
     public Long add(final User userRequest, final Long productId) {
-        final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getUserEmailValue());
-        final User user = userOptional.orElseThrow(() -> new UserNotFoundException(userRequest.getUserEmailValue()));
-
-        return cartRepository.insert(user, productId);
-    }
-
-    public List<CartProduct> getCartProducts(final User userRequest) {
-        final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getUserEmailValue());
-        final User user = userOptional.orElseThrow(() -> new UserNotFoundException(userRequest.getUserEmailValue()));
-
-        return cartRepository.findAllByUser(user);
+        return cartRepository.insert(userRequest.getId(), productId);
     }
 
     @Transactional
-    public void delete(final User userRequest, final Long cartProductId) {
-        final Optional<User> userOptional = userRepository.findUserByEmail(userRequest.getUserEmailValue());
-        final User user = userOptional.orElseThrow(() -> new UserNotFoundException(userRequest.getUserEmailValue()));
-
-        cartRepository.delete(user, cartProductId);
+    public void delete(final Long cartProductId) {
+        cartRepository.delete(cartProductId);
     }
 }

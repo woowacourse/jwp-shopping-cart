@@ -26,21 +26,21 @@ class CartDaoTest {
 
     @BeforeEach
     void setUp() {
-        cartDao.insert(user, 1L);
-        cartDao.insert(user, 2L);
+        cartDao.insert(user.getId(), 1L);
+        cartDao.insert(user.getId(), 2L);
     }
 
     @DisplayName("유저의 카트에 정상적으로 상품을 추가할 수 있다.")
     @Test
     void insert() {
-        assertDoesNotThrow(() -> cartDao.insert(user, 1L));
+        assertDoesNotThrow(() -> cartDao.insert(user.getId(), 1L));
     }
 
     @DisplayName("유저의 카트에 담긴 상품들을 확인할 수 있다.")
     @Test
     void findAllByUser() {
         // given, when
-        final List<CartProduct> cartProducts = cartDao.findAllByUser(user);
+        final List<CartProduct> cartProducts = cartDao.findAllByUser2(user);
 
         // then
         assertAll(
@@ -55,12 +55,12 @@ class CartDaoTest {
     @Test
     void delete() {
         // given
-        final List<CartProduct> cartProducts = cartDao.findAllByUser(user);
+        final List<CartProduct> cartProducts = cartDao.findAllByUser2(user);
         final int originalSize = cartProducts.size();
 
         // when
-        cartDao.delete(user, 1L);
-        final int updatedSize = cartDao.findAllByUser(user).size();
+        cartDao.delete(1L);
+        final int updatedSize = cartDao.findAllByUser2(user).size();
 
         // then
         assertThat(originalSize - 1).isEqualTo(updatedSize);

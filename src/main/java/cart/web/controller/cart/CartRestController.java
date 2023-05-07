@@ -42,7 +42,7 @@ public class CartRestController {
     @DeleteMapping("/{cartProductId}")
     public ResponseEntity<Void> deleteProduct(@AuthorizedUser User user,
                                               @PathVariable Long cartProductId) {
-        cartService.delete(user, cartProductId);
+        cartService.delete(cartProductId);
 
         return ResponseEntity.noContent().build();
     }
@@ -50,7 +50,7 @@ public class CartRestController {
     @GetMapping("/all")
     public ResponseEntity<List<CartResponse>> getProducts(@AuthorizedUser User user) {
         log.info("all - user = {}", user);
-        final List<CartProduct> cartProducts = cartService.getCartProducts(user);
+        final List<CartProduct> cartProducts = cartService.getCartProducts2(user);
         final List<CartResponse> productResponses = cartProducts.stream()
                 .map(product -> new CartResponse(product.getCartProductId(), product.getProductId(), product.getProductNameValue(),
                         product.getImageUrlValue(), product.getPriceValue(), product.getCategory()))

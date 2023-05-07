@@ -16,15 +16,19 @@ public class CartProduct {
     private final ProductCategory category;
 
     public CartProduct(final Long id, final Product product) {
-        this(id, product.getId(), product.getProductNameValue(), product.getImageUrlValue(), product.getPriceValue(), product.getCategory());
+        this(id, product.getId(), product.getProductNameValue(), product.getImageUrlValue(), product.getPriceValue(), product.getCategory().name());
     }
 
-    public CartProduct(final Long cartProductId, final Long productId, final String productName, final String imageUrl, final Integer price, final ProductCategory category) {
+    public CartProduct(final Long cartProductId, final Long productId, final String productName, final String imageUrl, final Integer price, final String category) {
+        this(cartProductId, productId, new ProductName(productName), new ImageUrl(imageUrl), new Price(price), ProductCategory.valueOf(category));
+    }
+
+    public CartProduct(final Long cartProductId, final Long productId, final ProductName productName, final ImageUrl imageUrl, final Price price, final ProductCategory category) {
         this.cartProductId = cartProductId;
         this.productId = productId;
-        this.productName = new ProductName(productName);
-        this.imageUrl = new ImageUrl(imageUrl);
-        this.price = new Price(price);
+        this.productName = productName;
+        this.imageUrl = imageUrl;
+        this.price = price;
         this.category = category;
     }
 

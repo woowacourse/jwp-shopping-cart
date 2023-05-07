@@ -34,20 +34,20 @@ public class CartDao implements CartRepository {
             );
 
     @Override
-    public Long insert(final User user, final Long productId) {
+    public Long insert(final Long userId, final Long productId) {
         final String query = "INSERT INTO cart(product_id, user_id) VALUES(?, ?)";
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
             ps.setInt(1, productId.intValue());
-            ps.setInt(2, user.getId().intValue());
+            ps.setInt(2, userId.intValue());
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     @Override
-    public List<CartProduct> findAllByUser(final User user) {
+    public List<CartProduct> findAllByUser1(final User user) {
         final String query1 = "SELECT c.id, c.product_id FROM cart c WHERE c.user_id = ?";
         final List<Map<String, Long>> cartProducts = jdbcTemplate.query(query1,
                 (result, count) -> {
@@ -66,9 +66,28 @@ public class CartDao implements CartRepository {
         return result;
     }
 
+    private final RowMapper<CartProduct> actorRowMapper = (resultSet, rowNum) -> new CartProduct(
+            resultSet.getLong("id"),
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getString("image_url"),
+            resultSet.getInt("price"),
+            resultSet.getString("category")
+    );
+
     @Override
-    public void delete(final User user, final Long cartProductId) {
-        final String query = "DELETE FROM cart c WHERE c.user_id = ? and c.id = ?";
-        jdbcTemplate.update(query, user.getId(), cartProductId);
+    public List<CartProduct> findAllByUser2(final User user) {
+        final String query = "SELECT c.id, p.id, p.name, p.image_url, p.price, p.category " +
+                "FROM cart c " +
+                "JOIN product p ON c.product_id = p.id " +
+                "WHERE c.user_id = ?";
+
+        return jdbcTemplate.query(query, actorRowMapper, user.getId());
+    }
+
+    @Override
+    public void delete(final Long cartProductId) {
+        final String query = "DELETE FROM cart c WHERE c.id = ?";
+        jdbcTemplate.update(query, cartProductId);
     }
 }
