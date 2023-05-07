@@ -49,7 +49,7 @@ public class CartIntegrationTest {
 			.auth().preemptive().basic("a@a.com", "pw")
 			.pathParam("email", member.getEmail())
 			.when().log().all()
-			.get("/carts/{email}")
+			.get("/cart/items")
 			.then().log().all()
 			.extract();
 
