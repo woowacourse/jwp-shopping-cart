@@ -8,5 +8,5 @@ public interface MemberDao {
 
     public List<Member> findAll();
 
-    public Optional<Member> findByEmail(String email);
+    public Optional<Member> findByEmailAndPassword(String email, String password);
 }

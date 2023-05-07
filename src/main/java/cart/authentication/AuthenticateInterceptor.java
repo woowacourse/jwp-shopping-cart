@@ -35,7 +35,7 @@ public class AuthenticateInterceptor implements HandlerInterceptor {
             String[] credentials = decodedString.split(DELIMITER);
             String email = credentials[0];
             String password = credentials[1];
-            memberDao.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+            memberDao.findByEmailAndPassword(email, password).orElseThrow(MemberNotFoundException::new);
             return true;
         }
 

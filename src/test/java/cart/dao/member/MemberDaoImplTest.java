@@ -41,7 +41,7 @@ class MemberDaoImplTest {
         String email = "ako@wooteco.com";
         String password = "ako";
         // when
-        Optional<Member> result = memberDao.findByEmail(email);
+        Optional<Member> result = memberDao.findByEmailAndPassword(email, password);
 
         // then
         assertThat(result.get().getEmail()).isEqualTo(email);

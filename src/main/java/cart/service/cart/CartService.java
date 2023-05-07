@@ -34,7 +34,7 @@ public class CartService {
 
     @Transactional
     public Long saveCart(final MemberRequest memberRequest, final CartItemRequest cartItemRequest) {
-        Member member = memberDao.findByEmail(memberRequest.getEmail())
+        Member member = memberDao.findByEmailAndPassword(memberRequest.getEmail(), memberRequest.getPassword())
             .orElseThrow(MemberNotFoundException::new);
         Product product = productDao.findById(cartItemRequest.getProductId())
             .orElseThrow(ProductNotFoundException::new);
@@ -50,7 +50,7 @@ public class CartService {
 
     @Transactional
     public List<CartItemResponse> findCartByMember(final MemberRequest memberRequest) {
-        Member member = memberDao.findByEmail(memberRequest.getEmail())
+        Member member = memberDao.findByEmailAndPassword(memberRequest.getEmail(), memberRequest.getPassword())
             .orElseThrow(MemberNotFoundException::new);
 
         List<CartItem> cartItems = cartDao.findByMemberId(member);
@@ -61,7 +61,7 @@ public class CartService {
     }
 
     public void deleteCartItem(final MemberRequest memberRequest, final Long productId) {
-        Member member = memberDao.findByEmail(memberRequest.getEmail())
+        Member member = memberDao.findByEmailAndPassword(memberRequest.getEmail(), memberRequest.getPassword())
             .orElseThrow(MemberNotFoundException::new);
         Cart cart = cartDao.findByMemberIdAndProductId(member, productId)
             .orElseThrow(ProductNotFoundException::new);

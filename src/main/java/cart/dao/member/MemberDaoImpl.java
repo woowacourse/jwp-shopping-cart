@@ -31,10 +31,10 @@ public class MemberDaoImpl implements MemberDao {
     }
 
     @Override
-    public Optional<Member> findByEmail(final String email) {
-        String sql = "SELECT id, email, password FROM member WHERE email = ?";
+    public Optional<Member> findByEmailAndPassword(final String email, final String passwrod) {
+        String sql = "SELECT id, email, password FROM member WHERE email = ? AND password = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, email));
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, email, passwrod));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
