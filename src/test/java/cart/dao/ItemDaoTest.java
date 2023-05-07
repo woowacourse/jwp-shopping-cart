@@ -94,7 +94,7 @@ class ItemDaoTest {
                 .build());
     }
 
-    @DisplayName("아에템을 수정한다")
+    @DisplayName("아이템을 수정한다")
     @Test
     void update() {
         //given
