@@ -6,14 +6,16 @@ import java.util.List;
 
 public class Cart {
 
+    private final User owner;
     private final List<CartItem> items;
 
-    public Cart() {
-        this(Collections.emptyList());
+    public Cart(User user) {
+        this(user, Collections.emptyList());
     }
 
-    public Cart(List<CartItem> items) {
+    public Cart(User owner, List<CartItem> items) {
         validateNoDuplicate(items);
+        this.owner = owner;
         this.items = new ArrayList<>(items);
     }
 
@@ -43,6 +45,10 @@ public class Cart {
     public void delete(CartItem item) {
         validateHas(item);
         items.remove(item);
+    }
+
+    public User getOwner() {
+        return owner;
     }
 
     public List<CartItem> getItems() {

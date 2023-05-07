@@ -1,6 +1,7 @@
 package cart;
 
 import cart.domain.Product;
+import cart.domain.User;
 
 public class TestFixture {
 
@@ -25,4 +26,6 @@ public class TestFixture {
 
     public static final String PASSWORD_0CHIL = "weakpassword";
     public static final String PASSWORD_BEAVER = "veryverysecurepassword";
+
+    public static final User USER_0CHIL = new User(null, EMAIL_0CHIL, PASSWORD_0CHIL);
 }

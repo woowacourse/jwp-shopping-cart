@@ -39,7 +39,7 @@ public class CartService {
         Cart cart = cartRepository.getCartOf(user);
         cart.add(new CartItem(product));
 
-        cartRepository.save(user, cart);
+        cartRepository.save(cart);
     }
 
     @Transactional
@@ -50,7 +50,7 @@ public class CartService {
         Cart cart = cartRepository.getCartOf(user);
         cart.delete(cartItem);
 
-        cartRepository.save(user, cart);
+        cartRepository.save(cart);
     }
 
     public List<CartItem> getCartItemsOf(Integer userId) {

@@ -6,6 +6,7 @@ import static cart.TestFixture.PRICE_CHICKEN;
 import static cart.TestFixture.PRODUCT_CHICKEN;
 import static cart.TestFixture.PRODUCT_ICE_CREAM;
 import static cart.TestFixture.PRODUCT_VANILLA_LATTE;
+import static cart.TestFixture.USER_0CHIL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -19,7 +20,7 @@ class CartTest {
 
     @BeforeEach
     void setUp() {
-        this.cart = new Cart();
+        this.cart = new Cart(USER_0CHIL);
         cart.add(new CartItem(PRODUCT_CHICKEN));
         cart.add(new CartItem(PRODUCT_ICE_CREAM));
         cart.add(new CartItem(PRODUCT_VANILLA_LATTE));

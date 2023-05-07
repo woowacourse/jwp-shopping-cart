@@ -17,12 +17,12 @@ public class CartRepository {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public void save(final User user, final Cart cart) {
-        cartItemRepository.save(user.getId(), cart.getItems());
+    public void save(final Cart cart) {
+        cartItemRepository.save(cart.getOwner().getId(), cart.getItems());
     }
 
     public Cart getCartOf(final User user) {
         List<CartItem> cartItems = cartItemRepository.getItemsOf(user);
-        return new Cart(cartItems);
+        return new Cart(user, cartItems);
     }
 }
