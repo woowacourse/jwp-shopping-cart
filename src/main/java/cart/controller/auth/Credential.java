@@ -1,10 +1,10 @@
-package cart.controller.auth.dto;
+package cart.controller.auth;
 
-public class AuthInfo {
+public class Credential {
     private final String email;
     private final String password;
 
-    public AuthInfo(String email, String password) {
+    public Credential(String email, String password) {
         this.email = email;
         this.password = password;
     }

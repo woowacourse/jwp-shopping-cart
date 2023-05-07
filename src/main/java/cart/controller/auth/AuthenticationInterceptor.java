@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import cart.controller.auth.dto.AuthInfo;
 import cart.controller.auth.exception.IllegalAuthenticationException;
 import cart.controller.auth.exception.InvalidAuthenticationException;
 import cart.dao.UserDao;
@@ -25,31 +24,31 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
             Exception {
-        AuthInfo authInfo = BasicAuthorizationExtractor.extract(request);
-        validateHas(authInfo);
-        validateHasEmailAndPasswordIn(authInfo);
+        Credential credential = BasicAuthorizationExtractor.extract(request);
+        validateHas(credential);
+        validateHasEmailAndPasswordIn(credential);
 
-        UserDto userDto = userDao.selectBy(authInfo.getEmail())
+        UserDto userDto = userDao.selectBy(credential.getEmail())
                 .orElseThrow(InvalidAuthenticationException::new);
-        validatePasswordMatches(authInfo, userDto);
+        validatePasswordMatches(credential, userDto);
 
         return true;
     }
 
-    private void validateHas(AuthInfo authInfo) {
-        if (Objects.isNull(authInfo)) {
+    private void validateHas(Credential credential) {
+        if (Objects.isNull(credential)) {
             throw new IllegalAuthenticationException();
         }
     }
 
-    private void validateHasEmailAndPasswordIn(AuthInfo authInfo) {
-        if (!StringUtils.hasLength(authInfo.getEmail()) || !StringUtils.hasLength(authInfo.getPassword())) {
+    private void validateHasEmailAndPasswordIn(Credential credential) {
+        if (!StringUtils.hasLength(credential.getEmail()) || !StringUtils.hasLength(credential.getPassword())) {
             throw new IllegalAuthenticationException();
         }
     }
 
-    private void validatePasswordMatches(AuthInfo authInfo, UserDto userDto) {
-        if (!Objects.equals(authInfo.getPassword(), userDto.getPassword())) {
+    private void validatePasswordMatches(Credential credential, UserDto userDto) {
+        if (!Objects.equals(credential.getPassword(), userDto.getPassword())) {
             throw new InvalidAuthenticationException();
         }
     }

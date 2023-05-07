@@ -4,15 +4,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 
-import cart.controller.auth.dto.AuthInfo;
-
 public class BasicAuthorizationExtractor {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
     private static final int NO_LIMIT = -1;
 
-    public static AuthInfo extract(HttpServletRequest request) {
+    public static Credential extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
         if (header == null) {
@@ -28,7 +26,7 @@ public class BasicAuthorizationExtractor {
             String email = credentials[0];
             String password = credentials[1];
 
-            return new AuthInfo(email, password);
+            return new Credential(email, password);
         }
 
         return null;
