@@ -51,6 +51,6 @@ public class CartRepositoryTest {
         //when
         List<CartItemResponse> cartsWithProductByUserId = cartRepository.findCartsWithProductByUserId(userId);
 
-        assertEquals(cartsWithProductByUserId.size(), 1);
+        assertEquals(1, cartsWithProductByUserId.size());
     }
 }
