@@ -39,7 +39,8 @@ public class H2MemberDao implements MemberDao {
 
     @Override
     public List<MemberEntity> findAll() {
-        return null;
+        final String sql = "SELECT id, email, password, name, phone_number FROM member";
+        return this.jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
