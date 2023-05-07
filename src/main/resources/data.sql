@@ -4,10 +4,11 @@ DROP TABLE IF EXISTS member;
 
 CREATE TABLE PRODUCT
 (
-    id      BIGINT      NOT NULL AUTO_INCREMENT,
-    name    VARCHAR(20) NOT NULL,
-    img_url VARCHAR(255),
-    price   INT         NOT NULL,
+    id        BIGINT      NOT NULL AUTO_INCREMENT,
+    name      VARCHAR(20) NOT NULL,
+    img_url   VARCHAR(255),
+    price     INT         NOT NULL,
+    is_delete BOOL        NOT NULL DEFAULT FALSE,
     PRIMARY KEY (id)
 );
 

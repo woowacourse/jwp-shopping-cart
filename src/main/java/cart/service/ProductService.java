@@ -20,6 +20,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponse> findProducts() {
         return productDao.findAll().stream()
+                .filter(product -> !product.isDelete())
                 .map(ProductResponse::from)
                 .collect(Collectors.toList());
     }

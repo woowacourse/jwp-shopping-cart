@@ -6,13 +6,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class CartsResponse {
-    private List<CartResponse> cartResponses;
+    private final List<CartResponse> cartResponses;
 
     public CartsResponse(List<CartResponse> cartResponses) {
         this.cartResponses = cartResponses;
-    }
-
-    public CartsResponse() {
     }
 
     public static CartsResponse of(List<Product> products, List<Long> cartIds) {
@@ -40,6 +37,9 @@ public class CartsResponse {
         }
 
         public static CartResponse of(Long cartId, Product product) {
+            if (product.isDelete()) {
+                return new CartResponse(cartId, "삭제된 상품", "", 0);
+            }
             return new CartResponse(cartId, product.getName(), product.getImgUrl(), product.getPrice());
         }
 

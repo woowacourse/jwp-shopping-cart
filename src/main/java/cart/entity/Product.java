@@ -7,14 +7,24 @@ public class Product {
     private final String name;
     private final String imgUrl;
     private final Integer price;
+    private final boolean isDelete;
+
+    public Product(String name, String imgUrl, Integer price) {
+        this(null, name, imgUrl, price, false);
+    }
 
     public Product(Long id, String name, String imgUrl, Integer price) {
+        this(id, name, imgUrl, price, false);
+    }
+
+    public Product(Long id, String name, String imgUrl, Integer price, boolean isDelete) {
         validateName(name);
         validatePrice(price);
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
         this.price = price;
+        this.isDelete = isDelete;
     }
 
     private void validateName(String name) {
@@ -27,10 +37,6 @@ public class Product {
         if (price < 1000) {
             throw new IllegalArgumentException("상품 가격은 1000원 이상이여야 합니다.");
         }
-    }
-
-    public Product(String name, String imgUrl, Integer price) {
-        this(null, name, imgUrl, price);
     }
 
     public Long getId() {
@@ -47,6 +53,10 @@ public class Product {
 
     public Integer getPrice() {
         return price;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
     }
 
     @Override

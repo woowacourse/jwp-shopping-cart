@@ -3,6 +3,7 @@ package cart;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -10,8 +11,6 @@ import cart.dao.MemberDao;
 import cart.dao.ProductCartDao;
 import cart.dao.ProductDao;
 import cart.dto.CartRequest;
-import cart.dto.CartsResponse;
-import cart.dto.CartsResponse.CartResponse;
 import cart.dto.ProductRequest;
 import cart.entity.Member;
 import cart.entity.Product;
@@ -132,7 +131,8 @@ public class ProductIntegrationTest {
 
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
-        assertThat(productDao.findById(boxster.getId())).isEmpty();
+        Product savedProduct = productDao.findById(boxster.getId()).get();
+        assertThat(savedProduct.isDelete()).isTrue();
     }
 
     @DisplayName("로그인 된 회원으로 장바구니의 상품을 조회한다")
@@ -144,21 +144,16 @@ public class ProductIntegrationTest {
         productCartDao.save(new ProductCart(pizza.getId(), member.getId()));
         productCartDao.save(new ProductCart(burger.getId(), member.getId()));
 
-        CartsResponse response = RestAssured.given()
+        RestAssured.given()
                 .auth().preemptive().basic("boxster@email.com", "boxster")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/carts")
-                .then()
+                .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .extract().as(CartsResponse.class);
-
-        assertAll(
-                () -> assertThat(response.getCartResponses()).hasSize(2),
-                () -> assertThat(response.getCartResponses()).map(CartResponse::getProductName)
-                        .containsExactly("pizza", "burger"),
-                () -> assertThat(response.getCartResponses()).map(CartResponse::getProductPrice)
-                        .containsExactly(10000, 20000)
-        );
+                .body("cartResponses", hasSize(2))
+                .body("cartResponses[0].productName", equalTo("pizza"))
+                .body("cartResponses[0].productImgUrl", equalTo("https://pizza.com"))
+                .body("cartResponses[0].productPrice", equalTo(10000));
     }
 
     @DisplayName("로그인 된 회원의 장바구니에 상품을 추가한다")
@@ -195,5 +190,26 @@ public class ProductIntegrationTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
         assertThat(productCartDao.findAllByMemberId(member.getId())).isEmpty();
+    }
+
+    @DisplayName("장바구니에 담긴 상품을 삭제하면 삭제된 상품이라고 보여준다")
+    @Test
+    void deleteProductInCart() {
+        Member member = memberDao.save(new Member("boxster@email.com", "boxster"));
+        Product pizza = productDao.save(new Product("pizza", "https://pizza.com", 10000));
+        ProductCart cart = productCartDao.save(new ProductCart(pizza.getId(), member.getId()));
+
+        productDao.deleteById(pizza.getId());
+
+        RestAssured.given()
+                .auth().preemptive().basic("boxster@email.com", "boxster")
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/carts")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("cartResponses", hasSize(1))
+                .body("cartResponses[0].productName", equalTo("삭제된 상품"))
+                .body("cartResponses[0].productImgUrl", equalTo(""))
+                .body("cartResponses[0].productPrice", equalTo(0));
     }
 }

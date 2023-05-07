@@ -24,7 +24,8 @@ public class H2ProductDao implements ProductDao {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("img_url"),
-            resultSet.getInt("price")
+            resultSet.getInt("price"),
+            resultSet.getBoolean("is_delete")
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -45,12 +46,12 @@ public class H2ProductDao implements ProductDao {
         namedParameterJdbcTemplate.update(sql, parameters, keyHolder);
 
         long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        return new Product(id, product.getName(), product.getImgUrl(), product.getPrice());
+        return new Product(id, product.getName(), product.getImgUrl(), product.getPrice(), false);
     }
 
     @Override
     public List<Product> findAll() {
-        String sql = "SELECT * FROM product";
+        String sql = "SELECT * FROM product WHERE is_delete = false";
         return jdbcTemplate.query(sql, productRowMapper);
     }
 
@@ -78,7 +79,7 @@ public class H2ProductDao implements ProductDao {
 
     @Override
     public void deleteById(Long id) {
-        String sql = "DELETE FROM product WHERE id = :id";
+        String sql = "UPDATE product SET is_delete = true WHERE id = :id";
         Map<String, Long> parameter = Collections.singletonMap("id", id);
         namedParameterJdbcTemplate.update(sql, parameter);
     }

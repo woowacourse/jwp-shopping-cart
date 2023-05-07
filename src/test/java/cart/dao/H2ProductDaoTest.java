@@ -70,7 +70,8 @@ class H2ProductDaoTest {
 
         productDao.deleteById(gitchan.getId());
 
-        assertThat(productDao.findById(gitchan.getId())).isEmpty();
+        Product savedProduct = productDao.findById(gitchan.getId()).get();
+        assertThat(savedProduct.isDelete()).isTrue();
     }
 
     @DisplayName("여러개의 cart의 product ID로 조회할 수 있다")
