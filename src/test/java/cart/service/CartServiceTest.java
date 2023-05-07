@@ -3,6 +3,7 @@ package cart.service;
 import cart.controller.dto.auth.AuthInfo;
 import cart.controller.dto.response.CartResponse;
 import cart.dao.CartDao;
+import cart.dao.ItemDao;
 import cart.dao.UserDao;
 import cart.domain.*;
 import cart.exception.NotFoundResultException;
@@ -27,6 +28,8 @@ class CartServiceTest {
     private CartDao cartDao;
     @Mock
     private UserDao userDao;
+    @Mock
+    private ItemDao itemDao;
 
     @InjectMocks
     private CartService cartService;
@@ -44,6 +47,14 @@ class CartServiceTest {
                         .id(1L)
                         .email(new Email("test@gmail.com"))
                         .password(new Password("testPW"))
+                        .build()
+        ));
+        when(itemDao.findBy(anyLong())).thenReturn(Optional.of(
+                new Item.Builder()
+                        .id(1L)
+                        .name(new Name("test"))
+                        .imageUrl(new ImageUrl("testUrl"))
+                        .price(new Price(150000))
                         .build()
         ));
         //when
