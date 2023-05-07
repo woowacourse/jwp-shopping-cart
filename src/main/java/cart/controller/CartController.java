@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cart.controller.argumentresolver.AuthenticationPrincipal;
+import cart.dto.cart.CartCreateRequest;
 import cart.dto.cart.CartProductResponse;
 import cart.dto.user.UserRequest;
 import cart.service.CartService;
@@ -36,12 +38,12 @@ public class CartController {
         return ResponseEntity.ok(cartService.findAllProductsInCart(userRequest));
     }
 
-    @PostMapping("/products/{productId}")
+    @PostMapping("/products")
     public ResponseEntity<Void> addProductToCart(
             @AuthenticationPrincipal UserRequest userRequest,
-            @PathVariable Long productId
+            @RequestBody CartCreateRequest cartCreateRequest
     ) {
-        final Long cartId = cartService.addProduct(userRequest, productId);
+        final Long cartId = cartService.addProduct(userRequest, cartCreateRequest.getProductId());
         return ResponseEntity.created(URI.create("/cart/product/" + cartId)).build();
     }
 
