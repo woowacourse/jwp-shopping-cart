@@ -1,5 +1,7 @@
 package cart.domain.member;
 
+import java.util.Objects;
+
 public class Password {
 
     private static final int MIN_PASSWORD_LENGTH = 12;
@@ -29,5 +31,22 @@ public class Password {
 
     public String password() {
         return password;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Password password1 = (Password) o;
+        return Objects.equals(password, password1.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(password);
     }
 }
