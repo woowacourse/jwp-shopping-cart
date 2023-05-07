@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -36,7 +37,7 @@ import static org.mockito.Mockito.when;
         controllers = CartController.class,
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfigurer.class),
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = HandlerInterceptorAdapter.class)
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = HandlerInterceptor.class)
         })
 public class CartControllerTest {
 
