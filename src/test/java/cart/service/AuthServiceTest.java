@@ -41,13 +41,13 @@ public class AuthServiceTest {
         UserResponse expectedResponse = new UserResponse(userEntity.getId(), email, password);
 
         //when
-        UserResponse actualResponse = authService.basicLogin(request);
+        UserEntity actualEntity = authService.basicLogin(request);
 
         //then
         assertAll(
-                () -> assertEquals(expectedResponse.getId(), actualResponse.getId()),
-                () -> assertEquals(expectedResponse.getEmail(), actualResponse.getEmail()),
-                () -> assertEquals(expectedResponse.getPassword(), actualResponse.getPassword())
+                () -> assertEquals(expectedResponse.getId(), actualEntity.getId()),
+                () -> assertEquals(expectedResponse.getEmail(), actualEntity.getEmail()),
+                () -> assertEquals(expectedResponse.getPassword(), actualEntity.getPassword())
         );
 
         verify(userDao).findByEmailAndPassword(email, password);

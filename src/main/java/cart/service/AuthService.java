@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.controller.dto.request.LoginRequest;
-import cart.controller.dto.response.UserResponse;
 import cart.database.dao.UserDao;
 import cart.entity.UserEntity;
 import org.springframework.stereotype.Service;
@@ -17,9 +16,7 @@ public class AuthService {
         this.userDao = userDao;
     }
 
-    @Transactional
-    public UserResponse basicLogin(LoginRequest request) {
-        UserEntity userEntity = userDao.findByEmailAndPassword(request.getEmail(), request.getPassword());
-        return new UserResponse(userEntity.getId(), userEntity.getEmail(), userEntity.getPassword());
+    public UserEntity basicLogin(LoginRequest request) {
+        return userDao.findByEmailAndPassword(request.getEmail(), request.getPassword());
     }
 }

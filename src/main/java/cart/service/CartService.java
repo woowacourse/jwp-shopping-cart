@@ -1,10 +1,10 @@
 package cart.service;
 
 import cart.controller.dto.response.CartItemResponse;
-import cart.controller.dto.response.UserResponse;
 import cart.database.dao.CartDao;
 import cart.database.dao.ProductDao;
 import cart.database.repository.CartRepository;
+import cart.entity.UserEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,19 +27,19 @@ public class CartService {
     }
 
     @Transactional
-    public void addCart(UserResponse userResponse, Long productId) {
+    public void addCart(UserEntity userEntity, Long productId) {
         if (!productDao.existById(productId)) {
             throw new IllegalStateException("제품 아이디가 없습니다.");
         }
 
-        cartDao.create(userResponse.getId(), productId, DEFAULT_COUNT);
+        cartDao.create(userEntity.getId(), productId, DEFAULT_COUNT);
     }
 
-    public List<CartItemResponse> findCartItemsByUser(UserResponse userResponse) {
-        return cartRepository.findCartsWithProductByUserId(userResponse.getId());
+    public List<CartItemResponse> findCartItemsByUser(UserEntity userEntity) {
+        return cartRepository.findCartsWithProductByUserId(userEntity.getId());
     }
 
-    public void deleteCartByUserAndProductId(UserResponse userResponse, Long cartId) {
-        cartDao.deleteByUserIdAndCartId(userResponse.getId(), cartId);
+    public void deleteCartByUserAndProductId(UserEntity userEntity, Long cartId) {
+        cartDao.deleteByUserIdAndCartId(userEntity.getId(), cartId);
     }
 }
