@@ -76,7 +76,7 @@ class ItemControllerTest {
         verify(mockController, times(1)).loadAllItem();
     }
 
-    @DisplayName("GET /items 요청 시 loadAllItem 메서드가 호출된다")
+    @DisplayName("GET /items/{id} 요청 시 loadAllItem 메서드가 호출된다")
     @Test
     void loadItemMappingURL() throws Exception {
         //given
@@ -91,7 +91,7 @@ class ItemControllerTest {
         verify(mockController, times(1)).loadItem(anyLong());
     }
 
-    @DisplayName("PUT /items/{itemsId} 요청 시 updateItem 메서드가 호출된다")
+    @DisplayName("PUT /items/{itemId} 요청 시 updateItem 메서드가 호출된다")
     @Test
     void updateItemMappingURL() throws Exception {
         //given
