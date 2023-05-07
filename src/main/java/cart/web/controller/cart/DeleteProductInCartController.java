@@ -2,9 +2,9 @@ package cart.web.controller.cart;
 
 import cart.domain.cart.service.dto.AuthorizedCartUserDto;
 import cart.domain.cart.usecase.DeleteOneProductInCartUseCase;
-import cart.web.config.PathVariableId;
 import cart.web.config.auth.AuthorizedUser;
 import cart.web.dto.request.AuthorizedUserRequest;
+import cart.web.dto.request.PathVariableId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

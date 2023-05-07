@@ -1,4 +1,4 @@
-package cart.web.config;
+package cart.web.dto.request;
 
 public class PathVariableId {
     private static final int MIN_PATH_VARIABLE_ID = 1;
