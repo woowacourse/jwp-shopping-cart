@@ -59,7 +59,7 @@ class CartControllerTest {
         final CartEntity cartEntity = new CartEntity(30L, productKey);
         final Long cartId = cartDao.save(cartEntity);
 
-        mockMvc.perform(get("/carts")
+        mockMvc.perform(get("/carts/products")
                         .header(HttpHeaders.AUTHORIZATION, authHeader))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(cartId))
@@ -69,20 +69,20 @@ class CartControllerTest {
 
     @Test
     void showCartWithoutHeader() throws Exception {
-        mockMvc.perform(get("/carts"))
+        mockMvc.perform(get("/carts/products"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void showCartWithInvalidHeader() throws Exception {
-        mockMvc.perform(get("/carts")
+        mockMvc.perform(get("/carts/products")
                         .header(HttpHeaders.AUTHORIZATION, "basemfds:pass"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void addProduct() throws Exception {
-        final MvcResult mvcResult = mockMvc.perform(post("/carts/20")
+        final MvcResult mvcResult = mockMvc.perform(post("/carts/products/20")
                         .header(HttpHeaders.AUTHORIZATION, authHeader))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists(HttpHeaders.LOCATION))

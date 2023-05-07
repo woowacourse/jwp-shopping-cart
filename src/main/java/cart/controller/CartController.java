@@ -24,14 +24,14 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping
+    @GetMapping("/products")
     public ResponseEntity<List<CartResponse>> showCart(@Auth Credential credential) {
         final Long memberId = credential.getMemberId();
         final List<CartResponse> products = cartService.findProductsByMemberId(memberId);
         return ResponseEntity.ok(products);
     }
 
-    @PostMapping("/{productId}")
+    @PostMapping("/products/{productId}")
     public ResponseEntity<String> addProduct(@Auth Credential credential,
                                              @PathVariable Long productId) {
         final Long memberId = credential.getMemberId();
@@ -40,7 +40,7 @@ public class CartController {
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long cartId) {
+    public ResponseEntity<String> deleteCartItem(@PathVariable Long cartId) {
         cartService.deleteById(cartId);
         return ResponseEntity.noContent().build();
     }
