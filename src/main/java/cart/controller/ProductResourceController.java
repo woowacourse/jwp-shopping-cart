@@ -4,7 +4,10 @@ import cart.dto.application.ProductDto;
 import cart.dto.application.ProductEntityDto;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
-import cart.service.ProductService;
+import cart.service.product.ProductDeleteService;
+import cart.service.product.ProductEnrollService;
+import cart.service.product.ProductFindService;
+import cart.service.product.ProductUpdateService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,10 +23,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/products")
 public class ProductResourceController {
 
-    private final ProductService productService;
+    private final ProductEnrollService productEnrollService;
+    private final ProductFindService productFindService;
+    private final ProductUpdateService productUpdateService;
+    private final ProductDeleteService productDeleteService;
 
-    public ProductResourceController(final ProductService productService) {
-        this.productService = productService;
+    public ProductResourceController(final ProductEnrollService productEnrollService,
+                                     final ProductFindService productFindService,
+                                     final ProductUpdateService productUpdateService,
+                                     final ProductDeleteService productDeleteService) {
+        this.productEnrollService = productEnrollService;
+        this.productFindService = productFindService;
+        this.productUpdateService = productUpdateService;
+        this.productDeleteService = productDeleteService;
     }
 
     @PostMapping
@@ -31,7 +43,7 @@ public class ProductResourceController {
     public ProductResponse createProduct(@RequestBody @Valid final ProductRequest request) {
         final ProductDto productDto = new ProductDto(request);
 
-        final ProductEntityDto result = productService.register(productDto);
+        final ProductEntityDto result = productEnrollService.register(productDto);
 
         return new ProductResponse(result);
     }
@@ -42,7 +54,7 @@ public class ProductResourceController {
                                          @RequestBody @Valid final ProductRequest request) {
         final ProductEntityDto productDto = new ProductEntityDto(id, request);
 
-        final ProductEntityDto result = productService.updateProduct(productDto);
+        final ProductEntityDto result = productUpdateService.updateProduct(productDto);
 
         return new ProductResponse(result);
     }
@@ -50,6 +62,6 @@ public class ProductResourceController {
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable final long id) {
-        productService.deleteProduct(id);
+        productDeleteService.deleteProduct(id);
     }
 }

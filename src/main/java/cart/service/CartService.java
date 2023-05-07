@@ -5,24 +5,25 @@ import cart.domain.cart.Item;
 import cart.domain.cart.ItemEntity;
 import cart.dto.application.ItemEntityDto;
 import cart.dto.application.MemberDto;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import cart.service.product.ProductFindService;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartService {
 
     private final CartDao cartDao;
     private final MemberService memberService;
-    private final ProductService productService;
+    private final ProductFindService productFindService;
 
-    public CartService(final CartDao cartDao, final MemberService memberService, final ProductService productService) {
+    public CartService(final CartDao cartDao, final MemberService memberService,
+                       final ProductFindService productFindService) {
         this.cartDao = cartDao;
         this.memberService = memberService;
-        this.productService = productService;
+        this.productFindService = productFindService;
     }
 
     @Transactional(readOnly = true)
@@ -32,7 +33,7 @@ public class CartService {
         final List<ItemEntity> items = cartDao.findAll(memberId);
         final Function<ItemEntity, ItemEntityDto> ItemEntityToItemEntityDto = item -> new ItemEntityDto(
                 item.getId(),
-                productService.find(item.getProductId())
+                productFindService.find(item.getProductId())
         );
 
         return items.stream()
