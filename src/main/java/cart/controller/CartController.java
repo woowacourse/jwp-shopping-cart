@@ -19,7 +19,7 @@ import cart.dto.user.UserRequest;
 import cart.service.CartService;
 
 @Controller
-@RequestMapping("/cart")
+@RequestMapping("/carts")
 public class CartController {
 
     private final CartService cartService;
@@ -38,7 +38,7 @@ public class CartController {
         return ResponseEntity.ok(cartService.findAllProductsInCart(userRequest));
     }
 
-    @PostMapping("/products")
+    @PostMapping
     public ResponseEntity<Void> addProductToCart(
             @AuthenticationPrincipal UserRequest userRequest,
             @RequestBody CartCreateRequest cartCreateRequest
@@ -47,7 +47,7 @@ public class CartController {
         return ResponseEntity.created(URI.create("/cart/product/" + cartId)).build();
     }
 
-    @DeleteMapping("/products/{cartId}")
+    @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> removeProductInCart(
             @AuthenticationPrincipal UserRequest userRequest,
             @PathVariable Long cartId

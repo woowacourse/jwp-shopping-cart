@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
+import cart.dto.cart.CartCreateRequest;
 import cart.dto.cart.CartProductResponse;
 import cart.dto.product.ProductCreateRequest;
 import cart.dto.user.UserRequest;
@@ -44,12 +45,12 @@ class CartControllerTest {
     }
 
     @Test
-    @DisplayName("/cart get요청에 200을 응답한다.")
+    @DisplayName("/carts get요청에 200을 응답한다.")
     void cart() {
         final ExtractableResponse<Response> response =
                 given().log().all()
                         .auth().preemptive().basic(EMAIL, PASSWORD)
-                        .when().get("/cart")
+                        .when().get("/carts")
                         .then().log().all()
                         .extract();
 
@@ -66,7 +67,7 @@ class CartControllerTest {
                 given().log().all()
                         .auth().preemptive().basic(EMAIL, PASSWORD)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
-                        .when().get("/cart/products")
+                        .when().get("/carts/products")
                         .then().log().all()
                         .extract();
 
@@ -80,7 +81,7 @@ class CartControllerTest {
     }
 
     @Test
-    @DisplayName("/product/{productId} post 요청 시 cart에 상품을 추가한다.")
+    @DisplayName("/{productId} post 요청 시 cart에 상품을 추가한다.")
     void addProductToCart() {
         //given
         final Long productId = productService.save(PRODUCT_CREATE_REQUEST);
@@ -88,9 +89,10 @@ class CartControllerTest {
         //when
         final ExtractableResponse<Response> response = given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CartCreateRequest(productId))
                 .when().log().all()
-                .post("/cart/products/" + productId)
+                .post("/carts")
                 .then().log().all()
                 .extract();
 
@@ -99,7 +101,7 @@ class CartControllerTest {
     }
 
     @Test
-    @DisplayName("/cart/product/{cartId} delete 요청 시 cart에 담긴 상품을 삭제한다.")
+    @DisplayName("/carts/{cartId} delete 요청 시 cart에 담긴 상품을 삭제한다.")
     void removeProductInCart() {
         //given
         final Long productId = productService.save(PRODUCT_CREATE_REQUEST);
@@ -110,7 +112,7 @@ class CartControllerTest {
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().log().all()
-                .delete("/cart/products/" + cartId)
+                .delete("/carts/" + cartId)
                 .then().log().all()
                 .extract();
         final List<CartProductResponse> results = cartService.findAllProductsInCart(
@@ -124,7 +126,7 @@ class CartControllerTest {
     }
 
     @Test
-    @DisplayName("등록 되지 않은 사용자 정보를 통해 /cart/product*/** url에 요청을 보내면 401을 반환한다.")
+    @DisplayName("등록 되지 않은 사용자 정보를 통해 /carts/** url에 요청을 보내면 401을 반환한다.")
     void unauthorizedRequest() {
         //given
         final String unauthorizedEmail = "aaa@aaa.com";
@@ -133,7 +135,7 @@ class CartControllerTest {
         final ExtractableResponse<Response> response =
                 given().log().all()
                         .auth().preemptive().basic(unauthorizedEmail, PASSWORD)
-                        .when().get("/cart/products")
+                        .when().get("/carts/products")
                         .then().log().all()
                         .extract();
 
