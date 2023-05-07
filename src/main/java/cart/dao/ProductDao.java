@@ -52,4 +52,11 @@ public class ProductDao {
                 .addValue("id", id);
         return namedParameterJdbcTemplate.update(sql, mapSqlParameters);
     }
+
+    public ProductEntity findById(int productId) {
+        final String sql = "SELECT * FROM product WHERE id = ?";
+        BeanPropertyRowMapper<ProductEntity> mapper = BeanPropertyRowMapper.newInstance(ProductEntity.class);
+        List<ProductEntity> product = jdbcTemplate.query(sql, mapper, productId);
+        return product.get(0);
+    }
 }
