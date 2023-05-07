@@ -5,6 +5,6 @@ import cart.global.exception.common.ExceptionStatus;
 
 public class UnsupportedAuthorizationException extends CartException {
     public UnsupportedAuthorizationException() {
-        super(ExceptionStatus.UNSUPPORTED_AUTHORIZATION_HEADER.getMessage());
+        super(ExceptionStatus.UNSUPPORTED_AUTHORIZATION_HEADER);
     }
 }

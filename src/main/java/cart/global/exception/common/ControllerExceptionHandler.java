@@ -1,5 +1,8 @@
 package cart.global.exception.common;
 
+import cart.global.exception.auth.AuthorizationNotFoundException;
+import cart.global.exception.auth.InvalidAuthorizationException;
+import cart.global.exception.cart.ProductNotFoundInCartException;
 import cart.global.exception.product.ProductNotFoundException;
 import cart.global.exception.response.ErrorResponse;
 import java.util.List;
@@ -32,10 +35,16 @@ public class ControllerExceptionHandler {
         return new ErrorResponse(ExceptionStatus.BAD_INPUT_VALUE_EXCEPTION);
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
+    @ExceptionHandler({InvalidAuthorizationException.class, AuthorizationNotFoundException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleAuthorizationException(final CartException e) {
+        return new ErrorResponse(e.getExceptionStatus());
+    }
+
+    @ExceptionHandler({ProductNotFoundException.class, ProductNotFoundInCartException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleProductNotFoundException() {
-        return new ErrorResponse(ExceptionStatus.NOT_FOUND_PRODUCT);
+    public ErrorResponse handleProductNotFoundException(final CartException e) {
+        return new ErrorResponse(e.getExceptionStatus());
     }
 
     @ExceptionHandler(Exception.class)

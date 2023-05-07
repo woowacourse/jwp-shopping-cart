@@ -5,6 +5,6 @@ import cart.global.exception.common.ExceptionStatus;
 
 public class InvalidAuthorizationException extends CartException {
     public InvalidAuthorizationException() {
-        super(ExceptionStatus.INVALID_AUTHORIZATION.getMessage());
+        super(ExceptionStatus.INVALID_AUTHORIZATION);
     }
 }
