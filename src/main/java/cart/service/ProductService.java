@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class ProductService {
 
@@ -27,6 +28,7 @@ public class ProductService {
         return productDao.save(product);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
         List<Product> products = productDao.findAll();
         return products.stream()
@@ -46,7 +48,6 @@ public class ProductService {
         return productDao.update(id, newProduct);
     }
 
-    @Transactional
     public void delete(final Long id) {
         productDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 id 값이 없습니다."));

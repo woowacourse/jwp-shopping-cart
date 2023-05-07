@@ -5,10 +5,12 @@ import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.domain.Product;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class CartService {
 
@@ -30,6 +32,7 @@ public class CartService {
         cartDao.save(memberId, productId);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findByEmail(final String email) {
         List<Product> productsByEmail = cartDao.findByEmail(email);
         return productsByEmail.stream()
