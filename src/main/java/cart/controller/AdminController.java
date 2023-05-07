@@ -4,6 +4,7 @@ import cart.domain.product.service.ProductService;
 import cart.domain.product.dto.ProductCreateRequest;
 import cart.domain.product.dto.ProductUpdateRequest;
 import java.net.URI;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,7 +27,7 @@ public class AdminController {
     @PostMapping("/products")
     public ResponseEntity<Void> add(@RequestBody final ProductCreateRequest productCreateRequest) {
         productService.create(productCreateRequest);
-        return ResponseEntity.created(URI.create("/admin")).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping("/products/{id}")
