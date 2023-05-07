@@ -1,7 +1,7 @@
 package cart.dto.entity;
 
 public class CartEntity {
-    public static final int DEFAULT_CONT = 1;
+    public static final int DEFAULT_COUNT = 1;
 
     private int id;
     private int count;
@@ -14,7 +14,7 @@ public class CartEntity {
     public CartEntity(int member_id, int product_id) {
         this.member_id = member_id;
         this.product_id = product_id;
-        count = DEFAULT_CONT;
+        count = DEFAULT_COUNT;
     }
 
     public CartEntity(int id, int count, int member_id, int product_id) {

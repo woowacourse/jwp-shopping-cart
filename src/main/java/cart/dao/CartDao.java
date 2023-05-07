@@ -36,7 +36,7 @@ public class CartDao {
 
     public int save(CartEntity cartEntity) {
         GeneratedKeyHolder keyholder = new GeneratedKeyHolder();
-        final String sql = "INSERT INTO cart (member_id, product_id, count) VALUES (:member_id, :product_id, :count)";
+        final String sql = "INSERT INTO cart (count, member_id, product_id) VALUES (:count, :member_id, :product_id)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(cartEntity);
         namedParameterJdbcTemplate.update(sql, namedParameters, keyholder, new String[]{"id"});
         return keyholder.getKey().intValue();
