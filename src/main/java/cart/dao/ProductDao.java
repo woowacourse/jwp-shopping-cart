@@ -1,7 +1,6 @@
 package cart.dao;
 
-import cart.dto.request.ProductRequest;
-import cart.dto.response.ProductResponse;
+import cart.dto.entity.ProductEntity;
 import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,28 +21,28 @@ public class ProductDao {
         namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public int save(ProductRequest productRequest) {
+    public int save(ProductEntity productEntity) {
         GeneratedKeyHolder keyholder = new GeneratedKeyHolder();
         final String sql = "INSERT INTO product (name, imgUrl, price) VALUES (:name, :imgUrl, :price)";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(productRequest);
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(productEntity);
         namedParameterJdbcTemplate.update(sql, namedParameters, keyholder, new String[]{"id"});
 
         return keyholder.getKey().intValue();
     }
 
-    public List<ProductResponse> findAll() {
+    public List<ProductEntity> findAll() {
         final String sql = "SELECT * FROM product";
-        BeanPropertyRowMapper<ProductResponse> mapper = BeanPropertyRowMapper.newInstance(ProductResponse.class);
+        BeanPropertyRowMapper<ProductEntity> mapper = BeanPropertyRowMapper.newInstance(ProductEntity.class);
         return jdbcTemplate.query(sql, mapper);
     }
 
-    public int update(ProductRequest productRequest, int id) {
+    public int update(ProductEntity productEntity) {
         final String sql = "UPDATE product SET name=:name, imgUrl=:imgUrl, price=:price WHERE id=:id";
         MapSqlParameterSource mapSqlParameters = new MapSqlParameterSource()
-                .addValue("name", productRequest.getName())
-                .addValue("imgUrl", productRequest.getImgUrl())
-                .addValue("price", productRequest.getPrice())
-                .addValue("id", id);
+                .addValue("id", productEntity.getId())
+                .addValue("name", productEntity.getName())
+                .addValue("imgUrl", productEntity.getImgUrl())
+                .addValue("price", productEntity.getPrice());
         return namedParameterJdbcTemplate.update(sql, mapSqlParameters);
     }
 

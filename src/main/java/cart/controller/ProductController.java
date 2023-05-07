@@ -50,8 +50,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> productModify(@Validated @RequestBody ProductRequest productRequest,
-                                                             @PathVariable int id) {
+    public ResponseEntity<Map<String, String>> productModify(
+            @Validated @RequestBody ProductRequest productRequest,
+            @PathVariable int id) {
         productService.update(productRequest, id);
 
         Map<String, String> response = new HashMap<>();

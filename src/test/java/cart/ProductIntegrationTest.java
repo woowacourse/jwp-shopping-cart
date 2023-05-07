@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import cart.dao.ProductDao;
+import cart.dto.entity.ProductEntity;
 import cart.dto.request.ProductRequest;
-import cart.dto.response.ProductResponse;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -126,12 +126,12 @@ class ProductIntegrationTest {
     @Nested
     class ProductModify {
         void before() {
-            ProductRequest productRequest = new ProductRequest(
+            ProductEntity productEntity = new ProductEntity(
                     "오잉",
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     10000
             );
-            productDao.save(productRequest);
+            productDao.save(productEntity);
         }
 
         @DisplayName("성공")
@@ -155,7 +155,7 @@ class ProductIntegrationTest {
                     .log().all()
                     .statusCode(HttpStatus.OK.value());
 
-            ProductResponse product = productDao.findAll().get(0);
+            ProductEntity product = productDao.findAll().get(0);
 
             assertThat(product.getId()).isEqualTo(1);
             assertThat(product.getName()).isEqualTo("토리");
@@ -240,12 +240,12 @@ class ProductIntegrationTest {
     @Nested
     class ProductDelete {
         void before() {
-            ProductRequest productRequest = new ProductRequest(
+            ProductEntity productEntity = new ProductEntity(
                     "오잉",
                     "https://pelicana.co.kr/resources/images/menu/original_menu01_200529.png",
                     10000
             );
-            productDao.save(productRequest);
+            productDao.save(productEntity);
         }
 
         @DisplayName("성공")

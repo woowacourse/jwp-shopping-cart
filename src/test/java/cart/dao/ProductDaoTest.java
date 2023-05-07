@@ -3,8 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dto.request.ProductRequest;
-import cart.dto.response.ProductResponse;
+import cart.dto.entity.ProductEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,13 +17,13 @@ class ProductDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private ProductDao productDao;
-    private ProductRequest productRequest;
+    private ProductEntity productEntity;
 
     @BeforeEach
     void setUp() {
         productDao = new ProductDao(jdbcTemplate);
 
-        productRequest = new ProductRequest(
+        productEntity = new ProductEntity(
                 "치킨",
                 "https://barunchicken.com/wp-content/uploads/2022/07/%EA%B3%A8%EB%93%9C%EC%B9%98%ED%82%A8-2-1076x807.jpg",
                 10000
@@ -34,8 +33,8 @@ class ProductDaoTest {
     @DisplayName("데이터 저장 테스트")
     @Test
     void Should_Success_When_Save() {
-        productDao.save(productRequest);
-        ProductResponse product = productDao.findAll().get(0);
+        productDao.save(productEntity);
+        ProductEntity product = productDao.findAll().get(0);
 
         assertAll(
                 () -> assertThat(product.getName()).isEqualTo("치킨"),
@@ -48,15 +47,17 @@ class ProductDaoTest {
     @DisplayName("데이터 변경 테스트")
     @Test
     void Should_Success_When_Update() {
-        ProductRequest productRequest2 = new ProductRequest(
+        int id = productDao.save(productEntity);
+
+        ProductEntity productEntity2 = new ProductEntity(
+                id,
                 "토리",
                 "https://barunchicken.com/wp-content/uploads/2022/07/%EA%B3%A8%EB%93%9C%EC%B9%98%ED%82%A8-2-1076x807.jpg",
                 20000
         );
 
-        int id = productDao.save(productRequest);
-        productDao.update(productRequest2, id);
-        ProductResponse product = productDao.findAll().get(0);
+        productDao.update(productEntity2);
+        ProductEntity product = productDao.findAll().get(0);
 
         assertAll(
                 () -> assertThat(product.getName()).isEqualTo("토리"),
@@ -69,10 +70,10 @@ class ProductDaoTest {
     @DisplayName("데이터 삭제 테스트")
     @Test
     void Should_Success_When_Delete() {
-        int id = productDao.save(productRequest);
+        int id = productDao.save(productEntity);
         productDao.delete(id);
-        List<ProductResponse> productResponseList = productDao.findAll();
+        List<ProductEntity> productEntities = productDao.findAll();
 
-        assertThat(productResponseList).hasSize(0);
+        assertThat(productEntities).hasSize(0);
     }
 }

@@ -31,20 +31,4 @@ public class ProductResponse {
     public int getPrice() {
         return price;
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
 }
