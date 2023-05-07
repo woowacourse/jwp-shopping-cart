@@ -10,9 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @JdbcTest
 class UserDaoTest {
@@ -42,7 +42,7 @@ class UserDaoTest {
         List<UserEntity> users = userDao.findAll();
 
         assertNotNull(users);
-        assertTrue(users.size() > 0);
+        assertThat(users).isNotEmpty();
     }
 
     @DisplayName("이메일과 비밀번호로 사용자 정보를 가져오기")
