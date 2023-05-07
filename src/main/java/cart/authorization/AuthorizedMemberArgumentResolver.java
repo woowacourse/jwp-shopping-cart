@@ -20,7 +20,7 @@ public class AuthorizedMemberArgumentResolver implements HandlerMethodArgumentRe
         final HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         final Object authInfo = request.getAttribute(MemberLoginInterceptor.AUTH_INFO);
         if (authInfo == null) {
-            throw new IllegalStateException("AuthInfo가 존재하지 않음");
+            throw new IllegalStateException("AuthInfo가 존재하지 않습니다.");
         }
 
         return authInfo;
