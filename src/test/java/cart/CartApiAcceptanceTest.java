@@ -44,8 +44,8 @@ class CartApiAcceptanceTest {
     private int port;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert simpleJdbcInsertCart;
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsertCart;
 
     @Autowired
     public CartApiAcceptanceTest(final JdbcTemplate jdbcTemplate) {
@@ -135,6 +135,19 @@ class CartApiAcceptanceTest {
                 .when().delete("/cart/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("없는 카트 id접근시 실패 테스트")
+    void find_by_id_fail_test() {
+        final Product product = findFirstProduct();
+        final long id = insertToCartTable("test@email.com", product.getId()) + 1L;
+
+        RestAssured.given().log().all()
+                .header("Authorization", "Basic " + SUCCESS_CREDENTIAL)
+                .when().delete("/cart/" + id)
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test

@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.entity.Product;
-import cart.exception.NoSuchProductException;
+import cart.exception.TableIdNotFoundException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -92,8 +92,8 @@ class JdbcProductsDaoTest {
 
         // when & then
         assertThatThrownBy(() -> productsDao.findById(id))
-                .isInstanceOf(NoSuchProductException.class)
-                .hasMessage("해당 상품이 없습니다. 입략된 상품 id : " + id);
+                .isInstanceOf(TableIdNotFoundException.class)
+                .hasMessage("해당 상품이 id를 찾을 수 없습니다. 입략된 상품 id : " + id);
     }
 
     private long findLastInsertedId() {

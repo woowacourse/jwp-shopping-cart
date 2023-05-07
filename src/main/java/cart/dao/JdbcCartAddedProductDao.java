@@ -3,6 +3,8 @@ package cart.dao;
 import cart.entity.CartAddedProduct;
 import cart.entity.Product;
 import cart.entity.vo.Email;
+import cart.exception.TableIdNotFoundException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -55,7 +57,11 @@ public class JdbcCartAddedProductDao implements cartAddedProductDao {
                 "ON cart_added_product.product_id = products.id " +
                 "WHERE cart_added_product.id = ?;";
 
-        return jdbcTemplate.queryForObject(sql, cartAddedProductRowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(sql, cartAddedProductRowMapper, id);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new TableIdNotFoundException("해당 카트 id를 찾을 수 없습니다. 입력된 카트 id : " + id);
+        }
     }
 
     @Override

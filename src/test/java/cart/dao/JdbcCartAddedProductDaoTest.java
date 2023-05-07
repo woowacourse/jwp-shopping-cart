@@ -3,6 +3,7 @@ package cart.dao;
 import cart.entity.CartAddedProduct;
 import cart.entity.Product;
 import cart.entity.vo.Email;
+import cart.exception.TableIdNotFoundException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -84,6 +85,22 @@ class JdbcCartAddedProductDaoTest {
             softly.assertThat(addedProduct.getPrice()).isEqualTo(product.getPrice());
             softly.assertThat(addedProduct.getImageUrl()).isEqualTo(product.getImageUrl());
         });
+    }
+
+    @Test
+    @DisplayName("id로 검색 실패 테스트")
+    void findById_fail_test() {
+        // given
+        final long id = findLastInsertedId() + 1L;
+
+        // when & then
+        assertThatThrownBy(() -> cartAddedProductDao.findById(id))
+                .isInstanceOf(TableIdNotFoundException.class)
+                .hasMessage("해당 카트 id를 찾을 수 없습니다. 입력된 카트 id : " + id);
+    }
+
+    private long findLastInsertedId() {
+        return jdbcTemplate.queryForObject("SELECT max(id) FROM products", Long.class);
     }
 
     private long insertToCartTable(final String email, final long productId) {
