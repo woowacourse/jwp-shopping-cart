@@ -34,10 +34,10 @@ class ProductServiceTest {
 
 		// when
 		final ProductUpdateRequest request = new ProductUpdateRequest("KIARA", 1000, "이미지");
-		final ProductId productId = productService.insert(request);
+		final ProductResponse response = productService.insert(request);
 
 		// then
-		assertThat(ProductId.from(1L)).isEqualTo(productId);
+		assertThat(1L).isEqualTo(response.getId());
 	}
 
 	@DisplayName("전체 상품 조회 테스트")

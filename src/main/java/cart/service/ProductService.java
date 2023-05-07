@@ -11,19 +11,18 @@ import cart.service.request.ProductUpdateRequest;
 import cart.service.response.ProductResponse;
 import cart.domain.product.Product;
 import cart.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 
 @Transactional(readOnly = true)
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 	private final ProductRepository productRepository;
 
-	public ProductService(final ProductRepository productRepository) {
-		this.productRepository = productRepository;
-	}
-
-	@Transactional
-	public ProductId insert(final ProductUpdateRequest request) {
-		return productRepository.insert(new Product(request.getName(), request.getPrice(), request.getImage()));
+	public ProductResponse insert(final ProductUpdateRequest request) {
+		Product product = new Product(request.getName(), request.getPrice(), request.getImage());
+		final ProductId productId = productRepository.insert(product);
+		return new ProductResponse(productId.getId(), product.getName(), product.getPrice(), product.getImage());
 	}
 
 	public List<ProductResponse> findAll() {
