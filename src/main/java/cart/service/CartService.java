@@ -43,4 +43,13 @@ public class CartService {
 			})
 			.collect(Collectors.toList());
 	}
+
+	@Transactional
+	public void deleteById(final MemberId memberId, final ProductId productId){
+		final boolean isDelete = cartRepository.deleteById(memberId, productId);
+
+		if (!isDelete) {
+			throw new IllegalStateException("상품 삭제에 실패했습니다.");
+		}
+	}
 }
