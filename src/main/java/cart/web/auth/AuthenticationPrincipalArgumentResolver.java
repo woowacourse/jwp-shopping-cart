@@ -1,5 +1,6 @@
 package cart.web.auth;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -21,9 +22,14 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        AuthorizationExtractor<UserInfo> extractor = new BasicAuthorizationExtractor();
+        AuthorizationExtractor<UserInfo> extractor = basicAuthorizationExtractor();
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
 
         return extractor.extract(request);
+    }
+
+    @Bean
+    private AuthorizationExtractor<UserInfo> basicAuthorizationExtractor() {
+        return new BasicAuthorizationExtractor();
     }
 }
