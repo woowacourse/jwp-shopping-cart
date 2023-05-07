@@ -6,9 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class CartControllerAdvice {
+public class CartControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler({EmptyResultDataAccessException.class})
     public ResponseEntity<String> handleEmptyDataAccessException(final EmptyResultDataAccessException e) {
         return ResponseEntity.badRequest().body("해당하는 상품이 없습니다.");
@@ -26,7 +28,11 @@ public class CartControllerAdvice {
     }
 
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<String> handleException(final Exception e) {
-        return ResponseEntity.internalServerError().body("서버 내부 오류가 발생했습니다." + e.getMessage());
+    public ResponseEntity<Object> handleOtherException(final Exception e, WebRequest request) {
+        try {
+            return handleException(e, request);
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 내부 오류가 발생했습니다");
+        }
     }
 }
