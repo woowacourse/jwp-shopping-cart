@@ -30,12 +30,12 @@
                     <p class="product-name" th:text="${product.name}"></p> <!-- 상품 이름 -->
                     <p class="product-price" th:text="${product.price}"></p> <!-- 상품 가격 -->
                 </div>
-                <button type="submit" class="product-btn" th:onclick="addCartItem([[${product.productId}]])">담기</button>
+                <button type="submit" class="product-btn" th:onclick="addCartItem([[${product.id}]])">담기</button>
             </div>
         </li>
     </ul>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script th:src="@{/js/cart.js}"></script>
+<script th:src="@{/js/cart.js?ver=1}"></script>
 </body>
 </html>

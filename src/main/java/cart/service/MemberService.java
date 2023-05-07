@@ -28,7 +28,8 @@ public class MemberService {
                         member.getPassword()))
                 .collect(Collectors.toList());
     }
-        public MemberResponse findMember(Long id) {
+
+    public MemberResponse findMember(Long id) {
         Member member = memberRepository.getMember(id);
         return new MemberResponse(member.getId(), member.getName(), member.getEmail(), member.getPassword());
     }

@@ -2,6 +2,8 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.dao.product.ProductDao;
+import cart.dao.product.ProductEntity;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

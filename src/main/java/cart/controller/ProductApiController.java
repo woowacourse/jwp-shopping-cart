@@ -33,9 +33,9 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponse> saveProduct(@RequestBody @Valid ProductRequest productRequest) {
+    public ResponseEntity<ProductResponse> createProduct(@RequestBody @Valid ProductRequest productRequest) {
         ProductResponse savedProduct = productService.createProduct(productRequest);
-        return ResponseEntity.created(URI.create("products"+ savedProduct.getId())).body(savedProduct);
+        return ResponseEntity.created(URI.create("products/"+ savedProduct.getId())).body(savedProduct);
     }
 
     @PutMapping("/{productId}")

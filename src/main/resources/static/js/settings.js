@@ -59,7 +59,6 @@ const createMember = (member) => { //
     });
 };
 
-// 상품 업데이
 const updateMember = (member) => {
     const { id } = member; //왜???
 
