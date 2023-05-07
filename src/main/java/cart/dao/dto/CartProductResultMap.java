@@ -1,33 +1,34 @@
-package cart.dto;
+package cart.dao.dto;
 
-import cart.dao.entity.Product;
+public class CartProductResultMap {
 
-public class ProductResponse {
     private final Long id;
+    private final Long productId;
     private final String name;
-    private final Integer price;
+    private final int price;
     private final String imgUrl;
 
-    public ProductResponse(Long id, String name, Integer price, String imgUrl) {
+    public CartProductResultMap(final Long id, final Long productId, final String name, final int price, final String imgUrl) {
         this.id = id;
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;
-    }
-
-    public ProductResponse(Product product) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getImgUrl());
     }
 
     public Long getId() {
         return id;
     }
 
+    public Long getProductId() {
+        return productId;
+    }
+
     public String getName() {
         return name;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 

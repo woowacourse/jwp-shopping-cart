@@ -1,54 +1,55 @@
 package cart.service;
 
+import cart.dao.CartDao;
+import cart.dao.ProductDao;
+import cart.dao.entity.Product;
+import cart.dto.ProductResponse;
+import cart.dto.ProductSaveRequest;
+import cart.dto.ProductUpdateRequest;
+import org.springframework.dao.IncorrectUpdateSemanticsDataAccessException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Service;
-
-import cart.dao.ProductDao;
-import cart.dao.entity.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-
 @Service
+@Transactional
 public class ProductService {
 
     private final ProductDao productDao;
+    private final CartDao cartDao;
+    private final ProductMapper productMapper;
 
-    public ProductService(ProductDao productDao) {
+    public ProductService(ProductDao productDao, CartDao cartDao, ProductMapper productMapper) {
         this.productDao = productDao;
+        this.cartDao = cartDao;
+        this.productMapper = productMapper;
     }
 
-    public Long save(ProductRequest productRequest) {
-        final Product product = createProduct(productRequest);
+    public Long save(final ProductSaveRequest productSaveRequest) {
+        final Product product = productMapper.mapFrom(productSaveRequest);
         return productDao.save(product);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
         final List<Product> products = productDao.findAll();
         return products.stream()
-                .map(product -> new ProductResponse(
-                        product.getId(),
-                        product.getName(),
-                        product.getPrice(),
-                        product.getImgUrl())
-                )
+                .map(ProductResponse::new)
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public void delete(final Long id) {
         productDao.delete(id);
+        cartDao.deleteByProductId(id);
     }
 
-    public void update(final Long id, final ProductRequest request) {
-        productDao.update(id, createProduct(request));
-    }
+    public void update(final Long id, final ProductUpdateRequest request) {
+        final int affectedRows = productDao.update(id, productMapper.mapFrom(request));
 
-    private Product createProduct(ProductRequest productRequest) {
-        return new Product(
-                productRequest.getName(),
-                productRequest.getPrice(),
-                productRequest.getImgUrl()
-        );
+        if (affectedRows == 0) {
+            throw new IncorrectUpdateSemanticsDataAccessException("수정에 실패했습니다.");
+        }
     }
 }

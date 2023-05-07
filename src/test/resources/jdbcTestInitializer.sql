@@ -10,5 +10,6 @@ INSERT INTO product (name, price, img_url) VALUES ('짜장면', 7000, 'https://t
 -- 기본 카트
 INSERT INTO cart (user_id, product_id) VALUES (1L, 1L);
 INSERT INTO cart (user_id, product_id) VALUES (1L, 2L);
+INSERT INTO cart (user_id, product_id) VALUES (2L, 1L);
+INSERT INTO cart (user_id, product_id) VALUES (2L, 2L);
 INSERT INTO cart (user_id, product_id) VALUES (2L, 3L);
-
