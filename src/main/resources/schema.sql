@@ -17,6 +17,15 @@ CREATE TABLE member
     PRIMARY KEY (id)
 );
 
+CREATE TABLE cart_product
+(
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    member_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (product_id) REFERENCES product (id)
+)
+
 -- INSERT INTO member(email, password, name, phone_number)
 -- VALUES ('email1@test.com', '1234abcd!@', 'Test Name', '01012341234');
 --
