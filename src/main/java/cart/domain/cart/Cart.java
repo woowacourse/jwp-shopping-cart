@@ -29,13 +29,12 @@ public class Cart {
     }
 
     public void removeItem(Item item) {
-        boolean isRemoved = items.remove(item);
-
-        validateNotExistsItem(isRemoved);
+        validateNotExistsItem(item);
+        items.remove(item);
     }
 
-    private void validateNotExistsItem(boolean isRemoved) {
-        if (!isRemoved) {
+    private void validateNotExistsItem(Item item) {
+        if (items.contains(item)) {
             throw new CartNotFoundException("장바구니에 존재하지 않는 상품입니다.");
         }
     }
