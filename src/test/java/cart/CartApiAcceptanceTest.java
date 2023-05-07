@@ -22,9 +22,12 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
+import java.util.List;
 import java.util.stream.Stream;
 
+import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.isIn;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
@@ -103,17 +106,19 @@ class CartApiAcceptanceTest {
         final String email = "test@email.com";
         insertToCartTable(email, product.getId());
 
-        final Integer totalCount = jdbcTemplate.queryForObject(
-                "SELECT count(*) FROM cart_added_product " +
-                        "WHERE user_email = ?"
-                , Integer.class, email);
+        final List<Long> actual = jdbcTemplate.queryForList(
+                "SELECT id FROM cart_added_product " +
+                        "WHERE user_email = ?",
+                Long.class,
+                email);
 
         RestAssured.given().log().all()
                 .header("Authorization", "Basic " + SUCCESS_CREDENTIAL)
                 .when().get("/cart/products")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("$", hasSize(totalCount));
+                .body("$", hasSize(actual.size()))
+                .body("collect {it.id.toLong()}", everyItem(isIn(actual)));
     }
 
     private long insertToCartTable(final String email, final long productId) {
