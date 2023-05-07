@@ -29,7 +29,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@WebMvcTest(value = ItemController.class)
+@WebMvcTest(ItemController.class)
 class ItemControllerTest {
 
     @MockBean
