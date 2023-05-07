@@ -2,10 +2,7 @@ package cart.presentation.dto;
 
 public class ExceptionResponse {
 
-    private String message;
-
-    public ExceptionResponse() {
-    }
+    private final String message;
 
     public ExceptionResponse(String message) {
         this.message = message;
