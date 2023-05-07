@@ -93,4 +93,12 @@ class JwpCartControllerTest {
                 .andExpect(view().name("settings"))
                 .andExpect(model().attribute("members", expectResponses));
     }
+
+    @Test
+    @DisplayName("장바구니 페이지를 조회한다.")
+    void cartTest() throws Exception {
+        mockMvc.perform(get("/cart"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("cart"));
+    }
 }
