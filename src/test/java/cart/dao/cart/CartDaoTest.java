@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 
 @Import({CartDao.class, UserDao.class, ProductDao.class})
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @JdbcTest
 class CartDaoTest {
@@ -34,14 +33,14 @@ class CartDaoTest {
     private ProductDao productDao;
 
 
-    @BeforeAll
+    @BeforeEach
     void initializeData() {
         userId = userDao.insert(userEntity);
         chickenId = productDao.insert(chickenEntity);
         pizzaId = productDao.insert(pizzaEntity);
     }
 
-    @AfterAll
+    @AfterEach
     void deleteData() {
         userDao.deleteById(userId);
         productDao.deleteById(chickenId);

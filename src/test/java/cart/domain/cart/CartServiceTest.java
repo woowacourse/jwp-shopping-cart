@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 @Transactional
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 class CartServiceTest {
     static Long userId, pizzaId, chickenId;
@@ -30,14 +29,14 @@ class CartServiceTest {
     @Autowired
     private ProductRepository productRepository;
 
-    @BeforeAll
+    @BeforeEach
     void initializeData() {
         userId = userRepository.save(TestFixture.ZUNY);
         chickenId = productRepository.save(TestFixture.CHICKEN);
         pizzaId = productRepository.save(TestFixture.PIZZA);
     }
 
-    @AfterAll
+    @AfterEach
     void deleteData() {
         userRepository.deleteById(userId);
         productRepository.deleteById(chickenId);

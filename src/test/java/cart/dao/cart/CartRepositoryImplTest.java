@@ -24,7 +24,6 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 
 @Import({CartRepositoryImpl.class, UserRepositoryImpl.class, ProductRepositoryImpl.class,
         CartDao.class, UserDao.class, ProductDao.class})
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @JdbcTest
 class CartRepositoryImplTest {
@@ -39,14 +38,14 @@ class CartRepositoryImplTest {
     @Autowired
     private ProductRepository productRepository;
 
-    @BeforeAll
+    @BeforeEach
     void initializeData() {
         userId = userRepository.save(TestFixture.ZUNY);
         chickenId = productRepository.save(TestFixture.CHICKEN);
         pizzaId = productRepository.save(TestFixture.PIZZA);
     }
 
-    @AfterAll
+    @AfterEach
     void deleteData() {
         userRepository.deleteById(userId);
         productRepository.deleteById(chickenId);
