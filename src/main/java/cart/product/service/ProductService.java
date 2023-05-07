@@ -8,12 +8,14 @@ import cart.product.dto.request.ProductAddRequest;
 import cart.product.dto.request.ProductUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ProductService {
 
     private final ProductDao productDao;
@@ -23,6 +25,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> getAllProducts() {
         return productDao.findAll()
                          .stream()
@@ -30,6 +33,7 @@ public class ProductService {
                          .collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional(readOnly = true)
     public ProductDto getProductById(long productId) {
         final Product foundProduct = findProductOrThrow(productId);
 
@@ -60,6 +64,7 @@ public class ProductService {
         return productId;
     }
 
+    @Transactional(readOnly = true)
     public void validateProductExist(long productId) {
         productDao.findById(productId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다"));
     }

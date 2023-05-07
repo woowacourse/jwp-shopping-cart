@@ -7,12 +7,14 @@ import cart.product.dto.ProductDto;
 import cart.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CartService {
 
     private static final int EXPECTED_DELETED_ITEMS_COUNT = 1;
@@ -26,6 +28,7 @@ public class CartService {
         this.productService = productService;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findItemsOfCart(long memberId) {
         final List<Long> productIds = cartDao.findProductIdsByMemberId(memberId);
 
