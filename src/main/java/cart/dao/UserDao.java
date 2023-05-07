@@ -2,9 +2,7 @@ package cart.dao;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -61,7 +59,7 @@ public class UserDao {
     }
 
     public Optional<UserDto> selectBy(String email) {
-        return handleDataAccessExceptionOf(() -> {
+        return DataAccessExceptionHandler.handleWithOptional(() -> {
             String sql = "SELECT id, email, password FROM users WHERE email = ?";
 
             return jdbcTemplate.queryForObject(
@@ -74,13 +72,5 @@ public class UserDao {
                     email
             );
         });
-    }
-
-    private <T> Optional<T> handleDataAccessExceptionOf(Supplier<T> supplier) {
-        try {
-            return Optional.ofNullable(supplier.get());
-        } catch (DataAccessException exception) {
-            return Optional.empty();
-        }
     }
 }

@@ -1,7 +1,10 @@
 package cart.dao;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -45,20 +48,21 @@ public class ProductDao {
         return jdbcTemplate.update(sql, id);
     }
 
-    public ProductDto select(final Integer id) {
-        String sql = "select * from product where id = ?";
+    public Optional<ProductDto> select(final Integer id) {
+        return DataAccessExceptionHandler.handleWithOptional(() -> {
+            String sql = "select * from product where id = ?";
 
-        return jdbcTemplate.queryForObject(
-                sql,
-                (rs, rowNum) ->
-                        new ProductDto(
-                                rs.getInt("id"),
-                                rs.getString("name"),
-                                rs.getString("image"),
-                                rs.getLong("price")
-                        ),
-                id
-        );
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    (rs, rowNum) -> new ProductDto(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("image"),
+                            rs.getLong("price")
+                    ),
+                    id
+            );
+        });
     }
 
     public List<ProductDto> findAll() {
@@ -74,5 +78,13 @@ public class ProductDao {
                                 rs.getLong("price")
                         )
         );
+    }
+
+    private <T> Optional<T> handleDataAccessExceptionOf(Supplier<T> supplier) {
+        try {
+            return Optional.ofNullable(supplier.get());
+        } catch (DataAccessException exception) {
+            return Optional.empty();
+        }
     }
 }

@@ -3,13 +3,12 @@ package cart.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import cart.dao.ProductDao;
 import cart.dao.dto.ProductDto;
 import cart.domain.Product;
-import cart.repository.exception.NoSuchIdException;
+import cart.repository.exception.NoSuchProductException;
 
 @Repository
 public class ProductRepository {
@@ -30,11 +29,9 @@ public class ProductRepository {
     }
 
     public Product findBy(final Integer id) {
-        try {
-            return toProduct(productDao.select(id));
-        } catch (EmptyResultDataAccessException exception) {
-            throw new NoSuchIdException();
-        }
+        return productDao.select(id)
+                .map(this::toProduct)
+                .orElseThrow(NoSuchProductException::new);
     }
 
     public void delete(final Integer id) {
@@ -52,7 +49,7 @@ public class ProductRepository {
 
     private void validateIdExists(int affectedCount) {
         if (affectedCount == ZERO) {
-            throw new NoSuchIdException();
+            throw new NoSuchProductException();
         }
     }
 

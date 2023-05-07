@@ -25,7 +25,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.repository.exception.NoSuchIdException;
+import cart.repository.exception.NoSuchProductException;
 
 @JdbcTest
 class ProductRepositoryTest {
@@ -94,14 +94,14 @@ class ProductRepositoryTest {
     void noUpdateCountThrows() {
         assertThatThrownBy(
                 () -> productRepository.update(new Product(INVALID_ID, NAME_CHICKEN, IMAGE_CHICKEN, PRICE_CHICKEN)))
-                .isInstanceOf(NoSuchIdException.class);
+                .isInstanceOf(NoSuchProductException.class);
     }
 
     @DisplayName("제거된 대상이 없으면 예외를 던진다")
     @Test
     void noDeleteCountThrows() {
         assertThatThrownBy(() -> productRepository.delete(INVALID_ID))
-                .isInstanceOf(NoSuchIdException.class);
+                .isInstanceOf(NoSuchProductException.class);
     }
 
     private Integer getGreatestId() {

@@ -12,6 +12,8 @@ import static cart.TestFixture.PRICE_VANILLA_LATTE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,9 +52,10 @@ class ProductDaoTest {
     @Test
     @DisplayName("상품 하나 조회")
     void select() {
-        final ProductDto entity = productDao.select(getGreatestId());
+        final Optional<ProductDto> entity = productDao.select(getGreatestId());
 
         assertThat(entity)
+                .get()
                 .extracting("name", "image", "price")
                 .containsExactly(NAME_VANILLA_LATTE, IMAGE_VANILLA_LATTE, PRICE_VANILLA_LATTE);
     }
