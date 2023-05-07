@@ -20,6 +20,6 @@ public class BasicAuthorizationExtractor {
                 .map(String::new)
                 .map(decodedString -> decodedString.split(DELIMITER))
                 .map(credentials -> UserInfo.of(credentials[0], credentials[1]))
-                .orElseThrow(() -> new AuthorizationException("[Extractor] 유저 인증 정보가 잘못되었습니다."));
+                .orElseThrow(() -> new AuthorizationException("유저 인증 정보가 잘못되었습니다."));
     }
 }
