@@ -46,19 +46,19 @@ public class Product {
 
         Product product = (Product)o;
 
-        if (Objects.isNull(id) && Objects.isNull(product.id)) {
-            return super.equals(product);
-        }
-        if (Objects.isNull(id) || Objects.isNull(product.id)) {
-            // 한 쪽이 id가 없다면, 같은 데이터일 수 없다. 현 상황에 한정해 상품들의 저장이 한 번에 이뤄지기 때문이다.
+        if (!Objects.equals(name, product.name))
             return false;
-        }
-        return Objects.equals(id, product.id);
+        if (!Objects.equals(image, product.image))
+            return false;
+        return Objects.equals(price, product.price);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (image != null ? image.hashCode() : 0);
+        result = 31 * result + (price != null ? price.hashCode() : 0);
+        return result;
     }
 
     public Integer getId() {

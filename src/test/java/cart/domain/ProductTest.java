@@ -34,41 +34,12 @@ public class ProductTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @DisplayName("둘 다 id가 없다면 인스턴스를 비교한다")
+    @DisplayName("이름, 이미지, 가격이 같으면 같다.")
     @Test
-    void compareEqualityWithInstance_whenBothIdsAreNull() {
-        Product product = PRODUCT_CHICKEN;
+    void equals_whenNameImageAndPriceEquals() {
+        Product otherProductWithSameProperties = new Product(NAME_CHICKEN, IMAGE_CHICKEN, PRICE_CHICKEN);
 
-        assertThat(product).isEqualTo(product);
-    }
-
-    @DisplayName("한 쪽만 id가 없다면 동등하지 않다")
-    @Test
-    void notEqual_whenEitherIdIsNull() {
-        Product productWithoutId = PRODUCT_CHICKEN;
-        Product productWithId = new Product(1, NAME_CHICKEN, IMAGE_CHICKEN, PRICE_CHICKEN);
-
-        assertThat(productWithoutId).isNotEqualTo(productWithId);
-        assertThat(productWithId).isNotEqualTo(productWithoutId);
-    }
-
-    @DisplayName("둘 다 id가 있고, id가 같으면 같다")
-    @Test
-    void equals_whenBothHasSameId() {
-        Product productWithIdTwo = new Product(2, NAME_CHICKEN, IMAGE_CHICKEN, PRICE_CHICKEN);
-        Product otherProductWithIdTwo = new Product(2, NAME_CHICKEN, IMAGE_CHICKEN, PRICE_CHICKEN);
-
-        assertThat(productWithIdTwo).isEqualTo(otherProductWithIdTwo);
-        assertThat(otherProductWithIdTwo).isEqualTo(productWithIdTwo);
-    }
-
-    @DisplayName("둘 다 id가 있어도, id가 다르면 다르다")
-    @Test
-    void notEqual_whenBothHasDifferentId() {
-        Product productWithIdTwo = new Product(2, NAME_CHICKEN, IMAGE_CHICKEN, PRICE_CHICKEN);
-        Product productWithIdOne = new Product(1, NAME_CHICKEN, IMAGE_CHICKEN, PRICE_CHICKEN);
-
-        assertThat(productWithIdTwo).isNotEqualTo(productWithIdOne);
-        assertThat(productWithIdOne).isNotEqualTo(productWithIdTwo);
+        assertThat(PRODUCT_CHICKEN).isEqualTo(otherProductWithSameProperties);
+        assertThat(otherProductWithSameProperties).isEqualTo(PRODUCT_CHICKEN);
     }
 }
