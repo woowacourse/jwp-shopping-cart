@@ -6,6 +6,7 @@ import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.Cart;
+import cart.domain.Member;
 import cart.domain.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
