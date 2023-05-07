@@ -3,6 +3,7 @@ package cart.controller.api;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,7 +33,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(CartApiController.class)
 @Import(MockBasicAuthProviderConfig.class)
 class CartApiControllerTest {
-    private static final String AUTHORIZATION_HEADER = "authorization";
     private static final String TOKEN = "Basic Z2xlbmZpZGRpY2hAbmF2ZXIuY29tOjEyMzQ1Ng==";
 
     @Autowired
@@ -67,7 +67,7 @@ class CartApiControllerTest {
         // expect
         mockMvc.perform(post("/api/cart/" + productId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(AUTHORIZATION_HEADER, TOKEN))
+                        .header(AUTHORIZATION, TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.message").value("장바구니에 상품이 담겼습니다."));
@@ -84,7 +84,7 @@ class CartApiControllerTest {
         // expect
         mockMvc.perform(post("/api/cart/" + productId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(AUTHORIZATION_HEADER, TOKEN))
+                        .header(AUTHORIZATION, TOKEN))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("존재하지 않는 상품의 ID 입니다."));
@@ -105,7 +105,7 @@ class CartApiControllerTest {
         // expect
         mockMvc.perform(get("/api/cart")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(AUTHORIZATION_HEADER, TOKEN))
+                        .header(AUTHORIZATION, TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.message").value("3개의 상품이 조회되었습니다."))
@@ -139,7 +139,7 @@ class CartApiControllerTest {
         // expect
         mockMvc.perform(delete("/api/cart/" + cartId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(AUTHORIZATION_HEADER, TOKEN))
+                        .header(AUTHORIZATION, TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("200"))
                 .andExpect(jsonPath("$.message").value("장바구니에 상품이 삭제되었습니다."));
@@ -156,7 +156,7 @@ class CartApiControllerTest {
         // expect
         mockMvc.perform(delete("/api/cart/" + cartId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(AUTHORIZATION_HEADER, TOKEN))
+                        .header(AUTHORIZATION, TOKEN))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("존재하지 않는 장바구니의 ID 입니다."));
