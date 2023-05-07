@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class CartData {
 
     private final Long id;
@@ -28,5 +30,28 @@ public class CartData {
 
     public Integer getPrice() {
         return price.getValue();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartData cartData = (CartData) o;
+        return Objects.equals(id, cartData.id) && Objects.equals(name, cartData.name) && Objects.equals(imageUrl, cartData.imageUrl) && Objects.equals(price, cartData.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, imageUrl, price);
+    }
+
+    @Override
+    public String toString() {
+        return "CartData{" +
+                "id=" + id +
+                ", name=" + name +
+                ", imageUrl=" + imageUrl +
+                ", price=" + price +
+                '}';
     }
 }

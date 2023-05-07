@@ -1,5 +1,7 @@
 package cart.domain;
 
+import java.util.Objects;
+
 public class Cart {
 
     private final Long id;
@@ -50,5 +52,27 @@ public class Cart {
         public Cart build() {
             return new Cart(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cart cart = (Cart) o;
+        return Objects.equals(id, cart.id) && Objects.equals(userId, cart.userId) && Objects.equals(itemId, cart.itemId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, userId, itemId);
+    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", itemId=" + itemId +
+                '}';
     }
 }
