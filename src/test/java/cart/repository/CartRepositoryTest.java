@@ -95,7 +95,7 @@ class CartRepositoryTest {
 		cartRepository.insert(memberId, chickenId);
 		cartRepository.insert(memberId, pizzaId);
 
-		cartRepository.deleteByMemberId(memberId, chickenId);
+		cartRepository.deleteById(memberId, chickenId);
 		final List<Cart> carts = cartRepository.findAllByMemberId(memberId);
 		final Product remainProduct = productRepository.findByProductId(carts.get(0).getProductId());
 

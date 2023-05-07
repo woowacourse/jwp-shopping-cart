@@ -58,7 +58,7 @@ public class CartRepository {
 		return jdbcTemplate.query(sql, cartRowMapper, email);
 	}
 
-	public boolean deleteByMemberId(final MemberId memberId, final ProductId productId) {
+	public boolean deleteById(final MemberId memberId, final ProductId productId) {
 		final String sql = "DELETE FROM carts WHERE memberId = ? AND productId = ?";
 		final int deleteCount = jdbcTemplate.update(sql, memberId.getId(), productId.getId());
 
