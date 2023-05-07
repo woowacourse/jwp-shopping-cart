@@ -6,11 +6,11 @@ import cart.exception.UserAuthorizationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
+@Repository
 public class JdbcUsersDao implements UsersDao {
 
     private static final RowMapper<User> userRowMapper = (rs, rowNum) ->

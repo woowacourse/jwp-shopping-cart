@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.ProductsDao;
-import cart.dao.cartAddedProductDao;
+import cart.dao.CartAddedProductDao;
 import cart.entity.CartAddedProduct;
 import cart.entity.Product;
 import cart.entity.vo.Email;
@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
 
-    private final cartAddedProductDao cartAddedProductDao;
+    private final CartAddedProductDao cartAddedProductDao;
     private final ProductsDao productsDao;
 
-    public CartService(final cartAddedProductDao cartAddedProductDao, final ProductsDao productsDao) {
+    public CartService(final CartAddedProductDao cartAddedProductDao, final ProductsDao productsDao) {
         this.cartAddedProductDao = cartAddedProductDao;
         this.productsDao = productsDao;
     }

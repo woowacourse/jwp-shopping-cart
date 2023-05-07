@@ -6,7 +6,7 @@ import cart.entity.vo.Email;
 
 import java.util.List;
 
-public interface cartAddedProductDao {
+public interface CartAddedProductDao {
 
     long insert(final Email email, final Product product);
 
