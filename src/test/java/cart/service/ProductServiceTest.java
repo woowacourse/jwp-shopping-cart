@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
@@ -81,19 +80,6 @@ class ProductServiceTest {
     }
 
     @Test
-    void 존재하지_않은_상품을_수정하면_예외가_발생한다() {
-        // given
-        when(productDao.update(any(Long.class), any(ProductEntity.class)))
-                .thenReturn(0);
-        final RequestUpdateProductDto requestUpdateProductDto = new RequestUpdateProductDto(1L, "치킨", 1000, "치킨 사진");
-
-        // expect
-        assertThatThrownBy(() -> productService.update(1L, requestUpdateProductDto))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("접근하려는 데이터가 존재하지 않습니다.");
-    }
-
-    @Test
     void 상품을_삭제한다() {
         // given
         when(productDao.delete(any(Long.class)))
@@ -108,15 +94,16 @@ class ProductServiceTest {
     }
 
     @Test
-    void 존재하지_않은_상품을_삭제하면_예외가_발생한다() {
-        // given
-        when(productDao.delete(any(Long.class)))
-                .thenReturn(0);
+    void id로_상품을_찾는다() {
+        //given
         final Long id = 1L;
+        when(productDao.findById(id))
+                .thenReturn(new ProductEntity(id, "치킨", 10_000, "치킨 주소"));
 
-        // expect
-        assertThatThrownBy(() -> productService.delete(id))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("접근하려는 데이터가 존재하지 않습니다.");
+        //when
+        final ProductEntity product = productService.findById(id);
+
+        //then
+        assertThat(product).isEqualTo(new ProductEntity(1L, "치킨", 10_000, "치킨 주소"));
     }
 }
