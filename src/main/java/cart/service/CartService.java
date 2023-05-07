@@ -1,75 +1,70 @@
 package cart.service;
 
-import cart.domain.Product;
-import cart.dto.request.ProductRequest;
-import cart.dto.request.ProductUpdateRequest;
-import cart.dto.response.ProductResponse;
-import cart.persistence.ProductDao;
+import cart.controller.exception.CartHasDuplicatedItemsException;
+import cart.domain.cart.Cart;
+import cart.domain.cart.Item;
+import cart.domain.member.Member;
+import cart.domain.product.Product;
+import cart.dto.mapper.ResponseMapper;
+import cart.dto.response.CartResponse;
+import cart.dto.response.ItemResponse;
+import cart.persistence.CartDao;
+import cart.persistence.MembersDao;
+import cart.persistence.ProductsDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class CartService {
 
-    private final ProductDao productDao;
+    private final CartDao cartDao;
+    private final ProductsDao productsDao;
+    private final MembersDao membersDao;
 
-    public CartService(ProductDao productDao) {
-        this.productDao = productDao;
+    public CartService(CartDao cartDao, ProductsDao productsDao, MembersDao membersDao) {
+        this.cartDao = cartDao;
+        this.productsDao = productsDao;
+        this.membersDao = membersDao;
     }
 
-    public ProductResponse create(ProductRequest productRequest) {
-        Product product = new Product(
-                productRequest.getName(),
-                productRequest.getPrice(),
-                productRequest.getImageUrl()
-        );
+    public ItemResponse createItem(Long memberId, Long productId) {
+        Member member = membersDao.findById(memberId);
+        Product product = productsDao.findById(productId);
+        Item requestedItem = new Item(member, product);
 
-        Long createdId = productDao.create(product);
-        Product created = productDao.find(createdId);
+        Cart memberCart = getCartByMember(member);
 
-        return new ProductResponse(
-                created.getId(),
-                created.getName(),
-                created.getPrice(),
-                created.getImageUrl());
-    }
+        if (memberCart.contains(requestedItem)) {
+            throw new CartHasDuplicatedItemsException();
+        }
 
-    public List<ProductResponse> readAll() {
-        List<Product> products = productDao.findAll();
-        return products.stream()
-                .map(product -> new ProductResponse(
-                        product.getId(),
-                        product.getName(),
-                        product.getPrice(),
-                        product.getImageUrl()
-                ))
-                .collect(Collectors.toList());
-    }
+        long registeredItemId = cartDao.saveItem(requestedItem);
 
-    public ProductResponse update(ProductUpdateRequest productUpdateRequest) {
-        Product product = new Product(
-                productUpdateRequest.getId(),
-                productUpdateRequest.getName(),
-                productUpdateRequest.getPrice(),
-                productUpdateRequest.getImageUrl()
-        );
-
-        Long updatedId = productDao.update(product);
-        Product updated = productDao.find(updatedId);
-
-        return new ProductResponse(
-                updated.getId(),
-                updated.getName(),
-                updated.getPrice(),
-                updated.getImageUrl()
+        return new ItemResponse(
+                registeredItemId,
+                requestedItem.getMemberId(),
+                ResponseMapper.toProductResponse(requestedItem.getProduct())
         );
     }
 
-    public void delete(Long id) {
-        productDao.delete(id);
+    private Cart getCartByMember(Member member) {
+        List<Item> items = cartDao.findAllItemsByMemberId(member.getId());
+        return new Cart(member, items);
+    }
+
+    public CartResponse readAllItemsByMemberId(Long memberId) {
+        Member member = membersDao.findById(memberId);
+        Cart cart = getCartByMember(member);
+
+        List<ItemResponse> responses = ResponseMapper.toItemResponses(cart.getItems());
+
+        return new CartResponse(member.getId(), responses);
+    }
+
+    public void deleteItemById(long id) {
+        cartDao.deleteItemById(id);
     }
 }

@@ -1,48 +1,37 @@
-package cart.controller;
+package cart.controller.rest;
 
 import cart.dto.request.ProductRequest;
 import cart.dto.request.ProductUpdateRequest;
 import cart.dto.response.ProductResponse;
-import cart.service.CartService;
-import org.springframework.http.HttpStatus;
+import cart.service.ProductsService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
-import java.util.List;
 
-@Controller
-@RequestMapping("/admin")
-public class AdminController {
 
-    private final CartService cartService;
+@RestController
+@RequestMapping("/api/products")
+public class ProductsController {
 
-    public AdminController(CartService cartService) {
-        this.cartService = cartService;
+    private final ProductsService productsService;
+
+    public ProductsController(ProductsService productsService) {
+        this.productsService = productsService;
     }
 
-    @GetMapping
-    public String admin(Model model) {
-        List<ProductResponse> productsResponse = cartService.readAll();
-        model.addAttribute("products", productsResponse);
-        return "admin";
-    }
-
-    @PostMapping("/products")
+    @PostMapping
     public ResponseEntity<ProductResponse> create(@RequestBody @Valid ProductRequest productRequest) {
-        ProductResponse productResponse = cartService.create(productRequest);
+        ProductResponse productResponse = productsService.create(productRequest);
 
         URI createdUri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -53,16 +42,15 @@ public class AdminController {
         return ResponseEntity.created(createdUri).body(productResponse);
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> update(@RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
-        ProductResponse productResponse = cartService.update(productUpdateRequest);
-
+        ProductResponse productResponse = productsService.update(productUpdateRequest);
         return ResponseEntity.ok().body(productResponse);
     }
 
-    @DeleteMapping("/products/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable @NotNull Long id) {
-        cartService.delete(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable @NotNull Long id) {
+        productsService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

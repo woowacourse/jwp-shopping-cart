@@ -1,21 +1,22 @@
 package cart.persistence;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class H2ProductDao implements ProductDao {
+public class H2ProductsDao implements ProductsDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    public H2ProductDao(JdbcTemplate jdbcTemplate) {
+    public H2ProductsDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -36,7 +37,7 @@ public class H2ProductDao implements ProductDao {
     }
 
     @Override
-    public Product find(Long id) {
+    public Product findById(Long id) {
         String sql = "SELECT id, name, image_url, price FROM PRODUCT WHERE id=?";
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new Product(
                 resultSet.getLong("id"),
@@ -55,6 +56,20 @@ public class H2ProductDao implements ProductDao {
                 resultSet.getInt("price"),
                 resultSet.getString("image_url")
         ));
+    }
+
+    @Override
+    public List<Product> findAll(List<Long> productIds) {
+        final String inSql = String.join(",", Collections.nCopies(productIds.size(), "?"));
+        String sql = String.format("SELECT id, name, image_url, price FROM PRODUCT WHERE id IN (%s)", inSql);
+
+        return jdbcTemplate.query(sql,
+                (resultSet, rowNum) -> new Product(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt("price"),
+                        resultSet.getString("image_url")
+                ), productIds.toArray());
     }
 
     @Override

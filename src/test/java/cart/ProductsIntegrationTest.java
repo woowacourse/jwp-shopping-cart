@@ -2,11 +2,10 @@ package cart;
 
 import static org.hamcrest.core.Is.is;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.request.ProductUpdateRequest;
-import cart.persistence.H2ProductDao;
-import cart.persistence.ProductDao;
+import cart.persistence.ProductsDao;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AdminIntegrationTest {
+public class ProductsIntegrationTest {
 
     @LocalServerPort
     int port;
@@ -33,18 +32,7 @@ class AdminIntegrationTest {
     }
 
     @Test
-    @DisplayName("/admin 으로 get 요청을 보내면 ok 상태코드를 반환한다")
-    void adminTest() {
-        RestAssured.given()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/admin")
-                .then()
-                .statusCode(HttpStatus.OK.value());
-    }
-
-    @Test
-    @DisplayName("/admin/product에 정상적인 POST request를 전송하면 created 상태코드를 반환한다")
+    @DisplayName("/product에 정상적인 POST request를 전송하면 created 상태코드를 반환한다")
     void createTest() {
         ProductRequest productRequest = new ProductRequest("테스트", 1000, "http://testtest");
 
@@ -52,13 +40,13 @@ class AdminIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
-                .post("/admin/products")
+                .post("/api/products")
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
-    @DisplayName("/admin/product에 비정상적인 POST request를 전송하면 bad_request를 반환하고 에러 메시지의 size는 비정상적인 파라미터의 개수와 같다")
+    @DisplayName("/product에 비정상적인 POST request를 전송하면 bad_request를 반환하고 에러 메시지의 size는 비정상적인 파라미터의 개수와 같다")
     void createExceptionTest() {
         ProductRequest productRequest = new ProductRequest("", null, "");
 
@@ -66,7 +54,7 @@ class AdminIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
                 .when()
-                .post("/admin/products")
+                .post("/api/products")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("size()", is(3));
@@ -74,10 +62,10 @@ class AdminIntegrationTest {
 
     @Test
     @Sql("/data.sql")
-    @DisplayName("/admin/product에 정상적인 PUT request를 전송하면 ok 상태코드를 반환한다")
+    @DisplayName("/product에 정상적인 PUT request를 전송하면 ok 상태코드를 반환한다")
     void updateTest() {
-        ProductDao productDao = applicationContext.getBean("h2ProductDao", ProductDao.class);
-        Long createdId = productDao.create(new Product("테스트", 1000, "http://testtest"));
+        ProductsDao productsDao = applicationContext.getBean("h2ProductsDao", ProductsDao.class);
+        Long createdId = productsDao.create(new Product("테스트", 1000, "http://testtest"));
         ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(
                 createdId,
                 "수정된 테스트",
@@ -89,13 +77,13 @@ class AdminIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productUpdateRequest)
                 .when()
-                .put("/admin/products/" + createdId)
+                .put("/api/products/" + createdId)
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
 
     @Test
-    @DisplayName("/admin/product에 비정상적인 PUT request를 전송하면 bad_request를 반환하고 에러 메시지의 size는 비정상적인 파라미터의 개수와 같다")
+    @DisplayName("/product에 비정상적인 PUT request를 전송하면 bad_request를 반환하고 에러 메시지의 size는 비정상적인 파라미터의 개수와 같다")
     void updateExceptionTest() {
         ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(null, "", null, "");
 
@@ -103,7 +91,7 @@ class AdminIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productUpdateRequest)
                 .when()
-                .put("/admin/products/1")
+                .put("/api/products/1")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("size()", is(4));
@@ -111,15 +99,15 @@ class AdminIntegrationTest {
 
     @Test
     @Sql("/data.sql")
-    @DisplayName("/admin/delete에 정상적인 request를 전송하면 no_content 상태코드를 반환한다")
+    @DisplayName("/delete에 정상적인 request를 전송하면 no_content 상태코드를 반환한다")
     void deleteTest() {
-        ProductDao productDao = applicationContext.getBean("h2ProductDao", ProductDao.class);
-        Long createdId = productDao.create(new Product("테스트", 1000, "http://testtest"));
+        ProductsDao productsDao = applicationContext.getBean("h2ProductsDao", ProductsDao.class);
+        Long createdId = productsDao.create(new Product("테스트", 1000, "http://testtest"));
 
         RestAssured.given()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/admin/products/" + createdId)
+                .delete("/api/products/" + createdId)
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
