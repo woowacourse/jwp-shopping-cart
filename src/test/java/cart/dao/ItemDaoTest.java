@@ -8,8 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
@@ -22,7 +23,7 @@ import static org.assertj.core.api.Assertions.*;
 class ItemDaoTest {
 
     private final ItemDao itemDao;
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<Item> actorRowMapper = (resultSet, rowNumber) -> new Item.Builder()
             .id(resultSet.getLong("id"))
             .name(new Name(resultSet.getString("name")))
@@ -31,9 +32,9 @@ class ItemDaoTest {
             .build();
 
     @Autowired
-    ItemDaoTest(final JdbcTemplate jdbcTemplate) {
-        this.itemDao = new ItemDao(jdbcTemplate);
-        this.jdbcTemplate = jdbcTemplate;
+    ItemDaoTest(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.itemDao = new ItemDao(namedParameterJdbcTemplate);
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     @DisplayName("아이템의 전체 목록을 조회한다")
@@ -80,10 +81,10 @@ class ItemDaoTest {
         // when
         Long itemId = itemDao.save(item);
         // then
-        Item findItem = jdbcTemplate.queryForObject(
-                "SELECT * FROM items WHERE id = ?",
-                actorRowMapper,
-                itemId
+        Item findItem = namedParameterJdbcTemplate.queryForObject(
+                "SELECT * FROM items WHERE id = :id",
+                new MapSqlParameterSource("id", itemId),
+                actorRowMapper
         );
         assertThat(findItem).isEqualTo(new Item.Builder()
                 .id(itemId)
@@ -106,10 +107,10 @@ class ItemDaoTest {
         //when
         itemDao.update(editItem);
         //then
-        Item findItem = jdbcTemplate.queryForObject(
-                "SELECT * FROM items WHERE id = ?",
-                actorRowMapper,
-                editItem.getId()
+        Item findItem = namedParameterJdbcTemplate.queryForObject(
+                "SELECT * FROM items WHERE id = :id",
+                new MapSqlParameterSource("id", editItem.getId()),
+                actorRowMapper
         );
         assertThat(findItem).isEqualTo(editItem);
     }
@@ -118,15 +119,15 @@ class ItemDaoTest {
     @Test
     void delete() {
         //given
-        Item targetItem = jdbcTemplate.queryForObject(
-                "SELECT * FROM items WHERE id = ?",
-                actorRowMapper,
-                1L
+        Item targetItem = namedParameterJdbcTemplate.queryForObject(
+                "SELECT * FROM items WHERE id = :id",
+                new MapSqlParameterSource("id", 1L),
+                actorRowMapper
         );
         //when
         itemDao.deleteBy(targetItem.getId());
         //then
-        List<Item> findItems = jdbcTemplate.query(
+        List<Item> findItems = namedParameterJdbcTemplate.query(
                 "SELECT * FROM items",
                 actorRowMapper
         );

@@ -5,23 +5,24 @@ import cart.domain.Item;
 import cart.domain.Name;
 import cart.domain.Price;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class ItemDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public ItemDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ItemDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     private final RowMapper<Item> actorRowMapper = (resultSet, rowNumber) -> new Item.Builder()
@@ -33,38 +34,36 @@ public class ItemDao {
 
     public List<Item> findAll() {
         final String sql = "SELECT id, name, image_url, price FROM items ";
-        return jdbcTemplate.query(sql, actorRowMapper);
+        return namedParameterJdbcTemplate.query(sql, actorRowMapper);
     }
 
     public Optional<Item> findBy(final Long itemId) {
-        final String sql = "SELECT id, name, image_url, price FROM items WHERE id = ?";
+        final String sql = "SELECT id, name, image_url, price FROM items WHERE id = :id";
+        MapSqlParameterSource param = new MapSqlParameterSource("id", itemId);
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, actorRowMapper, itemId));
+            return Optional.of(namedParameterJdbcTemplate.queryForObject(sql, param, actorRowMapper));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }
 
     public Long save(final Item item) {
-        final String sql = "INSERT INTO items(name, image_url, price) VALUES(?, ?, ?)";
+        final String sql = "INSERT INTO items(name, image_url, price) VALUES(:name, :imageUrl, :price)";
+        BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(item);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, item.getName());
-            preparedStatement.setString(2, item.getImageUrl());
-            preparedStatement.setInt(3, item.getPrice());
-            return preparedStatement;
-        }, keyHolder);
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
         return (Long) keyHolder.getKey();
     }
 
     public void update(final Item item) {
-        final String sql = "UPDATE items SET name = ?, image_url = ?, price = ? WHERE id = ?";
-        jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice(), item.getId());
+        final String sql = "UPDATE items SET name = :name, image_url = :imageUrl, price = :price WHERE id = :id";
+        BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(item);
+        namedParameterJdbcTemplate.update(sql, params);
     }
 
     public void deleteBy(final Long itemId) {
-        final String sql = "DELETE FROM items WHERE id = ?";
-        jdbcTemplate.update(sql, itemId);
+        final String sql = "DELETE FROM items WHERE id = :id";
+        MapSqlParameterSource param = new MapSqlParameterSource("id", itemId);
+        namedParameterJdbcTemplate.update(sql, param);
     }
 }
