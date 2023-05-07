@@ -16,6 +16,7 @@ public class CartDAOImpl implements CartDAO {
     public static final String USER_CART_NOT_FOUND_ERROR = "해당 유저의 장바구니가 없습니다.";
     public static final String CART_NOT_FOUND_ERROR = "해당 카트를 찾을 수 없습니다.";
     public static final String ITEM_NOT_FOUND_IN_CART_ERROR = "장바구니에 해당 상품이 없습니다.";
+    public static final String TABLE_NAME = "cart_items";
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     
@@ -29,7 +30,7 @@ public class CartDAOImpl implements CartDAO {
     public CartDAOImpl(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("carts")
+                .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
     }
     
@@ -44,7 +45,7 @@ public class CartDAOImpl implements CartDAO {
     
     @Override
     public Cart find(final CartRequestDTO cartRequestDTO) throws NotFoundException {
-        final String sql = "select id, user_id, product_id from carts where user_id = ? and product_id = ?";
+        final String sql = "select id, user_id, product_id from cart_items where user_id = ? and product_id = ?";
         final long userId = cartRequestDTO.getUserId();
         final long productId = cartRequestDTO.getProductId();
         try {
@@ -56,7 +57,7 @@ public class CartDAOImpl implements CartDAO {
     
     @Override
     public List<Cart> findUserCart(final long userId) throws NotFoundException {
-        final String sql = "select id, user_id, product_id from carts where user_id = ?";
+        final String sql = "select id, user_id, product_id from cart_items where user_id = ?";
         try {
             return this.jdbcTemplate.query(sql, this.rowMapper, userId);
         } catch (final Exception e) {
@@ -66,7 +67,7 @@ public class CartDAOImpl implements CartDAO {
     
     @Override
     public void delete(final Cart cart) {
-        final String sql = "delete from carts where id = ?";
+        final String sql = "delete from cart_items where id = ?";
         final long id = cart.getId();
         try {
             this.jdbcTemplate.update(sql, id);
@@ -77,7 +78,7 @@ public class CartDAOImpl implements CartDAO {
     
     @Override
     public void clear(final long userId) {
-        final String sql = "delete from carts where user_id = ?";
+        final String sql = "delete from cart_items where user_id = ?";
         try {
             this.jdbcTemplate.update(sql, userId);
         } catch (final Exception e) {

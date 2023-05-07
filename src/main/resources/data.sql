@@ -22,7 +22,8 @@ CREATE TABLE users (
 INSERT INTO users (email,password) VALUES('echo@wtc.com','#abcd1234');
 INSERT INTO users (email,password) VALUES('hello@test.com','#abcd1234');
 
-CREATE TABLE carts (
+DROP TABLE cart_items if exists;
+CREATE TABLE cart_items (
     id          BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
     product_id   BIGINT          NOT NULL,
     user_id      BIGINT          NOT NULL,
@@ -32,7 +33,7 @@ CREATE TABLE carts (
     ON DELETE CASCADE
 );
 
-INSERT INTO carts (product_id,user_id) VALUES(1,1);
-INSERT INTO carts (product_id,user_id) VALUES(2,1);
-INSERT INTO carts (product_id,user_id) VALUES(3,1);
+INSERT INTO cart_items (product_id,user_id) VALUES(1,1);
+INSERT INTO cart_items (product_id,user_id) VALUES(2,1);
+INSERT INTO cart_items (product_id,user_id) VALUES(3,1);
 

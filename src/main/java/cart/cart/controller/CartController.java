@@ -27,7 +27,6 @@ public class CartController {
     @GetMapping("/cart/items")
     public ResponseEntity<List<ResponseProductDto>> cart(final HttpServletRequest request) {
         final UserInfo userInfo = this.basicAuthorizationExtractor.extract(request);
-        System.out.println("userInfo = " + userInfo);
         final UserResponseDTO userResponseDTO = this.authService.findUser(userInfo);
         final List<ResponseProductDto> userCart = this.cartService.findUserCart(userResponseDTO.getId());
         return ResponseEntity.ok().body(userCart);
