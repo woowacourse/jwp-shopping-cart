@@ -1,25 +1,11 @@
 package cart.controller.view;
 
 import cart.controller.dto.response.MemberResponse;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import cart.dao.MemberDao;
->>>>>>> 1eb8f466 (feat: 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있다.)
-=======
->>>>>>> d9c17a80 (chore: 불필요한 import 제거)
 import cart.service.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import java.lang.reflect.Member;
->>>>>>> 1eb8f466 (feat: 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있다.)
-=======
->>>>>>> d9c17a80 (chore: 불필요한 import 제거)
 import java.util.List;
 
 @Controller
@@ -32,15 +18,7 @@ public class SettingsController {
     }
 
     @GetMapping("/settings")
-<<<<<<< HEAD
-<<<<<<< HEAD
     public String getSettingsPage(Model model) {
-=======
-    public String settings(Model model) {
->>>>>>> 1eb8f466 (feat: 모든 사용자의 정보를 확인하고 사용자를 선택할 수 있다.)
-=======
-    public String getSettingsPage(Model model) {
->>>>>>> 46ded3a7 (feat: 장바구니 상품 삭제)
         final List<MemberResponse> responses = memberService.findAll();
         model.addAttribute("members", responses);
         return "settings";
