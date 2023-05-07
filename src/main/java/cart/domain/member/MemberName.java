@@ -14,9 +14,9 @@ public class MemberName {
         validate(this.name);
     }
 
+    //todo : 에러메시지 50 숫자 포맷
     private void validate(String name) {
         if(name != null && (name.length() <MIN_LENGTH ||name.length() > MAX_LENGTH)) {
-            //todo : 에러메시지 50 숫자 포맷
             throw new IllegalArgumentException("회원 이름의 길이는 1자 이상 50자 이하여야 합니다.");
         }
     }
