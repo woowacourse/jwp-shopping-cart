@@ -30,6 +30,13 @@ public class ProductExceptionHandler {
                 .body(new ExceptionResponse(HttpStatus.NOT_FOUND.value(), e.getMessage()));
     }
 
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ExceptionResponse> handleAuthorizationException(final AuthorizationException e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ExceptionResponse(HttpStatus.UNAUTHORIZED.value(), e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleUnexpectedException(final Exception e) {
         return ResponseEntity
