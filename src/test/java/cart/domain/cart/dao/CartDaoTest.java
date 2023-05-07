@@ -14,17 +14,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-@JdbcTest
+@DataJdbcTest
 @ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql("/test-data.sql")
 class CartDaoTest {
 
     @Autowired
@@ -71,18 +67,18 @@ class CartDaoTest {
             LocalDateTime.now());
         final Product product = new Product(1L, "product", 1000, "imageUrl", LocalDateTime.now(),
             LocalDateTime.now());
-        memberDao.save(member);
-        productDao.save(product);
-        final Cart cart = new Cart(null, product, member, null, null);
+        final Member savedMember = memberDao.save(member);
+        final Product savedProduct = productDao.save(product);
+        final Cart cart = new Cart(null, savedProduct, savedMember, null, null);
         final Cart savedCart = cartDao.save(cart);
 
         //when
-        final List<Cart> carts = cartDao.findByMember(member);
+        final List<Cart> carts = cartDao.findByMember(savedMember);
 
         //then
         assertThat(carts.size()).isEqualTo(1);
-        assertThat(carts.get(0).getMember().getId()).isEqualTo(member.getId());
-        assertThat(carts.get(0).getProduct().getId()).isEqualTo(product.getId());
+        assertThat(carts.get(0).getMember().getId()).isEqualTo(savedMember.getId());
+        assertThat(carts.get(0).getProduct().getId()).isEqualTo(savedProduct.getId());
         assertThat(carts.get(0).getId()).isEqualTo(savedCart.getId());
     }
 
