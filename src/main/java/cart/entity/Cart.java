@@ -2,16 +2,16 @@ package cart.entity;
 
 import cart.entity.vo.Email;
 
-public class CartAddedProduct {
+public class Cart {
 
     private final Long id;
     private final Email userEmail;
-    private final Product product;
+    private final long productId;
 
-    public CartAddedProduct(final Long id, final Email userEmail, final Product product) {
+    public Cart(final Long id, final Email userEmail, final long productId) {
         this.id = id;
         this.userEmail = userEmail;
-        this.product = product;
+        this.productId = productId;
     }
 
     public boolean isCartOwner(final Email email) {
@@ -26,7 +26,7 @@ public class CartAddedProduct {
         return userEmail;
     }
 
-    public Product getProduct() {
-        return product;
+    public long getProductId() {
+        return productId;
     }
 }

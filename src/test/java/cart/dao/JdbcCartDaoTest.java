@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.entity.CartAddedProduct;
+import cart.entity.Cart;
 import cart.entity.Product;
 import cart.entity.vo.Email;
 import cart.exception.TableIdNotFoundException;
@@ -15,14 +15,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
-class JdbcCartAddedProductDaoTest {
+class JdbcCartDaoTest {
 
     private static final RowMapper<Product> productRowMapper = (rs, rowNum) ->
             new Product(rs.getLong("id"),
@@ -34,15 +33,15 @@ class JdbcCartAddedProductDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final JdbcCartAddedProductDao cartAddedProductDao;
+    private final JdbcCartDao cartDao;
 
     @Autowired
-    public JdbcCartAddedProductDaoTest(final JdbcTemplate jdbcTemplate) {
+    public JdbcCartDaoTest(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cart_added_product")
                 .usingGeneratedKeyColumns("id");
-        this.cartAddedProductDao = new JdbcCartAddedProductDao(jdbcTemplate);
+        this.cartDao = new JdbcCartDao(jdbcTemplate);
     }
 
     @Test
@@ -52,7 +51,7 @@ class JdbcCartAddedProductDaoTest {
         final Product product = findFirstProduct();
 
         // when
-        final long insertedCartId = cartAddedProductDao.insert(testUserEmail, product);
+        final long insertedCartId = cartDao.insert(testUserEmail, product.getId());
 
         // then
         final Map<String, Object> result = jdbcTemplate.queryForMap("SELECT * FROM cart_added_product WHERE id = ?", insertedCartId);
@@ -74,16 +73,13 @@ class JdbcCartAddedProductDaoTest {
         final long cartId = insertToCartTable(testUserEmail.getValue(), product.getId());
 
         // when
-        final CartAddedProduct cartAddedProduct = cartAddedProductDao.findById(cartId);
-        final Product addedProduct = cartAddedProduct.getProduct();
+        final Cart cart = cartDao.findById(cartId);
+        final long addedProductId = cart.getProductId();
 
         // then
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(cartAddedProduct.getUserEmail()).isEqualTo(testUserEmail);
-            softly.assertThat(addedProduct.getId()).isEqualTo(product.getId());
-            softly.assertThat(addedProduct.getName()).isEqualTo(product.getName());
-            softly.assertThat(addedProduct.getPrice()).isEqualTo(product.getPrice());
-            softly.assertThat(addedProduct.getImageUrl()).isEqualTo(product.getImageUrl());
+            softly.assertThat(cart.getUserEmail()).isEqualTo(testUserEmail);
+            softly.assertThat(addedProductId).isEqualTo(product.getId());
         });
     }
 
@@ -94,7 +90,7 @@ class JdbcCartAddedProductDaoTest {
         final long id = findLastInsertedId() + 1L;
 
         // when & then
-        assertThatThrownBy(() -> cartAddedProductDao.findById(id))
+        assertThatThrownBy(() -> cartDao.findById(id))
                 .isInstanceOf(TableIdNotFoundException.class)
                 .hasMessage("해당 카트 id를 찾을 수 없습니다. 입력된 카트 id : " + id);
     }
@@ -122,10 +118,10 @@ class JdbcCartAddedProductDaoTest {
         }
 
         // when
-        final List<CartAddedProduct> productsByUserEmail = cartAddedProductDao.findProductsByUserEmail(testUserEmail);
+        final Map<Cart, Product> productsByUserEmail = cartDao.findProductsByUserEmail(testUserEmail);
 
         // then
-        assertThat(productsByUserEmail).hasSize(cartAddedCount);
+        assertThat(productsByUserEmail.entrySet()).hasSize(cartAddedCount);
     }
 
     @Test
@@ -136,7 +132,7 @@ class JdbcCartAddedProductDaoTest {
         final long insertedId = insertToCartTable(testUserEmail.getValue(), product.getId());
 
         // when
-        cartAddedProductDao.delete(insertedId);
+        cartDao.delete(insertedId);
 
         // then
         assertThatThrownBy(() -> jdbcTemplate.queryForObject("SELECT id FROM cart_added_product where id = ?", Long.class, insertedId))
