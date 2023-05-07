@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.exception.BasicAuthException;
+import cart.exception.InvalidBasicAuthException;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,11 +20,11 @@ public class BasicAuthorizationExtractor {
 
     private void validateAuthorizationHeader(final String header) {
         if (header == null) {
-            throw new BasicAuthException("Header에 사용자 인증 정보가 존재하지 않습니다.");
+            throw new InvalidBasicAuthException("Header에 사용자 인증 정보가 존재하지 않습니다.");
         }
 
         if (!header.startsWith(BASIC_TYPE)) {
-            throw new BasicAuthException("Basic 타입의 Header가 아닙니다.");
+            throw new InvalidBasicAuthException("Basic 타입의 Header가 아닙니다.");
         }
     }
 
@@ -34,7 +34,7 @@ public class BasicAuthorizationExtractor {
         String decodedString = new String(decodedBytes);
 
         if (!decodedString.contains(DELIMITER)) {
-            throw new BasicAuthException("유효한 Basic Token 값이 아닙니다.");
+            throw new InvalidBasicAuthException("유효한 Basic Token 값이 아닙니다.");
         }
         return List.of(decodedString.split(DELIMITER));
     }

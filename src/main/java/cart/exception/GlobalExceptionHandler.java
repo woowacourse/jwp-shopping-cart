@@ -12,6 +12,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -20,7 +21,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 LocalDateTime.now(),
-                ex.getMessage()
+                Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage()
         );
         return ResponseEntity
                 .badRequest()
@@ -38,8 +39,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(exceptionResponse);
     }
 
-    @ExceptionHandler(BasicAuthException.class)
-    public ResponseEntity<ExceptionResponse> handleBasicAuthException(final BasicAuthException exception) {
+    @ExceptionHandler(InvalidBasicAuthException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidBasicAuth(final InvalidBasicAuthException exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 LocalDateTime.now(),
                 "인증된 사용자가 아닙니다."
@@ -51,7 +52,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(InvalidDomainException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidDomainException(final InvalidDomainException exception) {
+    public ResponseEntity<ExceptionResponse> handleInvalidDomain(final InvalidDomainException exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 LocalDateTime.now(),
                 exception.getMessage()
@@ -63,7 +64,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(final IllegalArgumentException exception) {
+    public ResponseEntity<ExceptionResponse> handleIllegalArgument(final IllegalArgumentException exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 LocalDateTime.now(),
                 exception.getMessage()
