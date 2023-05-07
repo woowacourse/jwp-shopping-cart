@@ -1,17 +1,15 @@
 package cart.auth;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BasicAuthorizationExtractor {
 
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
-    public AuthInfo extract(final HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-
+    public AuthInfo extract(final String header) {
         if (header == null) {
             return null;
         }

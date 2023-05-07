@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import cart.auth.Auth;
 import cart.auth.AuthInfo;
-import cart.auth.BasicAuthorizationExtractor;
 import cart.controller.dto.CartResponse;
 import cart.controller.dto.ProductResponse;
 import cart.dao.CartDao;
@@ -27,7 +25,6 @@ public class CartController {
 
     private final ProductDao productDao;
     private final CartDao cartDao;
-    private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
 
     public CartController(final ProductDao productDao, final CartDao cartDao) {
         this.productDao = productDao;
@@ -51,21 +48,15 @@ public class CartController {
     }
 
     @PostMapping("/cart/products/{productId}")
-    public ResponseEntity<Void> addProduct(@PathVariable final Long productId, final HttpServletRequest request) {
-        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-        String email = authInfo.getEmail();
-
-        cartDao.saveCartItemByMemberEmail(email, productId);
+    public ResponseEntity<Void> addProduct(@PathVariable final Long productId, @Auth final AuthInfo authInfo) {
+        cartDao.saveCartItemByMemberEmail(authInfo.getEmail(), productId);
 
         return ResponseEntity.created(URI.create("/cart/products" + productId)).build();
     }
 
     @GetMapping("/cart/products")
-    public ResponseEntity<List<CartResponse>> findAllProductsByMember(final HttpServletRequest request) {
-        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-        String email = authInfo.getEmail();
-
-        List<Product> cartItems = cartDao.findCartItemsByMemberEmail(email);
+    public ResponseEntity<List<CartResponse>> findAllProductsByMember(@Auth final AuthInfo authInfo) {
+        List<Product> cartItems = cartDao.findCartItemsByMemberEmail(authInfo.getEmail());
         List<CartResponse> cartResponses = cartItems.stream()
                 .map(CartResponse::from)
                 .collect(Collectors.toList());
