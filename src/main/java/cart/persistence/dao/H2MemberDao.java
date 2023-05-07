@@ -3,6 +3,7 @@ package cart.persistence.dao;
 import cart.persistence.entity.MemberEntity;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -45,6 +46,12 @@ public class H2MemberDao implements MemberDao {
 
     @Override
     public Optional<MemberEntity> findByEmail(String email) {
-        return Optional.empty();
+        final String sql = "SELECT id, email, password, name, phone_number FROM member WHERE email = ?";
+        try {
+            MemberEntity memberEntity = this.jdbcTemplate.queryForObject(sql, rowMapper, email);
+            return Optional.ofNullable(memberEntity);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }
