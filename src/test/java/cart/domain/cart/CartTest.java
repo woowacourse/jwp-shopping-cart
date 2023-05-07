@@ -8,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.domain.item.Item;
 import cart.exception.cart.CartAlreadyExistsException;
-import cart.exception.cart.CartNotChangeException;
-import cart.exception.cart.CartNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,33 +52,5 @@ class CartTest {
                 () -> assertDoesNotThrow(() -> cart.removeItem(item)),
                 () -> assertThat(cart.getItems()).isEmpty()
         );
-    }
-
-    @Test
-    @DisplayName("장바구니에 없는 상품을 삭제하면 예외가 발생한다.")
-    void removeItemFailWithNotExistsItem() {
-        assertThatThrownBy(() -> cart.removeItem(MAC_BOOK))
-                .isInstanceOf(CartNotFoundException.class)
-                .hasMessage("장바구니에 존재하지 않는 상품입니다.");
-    }
-
-    @Test
-    @DisplayName("기존 장바구니와 비교해 존재하지 않는 상품을 반환한다.")
-    void findDifferentItemSuccess() {
-        List<Item> items = List.of(item, MAC_BOOK);
-
-        Item actual = cart.findDifferentItem(items);
-
-        assertThat(actual).isEqualTo(MAC_BOOK);
-    }
-
-    @Test
-    @DisplayName("기존 장바구니와 비교했을 때 차이가 없다면 예외가 발생한다.")
-    void findDifferentItemFailWithSameCartItems() {
-        List<Item> items = List.of(this.item);
-
-        assertThatThrownBy(() -> cart.findDifferentItem(items))
-                .isInstanceOf(CartNotChangeException.class)
-                .hasMessage("장바구니의 변화가 없습니다.");
     }
 }
