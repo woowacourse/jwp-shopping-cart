@@ -64,12 +64,14 @@ class ProductDaoTest {
     }
 
     @Test
-    void 등록되지_않은_데이터를_수정할_수_없다() {
-        // when
-        final int updatedRows = productDao.update(99999L, new ProductEntity("치킨", 1_000, "치킨 이미지 주소"));
+    void 등록되지_않은_데이터를_수정하면_예외를_던진다() {
+        //given
+        final Long id = 99999L;
 
-        // then
-        assertThat(updatedRows).isZero();
+        //expect
+        assertThatThrownBy(() -> productDao.update(id, new ProductEntity("치킨", 1_000, "치킨 이미지 주소")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("접근하려는 데이터가 존재하지 않습니다.");
     }
 
     @Test
@@ -100,6 +102,17 @@ class ProductDaoTest {
         // then
         assertThatThrownBy(() -> productDao.findById(id))
                 .isInstanceOf(EmptyResultDataAccessException.class);
+    }
+
+    @Test
+    void 등록되지_않은_데이터를_삭제하면_예외를_던진다() {
+        //given
+        final Long id = 99999L;
+
+        //expect
+        assertThatThrownBy(() -> productDao.delete(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("접근하려는 데이터가 존재하지 않습니다.");
     }
 
     @Test

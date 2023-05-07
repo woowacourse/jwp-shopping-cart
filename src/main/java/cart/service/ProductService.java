@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
-    private static final int MINIMUM_AFFECTED_ROWS = 1;
-
     private final ProductDao productDao;
 
     public ProductService(final ProductDao productDao) {
@@ -39,22 +37,12 @@ public class ProductService {
     @Transactional
     public int update(final Long id, final RequestUpdateProductDto requestUpdateProductDto) {
         final ProductEntity productEntity = requestUpdateProductDto.toProductEntity();
-        final int updatedRows = productDao.update(id, productEntity);
-        validateAffectedRowsCount(updatedRows);
-        return updatedRows;
-    }
-
-    private void validateAffectedRowsCount(final int affectedRows) {
-        if (affectedRows < MINIMUM_AFFECTED_ROWS) {
-            throw new IllegalArgumentException("접근하려는 데이터가 존재하지 않습니다.");
-        }
+        return productDao.update(id, productEntity);
     }
 
     @Transactional
     public int delete(final Long id) {
-        final int affectedRows = productDao.delete(id);
-        validateAffectedRowsCount(affectedRows);
-        return affectedRows;
+        return productDao.delete(id);
     }
 
     @Transactional(readOnly = true)

@@ -21,6 +21,7 @@ public class ProductDao {
             resultSet.getString("image")
     );
     private static final String[] GENERATED_ID_COLUMN = {"id"};
+    private static final int MINIMUM_AFFECTED_ROWS = 1;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -50,18 +51,28 @@ public class ProductDao {
 
     public int update(final Long id, final ProductEntity productEntity) {
         final String sql = "UPDATE product SET name = ?, price = ?, image = ? WHERE id = ?";
-        return jdbcTemplate.update(
+        final int affectedRows = jdbcTemplate.update(
                 sql,
                 productEntity.getName(),
                 productEntity.getPrice(),
                 productEntity.getImage(),
                 id
         );
+        validateAffectedRowsCount(affectedRows);
+        return affectedRows;
+    }
+
+    private void validateAffectedRowsCount(final int affectedRows) {
+        if (affectedRows < MINIMUM_AFFECTED_ROWS) {
+            throw new IllegalArgumentException("접근하려는 데이터가 존재하지 않습니다.");
+        }
     }
 
     public int delete(final Long id) {
         final String sql = "DELETE FROM product WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+        final int affectedRows = jdbcTemplate.update(sql, id);
+        validateAffectedRowsCount(affectedRows);
+        return affectedRows;
     }
 
     public ProductEntity findById(final Long id) {
