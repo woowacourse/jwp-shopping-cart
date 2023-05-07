@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ### Dummy Datas ###
-data.sql
+#data.sql
