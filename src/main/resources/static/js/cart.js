@@ -5,15 +5,14 @@ const addCartItem = (productId) => {
         window.location.href = '/settings';
         return;
     }
-    console.log(productId);
     axios.request({
-        url: `/cart/products/${productId}`,
+        url: `/carts`,
         method: 'POST',
         headers: {
             'Authorization': `Basic ${credentials}`
-        }
+        },
+        data: {productId}
     }).then((response) => {
-        console.log(response);
         alert('장바구니에 담았습니다.');
     }).catch((error) => {
         console.error(error);
@@ -30,13 +29,10 @@ const removeCartItem = (productId) => {
 
     // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
     axios.request({
-        url: `/cart/products/${productId}`,
+        url: `/carts/${productId}`,
         method: 'DELETE',
         headers: {
             'Authorization': `Basic ${credentials}`
-        },
-        data: {
-            'id': productId,
         }
     }).then((response) => {
         window.location.reload();
