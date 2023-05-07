@@ -38,7 +38,7 @@ public class ItemController {
                              .body(items);
     }
 
-    @GetMapping("/{itemId}")
+    @GetMapping("{itemId}")
     public ResponseEntity<ItemResponse> loadItem(@PathVariable final Long itemId) {
         ItemResponse item = itemService.loadItem(itemId);
         return ResponseEntity.status(HttpStatus.OK)
@@ -46,7 +46,7 @@ public class ItemController {
                              .body(item);
     }
 
-    @PutMapping("/{itemId}")
+    @PutMapping("{itemId}")
     public ResponseEntity<Void> updateItem(@PathVariable final Long itemId,
                                            @RequestBody @Valid final ItemRequest itemRequest) {
         itemService.updateItem(itemId, itemRequest);
@@ -55,7 +55,7 @@ public class ItemController {
                              .build();
     }
 
-    @DeleteMapping("/{itemId}")
+    @DeleteMapping("{itemId}")
     public ResponseEntity<Void> deleteItem(@PathVariable final Long itemId) {
         itemService.deleteItem(itemId);
         return ResponseEntity.status(HttpStatus.OK)
