@@ -1,9 +1,9 @@
-package cart.persistence;
+package cart.persistence.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.product.Product;
+import cart.persistence.entity.ProductEntity;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -15,27 +15,27 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 @JdbcTest
-class H2ProductRepositoryTest {
+class H2ProductDaoTest {
 
-    private final H2ProductRepository h2ProductRepository;
+    private final ProductDao productDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2ProductRepositoryTest(JdbcTemplate jdbcTemplate) {
-        this.h2ProductRepository = new H2ProductRepository(jdbcTemplate);
+    public H2ProductDaoTest(JdbcTemplate jdbcTemplate) {
+        this.productDao = new H2ProductDao(jdbcTemplate);
     }
 
     @DisplayName("상품을 저장한다.")
     @Test
     void shouldSaveProductWhenRequest() {
-        final Product productToSave = Product.createToSave("changer", 10, "domain.com");
-        final long productId = h2ProductRepository.save(productToSave);
+        final ProductEntity productEntityToSave = ProductEntity.createToSave("changer", 10, "domain.com");
+        final long productId = this.productDao.save(productEntityToSave);
         final String sql = "SELECT id, name, price, image_url FROM product WHERE id = ?";
 
-        final Product productFromDb = jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNumber) -> Product.create(
+        final ProductEntity productEntityFromDb = jdbcTemplate.queryForObject(sql,
+                (resultSet, rowNumber) -> ProductEntity.create(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getLong("price"),
@@ -43,9 +43,9 @@ class H2ProductRepositoryTest {
                 , productId);
 
         assertAll(
-                () -> assertThat(productFromDb.getName()).isEqualTo("changer"),
-                () -> assertThat(productFromDb.getPrice()).isEqualTo(10),
-                () -> assertThat(productFromDb.getImageUrl()).isEqualTo("domain.com")
+                () -> assertThat(productEntityFromDb.getName()).isEqualTo("changer"),
+                () -> assertThat(productEntityFromDb.getPrice()).isEqualTo(10),
+                () -> assertThat(productEntityFromDb.getImageUrl()).isEqualTo("domain.com")
         );
     }
 
@@ -55,14 +55,14 @@ class H2ProductRepositoryTest {
         jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)", "사과", 100, "domain.com");
         jdbcTemplate.update("INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)", "당근", 100, "domain.com");
 
-        final List<Product> products = h2ProductRepository.findAll();
+        final List<ProductEntity> productEntities = this.productDao.findAll();
 
         assertAll(
-                () -> assertThat(products).hasSize(2),
-                () -> assertThat(products.get(0).getName()).isEqualTo("사과"),
-                () -> assertThat(products.get(0).getPrice()).isEqualTo(100),
-                () -> assertThat(products.get(0).getImageUrl()).isEqualTo("domain.com"),
-                () -> assertThat(products.get(1).getName()).isEqualTo("당근")
+                () -> assertThat(productEntities).hasSize(2),
+                () -> assertThat(productEntities.get(0).getName()).isEqualTo("사과"),
+                () -> assertThat(productEntities.get(0).getPrice()).isEqualTo(100),
+                () -> assertThat(productEntities.get(0).getImageUrl()).isEqualTo("domain.com"),
+                () -> assertThat(productEntities.get(1).getName()).isEqualTo("당근")
         );
     }
 
@@ -82,7 +82,7 @@ class H2ProductRepositoryTest {
         }, keyHolder);
 
         long productId = keyHolder.getKey().longValue();
-        Product productToUpdate = Product.create(
+        ProductEntity productEntityToUpdate = ProductEntity.create(
                 productId,
                 "당근",
                 1000,
@@ -90,11 +90,11 @@ class H2ProductRepositoryTest {
         );
 
         //when
-        h2ProductRepository.update(productToUpdate);
+        this.productDao.update(productEntityToUpdate);
 
-        Product productAfterUpdate = jdbcTemplate.queryForObject(
+        ProductEntity productEntityAfterUpdate = jdbcTemplate.queryForObject(
                 "SELECT id, name, price, image_url FROM product WHERE id = ?",
-                (resultSet, rowNumber) -> Product.create(
+                (resultSet, rowNumber) -> ProductEntity.create(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getLong("price"),
@@ -103,10 +103,10 @@ class H2ProductRepositoryTest {
 
         //then
         assertAll(
-                () -> assertThat(productAfterUpdate.getId()).isEqualTo(productToUpdate.getId()),
-                () -> assertThat(productAfterUpdate.getName()).isEqualTo(productToUpdate.getName()),
-                () -> assertThat(productAfterUpdate.getPrice()).isEqualTo(productToUpdate.getPrice()),
-                () -> assertThat(productAfterUpdate.getImageUrl()).isEqualTo(productToUpdate.getImageUrl())
+                () -> assertThat(productEntityAfterUpdate.getId()).isEqualTo(productEntityToUpdate.getId()),
+                () -> assertThat(productEntityAfterUpdate.getName()).isEqualTo(productEntityToUpdate.getName()),
+                () -> assertThat(productEntityAfterUpdate.getPrice()).isEqualTo(productEntityToUpdate.getPrice()),
+                () -> assertThat(productEntityAfterUpdate.getImageUrl()).isEqualTo(productEntityToUpdate.getImageUrl())
         );
     }
 
@@ -129,11 +129,11 @@ class H2ProductRepositoryTest {
         long id = keyHolder.getKey().longValue();
 
         //when
-        h2ProductRepository.deleteById(id);
+        this.productDao.deleteById(id);
 
-        List<Product> products = jdbcTemplate.query(
+        List<ProductEntity> productEntities = jdbcTemplate.query(
                 "SELECT id, name, price, image_url FROM product",
-                (resultSet, rowNumber) -> Product.create(
+                (resultSet, rowNumber) -> ProductEntity.create(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getLong("price"),
@@ -141,7 +141,7 @@ class H2ProductRepositoryTest {
                 ));
 
         //then
-        assertThat(products).hasSize(1);
+        assertThat(productEntities).hasSize(1);
     }
 
     @DisplayName("상품 1개를 ID로 조회한다.")
@@ -161,16 +161,16 @@ class H2ProductRepositoryTest {
         long id = keyHolder.getKey().longValue();
 
         //when
-        Product product = h2ProductRepository.findById(id).orElse(null);
+        ProductEntity productEntity = this.productDao.findById(id).orElse(null);
 
         //then
-        assertThat(product.getId()).isEqualTo(id);
+        assertThat(productEntity.getId()).isEqualTo(id);
     }
 
     @DisplayName("없는 ID로 조회하면 빈 값을 반환한다.")
     @Test
     void shouldReturnEmptyValueWhenFindByIdNotExist() {
         // Product를 생성하지 않고 ID로 조회
-        assertThat(h2ProductRepository.findById(1L).isPresent()).isFalse();
+        assertThat(this.productDao.findById(1L).isPresent()).isFalse();
     }
 }
