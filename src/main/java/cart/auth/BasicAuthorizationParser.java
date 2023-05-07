@@ -8,7 +8,7 @@ public class BasicAuthorizationParser implements AuthorizationParser<AuthInfo> {
 
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
-    private static final int CREDENTAIL_INDEX_SIZE = 2;
+    private static final int CREDENTIAL_INDEX_SIZE = 2;
 
     @Override
     public AuthInfo parse(final String requestHeader) {
@@ -49,7 +49,7 @@ public class BasicAuthorizationParser implements AuthorizationParser<AuthInfo> {
     }
 
     private void validateCredentials(final String[] credentials) {
-        if (credentials.length != CREDENTAIL_INDEX_SIZE) {
+        if (credentials.length != CREDENTIAL_INDEX_SIZE) {
             throw new IllegalArgumentException("올바른 base64 인증정보를 입력하세요");
         }
     }
