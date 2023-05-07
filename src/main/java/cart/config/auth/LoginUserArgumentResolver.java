@@ -14,20 +14,20 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import cart.config.auth.dto.AuthInfo;
 import cart.config.auth.dto.AuthUser;
-import cart.dao.user.UserDao;
 import cart.domain.user.User;
 import cart.exception.LoginException;
+import cart.service.user.UserService;
 
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
 	private final BasicAuthorizationExtractor basicAuthorizationExtractor;
-	private final UserDao userDao;
+	private final UserService userService;
 
 	public LoginUserArgumentResolver(final BasicAuthorizationExtractor basicAuthorizationExtractor,
-		final UserDao userDao) {
+		final UserService userService) {
 		this.basicAuthorizationExtractor = basicAuthorizationExtractor;
-		this.userDao = userDao;
+		this.userService = userService;
 	}
 
 	@Override
@@ -45,21 +45,23 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 		final HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
 		final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
 
-		final String email = authInfo.getEmail();
-		final Optional<User> optionalUser = userDao.findUserByEmail(email);
-
-		final User user = validateUser(authInfo, optionalUser);
+		final User user = validateAuthInfo(authInfo);
 
 		return new AuthUser(user);
 	}
 
-	private static User validateUser(final AuthInfo authInfo, final Optional<User> optionalUser) {
+	private User validateAuthInfo(final AuthInfo authInfo) {
+		final String email = authInfo.getEmail();
+		final Optional<User> optionalUser = userService.findUserByEmail(email);
+
 		final User user = optionalUser
 			.orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
 
 		if (!Objects.equals(user.getPassword(), authInfo.getPassword())) {
 			throw LoginException.EXCEPTION;
 		}
+
 		return user;
 	}
+
 }
