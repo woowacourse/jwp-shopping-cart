@@ -36,7 +36,7 @@ class JwpCartControllerTest {
 
     @Test
     @DisplayName("상품 목록 페이지를 조회한다.")
-    void index() throws Exception {
+    void indexTest() throws Exception {
         List<ProductDto> expectDtos = List.of(
                 ProductDto.fromEntity(new ProductEntity(1L, "product1", "p1p1.com", 1000)),
                 ProductDto.fromEntity(new ProductEntity(2L, "product2", "p2p2.com", 2000))
@@ -56,7 +56,7 @@ class JwpCartControllerTest {
 
     @Test
     @DisplayName("관리자 도구 페이지를 조회한다.")
-    void admin() throws Exception {
+    void adminTest() throws Exception {
         List<ProductDto> expectDtos = List.of(
                 ProductDto.fromEntity(new ProductEntity(1L, "product1", "p1p1.com", 1000)),
                 ProductDto.fromEntity(new ProductEntity(2L, "product2", "p2p2.com", 2000))
@@ -76,7 +76,7 @@ class JwpCartControllerTest {
 
     @Test
     @DisplayName("사용자 설정 페이지를 조회한다.")
-    void settings() throws Exception {
+    void settingsTest() throws Exception {
         List<MemberDto> expectDtos = List.of(
                 MemberDto.fromEntity(new MemberEntity(1L, "a@a.com", "password1")),
                 MemberDto.fromEntity(new MemberEntity(2L, "b@b.com", "password2"))

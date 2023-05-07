@@ -47,7 +47,7 @@ class MemberControllerTest {
 
     @Test
     @DisplayName("회원을 추가한다.")
-    void addMemberTest() throws Exception {
+    void addMemberTest_success() throws Exception {
         String email = "a@a.com";
         String password = "password1";
         MemberRequestDto requestDto = new MemberRequestDto(email, password);
@@ -66,7 +66,7 @@ class MemberControllerTest {
     @ParameterizedTest
     @MethodSource("makeInvalidDto")
     @DisplayName("회원을 추가한다. - 잘못된 입력을 검증한다.")
-    void joinMemberInvalidInput(MemberRequestDto requestDto) throws Exception {
+    void addMemberTest_fail(MemberRequestDto requestDto) throws Exception {
         mockMvc.perform(post("/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
@@ -75,7 +75,7 @@ class MemberControllerTest {
 
     @Test
     @DisplayName("회원 정보를 수정한다.")
-    void updateProduct() throws Exception {
+    void updateProductTest_success() throws Exception {
         String email = "email@email.com";
         String newPassword = "newPassword";
 
@@ -95,7 +95,7 @@ class MemberControllerTest {
     @ParameterizedTest
     @MethodSource("makeInvalidDto")
     @DisplayName("회원 정보를 수정한다. - 잘못된 입력을 검증한다.")
-    void updateProductInvalidInput(MemberRequestDto modifiedInvalidRequestDto) throws Exception {
+    void updateProductTest_fail(MemberRequestDto modifiedInvalidRequestDto) throws Exception {
         when(memberService.updateById(any(MemberRequestDto.class), anyLong()))
                 .thenThrow(new InvalidMemberException("잘못된 입력입니다."));
 
@@ -107,7 +107,7 @@ class MemberControllerTest {
 
     @Test
     @DisplayName("회원을 삭제한다.")
-    void deleteProduct() throws Exception {
+    void deleteProductTest() throws Exception {
         doNothing().when(memberService).deleteById(anyLong());
         mockMvc.perform(delete("/members/{id}", anyLong()))
                 .andExpect(status().isOk());

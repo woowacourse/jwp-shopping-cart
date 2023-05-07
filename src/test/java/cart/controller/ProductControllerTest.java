@@ -38,9 +38,15 @@ class ProductControllerTest {
     @MockBean
     ProductService productService;
 
+    static Stream<Arguments> makeInvalidDto() {
+        return Stream.of(Arguments.arguments(new ProductRequestDto("a".repeat(256), "https://naver.com", 1000)),
+                Arguments.arguments(new ProductRequestDto("aaa", "https://naver" + "a".repeat(8001) + ".com", 1000)),
+                Arguments.arguments(new ProductRequestDto("aaa", "https://naver.com", -1000)));
+    }
+
     @Test
     @DisplayName("상품을 추가한다.")
-    void addProduct() throws Exception {
+    void addProductTest_success() throws Exception {
         String name = "리오";
         String imgUrl = "http://asdf.asdf";
         int price = 3000;
@@ -62,7 +68,7 @@ class ProductControllerTest {
     @ParameterizedTest
     @MethodSource("makeInvalidDto")
     @DisplayName("상품을 추가한다. - 잘못된 입력을 검증한다.")
-    void addProductInvalidInput(ProductRequestDto requestDto) throws Exception {
+    void addProductTest_fail(ProductRequestDto requestDto) throws Exception {
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
@@ -71,7 +77,7 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("상품 정보를 수정한다.")
-    void updateProduct() throws Exception {
+    void updateProductTest_success() throws Exception {
         String name = "리오";
         String imgUrl = "http://asdf.asdf";
         int modifiedPrice = 1000;
@@ -93,7 +99,7 @@ class ProductControllerTest {
     @ParameterizedTest
     @MethodSource("makeInvalidDto")
     @DisplayName("상품 정보를 수정한다. - 잘못된 입력을 검증한다.")
-    void updateProductInvalidInput(ProductRequestDto modifiedRequestDto) throws Exception {
+    void updateProductTest_fail(ProductRequestDto modifiedRequestDto) throws Exception {
         String name = "리오";
         String imgUrl = "http://asdf.asdf";
         int modifiedPrice = 1000;
@@ -110,15 +116,9 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("상품을 삭제한다.")
-    void deleteProduct() throws Exception {
+    void deleteProductTest() throws Exception {
         doNothing().when(productService).deleteById(anyLong());
         mockMvc.perform(delete("/products/{id}", anyLong()))
                 .andExpect(status().isOk());
-    }
-
-    static Stream<Arguments> makeInvalidDto() {
-        return Stream.of(Arguments.arguments(new ProductRequestDto("a".repeat(256), "https://naver.com", 1000)),
-                Arguments.arguments(new ProductRequestDto("aaa", "https://naver" + "a".repeat(8001) + ".com", 1000)),
-                Arguments.arguments(new ProductRequestDto("aaa", "https://naver.com", -1000)));
     }
 }

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Sql({"/testSchema.sql"})
@@ -38,7 +37,7 @@ class DBProductRepositoryTest {
 
     @Test
     @DisplayName("상품 정보를 DB에 저장한다.")
-    void save() {
+    void saveTest() {
         ProductEntity entity3 = new ProductEntity(null, "name3", "url3.com", 3000);
 
         productRepository.save(entity3);
@@ -48,30 +47,25 @@ class DBProductRepositoryTest {
 
     @Test
     @DisplayName("ID로 상품 정보를 조회한다.")
-    void findById() {
+    void findByIdTest() {
         Optional<ProductEntity> nullableEntity = productRepository.findById(entity1.getId());
         if (nullableEntity.isEmpty()) {
             throw new RuntimeException();
         }
-        ProductEntity response = nullableEntity.get();
-
-        assertAll(
-                () -> assertThat(response.getName()).isEqualTo(entity1.getName()),
-                () -> assertThat(response.getImgUrl()).isEqualTo(entity1.getImgUrl()),
-                () -> assertThat(response.getPrice()).isEqualTo(entity1.getPrice())
-        );
+        ProductEntity foundEntity = nullableEntity.get();
+        assertThat(foundEntity).isEqualTo(entity1);
     }
 
     @Test
     @DisplayName("모든 상품 정보를 조회한다.")
-    void findAll() {
+    void findAllTest() {
         List<ProductEntity> entities = productRepository.findAll();
         assertThat(entities).hasSize(2);
     }
 
     @Test
     @DisplayName("ID에 해당하는 상품 정보를 수정한다.")
-    void updateById() {
+    void updateByIdTest() {
         ProductEntity modifiedEntity = new ProductEntity(entity1.getId(), entity1.getName(), entity1.getImgUrl(), 4000);
         productRepository.update(modifiedEntity);
 
@@ -81,16 +75,12 @@ class DBProductRepositoryTest {
         }
         ProductEntity entityAfterUpdate = nullableEntity.get();
 
-        assertAll(
-                () -> assertThat(entityAfterUpdate.getName()).isEqualTo(modifiedEntity.getName()),
-                () -> assertThat(entityAfterUpdate.getImgUrl()).isEqualTo(modifiedEntity.getImgUrl()),
-                () -> assertThat(entityAfterUpdate.getPrice()).isEqualTo(modifiedEntity.getPrice())
-        );
+        assertThat(entityAfterUpdate).isEqualTo(modifiedEntity);
     }
 
     @Test
     @DisplayName("ID에 해당하는 상품 정보를 삭제한다.")
-    void deleteById() {
+    void deleteByIdTest() {
         productRepository.deleteById(entity2.getId());
 
         List<ProductEntity> entities = productRepository.findAll();

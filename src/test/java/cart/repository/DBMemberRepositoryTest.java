@@ -15,7 +15,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Sql({"/testSchema.sql"})
@@ -54,12 +53,9 @@ class DBMemberRepositoryTest {
         if (nullableEntity.isEmpty()) {
             throw new RuntimeException();
         }
-        MemberEntity response = nullableEntity.get();
+        MemberEntity foundEntity = nullableEntity.get();
 
-        assertAll(
-                () -> assertThat(response.getEmail()).isEqualTo(entity1.getEmail()),
-                () -> assertThat(response.getPassword()).isEqualTo(entity1.getPassword())
-        );
+        assertThat(foundEntity).isEqualTo(entity1);
     }
 
     @Test
@@ -69,12 +65,9 @@ class DBMemberRepositoryTest {
         if (nullableEntity.isEmpty()) {
             throw new RuntimeException();
         }
-        MemberEntity response = nullableEntity.get();
+        MemberEntity foundEntity = nullableEntity.get();
 
-        assertAll(
-                () -> assertThat(response.getEmail()).isEqualTo(entity1.getEmail()),
-                () -> assertThat(response.getPassword()).isEqualTo(entity1.getPassword())
-        );
+        assertThat(foundEntity).isEqualTo(entity1);
     }
 
     @Test
@@ -83,6 +76,7 @@ class DBMemberRepositoryTest {
         String duplicatedEmail = entity1.getEmail();
         MemberEntity emailDuplicatedEntity = new MemberEntity(null, duplicatedEmail, "password3");
         memberRepository.save(emailDuplicatedEntity);
+
         assertThatThrownBy(() -> memberRepository.findByEmail(duplicatedEmail))
                 .isInstanceOf(DuplicateEmailException.class)
                 .hasMessage("동일한 이메일이 2개 이상 존재합니다.");
@@ -92,7 +86,8 @@ class DBMemberRepositoryTest {
     @DisplayName("모든 회원 정보를 조회한다.")
     void findAllTest() {
         List<MemberEntity> entities = memberRepository.findAll();
-        assertThat(entities).hasSize(2);
+
+        assertThat(entities).isEqualTo(List.of(entity1, entity2));
     }
 
     @Test
@@ -107,10 +102,7 @@ class DBMemberRepositoryTest {
         }
         MemberEntity entityAfterUpdate = nullableEntity.get();
 
-        assertAll(
-                () -> assertThat(entityAfterUpdate.getEmail()).isEqualTo(modifiedEntity.getEmail()),
-                () -> assertThat(entityAfterUpdate.getPassword()).isEqualTo(modifiedEntity.getPassword())
-        );
+        assertThat(entityAfterUpdate).isEqualTo(modifiedEntity);
     }
 
     @Test
