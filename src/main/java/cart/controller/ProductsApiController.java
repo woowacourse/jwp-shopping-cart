@@ -4,7 +4,6 @@ import cart.controller.dto.ProductRequest;
 import cart.controller.dto.ProductResponse;
 import cart.service.ProductService;
 import cart.service.dto.ProductDto;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,8 +38,7 @@ public class ProductsApiController {
                 .price(productRequest.getPrice())
                 .imageUrl(productRequest.getImageUrl())
                 .build());
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Location", PRODUCTS_LOCATION_PREFIX + productId)
+        return ResponseEntity.created(URI.create(PRODUCTS_LOCATION_PREFIX + productId))
                 .build();
     }
 
