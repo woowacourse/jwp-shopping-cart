@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.auth.AuthInfo;
+import cart.auth.AuthenticationPrincipal;
 import cart.auth.BasicAuthorizationExtractor;
 import cart.entity.CartItemEntity;
 import cart.entity.ProductEntity;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -29,9 +29,7 @@ public class CartController {
 
     @GetMapping
     @ResponseBody
-    public ResponseEntity<List<ProductEntity>> getCartItem(Model model, HttpServletRequest request) {
-        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-
+    public ResponseEntity<List<ProductEntity>> getCartItem(Model model, @AuthenticationPrincipal AuthInfo authInfo) {
         int memberId = memberService.findMemberId(authInfo.getEmail(), authInfo.getPassword());
         List<ProductEntity> cartItems = cartItemService.getCartItems(memberId);
 
@@ -40,9 +38,7 @@ public class CartController {
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<Void> insertCartItem(HttpServletRequest request, @PathVariable int productId) {
-        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-
+    public ResponseEntity<Void> insertCartItem(@PathVariable int productId, @AuthenticationPrincipal AuthInfo authInfo) {
         int memberId = memberService.findMemberId(authInfo.getEmail(), authInfo.getPassword());
         cartItemService.addCartItem(new CartItemEntity(memberId, productId));
 

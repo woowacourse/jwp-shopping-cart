@@ -2,17 +2,12 @@ package cart.auth;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 
-import javax.servlet.http.HttpServletRequest;
-
 public class BasicAuthorizationExtractor {
 
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
-    String AUTHORIZATION = "Authorization";
 
-    public AuthInfo extract(HttpServletRequest request) {
-        String header = request.getHeader(AUTHORIZATION);
-
+    public AuthInfo extract(String header) {
         if (header == null) {
             return null;
         }
@@ -25,7 +20,8 @@ public class BasicAuthorizationExtractor {
             String[] credentials = decodedString.split(DELIMITER);
             String email = credentials[0];
             String password = credentials[1];
-
+            System.out.println("email = " + email);
+            System.out.println("password = " + password);
             return new AuthInfo(email, password);
         }
 
