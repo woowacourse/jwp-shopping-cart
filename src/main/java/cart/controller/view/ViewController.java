@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.view;
 
 import cart.controller.dto.MemberResponse;
 import cart.controller.dto.ProductResponse;
