@@ -20,9 +20,6 @@ public class ProductControllerAdvice {
 
     @ExceptionHandler(NoSuchProductException.class)
     public ResponseEntity<ErrorResponse> noProductDataHandler(final NoSuchProductException exception) {
-        final String message = exception.getMessage();
-
-        return ResponseEntity.badRequest()
-                .body(new ErrorResponse(message));
+        return ResponseEntity.notFound().build();
     }
 }

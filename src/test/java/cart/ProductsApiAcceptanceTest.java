@@ -125,8 +125,7 @@ class ProductsApiAcceptanceTest {
                 .body(new ProductRequest("달리", PRICE, IMAGE))
                 .when().put("/products/" + impossibleId)
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("해당 상품이 없습니다. 입략된 상품 id : " + impossibleId));
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
