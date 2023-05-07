@@ -1,27 +1,27 @@
 package cart.domain.cart;
 
 import cart.domain.product.Product;
-import cart.domain.user.User;
+import cart.domain.user.UserId;
 import java.util.List;
 import java.util.Objects;
 
 public class Cart {
 
     private final CartId cartId;
-    private final User user;
+    private final UserId userId;
     private final CartProducts cartProducts;
 
-    public Cart(final CartId cartId, final User user, final List<CartProduct> cartProducts) {
-        this(cartId, user, new CartProducts(cartProducts));
+    public Cart(final CartId cartId, final UserId userId, final List<CartProduct> cartProducts) {
+        this(cartId, userId, new CartProducts(cartProducts));
     }
 
-    public Cart(final User user) {
-        this(new CartId(), user, new CartProducts());
+    public Cart(final UserId userId) {
+        this(new CartId(), userId, new CartProducts());
     }
 
-    public Cart(final CartId cartId, final User user, final CartProducts cartProducts) {
+    public Cart(final CartId cartId, final UserId userId, final CartProducts cartProducts) {
         this.cartId = cartId;
-        this.user = user;
+        this.userId = userId;
         this.cartProducts = cartProducts;
     }
 
@@ -33,13 +33,13 @@ public class Cart {
         cartProducts.delete(cartProductId);
     }
 
-
     public CartId getCartId() {
         return cartId;
     }
 
-    public User getUser() {
-        return user;
+
+    public UserId getUserId() {
+        return userId;
     }
 
     public CartProducts getCartProducts() {

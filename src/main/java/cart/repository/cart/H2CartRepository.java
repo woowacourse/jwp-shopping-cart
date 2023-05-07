@@ -4,6 +4,7 @@ import cart.domain.cart.Cart;
 import cart.domain.cart.CartProduct;
 import cart.domain.product.Product;
 import cart.domain.user.User;
+import cart.domain.user.UserId;
 import cart.entiy.cart.CartEntity;
 import cart.entiy.cart.CartEntityId;
 import cart.entiy.cart.CartProductEntity;
@@ -40,7 +41,7 @@ public class H2CartRepository implements CartRepository {
         }
 
         saveCartProducts(cart, cartEntity);
-        return findCart(cart.getUser(), cartEntity);
+        return findCart(cart.getUserId(), cartEntity);
     }
 
     private void saveCartProducts(final Cart cart, final CartEntity cartEntity) {
@@ -67,12 +68,12 @@ public class H2CartRepository implements CartRepository {
     }
 
     @Override
-    public Optional<Cart> findByUser(final User user) {
-        final CartEntity cartEntity = cartDao.findByUserId(UserEntityId.from(user.getUserId()));
+    public Optional<Cart> findByUserId(final UserId userId) {
+        final CartEntity cartEntity = cartDao.findByUserId(UserEntityId.from(userId));
         if (cartEntity == null) {
             return Optional.empty();
         }
-        return Optional.of(findCart(user, cartEntity));
+        return Optional.of(findCart(userId, cartEntity));
     }
 
     private Cart findCart(final User user, final CartEntity cartEntity) {
@@ -82,7 +83,17 @@ public class H2CartRepository implements CartRepository {
         final List<CartProduct> cartProducts = updatedCartProductEntities.stream()
                 .map(cartProductEntity -> findCartProduct(cartProductEntity, products))
                 .collect(Collectors.toList());
-        return new Cart(cartEntity.getCartId().toDomain(), user, cartProducts);
+        return new Cart(cartEntity.getCartId().toDomain(), user.getUserId(), cartProducts);
+    }
+
+    private Cart findCart(final UserId userId, final CartEntity cartEntity) {
+        final List<CartProductEntity> updatedCartProductEntities = cartProductDao.findAllByCartId(
+                cartEntity.getCartId());
+        final List<Product> products = productRepository.findAll();
+        final List<CartProduct> cartProducts = updatedCartProductEntities.stream()
+                .map(cartProductEntity -> findCartProduct(cartProductEntity, products))
+                .collect(Collectors.toList());
+        return new Cart(cartEntity.getCartId().toDomain(), userId, cartProducts);
     }
 
     private CartProduct findCartProduct(final CartProductEntity cartProductEntity,

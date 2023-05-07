@@ -2,6 +2,7 @@ package cart.service.cart;
 
 import cart.domain.cart.Cart;
 import cart.domain.product.Product;
+import cart.domain.user.User;
 import cart.event.user.UserRegisteredEvent;
 import cart.exception.ProductNotFoundException;
 import cart.exception.UserNotFoundException;
@@ -30,13 +31,14 @@ public class CartCommandService {
 
     @EventListener(UserRegisteredEvent.class)
     public void createCart(final UserRegisteredEvent userRegisteredEvent) {
-        final Cart cart = new Cart(userRegisteredEvent.getUser());
+        final Cart cart = new Cart(userRegisteredEvent.getUser().getUserId());
         cartRepository.save(cart);
     }
 
     public Cart addProduct(final Long productId, final String email) {
         final Cart cart = userQueryService.findByEmail(email)
-                .flatMap(cartRepository::findByUser)
+                .map(User::getUserId)
+                .flatMap(cartRepository::findByUserId)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
         final Product product = productQueryService.findById(productId)
@@ -48,7 +50,8 @@ public class CartCommandService {
 
     public void deleteProduct(final Long cartProductId, final String email) {
         final Cart cart = userQueryService.findByEmail(email)
-                .flatMap(cartRepository::findByUser)
+                .map(User::getUserId)
+                .flatMap(cartRepository::findByUserId)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
         cart.deleteProduct(cartProductId);

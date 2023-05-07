@@ -24,7 +24,7 @@ public class CartEntity {
     public static CartEntity from(final Cart cart) {
         return new CartEntity(
                 CartEntityId.from(cart.getCartId()),
-                UserEntityId.from(cart.getUser().getUserId())
+                UserEntityId.from(cart.getUserId())
         );
     }
 

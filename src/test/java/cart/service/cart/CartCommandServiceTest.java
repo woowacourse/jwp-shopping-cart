@@ -43,14 +43,14 @@ class CartCommandServiceTest {
     void 카트_추가_테스트() {
         // given
         final User savedUser = userRepository.save(new User("asdf", "1234"));
-        final Cart cart = new Cart(savedUser);
+        final Cart cart = new Cart(savedUser.getUserId());
         cartRepository.save(cart);
 
         // when
         cartCommandService.createCart(new UserRegisteredEvent(savedUser));
 
         // then
-        final Optional<Cart> findResult = cartRepository.findByUser(savedUser);
+        final Optional<Cart> findResult = cartRepository.findByUserId(savedUser.getUserId());
         assertAll(
                 () -> assertThat(findResult).isPresent(),
                 () -> assertThat(findResult.get().getCartId().getValue()).isPositive()
@@ -62,7 +62,7 @@ class CartCommandServiceTest {
         // given
         final User savedUser = userRepository.save(new User("asdf", "1234"));
         final Product savedProduct = productRepository.save(new Product("name", "image", 5));
-        final Cart cart = new Cart(savedUser);
+        final Cart cart = new Cart(savedUser.getUserId());
         cartRepository.save(cart);
 
         // when

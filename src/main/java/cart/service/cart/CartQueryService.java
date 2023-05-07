@@ -1,6 +1,7 @@
 package cart.service.cart;
 
 import cart.domain.cart.Cart;
+import cart.domain.user.User;
 import cart.exception.UserNotFoundException;
 import cart.repository.cart.CartRepository;
 import cart.service.user.UserQueryService;
@@ -21,7 +22,8 @@ public class CartQueryService {
 
     public Cart findByEmail(final String email) {
         return userQueryService.findByEmail(email)
-                .flatMap(cartRepository::findByUser)
+                .map(User::getUserId)
+                .flatMap(cartRepository::findByUserId)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
     }
 }

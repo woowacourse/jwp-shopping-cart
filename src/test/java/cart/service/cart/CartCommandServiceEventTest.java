@@ -38,7 +38,7 @@ class CartCommandServiceEventTest {
         applicationEventPublisher.publishEvent(new UserRegisteredEvent(user));
 
         //then
-        final Optional<Cart> expectResult = cartRepository.findByUser(user);
+        final Optional<Cart> expectResult = cartRepository.findByUserId(user.getUserId());
         assertAll(
                 () -> assertThat(expectResult).isPresent(),
                 () -> assertThat(expectResult.get().getCartId().getValue()).isPositive()

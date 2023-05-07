@@ -48,35 +48,35 @@ class H2CartRepositoryTest {
 
     @Test
     void 카트_저장_테스트() {
-        final Cart cart = new Cart(user);
+        final Cart cart = new Cart(user.getUserId());
 
         final Cart result = cartRepository.save(cart);
 
-        final Optional<Cart> findResult = cartRepository.findByUser(user);
+        final Optional<Cart> findResult = cartRepository.findByUserId(user.getUserId());
 
         assertAll(
                 () -> assertThat(findResult).isPresent(),
                 () -> assertThat(findResult).contains(result),
                 () -> assertThat(findResult.get().getCartProducts().getCartProducts()).isEmpty(),
-                () -> assertThat(findResult.get().getUser()).isEqualTo(user),
+                () -> assertThat(findResult.get().getUserId()).isEqualTo(user.getUserId()),
                 () -> assertThat(findResult.get().getCartId()).isEqualTo(result.getCartId())
         );
     }
 
     @Test
     void 카트_저장_테스트_카트_상품_추가() {
-        final Cart cart = new Cart(user);
+        final Cart cart = new Cart(user.getUserId());
         cart.addProduct(product);
 
         final Cart result = cartRepository.save(cart);
 
-        final Optional<Cart> findResult = cartRepository.findByUser(user);
+        final Optional<Cart> findResult = cartRepository.findByUserId(user.getUserId());
 
         assertAll(
                 () -> assertThat(findResult).isPresent(),
                 () -> assertThat(findResult).contains(result),
                 () -> assertThat(findResult.get().getCartProducts().getCartProducts()).hasSize(1),
-                () -> assertThat(findResult.get().getUser()).isEqualTo(user),
+                () -> assertThat(findResult.get().getUserId()).isEqualTo(user.getUserId()),
                 () -> assertThat(findResult.get().getCartId()).isEqualTo(result.getCartId()),
                 () -> assertThat(findResult.get().getCartProducts().getCartProducts().get(0).getProduct()).isEqualTo(
                         product),
@@ -92,7 +92,7 @@ class H2CartRepositoryTest {
 
         @BeforeEach
         void setUp() {
-            final Cart newCart = new Cart(user);
+            final Cart newCart = new Cart(user.getUserId());
             newCart.addProduct(product);
 
             cart = cartRepository.save(newCart);
@@ -100,13 +100,13 @@ class H2CartRepositoryTest {
 
         @Test
         void 조회_테스트() {
-            final Optional<Cart> findResult = cartRepository.findByUser(user);
+            final Optional<Cart> findResult = cartRepository.findByUserId(user.getUserId());
 
             assertAll(
                     () -> assertThat(findResult).isPresent(),
                     () -> assertThat(findResult).contains(cart),
                     () -> assertThat(findResult.get().getCartProducts().getCartProducts()).hasSize(1),
-                    () -> assertThat(findResult.get().getUser()).isEqualTo(user),
+                    () -> assertThat(findResult.get().getUserId()).isEqualTo(user.getUserId()),
                     () -> assertThat(findResult.get().getCartId()).isEqualTo(cart.getCartId()),
                     () -> assertThat(
                             findResult.get().getCartProducts().getCartProducts().get(0).getProduct()).isEqualTo(
