@@ -27,7 +27,7 @@ public class UserService {
 
     public void validateUser(final String email, final String password) {
         final User user = usersDao.findByEmail(new Email(email));
-        if (!user.getPassword().equals(password)) {
+        if (user.isWrongPassword(password)) {
             throw new UserAuthorizationException("사용자의 비밀번호가 일치하지 않습니다.");
         }
     }

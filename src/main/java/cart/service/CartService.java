@@ -44,7 +44,7 @@ public class CartService {
     public void deleteCartItem(final String userEmail, final Long id) {
         final CartAddedProduct cartAddedProduct = cartAddedProductDao.findById(id);
 
-        if (!cartAddedProduct.getUserEmail().equals(new Email(userEmail))) {
+        if (!cartAddedProduct.isCartOwner(new Email(userEmail))) {
             throw new UserForbiddenException("해당 장바구니의 사용자가 아닙니다.");
         }
 

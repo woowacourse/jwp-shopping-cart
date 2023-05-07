@@ -14,6 +14,10 @@ public class CartAddedProduct {
         this.product = product;
     }
 
+    public boolean isCartOwner(final Email email) {
+        return userEmail.equals(email);
+    }
+
     public Long getId() {
         return id;
     }
