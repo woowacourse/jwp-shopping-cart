@@ -1,6 +1,8 @@
 package cart.product;
 
+import cart.product.dao.ProductDao;
 import cart.product.domain.Money;
+import cart.product.domain.Product;
 import cart.product.domain.ProductImageUrl;
 import cart.product.domain.ProductName;
 import cart.product.dto.request.ProductAddRequest;
@@ -19,13 +21,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import static cart.TestUtils.toJson;
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = "/schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -35,7 +38,7 @@ public class ProductApiIntegrationTest {
     private int port;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private ProductDao productDao;
 
     @BeforeEach
     void setUp() {
@@ -43,17 +46,27 @@ public class ProductApiIntegrationTest {
     }
 
     @Test
-    @DisplayName("상품이 정상적으로 추가되었을 때 OK 응답 코드를 반환한다")
+    @DisplayName("상품이 정상적으로 추가되었을 때 CREATED 응답 코드를 반환한다")
     void add() throws JsonProcessingException {
         final ProductAddRequest productAddRequest = new ProductAddRequest("a".repeat(ProductName.MAX_LENGTH), "a".repeat(ProductImageUrl.MAX_LENGTH), Money.MAX_AMOUNT);
+        final int productId = 1;
 
-        var response = given().contentType(ContentType.JSON)
-                              .body(toJson(productAddRequest))
-                              .when()
-                              .post("/products")
-                              .then()
-                              .assertThat()
-                              .statusCode(HttpStatus.CREATED.value());
+        given()
+                .contentType(ContentType.JSON)
+                .body(toJson(productAddRequest))
+        .when()
+                .post("/products")
+        .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location", "/products/" + productId);
+
+        final Product actual = productDao.findById(1L).get();
+
+        assertAll(
+                () -> assertThat(actual.getName()).isEqualTo(productAddRequest.getName()),
+                () -> assertThat(actual.getPrice()).isEqualTo(productAddRequest.getPrice()),
+                () -> assertThat(actual.getImageUrl()).isEqualTo(productAddRequest.getImageUrl())
+        );
     }
 
     @ParameterizedTest(name = "상품 이름이 공백만으로 구성되면 BAD REQUEST 응답 코드를 반환한다")
@@ -61,14 +74,14 @@ public class ProductApiIntegrationTest {
     void addFailShortName(String name) throws JsonProcessingException {
         final ProductAddRequest productAddRequest = new ProductAddRequest(name, "a".repeat(ProductImageUrl.MAX_LENGTH), Money.MAX_AMOUNT);
 
-        var response = given().contentType(ContentType.JSON)
-                              .body(toJson(productAddRequest))
-                              .when()
-                              .post("/products")
-                              .then()
-                              .assertThat()
-                              .statusCode(HttpStatus.BAD_REQUEST.value())
-                              .body("message", Matchers.containsString("이름"));
+        given()
+                .contentType(ContentType.JSON)
+                .body(toJson(productAddRequest))
+        .when()
+                .post("/products")
+        .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", Matchers.containsString("이름"));
     }
 
     @Test
@@ -76,14 +89,14 @@ public class ProductApiIntegrationTest {
     void addFailLongName() throws JsonProcessingException {
         final ProductAddRequest productAddRequest = new ProductAddRequest("a".repeat(ProductName.MAX_LENGTH + 1), "a".repeat(ProductImageUrl.MAX_LENGTH), Money.MAX_AMOUNT);
 
-        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                              .body(toJson(productAddRequest))
-                              .when()
-                              .post("/products")
-                              .then()
-                              .assertThat()
-                              .statusCode(HttpStatus.BAD_REQUEST.value())
-                              .body("message", Matchers.containsString("이름"));
+        given()
+                .contentType(ContentType.JSON)
+                .body(toJson(productAddRequest))
+        .when()
+                .post("/products")
+        .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", Matchers.containsString("이름"));
     }
 
     @ParameterizedTest(name = "상품 URL이 공백만으로 구성되면 BAD REQUEST 응답 코드를 반환한다")
@@ -91,14 +104,14 @@ public class ProductApiIntegrationTest {
     void addFailShortUrl(String url) throws JsonProcessingException {
         final ProductAddRequest productAddRequest = new ProductAddRequest("a".repeat(ProductName.MAX_LENGTH), url, Money.MAX_AMOUNT);
 
-        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                              .body(toJson(productAddRequest))
-                              .when()
-                              .post("/products")
-                              .then()
-                              .assertThat()
-                              .statusCode(HttpStatus.BAD_REQUEST.value())
-                              .body("message", Matchers.containsStringIgnoringCase("url"));
+        given()
+                .contentType(ContentType.JSON)
+                .body(toJson(productAddRequest))
+        .when()
+                .post("/products")
+        .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", Matchers.containsStringIgnoringCase("url"));
     }
 
     @Test
@@ -106,14 +119,14 @@ public class ProductApiIntegrationTest {
     void addFailLongUrl() throws JsonProcessingException {
         final ProductAddRequest productAddRequest = new ProductAddRequest("a".repeat(ProductName.MAX_LENGTH), "a".repeat(ProductImageUrl.MAX_LENGTH + 1), Money.MAX_AMOUNT);
 
-        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                              .body(toJson(productAddRequest))
-                              .when()
-                              .post("/products")
-                              .then()
-                              .assertThat()
-                              .statusCode(HttpStatus.BAD_REQUEST.value())
-                              .body("message", Matchers.containsStringIgnoringCase("url"));
+        given()
+                .contentType(ContentType.JSON)
+                .body(toJson(productAddRequest))
+        .when()
+                .post("/products")
+        .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", Matchers.containsStringIgnoringCase("url"));
     }
 
     @ParameterizedTest(name = "상품이 가격이 허용 범위 밖이면 BAD REQUEST 응답 코드를 반환한다")
@@ -121,75 +134,67 @@ public class ProductApiIntegrationTest {
     void addFailPrice(int price) throws JsonProcessingException {
         final ProductAddRequest productAddRequest = new ProductAddRequest("a".repeat(ProductName.MAX_LENGTH), "a".repeat(ProductImageUrl.MAX_LENGTH), price);
 
-        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                              .body(toJson(productAddRequest))
-                              .when()
-                              .post("/products")
-                              .then()
-                              .assertThat()
-                              .statusCode(HttpStatus.BAD_REQUEST.value())
-                              .body("message", containsString("금액"));
+        given().contentType(MediaType.APPLICATION_JSON_VALUE)
+               .body(toJson(productAddRequest))
+        .when()
+               .post("/products")
+        .then()
+               .statusCode(HttpStatus.BAD_REQUEST.value())
+               .body("message", containsString("금액"));
     }
 
     @Test
     @DisplayName("상품 수정이 성공하면 OK 상태 코드를 반환한다.")
     void update() throws JsonProcessingException {
-        int insertCount = jdbcTemplate.update("INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.com', 1000)");
-        assertThat(insertCount).isEqualTo(1);
+        productDao.save(new Product("에밀", "emil.com", 1000));
 
         final ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(1L, "a".repeat(ProductName.MAX_LENGTH), "a".repeat(ProductImageUrl.MAX_LENGTH), Money.MAX_AMOUNT);
 
-        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                              .body(toJson(productUpdateRequest))
-                              .when()
-                              .put("/products")
-                              .then()
-                              .assertThat()
-                              .statusCode(HttpStatus.CREATED.value());
+        given().contentType(MediaType.APPLICATION_JSON_VALUE)
+               .body(toJson(productUpdateRequest))
+        .when()
+               .put("/products")
+        .then()
+               .statusCode(HttpStatus.OK.value());
     }
 
     @Test
     @DisplayName("존재하지 않는 상품을 요청하면 NOT_FOUND 상태 코드를 반환한다.")
     void updateFailNoId() throws JsonProcessingException {
-        int insertCount = jdbcTemplate.update("INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.com', 1000)");
-        assertThat(insertCount).isEqualTo(1);
+        productDao.save(new Product("에밀", "emil.com", 1000));
 
         final ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(2L, "a".repeat(ProductName.MAX_LENGTH), "a".repeat(ProductImageUrl.MAX_LENGTH), Money.MAX_AMOUNT);
 
-        var response = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                              .body(toJson(productUpdateRequest))
-                              .when()
-                              .put("/products")
-                              .then()
-                              .assertThat()
-                              .statusCode(HttpStatus.NOT_FOUND.value())
-                              .body("message", Matchers.containsStringIgnoringCase("상품"));
+        given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(toJson(productUpdateRequest))
+        .when()
+                .put("/products")
+        .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body("message", Matchers.containsStringIgnoringCase("상품"));
     }
 
     @Test
-    @DisplayName("상품 삭제가 성공하면 OK 상태 코드를 반환한다.")
+    @DisplayName("상품 삭제가 성공하면 NO CONTENT 상태 코드를 반환한다.")
     void delete() {
-        int insertCount = jdbcTemplate.update("INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.com', 1000)");
-        assertThat(insertCount).isEqualTo(1);
+        productDao.save(new Product("에밀", "emil.com", 1000));
 
-        var response = given().when()
-                              .delete("/products/1")
-                              .then()
-                              .assertThat()
-                              .statusCode(HttpStatus.NO_CONTENT.value());
+        when()
+            .delete("/products/1")
+        .then()
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
     @DisplayName("존재하지 않는 상품을 삭제하면 NOT_FOUND 상태 코드를 반환한다.")
     void deleteFailNoId() {
-        int insertCount = jdbcTemplate.update("INSERT INTO products (name, image_url, price) VALUES ('에밀', 'emil.com', 1000)");
-        assertThat(insertCount).isEqualTo(1);
+        productDao.save(new Product("에밀", "emil.com", 1000));
 
-        var response = given().when()
-                              .delete("/products/" + 2)
-                              .then()
-                              .assertThat()
-                              .statusCode(HttpStatus.NOT_FOUND.value())
-                              .body("message", Matchers.containsStringIgnoringCase("상품"));
+        when()
+                .delete("/products/" + 2)
+        .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body("message", Matchers.containsStringIgnoringCase("상품"));
     }
 }

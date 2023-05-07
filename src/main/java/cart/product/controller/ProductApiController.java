@@ -30,12 +30,13 @@ public class ProductApiController {
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
         final long id = productService.update(productUpdateRequest);
-        return ResponseEntity.created(URI.create("/products/" + id)).build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.delete(id);
+        System.out.println("404??");
         return ResponseEntity.noContent().build();
     }
 }

@@ -2,7 +2,6 @@ package cart.member.dao;
 
 import cart.member.domain.Member;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -38,12 +37,9 @@ public class MemberDao {
                 .withTableName("members")
                 .usingGeneratedKeyColumns("id");
 
-        try {
-            final Number key = simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(member));
-            return new Member(key.longValue(), member.getEmail(), member.getPassword(), member.getPhoneNumber());
-        } catch (DuplicateKeyException e) {
-            throw new IllegalArgumentException("키 중복 오류");
-        }
+        final Number key = simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(member));
+        return new Member(key.longValue(), member.getEmail(), member.getPassword(), member.getPhoneNumber());
+
     }
 
     public int update(Member member) {

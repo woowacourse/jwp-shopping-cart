@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.sql.SQLException;
@@ -23,7 +24,6 @@ class MemberDaoTest {
 
     @Autowired
     MemberDaoTest(NamedParameterJdbcTemplate namedParameterJdbcTemplate) throws SQLException {
-        System.out.println(namedParameterJdbcTemplate.getJdbcTemplate().getDataSource().getConnection().getMetaData());
         this.memberDao = new MemberDao(namedParameterJdbcTemplate);
     }
 
@@ -46,7 +46,7 @@ class MemberDaoTest {
 
         final ThrowingCallable throwingCallable = () -> memberDao.save(duplicateEmailMember);
 
-        assertThatThrownBy(throwingCallable).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(throwingCallable).isInstanceOf(DuplicateKeyException.class);
     }
 
     @Test
@@ -96,27 +96,30 @@ class MemberDaoTest {
     @Test
     @DisplayName("member를 id로 삭제한다")
     void deleteById() {
-        // given
         Member member = new Member("email@email.com", "password", "0100100100");
         Member inserted = memberDao.save(member);
 
-        // when
         final int deleted = memberDao.deleteById(inserted.getId());
 
-        // then
         assertThat(memberDao.findById(deleted).isEmpty()).isTrue();
     }
 
     @Test
-    @DisplayName("이미 이메일이 존재하면 true, 없으면 false를 반환한다.")
+    @DisplayName("이미 이메일이 존재하면 true를 반환한다.")
     void containsEmail() {
         final String EMAIL = "email@email.com";
         Member member = new Member(EMAIL, "password", "0100100100");
 
-        assertThat(memberDao.containsEmail(EMAIL)).isFalse();
-
         memberDao.save(member);
 
         assertThat(memberDao.containsEmail(EMAIL)).isTrue();
+    }
+
+    @Test
+    @DisplayName("이메일이 없으면 false를 반환한다.")
+    void notContainsEmail() {
+        final String EMAIL = "email@email.com";
+
+        assertThat(memberDao.containsEmail(EMAIL)).isFalse();
     }
 }

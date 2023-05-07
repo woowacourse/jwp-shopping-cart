@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;
 
 import static cart.TestUtils.*;
+
 @TestComponent
 public class CartItemTestConfig {
 

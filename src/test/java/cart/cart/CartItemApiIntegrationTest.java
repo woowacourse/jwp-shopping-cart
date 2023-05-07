@@ -46,16 +46,18 @@ public class CartItemApiIntegrationTest {
     @Test
     @DisplayName("상품이 정상적으로 추가되었을 때 CREATED 응답 코드를 반환한다")
     void getCartItems() throws JsonProcessingException {
+        final long productId = 3L;
+
         given()
                 .log().all()
                 .auth().preemptive().basic(NO_ID_MEMBER2.getEmail(), NO_ID_MEMBER2.getPassword())
-                .contentType(ContentType.JSON).body(toJson(new CartItemAddRequest(3L)))
+                .contentType(ContentType.JSON).body(toJson(new CartItemAddRequest(productId)))
         .when()
                .post("/cart/items")
         .then()
                 .log().all().assertThat()
                 .statusCode(HttpStatus.CREATED.value())
-                .header(HttpHeaders.LOCATION, "/cart/items/3");
+                .header(HttpHeaders.LOCATION, "/cart/items/" + productId);
     }
 
     @Test
@@ -78,36 +80,42 @@ public class CartItemApiIntegrationTest {
     @Test
     @DisplayName("상품 삭제가 성공하면 NO_CONTENT 상태 코드를 반환한다.")
     void delete() {
-        cartDao.saveItem(new CartItemDto(2, 1));
-        cartDao.saveItem(new CartItemDto(2, 3));
+        final int memberId = 2;
+        final int productId1 = 1;
+        final int productId2 = 3;
+
+        cartDao.saveItem(new CartItemDto(memberId, productId1));
+        cartDao.saveItem(new CartItemDto(memberId, productId2));
 
         given()
                 .log().all()
                 .auth().preemptive().basic(NO_ID_MEMBER2.getEmail(), NO_ID_MEMBER2.getPassword())
         .when()
-                .delete("/cart/items/" + 3)
+                .delete("/cart/items/" + productId2)
         .then()
                 .log().all().assertThat()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(cartDao.findProductIdsByMemberId(2)).hasSize(1);
+        assertThat(cartDao.findProductIdsByMemberId(memberId)).hasSize(productId1);
     }
 
     @Test
     @DisplayName("없는 상품을 삭제하려고 하면 NOT FOUND를 반환한다.")
     void deleteFail() {
-        cartDao.saveItem(new CartItemDto(2, 1));
-        cartDao.saveItem(new CartItemDto(2, 3));
+        final int memberId = 2;
+        final int notAddedProductId = 2;
+        cartDao.saveItem(new CartItemDto(memberId, 1));
+        cartDao.saveItem(new CartItemDto(memberId, 3));
 
         given()
                 .log().all()
                 .auth().preemptive().basic(NO_ID_MEMBER2.getEmail(), NO_ID_MEMBER2.getPassword())
         .when()
-                .delete("/cart/items/" + 2)
+                .delete("/cart/items/" + notAddedProductId)
         .then()
                 .log().all().assertThat()
                 .statusCode(HttpStatus.NOT_FOUND.value());
 
-        assertThat(cartDao.findProductIdsByMemberId(2)).hasSize(2);
+        assertThat(cartDao.findProductIdsByMemberId(memberId)).hasSize(2);
     }
 }
