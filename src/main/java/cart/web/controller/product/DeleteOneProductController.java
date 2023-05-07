@@ -2,7 +2,6 @@ package cart.web.controller.product;
 
 import cart.domain.product.usecase.DeleteOneProductUseCase;
 import cart.web.dto.request.PathVariableId;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +22,7 @@ public class DeleteOneProductController {
         deleteProductService.deleteSingleProductById(deleteId.getId());
 
         return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
+                .noContent()
                 .build();
     }
 }
