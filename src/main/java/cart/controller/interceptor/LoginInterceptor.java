@@ -1,5 +1,7 @@
 package cart.controller.interceptor;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,7 +11,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
-    public static final String AUTHORIZATION = "Authorization";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
