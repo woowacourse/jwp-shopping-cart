@@ -22,6 +22,7 @@ CREATE TABLE cart_product
     id BIGINT NOT NULL AUTO_INCREMENT,
     member_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
+    CONSTRAINT SAME_PRODUCT UNIQUE (member_id, product_id),
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (product_id) REFERENCES product (id)
 )

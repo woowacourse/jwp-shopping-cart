@@ -236,7 +236,7 @@ Content-Type: application/json
 **구현 내용**
 > - [x] 요청 받은 ID에 해당하는 Product를 Cart에 추가
 >   - [x] 로그인 확인
-> - [ ] DB에 저장
+> - [x] DB에 저장
 
 **Request example**
 ```json

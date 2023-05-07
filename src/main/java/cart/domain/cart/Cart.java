@@ -7,20 +7,20 @@ import java.util.Objects;
 
 public class Cart {
 
-    private final long id;
+    private final long memberId;
     private final List<Product> products;
 
-    private Cart(long id, List<Product> products) {
-        this.id = id;
+    private Cart(long memberId, List<Product> products) {
+        this.memberId = memberId;
         this.products = products;
     }
 
-    public static Cart createEmpty(long id) {
-        return new Cart(id, new ArrayList<>());
+    public static Cart createEmpty(long userId) {
+        return new Cart(userId, new ArrayList<>());
     }
 
-    public static Cart createWithProducts(long id, List<Product> products) {
-        return new Cart(id, new ArrayList<>(products));
+    public static Cart createWithProducts(long userId, List<Product> products) {
+        return new Cart(userId, new ArrayList<>(products));
     }
 
     public void add(Product product) {
@@ -34,8 +34,8 @@ public class Cart {
         }
     }
 
-    public Long getId() {
-        return id;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public List<Product> getProducts() {
@@ -51,11 +51,11 @@ public class Cart {
             return false;
         }
         Cart cart = (Cart) o;
-        return id == cart.id;
+        return memberId == cart.memberId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(memberId);
     }
 }

@@ -1,6 +1,5 @@
 package cart.service;
 
-import cart.domain.cart.CartRepository;
 import cart.domain.member.Member;
 import cart.domain.member.MemberRepository;
 import cart.service.dto.MemberAuthDto;
@@ -14,11 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final CartRepository cartRepository;
 
-    public MemberService(MemberRepository memberRepository, CartRepository cartRepository) {
+    public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.cartRepository = cartRepository;
     }
 
     public void save(MemberSaveDto memberSaveDto) {
@@ -28,8 +25,7 @@ public class MemberService {
                 memberSaveDto.getName(),
                 memberSaveDto.getPhoneNumber()
         );
-        Long userId = this.memberRepository.save(member);
-        this.cartRepository.create(userId);
+        this.memberRepository.save(member);
     }
 
     public List<Member> findAll() {
