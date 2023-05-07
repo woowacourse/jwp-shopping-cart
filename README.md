@@ -14,6 +14,19 @@
 |Post | /carts/product | 장바구니에 상품 담기 |
 |Delete | /carts/product/{id} | 장바구니에 담긴 상품 삭제 |
 
+## 2단계 피드백 및 추가 적용 사항
+- [ ] 외래키를 사용한 이유, 외래키의 장점과 단점
+- [ ] 기본적인 예외 핸들링은 ResponseEntityExceptionHandler 사용해보기
+- [ ] 아무 계정을 선택하고, 아무 상품을 장바구니에 담은 후, 관리자 탭에서 장바구니에 담은 상품을 삭제했을 때 발생하는 예외 확인
+- [ ] 서버에서 에러 확인할 수 있게 하기
+- [ ] 에러 발생 시 클라이언트에서 alert 창 띄우기
+- [ ] @DirtiesContext를 사용한 이유
+- [ ] user와 join을 한 번 더 하지 않고 서브쿼리를 작성한 이유
+- [ ] Interceptor와 ArgumentResolver, Filter 역할 정리
+- [ ] equals, hashCode 를 재구현 -> 테스트 코드를 위해 프로덕션 코드를 수정한 것?
+- [ ] 어떤 면에서 Response 객체가 Entity 느낌이라고 생각했는지
+- [ ] API 요청 확인 시 .http 사용해보기
+- [ ] E2E 테스트 코드 작성하기
 
 ## 2단계 기능 요구사항
 - [x] 사용자 기능 구현
