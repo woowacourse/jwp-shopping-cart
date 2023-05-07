@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS products CASCADE;
-
-CREATE TABLE products
+CREATE TABLE IF NOT EXISTS products
 (
     id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     name      VARCHAR(30)     NOT NULL,
@@ -9,9 +7,7 @@ CREATE TABLE products
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS members CASCADE;
-
-CREATE TABLE members
+CREATE TABLE IF NOT EXISTS members
 (
     id       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     email    VARCHAR(255)    NOT NULL,
@@ -20,9 +16,7 @@ CREATE TABLE members
     UNIQUE KEY uk_email (email)
 );
 
-DROP TABLE IF EXISTS cart_items;
-
-CREATE TABLE cart_items
+CREATE TABLE IF NOT EXISTS cart_items
 (
     id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     member_id  BIGINT UNSIGNED NOT NULL,

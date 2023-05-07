@@ -95,5 +95,13 @@
     - [x] Interceptor, ArgumentResolver 사용하여 중복 제거
     - [x] 통합 테스트 작성
         - [x] 테스트 픽스쳐 적용, 테스트 DB 초기데이터와 일치하도록 설정
+- [x] [테스트 실패 케이스 해결 (테스트 독립적으로 구성하기)](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186779720)
+    - [ ] 정확한 원인 파악 (해당 오류와 @Sql 어노테이션의 인과관계?)
+        - 테스트 독립성 문제이기 때문에 인메모리 DB를 사용하면 고려할 필요 없는 문제이기는 하다.
+- [x] [DB 초기화 전략 수정 (로컬 DB에 걸맞게 사용하기)](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186787097)
+    - 테스트 DB의 경우 같은 DataSource(@JdbcTest)나 ApplicationContext(@SpringBootTest 내 테스트들)를 공유하는 경우,
+    - auto_increment 값 문제로 매번 테이블을 아예 새로 만들어주거나 관련 처리를 해줘야 한다. => 그럴 바엔 인메모리로 변경함
+    - 그럼에도 테스트에서도 로컬 DB를 사용할 수 있는 방법은 없을까?(테스트 간 의존도가 너무 높아서 디버깅이 어려워 일단 중단함)
+- [ ]
 - [ ] snake case vs carmel case 통일
 - [ ] 예외메시지 형식 / 마침표 등 통일, 관리하기 쉽게 만들기

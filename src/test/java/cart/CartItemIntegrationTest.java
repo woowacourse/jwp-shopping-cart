@@ -4,6 +4,7 @@ import static cart.fixture.MemberFixture.MEMBER1;
 import static cart.fixture.MemberFixture.MEMBER2;
 
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,14 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@SqlGroup({
-        @Sql("/schema.sql"),
-        @Sql("/data.sql")
-})
 public class CartItemIntegrationTest {
 
     private static final String FIXTURE_UNAUTHORIZED_EMAIL = "unauthorized@gmail.com";
@@ -33,6 +29,11 @@ public class CartItemIntegrationTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+    }
+
+    @AfterEach
+    void clean() {
+        jdbcTemplate.update("TRUNCATE TABLE cart_items");
     }
 
     @DisplayName("로그인 사용자의 장바구니 아이템 조회 시 OK 응답코드를 반환한다")
@@ -57,6 +58,7 @@ public class CartItemIntegrationTest {
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
+    @Transactional
     @DisplayName("로그인 사용자의 장바구니 아이템 등록 시 CREATED 응답코드를 반환한다")
     @Test
     void create() {
