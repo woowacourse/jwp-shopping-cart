@@ -20,9 +20,5 @@ public class CatalogController {
         return "index";
     }
     
-    @GetMapping("/admin")
-    public String renderAdminPage(final Model model) {
-        model.addAttribute("products", this.catalogService.display());
-        return "admin";
-    }
+    
 }
