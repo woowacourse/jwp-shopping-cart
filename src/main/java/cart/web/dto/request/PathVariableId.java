@@ -28,7 +28,7 @@ public class PathVariableId {
         try {
             return Long.parseLong(value);
         } catch (final NumberFormatException exception) {
-            throw new IllegalPathVariableTypeException("경로에 포함된 Id는 정수만 가능합니다.");
+            throw new IllegalPathVariableTypeException("경로에 포함된 Id는 정수만 가능합니다.", exception);
         }
     }
 
