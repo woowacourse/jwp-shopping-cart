@@ -4,7 +4,6 @@ public class CartItemEntity {
 
     private int id;
     private int member_id;
-
     private int product_id;
 
     public CartItemEntity(int id, int member_id, int product_id) {

@@ -2,7 +2,6 @@ package cart.controller;
 
 import cart.auth.AuthInfo;
 import cart.auth.AuthenticationPrincipal;
-import cart.auth.BasicAuthorizationExtractor;
 import cart.entity.CartItemEntity;
 import cart.entity.ProductEntity;
 import cart.service.CartItemService;
@@ -16,8 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/cart/item")
 public class CartController {
-
-    private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
 
     private final CartItemService cartItemService;
     private final MemberService memberService;

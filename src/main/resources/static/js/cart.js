@@ -1,5 +1,4 @@
 const addCartItem = (productId) => {
-    console.log("확인용")
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
