@@ -39,6 +39,7 @@ public class H2CartDao implements CartDao {
                 );
     }
 
+    @Override
     public Optional<CartEntity> save(Cart cart, long productId, long memberId) {
         Map<String, Object> parameterSource = new HashMap<>();
 
@@ -51,12 +52,7 @@ public class H2CartDao implements CartDao {
         return findById(id);
     }
 
-    public CartEntity update(CartEntity entity) {
-        String sql = "UPDATE cart SET count = ?, updated_at = ? WHERE id = ?";
-        jdbcTemplate.update(sql, entity.getCount(), entity.getUpdatedAt(), entity.getId());
-        return entity;
-    }
-
+    @Override
     public Optional<CartEntity> findById(Long id) {
         String sql = "SELECT * FROM cart WHERE id = ?";
         try {
@@ -66,18 +62,42 @@ public class H2CartDao implements CartDao {
         }
     }
 
+    @Override
+    public List<CartEntity> findByMemberId(long memberId) {
+        String sql = "SELECT * FROM cart WHERE member_id = ?";
+        return jdbcTemplate.query(sql, cartEntityRowMapper(), memberId);
+    }
+
+    @Override
     public List<CartEntity> findAll() {
         String sql = "SELECT * FROM cart";
         return jdbcTemplate.query(sql, cartEntityRowMapper());
     }
 
+    @Override
+    public CartEntity update(CartEntity entity) {
+        String sql = "UPDATE cart SET count = ?, updated_at = ? WHERE id = ?";
+        jdbcTemplate.update(sql, entity.getCount(), entity.getUpdatedAt(), entity.getId());
+        return entity;
+    }
+
+    @Override
+    public boolean existByIdAndMemberId(long id, long memberId) {
+        String sql = "SELECT COUNT(*) FROM cart WHERE id = ? AND member_id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, id, memberId);
+        return count > 0;
+    }
+
+    @Override
+    public boolean existByMemberIdAndProductId(long memberId, long productId) {
+        String sql = "SELECT COUNT(*) FROM cart WHERE member_id = ? AND product_id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, memberId, productId);
+        return count > 0;
+    }
+
+    @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart WHERE id = ?";
         jdbcTemplate.update(sql, id);
-    }
-
-    public List<CartEntity> findByMemberId(long memberId) {
-        String sql = "SELECT * FROM cart WHERE member_id = ?";
-        return jdbcTemplate.query(sql, cartEntityRowMapper(), memberId);
     }
 }
