@@ -6,7 +6,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import javax.servlet.http.HttpServletRequest;
 
 public class BasicAuthorizationExtractor implements AuthorizationExtractor<UserAuthInfo> {
-    private static final String BASIC_TYPE = "Basic";
+    private static final String BASIC_TYPE = "basic";
     private static final String DELIMITER = ":";
 
     @Override
@@ -17,12 +17,9 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<UserA
             return null;
         }
 
-        if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
-            String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
-            byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
-            String decodedString = new String(decodedBytes);
+        if ((header.toLowerCase().startsWith(BASIC_TYPE))) {
+            String[] credentials = getCredentials(header);
 
-            String[] credentials = decodedString.split(DELIMITER);
             String email = credentials[0];
             String password = credentials[1];
 
@@ -30,5 +27,12 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<UserA
         }
 
         return null;
+    }
+
+    private String[] getCredentials(String header) {
+        String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
+        byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
+        String decodedString = new String(decodedBytes);
+        return decodedString.split(DELIMITER);
     }
 }
