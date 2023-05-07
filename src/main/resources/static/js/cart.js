@@ -1,4 +1,5 @@
 const addCartItem = (productId) => {
+    console.log("확인용")
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
@@ -8,7 +9,7 @@ const addCartItem = (productId) => {
 
     // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
     axios.request({
-        url: '/cart/'+productId,
+        url: '/cart/item/' + productId,
         method: 'POST',
         headers: {
             'Authorization': `Basic ${credentials}`,
@@ -30,12 +31,13 @@ const removeCartItem = (id) => {
 
     // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
     axios.request({
-        url: '/cart/' + id,
+        url: '/cart/item/' + id,
         method: "DELETE",
         headers: {
             'Authorization': `Basic ${credentials}`
         }
     }).then((response) => {
+        alert('삭제했습니다.');
         window.location.reload();
     }).catch((error) => {
         console.error(error);

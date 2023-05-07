@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@RequestMapping("/cart/item")
 public class CartController {
 
     private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
@@ -26,7 +27,7 @@ public class CartController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/cart/load")
+    @GetMapping
     @ResponseBody
     public ResponseEntity<List<ProductEntity>> getCartItem(Model model, HttpServletRequest request) {
         AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
@@ -38,7 +39,7 @@ public class CartController {
         return ResponseEntity.ok().body(cartItems);
     }
 
-    @PostMapping("/cart/{productId}")
+    @PostMapping("/{productId}")
     public ResponseEntity<Void> insertCartItem(HttpServletRequest request, @PathVariable int productId) {
         AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
 
@@ -48,7 +49,7 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/cart/{cartId}")
+    @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> deleteCartItem(@PathVariable int cartId) {
         cartItemService.deleteCartItem(cartId);
         return ResponseEntity.ok().build();
