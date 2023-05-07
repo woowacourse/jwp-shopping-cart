@@ -16,12 +16,6 @@ public class CartControllerAdvice extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest().body("해당하는 상품이 없습니다.");
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<String> handleValidationException(final MethodArgumentNotValidException e) {
-        final String errorMessage = "잘못된 요청입니다. " + e.getFieldErrors().get(0).getDefaultMessage();
-        return ResponseEntity.badRequest().body(errorMessage);
-    }
-
     @ExceptionHandler({UserAuthenticationException.class})
     public ResponseEntity<String> handleAuthentificationException(final UserAuthenticationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
