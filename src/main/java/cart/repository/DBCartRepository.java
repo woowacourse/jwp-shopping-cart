@@ -35,19 +35,36 @@ public class DBCartRepository implements CartRepository {
     }
 
     @Override
-    public List<Cart> findAll() {
-        String sql = "SELECT id, member_id, product_id FROM cart";
+    public Cart findById(Long id) {
+        String sql = "SELECT id, member_id, product_id FROM cart WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql,
+            (resultSet, rowNum) -> Cart.of(
+                resultSet.getLong("id"),
+                resultSet.getLong("member_id"),
+                resultSet.getLong("product_id")
+            ), id);
+    }
+
+    @Override
+    public List<Cart> findAll(Long memberId) {
+        String sql = "SELECT id, member_id, product_id FROM cart WHERE member_id = ?";
         return jdbcTemplate.query(sql,
             (resultSet, rowNum) -> Cart.of(
                 resultSet.getLong("id"),
                 resultSet.getLong("member_id"),
                 resultSet.getLong("product_id")
-            ));
+            ), memberId);
     }
 
     @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM cart WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public void deleteByProductID(Long productId) {
+        String sql = "DELETE FROM cart WHERE product_id = ?";
+        jdbcTemplate.update(sql, productId);
     }
 }

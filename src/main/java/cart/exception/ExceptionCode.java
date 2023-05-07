@@ -5,7 +5,9 @@ public enum ExceptionCode {
     INVALID_URL_LENGTH("URL은 영문기준 8000자 이하입니다."),
     INVALID_PRODUCT_NAME_LENGTH("상품명은 영문기준 255자 이하입니다."),
     BAD_REQUEST("입력이 잘못되었습니다."),
-    NO_AUTHORIZATION_HEADER("인증 헤더가 없습니다.");
+    NO_AUTHORIZATION_HEADER("인증 헤더가 없습니다."),
+    AUTHORIZATION_FAIL("잘못된 사용자입니다."),
+    EMPTY_REQUEST("요청이 없거나 공백입니다.");
 
     
     private String message;

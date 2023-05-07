@@ -1,6 +1,7 @@
 package cart.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cart.dto.AuthInfo;
 import cart.dto.CartRequest;
+import cart.dto.CartResponse;
 import cart.dto.MemberResponse;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
@@ -19,6 +21,8 @@ import cart.entity.Member;
 import cart.entity.MemberRepository;
 import cart.entity.Product;
 import cart.entity.ProductRepository;
+import cart.exception.DomainException;
+import cart.exception.ExceptionCode;
 
 @Service
 @Transactional(readOnly = true)
@@ -79,7 +83,9 @@ public class JwpCartService {
 
     @Transactional
     public void deleteProductById(Long id) {
+        cartRepository.deleteByProductID(id);
         productRepository.deleteById(id);
+
     }
 
     public List<MemberResponse> findAllMembers() {
@@ -99,5 +105,23 @@ public class JwpCartService {
     public void addProductToCart(AuthInfo authInfo, CartRequest cartRequest) {
         Member member = memberRepository.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
         cartRepository.save(Cart.of(null, member.getId(), cartRequest.getProductId()));
+    }
+
+    @Transactional
+    public void deleteProductFromCart(AuthInfo authInfo, Long id) {
+        Member member = memberRepository.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
+        if (Objects.equals(member.getId(), cartRepository.findById(id).getMemberId())) {
+            cartRepository.deleteById(id);
+            return;
+        }
+        throw new DomainException(ExceptionCode.AUTHORIZATION_FAIL);
+    }
+
+    public List<CartResponse> findAllCartItems(AuthInfo authInfo) {
+        Long memberId = memberRepository.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword()).getId();
+        return cartRepository.findAll(memberId)
+            .stream()
+            .map(cart -> new CartResponse(cart, productRepository.findById(cart.getProductId())))
+            .collect(Collectors.toList());
     }
 }

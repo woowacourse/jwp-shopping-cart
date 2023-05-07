@@ -1,24 +1,27 @@
 package cart.dto;
 
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.URL;
+
+import cart.exception.DomainException;
+import cart.exception.ExceptionCode;
 
 public class ProductRequest {
 
-    @Length(max = 255,message = "상품명은 영문기준 255자 이하입니다.")
+    @NotEmpty
     private String name;
-    @Length(max = 8000, message = "URL은 영문기준 8000자 이하입니다.")
+    @NotEmpty
     @URL
     private String imgUrl;
-    @Range(min = 0, max = Integer.MAX_VALUE, message = "가격은 0원부터 21억원 미만입니다.")
-    private int price;
+    @NotNull
+    private Integer price;
 
     public ProductRequest() {
     }
 
     public ProductRequest(String name, String imgUrl, int price) {
-
         this.name = name;
         this.imgUrl = imgUrl;
         this.price = price;
