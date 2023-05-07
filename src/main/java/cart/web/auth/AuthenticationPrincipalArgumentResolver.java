@@ -11,11 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(Auth.class);
+        if (parameter.hasParameterAnnotation(Auth.class)) {
+            Auth authAnnotation = parameter.getParameterAnnotation(Auth.class);
+
+            return authAnnotation.required();
+        }
+        return false;
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory){
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         AuthorizationExtractor<UserInfo> extractor = new BasicAuthorizationExtractor();
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
 
