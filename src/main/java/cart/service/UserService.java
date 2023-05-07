@@ -47,7 +47,7 @@ public class UserService {
         return UserResponse.from(user);
     }
 
-    public void updateItem(final Long userId, final UserRequest userRequest) {
+    public void updateUser(final Long userId, final UserRequest userRequest) {
         validateExistUser(userId);
         User user = new User.Builder()
                 .id(userId)
@@ -55,6 +55,11 @@ public class UserService {
                 .password(new Password(userRequest.getPassword()))
                 .build();
         userDao.update(user);
+    }
+
+    public void deleteUser(final Long userId) {
+        validateExistUser(userId);
+        userDao.deleteBy(userId);
     }
 
     private void validateExistUser(Long userId) {

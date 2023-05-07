@@ -49,7 +49,7 @@ public class UserController {
     @PutMapping("{userId}")
     public ResponseEntity<Void> updateUser(@PathVariable final Long userId,
                                            @RequestBody @Valid final UserRequest userRequest) {
-        userService.updateItem(userId, userRequest);
+        userService.updateUser(userId, userRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/"))
                              .build();
