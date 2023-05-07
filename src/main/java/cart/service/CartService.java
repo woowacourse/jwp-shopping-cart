@@ -8,6 +8,7 @@ import cart.persistence.dao.CartDao;
 import cart.persistence.dao.ProductDao;
 import cart.persistence.dao.UserDao;
 import cart.persistence.entity.CartEntity;
+import cart.persistence.entity.CartProductEntity;
 import cart.persistence.entity.ProductEntity;
 import cart.persistence.entity.UserEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -66,7 +67,7 @@ public class CartService {
     }
 
     public List<CartProductResponse> readCart(final String email) {
-        final List<ProductEntity> products = productDao.findProductsByUser(email);
+        final List<CartProductEntity> products = productDao.findProductsByUser(email);
 
         return products.stream()
                 .map(CartProductResponse::from)

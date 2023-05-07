@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.persistence.entity.ProductEntity;
+import cart.persistence.entity.CartProductEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
@@ -19,9 +19,9 @@ public class CartProductResponse {
         this.imageUrl = imageUrl;
     }
 
-    public static CartProductResponse from(final ProductEntity productEntity) {
-        return new CartProductResponse(productEntity.getId(), productEntity.getName(),
-                productEntity.getPrice(), productEntity.getImageUrl());
+    public static CartProductResponse from(final CartProductEntity cartProductEntity) {
+        return new CartProductResponse(cartProductEntity.getId(), cartProductEntity.getName(),
+                cartProductEntity.getPrice(), cartProductEntity.getImageUrl());
     }
 
     public Long getCartId() {

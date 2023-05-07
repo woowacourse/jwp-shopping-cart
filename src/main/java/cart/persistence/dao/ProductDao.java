@@ -1,9 +1,10 @@
 package cart.persistence.dao;
 
+import cart.persistence.entity.CartProductEntity;
 import cart.persistence.entity.ProductEntity;
 
 import java.util.List;
 
 public interface ProductDao extends Dao<ProductEntity> {
-    List<ProductEntity> findProductsByUser(final String email);
+    List<CartProductEntity> findProductsByUser(final String email);
 }

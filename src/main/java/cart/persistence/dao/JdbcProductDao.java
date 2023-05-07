@@ -1,5 +1,6 @@
 package cart.persistence.dao;
 
+import cart.persistence.entity.CartProductEntity;
 import cart.persistence.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,7 +24,7 @@ public class JdbcProductDao implements ProductDao {
             resultSet.getString("image_url")
     );
 
-    private final RowMapper<ProductEntity> cartProductRowMapper = (resultSet, rowNum) -> new ProductEntity(
+    private final RowMapper<CartProductEntity> cartProductRowMapper = (resultSet, rowNum) -> new CartProductEntity(
             resultSet.getLong("cart_id"),
             resultSet.getString("name"),
             resultSet.getInt("price"),
@@ -68,7 +69,7 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public List<ProductEntity> findProductsByUser(final String email) {
+    public List<CartProductEntity> findProductsByUser(final String email) {
         final String sql = "SELECT c.cart_id, p.name, p.price, p.image_url\n" +
                 "FROM product AS p\n" +
                 "JOIN cart AS c ON p.product_id = c.product_id\n" +
