@@ -10,15 +10,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@SqlGroup({
-        @Sql("/schema.sql"),
-        @Sql("/data.sql")
-})
 class H2ProductDaoTest {
 
     private final ProductDao productDao;
