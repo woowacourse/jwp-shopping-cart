@@ -8,24 +8,6 @@ public class User {
     private final Email email;
     private final Password password;
 
-    private User(Builder builder) {
-        this.id = builder.id;
-        this.email = builder.email;
-        this.password = builder.password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email.getValue();
-    }
-
-    public String getPassword() {
-        return password.getValue();
-    }
-
     public static class Builder {
         private Long id;
         private Email email;
@@ -52,6 +34,34 @@ public class User {
         public User build() {
             return new User(this);
         }
+    }
+
+    private User(Builder builder) {
+        validate(builder);
+        this.id = builder.id;
+        this.email = builder.email;
+        this.password = builder.password;
+    }
+
+    private void validate(Builder builder) {
+        if (builder.email == null) {
+            throw new IllegalArgumentException("이메일은 빈 값일 수 없습니다.");
+        }
+        if (builder.password == null) {
+            throw new IllegalArgumentException("비밀번호는 빈 값일 수 없습니다.");
+        }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email.getValue();
+    }
+
+    public String getPassword() {
+        return password.getValue();
     }
 
     @Override
