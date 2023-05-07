@@ -1,6 +1,6 @@
-package cart.cartitems.dao;
+package cart.cart.dao;
 
-import cart.cartitems.dto.CartItemDto;
+import cart.cart.dto.CartItemDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

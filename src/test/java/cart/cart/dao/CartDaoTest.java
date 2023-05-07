@@ -1,6 +1,6 @@
-package cart.cartitems.dao;
+package cart.cart.dao;
 
-import cart.cartitems.dto.CartItemDto;
+import cart.cart.dto.CartItemDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 // DDL
 @Sql(value = "/schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Import(CartItemTestConfig.class)
-@ComponentScan(basePackages = {"cart.product.dao", "cart.member.dao", "cart.cartitems.dao"})
+@ComponentScan(basePackages = {"cart.product.dao", "cart.member.dao", "cart.cart.dao"})
 class CartDaoTest {
 
     private static final int FIRST_MEMBER_ID = 1;

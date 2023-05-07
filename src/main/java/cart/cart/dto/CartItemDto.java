@@ -1,4 +1,4 @@
-package cart.cartitems.dto;
+package cart.cart.dto;
 
 import lombok.Getter;
 

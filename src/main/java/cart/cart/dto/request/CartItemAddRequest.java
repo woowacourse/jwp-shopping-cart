@@ -1,4 +1,4 @@
-package cart.cartitems.dto.request;
+package cart.cart.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

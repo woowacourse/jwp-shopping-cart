@@ -1,4 +1,4 @@
-package cart.cartitems.dao;
+package cart.cart.dao;
 
 import cart.member.dao.MemberDao;
 import cart.product.dao.ProductDao;

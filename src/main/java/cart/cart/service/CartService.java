@@ -1,7 +1,7 @@
-package cart.cartitems.service;
+package cart.cart.service;
 
-import cart.cartitems.dao.CartDao;
-import cart.cartitems.dto.CartItemDto;
+import cart.cart.dao.CartDao;
+import cart.cart.dto.CartItemDto;
 import cart.exception.DuplicateCartItemException;
 import cart.product.dto.ProductDto;
 import cart.product.service.ProductService;

@@ -1,9 +1,9 @@
-package cart.cartitems;
+package cart.cart;
 
-import cart.cartitems.dao.CartDao;
-import cart.cartitems.dao.CartItemTestConfig;
-import cart.cartitems.dto.CartItemDto;
-import cart.cartitems.dto.request.CartItemAddRequest;
+import cart.cart.dao.CartDao;
+import cart.cart.dao.CartItemTestConfig;
+import cart.cart.dto.CartItemDto;
+import cart.cart.dto.request.CartItemAddRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
