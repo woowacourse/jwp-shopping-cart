@@ -32,6 +32,7 @@ public class MemberService {
         return memberDao.findByEmail(email);
     }
 
+    @Transactional(readOnly = true)
     public boolean hasMember(final String email, final String password) {
         try {
             final MemberEntity memberEntity = memberDao.findByEmail(email);
