@@ -57,7 +57,7 @@ public class CartService {
     }
 
     private void validateExistCart(Long cartId) {
-        Optional<List<Cart>> findCart = cartDao.findBy(cartId);
+        Optional<Cart> findCart = cartDao.findBy(cartId);
         if (findCart.isEmpty()) {
             throw new NotFoundResultException("존재하지 않는 아이템 입니다.");
         }

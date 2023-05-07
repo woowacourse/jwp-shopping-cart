@@ -50,11 +50,11 @@ public class CartDao {
         return namedParameterJdbcTemplate.query(sql, param, cartDataRowMapper);
     }
 
-    public Optional<List<Cart>> findBy(final Long cartId) {
+    public Optional<Cart> findBy(final Long cartId) {
         final String sql = "SELECT id, user_id, item_id FROM carts WHERE id = :id";
         MapSqlParameterSource param = new MapSqlParameterSource("id", cartId);
         try {
-            return Optional.of(namedParameterJdbcTemplate.query(sql, param, cartRowMapper));
+            return Optional.of(namedParameterJdbcTemplate.queryForObject(sql, param, cartRowMapper));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
