@@ -1,4 +1,4 @@
-package cart;
+package cart.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -31,7 +31,7 @@ class ProductIntegrationTest {
     void setUp() {
         RestAssured.port = port;
         jdbcTemplate.execute("DELETE FROM product");
-        jdbcTemplate.execute("ALTER TABLE product  ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("ALTER TABLE product ALTER COLUMN id RESTART WITH 1");
     }
 
     @DisplayName("상품 조회")
