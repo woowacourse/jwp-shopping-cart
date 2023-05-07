@@ -1,6 +1,6 @@
 package cart.exception;
 
-public class DomainException extends RuntimeException{
+public class DomainException extends RuntimeException {
 
     private final ExceptionCode exceptionCode;
 

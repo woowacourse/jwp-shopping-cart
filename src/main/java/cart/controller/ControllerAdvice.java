@@ -1,5 +1,7 @@
 package cart.controller;
 
+import java.sql.SQLDataException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,5 +21,10 @@ public class ControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionCode> handleBadRequest(MethodArgumentNotValidException e) {
         return ResponseEntity.badRequest().body(ExceptionCode.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SQLDataException.class)
+    public ResponseEntity<ExceptionCode> handleDataException(SQLDataException e) {
+        return ResponseEntity.badRequest().body(ExceptionCode.NO_DATA);
     }
 }

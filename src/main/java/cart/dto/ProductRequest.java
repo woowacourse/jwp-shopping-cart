@@ -5,9 +5,6 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.URL;
 
-import cart.exception.DomainException;
-import cart.exception.ExceptionCode;
-
 public class ProductRequest {
 
     @NotEmpty
