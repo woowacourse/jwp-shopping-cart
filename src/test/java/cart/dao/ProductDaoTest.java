@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Transactional
 class ProductDaoTest {
 
-    ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
-    ProductEntity productEntity = new ProductEntity(productRequestDto.getName(), productRequestDto.getPrice(), productRequestDto.getImage());
+    private ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+    private ProductEntity productEntity = new ProductEntity(productRequestDto.getName(), productRequestDto.getPrice(), productRequestDto.getImage());
 
 
     @Autowired
