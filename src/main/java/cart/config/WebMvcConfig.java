@@ -12,17 +12,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private final PrincipalArgumentResolver principalArgumentResolver;
     private final BasicAuthInterceptor basicAuthInterceptor;
 
-    public WebMvcConfig(PrincipalArgumentResolver principalArgumentResolver, BasicAuthInterceptor basicAuthInterceptor) {
-        this.principalArgumentResolver = principalArgumentResolver;
+    public WebMvcConfig(BasicAuthInterceptor basicAuthInterceptor) {
         this.basicAuthInterceptor = basicAuthInterceptor;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(principalArgumentResolver);
+        resolvers.add(new PrincipalArgumentResolver());
     }
 
     @Override
