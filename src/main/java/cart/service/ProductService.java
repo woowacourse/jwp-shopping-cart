@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class ProductService {
 
-    private static final String NO_PRODUCT_EXCEPTION_MESSAGE = "상품을 찾을 수 없습니다.";
-
     private final ProductDao productDao;
     private final CartDao cartDao;
     private final ProductMapper productMapper;

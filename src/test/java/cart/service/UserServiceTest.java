@@ -8,8 +8,6 @@ import cart.dto.UserResponses;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +45,6 @@ class UserServiceTest extends JdbcSaveUser {
 
     private UserResponse findById(final Long id) {
         final String sql = "SELECT id, email, password, created_at FROM users WHERE id = :id";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         final User user = jdbcTemplate.queryForObject(
                 sql,
@@ -70,8 +67,8 @@ class UserServiceTest extends JdbcSaveUser {
     @Test
     void 전체_조회를_한다() {
         // given
-        final long firstId = 사용자를_저장한다("test@test.com", "test");
-        final long secondId = 사용자를_저장한다("user@user.com", "user");
+        사용자를_저장한다("test@test.com", "test");
+        사용자를_저장한다("user@user.com", "user");
 
         // when
         final UserResponses userResponses = userService.findAll();
