@@ -10,11 +10,11 @@ import cart.dto.product.ProductResponse;
 import cart.service.ProductService;
 
 @Controller
-public class MainController {
+public class HomeController {
 
     private final ProductService productService;
 
-    public MainController(ProductService productService) {
+    public HomeController(ProductService productService) {
         this.productService = productService;
     }
 
