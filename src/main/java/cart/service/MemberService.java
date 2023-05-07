@@ -1,6 +1,5 @@
 package cart.service;
 
-import cart.dao.H2MemberDao;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.request.MemberRequest;
@@ -19,7 +18,7 @@ public class MemberService {
     private final MemberDao memberDao;
     private final MemberMapper memberMapper;
 
-    public MemberService(H2MemberDao memberDao, MemberMapper memberMapper) {
+    public MemberService(MemberDao memberDao, MemberMapper memberMapper) {
         this.memberDao = memberDao;
         this.memberMapper = memberMapper;
     }

@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dao.H2MemberDao;
+import cart.dao.MemberDao;
 import cart.dto.request.MemberRequest;
 import cart.fixture.MemberFixture;
 import cart.service.MemberService;
@@ -18,16 +18,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @WebMvcTest(MemberController.class)
-@Import({H2MemberDao.class})
+@Import({MemberDao.class})
 @MockBean(JdbcTemplate.class)
 class MemberControllerTest {
 

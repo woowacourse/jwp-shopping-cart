@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dao.H2MemberDao;
+import cart.dao.MemberDao;
 import cart.dto.request.ProductRequest;
 import cart.fixture.ImageFixture;
 import cart.service.ProductService;
@@ -22,17 +22,14 @@ import static cart.fixture.ProductFixture.CHICKEN;
 import static cart.fixture.ProductFixture.SNACK;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @WebMvcTest(ProductController.class)
-@Import({H2MemberDao.class})
+@Import({MemberDao.class})
 @MockBean(JdbcTemplate.class)
 class ProductControllerTest {
 

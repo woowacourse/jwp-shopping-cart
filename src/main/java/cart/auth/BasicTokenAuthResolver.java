@@ -1,6 +1,5 @@
 package cart.auth;
 
-import cart.dao.H2MemberDao;
 import cart.dao.MemberDao;
 import cart.entity.MemberEntity;
 import cart.exception.AuthenticationException;
@@ -28,7 +27,7 @@ public class BasicTokenAuthResolver implements TokenAuthResolver {
     private final MemberDao memberDao;
     private MemberEntity member = null;
 
-    public BasicTokenAuthResolver(H2MemberDao memberDao) {
+    public BasicTokenAuthResolver(MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
