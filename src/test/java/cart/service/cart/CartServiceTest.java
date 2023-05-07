@@ -45,7 +45,9 @@ class CartServiceTest {
         given(productDao.findById(any()))
                 .willReturn(Optional.of(new Product(1L, new ProductName("치킨"), new ProductImage("image"), new ProductPrice(10000))));
 
-        given(cartDao.addProduct(any()))
+//        given(cartDao.addProduct(any()))
+//                .willReturn(1L);
+        given(cartDao.addCartItem(any(), any()))
                 .willReturn(1L);
 
         Long cartId = cartService.createCartItem(new CartServiceRequest("cyh6099@gmail.com", 1L));

@@ -1,6 +1,6 @@
 package cart.service.cart;
 
-import cart.service.cart.domain.Cart;
+import cart.service.cart.domain.CartItems;
 import cart.service.cart.dto.CartServiceRequest;
 import cart.service.cart.dto.ProductResponse;
 import cart.service.member.MemberDao;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -32,12 +31,12 @@ public class CartService {
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
 
-        productDao.findById(cartServiceRequest.getProductId()).orElseThrow(
+        Product product = productDao.findById(cartServiceRequest.getProductId()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 상품입니다.")
         );
 
-        Cart cart = new Cart(cartServiceRequest.getProductId(), member.getId());
-        return cartDao.addProduct(cart);
+        return cartDao.addCartItem(product, member);
+
     }
 
     @Transactional(readOnly = true)
@@ -45,10 +44,8 @@ public class CartService {
         Member member = memberDao.findByEmail(cartServiceRequest.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
-        List<Product> products = cartDao.findProductsByUserId(member.getId());
-        return products.stream()
-                .map(p -> new ProductResponse(p.getId(), p.getName(), p.getImageUrl(), p.getPrice()))
-                .collect(Collectors.toList());
+        CartItems cartItems = cartDao.findCartItemsByMember(member);
+        return cartItems.makeResponseToController();
     }
 
     public void deleteCartItem(CartServiceRequest cartServiceRequest) {

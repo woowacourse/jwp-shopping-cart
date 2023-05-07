@@ -1,17 +1,17 @@
-package cart.service.cart.domain;
+package cart.persistence;
 
-public class Cart {
+public class CartEntity {
     private Long id;
     private final Long productId;
     private final Long memberId;
 
-    public Cart(Long id, Long productId, Long memberId) {
+    public CartEntity(Long id, Long productId, Long memberId) {
         this.id = id;
         this.productId = productId;
         this.memberId = memberId;
     }
 
-    public Cart(Long productId, Long memberId) {
+    public CartEntity(Long productId, Long memberId) {
         this(null, productId, memberId);
     }
 

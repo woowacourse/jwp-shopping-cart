@@ -1,6 +1,5 @@
 package cart.persistence;
 
-import cart.service.cart.domain.Cart;
 import cart.service.member.domain.Member;
 import cart.service.product.domain.Product;
 import cart.service.product.domain.ProductImage;
@@ -38,9 +37,9 @@ class H2CartDaoTest {
         Long memberId = member.getId();
 
         Long productId = productDao.save(new Product(new ProductName("chicken"), new ProductImage("image"), new ProductPrice(1000)));
-        Cart cart = new Cart(productId, memberId);
+        Product product = productDao.findById(productId).get();
 
-        assertThat(cartDao.addProduct(cart)).isPositive();
+        assertThat(cartDao.addCartItem(product, member)).isPositive();
     }
 
     @Test
@@ -49,19 +48,23 @@ class H2CartDaoTest {
         Member member = memberDao.save(new Member("cyh6099@gmail.com", "qwer1234"));
         Long memberId = member.getId();
 
-        Long memberNoHaveCartId = memberDao.save(new Member("cyh6099@wooteco.com", "qwer1234")).getId();
+        Member memberNoHaveCartItem = memberDao.save(new Member("cyh6099@wooteco.com", "qwer1234"));
+
 
         Long chickenId = productDao.save(new Product(new ProductName("chicken"), new ProductImage("image"), new ProductPrice(1000)));
         Long pizzaId = productDao.save(new Product(new ProductName("pizza"), new ProductImage("image"), new ProductPrice(2000)));
 
         //when
-        cartDao.addProduct(new Cart(chickenId, memberId));
-        cartDao.addProduct(new Cart(pizzaId, memberId));
+        Product chicken = productDao.findById(chickenId).get();
+        Product pizza = productDao.findById(pizzaId).get();
+
+        cartDao.addCartItem(chicken, member);
+        cartDao.addCartItem(pizza, member);
 
         //then
         Assertions.assertAll(
-                () -> assertThat(cartDao.findProductsByUserId(memberId)).hasSize(2),
-                () -> assertThat(cartDao.findProductsByUserId(memberNoHaveCartId)).hasSize(0)
+                () -> assertThat(cartDao.findCartItemsByMember(member).getCartItems()).hasSize(2),
+                () -> assertThat(cartDao.findCartItemsByMember(memberNoHaveCartItem).getCartItems()).hasSize(0)
         );
     }
 
@@ -72,15 +75,17 @@ class H2CartDaoTest {
         Long chickenId = productDao.save(new Product(new ProductName("chicken"), new ProductImage("image"), new ProductPrice(1000)));
         Long pizzaId = productDao.save(new Product(new ProductName("pizza"), new ProductImage("image"), new ProductPrice(2000)));
 
-        Long chickenCartItemId = cartDao.addProduct(new Cart(chickenId, member.getId()));
-        cartDao.addProduct(new Cart(pizzaId, member.getId()));
+        Product chicken = productDao.findById(chickenId).get();
+        Product pizza = productDao.findById(pizzaId).get();
+
+        cartDao.addCartItem(pizza, member);
+        cartDao.addCartItem(chicken, member);
+
+        Long chickenCartItemId = cartDao.findOneCartItem(member, chickenId).get();
 
         cartDao.deleteCartItem(chickenCartItemId);
+        assertThat(cartDao.findCartItemsByMember(member).getCartItems()).hasSize(1);
 
-        Assertions.assertAll(
-                () -> assertThat(cartDao.findProductsByUserId(member.getId())).hasSize(1),
-                () -> assertThat(cartDao.findProductsByUserId(member.getId()).get(0).getName()).isEqualTo("pizza")
-        );
 
     }
 }

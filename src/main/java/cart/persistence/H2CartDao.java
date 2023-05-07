@@ -1,7 +1,8 @@
 package cart.persistence;
 
 import cart.service.cart.CartDao;
-import cart.service.cart.domain.Cart;
+import cart.service.cart.domain.CartItem;
+import cart.service.cart.domain.CartItems;
 import cart.service.member.domain.Member;
 import cart.service.product.domain.Product;
 import cart.service.product.domain.ProductImage;
@@ -37,20 +38,19 @@ public class H2CartDao implements CartDao {
                     new ProductPrice(resultSet.getInt("price"))
             );
 
+    private final RowMapper<CartItem> cartItemRowMapper = (resultSet, rowNum) ->
+            new CartItem(
+                    resultSet.getLong("id"),
+                    new Product(
+                            resultSet.getLong("product_id"),
+                            new ProductName(resultSet.getString("name")),
+                            new ProductImage(resultSet.getString("image_url")),
+                            new ProductPrice(resultSet.getInt("price"))
+                    )
+            );
+
     private final RowMapper<Long> deleteCartItemRowMapper = (resultSet, rowNum) ->
             resultSet.getLong("id");
-
-    @Override
-    public Long addProduct(Cart cart) {
-        BeanPropertySqlParameterSource parameters = new BeanPropertySqlParameterSource(cart);
-        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
-    }
-
-    @Override
-    public List<Product> findProductsByUserId(Long memberId) {
-        String sql = "SELECT * FROM cart c JOIN product p ON c.product_id = p.id WHERE c.member_id = ?";
-        return jdbcTemplate.query(sql, rowMapper, memberId);
-    }
 
     @Override
     public void deleteCartItem(Long cartId) {
@@ -63,5 +63,19 @@ public class H2CartDao implements CartDao {
         String sql = "SELECT * FROM cart WHERE product_id = ? AND member_id = ?";
         return jdbcTemplate.query(sql, deleteCartItemRowMapper, productId, member.getId()).stream()
                 .findAny();
+    }
+
+    @Override
+    public Long addCartItem(Product product, Member member) {
+        CartEntity cartEntity = new CartEntity(product.getId(), member.getId());
+        BeanPropertySqlParameterSource parameters = new BeanPropertySqlParameterSource(cartEntity);
+        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+    }
+
+    @Override
+    public CartItems findCartItemsByMember(Member member) {
+        String sql = "SELECT * FROM cart c JOIN product p ON c.product_id = p.id WHERE c.member_id = ?";
+        List<CartItem> cartItems = jdbcTemplate.query(sql, cartItemRowMapper, member.getId());
+        return new CartItems(cartItems);
     }
 }
