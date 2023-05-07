@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cart.dao.cart.CartDao;
 import cart.dao.product.ProductDao;
 import cart.domain.product.Product;
+import cart.exception.ProductNotFoundException;
 import cart.service.product.dto.ProductDto;
 import cart.service.product.dto.SaveProductDto;
 import cart.service.product.dto.UpdateProductDto;
@@ -47,7 +48,7 @@ public class ProductService {
 		final int updatedRow = productDao.updateById(product);
 
 		if (updatedRow != EXPECTED_ROW_COUNT) {
-			throw new IllegalArgumentException("해당하는 상품이 없습니다.");
+			throw ProductNotFoundException.EXCEPTION;
 		}
 
 		return mapProductToProductDto(product);
@@ -58,7 +59,7 @@ public class ProductService {
 		final int deletedProductRow = productDao.deleteById(id);
 
 		if (deletedProductRow != EXPECTED_ROW_COUNT) {
-			throw new IllegalArgumentException("해당하는 상품이 없습니다.");
+			throw ProductNotFoundException.EXCEPTION;
 		}
 	}
 

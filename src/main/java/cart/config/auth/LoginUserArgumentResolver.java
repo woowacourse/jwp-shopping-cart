@@ -16,6 +16,7 @@ import cart.config.auth.dto.AuthInfo;
 import cart.config.auth.dto.AuthUser;
 import cart.dao.user.UserDao;
 import cart.domain.user.User;
+import cart.exception.LoginException;
 
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
@@ -57,7 +58,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 			.orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
 
 		if (!Objects.equals(user.getPassword(), authInfo.getPassword())) {
-			throw new IllegalArgumentException("올바른 패스워드가 아닙니다.");
+			throw LoginException.EXCEPTION;
 		}
 		return user;
 	}

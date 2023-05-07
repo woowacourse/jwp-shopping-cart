@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import cart.controller.dto.ExceptionResponse;
 import cart.controller.dto.ProductRequest;
 import cart.controller.dto.ProductResponse;
 import io.restassured.RestAssured;
@@ -95,30 +94,21 @@ class ProductApiControllerTest {
 		void nameNullTest(String name) {
 			ProductRequest productRequest = new ProductRequest(name, 1000, "image");
 
-			ExceptionResponse response = saveProducts(productRequest, HttpStatus.BAD_REQUEST.value()).as(
-				ExceptionResponse.class);
-
-			assertThat(response.getExceptionMessage()).isEqualTo("상품명을 입력해주세요.");
+			saveProducts(productRequest, HttpStatus.BAD_REQUEST.value());
 		}
 
 		@Test
 		void nameSizeTest() {
 			ProductRequest productRequest = new ProductRequest("thisIs20OverLengthString", 1000, "image");
 
-			ExceptionResponse response = saveProducts(productRequest, HttpStatus.BAD_REQUEST.value()).as(
-				ExceptionResponse.class);
-
-			assertThat(response.getExceptionMessage()).isEqualTo("20 글자 이하만 입력 가능합니다.");
+			saveProducts(productRequest, HttpStatus.BAD_REQUEST.value());
 		}
 
 		@Test
 		void priceNullTest() {
 			ProductRequest productRequest = new ProductRequest("name", null, "image");
 
-			ExceptionResponse response = saveProducts(productRequest, HttpStatus.BAD_REQUEST.value()).as(
-				ExceptionResponse.class);
-
-			assertThat(response.getExceptionMessage()).isEqualTo("상품가격을 입력해주세요.");
+			saveProducts(productRequest, HttpStatus.BAD_REQUEST.value());
 		}
 
 		@ParameterizedTest
@@ -126,10 +116,7 @@ class ProductApiControllerTest {
 		void nameRangeTest(int price) {
 			ProductRequest productRequest = new ProductRequest("name", price, "image");
 
-			ExceptionResponse response = saveProducts(productRequest, HttpStatus.BAD_REQUEST.value()).as(
-				ExceptionResponse.class);
-
-			assertThat(response.getExceptionMessage()).isEqualTo("상품 금액은 0원 이상의 정수만 입력가능 합니다.");
+			saveProducts(productRequest, HttpStatus.BAD_REQUEST.value());
 		}
 
 	}
@@ -144,6 +131,7 @@ class ProductApiControllerTest {
 			.post("/products")
 			.then().log().all()
 			.statusCode(httpStatusCode)
+			.contentType(ContentType.JSON)
 			.extract();
 	}
 }

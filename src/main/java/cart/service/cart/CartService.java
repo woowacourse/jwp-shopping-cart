@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cart.dao.cart.CartDao;
 import cart.dao.cart.dto.CartProductDto;
 import cart.domain.cart.Cart;
+import cart.exception.CartNotFountException;
 import cart.service.cart.dto.CartDto;
 
 @Service
@@ -37,7 +38,7 @@ public class CartService {
 
 	public CartDto updateQuantity(final Long userId, final Long productId) {
 		final CartProductDto cartProductDto = cartDao.findByIds(userId, productId)
-			.orElseThrow(() -> new IllegalArgumentException("해당하는 상품이 없습니다."));
+			.orElseThrow(() -> CartNotFountException.EXCEPTION);
 
 		cartDao.updateQuantityByCartId(cartProductDto.getId());
 		final Cart updatedCart = new Cart(cartProductDto.getId(), userId, productId,
@@ -50,7 +51,7 @@ public class CartService {
 		final int deleteRow = cartDao.deleteByCartId(userId, productId);
 
 		if (deleteRow != EXPECTED_ROW_COUNT) {
-			throw new IllegalArgumentException("해당하는 상품이 없습니다.");
+			throw CartNotFountException.EXCEPTION;
 		}
 	}
 

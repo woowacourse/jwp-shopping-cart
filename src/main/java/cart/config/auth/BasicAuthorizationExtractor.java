@@ -6,6 +6,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 import cart.config.auth.dto.AuthInfo;
+import cart.exception.AuthException;
 
 @Component
 public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthInfo> {
@@ -18,7 +19,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
 		String header = request.getHeader(AUTHORIZATION);
 
 		if (header == null) {
-			throw new IllegalStateException("Header 값이 비어있습니다.");
+			throw AuthException.EXCEPTION;
 		}
 
 		if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
