@@ -8,8 +8,16 @@ public class Product {
     private final Price price;
     private final ProductCategory category;
 
-    public Product(final String productName, final String imageUrl, final Integer price, final ProductCategory category) {
+    public Product(final String productName, final String imageUrl, final String price, final ProductCategory category) {
         this(null, productName, imageUrl, price, category);
+    }
+
+    public Product(final Long id, final String productName, final String imageUrl, final String price, final ProductCategory category) {
+        this.id = id;
+        this.productName = new ProductName(productName);
+        this.imageUrl = new ImageUrl(imageUrl);
+        this.price = new Price(Integer.parseInt(price));
+        this.category = category;
     }
 
     public Product(final Long id, final String productName, final String imageUrl, final Integer price, final ProductCategory category) {

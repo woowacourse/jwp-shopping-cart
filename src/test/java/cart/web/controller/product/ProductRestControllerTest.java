@@ -53,7 +53,7 @@ class ProductRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        productRequest = new ProductRequest("치킨", "chickenUrl", 20000, ProductCategory.KOREAN);
+        productRequest = new ProductRequest("치킨", "chickenUrl", "20000", ProductCategory.KOREAN);
     }
 
     @DisplayName("상품을 정상적으로 추가한다")

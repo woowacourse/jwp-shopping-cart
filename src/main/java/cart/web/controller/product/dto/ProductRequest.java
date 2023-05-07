@@ -16,28 +16,17 @@ public class ProductRequest {
 
     @NotNull(message = "상품 가격이 입력되지 않았습니다. 상품 가격을 입력해주세요")
     @Range(min = 0, max = 1000000, message = "올바르지 않은 입력입니다. 입력 가능한 범위 : 0 ~ 999999")
-    private final Integer price;
+    private final String price;
 
     @NotNull(message = "상품 카테고리는 비어있을 수 없습니다.")
     private final ProductCategory category;
 
-    public ProductRequest(final String name, final String imageUrl, final Integer price, final ProductCategory category) {
+    public ProductRequest(final String name, final String imageUrl, final String price, final ProductCategory category) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
         this.category = category;
     }
-
-    /*@JsonCreator
-    public ProductRequest(@JsonProperty("name") final String name,
-                          @JsonProperty("imageUrl") final String imageUrl,
-                          @JsonProperty("price") final Integer price,
-                          @JsonProperty("category") final ProductCategory category) {
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.price = price;
-        this.category = category;
-    }*/
 
     public String getName() {
         return name;
@@ -47,7 +36,7 @@ public class ProductRequest {
         return imageUrl;
     }
 
-    public Integer getPrice() {
+    public String getPrice() {
         return price;
     }
 

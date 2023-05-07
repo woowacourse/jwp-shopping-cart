@@ -38,14 +38,14 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        productRequest = new ProductRequest("스테이크", "steakUrl", 40000, ProductCategory.WESTERN);
+        productRequest = new ProductRequest("스테이크", "steakUrl", "40000", ProductCategory.WESTERN);
     }
 
     @DisplayName("상품을 저장한다")
     @Test
     void save() {
         // given
-        final List<Product> productEntities = List.of(new Product("스테이크", "steakUrl", 40000, ProductCategory.WESTERN));
+        final List<Product> productEntities = List.of(new Product("스테이크", "steakUrl", "40000", ProductCategory.WESTERN));
         when(productDao.insert(any())).thenReturn(1L);
         when(productDao.findAll()).thenReturn(productEntities);
 
@@ -64,7 +64,7 @@ class ProductServiceTest {
     @Test
     void findProduct_success() {
         // given
-        final Product productEntity = new Product("스테이크", "steakUrl", 40000, ProductCategory.WESTERN);
+        final Product productEntity = new Product("스테이크", "steakUrl", "40000", ProductCategory.WESTERN);
         when(productDao.findById(any())).thenReturn(Optional.of(productEntity));
 
         // when
@@ -95,9 +95,9 @@ class ProductServiceTest {
     void getProducts() {
         // given
         final List<Product> productEntities = List.of(
-                new Product("치킨", "chickenUrl", 20000, ProductCategory.KOREAN),
-                new Product("초밥", "chobobUrl", 30000, ProductCategory.JAPANESE),
-                new Product("스테이크", "steakUrl", 40000, ProductCategory.WESTERN)
+                new Product("치킨", "chickenUrl", "20000", ProductCategory.KOREAN),
+                new Product("초밥", "chobobUrl", "30000", ProductCategory.JAPANESE),
+                new Product("스테이크", "steakUrl", "40000", ProductCategory.WESTERN)
         );
         when(productDao.findAll()).thenReturn(productEntities);
 
