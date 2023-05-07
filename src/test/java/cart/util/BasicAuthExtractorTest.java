@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BasicAuthExtractorTest {
 
-    @DisplayName("BASE64 인코딩을 이용한 변환 테스트")
+    @DisplayName("BASE64 인코딩을 이용한 변환")
     @Test
     void basicLoginEncodeDecode() {
         //given
@@ -36,7 +36,7 @@ class BasicAuthExtractorTest {
         );
     }
 
-    @DisplayName("BASE64 인코딩을 이용한 변환 실패 테스트(다르게 만들어진 헤더)")
+    @DisplayName("BASE64 인코딩을 이용한 변환 실패(다르게 만들어진 헤더)")
     @Test
     void basicLoginEncodeDecodeFail() {
         //given

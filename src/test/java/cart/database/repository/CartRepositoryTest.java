@@ -43,7 +43,7 @@ public class CartRepositoryTest {
         jdbcTemplate.update(insertCart, userId, productId, count);
     }
 
-    @DisplayName("UserId를 이용해 조인으로 장바구니 아이템들 가져오는 테스트")
+    @DisplayName("UserId를 이용해 조인으로 장바구니 아이템들 가져오기")
     @Test
     public void findCartsWithProductByUserId() {
         //given

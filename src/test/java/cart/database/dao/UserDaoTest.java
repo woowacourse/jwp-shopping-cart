@@ -36,7 +36,7 @@ class UserDaoTest {
         );
     }
 
-    @DisplayName("모든 사용자 가져오기 테스트")
+    @DisplayName("모든 사용자 가져오기")
     @Test
     void findAll() {
         List<UserEntity> users = userDao.findAll();
@@ -45,7 +45,7 @@ class UserDaoTest {
         assertTrue(users.size() > 0);
     }
 
-    @DisplayName("이메일과 비밀번호로 사용자 정보를 가져오기 테스트")
+    @DisplayName("이메일과 비밀번호로 사용자 정보를 가져오기")
     @Test
     void findByEmailAndPassword() {
         UserEntity user = userDao.findByEmailAndPassword(userEmail, userPassword);

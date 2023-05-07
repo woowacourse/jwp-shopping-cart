@@ -149,7 +149,7 @@ class ProductDaoTest {
         assertThrows(ConstraintViolationException.class, () -> productDao.create(productEntityConvertor.dtoToEntity(request)));
     }
 
-    @DisplayName("Product 존재 여부 테스트")
+    @DisplayName("Product 존재 여부 조회")
     @Test
     void existById() {
         //given

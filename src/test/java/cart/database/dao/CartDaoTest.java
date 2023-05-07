@@ -35,7 +35,7 @@ class CartDaoTest {
         );
     }
 
-    @DisplayName("insert 테스트")
+    @DisplayName("cart 아이템 insert")
     @Test
     public void create() {
         Long newUserId = 2L;
@@ -51,7 +51,7 @@ class CartDaoTest {
         assertThat(count).isEqualTo(1);
     }
 
-    @DisplayName("userId로 cart 쿼리 테스트")
+    @DisplayName("userId로 cart 쿼리")
     @Test
     public void findByUserId() {
         List<CartItemEntity> result = cartDao.findByUserId(userId);
@@ -62,7 +62,7 @@ class CartDaoTest {
         assertThat(result.get(0).getCount()).isEqualTo(1);
     }
 
-    @DisplayName("userId와 cartId로 제거 테스트")
+    @DisplayName("userId와 cartId로 제거")
     @Test
     public void deleteByUserIdAndCartId() {
         final Long firstCartId = 1L;

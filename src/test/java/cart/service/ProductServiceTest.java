@@ -37,7 +37,7 @@ public class ProductServiceTest {
         productService = new ProductService(productDao, productEntityConvertor);
     }
 
-    @DisplayName("Product create 테스트")
+    @DisplayName("Product를 create")
     @Test
     void create() {
         //given
@@ -54,7 +54,7 @@ public class ProductServiceTest {
     }
 
 
-    @DisplayName("Product findAll 테스트")
+    @DisplayName("Product를 모두 조회")
     @Test
     void findAll() {
         List<ProductEntity> expectedDaoReturn = Arrays.asList(
@@ -80,7 +80,7 @@ public class ProductServiceTest {
         }
     }
 
-    @DisplayName("Product update 테스트")
+    @DisplayName("Product를 update")
     @Test
     void update() {
         //given
@@ -97,7 +97,7 @@ public class ProductServiceTest {
         verify(productDao).updateById(eq(id), any());
     }
 
-    @DisplayName("Product delete 테스트")
+    @DisplayName("Product를 delete")
     @Test
     void delete() {
         //given

@@ -27,7 +27,7 @@ public class AuthServiceTest {
         authService = new AuthService(userDao);
     }
 
-    @DisplayName("로그인 정보 확인 테스트")
+    @DisplayName("로그인 정보 확인")
     @Test
     public void basicLogin() {
         //given

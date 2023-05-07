@@ -29,7 +29,7 @@ public class UserServiceTest {
         userService = new UserService(userDao);
     }
 
-    @DisplayName("모든 User 조회 테스트")
+    @DisplayName("모든 User 조회")
     @Test
     public void findAll() {
         //given

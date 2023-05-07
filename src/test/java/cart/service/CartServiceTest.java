@@ -40,7 +40,7 @@ public class CartServiceTest {
         cartService = new CartService(productDao, cartDao, cartRepository);
     }
 
-    @DisplayName("장바구니 아이템 추가 테스트")
+    @DisplayName("장바구니에 아이템 추가")
     @Test
     public void addCart() {
         // given
@@ -57,7 +57,7 @@ public class CartServiceTest {
         verify(cartDao, times(1)).create(userEntity.getId(), productId, count);
     }
 
-    @DisplayName("ProductId가 유효하지 않은 경우 카트아이템 추가 테스트")
+    @DisplayName("ProductId가 유효하지 않은 경우 카트아이템 추가를 실패")
     @Test
     public void addCartIfNotExistProductId() {
         // given
@@ -102,7 +102,7 @@ public class CartServiceTest {
         }
     }
 
-    @DisplayName("유저가 가진 장바구니에서 특정 아이템 제거 테스트")
+    @DisplayName("유저가 가진 장바구니에서 특정 아이템 제거")
     @Test
     public void deleteCartItemByUserAndProductId() {
         // given
