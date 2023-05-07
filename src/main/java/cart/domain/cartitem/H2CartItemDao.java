@@ -23,8 +23,8 @@ public class H2CartItemDao extends CartItemDao {
 
     private static final RowMapper<CartItem> CART_ITEM_ROW_MAPPER = (resultSet, rowNum) -> new CartItem(
             resultSet.getLong("id"),
-            resultSet.getLong("product_id"),
-            resultSet.getLong("member_id")
+            resultSet.getLong("member_id"),
+            resultSet.getLong("product_id")
     );
 
     private final JdbcTemplate jdbcTemplate;
