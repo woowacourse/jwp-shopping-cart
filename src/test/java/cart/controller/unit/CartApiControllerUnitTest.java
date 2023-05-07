@@ -7,6 +7,8 @@ import cart.dto.ResponseProductDto;
 import cart.service.CartService;
 import cart.service.MemberService;
 import cart.service.ProductService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -18,12 +20,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -35,6 +36,8 @@ class CartApiControllerUnitTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private MemberService memberService;
@@ -52,17 +55,30 @@ class CartApiControllerUnitTest {
                 .willReturn(true);
 
         given(cartService.findCartProducts(any()))
-                .willReturn(List.of(new ResponseProductDto(new ProductEntity(1L, "치킨", 10_000, "치킨 주소"))));
+                .willReturn(List.of(new ResponseProductDto(new ProductEntity(1L, "chicken", 10_000, "chicken image url"))));
 
-        //expect
-        mockMvc.perform(get("/carts")
+        //when
+        final String responseJson = mockMvc.perform(get("/carts")
                         .header("Authorization", "Basic " + ENCODED_CREDENTIALS)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].id").value(equalTo(1)))
-                .andExpect(jsonPath("$[0].name").value(equalTo("치킨")))
-                .andExpect(jsonPath("$[0].price").value(equalTo(10000)))
-                .andExpect(jsonPath("$[0].image").value(equalTo("치킨 주소")))
-                .andDo(print());
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        final List<ResponseProductDto> productDtos = objectMapper.readValue(responseJson, new TypeReference<>() {
+        });
+
+        //then
+        assertSoftly(softly -> {
+            softly.assertThat(productDtos).hasSize(1);
+            final ResponseProductDto productDto = productDtos.get(0);
+            softly.assertThat(productDto.getId()).isEqualTo(1L);
+            softly.assertThat(productDto.getName()).isEqualTo("chicken");
+            softly.assertThat(productDto.getPrice()).isEqualTo(10_000);
+            softly.assertThat(productDto.getImage()).isEqualTo("chicken image url");
+        });
     }
 
     @Test

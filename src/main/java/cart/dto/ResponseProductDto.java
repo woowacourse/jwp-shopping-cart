@@ -4,16 +4,19 @@ import cart.domain.ProductEntity;
 
 public class ResponseProductDto {
 
-    private final Long id;
-    private final String name;
-    private final Integer price;
-    private final String image;
+    private Long id;
+    private String name;
+    private Integer price;
+    private String image;
 
     public ResponseProductDto(final ProductEntity productEntity) {
         this.id = productEntity.getId();
         this.name = productEntity.getName();
         this.price = productEntity.getPrice();
         this.image = productEntity.getImage();
+    }
+
+    public ResponseProductDto() {
     }
 
     public Long getId() {
