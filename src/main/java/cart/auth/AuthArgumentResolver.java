@@ -21,10 +21,10 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             final ModelAndViewContainer mavContainer,
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
-    ) throws Exception {
+    ) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String email = (String) request.getAttribute("email");
         String password = (String) request.getAttribute("password");
-        return new AuthInfo(email, password);
+        return new AuthMemberDetails(email, password);
     }
 }

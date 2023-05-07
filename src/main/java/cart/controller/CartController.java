@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.auth.Auth;
-import cart.auth.AuthInfo;
+import cart.auth.AuthMemberDetails;
 import cart.controller.dto.CartProductRequest;
 import cart.controller.dto.ProductResponse;
 import cart.service.CartService;
@@ -22,8 +22,8 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getProducts(@Auth final AuthInfo authInfo) {
-        List<ProductResponse> productResponses = cartService.findByEmail(authInfo.getEmail());
+    public ResponseEntity<List<ProductResponse>> getProducts(@Auth final AuthMemberDetails authMemberDetails) {
+        List<ProductResponse> productResponses = cartService.findByEmail(authMemberDetails.getEmail());
 
         return ResponseEntity
                 .ok()
@@ -32,10 +32,10 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<Void> addProduct(
-            @Auth final AuthInfo authInfo,
+            @Auth final AuthMemberDetails authMemberDetails,
             @RequestBody final CartProductRequest cartProductRequest
     ) {
-        cartService.save(authInfo.getEmail(), cartProductRequest.getProductId());
+        cartService.save(authMemberDetails.getEmail(), cartProductRequest.getProductId());
 
         return ResponseEntity
                 .created(URI.create("/cart/products"))
@@ -43,8 +43,8 @@ public class CartController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId, @Auth final AuthInfo authInfo) {
-        cartService.delete(authInfo.getEmail(), productId);
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId, @Auth final AuthMemberDetails authMemberDetails) {
+        cartService.delete(authMemberDetails.getEmail(), productId);
 
         return ResponseEntity
                 .noContent()
