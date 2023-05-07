@@ -8,8 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.auth.AuthContext;
 import cart.dao.MemberDao;
-import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.domain.Member;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -22,27 +21,27 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
-@DisplayName("HomeController 는")
-@WebMvcTest(HomeController.class)
+@DisplayName("SettingController 는")
+@WebMvcTest(SettingController.class)
 @MockBean({MemberDao.class, AuthContext.class})
-class HomeControllerTest {
+class SettingControllerTest {
 
     @Autowired
     MockMvc mockMvc;
 
     @MockBean
-    ProductDao productDao;
+    MemberDao memberDao;
 
     @Test
-    void 상품목록을_보여준다() throws Exception {
-        Product product1 = new Product("말랑", "https://mallang.com", 1000);
-        Product product2 = new Product("채채", "https://chaechae.com", 2000);
-        final List<Product> products = List.of(product1, product2);
+    void 회원목록을_보여준다() throws Exception {
+        final Member 말랑 = new Member("mallang@mallang.com", "mallang123");
+        final Member 완태 = new Member("wannte@wannte.com", "wannte123");
+        final List<Member> members = List.of(말랑, 완태);
 
-        given(productDao.findAll()).willReturn(products);
-        mockMvc.perform(get("/"))
+        given(memberDao.findAll()).willReturn(members);
+        mockMvc.perform(get("/settings"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("index"))
-                .andExpect(model().attribute("products", products));
+                .andExpect(view().name("settings"))
+                .andExpect(model().attribute("members", members));
     }
 }

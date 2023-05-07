@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.Product;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -50,14 +51,22 @@ public class ProductDao {
         return template.query(sql, productRowMapper);
     }
 
-    public void update(final Product product) {
-        final String sql = "update product set name = ?, image_url = ?, price = ?";
-        template.update(sql, product.getName(), product.getImageUrl(), product.getPrice());
+    public int update(final Product product) {
+        final String sql = "update product set name = ?, image_url = ?, price = ? where id = ?";
+        return template.update(sql,
+                product.getName(),
+                product.getImageUrl(),
+                product.getPrice(),
+                product.getId());
     }
 
     public void deleteById(final Long id) {
-        final String sql = "delete from product where id = ?";
-        template.update(sql, id);
+        try {
+            final String sql = "delete from product where id = ?";
+            template.update(sql, id);
+        } catch (final DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("해당 상품을 담은 고객기 있어 제거할 수 없습니다");
+        }
     }
 }
 

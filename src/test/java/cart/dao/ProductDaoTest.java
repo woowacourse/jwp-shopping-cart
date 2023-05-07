@@ -1,6 +1,7 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +32,7 @@ class ProductDaoTest {
     @Test
     void 상품_저장() {
         // when
-        final Long id = productDao.save(new Product("말링", "채채", 10000));
+        final Long id = productDao.save(new Product("말링", "https://woowa.chat", 10000));
 
         // then
         assertThat(id).isNotNull();
@@ -40,7 +41,7 @@ class ProductDaoTest {
     @Test
     void 상품_조회() {
         // given
-        final Long id = productDao.save(new Product("말링", "채채", 10000));
+        final Long id = productDao.save(new Product("말링", "https://woowa.chat", 10000));
 
         // expected
         assertThat(productDao.findById(id)).isPresent();
@@ -55,8 +56,8 @@ class ProductDaoTest {
     @Test
     void 상품_전체_조회() {
         // given
-        productDao.save(new Product("말링", "채채", 10000));
-        productDao.save(new Product("말링2", "채채2", 20000));
+        productDao.save(new Product("말링", "https://woowa.chat", 10000));
+        productDao.save(new Product("말링2", "https://woowa.chats", 20000));
 
         // expected
         assertThat(productDao.findAll()).hasSize(2);
@@ -65,20 +66,21 @@ class ProductDaoTest {
     @Test
     void 상품_업데이트() {
         // given
-        final Long id = productDao.save(new Product("말링", "채채", 10000));
+        final Long id = productDao.save(new Product("말링", "https://woowa.chat", 10000));
 
         // when
-        productDao.update(new Product(id, "수정이미지", "수정이미지", 3000));
+        final int rows = productDao.update(new Product(id, "수정이미지", "https://woowa.chats", 3000));
 
         // then
-        assertThat(productDao.findById(id).get().getName())
-                .isEqualTo("수정이미지");
+        assertAll(() -> assertThat(productDao.findById(id).get().getName())
+                        .isEqualTo("수정이미지"),
+                () -> assertThat(rows).isEqualTo(1));
     }
 
     @Test
     void 상품_삭제() {
         // given
-        final Long id = productDao.save(new Product("말링", "채채", 10000));
+        final Long id = productDao.save(new Product("말링", "https://woowa.chat", 10000));
 
         // when
         productDao.deleteById(id);

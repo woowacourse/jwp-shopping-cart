@@ -1,14 +1,13 @@
 package cart.controller.view;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import cart.auth.AuthContext;
+import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import java.util.List;
@@ -25,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @DisplayName("AdminController 는")
 @WebMvcTest(AdminController.class)
+@MockBean({MemberDao.class, AuthContext.class})
 class AdminControllerTest {
 
     @Autowired
@@ -35,8 +35,8 @@ class AdminControllerTest {
 
     @Test
     public void 상품목록을_보여준다() throws Exception {
-        final Product 채채 = new Product("채채", "채채.com", 1000);
-        final Product 말랑 = new Product("말랑", "말랑.com", 2000);
+        final Product 채채 = new Product("채채", "https://chaechae.com", 1000);
+        final Product 말랑 = new Product("말랑", "https://mallang.com", 2000);
         final List<Product> list = List.of(채채, 말랑);
         given(productDao.findAll()).willReturn(list);
 
