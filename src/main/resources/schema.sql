@@ -6,3 +6,19 @@ CREATE TABLE PRODUCT
     price BIGINT NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE USERS
+(
+    id       INT          NOT NULL AUTO_INCREMENT,
+    email    VARCHAR(200) NOT NULL UNIQUE,
+    password VARCHAR(200) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE CART_ITEM
+(
+    id         INT NOT NULL AUTO_INCREMENT,
+    user_id    INT NOT NULL,
+    product_id INT NOT NULL,
+    PRIMARY KEY (id)
+);

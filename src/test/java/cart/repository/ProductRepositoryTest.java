@@ -1,69 +1,107 @@
 package cart.repository;
 
-import cart.dao.ProductJdbcDao;
-import cart.entity.ProductEntity;
+import static cart.TestFixture.IMAGE_CHICKEN;
+import static cart.TestFixture.IMAGE_ICE_CREAM;
+import static cart.TestFixture.IMAGE_VANILLA_LATTE;
+import static cart.TestFixture.NAME_CHICKEN;
+import static cart.TestFixture.NAME_ICE_CREAM;
+import static cart.TestFixture.NAME_VANILLA_LATTE;
+import static cart.TestFixture.PRICE_CHICKEN;
+import static cart.TestFixture.PRICE_ICE_CREAM;
+import static cart.TestFixture.PRICE_VANILLA_LATTE;
+import static cart.TestFixture.PRODUCT_CHICKEN;
+import static cart.TestFixture.PRODUCT_ICE_CREAM;
+import static cart.TestFixture.PRODUCT_VANILLA_LATTE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
+
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import cart.dao.ProductDao;
+import cart.domain.Product;
+import cart.repository.exception.NoSuchProductException;
 
 @JdbcTest
 class ProductRepositoryTest {
 
+    private static final int INVALID_ID = Integer.MIN_VALUE;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private ProductJdbcDao productDao;
     private ProductRepository productRepository;
 
     @BeforeEach
     void setUp() {
-        productDao = new ProductJdbcDao(jdbcTemplate);
-        this.productRepository = new ProductRepository(productDao);
+        this.productRepository = new ProductRepository(new ProductDao(jdbcTemplate));
 
-        productRepository.save("땡칠", "asdf", 100L);
+        productRepository.save(PRODUCT_CHICKEN);
+        productRepository.save(PRODUCT_ICE_CREAM);
+        productRepository.save(PRODUCT_VANILLA_LATTE);
     }
 
     @Test
-    void add() {
-        ProductEntity productEntity = productDao.select(getGreatestId());
-        assertThat(productEntity).isEqualTo(new ProductEntity(getGreatestId(), "땡칠", "asdf", 100L));
+    @DisplayName("상품 저장")
+    void save() {
+        assertThat(productRepository.getAll())
+                .extracting("name", "image", "price")
+                .contains(
+                        tuple(NAME_VANILLA_LATTE, IMAGE_VANILLA_LATTE, PRICE_VANILLA_LATTE)
+                );
     }
 
     @Test
+    @DisplayName("상품 제거")
     void delete() {
         productRepository.delete(getGreatestId());
 
-        final List<ProductEntity> result = productDao.findAll();
-        ProductEntity deletedItem = new ProductEntity(getGreatestId(), "땡칠", "asdf", 100L);
-
-        assertThat(result).doesNotContain(deletedItem);
+        assertThat(productRepository.getAll())
+                .extracting("name")
+                .doesNotContain(NAME_VANILLA_LATTE);
     }
 
     @Test
+    @DisplayName("상품 수정")
     void update() {
-        productRepository.update(getGreatestId(), "땡칠", "VERY_BIG_IMAGE", 100L);
+        productRepository.update(
+                new Product(getGreatestId(), NAME_VANILLA_LATTE, "VERY_BIG_IMAGE", PRICE_VANILLA_LATTE));
 
-        ProductEntity productEntity = productDao.select(getGreatestId());
-        assertThat(productEntity).isEqualTo(new ProductEntity(getGreatestId(), "땡칠", "VERY_BIG_IMAGE", 100L));
+        assertThat(productRepository.getAll())
+                .extracting("name", "image", "price")
+                .contains(tuple(NAME_VANILLA_LATTE, "VERY_BIG_IMAGE", PRICE_VANILLA_LATTE));
     }
 
     @Test
+    @DisplayName("모든 상품 가져오기")
     void getAll() {
-        productRepository.save("비버", "SMALL_IMAGE", 100L);
+        assertThat(productRepository.getAll())
+                .extracting("name", "image", "price")
+                .containsExactlyInAnyOrder(
+                        tuple(NAME_CHICKEN, IMAGE_CHICKEN, PRICE_CHICKEN),
+                        tuple(NAME_ICE_CREAM, IMAGE_ICE_CREAM, PRICE_ICE_CREAM),
+                        tuple(NAME_VANILLA_LATTE, IMAGE_VANILLA_LATTE, PRICE_VANILLA_LATTE)
+                );
+    }
 
-        final List<ProductEntity> result = productDao.findAll();
-        final List<ProductEntity> expectedEntities = List.of(
-                new ProductEntity(getGreatestId() - 1, "비버", "SMALL_IMAGE", 100L),
-                new ProductEntity(getGreatestId(), "땡칠", "asdf", 100L)
-        );
+    @DisplayName("수정된 대상이 없으면 예외를 던진다")
+    @Test
+    void noUpdateCountThrows() {
+        assertThatThrownBy(
+                () -> productRepository.update(new Product(INVALID_ID, NAME_CHICKEN, IMAGE_CHICKEN, PRICE_CHICKEN)))
+                .isInstanceOf(NoSuchProductException.class);
+    }
 
-        assertThat(result).containsExactlyInAnyOrderElementsOf(expectedEntities);
+    @DisplayName("제거된 대상이 없으면 예외를 던진다")
+    @Test
+    void noDeleteCountThrows() {
+        assertThatThrownBy(() -> productRepository.delete(INVALID_ID))
+                .isInstanceOf(NoSuchProductException.class);
     }
 
     private Integer getGreatestId() {

@@ -20,13 +20,14 @@
 </header>
 <div class="container">
     <h1>장바구니</h1>
+    <button class="cart-item-delete" onclick="refresh()">새로고침</button>
     <div class="cart-items">
     </div>
 </div>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/cart.js}"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    const refresh = () => {
         const credentials = localStorage.getItem('credentials');
         if (!credentials) {
             alert('사용자 정보가 없습니다.');
@@ -34,8 +35,7 @@
             return;
         }
 
-        axios.request({
-            url: '',
+        axios.get('/cart/items', {
             headers: {
                 'Authorization': `Basic ${credentials}`
             }
@@ -48,9 +48,9 @@
                 productElement += `
                         <div class="cart-item">
                           <div class="cart-item-info">
-                            <img src="" alt=""/> <!-- 상품 이미지 -->
-                            <div class="cart-item-name"></div> <!-- 상품 이름 -->
-                            <div class="cart-item-price"></div> <!-- 상품 가격 -->
+                            <img src="${cartItem.image}" alt=""/> <!-- 상품 이미지 -->
+                            <div class="cart-item-name">${cartItem.name}</div> <!-- 상품 이름 -->
+                            <div class="cart-item-price">${cartItem.price}</div> <!-- 상품 가격 -->
                             <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
                           </div>
                         </div>
@@ -61,8 +61,9 @@
         }).catch((error) => {
             console.error(error);
         });
+    };
 
-    });
+    document.addEventListener("DOMContentLoaded", refresh);
 </script>
 </body>
 </html>

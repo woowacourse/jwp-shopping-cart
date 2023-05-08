@@ -1,35 +1,70 @@
 package cart.repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import cart.dao.ProductDao;
-import cart.entity.ProductEntity;
+import cart.dao.dto.ProductDto;
+import cart.domain.Product;
+import cart.repository.exception.NoSuchProductException;
 
 @Repository
 public class ProductRepository {
+    private static final int ZERO = 0;
+
     private final ProductDao productDao;
 
-    public ProductRepository(@Qualifier("productJdbcDao") final ProductDao productDao) {
+    public ProductRepository(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
-    public void save(final String name, final String image, final Long price) {
-        productDao.insert(new ProductDto(name, image, price));
+    public void save(final Product product) {
+        productDao.insert(
+                product.getName(),
+                product.getImage(),
+                product.getPrice()
+        );
+    }
+
+    public Product findBy(final Integer id) {
+        return productDao.select(id)
+                .map(this::toProduct)
+                .orElseThrow(NoSuchProductException::new);
     }
 
     public void delete(final Integer id) {
-        productDao.deleteById(id);
+        validateIdExists(productDao.deleteById(id));
     }
 
-    public void update(final Integer id, final String name, final String image, final Long price) {
-        ProductEntity entity = productDao.select(id);
-        productDao.update(entity.getId(), new ProductDto(name, image, price));
+    public void update(final Product product) {
+        validateIdExists(productDao.update(
+                product.getId(),
+                product.getName(),
+                product.getImage(),
+                product.getPrice()
+        ));
     }
 
-    public List<ProductEntity> getAll() {
-        return productDao.findAll();
+    private void validateIdExists(int affectedCount) {
+        if (affectedCount == ZERO) {
+            throw new NoSuchProductException();
+        }
+    }
+
+    public List<Product> getAll() {
+        return productDao.findAll().stream()
+                .map(this::toProduct)
+                .collect(Collectors.toList());
+    }
+
+    private Product toProduct(ProductDto productDto) {
+        return new Product(
+                productDto.getId(),
+                productDto.getName(),
+                productDto.getImage(),
+                productDto.getPrice()
+        );
     }
 }

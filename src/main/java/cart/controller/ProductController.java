@@ -1,15 +1,22 @@
 package cart.controller;
 
-import cart.controller.dto.ProductRequest;
-import cart.repository.ProductRepository;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-import java.util.Objects;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import cart.controller.dto.ProductRequest;
+import cart.domain.Product;
+import cart.repository.ProductRepository;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductRepository productRepository;
@@ -20,7 +27,12 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<String> createProduct(@RequestBody @Valid ProductRequest productRequest) {
-        productRepository.save(productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
+        Product product = new Product(
+                productRequest.getName(),
+                productRequest.getImage(),
+                productRequest.getPrice()
+        );
+        productRepository.save(product);
         return ResponseEntity.ok().build();
     }
 
@@ -28,14 +40,19 @@ public class ProductController {
     public ResponseEntity<String> updateProduct(
             @PathVariable("id") Integer id,
             @RequestBody @Valid ProductRequest productRequest) {
-        Objects.requireNonNull(id);
-        productRepository.update(id, productRequest.getName(), productRequest.getImage(), productRequest.getPrice());
+        final Product product = new Product(
+                id,
+                productRequest.getName(),
+                productRequest.getImage(),
+                productRequest.getPrice()
+        );
+
+        productRepository.update(product);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Integer id) {
-        Objects.requireNonNull(id);
         productRepository.delete(id);
         return ResponseEntity.ok().build();
     }
