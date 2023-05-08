@@ -5,13 +5,13 @@ import cart.dao.CartWithProduct;
 import cart.domain.Cart;
 import cart.domain.Product;
 import cart.entity.CartEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Repository
 public class CartRepository {
 
     private final CartDao cartDao;
