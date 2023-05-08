@@ -1,9 +1,8 @@
-package cart.dao;
+package cart.persistnece.dao;
 
-import cart.domain.Product;
-import cart.exception.custom.ResourceNotFoundException;
+import cart.persistnece.entity.Product;
 import java.util.List;
-import javax.sql.DataSource;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,11 +23,11 @@ public class ProductDao {
             resultSet.getInt("price"),
             resultSet.getString("image_url"));
 
-    public ProductDao(DataSource dataSource) {
-        this.insertActor = new SimpleJdbcInsert(dataSource)
+    public ProductDao(JdbcTemplate jdbcTemplate) {
+        this.insertActor = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Long save(Product product) {
@@ -36,12 +35,14 @@ public class ProductDao {
         return insertActor.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public Product findById(Long id) {
+    //TODO: Optional로 변경
+    public Optional<Product> findById(Long id) {
         String sql = "select * from product where id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+            Product product = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            return Optional.of(product);
         } catch (EmptyResultDataAccessException exception) {
-            throw new ResourceNotFoundException();
+            return Optional.empty();
         }
     }
 

@@ -1,6 +1,8 @@
 package cart.controller;
 
 import cart.dto.response.ProductResponse;
+import cart.persistnece.entity.Member;
+import cart.service.MemberService;
 import cart.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -11,9 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class MainController {
 
     private final ProductService productService;
+    private final MemberService memberService;
 
-    public MainController(ProductService productService) {
+    public MainController(ProductService productService, MemberService memberService) {
         this.productService = productService;
+        this.memberService = memberService;
     }
 
     @GetMapping("/")
@@ -30,5 +34,18 @@ public class MainController {
         mav.addObject("products", products);
         mav.setViewName("admin");
         return mav;
+    }
+
+    @GetMapping("/settings")
+    public ModelAndView settings(ModelAndView mav) {
+        List<Member> members = memberService.findAll();
+        mav.addObject("members", members);
+        mav.setViewName("settings");
+        return mav;
+    }
+
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
     }
 }

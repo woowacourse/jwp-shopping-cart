@@ -2,15 +2,16 @@ package cart.service;
 
 import static java.util.stream.Collectors.toList;
 
-import cart.dao.ProductDao;
-import cart.domain.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.exception.custom.ResourceNotFoundException;
+import cart.persistnece.dao.ProductDao;
+import cart.persistnece.entity.Product;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class ProductService {
 
@@ -20,7 +21,6 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    @Transactional
     public Long save(ProductRequest productRequest) {
         Product product = productRequest.toEntity();
         Long savedId = productDao.save(product);
@@ -29,7 +29,8 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse findById(Long id) {
-        Product product = productDao.findById(id);
+        Product product = productDao.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("해당하는 id의 상품이 존재하지 않습니다."));
         return new ProductResponse(product);
     }
 
@@ -41,13 +42,11 @@ public class ProductService {
                 .collect(toList());
     }
 
-    @Transactional
     public void deleteById(Long id) {
         int deleteCount = productDao.deleteById(id);
         hasNoMatchingResult(deleteCount);
     }
 
-    @Transactional
     public void updateById(Long id, ProductRequest productRequest) {
         Product product = productRequest.toEntity();
         int updateCount = productDao.updateById(id, product);
@@ -56,7 +55,7 @@ public class ProductService {
 
     private void hasNoMatchingResult(int count) {
         if (count == 0) {
-            throw new ResourceNotFoundException();
+            throw new ResourceNotFoundException("해당하는 id의 상품이 존재하지 않습니다.");
         }
     }
 }

@@ -1,9 +1,10 @@
-package cart.domain;
+package cart.persistence.entity;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cart.exception.custom.ArgumentNotValidException;
+import cart.persistnece.entity.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

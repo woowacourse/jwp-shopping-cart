@@ -10,19 +10,20 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import cart.dao.ProductDao;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.exception.custom.ArgumentNotValidException;
 import cart.exception.custom.ResourceNotFoundException;
+import cart.persistnece.dao.ProductDao;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -32,12 +33,8 @@ class ProductServiceTest {
     @Mock
     private ProductDao productDao;
 
+    @InjectMocks
     private ProductService productService;
-
-    @BeforeEach
-    void setUp() {
-        productService = new ProductService(productDao);
-    }
 
     @Nested
     @DisplayName("상품 저장할 때")
@@ -102,7 +99,7 @@ class ProductServiceTest {
         void find_by_id_success() {
             //when
             when(productDao.findById(any()))
-                    .thenReturn(PRODUCT_A_HAS_ID);
+                    .thenReturn(Optional.of(PRODUCT_A_HAS_ID));
             ProductResponse actual = productService.findById(1L);
             //then
             assertThat(actual)
@@ -193,7 +190,7 @@ class ProductServiceTest {
             //when && then
             assertThatThrownBy(() -> productService.updateById(9999L, PRODUCT_REQUEST_A))
                     .isInstanceOf(ResourceNotFoundException.class)
-                    .hasMessage("존재하지 않는 리소스입니다.");
+                    .hasMessage("해당하는 id의 상품이 존재하지 않습니다.");
         }
     }
 
@@ -219,8 +216,7 @@ class ProductServiceTest {
             //when && then
             assertThatThrownBy(() -> productService.deleteById(1L))
                     .isInstanceOf(ResourceNotFoundException.class)
-                    .hasMessage("존재하지 않는 리소스입니다.");
+                    .hasMessage("해당하는 id의 상품이 존재하지 않습니다.");
         }
     }
 }
-

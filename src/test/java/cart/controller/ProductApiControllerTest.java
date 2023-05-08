@@ -8,9 +8,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
-import cart.dao.ProductDao;
-import cart.domain.Product;
 import cart.dto.request.ProductRequest;
+import cart.persistnece.dao.ProductDao;
+import cart.persistnece.entity.Product;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -27,18 +27,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductApiControllerTest {
 
-    private static final String API_URL = "/products";
+    private static final String PRODUCT_API_URL = "/products";
 
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private ProductDao productDao;
@@ -49,7 +45,6 @@ class ProductApiControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        jdbcTemplate.update("delete from product");
     }
 
     @Nested
@@ -60,14 +55,14 @@ class ProductApiControllerTest {
         @DisplayName("정상적으로 단일 상품을 조회한다.")
         void find_by_id_success() throws JsonProcessingException {
             Long id = productDao.save(PRODUCT_A);
-            Product findProduct = productDao.findById(id);
+            Product findProduct = productDao.findById(id).get();
             String expected = objectMapper.writeValueAsString(findProduct);
 
             given()
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .get(API_URL + "/" + id)
+                    .get(PRODUCT_API_URL + "/" + id)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.OK.value())
@@ -82,7 +77,7 @@ class ProductApiControllerTest {
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .get(API_URL + "/" + nullValue)
+                    .get(PRODUCT_API_URL + "/" + nullValue)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -96,7 +91,7 @@ class ProductApiControllerTest {
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .get(API_URL + "/" + wrongTypeValue)
+                    .get(PRODUCT_API_URL + "/" + wrongTypeValue)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -111,10 +106,10 @@ class ProductApiControllerTest {
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .get(API_URL + "/" + 100000L)
+                    .get(PRODUCT_API_URL + "/" + 100000L)
                     .then()
                     .log().all()
-                    .body("message", equalTo("존재하지 않는 리소스입니다."))
+                    .body("message", equalTo("해당하는 id의 상품이 존재하지 않습니다."))
                     .statusCode(HttpStatus.NOT_FOUND.value());
         }
     }
@@ -131,7 +126,7 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(PRODUCT_REQUEST_A)
                     .when()
-                    .post(API_URL)
+                    .post(PRODUCT_API_URL)
                     .then()
                     .header("location", notNullValue())
                     .log().all()
@@ -149,7 +144,7 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
                     .when()
-                    .post(API_URL)
+                    .post(PRODUCT_API_URL)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -166,10 +161,10 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
                     .when()
-                    .post(API_URL)
+                    .post(PRODUCT_API_URL)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                     .body("message", equalTo("상품의 이름은 1자 이상, 20자 이하입니다."));
         }
 
@@ -184,7 +179,7 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
                     .when()
-                    .post(API_URL)
+                    .post(PRODUCT_API_URL)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -202,10 +197,10 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
                     .when()
-                    .post(API_URL)
+                    .post(PRODUCT_API_URL)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                     .body("message", equalTo("상품의 최소 가격은 1000원 이상입니다."));
         }
 
@@ -220,10 +215,10 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
                     .when()
-                    .post(API_URL)
+                    .post(PRODUCT_API_URL)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                     .body("message", equalTo("상품의 가격 단위는 100원 단위입니다."));
         }
 
@@ -238,7 +233,7 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
                     .when()
-                    .post(API_URL)
+                    .post(PRODUCT_API_URL)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -260,7 +255,7 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(PRODUCT_REQUEST_B)
                     .when()
-                    .put(API_URL + "/" + savedId)
+                    .put(PRODUCT_API_URL + "/" + savedId)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.NO_CONTENT.value());
@@ -275,7 +270,7 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(PRODUCT_REQUEST_A)
                     .when()
-                    .put(API_URL + "/" + wrongValue)
+                    .put(PRODUCT_API_URL + "/" + wrongValue)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -290,7 +285,7 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(PRODUCT_REQUEST_A)
                     .when()
-                    .put(API_URL + "/" + wrongTypeValue)
+                    .put(PRODUCT_API_URL + "/" + wrongTypeValue)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -306,11 +301,11 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(PRODUCT_REQUEST_A)
                     .when()
-                    .put(API_URL + "/" + 100000L)
+                    .put(PRODUCT_API_URL + "/" + 100000L)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.NOT_FOUND.value())
-                    .body("message", equalTo("존재하지 않는 리소스입니다."));
+                    .body("message", equalTo("해당하는 id의 상품이 존재하지 않습니다."));
         }
 
         @ParameterizedTest
@@ -325,7 +320,7 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
                     .when()
-                    .put(API_URL + "/" + savedId)
+                    .put(PRODUCT_API_URL + "/" + savedId)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -342,10 +337,10 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
                     .when()
-                    .put(API_URL + "/" + savedId)
+                    .put(PRODUCT_API_URL + "/" + savedId)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                     .body("message", equalTo("상품의 이름은 1자 이상, 20자 이하입니다."));
         }
 
@@ -361,7 +356,7 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
                     .when()
-                    .put(API_URL + "/" + savedId)
+                    .put(PRODUCT_API_URL + "/" + savedId)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -380,10 +375,10 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
                     .when()
-                    .put(API_URL + "/" + savedId)
+                    .put(PRODUCT_API_URL + "/" + savedId)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                     .body("message", equalTo("상품의 최소 가격은 1000원 이상입니다."));
         }
 
@@ -399,10 +394,10 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
                     .when()
-                    .put(API_URL + "/" + savedId)
+                    .put(PRODUCT_API_URL + "/" + savedId)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
                     .body("message", equalTo("상품의 가격 단위는 100원 단위입니다."));
         }
 
@@ -418,7 +413,7 @@ class ProductApiControllerTest {
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(request)
                     .when()
-                    .put(API_URL + "/" + savedId)
+                    .put(PRODUCT_API_URL + "/" + savedId)
                     .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message", equalTo("이미지 URL을 입력해주세요."));
@@ -438,7 +433,7 @@ class ProductApiControllerTest {
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .delete(API_URL + "/" + savedId)
+                    .delete(PRODUCT_API_URL + "/" + savedId)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.NO_CONTENT.value());
@@ -452,7 +447,7 @@ class ProductApiControllerTest {
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .delete(API_URL + "/" + nullValue)
+                    .delete(PRODUCT_API_URL + "/" + nullValue)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -466,14 +461,13 @@ class ProductApiControllerTest {
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .delete(API_URL + "/" + wrongTypeValue)
+                    .delete(PRODUCT_API_URL + "/" + wrongTypeValue)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("message",
                             is("잘못된 타입을 입력하였습니다. 입력 타입 : class java.lang.String, 요구 타입: class java.lang.Long"));
         }
-
 
         @Test
         @DisplayName("존재하지 않는 상품 ID를 경로로 설정시 404를 반환한다.")
@@ -482,11 +476,11 @@ class ProductApiControllerTest {
                     .log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .when()
-                    .delete(API_URL + "/" + 100000L)
+                    .delete(PRODUCT_API_URL + "/" + 100000L)
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.NOT_FOUND.value())
-                    .body("message", equalTo("존재하지 않는 리소스입니다."));
+                    .body("message", equalTo("해당하는 id의 상품이 존재하지 않습니다."));
         }
     }
 }

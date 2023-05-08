@@ -10,6 +10,6 @@ public class ArgumentNotValidException extends ApplicationException {
 
     @Override
     public HttpStatus status() {
-        return HttpStatus.BAD_REQUEST;
+        return HttpStatus.UNPROCESSABLE_ENTITY;
     }
 }
