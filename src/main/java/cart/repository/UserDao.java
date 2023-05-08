@@ -1,6 +1,7 @@
 package cart.repository;
 
 import cart.entity.UserEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -40,5 +41,14 @@ public class UserDao {
     public int create(final UserEntity userEntity) {
         final SqlParameterSource params = new BeanPropertySqlParameterSource(userEntity);
         return simpleJdbcInsert.executeAndReturnKey(params).intValue();
+    }
+
+    public Integer findIdByEmail(final String email) {
+        final String sql = "select id from users where email = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, email);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 }

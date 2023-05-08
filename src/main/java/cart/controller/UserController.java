@@ -1,9 +1,11 @@
 package cart.controller;
 
-import cart.dto.request.ProductRequestDto;
 import cart.dto.request.SignUpRequestDto;
+import cart.exception.DuplicateEmailException;
 import cart.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,5 +30,10 @@ public class UserController {
     public ResponseEntity<Void> create(@RequestBody @Valid final SignUpRequestDto signUpRequestDto) {
         userService.signUp(signUpRequestDto);
         return ResponseEntity.created(URI.create(REDIRECT_URI)).build();
+    }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<String> handle(DuplicateEmailException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 }

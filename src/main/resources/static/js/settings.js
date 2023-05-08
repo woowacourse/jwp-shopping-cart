@@ -11,10 +11,19 @@ const showAddModal = () => {
     modal.style.display = 'block';
 };
 
+const hideAddModal = () => {
+    modal.style.display = 'none';
+    const elements = modal.getElementsByTagName('input');
+    for (const element of elements) {
+        element.value = '';
+    }
+}
+
 form.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
+    console.log(formData);
     let member = {};
     for (const entry of formData.entries()) {
         const [key, value] = entry;
@@ -40,6 +49,8 @@ const createMember = (member) => {
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
-        console.error(error);
+            console.log(error.response.data);
+            alert(error.response.data);
+            window.location.reload();
     });
 };

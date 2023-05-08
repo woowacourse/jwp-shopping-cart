@@ -3,6 +3,7 @@ package cart.service;
 import cart.dto.request.SignUpRequestDto;
 import cart.dto.response.UserResponseDto;
 import cart.entity.UserEntity;
+import cart.exception.DuplicateEmailException;
 import cart.repository.UserDao;
 import cart.service.converter.UserConverter;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,14 @@ public class UserService {
     }
 
     public int signUp(final SignUpRequestDto requestDto) {
+        checkDuplicateEmail(requestDto.getEmail());
         final UserEntity userEntity = UserConverter.requestDtoToEntity(requestDto);
         return userDao.create(userEntity);
+    }
+
+    private void checkDuplicateEmail(final String email) {
+        if (userDao.findIdByEmail(email) != null) {
+            throw new DuplicateEmailException();
+        }
     }
 }
