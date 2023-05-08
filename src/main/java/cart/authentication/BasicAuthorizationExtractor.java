@@ -1,13 +1,12 @@
 package cart.authentication;
 
-import cart.dto.member.MemberRequest;
 import cart.exception.notfound.MemberNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BasicAuthorizationExtractor implements AuthorizationExtractor{
+public class BasicAuthorizationExtractor implements AuthorizationExtractor {
 
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";

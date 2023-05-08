@@ -7,7 +7,6 @@ import cart.exception.member.AuthorityException;
 import cart.exception.notfound.MemberNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -36,7 +35,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         Member member = memberDao.findByEmailAndPassword(memberInfo.getEmail(), memberInfo.getPassword())
             .orElseThrow(MemberNotFoundException::new);
 
-        if(!checkAuthority(member)) {
+        if (!checkAuthority(member)) {
             throw new AuthorityException();
         }
 

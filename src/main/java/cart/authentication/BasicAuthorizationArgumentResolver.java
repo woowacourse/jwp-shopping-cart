@@ -1,10 +1,8 @@
 package cart.authentication;
 
 import cart.dto.member.MemberRequest;
-import cart.entity.member.Member;
 import cart.exception.notfound.MemberNotFoundException;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

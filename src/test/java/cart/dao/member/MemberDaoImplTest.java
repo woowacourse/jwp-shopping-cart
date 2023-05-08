@@ -2,7 +2,6 @@ package cart.dao.member;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import cart.dto.member.MemberRequest;
 import cart.entity.member.Email;
 import cart.entity.member.Member;
 import cart.entity.member.Password;

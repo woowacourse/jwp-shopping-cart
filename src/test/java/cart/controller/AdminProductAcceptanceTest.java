@@ -4,7 +4,6 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import cart.dto.product.ProductRequest;
-import cart.dto.product.ProductResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -136,7 +135,6 @@ class AdminProductAcceptanceTest {
             .get("admin/products")
             .then()
             .extract();
-
 
         // then
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
