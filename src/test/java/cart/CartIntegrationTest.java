@@ -2,6 +2,7 @@ package cart;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import cart.domain.cart.CartId;
 import cart.domain.member.Member;
 import cart.domain.member.MemberId;
 import cart.domain.product.Product;
@@ -46,9 +48,47 @@ public class CartIntegrationTest {
 
 		final ExtractableResponse<Response> result = RestAssured.given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
-			.auth().preemptive().basic("a@a.com", "pw")
+			.auth().preemptive().basic("a@a.com", "password1")
 			.when().log().all()
 			.get("/cart/items")
+			.then().log().all()
+			.extract();
+
+		Assertions.assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+	}
+
+	@Test
+	public void add() {
+		final Member member = new Member("kiara", "c@c.com", "password1");
+		final Product product = new Product("사과", 1000, "사과이미지");
+		final MemberId memberId = memberRepository.insert(member);
+		final ProductId productId = productRepository.insert(product);
+		repository.insert(memberId, productId);
+
+		final ExtractableResponse<Response> result = RestAssured.given()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.auth().preemptive().basic("c@c.com", "password1")
+			.when().log().all()
+			.post("/cart/" + productId.getId())
+			.then().log().all()
+			.extract();
+
+		Assertions.assertThat(result.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+	}
+
+	@Test
+	public void delete() {
+		final Member member = new Member("kiara", "c@c.com", "password1");
+		final Product product = new Product("사과", 1000, "사과이미지");
+		final MemberId memberId = memberRepository.insert(member);
+		final ProductId productId = productRepository.insert(product);
+		final CartId cartId = repository.insert(memberId, productId);
+
+		final ExtractableResponse<Response> result = RestAssured.given()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.auth().preemptive().basic("c@c.com", "password1")
+			.when().log().all()
+			.delete("/cart/" + cartId.getId())
 			.then().log().all()
 			.extract();
 
