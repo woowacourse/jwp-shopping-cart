@@ -1,88 +1,71 @@
 package cart.service;
 
+import cart.dao.CartDao;
+import cart.dao.MemberDao;
+import cart.dto.MemberRequestDto;
 import cart.dto.ProductResponseDto;
-import cart.dto.ProductSaveRequestDto;
-import cart.dto.ProductUpdateRequestDto;
+import cart.dto.entity.MemberCartEntity;
+import cart.dto.entity.MemberEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import java.util.List;
+import java.util.Optional;
 
-@SpringBootTest
-@Transactional
-@AutoConfigureTestDatabase
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 class CartServiceTest {
 
-    @Autowired
+    @InjectMocks
     private CartService cartService;
+    @Mock
+    private CartDao cartDao;
 
-    @DisplayName("상품을 추가할 수 있다.")
+    @Mock
+    private MemberDao memberDao;
+
     @Test
-    void addProduct() {
-        //given
-        ProductSaveRequestDto productSaveRequestDto = new ProductSaveRequestDto("ocean", "image", 1000);
+    @DisplayName("사용자의 모든 카트 상품을 찾는다.")
+    void findAll() {
+        MemberRequestDto member = new MemberRequestDto("eastsea@eastsea", "eastsea");
+        ProductResponseDto productResponseDto = new ProductResponseDto(1L, "ocean", "image", 1000);
+        MemberCartEntity memberCartEntity = new MemberCartEntity(1L, 1L, "ocean", "image", 1000);
 
-        //when & then
-        assertThatNoException().isThrownBy(() -> cartService.addProduct(productSaveRequestDto));
+        when(memberDao.findByEmail(any())).thenReturn(Optional.of(new MemberEntity(1L, member.getEmail(), member.getPassword())));
+        when(cartDao.findCartByMember(any())).thenReturn(List.of(memberCartEntity));
+
+        assertThat(cartService.findAll(member)).usingRecursiveComparison().isEqualTo(List.of(productResponseDto));
     }
 
-    @DisplayName("상품을 찾을 수 있다.")
     @Test
-    void findProducts() {
-        //given
-        ProductSaveRequestDto productSaveRequestDto = new ProductSaveRequestDto("ocean", "image", 1000);
+    @DisplayName("사용자의 카트에 상품을 저장한다.")
+    void save() {
+        MemberRequestDto member = new MemberRequestDto("eastsea@eastsea", "eastsea");
+        doNothing().when(cartDao).save(any());
+        when(memberDao.findByEmail(any())).thenReturn(Optional.of(new MemberEntity(1L, member.getEmail(), member.getPassword())));
 
-        //when
-        cartService.addProduct(productSaveRequestDto);
+        cartService.save(member, 1L);
 
-        //then
-        ProductResponseDto productResponseDto = cartService.findProducts().get(0);
-        assertAll(
-                () -> assertThat(productResponseDto.getName()).isEqualTo(productSaveRequestDto.getName()),
-                () -> assertThat(productResponseDto.getImage()).isEqualTo(productSaveRequestDto.getImage()),
-                () -> assertThat(productResponseDto.getPrice()).isEqualTo(productSaveRequestDto.getPrice())
-        );
+        verify(cartDao, times(1)).save(any());
     }
 
-    @DisplayName("상품이 있을 때 update 할 수 있다.")
     @Test
-    void updateProduct() {
-        //given
-        cartService.addProduct(new ProductSaveRequestDto("오션", "이미지", 10000));
-        ProductResponseDto product = cartService.findProducts().get(0);
-        //then
-        assertThatNoException().isThrownBy(() -> cartService.updateProduct(1L, new ProductUpdateRequestDto(product.getId(), "연어", "이미지", 100)));
-    }
+    @DisplayName("사용자의 카트에 상품을 삭제한다.")
+    void delete() {
+        MemberRequestDto member = new MemberRequestDto("eastsea@eastsea", "eastsea");
+        doNothing().when(cartDao).save(any());
+        when(memberDao.findByEmail(any())).thenReturn(Optional.of(new MemberEntity(1L, member.getEmail(), member.getPassword())));
 
-    @DisplayName("상품이 없을 때 update 시 예외가 발생한다.")
-    @Test
-    void updateProduct_Exception() {
-        assertThatThrownBy(() -> cartService.updateProduct(null, new ProductUpdateRequestDto()))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 상품이 존재하지 않습니다.");
-    }
+        cartService.save(member, 1L);
+        cartService.delete(member, 1L);
 
-    @DisplayName("상품이 있을 때 삭제할 수 있다.")
-    @Test
-    void deleteProduct() {
-        //given
-        cartService.addProduct(new ProductSaveRequestDto("오션", "이미지", 10000));
-        ProductResponseDto product = cartService.findProducts().get(0);
-
-        //then
-        assertThatNoException().isThrownBy(() -> cartService.deleteProduct(product.getId()));
-    }
-
-    @DisplayName("상품이 없을 때 삭제 시 예외가 발생한다.")
-    @Test
-    void deleteProduct_Exception() {
-        assertThatThrownBy(() -> cartService.deleteProduct(1L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 상품이 존재하지 않습니다.");
+        verify(cartDao, times(1)).delete(any());
     }
 }
