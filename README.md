@@ -175,7 +175,7 @@ CREATE TABLE cart_product
 #### [3] `DELETE` 장바구니 상품 제거
 - 요청
   ```json
-  POST /cart/products/1 HTTP/1.1
+  DELETE /cart/products/1 HTTP/1.1
   Authorizaiton: BASIC dGVzdEB0ZXN0LmNvbTp0ZXN0
   Content-Type: application/json
   ```
