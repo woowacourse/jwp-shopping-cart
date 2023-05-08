@@ -12,7 +12,10 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -22,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CartAcceptanceTest {
 
     @LocalServerPort
@@ -30,6 +34,7 @@ class CartAcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+
     }
 
     @Test
@@ -78,11 +83,14 @@ class CartAcceptanceTest {
         );
     }
 
+    @Order(1)
     @Test
     @DisplayName("사용자가 자신의 장바구니 상품을 조회한다.")
     void member_find_cart_item_success() {
         // given
         MemberRequest member = new MemberRequest("ako@wooteco.com", "ako");
+        String responseBody = "[{\"cartItemId\":1,\"name\":\"연필\",\"imageUrl\":\"이미지\",\"price\":1000,\"itemCount\":2},"
+            + "{\"cartItemId\":2,\"name\":\"지우개\",\"imageUrl\":\"이미지\",\"price\":2000,\"itemCount\":1}]";
 
         // when
         ExtractableResponse<Response> result = given()
@@ -92,9 +100,11 @@ class CartAcceptanceTest {
             .then()
             .extract();
 
+        System.out.println(result.response().asString());
         // then
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(result.response().as(List.class).size()).isEqualTo(2);
+        assertThat(result.response().asString()).isEqualTo(responseBody);
     }
 
     @Test
