@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS CARTS
     item_id BIGINT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES USERS (id) ON DELETE CASCADE,
-    FOREIGN KEY (item_id) REFERENCES ITEMS (id) ON DELETE CASCADE
+    FOREIGN KEY (item_id) REFERENCES ITEMS (id) ON DELETE CASCADE,
+    CONSTRAINT unique_user_item UNIQUE (user_id, item_id)
 );
 
 INSERT INTO users (email, password)

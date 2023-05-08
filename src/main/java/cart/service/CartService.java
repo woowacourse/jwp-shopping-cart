@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,8 +37,16 @@ public class CartService {
     public void saveCart(final String email, final Long itemId) {
         User user = userDao.findBy(email).orElseThrow(() -> new IllegalArgumentException(NOT_EXIST_USER));
         Item item = itemDao.findBy(itemId).orElseThrow(() -> new IllegalArgumentException(NOT_EXIST_ITEM));
+        checkDuplicatedCart(user, item);
         Cart cart = new Cart(user, item);
         cartDao.save(cart);
+    }
+
+    private void checkDuplicatedCart(final User user, final Item item) {
+        Optional<Cart> findCart = cartDao.findByUserAndItem(user.getId(), item.getId());
+        if (findCart.isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 장바구니 내역입니다.");
+        }
     }
 
     @Transactional(readOnly = true)

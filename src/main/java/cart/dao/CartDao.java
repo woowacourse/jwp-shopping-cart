@@ -61,6 +61,20 @@ public class CartDao {
         }
     }
 
+    public Optional<Cart> findByUserAndItem(final Long userId, final Long itemId) {
+        final String sql = "SELECT c.id, u.id as users_id, u.email, u.password, i.id as items_id, i.name, i.image_url, i.price " +
+                "FROM carts c " +
+                "JOIN users u ON c.user_id = u.id " +
+                "JOIN items i ON c.item_id = i.id " +
+                "WHERE u.id = ? " +
+                "AND i.id = ? ";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartRowMapper, userId, itemId));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
     public void delete(final Long cartId) {
         final String sql = "DELETE FROM carts WHERE id = ? ";
         jdbcTemplate.update(sql, cartId);
