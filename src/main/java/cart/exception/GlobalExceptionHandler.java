@@ -60,6 +60,12 @@ public class GlobalExceptionHandler {
                 new ExceptionResponse(HttpStatus.UNAUTHORIZED.value(), e.getMessage()));
     }
 
+    @ExceptionHandler(NotValidDataException.class)
+    public ResponseEntity<ExceptionResponse> handleNotValidException(final NotValidDataException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleUnexpectedException() {
         return ResponseEntity.internalServerError().body(

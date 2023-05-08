@@ -4,6 +4,7 @@ import cart.dto.MemberDto;
 import cart.entity.Member;
 import cart.exception.customexceptions.DataNotFoundException;
 import cart.exception.customexceptions.NotUniqueValueException;
+import cart.exception.customexceptions.NotValidDataException;
 import cart.exception.customexceptions.PasswordNotMatchException;
 import cart.repository.dao.memberDao.MemberDao;
 import cart.utils.CaesarCipher;
@@ -30,7 +31,7 @@ public class MemberService {
                 CaesarCipher.encrypt(memberDto.getPassword()));
 
         return memberDao.save(member)
-                .orElseThrow(() -> new NotUniqueValueException("중복되는 email입니다. 다른 이메일을 입력해주세요."));
+                .orElseThrow(() -> new NotValidDataException("적절하지 않은 정보 입니다."));
     }
 
     @Transactional(readOnly = true)

@@ -1,6 +1,7 @@
 package cart.repository.dao.memberDao;
 
 import cart.entity.Member;
+import cart.exception.customexceptions.NotUniqueValueException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.RowMapper;
@@ -30,6 +31,10 @@ public class JdbcMemberDao implements MemberDao {
 
     @Override
     public Optional<Long> save(final Member member) {
+        if (findByEmail(member.getEmail()).isPresent()) {
+            throw new NotUniqueValueException("중복되는 email입니다. 다른 이메일을 입력해주세요.");
+        }
+
         final SqlParameterSource source = new BeanPropertySqlParameterSource(member);
         try {
             return Optional.of((Long) simpleJdbcInsert.executeAndReturnKey(source));
