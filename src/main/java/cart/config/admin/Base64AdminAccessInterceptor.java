@@ -1,17 +1,25 @@
 package cart.config.admin;
 
 import cart.config.auth.Base64AuthInterceptor;
-import cart.exception.customexceptions.AdminAccessException;
+import cart.service.AuthService;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Component
 public class Base64AdminAccessInterceptor implements HandlerInterceptor {
 
     public static final String ADMIN_EMAIL = "admin@wootech.com";
     public static final String ADMIN_NAME = "admin";
+
+    private final AuthService authService;
+
+    public Base64AdminAccessInterceptor(final AuthService authService) {
+        this.authService = authService;
+    }
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
@@ -21,10 +29,9 @@ public class Base64AdminAccessInterceptor implements HandlerInterceptor {
 
         final String[] emailAndPasswordWithDecryption = auth.split(":");
         final String email = emailAndPasswordWithDecryption[0];
+        final String password = emailAndPasswordWithDecryption[1];
 
-        if (!ADMIN_EMAIL.equals(email)) {
-            throw new AdminAccessException("관리자만 접근이 가능합니다.");
-        }
+        authService.validateAdmin(email, password);
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

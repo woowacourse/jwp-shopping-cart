@@ -14,18 +14,28 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    private Base64AuthInterceptor base64AuthInterceptor;
+    private Base64AdminAccessInterceptor base64AdminAccessInterceptor;
+    private Base64AuthArgumentResolver base64AuthArgumentResolver;
+
+    public WebConfig(final Base64AuthInterceptor base64AuthInterceptor, final Base64AdminAccessInterceptor base64AdminAccessInterceptor, final Base64AuthArgumentResolver base64AuthArgumentResolver) {
+        this.base64AuthInterceptor = base64AuthInterceptor;
+        this.base64AdminAccessInterceptor = base64AdminAccessInterceptor;
+        this.base64AuthArgumentResolver = base64AuthArgumentResolver;
+    }
+
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new Base64AuthInterceptor())
+        registry.addInterceptor(base64AuthInterceptor)
                 .addPathPatterns("/admin/products/**", "/carts/**")
                 .order(Ordered.HIGHEST_PRECEDENCE);
-        registry.addInterceptor(new Base64AdminAccessInterceptor())
+        registry.addInterceptor(base64AdminAccessInterceptor)
                 .addPathPatterns("/admin/products/**")
                 .order(Ordered.LOWEST_PRECEDENCE);
     }
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new Base64AuthArgumentResolver());
+        resolvers.add(base64AuthArgumentResolver);
     }
 }

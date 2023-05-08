@@ -1,12 +1,14 @@
 package cart.config.auth;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@Component
 public class Base64AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String AUTHORIZATION_HEADER = "authorization";
