@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.entity.ProductEntity;
 import cart.service.ProductService;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @ApiOperation(value = "등록된 모든 상품 조회")
     @GetMapping(value = {"/products", "/"})
     public String indexPage(final Model model) {
         final List<ProductEntity> products = productService.findAll();

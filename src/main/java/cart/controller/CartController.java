@@ -3,6 +3,7 @@ package cart.controller;
 import cart.dto.AuthInfo;
 import cart.entity.ProductEntity;
 import cart.service.CartService;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class CartController {
 
     private final CartService cartService;
 
+    @ApiOperation(value = "사용자 장바구니 상품 조회")
     @GetMapping("/products")
     public ResponseEntity<List<ProductEntity>> getProductsOfCart(final AuthInfo authInfo) {
         final List<ProductEntity> products = cartService.showProductsBy(authInfo);
@@ -29,12 +31,14 @@ public class CartController {
         return ResponseEntity.ok(products);
     }
 
+    @ApiOperation(value = "장바구니에 상품 추가")
     @PostMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public void addToCart(final AuthInfo authInfo, @PathVariable long productId) {
         cartService.addToCart(authInfo, productId);
     }
 
+    @ApiOperation(value = "장바구니 상품 제거")
     @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteProduct(final AuthInfo authInfo, @PathVariable long productId) {
