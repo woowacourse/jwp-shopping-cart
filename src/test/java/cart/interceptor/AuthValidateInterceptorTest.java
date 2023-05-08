@@ -75,6 +75,6 @@ class AuthValidateInterceptorTest {
                 .when()
                 .get("/cart/products")
                 .then()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }

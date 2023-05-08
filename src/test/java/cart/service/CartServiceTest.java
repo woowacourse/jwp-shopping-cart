@@ -1,8 +1,8 @@
 package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
@@ -12,6 +12,7 @@ import cart.dto.AuthInfo;
 import cart.dto.ProductResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
+import cart.exception.UserNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -52,9 +53,8 @@ class CartServiceTest {
         Mockito.when(memberDao.findByAuthInfo(any(AuthInfo.class)))
                 .thenReturn(Optional.empty());
 
-        assertThatIllegalArgumentException().isThrownBy(
-                () -> cartService.addToCart(authInfo, 1L)
-        ).withMessage("존재하지 않는 회원입니다.");
+        assertThatThrownBy(() -> cartService.addToCart(authInfo, 1L))
+                .isInstanceOf(UserNotFoundException.class);
     }
 
     @Test

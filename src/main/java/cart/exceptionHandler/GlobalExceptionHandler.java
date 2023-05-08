@@ -1,6 +1,7 @@
 package cart.exceptionHandler;
 
 import cart.exception.AuthException;
+import cart.exception.UserNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,9 +63,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).headers(httpHeaders).body(body);
     }
 
-    private void logError(final Map<String, Object> body, final String message) {
-        logger.error(body);
-        logger.error(message);
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserNotFoundException(final UserNotFoundException e) {
+        final Map<String, Object> body = makeBody(HttpStatus.NOT_FOUND, e.getMessage());
+
+        logError(body, e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
     private Map<String, Object> makeBody(final HttpStatus httpStatus, final String errorMessage) {
@@ -78,5 +83,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         data.put("errorMessage", errorMessage);
 
         return data;
+    }
+
+    private void logError(final Map<String, Object> body, final String message) {
+        logger.error(body);
+        logger.error(message);
     }
 }
