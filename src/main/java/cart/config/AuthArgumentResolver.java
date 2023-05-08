@@ -4,13 +4,10 @@ import cart.authorization.BasicAuthorizationExtractor;
 import cart.dto.AuthorizationInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-
-import java.util.Iterator;
 
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 

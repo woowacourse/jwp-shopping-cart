@@ -1,6 +1,5 @@
 package cart.controller;
 
-import cart.authorization.BasicAuthorizationExtractor;
 import cart.config.Auth;
 import cart.dto.AuthorizationInformation;
 import cart.dto.ItemResponse;
@@ -14,11 +13,9 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
-    private final BasicAuthorizationExtractor basicAuthorizationExtractor;
 
-    public CartController(CartService cartService, BasicAuthorizationExtractor basicAuthorizationExtractor) {
+    public CartController(CartService cartService) {
         this.cartService = cartService;
-        this.basicAuthorizationExtractor = basicAuthorizationExtractor;
     }
 
     @GetMapping("/cart")
@@ -35,7 +32,7 @@ public class CartController {
     @PostMapping("/carts/new/{itemId}")
     @ResponseStatus(HttpStatus.CREATED)
     public String addItem(@Auth AuthorizationInformation authorizationInformation, @PathVariable Long itemId) {
-        cartService.putItemIntoCart(itemId,  authorizationInformation);
+        cartService.putItemIntoCart(itemId, authorizationInformation);
         return "ok";
     }
 
