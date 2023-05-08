@@ -42,4 +42,5 @@ class HomeControllerTest {
                 .all()
                 .statusCode(HttpStatus.OK.value());
     }
+
 }

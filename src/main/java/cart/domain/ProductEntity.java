@@ -75,8 +75,6 @@ public class ProductEntity {
         public ProductEntity build() {
             return new ProductEntity(id, name, image, price);
         }
-
     }
-
 
 }

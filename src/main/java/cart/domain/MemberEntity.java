@@ -37,7 +37,6 @@ public class MemberEntity {
         public MemberEntity build() {
             return new MemberEntity(email, password);
         }
-
     }
 
 }

@@ -71,4 +71,5 @@ class ProductDaoImplTest {
 
         assertThat(productDao.findAll()).hasSize(0);
     }
+
 }

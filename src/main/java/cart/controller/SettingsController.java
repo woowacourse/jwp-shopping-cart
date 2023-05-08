@@ -25,4 +25,5 @@ public class SettingsController {
         model.addAttribute("members", members);
         return "settings.html";
     }
+
 }

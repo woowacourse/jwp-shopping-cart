@@ -36,6 +36,6 @@ public class CartEntity {
         public CartEntity build() {
             return new CartEntity(id, product);
         }
-
     }
+
 }

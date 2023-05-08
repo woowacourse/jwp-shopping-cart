@@ -20,5 +20,4 @@ public class MemberService {
         return memberDao.findAll();
     }
 
-
 }

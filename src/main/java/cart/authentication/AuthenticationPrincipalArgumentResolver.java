@@ -23,4 +23,5 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
         return authorizationExtractor.extract(request);
     }
+
 }
