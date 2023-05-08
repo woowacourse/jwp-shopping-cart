@@ -8,9 +8,12 @@ const addCartItem = (productId) => {
 
     axios.request({
         method: 'post',
-        url: '/cart/' + productId,
+        url: '/cart',
         headers: {
             'Authorization': `Basic ${credentials}`
+        },
+        data: {
+            productId : productId
         }
     }).then((response) => {
         console.log(productId);
