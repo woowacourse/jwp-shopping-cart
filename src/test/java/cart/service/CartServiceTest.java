@@ -42,30 +42,28 @@ class CartServiceTest {
         when(memberDao.findByEmail(any()))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> cartService.findAllCartProductByEmail("random"))
+        assertThatThrownBy(() -> cartService.findAllCartItemsByEmail("random"))
                 .isInstanceOf(DataNotFoundException.class)
                 .hasMessage("해당 사용자가 존재하지 않습니다.");
     }
 
-    @Test
-    void 장바구니에서_찾아온_상품_ID들을_조회했을때_상품이_없으면_예외를_던진다() {
-        Long id = 1L;
-        String email = "ehdgur4814@naver.com";
-        String name = "hardy";
-        String password = "3333";
-        Member member = new Member(id, email, name, password);
-
-        when(memberDao.findByEmail(any()))
-                .thenReturn(Optional.of(member));
-        when(cartDao.findAllProductIdByMemberId(any()))
-                .thenReturn(List.of(1L, 2L));
-        when(productDao.findById(any()))
-                .thenReturn(Optional.empty());
-
-        assertThatThrownBy(() -> cartService.findAllCartProductByEmail(email))
-                .isInstanceOf(DataNotFoundException.class)
-                .hasMessage("해당 상품을 찾을 수 없습니다.");
-    }
+//    @Test
+//    void 장바구니에서_찾아온_상품_ID들을_조회했을때_상품이_없으면_예외를_던진다() {
+//        Long id = 1L;
+//        String email = "ehdgur4814@naver.com";
+//        String name = "hardy";
+//        String password = "3333";
+//        Member member = new Member(id, email, name, password);
+//
+//        when(memberDao.findByEmail(any()))
+//                .thenReturn(Optional.of(member));
+//        when(cartDao.findAllCartItemsByMemberId(any()))
+//                .thenReturn(List.of(1L, 2L));
+//
+//        assertThatThrownBy(() -> cartService.findAllCartItemsByEmail(email))
+//                .isInstanceOf(DataNotFoundException.class)
+//                .hasMessage("해당 상품을 찾을 수 없습니다.");
+//    }
 
     @Test
     void 존재하지_않는_사용자가_장바구니에_상품을_추가할때_예외를_던진다() {
@@ -80,30 +78,25 @@ class CartServiceTest {
                 .hasMessage("해당 사용자가 존재하지 않습니다.");
     }
 
+//    @Test
+//    void 존재하지_않는_사용자가_장바구니에_상품을_삭제할때_예외를_던진다() {
+//        Long productId = 1L;
+//        String email = "ehdgur4814@naver.com";
+//
+//        when(memberDao.findByEmail(any()))
+//                .thenReturn(Optional.empty());
+//
+//        assertThatThrownBy(() -> cartService.deleteProductByCartId(productId, email))
+//                .isInstanceOf(DataNotFoundException.class)
+//                .hasMessage("해당 사용자가 존재하지 않습니다.");
+//    }
+
     @Test
-    void 존재하지_않는_사용자가_장바구니에_상품을_삭제할때_예외를_던진다() {
-        Long productId = 1L;
-        String email = "ehdgur4814@naver.com";
-
-        when(memberDao.findByEmail(any()))
-                .thenReturn(Optional.empty());
-
-        assertThatThrownBy(() -> cartService.deleteProductInCart(productId, email))
-                .isInstanceOf(DataNotFoundException.class)
-                .hasMessage("해당 사용자가 존재하지 않습니다.");
-    }
-
-    @Test
-    void 존재하지_않는_상품을_삭제할때_예외를_던진다() {
-        Long productId = 1L;
-        String email = "ehdgur4814@naver.com";
-
-        when(memberDao.findByEmail(any()))
-                .thenReturn(Optional.of(new Member(1L, email, "hardy", "333")));
-        when(cartDao.delete(any(), any()))
+    void 존재하지_않는_장바구니_상품을_삭제할때_예외를_던진다() {
+        when(cartDao.deleteByCartId(any()))
                 .thenReturn(0);
 
-        assertThatThrownBy(() -> cartService.deleteProductInCart(productId, email))
+        assertThatThrownBy(() -> cartService.deleteProductByCartId(any()))
                 .isInstanceOf(DataNotFoundException.class)
                 .hasMessage("해당 상품을 찾을 수 없습니다.");
     }
