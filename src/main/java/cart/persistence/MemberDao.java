@@ -2,11 +2,9 @@ package cart.persistence;
 
 import cart.entity.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,20 +15,6 @@ public class MemberDao {
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public Integer insert(Member member) {
-        String sql = "INSERT INTO MEMBER (email, password) values(?, ?)";
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, member.getEmail());
-            ps.setString(2, member.getPassword());
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().intValue();
     }
 
     public List<Member> findAll() {
@@ -57,20 +41,20 @@ public class MemberDao {
         return jdbcTemplate.update(query, id);
     }
 
-
-    public void findSameMemberExist(Member member) {
-        final var query = "SELECT COUNT(*) FROM MEMBER WHERE email = ? AND password = ?";
-        int count = jdbcTemplate.queryForObject(query, Integer.class, member.getEmail(), member.getPassword());
-
-        if (count > 0) {
-            throw new IllegalArgumentException("같은 멤버가 존재합니다.");
-        }
-    }
-
-    public Optional<Member> findById(Integer id) {
-        final var query = "SELECT * FROM MEMBER WHERE id = ?";
-        Member member = jdbcTemplate.queryForObject(query, Member.class, id);
+    public Optional<Member> findByEmail(String email) {
+        final var query = "SELECT * FROM MEMBER WHERE email = ?";
+        Member member = jdbcTemplate.queryForObject(query, getMemberRowMapper(), email);
 
         return Optional.of(member);
+    }
+
+    private RowMapper<Member> getMemberRowMapper() {
+        return (resultSet, rowNum) -> {
+            int id = resultSet.getInt("id");
+            String mail = resultSet.getString("email");
+            String password = resultSet.getString("password");
+
+            return new Member(id, mail, password);
+        };
     }
 }

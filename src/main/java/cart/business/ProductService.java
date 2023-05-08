@@ -3,7 +3,6 @@ package cart.business;
 import cart.entity.Product;
 import cart.persistence.ProductDao;
 import cart.presentation.dto.ProductRequest;
-import cart.presentation.dto.ProductResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,10 +43,5 @@ public class ProductService {
 
     private Product makeProductFromRequest(ProductRequest request) {
         return new Product(null, request.getName(), request.getUrl(), request.getPrice());
-    }
-
-    private Product makeProductFromResponse(ProductResponse response) {
-        return new Product(
-                response.getId(), (response.getName()), response.getUrl(), response.getPrice());
     }
 }

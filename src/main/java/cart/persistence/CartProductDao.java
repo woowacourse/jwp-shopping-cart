@@ -1,8 +1,6 @@
 package cart.persistence;
 
 import cart.entity.CartProduct;
-import cart.entity.Product;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class CartProductDao {
@@ -48,22 +45,9 @@ public class CartProductDao {
                     return new CartProduct(id, productId, cartId);
                 });
     }
-
-    public List<Product> findAllProductsByCartId(Integer cartId) {
-        String sql = "SELECT p.* FROM CART_PRODUCT cp JOIN PRODUCT p ON cp.product_id = p.id WHERE cp.cart_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{cartId}, new BeanPropertyRowMapper<>(Product.class));
-    }
-
-
+    
     public Integer remove(Integer id) {
         final var query = "DELETE FROM CART_PRODUCT WHERE id = ?";
         return jdbcTemplate.update(query, id);
-    }
-
-    public Optional<CartProduct> findById(Integer cartProductId) {
-        final var query = "SELECT * FROM CART_PRODUCT WHERE id = ?";
-        CartProduct cartProduct = jdbcTemplate.queryForObject(query, CartProduct.class, cartProductId);
-
-        return Optional.of(cartProduct);
     }
 }

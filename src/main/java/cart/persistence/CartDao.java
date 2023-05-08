@@ -1,13 +1,10 @@
 package cart.persistence;
 
-import cart.entity.Member;
 import cart.entity.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class CartDao {
@@ -38,22 +35,5 @@ public class CartDao {
     public Integer remove(Integer memberId) {
         final var query = "DELETE FROM CART WHERE member_id = ?";
         return jdbcTemplate.update(query, memberId);
-    }
-
-    public Optional<Member> findByEmail(String email) {
-        final var query = "SELECT * FROM MEMBER WHERE email = ?";
-        Member member = jdbcTemplate.queryForObject(query, getMemberRowMapper(), email);
-
-        return Optional.of(member);
-    }
-
-    private RowMapper<Member> getMemberRowMapper() {
-        return (resultSet, rowNum) -> {
-            int id = resultSet.getInt("id");
-            String mail = resultSet.getString("email");
-            String password = resultSet.getString("password");
-
-            return new Member(id, mail, password);
-        };
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Primary
@@ -24,7 +23,7 @@ public class ProductDao implements ProductRepository {
 
     @Override
     public Integer insert(Product product) {
-        String sql = "INSERT into PRODUCT (name, url, price) values(?, ?, ?)";
+        String sql = "INSERT INTO PRODUCT (name, url, price) values(?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -69,16 +68,9 @@ public class ProductDao implements ProductRepository {
     public void findSameProductExist(Product product) {
         final var query = "SELECT COUNT(*) FROM PRODUCT WHERE name = ? AND url = ? AND price = ?";
         int count = jdbcTemplate.queryForObject(query, Integer.class, product.getName(), product.getUrl(), product.getPrice());
-        
+
         if (count > 0) {
             throw new IllegalArgumentException("같은 상품이 존재합니다.");
         }
-    }
-
-    public Optional<Product> findById(Integer id) {
-        final var query = "SELECT * FROM PRODUCT WHERE id = ?";
-        Product product = jdbcTemplate.queryForObject(query, Product.class, id);
-
-        return Optional.of(product);
     }
 }

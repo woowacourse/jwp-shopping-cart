@@ -9,12 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,12 +24,7 @@ public class ProductController {
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
-
-    @PostMapping(path = "/products")
-    public ResponseEntity<Integer> create(@RequestBody ProductRequest request) {
-        return ResponseEntity.created(URI.create("/products")).body(productService.create(request));
-    }
-
+    
     @GetMapping(path = "/products")
     public ResponseEntity<List<ProductResponse>> read() {
         List<Product> products = productService.read();

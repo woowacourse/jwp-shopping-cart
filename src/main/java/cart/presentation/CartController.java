@@ -5,6 +5,7 @@ import cart.auth.BasicAuthorizationExtractor;
 import cart.auth.dto.AuthInfo;
 import cart.business.CartProductService;
 import cart.business.CartService;
+import cart.business.MemberService;
 import cart.entity.Product;
 import cart.presentation.dto.ProductResponse;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +25,14 @@ import java.util.stream.Collectors;
 public class CartController {
 
     private final CartProductService cartProductService;
+    private final MemberService memberService;
     private final CartService cartService;
     private BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
     private AuthService authService;
 
-    public CartController(CartProductService cartProductService, CartService cartService, AuthService authService) {
+    public CartController(CartProductService cartProductService, MemberService memberService, CartService cartService, AuthService authService) {
         this.cartProductService = cartProductService;
+        this.memberService = memberService;
         this.cartService = cartService;
         this.authService = authService;
     }
@@ -41,7 +44,7 @@ public class CartController {
         AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
         String email = authInfo.getEmail();
         String password = authInfo.getPassword();
-        Integer memberId = cartService.findMemberByEmail(email).get().getId();
+        Integer memberId = memberService.findMemberByEmail(email).get().getId();
 
         if (authService.checkInvalidLogin(email, password)) {
             throw new AuthenticationException("유효하지 않은 로그인 요청입니다.");
@@ -54,7 +57,7 @@ public class CartController {
     @GetMapping(path = "/cart/products")
     public ResponseEntity<List<ProductResponse>> readProducts(HttpServletRequest request) throws AuthenticationException {
         String email = checkValidLogin(request);
-        Integer memberId = cartService.findMemberByEmail(email).get().getId();
+        Integer memberId = memberService.findMemberByEmail(email).get().getId();
         List<Product> products = cartService.findProductsByMemberId(memberId);
 
         List<ProductResponse> response = products.stream()
@@ -68,8 +71,8 @@ public class CartController {
     }
 
     @DeleteMapping(path = "/cart/products/{product_id}")
-    public ResponseEntity<Integer> delete(HttpServletRequest request,
-                                          @PathVariable(value = "product_id") Integer productId) throws AuthenticationException {
+    public ResponseEntity<Integer> delete(
+            HttpServletRequest request, @PathVariable(value = "product_id") Integer productId) throws AuthenticationException {
         checkValidLogin(request);
 
         return ResponseEntity.ok().body(cartProductService.delete(productId));

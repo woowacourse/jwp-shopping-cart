@@ -1,7 +1,6 @@
 package cart.auth;
 
 import cart.entity.Member;
-import cart.presentation.dto.MemberResponse;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -10,8 +9,6 @@ import java.util.List;
 @Service
 public class AuthService {
 
-    private static String EMAIL;
-    private static String PASSWORD;
     private final JdbcTemplate jdbcTemplate;
 
     public AuthService(JdbcTemplate jdbcTemplate) {
@@ -36,9 +33,4 @@ public class AuthService {
 
         return false;
     }
-
-    public MemberResponse findMember(String principal) {
-        return new MemberResponse(1, principal, PASSWORD);
-    }
-
 }
