@@ -1,5 +1,5 @@
 const showDetail = (productId) => {
-    window.location.href = `/${productId}`;
+    window.location.href = `/products/${productId}`;
 }
 
 const addCartItem = (productId) => {
@@ -10,9 +10,7 @@ const addCartItem = (productId) => {
         return;
     }
 
-    // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
-    axios.request({
-        url: '',
+    axios.post(`/cart/${productId}`, {}, {
         headers: {
             'Authorization': `Basic ${credentials}`
         }
@@ -31,9 +29,7 @@ const removeCartItem = (id) => {
         return;
     }
 
-    // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
-    axios.request({
-        url: '',
+    axios.delete(`/cart/${id}`, {
         headers: {
             'Authorization': `Basic ${credentials}`
         }

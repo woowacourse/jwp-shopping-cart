@@ -1,7 +1,18 @@
 const selectMember = (member) => {
-    <!-- TODO: [2단계] 사용자 정보에 맞게 변경 -->
     const {email, password} = member;
-    const string = `${email}:${password}`;
-    localStorage.setItem('credentials', btoa(string));
+    const token = `${email}:${password}`;
+    localStorage.setItem('credentials', btoa(token));
     alert(`${email} 사용자로 설정 했습니다.`);
+
+    axios.request({
+        url: `/`,
+        method: 'GET',
+        headers: {
+            'Authorization': `Basic ${token}`
+        },
+    }).then((response) => {
+        window.location.href = '/'
+    }).catch((error) => {
+        console.error(error);
+    });
 }

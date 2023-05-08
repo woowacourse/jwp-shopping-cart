@@ -54,29 +54,29 @@ form.addEventListener('submit', (event) => {
 });
 
 const createProduct = (product) => {
-    axios.post('/admin/products', product)
+    axios.post('/products', product)
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
         const {data} = error.response;
-        window.alert(data.errorMessage)
+        window.alert(data.message)
     });
 };
 
 const updateProduct = (product) => {
     const {id} = product;
 
-    axios.put(`/admin/products/${id}`, product)
+    axios.put(`/products/${id}`, product)
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
         const {data} = error.response;
-        window.alert(data.errorMessage)
+        window.alert(data.message)
     });
 };
 
 const deleteProduct = (id) => {
-    axios.delete(`/admin/products/${id}`)
+    axios.delete(`/products/${id}`)
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
