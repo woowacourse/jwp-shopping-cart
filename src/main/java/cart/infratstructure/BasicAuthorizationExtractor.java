@@ -3,12 +3,15 @@ package cart.infratstructure;
 import cart.dto.AuthInfo;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.stereotype.Component;
 
-public class BasicAuthorizationExtractor {
-    private static String AUTHORIZATION = "Authorization";
+@Component
+public class BasicAuthorizationExtractor implements AuthorizationExtractor {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
+    private static final String AUTHORIZATION = "Authorization";
 
+    @Override
     public AuthInfo extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
@@ -30,6 +33,4 @@ public class BasicAuthorizationExtractor {
 
         return null;
     }
-
-
 }

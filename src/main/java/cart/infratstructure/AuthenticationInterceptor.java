@@ -13,17 +13,19 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
-    private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
+    private final AuthorizationExtractor authorizationExtractor;
     private final MemberService memberService;
 
-    public AuthenticationInterceptor(final MemberService memberService) {
+    public AuthenticationInterceptor(final AuthorizationExtractor authorizationExtractor,
+                                     final MemberService memberService) {
+        this.authorizationExtractor = authorizationExtractor;
         this.memberService = memberService;
     }
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler)
-            throws Exception {
-        AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
+                             final Object handler) {
+        AuthInfo authInfo = authorizationExtractor.extract(request);
         if (authInfo == null) {
             throw new AuthenticationException("사용자 정보가 존재하지 않습니다");
         }
