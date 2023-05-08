@@ -18,7 +18,7 @@ public class SettingController {
     }
 
     @GetMapping
-    public String showUserLIst(final Model model) {
+    public String showUserList(final Model model) {
         model.addAttribute("users", userService.findAll());
         return "settings";
     }
