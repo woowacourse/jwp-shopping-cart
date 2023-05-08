@@ -13,6 +13,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
+    private static final String EXCEPTION_MESSAGE_MEMBER_NOT_FOUND = "사용자 정보가 존재하지 않습니다";
+    private static final String EXCEPTION_MESSAGE_WRONG_AUTH_INFO = "잘못된 사용자 정보입니다";
+
     private final AuthorizationExtractor authorizationExtractor;
     private final MemberService memberService;
 
@@ -25,20 +28,27 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
                              final Object handler) {
+        AuthInfo authInfo = extractAutoInfo(request);
+        Long loginMemberId = findLoginMemberId(authInfo.getEmail(), authInfo.getPassword());
+        
+        request.setAttribute(LOGIN_MEMBER_ID.name(), loginMemberId);
+        return true;
+    }
+
+    private AuthInfo extractAutoInfo(final HttpServletRequest request) {
         AuthInfo authInfo = authorizationExtractor.extract(request);
         if (authInfo == null) {
-            throw new AuthenticationException("사용자 정보가 존재하지 않습니다");
+            throw new AuthenticationException(EXCEPTION_MESSAGE_MEMBER_NOT_FOUND);
         }
-        String email = authInfo.getEmail();
-        String password = authInfo.getPassword();
+        return authInfo;
+    }
 
+    private Long findLoginMemberId(final String email, final String password) {
         Member member = memberService.findByEmail(email)
-                .orElseThrow(() -> new AuthenticationException("잘못된 사용자 정보입니다"));
+                .orElseThrow(() -> new AuthenticationException(EXCEPTION_MESSAGE_WRONG_AUTH_INFO));
         if (!Objects.equals(password, member.getPassword())) {
-            throw new AuthenticationException("잘못된 사용자 정보입니다");
+            throw new AuthenticationException(EXCEPTION_MESSAGE_WRONG_AUTH_INFO);
         }
-
-        request.setAttribute(LOGIN_MEMBER_ID.name(), member.getId());
-        return true;
+        return member.getId();
     }
 }
