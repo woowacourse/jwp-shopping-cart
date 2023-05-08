@@ -2,6 +2,7 @@ package cart.repository;
 
 import cart.domain.member.Member;
 import cart.domain.member.MemberId;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,75 +15,75 @@ import java.util.List;
 
 @SpringBootTest
 public class MemberRepositoryTest {
-    @Autowired
-    MemberRepository memberRepository;
+	@Autowired
+	MemberRepository memberRepository;
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
-    @BeforeEach
-    void setUp(){
-        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
-        jdbcTemplate.execute("TRUNCATE TABLE members RESTART IDENTITY");
-        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
-    }
+	@BeforeEach
+	void setUp() {
+		jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
+		jdbcTemplate.execute("TRUNCATE TABLE members RESTART IDENTITY");
+		jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
+	}
 
-    @DisplayName("회원 저장 테스트")
-    @Test
-    void insert(){
-        // given
-        final Member member = new Member("kiara", "email@email", "pw");
+	@DisplayName("회원 저장 테스트")
+	@Test
+	void insert() {
+		// given
+		final Member member = new Member("kiara", "email@email", "pw");
 
-        // when
-        MemberId insertId = memberRepository.insert(member);
+		// when
+		MemberId insertId = memberRepository.insert(member);
 
-        // then
-        Assertions.assertThat(new MemberId(1L)).isEqualTo(insertId);
-    }
+		// then
+		Assertions.assertThat(new MemberId(1L)).isEqualTo(insertId);
+	}
 
-    @DisplayName("전체 회원 조회 테스트")
-    @Test
-    void findAll(){
-        // given
-        final Member member = new Member("kiara", "email@email", "pw");
+	@DisplayName("전체 회원 조회 테스트")
+	@Test
+	void findAll() {
+		// given
+		final Member member = new Member("kiara", "email@email", "pw");
 
-        // when
-        memberRepository.insert(member);
-        List<Member> allMembers = memberRepository.findAll();
+		// when
+		memberRepository.insert(member);
+		List<Member> allMembers = memberRepository.findAll();
 
-        // then
-        Assertions.assertThat(1).isEqualTo(allMembers.size());
-    }
+		// then
+		Assertions.assertThat(1).isEqualTo(allMembers.size());
+	}
 
-    @DisplayName("ID로 회원 조회 테스트")
-    @Test
-    void findByMemberId(){
-        // given
-        MemberId memberId = memberRepository.insert(new Member("kiara", "email@email", "pw"));
+	@DisplayName("ID로 회원 조회 테스트")
+	@Test
+	void findByMemberId() {
+		// given
+		MemberId memberId = memberRepository.insert(new Member("kiara", "email@email", "pw"));
 
-        // when
-        Member memberById = memberRepository.findByMemberId(memberId);
+		// when
+		Member memberById = memberRepository.findByMemberId(memberId);
 
-        // then
-        Assertions.assertThat(memberById)
-                .usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(new Member("kiara", "email@email", "pw"));
-    }
+		// then
+		Assertions.assertThat(memberById)
+			.usingRecursiveComparison()
+			.ignoringFields("id")
+			.isEqualTo(new Member("kiara", "email@email", "pw"));
+	}
 
-    @DisplayName("email로 회원 조회 테스트")
-    @Test
-    void findByEmail() {
-        // given
-        memberRepository.insert(new Member("kiara", "email@email", "pw"));
+	@DisplayName("email로 회원 조회 테스트")
+	@Test
+	void findByEmail() {
+		// given
+		memberRepository.insert(new Member("kiara", "email@email", "pw"));
 
-        // when
-        final Member memberByEmail = memberRepository.findByEmail("email@email");
+		// when
+		final Member memberByEmail = memberRepository.findByEmail("email@email");
 
-        // then
-        Assertions.assertThat(memberByEmail)
-                .usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(new Member("kiara", "email@email", "pw"));
-    }
+		// then
+		Assertions.assertThat(memberByEmail)
+			.usingRecursiveComparison()
+			.ignoringFields("id")
+			.isEqualTo(new Member("kiara", "email@email", "pw"));
+	}
 }

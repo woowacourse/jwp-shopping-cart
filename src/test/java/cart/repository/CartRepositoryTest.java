@@ -78,7 +78,7 @@ class CartRepositoryTest {
 		final Product pizza = productRepository.findByProductId(carts.get(1).getProductId());
 
 		// then
-		SoftAssertions.assertSoftly(softly->{
+		SoftAssertions.assertSoftly(softly -> {
 			softly.assertThat(chicken.getName()).isEqualTo("치킨");
 			softly.assertThat(pizza.getName()).isEqualTo("피자");
 		});

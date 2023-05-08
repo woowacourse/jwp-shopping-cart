@@ -18,17 +18,17 @@ public class AuthController {
 	private AuthorizationExtractor<AuthInfo> basicAuthorizationExtractor = new BasicAuthorizationExtractor();
 	private AuthService authService;
 
-	public AuthController(AuthService authService){
+	public AuthController(AuthService authService) {
 		this.authService = authService;
 	}
 
 	@GetMapping("/carts")
-	public ResponseEntity showCart(HttpServletRequest request){
+	public ResponseEntity showCart(HttpServletRequest request) {
 		final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
 		String email = authInfo.getEmail();
 		String password = authInfo.getPassword();
 
-		if(authService.checkInvalidLogin(email,password)){
+		if (authService.checkInvalidLogin(email, password)) {
 			throw new AuthorizationException();
 		}
 

@@ -1,10 +1,10 @@
 package cart.domain.member;
 
 public class Member {
-	private MemberId id;
 	private final String name;
 	private final String email;
 	private final String password;
+	private MemberId id;
 
 	public Member(MemberId id, String name, String email, String password) {
 		this(name, email, password);

@@ -48,10 +48,10 @@ public class CartRepository {
 		return jdbcTemplate.query(sql, cartRowMapper, memberId.getId());
 	}
 
-	public List<Cart> findAllByEmail(final String email){
+	public List<Cart> findAllByEmail(final String email) {
 		final String sql =
 			"SELECT * "
-			+ "FROM members m "
+				+ "FROM members m "
 				+ "JOIN carts c ON m.id = c.memberId "
 				+ "JOIN products p ON c.productId = p.id "
 				+ "WHERE m.email = ?";
