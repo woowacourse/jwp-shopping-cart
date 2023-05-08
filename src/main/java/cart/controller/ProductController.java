@@ -1,7 +1,9 @@
 package cart.controller;
 
-import cart.dao.ProductDao;
-import java.util.NoSuchElementException;
+import cart.controller.dto.ProductRequest;
+import cart.service.ProductService;
+import java.net.URI;
+import java.net.URISyntaxException;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,40 +14,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequestMapping("/products")
+@RestController
 public class ProductController {
 
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public ProductController(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @PostMapping
-    public ResponseEntity create(@Valid @RequestBody ProductRequest product) {
-        productDao.add(product);
-        return ResponseEntity.ok().build();
+    public ResponseEntity create(@Valid @RequestBody ProductRequest product)
+        throws URISyntaxException {
+        productService.add(product);
+        return ResponseEntity.created(new URI("/admin")).build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity update(@PathVariable Long id,
-        @Valid @RequestBody ProductRequest product) {
-        final int updateCount = productDao.updateById(id, product);
-        validateChange(updateCount);
+                                 @Valid @RequestBody ProductRequest product) {
+        productService.update(id, product);
         return ResponseEntity.ok().build();
-    }
-
-    private static void validateChange(int changeColumnCount) {
-        if (changeColumnCount == 0) {
-            throw new NoSuchElementException();
-        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
-        final int deleteCount = productDao.deleteById(id);
-        validateChange(deleteCount);
+        productService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

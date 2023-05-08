@@ -3,7 +3,8 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.controller.ProductRequest;
+import cart.controller.dto.ProductRequest;
+import cart.dao.entity.ProductEntity;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,7 +70,7 @@ public class ProductDaoTest {
         final int requestPrice = 4_000;
         final String requestUrl = "none";
         final ProductRequest updateRequest = new ProductRequest(requestName, requestPrice,
-                requestUrl);
+            requestUrl);
 
         // when
         final int updateCount = productDao.updateById(firstRecordId, updateRequest);
@@ -77,10 +78,10 @@ public class ProductDaoTest {
         // then
         final ProductEntity actual = productDao.findById(firstRecordId).get();
         assertAll(
-                () -> assertThat(updateCount).isEqualTo(1),
-                () -> assertThat(actual.getName()).isEqualTo(requestName),
-                () -> assertThat(actual.getPrice()).isEqualTo(requestPrice),
-                () -> assertThat(actual.getImageUrl()).isEqualTo(requestUrl)
+            () -> assertThat(updateCount).isEqualTo(1),
+            () -> assertThat(actual.getName()).isEqualTo(requestName),
+            () -> assertThat(actual.getPrice()).isEqualTo(requestPrice),
+            () -> assertThat(actual.getImageUrl()).isEqualTo(requestUrl)
         );
     }
 
@@ -95,8 +96,8 @@ public class ProductDaoTest {
 
         // then
         assertAll(
-                () -> assertThat(deletedRecord).isEmpty(),
-                () -> assertThat(deleteCount).isEqualTo(1)
+            () -> assertThat(deletedRecord).isEmpty(),
+            () -> assertThat(deleteCount).isEqualTo(1)
         );
     }
 }

@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,7 +13,6 @@ public class ProductRequest {
     private String imageUrl;
 
     public ProductRequest() {
-
     }
 
     public ProductRequest(String name, Integer price, String imageUrl) {

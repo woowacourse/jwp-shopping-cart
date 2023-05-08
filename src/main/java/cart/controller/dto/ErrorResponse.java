@@ -1,8 +1,8 @@
-package cart.controller;
+package cart.controller.dto;
 
 public class ErrorResponse {
 
-    String message;
+    private final String message;
 
     public ErrorResponse(String message) {
         this.message = message;
