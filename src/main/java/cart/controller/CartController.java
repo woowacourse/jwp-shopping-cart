@@ -34,16 +34,16 @@ public class CartController {
         return ResponseEntity.ok().body(cartItems);
     }
 
-    @PostMapping("/{productId}")
-    public ResponseEntity<Void> insertCartItem(@PathVariable int productId, @AuthenticationPrincipal AuthInfo authInfo) {
+    @PostMapping
+    public ResponseEntity<Void> insertCartItem(@RequestParam int productId, @AuthenticationPrincipal AuthInfo authInfo) {
         int memberId = memberService.findMemberId(authInfo.getEmail(), authInfo.getPassword());
         cartItemService.addCartItem(new CartItemEntity(memberId, productId));
 
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable int cartId) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCartItem(@RequestParam int cartId) {
         cartItemService.deleteCartItem(cartId);
         return ResponseEntity.ok().build();
     }
