@@ -27,7 +27,7 @@ class ProductDaoImplTest {
     }
 
     @Test
-    @DisplayName("데이터를 추가한다")
+    @DisplayName("제품 데이터베이스에 상품 데이터를 추가한다")
     void insert() {
         productDao.insert(new ProductEntity("pizza", "img", 10000));
 
@@ -35,7 +35,7 @@ class ProductDaoImplTest {
     }
 
     @Test
-    @DisplayName("모든 데이터를 찾는다")
+    @DisplayName("데이터베이스에 등록된 모든 상품 정보를 찾는다")
     void findAll() {
         productDao.insert(new ProductEntity("pizza", "img", 10000));
         productDao.insert(new ProductEntity("chicken", "img", 20000));
@@ -44,7 +44,7 @@ class ProductDaoImplTest {
     }
 
     @Test
-    @DisplayName("특정 Id에 해당하는 제품을 찾는다")
+    @DisplayName("특정 Id에 해당하는 제품을 조회한다.")
     void findById() {
         String name = "pizza";
         String image = "img";
