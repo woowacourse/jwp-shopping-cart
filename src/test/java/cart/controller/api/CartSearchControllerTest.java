@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.Optional;
 
 import cart.controller.AbstractProductControllerTest;
 import cart.domain.cart.Cart;
@@ -20,7 +21,7 @@ class CartSearchControllerTest extends AbstractProductControllerTest {
 
     @Test
     void 장바구니_조회_테스트() throws Exception {
-        given(authService.getUser(any())).willReturn(new User("a@a.com", "password1"));
+        given(userRepository.findByEmail(any())).willReturn(Optional.of(new User("a@a.com", "password1")));
         final List<Cart> products = List.of(
                 new Cart(1L, new Product(1L, "odo", "url", 1)),
                 new Cart(2L, new Product(2L, "nunu", "url", 1))
@@ -31,7 +32,8 @@ class CartSearchControllerTest extends AbstractProductControllerTest {
                 new ProductResponse(2L, "nunu", "url", 1)
         );
         final String result = objectMapper.writeValueAsString(productResponses);
-        mockMvc.perform(get("/carts"))
+        mockMvc.perform(get("/carts")
+                        .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
                 .andExpect(status().isOk())
                 .andExpect(content().json(result));
     }

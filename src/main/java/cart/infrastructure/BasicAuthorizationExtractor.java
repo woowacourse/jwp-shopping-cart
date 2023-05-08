@@ -1,19 +1,14 @@
 package cart.infrastructure;
 
-import javax.servlet.http.HttpServletRequest;
-
 import cart.domain.user.User;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 public class BasicAuthorizationExtractor {
 
-    private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
-    public User extract(final HttpServletRequest request) {
-        final String header = request.getHeader(AUTHORIZATION);
-
+    public User extract(final String header) {
         if (header == null) {
             return null;
         }

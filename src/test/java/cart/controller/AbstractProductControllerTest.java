@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.repository.UserRepository;
 import cart.service.AuthService;
 import cart.service.CartCreateService;
 import cart.service.CartDeleteService;
@@ -20,6 +21,8 @@ public class AbstractProductControllerTest {
 
     @MockBean
     protected AuthService authService;
+    @MockBean
+    protected UserRepository userRepository;
     @MockBean
     protected CartDeleteService cartDeleteService;
     @MockBean

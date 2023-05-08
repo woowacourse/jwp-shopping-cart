@@ -1,5 +1,7 @@
 package cart.controller.api;
 
+import cart.controller.auth.AuthenticationPrincipal;
+import cart.domain.user.User;
 import cart.service.CartDeleteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +20,10 @@ public class CartDeleteController {
 
     @DeleteMapping("/carts/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteCart(@PathVariable final long id) {
-        cartDeleteService.delete(id);
+    public void deleteCart(
+            @PathVariable final long id,
+            @AuthenticationPrincipal final User user
+    ) {
+        cartDeleteService.delete(id, user);
     }
 }
