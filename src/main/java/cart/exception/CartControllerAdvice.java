@@ -1,9 +1,9 @@
 package cart.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -19,6 +19,11 @@ public class CartControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler({UserAuthenticationException.class})
     public ResponseEntity<String> handleAuthentificationException(final UserAuthenticationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler({DataIntegrityViolationException.class})
+    public ResponseEntity<String> handleDataIntegrityVioationException(final DataIntegrityViolationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("요청이 실패했습니다. 입력 값을 확인하고 다시 시도해주세요.");
     }
 
     @ExceptionHandler({Exception.class})
