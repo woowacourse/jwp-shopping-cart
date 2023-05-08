@@ -4,6 +4,7 @@ import cart.dto.MemberDto;
 import cart.entity.Member;
 import cart.exception.customexceptions.DataNotFoundException;
 import cart.exception.customexceptions.NotUniqueValueException;
+import cart.exception.customexceptions.NotValidDataException;
 import cart.exception.customexceptions.PasswordNotMatchException;
 import cart.repository.dao.memberDao.MemberDao;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -32,7 +33,7 @@ class MemberServiceTest {
     private MemberService memberService;
 
     @Test
-    void 중복되는_이메일로_회원가입시_예외를_던진다() {
+    void 잘못된_데이터로_회원가입시_예외를_던진다() {
         String email = "ehdgur4814@naver.com";
         String name = "hardy";
         String password = "1234";
@@ -42,8 +43,7 @@ class MemberServiceTest {
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> memberService.registerMember(member))
-                .isInstanceOf(NotUniqueValueException.class)
-                .hasMessage("중복되는 email입니다. 다른 이메일을 입력해주세요.");
+                .isInstanceOf(NotValidDataException.class);
     }
 
     @Test

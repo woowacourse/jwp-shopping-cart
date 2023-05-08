@@ -1,6 +1,7 @@
 package cart.repository.dao.memberDao;
 
 import cart.entity.Member;
+import cart.exception.customexceptions.NotUniqueValueException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -45,7 +47,7 @@ class JdbcMemberDaoTest {
     }
 
     @Test
-    void 회원가입시_이메일이_중복되면_빈_옵셔널을_반환한다() {
+    void 회원가입시_이메일이_중복되면_예외를_던진다() {
         String email = "ehdgur4814@naver.com";
         String name = "hardy";
         String password = "1234";
@@ -53,7 +55,8 @@ class JdbcMemberDaoTest {
 
         jdbcMemberDao.save(member);
 
-        assertThat(jdbcMemberDao.save(member).isEmpty()).isTrue();
+        assertThatThrownBy(() -> jdbcMemberDao.save(member))
+                .isInstanceOf(NotUniqueValueException.class);
     }
 
     @Test
