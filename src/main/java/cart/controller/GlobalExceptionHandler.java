@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleIllegalArgumentException(DataAccessException exception) {
 
         Map<String, String> error = new HashMap<>();
-        error.put("message", "데이터베이스에 접근할 수 없습니다.");
+        error.put("message", "데이터베이스에 접근할 수 없습니다. 서버 관리자에게 문의해주세요.");
 
         return ResponseEntity.internalServerError().body(error);
     }
