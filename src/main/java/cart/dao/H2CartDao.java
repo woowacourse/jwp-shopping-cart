@@ -1,10 +1,9 @@
 package cart.dao;
 
 import cart.entity.CartEntity;
-import cart.exception.InternalServerException;
+import cart.exception.BadRequestException;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -54,7 +53,7 @@ public class H2CartDao implements CartDao {
       final String sql = "delete from cart where member_id=? and product_id=?";
       namedParameterjdbcTemplate.getJdbcOperations().update(sql, memberId, productId);
     } catch (EmptyResultDataAccessException exception) {
-      throw new InternalServerException("카트가 존재하지 않습니다.");
+      throw new BadRequestException("카트가 존재하지 않습니다.");
     }
   }
 

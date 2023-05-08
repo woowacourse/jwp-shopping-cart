@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
-import cart.exception.InternalServerException;
+import cart.exception.BadRequestException;
 import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -64,9 +64,9 @@ public class H2ProductDao implements ProductDao {
             final String sql = "delete from product where id=?";
             namedParameterjdbcTemplate.getJdbcOperations().update(sql, id);
         } catch (DataIntegrityViolationException exception) {
-            throw new InternalServerException("이미 상품이 장바구니에 담겨 삭제할 수 없습니다.");
+            throw new BadRequestException("이미 상품이 장바구니에 담겨 삭제할 수 없습니다.");
         } catch (EmptyResultDataAccessException exception) {
-            throw new InternalServerException("상품이 존재하지 않습니다.");
+            throw new BadRequestException("상품이 존재하지 않습니다.");
         }
     }
 
