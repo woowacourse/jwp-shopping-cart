@@ -1,4 +1,4 @@
-package cart.common;
+package cart.auth;
 
 import cart.domain.member.dto.MemberCreateRequest;
 import java.lang.reflect.Type;

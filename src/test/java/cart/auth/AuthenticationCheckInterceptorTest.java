@@ -1,4 +1,4 @@
-package cart.common.auth;
+package cart.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -7,7 +7,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import cart.domain.auth.service.AuthService;
+import cart.auth.AuthenticationCheckInterceptor;
+import cart.auth.AuthenticationException;
+import cart.auth.AuthService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.DisplayName;

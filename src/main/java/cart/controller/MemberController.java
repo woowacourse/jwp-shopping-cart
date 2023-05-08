@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.common.EncodePassword;
+import cart.auth.EncodePassword;
 import cart.domain.member.service.MemberService;
 import cart.domain.member.dto.MemberCreateRequest;
 import cart.domain.member.dto.MemberCreateResponse;

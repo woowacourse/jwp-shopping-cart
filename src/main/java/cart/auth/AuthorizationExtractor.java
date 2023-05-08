@@ -1,4 +1,4 @@
-package cart.domain.auth.service;
+package cart.auth;
 
 import cart.domain.member.dto.MemberInformation;
 import org.springframework.stereotype.Component;

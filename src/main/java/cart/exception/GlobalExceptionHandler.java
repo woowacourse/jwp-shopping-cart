@@ -1,6 +1,6 @@
-package cart.common;
+package cart.exception;
 
-import cart.common.auth.AuthenticationException;
+import cart.auth.AuthenticationException;
 import java.util.Objects;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

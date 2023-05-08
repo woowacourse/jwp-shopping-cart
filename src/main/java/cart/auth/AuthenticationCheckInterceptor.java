@@ -1,6 +1,5 @@
-package cart.common.auth;
+package cart.auth;
 
-import cart.domain.auth.service.AuthService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;

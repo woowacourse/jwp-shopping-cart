@@ -1,4 +1,4 @@
-package cart.common;
+package cart.auth;
 
 import org.springframework.util.Base64Utils;
 

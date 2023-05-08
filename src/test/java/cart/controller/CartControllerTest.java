@@ -9,9 +9,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.common.auth.AuthInfoArgumentResolver;
-import cart.common.auth.AuthenticationCheckInterceptor;
-import cart.domain.auth.service.AuthService;
+import cart.auth.AuthInfoArgumentResolver;
+import cart.auth.AuthenticationCheckInterceptor;
+import cart.auth.AuthService;
 import cart.domain.cart.service.CartService;
 import cart.domain.member.dto.MemberInformation;
 import cart.domain.cart.dto.CartResponse;

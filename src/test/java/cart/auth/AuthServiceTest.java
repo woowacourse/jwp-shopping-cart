@@ -1,11 +1,13 @@
-package cart.domain.auth.service;
+package cart.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
-import cart.common.auth.AuthenticationException;
+import cart.auth.AuthService;
+import cart.auth.AuthenticationException;
+import cart.auth.AuthorizationExtractor;
 import cart.dao.MemberDao;
 import cart.domain.member.dto.MemberInformation;
 import cart.domain.member.entity.Member;

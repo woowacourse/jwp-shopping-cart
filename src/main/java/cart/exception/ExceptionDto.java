@@ -1,4 +1,4 @@
-package cart.common;
+package cart.exception;
 
 public class ExceptionDto {
 

@@ -1,6 +1,5 @@
-package cart.domain.auth.service;
+package cart.auth;
 
-import cart.common.auth.AuthenticationException;
 import cart.dao.MemberDao;
 import cart.domain.member.entity.Member;
 import cart.domain.member.dto.MemberInformation;

@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.common.auth.AuthInfo;
+import cart.auth.AuthInfo;
 import cart.domain.cart.service.CartService;
 import cart.domain.cart.dto.CartCreateRequest;
 import cart.domain.cart.dto.CartResponse;

@@ -1,7 +1,7 @@
 package cart.config;
 
-import cart.common.auth.AuthInfoArgumentResolver;
-import cart.common.auth.AuthenticationCheckInterceptor;
+import cart.auth.AuthInfoArgumentResolver;
+import cart.auth.AuthenticationCheckInterceptor;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
