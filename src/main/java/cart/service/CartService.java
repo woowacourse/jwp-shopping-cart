@@ -32,15 +32,13 @@ public class CartService {
         Member signedUpMember = this.memberService.signUp(memberAuthDto);
         Product product = this.productService.findById(productId);
         Cart cart = this.cartRepository.findByUserId(signedUpMember.getId());
-        cart.add(product);
-        this.cartRepository.update(cart);
+        this.cartRepository.saveProductToCart(cart, product);
     }
 
     public void deleteProductFromCartById(MemberAuthDto memberAuthDto, Long productId) {
         Member signedUpMember = this.memberService.signUp(memberAuthDto);
         Product product = this.productService.findById(productId);
         Cart cart = this.cartRepository.findByUserId(signedUpMember.getId());
-        cart.delete(product);
-        this.cartRepository.update(cart);
+        this.cartRepository.deleteProductFromCart(cart, product);
     }
 }

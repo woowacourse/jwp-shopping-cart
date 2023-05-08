@@ -30,8 +30,12 @@ public class H2CartProductDao implements CartProductDao {
     }
 
     @Override
-    public long save(CartProductEntity cartProductEntityToSave) {
+    public List<CartProductEntity> findAllByUserId() {
+        return null;
+    }
 
+    @Override
+    public long save(CartProductEntity cartProductEntityToSave) {
         String sql = "SELECT id, member_id, product_id FROM cart_product WHERE member_id = ? AND product_id = ?";
         try {
             CartProductEntity cartProductEntity = this.jdbcTemplate.queryForObject(
@@ -48,7 +52,7 @@ public class H2CartProductDao implements CartProductDao {
     }
 
     @Override
-    public List<CartProductEntity> findAllByUserId() {
-        return null;
+    public void delete(CartProductEntity cartProductEntity) {
+        
     }
 }

@@ -37,14 +37,24 @@ public class DbCartRepository implements CartRepository {
     }
 
     @Override
-    public void update(Cart cart) {
-        long memberId = cart.getMemberId();
-        List<Product> products = cart.getProducts();
-        products.stream()
-                .map(product -> CartProductEntity.createToSave(memberId, product.getId()))
-                .forEach(this::saveCartProductEntity);
-        // TODO 삭제 로직이 없다! 추가하자
+    public long saveProductToCart(Cart cartToAdd, Product product) {
+        CartProductEntity cartProductEntity = CartProductEntity.createToSave(
+                cartToAdd.getMemberId(),
+                product.getId()
+        );
+        return this.cartProductDao.save(cartProductEntity);
     }
+
+    @Override
+    public void deleteProductFromCart(Cart cartToDelete, Product product) {
+
+        CartProductEntity cartProductEntity = CartProductEntity.createToSave(
+                cartToDelete.getMemberId(),
+                product.getId()
+        );
+        this.cartProductDao.delete(cartProductEntity);
+    }
+
 
     private Product mapToProductFromCartProductEntity(CartProductEntity cartProductEntity) {
         ProductEntity productEntity = this.productDao.findById(cartProductEntity.getProductId())
@@ -55,9 +65,5 @@ public class DbCartRepository implements CartRepository {
                 productEntity.getPrice(),
                 productEntity.getImageUrl()
         );
-    }
-
-    private void saveCartProductEntity(CartProductEntity cartProductEntity) {
-        this.cartProductDao.save(cartProductEntity);
     }
 }
