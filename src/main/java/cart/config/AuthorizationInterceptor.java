@@ -1,6 +1,6 @@
 package cart.config;
 
-import cart.authorization.AuthorizationExtractor;
+import cart.authorization.BasicAuthorizationExtractor;
 import cart.dto.AuthorizationInformation;
 import cart.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +15,11 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     private MemberService memberService;
 
     @Autowired
-    private AuthorizationExtractor<AuthorizationInformation> authorizationExtractor;
+    private BasicAuthorizationExtractor basicAuthorizationExtractor;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        AuthorizationInformation authorizationInformation = authorizationExtractor.extract(request);
+        AuthorizationInformation authorizationInformation = basicAuthorizationExtractor.extract(request);
         return memberService.isValidMember(authorizationInformation);
     }
 }

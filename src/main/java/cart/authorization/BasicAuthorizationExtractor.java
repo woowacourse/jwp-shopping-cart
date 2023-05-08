@@ -9,13 +9,12 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 
 @Component
-public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthorizationInformation> {
+public class BasicAuthorizationExtractor {
 
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
     private static final String INVALID_MEMBER_MESSAGE = "사용자 정보가 올바르지 않습니다.";
 
-    @Override
     public AuthorizationInformation extract(HttpServletRequest request) {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
@@ -41,7 +40,6 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<Autho
         return !header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase());
     }
 
-    @Override
     public AuthorizationInformation extract(String header) {
         validateHeader(header);
 
