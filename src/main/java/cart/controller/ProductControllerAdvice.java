@@ -28,7 +28,6 @@ public class ProductControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(final Exception exception) {
-        System.out.println(exception.getClass());
-        return ResponseEntity.badRequest().body(new ExceptionResponse(exception.getMessage()));
+        return ResponseEntity.internalServerError().body(new ExceptionResponse(exception.getMessage()));
     }
 }
