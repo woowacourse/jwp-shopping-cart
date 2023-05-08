@@ -1,5 +1,6 @@
 package cart.repository.dao.cartDao;
 
+import cart.dto.CartItemDto;
 import cart.entity.Cart;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -32,26 +33,31 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
-    public List<Long> findAllProductIdByMemberId(final Long memberId) {
-        final String sql = "select product_id from cart where member_id = :memberId";
+    public List<CartItemDto> findAllCartItemsByMemberId(final Long memberId) {
+        final String sql = "select CART.id, CART.product_id, PRODUCT.name, PRODUCT.image_url, PRODUCT.price " +
+                "from CART INNER JOIN PRODUCT ON CART.product_id = PRODUCT.id " +
+                "WHERE CART.member_id = :memberId";
         final SqlParameterSource source = new MapSqlParameterSource()
                 .addValue("memberId", memberId);
         return template.query(sql, source, rowMapper());
     }
 
     @Override
-    public int delete(final Long memberId, final Long productId) {
-        final String sql = "delete from cart where member_id = :memberId and product_id = :productId";
+    public int deleteByCartId(final Long cartId) {
+        final String sql = "delete from cart where id = :cartId";
         final SqlParameterSource source = new MapSqlParameterSource()
-                .addValue("memberId", memberId)
-                .addValue("productId", productId);
+                .addValue("cartId", cartId);
         return template.update(sql, source);
     }
 
-    public RowMapper<Long> rowMapper() {
+    public RowMapper<CartItemDto> rowMapper() {
         return ((rs, rowNum) -> {
+            long cartId = rs.getLong("id");
             long productId = rs.getLong("product_id");
-            return Long.valueOf(productId);
+            String productName = rs.getString("name");
+            String imageUrl = rs.getString("image_url");
+            int price = rs.getInt("price");
+            return new CartItemDto(cartId, productId, productName, imageUrl, price);
         });
     }
 }
