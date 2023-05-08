@@ -29,16 +29,11 @@ class AdminControllerTest {
 
         ProductEntity productEntity = new ProductEntity(1, "pizza", "https://www.hmj2k.com/data/photos/20210936/art_16311398425635_31fd17.jpg", 1000);
 
-        RestAssured.given()
-                .log()
-                .all()
+        RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productEntity)
-                .when()
-                .get("/admin")
-                .then()
-                .log()
-                .all()
+                .when().get("/admin")
+                .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
