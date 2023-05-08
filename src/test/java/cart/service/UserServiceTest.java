@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
+import static cart.service.UserService.USER_ID_NOT_EXIST_ERROR_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -61,8 +62,10 @@ public class UserServiceTest {
         final long id = userService.save("test12@mail.com", "12121212");
 
         assertAll(
-                () -> assertDoesNotThrow(() -> userService.validateExistUserId(id)),
-                () -> assertThatThrownBy(() -> userService.validateExistUserId(-1L)).isInstanceOf(IllegalArgumentException.class)
+                () -> assertDoesNotThrow(() -> userService.validateUserIdExist(id)),
+                () -> assertThatThrownBy(() -> userService.validateUserIdExist(-1L))
+                        .isInstanceOf(IllegalArgumentException.class)
+                        .hasMessage(USER_ID_NOT_EXIST_ERROR_MESSAGE)
         );
     }
 }

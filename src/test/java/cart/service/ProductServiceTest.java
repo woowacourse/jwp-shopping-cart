@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
+import static cart.service.ProductService.PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -60,7 +61,7 @@ class ProductServiceTest {
     void updateInvalidId() {
         assertThatThrownBy(() -> productService.update((long) 9999, "애쉬", 1000, null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 상품 id 입니다.");
+                .hasMessage(PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE);
     }
 
     @Test
@@ -85,8 +86,10 @@ class ProductServiceTest {
         final long id = productService.save("이오", 1000, null);
 
         assertAll(
-                () -> assertDoesNotThrow(() -> productService.validateExistProductId(id)),
-                () -> assertThatThrownBy(() -> productService.validateExistProductId(-1L)).isInstanceOf(IllegalArgumentException.class)
+                () -> assertDoesNotThrow(() -> productService.validateProductIdExist(id)),
+                () -> assertThatThrownBy(() -> productService.validateProductIdExist(-1L))
+                        .isInstanceOf(IllegalArgumentException.class)
+                        .hasMessage(PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE)
         );
     }
 
@@ -97,6 +100,8 @@ class ProductServiceTest {
 
         productService.delete(id);
 
-        assertThatThrownBy(() -> productService.findById(id)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> productService.findById(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE);
     }
 }

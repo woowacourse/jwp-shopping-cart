@@ -10,6 +10,8 @@ import java.util.List;
 @Service
 public class UserService {
 
+    public static final String USER_ID_NOT_EXIST_ERROR_MESSAGE = "존재하지 않는 사용자 ID 입니다.";
+    public static final String USER_EMAIL_NOT_EXIST_ERROR_MESSAE = "존재하지 않는 사용자 email 입니다.";
     private final UserDao userDao;
 
     public UserService(final UserDao userDao) {
@@ -25,7 +27,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findByEmail(final String email) {
         return userDao.findByEmail(email).orElseThrow(() -> {
-            throw new IllegalArgumentException("존재하지 않는 사용자 email 입니다.");
+            throw new IllegalArgumentException(USER_EMAIL_NOT_EXIST_ERROR_MESSAE);
         });
     }
 
@@ -34,9 +36,13 @@ public class UserService {
         return userDao.findAll();
     }
 
-    public void validateExistUserId(final Long id) {
-        if (userDao.findById(id).isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 사용자 id 입니다.");
+    public void validateUserIdExist(final Long id) {
+        if (!isUserIdExist(id)) {
+            throw new IllegalArgumentException(USER_ID_NOT_EXIST_ERROR_MESSAGE);
         }
+    }
+
+    private boolean isUserIdExist(final Long id) {
+        return userDao.findById(id).isPresent();
     }
 }
