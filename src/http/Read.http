@@ -1,0 +1,10 @@
+### Read API
+
+### 상품 목록
+GET http://localhost:8080
+
+### 관리자 페이지
+GET http://localhost:8080/admin
+
+### 사용자 목록
+GET http://localhost:8080/settings

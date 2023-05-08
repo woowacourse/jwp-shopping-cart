@@ -1,91 +1,77 @@
 package cart.controller;
 
-import cart.dao.ProductDao;
-import cart.domain.Product;
 import cart.dto.ProductRequest;
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import cart.service.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ProductControllerTest {
+@WebMvcTest(ProductController.class)
+public class ProductControllerTest {
 
     @Autowired
-    private ProductDao productDao;
-
+    private MockMvc mockMvc;
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private ObjectMapper objectMapper;
+    @MockBean
+    private ProductService productService;
 
-    @BeforeEach
-    void setUp(@LocalServerPort final int port) {
-        RestAssured.port = port;
-    }
-
-    @AfterEach
-    void clear() {
-        jdbcTemplate.execute("TRUNCATE TABLE product");
-    }
-
-
+    @Test
     @DisplayName("POST /product")
-    @Test
-    void createProduct() {
-        ProductRequest request = new ProductRequest("이오", 1000, null);
+    void createProduct() throws Exception {
+        final ProductRequest productRequest = new ProductRequest("이오", 1000, null);
+        final String request = objectMapper.writeValueAsString(productRequest);
+        given(productService.save("이오", 1000, null)).willReturn(1L);
 
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().post("/product")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+        mockMvc.perform(post("/product")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+                .andExpect(status().isCreated())
+                .andExpect(header().string(HttpHeaders.LOCATION, "/product/1"));
+
+        verify(productService, times(1)).save(anyString(), anyInt(), any());
     }
 
+    @Test
     @DisplayName("PUT /product/{id}")
-    @Test
-    void updateProduct() {
-        Long id = productDao.insert(new Product("이오", 1000, null));
+    void updateProduct() throws Exception {
+        final ProductRequest productRequest = new ProductRequest("애쉬", 2000, "image");
+        final String request = objectMapper.writeValueAsString(productRequest);
+        final int id = 1;
+        given(productService.update(anyLong(), anyString(), anyInt(), anyString())).willReturn(1L);
 
-        ProductRequest request = new ProductRequest("애쉬", 2000, "image");
+        mockMvc.perform(put("/product/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+                .andExpect(status().isCreated())
+                .andExpect(header().string(HttpHeaders.LOCATION, "/product/1"));
 
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(request)
-                .when().put("/product/" + id)
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
-
-        Product product = productDao.findById(id);
-
-        assertAll(
-                () -> assertThat(product).isNotNull(),
-                () -> assertThat(product.getId()).isEqualTo(id),
-                () -> assertThat(product.getName()).isEqualTo("애쉬"),
-                () -> assertThat(product.getPrice()).isEqualTo(2000),
-                () -> assertThat(product.getImage()).isEqualTo("image")
-        );
+        verify(productService, times(1)).update(anyLong(), anyString(), anyInt(), any());
     }
 
-    @DisplayName("DELETE /product/{id}")
+
     @Test
-    void deleteProduct() {
-        Long id = productDao.insert(new Product("이오", 1000, null));
+    @DisplayName("DELETE /product/{id}")
+    void deleteProduct() throws Exception {
+        doNothing().when(productService).delete(anyLong());
+        final int id = 1;
 
-        RestAssured.given().log().all()
-                .when().delete("/product/" + id)
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+        mockMvc.perform(delete("/product/" + id))
+                .andExpect(status().isOk());
 
-        assertThat(productDao.findById(id)).isNull();
+        verify(productService, times(1)).delete(anyLong());
     }
 }

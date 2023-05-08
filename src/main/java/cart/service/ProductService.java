@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,17 +9,25 @@ import java.util.List;
 
 @Service
 public class ProductService {
+    public static final String PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE = "존재하지 않는 상품 ID 입니다.";
 
     private final ProductDao productDao;
 
-    public ProductService(ProductDao productDao) {
+    public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
     @Transactional
-    public void save(final String name, final int price, final String image) {
-        Product product = new Product(name, price, image);
-        productDao.insert(product);
+    public Long save(final String name, final int price, final String image) {
+        final Product product = new Product(name, price, image);
+        return productDao.insert(product);
+    }
+
+    @Transactional(readOnly = true)
+    public Product findById(final Long id) {
+        return productDao.findById(id).orElseThrow(() -> {
+            throw new IllegalArgumentException(PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE);
+        });
     }
 
     @Transactional(readOnly = true)
@@ -28,21 +36,28 @@ public class ProductService {
     }
 
     @Transactional
-    public void update(final Long id, final String name, final int price, final String image) {
-        checkExistProductId(id);
-        Product product = new Product(id, name, price, image);
+    public Long update(final Long id, final String name, final int price, final String image) {
+        validateProductIdExist(id);
+
+        final Product product = new Product(id, name, price, image);
         productDao.update(product);
+
+        return id;
     }
 
-    private void checkExistProductId(Long id) {
-        if (productDao.findById(id) == null) {
-            throw new IllegalArgumentException("존재하지 않는 상품 id 입니다.");
+    public void validateProductIdExist(final Long id) {
+        if (!isProductIdExist(id)) {
+            throw new IllegalArgumentException(PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE);
         }
+    }
+
+    public boolean isProductIdExist(final Long id) {
+        return productDao.isExist(id);
     }
 
     @Transactional
     public void delete(final Long id) {
-        checkExistProductId(id);
+        validateProductIdExist(id);
         productDao.deleteById(id);
     }
 }

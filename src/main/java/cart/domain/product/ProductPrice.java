@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.product;
 
 import java.util.Objects;
 
@@ -27,10 +27,10 @@ public class ProductPrice {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProductPrice that = (ProductPrice) o;
+        final ProductPrice that = (ProductPrice) o;
         return price == that.price;
     }
 

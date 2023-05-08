@@ -17,21 +17,21 @@ public class ControllerAdvice {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(IllegalArgumentException.class)
-    private ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
+    private ResponseEntity<ErrorResponse> handleIllegalArgumentException(final IllegalArgumentException exception) {
         logger.info("[IllegalArgumentException] ", exception);
-        
+
         return ResponseEntity.badRequest()
                 .body(new ErrorResponse(exception.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    private ResponseEntity<ErrorResponse> handleInvalidArgument(MethodArgumentNotValidException exception) {
+    private ResponseEntity<ErrorResponse> handleInvalidArgument(final MethodArgumentNotValidException exception) {
         logger.info("[MethodArgumentNotValidException] ", exception);
 
-        List<FieldError> fieldErrors = exception.getFieldErrors();
+        final List<FieldError> fieldErrors = exception.getFieldErrors();
 
-        StringBuilder stringBuilder = new StringBuilder();
-        for (FieldError fieldError : fieldErrors) {
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (final FieldError fieldError : fieldErrors) {
             stringBuilder.append(fieldError.getDefaultMessage());
         }
 
@@ -40,7 +40,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(Exception.class)
-    private ResponseEntity<ErrorResponse> unhandledException(Exception exception) {
+    private ResponseEntity<ErrorResponse> unhandledException(final Exception exception) {
         logger.error("[Internal Server Error] ", exception);
 
         return ResponseEntity.internalServerError()

@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.domain.product.Product;
-import cart.service.ProductService;
+import cart.domain.user.User;
+import cart.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,27 +19,27 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(HomeController.class)
-public class HomeControllerTest {
+@WebMvcTest(SettingController.class)
+class SettingControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private ProductService productService;
+    private UserService userService;
 
     @Test
-    @DisplayName("GET /")
+    @DisplayName("GET /settings")
     void getAdmin() throws Exception {
-        final Product product1 = new Product("이오", 1000, null);
-        final Product product2 = new Product("애쉬", 2000, null);
-        final List<Product> products = List.of(product1, product2);
-        given(productService.findAll()).willReturn(products);
+        final User user1 = new User("io@mail.com", "12121212");
+        final User user2 = new User("ash@mail.com", "34343434");
+        final List<User> users = List.of(user1, user2);
+        given(userService.findAll()).willReturn(users);
 
-        mockMvc.perform(get("/"))
+        mockMvc.perform(get("/settings"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(model().attribute("products", equalTo(products)));
+                .andExpect(model().attribute("users", equalTo(users)));
 
-        verify(productService, times(1)).findAll();
+        verify(userService, times(1)).findAll();
     }
 }

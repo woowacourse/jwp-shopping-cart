@@ -1,4 +1,4 @@
-# jwp-hopping-cart
+# jwp-shopping-cart
 
 # 1단계
 
@@ -23,9 +23,36 @@
 
 ---
 
-## 🛠️ 설계
+# 2단계
 
-### DB
+## 🎯 기능 목록
+
+- [x]  테이블 생성
+    - [x]  사용자 테이블
+    - [x]  장바구니 테이블
+- [x]  사용자 기능 구현
+    - [x]  사용자 목록 표시
+- [x]  사용자 설정 페이지 연동
+    - [x]  API 연동
+- [x]  장바구니 기능 구현
+    - [x]  인증 기능
+    - [x]  물건 추가
+        - [x] 상품, 사용자 ID 존재 여부 검증
+    - [x]  물건 삭제
+    - [x]  사용자별 장바구니 물건 표시
+- [x]  장바구니 페이지 연동
+    - [x]  CRD API 연동
+
+- [x] 사용자 검증
+    - [x] 이메일의 길이는 1자 이상 32자 이하이다.
+    - [x] 이메일의 형식을 만족해야 한다. (xx@xxx.xx)
+    - [x] 비밀번호는 1자 이상 32자 이하이다.
+
+---
+
+# 🛠️ 설계
+
+## DB
 
 Product
 
@@ -36,49 +63,47 @@ Product
 | price  | INT         |                    |
 | image  | TEXT        | NULLABLE           |
 
-### API
+User
 
-- Create
-    - POST /product
-    - Request Body
+| column   | type        |                    |
+|----------|-------------|--------------------|
+| id       | BIGINT      | PK, AUTO_INCREMENT |
+| email    | VARCHAR(32) |                    |
+| password | VARCHAR(32) |                    |
 
-        ```json
-        {
-          "name":"",
-          "price":0,
-          "image":""
-        }
-        ```
+Cart
 
-- Read
-    - GET /product
-    - Response Body
+| column     | type   |                                   |
+|------------|--------|-----------------------------------|
+| id         | BIGINT | PK, AUTO_INCREMENT                |
+| user_id    | BIGINT | FOREIGN KEY(user_list:id) CASCADE |
+| product_id | BIGINT | FOREIGN KEY(product:id) CASCADE   |
 
-        ```json
-        {
-          "products": [
-            {
-              "id":0,
-              "name":"",
-              "price":0,
-              "image":""
-            },
-            ...
-          ]
-        }
-        ```
+## API
 
-- Update
-    - PUT /product/:productId
-    - Request Body
+Header, ResponseBody를 포함한 세부 내용은 http 패키지에서 확인할 수 있습니다.
 
-        ```json
-        {
-          "name":"",
-          "price":0,
-          "image":""
-        }
-        ```
+- ProductController
+    - Create: POST /product
+    - Update: PUT /product/{id}
+    - Delete: DELETE/product/{id}
+- HomeController
+    - Read: GET /
+- AdminController
+    - Read: GET /admin
+- SettingController
+    - Read: GET /settings
+- CartController
+    - Create: POST /cart/items
+    - Read: GET /cart/items
+    - Delete: DELETE /cart/items/{id}
 
-- Delete
-    - DELETE /product/:productId
+---
+
+### ✔️ 실행 시
+
+실행 테스트의 편의를 위해 data.sql 하단에 Dummy Data를 삽입하는 쿼리를 추가하였습니다.
+데이터가 완전히 없는 상태에서의 테스트를 원할 경우 해당 부분을 주석처리해 주세요.
+
+
+

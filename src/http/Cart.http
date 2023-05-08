@@ -1,0 +1,21 @@
+### 장바구니 API
+
+### 장바구니 추가 (Create)
+POST http://localhost:8080/cart/items
+Authorization: Basic dGVzdDAxQGdtYWlsLmNvbToxMjEyMTIxMg==
+Content-Type: application/json
+
+{
+  "productId": 1
+}
+
+###
+GET http://localhost:8080/cart
+
+### 사용자별 장바구니 조회 (Read)
+GET http://localhost:8080/cart/items
+Authorization: Basic dGVzdDAxQGdtYWlsLmNvbToxMjEyMTIxMg==
+
+### 장바구니 삭제 (Delete)
+DELETE http://localhost:8080/cart/items/1
+Authorization: Basic dGVzdDAxQGdtYWlsLmNvbToxMjEyMTIxMg==

@@ -12,15 +12,13 @@ public class AdminController {
 
     private final ProductService productService;
 
-    public AdminController(ProductService productService) {
+    public AdminController(final ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping
-    public String showAll(Model model) {
+    public String showAll(final Model model) {
         model.addAttribute("products", productService.findAll());
         return "admin";
     }
-
-
 }
