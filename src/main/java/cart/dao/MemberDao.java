@@ -14,15 +14,21 @@ import java.util.Optional;
 @AllArgsConstructor
 public class MemberDao {
 
-    private final static String ALL_COLUMNS = "id, email, password, name, address, age";
+    private static final String ID = "id";
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
+    private static final String NAME = "name";
+    private static final String ADDRESS = "address";
+    private static final String AGE = "age";
+    private final static String ALL_COLUMNS = String.join(", ", ID, EMAIL, PASSWORD, NAME, ADDRESS, AGE);
 
     private static final RowMapper<MemberEntity> memberRowMapper = (resultSet, rowNum) -> new MemberEntity(
-            resultSet.getLong("id"),
-            resultSet.getString("email"),
-            resultSet.getString("password"),
-            resultSet.getString("name"),
-            resultSet.getString("address"),
-            resultSet.getInt("age")
+            resultSet.getLong(ID),
+            resultSet.getString(EMAIL),
+            resultSet.getString(PASSWORD),
+            resultSet.getString(NAME),
+            resultSet.getString(ADDRESS),
+            resultSet.getInt(AGE)
     );
 
     private final JdbcTemplate jdbcTemplate;

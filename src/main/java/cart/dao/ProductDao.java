@@ -14,12 +14,17 @@ import java.util.Optional;
 @Repository
 public class ProductDao {
 
-    private static final String ALL_COLUMNS = "id, name, price, image_url";
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final String PRICE = "price";
+    private static final String IMAGE_URL = "image_url";
+    private static final String ALL_COLUMNS = String.join(", ", ID, NAME, PRICE, IMAGE_URL);
+
     private static final RowMapper<ProductEntity> productRowMapper = (resultSet, rowNum) -> new ProductEntity(
-            resultSet.getLong("id"),
-            resultSet.getString("name"),
-            resultSet.getInt("price"),
-            resultSet.getString("image_url")
+            resultSet.getLong(ID),
+            resultSet.getString(NAME),
+            resultSet.getInt(PRICE),
+            resultSet.getString(IMAGE_URL)
     );
 
     private final JdbcTemplate jdbcTemplate;

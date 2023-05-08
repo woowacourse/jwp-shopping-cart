@@ -11,11 +11,14 @@ import java.util.List;
 @AllArgsConstructor
 public class CartDao {
 
+    private static final String MEMBER_ID = "member_id";
+    private static final String PRODUCT_ID = "product_id";
+    private static final String ALL_COLUMNS = String.join(", ", MEMBER_ID, PRODUCT_ID);
+
     private static final RowMapper<CartEntity> cartRowMapper = (resultSet, rowNum) -> new CartEntity(
-            resultSet.getLong("member_id"),
-            resultSet.getLong("product_id")
+            resultSet.getLong(MEMBER_ID),
+            resultSet.getLong(PRODUCT_ID)
     );
-    private static final String ALL_COLUMNS = "member_id, product_id";
 
     private final JdbcTemplate jdbcTemplate;
 
