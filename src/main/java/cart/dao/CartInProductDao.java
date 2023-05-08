@@ -16,7 +16,6 @@ public class CartInProductDao {
 
     private final RowMapper<CartInProductEntity> rowMapper = (rs, rowNum) ->
             new CartInProductEntity(
-                    rs.getLong("id"),
                     rs.getLong("cart_id"),
                     rs.getLong("product_id")
             );
@@ -24,8 +23,7 @@ public class CartInProductDao {
     public CartInProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("CART_IN_PRODUCT")
-                .usingGeneratedKeyColumns("id");
+                .withTableName("CART_IN_PRODUCT");
     }
 
     public void save(final CartInProductEntity cartInProductEntity) {
