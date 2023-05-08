@@ -1,6 +1,5 @@
 package cart.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -34,9 +33,10 @@ class CartControllerTest {
 
   private static final String AUTHORIZATION = "Authorization";
   private static final String BASIC_TYPE = "BASIC ";
-  private static final String email = "test";
-  private static final String password = "test";
+  private static final String EMAIL = "test";
+  private static final String PASSWORD = "test";
   private static final String DELIMITER = ":";
+  private static final String INVALID_PASSWORD = "INVALID";
 
   @Autowired
   private MockMvc mockMvc;
@@ -66,9 +66,23 @@ class CartControllerTest {
             new CartItemResponse(2, new ProductEntity(2L, "피자", "pizza", 20000))));
 
     mockMvc.perform(get("/carts")
-            .header(AUTHORIZATION, BASIC_TYPE + Base64Coder.encodeString(email + DELIMITER + password)))
+            .header(AUTHORIZATION, BASIC_TYPE + Base64Coder.encodeString(EMAIL + DELIMITER + PASSWORD)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.size()").value(2));
+
+    mockMvc.perform(get("/carts")
+            .header(AUTHORIZATION, BASIC_TYPE + Base64Coder.encodeString(EMAIL + DELIMITER + INVALID_PASSWORD)))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void noAuthentication() throws Exception {
+    given(memberDao.findByMemberEntity(any())).willReturn(
+        Optional.empty());
+
+    mockMvc.perform(get("/carts")
+            .header(AUTHORIZATION, BASIC_TYPE + Base64Coder.encodeString(EMAIL + DELIMITER + INVALID_PASSWORD)))
+        .andExpect(status().isUnauthorized());
   }
 
   @Test
@@ -76,7 +90,7 @@ class CartControllerTest {
     final String content = objectMapper.writeValueAsString(new CartRequest(1L));
 
     mockMvc.perform(post("/carts")
-            .header(AUTHORIZATION, BASIC_TYPE + Base64Coder.encodeString(email + DELIMITER + password))
+            .header(AUTHORIZATION, BASIC_TYPE + Base64Coder.encodeString(EMAIL + DELIMITER + PASSWORD))
             .content(content)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isCreated());
@@ -85,7 +99,7 @@ class CartControllerTest {
   @Test
   void deleteCart() throws Exception {
     mockMvc.perform(delete("/carts/" + 1L)
-            .header(AUTHORIZATION, BASIC_TYPE + Base64Coder.encodeString(email + DELIMITER + password)))
+            .header(AUTHORIZATION, BASIC_TYPE + Base64Coder.encodeString(EMAIL + DELIMITER + PASSWORD)))
         .andExpect(status().isNoContent());
   }
 }
