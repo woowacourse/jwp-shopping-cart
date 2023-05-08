@@ -11,7 +11,7 @@ public class BasicAuthorizationExtractor {
     private static final int CREDENTIALS_LENGTH = 2;
 
     public static AuthenticationDto extract(final String authorizationHeader) {
-        if (authorizationHeader.startsWith(BASIC_TYPE)) {
+        if (String.valueOf(authorizationHeader).startsWith(BASIC_TYPE)) {
             final String[] credentials = decode(authorizationHeader).split(DELIMITER);
             validateCredentials(credentials);
             final String email = credentials[0];
