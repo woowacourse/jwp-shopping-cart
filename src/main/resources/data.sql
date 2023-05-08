@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `cart_product`
     `product_id` long             NOT NULL,
     CONSTRAINT CART_UNIQUE UNIQUE (`member_id`, `product_id`),
     FOREIGN KEY (`member_id`) REFERENCES `member` (`id`),
-    FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
+    FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE
 );
 
 
