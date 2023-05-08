@@ -1,5 +1,7 @@
 package cart.auth.extractor;
 
+import cart.exception.UnsupportedAuthenticationException;
+
 public final class BasicAuthorizationExtractor implements AuthorizationExtractor {
 
     private static final String CREDENTIAL_DELIMITER = ":";
@@ -16,7 +18,7 @@ public final class BasicAuthorizationExtractor implements AuthorizationExtractor
 
     private void validateCredential(String credential) {
         if (credential.split(CREDENTIAL_DELIMITER, -1).length != VALID_AUTH_INFO_LENGHTH) {
-            throw new IllegalArgumentException("잘못된 형식의 인증 정보 입니다.");
+            throw new UnsupportedAuthenticationException("잘못된 형식의 인증 정보 입니다.");
         }
     }
 
