@@ -11,8 +11,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.util.Optional;
-
 
 public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver {
     private static final String AUTHORIZATION = "Authorization";
@@ -52,21 +50,22 @@ public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver 
             String email = credentials[0];
             String password = credentials[1];
 
-            Optional<Member> member = memeberDao.findByEmail(email);
-            return getMember(password, member);
+            Member member = memeberDao.findByEmail(email)
+                    .orElseThrow(() -> new NotFoundMemberException());
+
+            validateMember(member, password);
+
+            return member;
+
         }
 
         return null;
     }
 
-    private Member getMember(String password, Optional<Member> member) {
-        if (member.isEmpty()) {
-            throw new NotFoundMemberException();
-        }
-        if (!member.get().isPasswordCorrect(password)) {
+    private void validateMember(Member member, String password) {
+        if (password == null || !member.isPasswordCorrect(password)) {
             throw new NotMatchedPassword();
         }
-        return member.get();
     }
 
 }
