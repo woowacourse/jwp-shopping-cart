@@ -30,7 +30,7 @@ public class ExceptionController {
 
         final ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exceptionResponse);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exceptionResponse);
     }
 
     @ExceptionHandler({IllegalArgumentException.class, MethodArgumentNotValidException.class})

@@ -64,7 +64,7 @@ class CartProductControllerTest extends ApiControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get(path)
                 .then().log().all()
-                .statusCode(HttpStatus.FORBIDDEN.value())
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .body("message", is("로그인이 필요합니다"));
     }
 }
