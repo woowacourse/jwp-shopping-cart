@@ -2,7 +2,7 @@ package cart.auth;
 
 import cart.dao.MemberDao;
 import cart.domain.member.entity.Member;
-import cart.domain.member.dto.MemberInformation;
+import cart.domain.member.dto.MemberDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,13 +19,13 @@ public class AuthService {
         this.memberDao = memberDao;
     }
 
-    public MemberInformation checkAuthenticationHeader(final String header) {
-        final MemberInformation memberInformation = authorizationExtractor.extract(header);
-        final Member member = memberDao.findByEmail(memberInformation.getEmail())
+    public MemberDto checkAuthenticationHeader(final String header) {
+        final MemberDto memberDto = authorizationExtractor.extract(header);
+        final Member member = memberDao.findByEmail(memberDto.getEmail())
             .orElseThrow(() -> new AuthenticationException("인증 실패"));
-        if (member.passwordNotEquals(memberInformation.getPassword())) {
+        if (member.passwordNotEquals(memberDto.getPassword())) {
             throw new AuthenticationException("인증 실패");
         }
-        return memberInformation;
+        return memberDto;
     }
 }

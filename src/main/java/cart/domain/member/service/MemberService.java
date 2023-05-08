@@ -1,9 +1,8 @@
 package cart.domain.member.service;
 
 import cart.dao.MemberDao;
-import cart.domain.member.dto.MemberCreateDto;
-import cart.domain.member.dto.MemberInformation;
-import cart.domain.member.dto.MemberResponse;
+import cart.domain.member.dto.CreatedMemberDto;
+import cart.domain.member.dto.MemberDto;
 import cart.domain.member.entity.Member;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,12 +20,12 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberCreateDto create(final MemberInformation memberInformation) {
-        checkMemberExist(memberInformation.getEmail());
-        final Member member = new Member(null, memberInformation.getEmail(),
-            memberInformation.getPassword(), null, null);
+    public CreatedMemberDto create(final MemberDto memberDto) {
+        checkMemberExist(memberDto.getEmail());
+        final Member member = new Member(null, memberDto.getEmail(),
+            memberDto.getPassword(), null, null);
         final Member savedMember = memberDao.save(member);
-        return new MemberCreateDto(savedMember.getId(), savedMember.getEmail(),
+        return new CreatedMemberDto(savedMember.getId(), savedMember.getEmail(),
             savedMember.getCreatedAt(), savedMember.getUpdatedAt());
     }
 
@@ -37,10 +36,10 @@ public class MemberService {
             });
     }
 
-    public List<MemberResponse> findAll() {
+    public List<MemberDto> findAll() {
         final List<Member> members = memberDao.findAll();
         return members.stream()
-            .map(MemberResponse::of)
+            .map(member -> new MemberDto(member.getEmail(), member.getPassword()))
             .collect(Collectors.toUnmodifiableList());
     }
 }

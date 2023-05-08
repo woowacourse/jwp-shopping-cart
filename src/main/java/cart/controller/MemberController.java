@@ -1,8 +1,8 @@
 package cart.controller;
 
 import cart.auth.EncodePassword;
-import cart.domain.member.dto.MemberCreateDto;
-import cart.domain.member.dto.MemberInformation;
+import cart.domain.member.dto.CreatedMemberDto;
+import cart.domain.member.dto.MemberDto;
 import cart.domain.member.service.MemberService;
 import cart.dto.MemberCreateRequest;
 import cart.dto.MemberCreateResponse;
@@ -27,10 +27,9 @@ public class MemberController {
     @PostMapping("/member")
     public ResponseEntity<MemberCreateResponse> createMember(
         @RequestBody @Valid @EncodePassword final MemberCreateRequest request) {
-        final MemberInformation memberInformation = new MemberInformation(request.getEmail(),
-            request.getPassword());
-        final MemberCreateDto memberCreateDto = memberService.create(memberInformation);
-        final MemberCreateResponse response = MemberCreateResponse.of(memberCreateDto);
+        final MemberDto memberDto = MemberDto.of(request);
+        final CreatedMemberDto createdMemberDto = memberService.create(memberDto);
+        final MemberCreateResponse response = MemberCreateResponse.of(createdMemberDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

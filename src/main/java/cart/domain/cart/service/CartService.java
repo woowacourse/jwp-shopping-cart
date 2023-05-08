@@ -1,14 +1,12 @@
 package cart.domain.cart.service;
 
 import cart.dao.CartDao;
-import cart.domain.cart.entity.Cart;
 import cart.dao.MemberDao;
-import cart.domain.member.entity.Member;
 import cart.dao.ProductDao;
+import cart.domain.cart.dto.CartDto;
+import cart.domain.cart.entity.Cart;
+import cart.domain.member.entity.Member;
 import cart.domain.product.entity.Product;
-import cart.domain.cart.dto.CartCreateRequest;
-import cart.domain.cart.dto.CartCreateResponse;
-import cart.domain.cart.dto.CartResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -30,33 +28,33 @@ public class CartService {
     }
 
     @Transactional
-    public CartCreateResponse create(final CartCreateRequest request) {
-        final Member member = findMember(request);
-        final Product product = findProduct(request);
+    public CartDto create(final Long productId, final String memberEmail) {
+        final Member member = findMember(memberEmail);
+        final Product product = findProduct(productId);
         final Cart cart = new Cart(null, product, member, null, null);
         if (cartDao.exists(cart)) {
             throw new IllegalArgumentException("이미 담겨진 상품입니다.");
         }
         final Cart savedCar = cartDao.save(cart);
-        return CartCreateResponse.of(savedCar);
+        return CartDto.of(savedCar);
     }
 
-    private Member findMember(final CartCreateRequest request) {
-        return memberDao.findByEmail(request.getMemberEmail())
+    private Member findMember(final String email) {
+        return memberDao.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
     }
 
-    private Product findProduct(final CartCreateRequest request) {
-        return productDao.findById(request.getProductId())
+    private Product findProduct(final Long productId) {
+        return productDao.findById(productId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
 
-    public List<CartResponse> findByEmail(final String email) {
+    public List<CartDto> findByEmail(final String email) {
         final Member member = memberDao.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         final List<Cart> carts = cartDao.findByMember(member);
         return carts.stream()
-            .map(CartResponse::of)
+            .map(CartDto::of)
             .collect(Collectors.toUnmodifiableList());
     }
 

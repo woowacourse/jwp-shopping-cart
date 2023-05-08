@@ -10,13 +10,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.auth.AuthInfoArgumentResolver;
-import cart.auth.AuthenticationCheckInterceptor;
 import cart.auth.AuthService;
+import cart.auth.AuthenticationCheckInterceptor;
+import cart.domain.cart.dto.CartDto;
+import cart.dto.CartResponse;
 import cart.domain.cart.service.CartService;
-import cart.domain.member.dto.MemberInformation;
-import cart.domain.cart.dto.CartResponse;
+import cart.domain.member.dto.MemberDto;
+import cart.domain.product.dto.ProductDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,18 +52,25 @@ class CartControllerTest {
     @DisplayName("장바구니 리스트 api")
     public void testGetCarts() throws Exception {
         //given
-        final MemberInformation memberInformation = new MemberInformation("test@test.com", "password");
-        final List<CartResponse> cartResponses = List.of(
-            new CartResponse(1L, "name1", "imageUrl1", 1000),
-            new CartResponse(2L, "name2", "imageUrl2", 2000)
-        );
+        final MemberDto memberDto1 = new MemberDto("test1@test.com", "password1");
+        final MemberDto memberDto2 = new MemberDto("test2@test.com", "password2");
+        final ProductDto productDto1 = new ProductDto(1L, "test1", 1000, "imageUrl1",
+            LocalDateTime.now(),
+            LocalDateTime.now());
+        final ProductDto productDto2 = new ProductDto(2L, "test2", 2000, "imageUrl2",
+            LocalDateTime.now(),
+            LocalDateTime.now());
+        final List<CartDto> cartDtos = List.of(
+            new CartDto(1L, productDto1, memberDto1, LocalDateTime.now(), LocalDateTime.now()),
+            new CartDto(2L, productDto2, memberDto2, LocalDateTime.now(), LocalDateTime.now())
+            );
 
         when(authenticationCheckInterceptor.preHandle(any(), any(), any()))
             .thenReturn(true);
         when(authInfoArgumentResolver.resolveArgument(any(), any(), any(), any()))
-            .thenReturn(memberInformation);
+            .thenReturn(memberDto1);
         when(cartService.findByEmail(any()))
-            .thenReturn(cartResponses);
+            .thenReturn(cartDtos);
 
         //when
         //then
@@ -78,7 +88,7 @@ class CartControllerTest {
             });
 
         for (int i = 0; i < result.size(); i++) {
-            assertThat(result.get(i).getId()).isEqualTo(cartResponses.get(i).getId());
+            assertThat(result.get(i).getId()).isEqualTo(cartDtos.get(i).getId());
         }
     }
 
@@ -86,9 +96,9 @@ class CartControllerTest {
     @DisplayName("장바구니 추가 api")
     public void testAddCart() throws Exception {
         //given
-        final MemberInformation memberInformation = new MemberInformation("test@test.com", "password");
+        final MemberDto memberDto = new MemberDto("test@test.com", "password");
         when(authInfoArgumentResolver.resolveArgument(any(), any(), any(), any()))
-            .thenReturn(memberInformation);
+            .thenReturn(memberDto);
         when(authenticationCheckInterceptor.preHandle(any(), any(), any()))
             .thenReturn(true);
 

@@ -8,9 +8,9 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.ProductDao;
-import cart.domain.product.dto.ProductCreateRequest;
-import cart.domain.product.dto.ProductResponse;
-import cart.domain.product.dto.ProductUpdateRequest;
+import cart.domain.product.dto.ProductCreateDto;
+import cart.domain.product.dto.ProductDto;
+import cart.domain.product.dto.ProductUpdateDto;
 import cart.domain.product.entity.Product;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,8 +40,8 @@ class ProductServiceTest {
             .willReturn(savedProduct);
 
         //when
-        final ProductResponse result = productService.create(
-            new ProductCreateRequest("name", 1000, "imageUrl"));
+        final ProductDto result = productService.create(
+            new ProductCreateDto("name", 1000, "imageUrl"));
 
         //then
         assertThat(result)
@@ -67,7 +67,7 @@ class ProductServiceTest {
         given(productDao.findAll()).willReturn(products);
 
         //when
-        final List<ProductResponse> result = productService.findAll();
+        final List<ProductDto> result = productService.findAll();
 
         //then
         assertThat(result.size()).isEqualTo(products.size());
@@ -81,7 +81,7 @@ class ProductServiceTest {
 
         //when + then
         assertThatThrownBy(
-            () -> productService.update(new ProductUpdateRequest(1L, "name", 2000, "image_url")))
+            () -> productService.update(new ProductUpdateDto(1L, "name", 2000, "image_url")))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -93,7 +93,7 @@ class ProductServiceTest {
 
         //when + then
         assertDoesNotThrow(
-            () -> productService.update(new ProductUpdateRequest(1L, "name", 2000, "image_url")));
+            () -> productService.update(new ProductUpdateDto(1L, "name", 2000, "image_url")));
     }
 
     @Test

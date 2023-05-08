@@ -6,11 +6,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.MemberDao;
-import cart.domain.member.dto.MemberCreateDto;
-import cart.domain.member.dto.MemberInformation;
-import cart.domain.member.dto.MemberResponse;
+import cart.domain.member.dto.CreatedMemberDto;
+import cart.domain.member.dto.MemberDto;
 import cart.domain.member.entity.Member;
-import cart.dto.MemberCreateRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -34,10 +32,10 @@ class MemberServiceTest {
     @DisplayName("회원을 생성한다.")
     public void testCreate() {
         //given
-        final MemberInformation memberInformation = new MemberInformation("test@test.com",
+        final MemberDto memberDto = new MemberDto("test@test.com",
             "password");
-        final Member member = new Member(1L, memberInformation.getEmail(),
-            memberInformation.getPassword(),
+        final Member member = new Member(1L, memberDto.getEmail(),
+            memberDto.getPassword(),
             LocalDateTime.now(), LocalDateTime.now());
         given(memberDao.findByEmail(any()))
             .willReturn(Optional.empty());
@@ -45,10 +43,10 @@ class MemberServiceTest {
             .willReturn(member);
 
         //when
-        final MemberCreateDto memberCreateDto = memberService.create(memberInformation);
+        final CreatedMemberDto createdMemberDto = memberService.create(memberDto);
 
         //then
-        assertThat(memberCreateDto)
+        assertThat(createdMemberDto)
             .extracting("id", "email", "createdAt", "updatedAt")
             .containsExactly(
                 member.getId(),
@@ -62,16 +60,17 @@ class MemberServiceTest {
     @DisplayName("회원을 생성 실패 - 중복 이메일")
     public void testCreateDuplicateEmail() {
         //given
-        final MemberInformation memberInformation = new MemberInformation("test@test.com",
+        final MemberDto memberDto = new MemberDto("test@test.com",
             "password");
-        final Member member = new Member(1L, memberInformation.getEmail(), memberInformation.getPassword(),
+        final Member member = new Member(1L, memberDto.getEmail(),
+            memberDto.getPassword(),
             LocalDateTime.now(), LocalDateTime.now());
         given(memberDao.findByEmail(any()))
             .willReturn(Optional.of(member));
 
         //when
         //then
-        assertThatThrownBy(() -> memberService.create(memberInformation))
+        assertThatThrownBy(() -> memberService.create(memberDto))
             .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -87,7 +86,7 @@ class MemberServiceTest {
             .willReturn(members);
 
         //when
-        final List<MemberResponse> result = memberService.findAll();
+        final List<MemberDto> result = memberService.findAll();
 
         //then
         for (int i = 0; i < result.size(); i++) {

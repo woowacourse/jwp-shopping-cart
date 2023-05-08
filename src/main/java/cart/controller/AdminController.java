@@ -1,9 +1,10 @@
 package cart.controller;
 
+import cart.domain.product.dto.ProductCreateDto;
+import cart.domain.product.dto.ProductUpdateDto;
 import cart.domain.product.service.ProductService;
-import cart.domain.product.dto.ProductCreateRequest;
-import cart.domain.product.dto.ProductUpdateRequest;
-import java.net.URI;
+import cart.dto.ProductCreateRequest;
+import cart.dto.ProductUpdateRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,15 +27,16 @@ public class AdminController {
 
     @PostMapping("/products")
     public ResponseEntity<Void> add(@RequestBody final ProductCreateRequest productCreateRequest) {
-        productService.create(productCreateRequest);
+        final ProductCreateDto productCreateDto = ProductCreateDto.of(productCreateRequest);
+        productService.create(productCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping("/products/{id}")
     public ResponseEntity<Void> update(@PathVariable final Long id,
         @RequestBody final ProductUpdateRequest productUpdateRequest) {
-        productUpdateRequest.setId(id);
-        productService.update(productUpdateRequest);
+        final ProductUpdateDto productUpdateDto = ProductUpdateDto.of(id, productUpdateRequest);
+        productService.update(productUpdateDto);
         return ResponseEntity.ok().build();
     }
 

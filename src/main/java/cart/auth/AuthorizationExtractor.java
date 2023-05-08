@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.domain.member.dto.MemberInformation;
+import cart.domain.member.dto.MemberDto;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 
@@ -10,7 +10,7 @@ public class AuthorizationExtractor {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
-    public MemberInformation extract(final String header) {
+    public MemberDto extract(final String header) {
         if (header == null) {
             return null;
         }
@@ -21,7 +21,7 @@ public class AuthorizationExtractor {
             final String[] credentials = decodedString.split(DELIMITER);
             final String email = credentials[0];
             final String password = credentials[1];
-            return new MemberInformation(email, password);
+            return new MemberDto(email, password);
         }
         return null;
     }

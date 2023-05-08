@@ -1,7 +1,6 @@
-package cart.domain.cart.dto;
+package cart.dto;
 
-import cart.domain.cart.entity.Cart;
-import cart.domain.product.entity.Product;
+import cart.domain.cart.dto.CartDto;
 
 public class CartResponse {
 
@@ -21,10 +20,9 @@ public class CartResponse {
         this.productPrice = productPrice;
     }
 
-    public static CartResponse of(final Cart cart) {
-        final Product product = cart.getProduct();
-        return new CartResponse(cart.getId(), product.getName(), product.getImageUrl(),
-            product.getPrice());
+    public static CartResponse of(final CartDto cartDto) {
+        return new CartResponse(cartDto.getId(), cartDto.getProductName(),
+            cartDto.getProductImageUrl(), cartDto.getProductPrice());
     }
 
     public Long getId() {

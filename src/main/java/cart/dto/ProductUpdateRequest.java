@@ -1,31 +1,28 @@
-package cart.domain.product.dto;
+package cart.dto;
 
-import cart.domain.product.entity.Product;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 
-public class ProductCreateRequest {
+public class ProductUpdateRequest {
 
     @NotBlank
+    private Long id;
+    @NotBlank
     private String name;
-
     @PositiveOrZero(message = "가격은 음수가 될 수 없습니다.")
     private int price;
-
     @NotBlank
     private String imageUrl;
 
-    public ProductCreateRequest() {
+    public ProductUpdateRequest() {
     }
 
-    public ProductCreateRequest(final String name, final int price, final String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public Long getId() {
+        return id;
     }
 
-    public Product makeProduct() {
-        return new Product(null, name, price, imageUrl, null, null);
+    public void setId(final Long id) {
+        this.id = id;
     }
 
     public String getName() {

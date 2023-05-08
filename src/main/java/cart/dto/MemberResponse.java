@@ -1,6 +1,6 @@
-package cart.domain.member.dto;
+package cart.dto;
 
-import cart.domain.member.entity.Member;
+import cart.domain.member.dto.MemberDto;
 
 public class MemberResponse {
 
@@ -15,8 +15,8 @@ public class MemberResponse {
         this.password = password;
     }
 
-    public static MemberResponse of(final Member member) {
-        return new MemberResponse(member.getEmail(), member.getPassword());
+    public static MemberResponse of(final MemberDto memberDto) {
+        return new MemberResponse(memberDto.getEmail(), memberDto.getPassword());
     }
 
     public String getEmail() {

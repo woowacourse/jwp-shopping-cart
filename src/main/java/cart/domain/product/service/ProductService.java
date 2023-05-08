@@ -1,10 +1,10 @@
 package cart.domain.product.service;
 
 import cart.dao.ProductDao;
+import cart.domain.product.dto.ProductCreateDto;
+import cart.domain.product.dto.ProductDto;
+import cart.domain.product.dto.ProductUpdateDto;
 import cart.domain.product.entity.Product;
-import cart.domain.product.dto.ProductCreateRequest;
-import cart.domain.product.dto.ProductResponse;
-import cart.domain.product.dto.ProductUpdateRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -21,22 +21,26 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse create(final ProductCreateRequest productCreateRequest) {
-        final Product product = productCreateRequest.makeProduct();
+    public ProductDto create(final ProductCreateDto productCreateDto) {
+        final Product product = new Product(null, productCreateDto.getName(),
+            productCreateDto.getPrice(),
+            productCreateDto.getImageUrl(), null, null);
         final Product savedProduct = productDao.save(product);
-        return ProductResponse.of(savedProduct);
+        return ProductDto.of(savedProduct);
     }
 
-    public List<ProductResponse> findAll() {
+    public List<ProductDto> findAll() {
         final List<Product> products = productDao.findAll();
         return products.stream()
-            .map(ProductResponse::of)
+            .map(ProductDto::of)
             .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional
-    public void update(final ProductUpdateRequest productUpdateRequest) {
-        final int count = productDao.update(productUpdateRequest.makeProduct());
+    public void update(final ProductUpdateDto productUpdateDto) {
+        final Product product = new Product(productUpdateDto.getId(), productUpdateDto.getName(),
+            productUpdateDto.getPrice(), productUpdateDto.getImageUrl(), null, null);
+        final int count = productDao.update(product);
         checkProductExist(count);
     }
 

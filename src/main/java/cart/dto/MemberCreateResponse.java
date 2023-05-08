@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.member.dto.MemberCreateDto;
+import cart.domain.member.dto.CreatedMemberDto;
 import java.time.LocalDateTime;
 
 public class MemberCreateResponse {
@@ -21,9 +21,9 @@ public class MemberCreateResponse {
         this.updatedAt = updatedAt;
     }
 
-    public static MemberCreateResponse of(final MemberCreateDto memberCreateDto) {
-        return new MemberCreateResponse(memberCreateDto.getId(), memberCreateDto.getEmail(),
-            memberCreateDto.getCreatedAt(), memberCreateDto.getUpdatedAt());
+    public static MemberCreateResponse of(final CreatedMemberDto createdMemberDto) {
+        return new MemberCreateResponse(createdMemberDto.getId(), createdMemberDto.getEmail(),
+            createdMemberDto.getCreatedAt(), createdMemberDto.getUpdatedAt());
     }
 
     public Long getId() {

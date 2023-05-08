@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.member.dto.MemberCreateDto;
+import cart.domain.member.dto.CreatedMemberDto;
 import cart.domain.member.service.MemberService;
 import cart.dto.MemberCreateRequest;
 import cart.dto.MemberCreateResponse;
@@ -44,11 +44,11 @@ class MemberControllerTest {
         //given
         final MemberCreateRequest request = new MemberCreateRequest("test@test.com", "password");
         final String jsonRequest = objectMapper.writeValueAsString(request);
-        final MemberCreateDto memberCreateDto = new MemberCreateDto(1L,
+        final CreatedMemberDto createdMemberDto = new CreatedMemberDto(1L,
             request.getEmail(), LocalDateTime.now(), LocalDateTime.now());
-        final MemberCreateResponse expectedResponse = MemberCreateResponse.of(memberCreateDto);
+        final MemberCreateResponse expectedResponse = MemberCreateResponse.of(createdMemberDto);
         when(memberService.create(any()))
-            .thenReturn(memberCreateDto);
+            .thenReturn(createdMemberDto);
 
         //when
         //then

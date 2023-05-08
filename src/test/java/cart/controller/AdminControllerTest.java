@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.domain.product.service.ProductService;
-import cart.domain.product.dto.ProductCreateRequest;
-import cart.domain.product.dto.ProductUpdateRequest;
+import cart.dto.ProductCreateRequest;
+import cart.domain.product.dto.ProductUpdateDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,7 @@ class AdminControllerTest {
     public void testUpdate() throws Exception {
         //given
         final String request = objectMapper.writeValueAsString(
-            new ProductUpdateRequest(1L, "연필", 1000, "imageUrl"));
+            new ProductUpdateDto(1L, "연필", 1000, "imageUrl"));
 
         //when
         //then

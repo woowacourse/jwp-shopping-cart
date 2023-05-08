@@ -10,10 +10,11 @@ import static org.mockito.BDDMockito.given;
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.domain.cart.dto.CartCreateRequest;
-import cart.domain.cart.dto.CartCreateResponse;
+import cart.domain.cart.dto.CartDto;
 import cart.domain.cart.entity.Cart;
+import cart.domain.member.dto.MemberDto;
 import cart.domain.member.entity.Member;
+import cart.domain.product.dto.ProductDto;
 import cart.domain.product.entity.Product;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -44,7 +45,7 @@ class CartServiceTest {
             LocalDateTime.now());
         final Product product = new Product(1L, "test", 1000, "imageUrl", LocalDateTime.now(),
             LocalDateTime.now());
-        final CartCreateRequest request = new CartCreateRequest(1L, member.getEmail());
+        final Long productId = 1L;
         given(memberDao.findByEmail(anyString()))
             .willReturn(Optional.of(member));
         given(productDao.findById(anyLong()))
@@ -56,16 +57,17 @@ class CartServiceTest {
             .willReturn(cart);
 
         //when
-        final CartCreateResponse cartCreateResponse = cartService.create(request);
+        final CartDto cartDto = cartService.create(productId, member.getEmail());
 
         //then
-        assertThat(cartCreateResponse)
-            .extracting("id", "member", "product")
+        assertThat(cartDto)
+            .extracting("id", "memberDto", "productDto")
             .containsExactly(
                 cart.getId(),
-                cart.getMember(),
-                cart.getProduct()
+                MemberDto.of(cart.getMember()),
+                ProductDto.of(cart.getProduct())
             );
+
     }
 
     @Test
@@ -76,7 +78,6 @@ class CartServiceTest {
             LocalDateTime.now());
         final Product product = new Product(1L, "test", 1000, "imageUrl", LocalDateTime.now(),
             LocalDateTime.now());
-        final CartCreateRequest request = new CartCreateRequest(1L, member.getEmail());
         given(memberDao.findByEmail(anyString()))
             .willReturn(Optional.of(member));
         given(productDao.findById(anyLong()))
@@ -85,7 +86,7 @@ class CartServiceTest {
             .willReturn(true);
 
         //then
-        assertThatThrownBy(() -> cartService.create(request))
+        assertThatThrownBy(() -> cartService.create(product.getId(), member.getEmail()))
             .isInstanceOf(IllegalArgumentException.class);
     }
 }
