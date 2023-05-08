@@ -113,7 +113,7 @@
     - [ ] 함수 분리
     - [ ] 공백 삭제
     - [ ] 불필요한 오버라이딩 로직 삭제
-- [ ] [AuthenticationPrincipal 불필요한 메서드 삭제](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186782502)
+- [x] [AuthenticationPrincipal 불필요한 메서드 삭제](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186782502)
 - [x] [AuthenticationInterceptor 반환값 수정](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186782820)
 - [ ] [인증 Extractor 할당해서 사용 vs Bean 의존성 주입](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186783618)
 - [x] [외래키 사용 이유, 장단점](https://github.com/woowacourse/jwp-shopping-cart/pull/337/files/64e714428fd62e79b2d59f61f6a0159fc8d7f071#r1186786702)
