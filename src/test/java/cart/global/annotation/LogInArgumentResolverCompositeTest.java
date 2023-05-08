@@ -17,18 +17,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LogInArgumentResolverCompositeTest {
 
+    private static final String EMAIL = "example@example.com";
+    private static final String PASSWORD = "password";
+
     private final LogInArgumentResolverComposite logInArgumentResolverComposite = new LogInArgumentResolverComposite();
     private final MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
     private final NativeWebRequest nativeWebRequest = new ServletWebRequest(mockHttpServletRequest);
 
-    private final String email = "example@example.com";
-    private final String password = "password";
 
     @Test
     @DisplayName("resolveArgument() : 지원하지 않는 인증 형식이 아니면 InvalidAuthorizationTypeException가 발생한다.")
     void test_resolveArgument_InvalidAuthorizationTypeException() throws Exception {
         //given
-        final String credentials = email + ":" + password;
+        final String credentials = EMAIL + ":" + PASSWORD;
         mockHttpServletRequest.addHeader(HttpHeaders.AUTHORIZATION, credentials);
 
         //when & then
@@ -46,7 +47,7 @@ class LogInArgumentResolverCompositeTest {
     @DisplayName("resolveArgument() : Basic 인증을 사용하여 사용자 정보를 반환할 수 있다.")
     void test_resolveArgument_basic() throws Exception {
         //given
-        final String credentials = email + ":" + password;
+        final String credentials = EMAIL + ":" + PASSWORD;
         final String basicAuth = encodingBase64(credentials);
 
         mockHttpServletRequest.addHeader(HttpHeaders.AUTHORIZATION, basicAuth);
@@ -61,8 +62,8 @@ class LogInArgumentResolverCompositeTest {
 
         //then
         assertAll(
-                () -> assertEquals(email, authAccount.getEmail()),
-                () -> assertEquals(password, authAccount.getPassword())
+                () -> assertEquals(EMAIL, authAccount.getEmail()),
+                () -> assertEquals(PASSWORD, authAccount.getPassword())
         );
     }
 
@@ -74,7 +75,7 @@ class LogInArgumentResolverCompositeTest {
     @DisplayName("resolveArgument() : [아직 지원 X] Bearer 인증을 사용하여 사용자 정보를 반환할 수 있다.")
     void test_resolveArgument_bearer() throws Exception {
         //given
-        final String credentials = email + ":" + password;
+        final String credentials = EMAIL + ":" + PASSWORD;
         final String bearerAuth = "Bearer " + credentials;
 
         mockHttpServletRequest.addHeader(HttpHeaders.AUTHORIZATION, bearerAuth);
