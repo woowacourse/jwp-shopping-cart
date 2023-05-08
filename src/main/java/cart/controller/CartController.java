@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.auth.AuthInfo;
 import cart.domain.cart.dto.CartDto;
-import cart.dto.CartResponse;
+import cart.dto.response.CartResponse;
 import cart.domain.cart.service.CartService;
 import cart.domain.member.dto.MemberDto;
 import java.util.List;

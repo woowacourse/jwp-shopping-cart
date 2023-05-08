@@ -1,6 +1,6 @@
 package cart.domain.product.dto;
 
-import cart.dto.ProductCreateRequest;
+import cart.dto.request.ProductCreateRequest;
 
 public class ProductCreateDto {
 

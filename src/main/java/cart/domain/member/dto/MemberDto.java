@@ -1,7 +1,7 @@
 package cart.domain.member.dto;
 
 import cart.domain.member.entity.Member;
-import cart.dto.MemberCreateRequest;
+import cart.dto.request.MemberCreateRequest;
 import java.util.Objects;
 
 public class MemberDto {

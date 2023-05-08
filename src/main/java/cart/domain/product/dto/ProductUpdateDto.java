@@ -1,6 +1,6 @@
 package cart.domain.product.dto;
 
-import cart.dto.ProductUpdateRequest;
+import cart.dto.request.ProductUpdateRequest;
 
 public class ProductUpdateDto {
 

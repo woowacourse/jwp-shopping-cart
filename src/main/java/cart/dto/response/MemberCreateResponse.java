@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.response;
 
 import cart.domain.member.dto.CreatedMemberDto;
 import java.time.LocalDateTime;

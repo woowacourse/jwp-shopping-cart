@@ -9,8 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cart.domain.member.dto.CreatedMemberDto;
 import cart.domain.member.service.MemberService;
-import cart.dto.MemberCreateRequest;
-import cart.dto.MemberCreateResponse;
+import cart.dto.request.MemberCreateRequest;
+import cart.dto.response.MemberCreateResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.UnsupportedEncodingException;
