@@ -2,18 +2,18 @@ package cart.dto;
 
 public class AuthInfo {
     private final String email;
-    private final String paasword;
+    private final String password;
 
-    public AuthInfo(String email, String paasword) {
+    public AuthInfo(String email, String password) {
         this.email = email;
-        this.paasword = paasword;
+        this.password = password;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getPaasword() {
-        return paasword;
+    public String getPassword() {
+        return password;
     }
 }

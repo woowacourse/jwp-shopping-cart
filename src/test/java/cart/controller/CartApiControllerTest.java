@@ -32,7 +32,7 @@ class CartApiControllerTest {
     @DisplayName("GET /cart-products 성공 테스트")
     @Test
     void getCartItemsTest() throws Exception {
-        when(cartService.getCartItems(0)).thenReturn(List.of(
+        when(cartService.getCartProducts(0)).thenReturn(List.of(
                 new ProductResponseDto(1, "image1", "name1", 1000),
                 new ProductResponseDto(2, "image2", "name2", 2000)
         ));

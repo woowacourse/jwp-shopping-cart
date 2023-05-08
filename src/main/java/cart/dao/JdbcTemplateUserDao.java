@@ -39,7 +39,7 @@ public class JdbcTemplateUserDao implements UserDao {
     public Integer selectByAuth(final AuthInfo authInfo) {
         String sql = "select id from users where email = ? and password = ?";
 
-        return jdbcTemplate.queryForObject(sql, Integer.class, authInfo.getEmail(), authInfo.getPaasword());
+        return jdbcTemplate.queryForObject(sql, Integer.class, authInfo.getEmail(), authInfo.getPassword());
     }
 
     @Override
@@ -49,14 +49,11 @@ public class JdbcTemplateUserDao implements UserDao {
         return jdbcTemplate.query(sql, userEntityRowMapper);
     }
 
-    private final RowMapper<UserEntity> userEntityRowMapper = (resultSet, rowNumber) -> {
-        UserEntity userEntity = new UserEntity(
-                resultSet.getInt("id"),
-                resultSet.getString("email"),
-                resultSet.getString("password")
-        );
-        return userEntity;
-    };
+    private final RowMapper<UserEntity> userEntityRowMapper = (resultSet, rowNumber) -> new UserEntity(
+            resultSet.getInt("id"),
+            resultSet.getString("email"),
+            resultSet.getString("password")
+    );
 
     @Override
     public int update(final UserEntity user) {

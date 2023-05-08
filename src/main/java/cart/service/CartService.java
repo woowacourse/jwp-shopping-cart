@@ -35,7 +35,7 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<ProductResponseDto> getCartItems(final int userId) {
+    public List<ProductResponseDto> getCartProducts(final int userId) {
         List<CartEntity> carts = cartDao.selectByUserId(userId);
 
         List<ProductEntity> cartItems = carts.stream()
@@ -47,12 +47,12 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public int addCartItem(final int userId, final int productId) {
-        return cartDao.insert(new CartEntity(userId, productId));
+    public int addCartItem(final CartItem cartItem) {
+        return cartDao.insert(new CartEntity(cartItem.getUserId(), cartItem.getProductId()));
     }
 
-    public int deleteCartItem(final int userId, final int productId) {
-        int affectedRow = cartDao.delete(userId, productId);
+    public int deleteCartItem(final CartItem cartItem) {
+        int affectedRow = cartDao.delete(new CartEntity(cartItem.getUserId(), cartItem.getProductId()));
         if (affectedRow < MINAFFECTEDROW) {
             throw new IllegalArgumentException("장바구니에 존재하지 않는 상품입니다.");
         }

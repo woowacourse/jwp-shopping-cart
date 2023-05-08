@@ -9,5 +9,5 @@ public interface CartDao {
 
     List<CartEntity> selectByUserId(int userId);
 
-    int delete(int userId, int productId);
+    int delete(final CartEntity cartEntity);
 }

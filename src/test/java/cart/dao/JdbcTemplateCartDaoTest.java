@@ -58,7 +58,7 @@ class JdbcTemplateCartDaoTest {
         int productId = productDao.insert(new ProductEntity(null, "치킨", 10000, "image_url"));
 
         cartDao.insert(new CartEntity(userId, productId));
-        cartDao.delete(userId, productId);
+        cartDao.delete(new CartEntity(userId, productId));
 
         Assertions.assertThat(cartDao.selectByUserId(userId)).isEmpty();
     }

@@ -3,6 +3,7 @@ package cart.service;
 import cart.dao.CartDao;
 import cart.dao.ProductDao;
 import cart.dao.UserDao;
+import cart.dto.CartItem;
 import cart.dto.ProductResponseDto;
 import cart.dto.UserResponseDto;
 import cart.entity.CartEntity;
@@ -60,7 +61,7 @@ class CartServiceTest {
         when(productDao.selectById(2))
                 .thenReturn(new ProductEntity(2, "name2", 2000, "image2"));
 
-        List<ProductResponseDto> cartItems = cartService.getCartItems(1);
+        List<ProductResponseDto> cartItems = cartService.getCartProducts(1);
 
         assertAll(
                 () -> assertThat(cartItems).hasSize(2),
@@ -79,26 +80,26 @@ class CartServiceTest {
         when(cartDao.insert(any()))
                 .thenReturn(1);
 
-        assertThat(cartService.addCartItem(1, 1)).isEqualTo(1);
+        assertThat(cartService.addCartItem(new CartItem(1, 1))).isEqualTo(1);
     }
 
     @DisplayName("유저의 장바구니에서 아이템을 삭제하도록 요청했을 때 성공한다.")
     @Test
     void deleteCartItemSuccessTest() {
-        when(cartDao.delete(1, 1))
+        when(cartDao.delete(any()))
                 .thenReturn(1);
 
-        assertThat(cartService.deleteCartItem(1, 1))
+        assertThat(cartService.deleteCartItem(new CartItem(1, 1)))
                 .isEqualTo(1);
     }
 
     @DisplayName("유저의 장바구니에서 아이템을 삭제하도록 요청했을 때 삭제할 아이템이 존재하지 않는다.")
     @Test
     void deleteCartItemFailureTest() {
-        when(cartDao.delete(1, 1))
+        when(cartDao.delete(any()))
                 .thenReturn(0);
 
-        assertThatThrownBy(() -> cartService.deleteCartItem(1, 1))
+        assertThatThrownBy(() -> cartService.deleteCartItem(new CartItem(1, 1)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }
