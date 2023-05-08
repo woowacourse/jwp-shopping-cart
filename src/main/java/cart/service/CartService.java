@@ -21,8 +21,7 @@ public class CartService {
 
     public List<ProductResponse> findAllByMemberId(Long memberId) {
         List<ProductEntity> productEntities = cartDao.findAllByMemberId(memberId);
-        List<ProductResponse> productResponses = ProductResponse.from(productEntities);
-        return productResponses;
+        return ProductResponse.from(productEntities);
     }
 
     @Transactional
