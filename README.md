@@ -106,11 +106,11 @@
 - [x] [에러 발생 시 클라이언트 쪽 alert 띄우기](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780402)
 - [x] [/cartitems URL 구분자 추가](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780736)
 - [ ] [이메일, 비밀번호 검증 로직 추가](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186781377)
-- [ ] [인증 관련 클래스 클린 코드](https://github.com/woowacourse/jwp-shopping-cart/pull/337/files/64e714428fd62e79b2d59f61f6a0159fc8d7f071#r1186781824)
-    - [ ] final 키워드 누락 수정
-    - [ ] 불필요한 상수 선언, 소문자 변환 등 수정
-    - [ ] 조건문 정리
-    - [ ] 함수 분리
+- [x] [인증 관련 클래스 클린 코드](https://github.com/woowacourse/jwp-shopping-cart/pull/337/files/64e714428fd62e79b2d59f61f6a0159fc8d7f071#r1186781824)
+    - [x] final 키워드 누락 수정
+    - [x] 불필요한 상수 선언, 소문자 변환 등 수정
+    - [x] 조건문 정리
+    - [x] 함수 분리
     - [x] 공백 삭제
 - [x] [AuthenticationPrincipal 불필요한 메서드 삭제](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186782502)
 - [x] [AuthenticationInterceptor 반환값 수정](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186782820)
