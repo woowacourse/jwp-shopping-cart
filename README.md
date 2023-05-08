@@ -43,6 +43,17 @@
     - [x] Authorization: Basic Base64
   - [x] path: "/settings"
 
+## 장바구니 API 작성
+- [x] Read
+  - [x] HttpMethod: GET
+  - [x] path: "/carts"
+- [x] Create
+  - [x] HttpMethod: POST
+  - [x] path: "/carts"
+- [x] Update
+  - [x] HttpMethod: PUT
+  - [x] path: "/carts/{cart_id}"
+
 ## 인증 인터셉터 
 - [x] Base64AdminAccessInterceptor: 관리자 페이지 상품 등록,수정,삭제
 - [x] Base64AuthInterceptor: 장바구니 페이지 접근
