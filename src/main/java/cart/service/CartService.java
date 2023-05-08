@@ -67,7 +67,7 @@ public class CartService {
     }
 
     public List<CartProductResponse> readCart(final String email) {
-        final List<CartProductEntity> products = productDao.findProductsByUser(email);
+        final List<CartProductEntity> products = cartDao.findProductsByUser(email);
 
         return products.stream()
                 .map(CartProductResponse::from)

@@ -1,6 +1,5 @@
 package cart.persistence.dao;
 
-import cart.persistence.entity.CartProductEntity;
 import cart.persistence.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,13 +18,6 @@ public class JdbcProductDao implements ProductDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<ProductEntity> actorRowMapper = (resultSet, rowNum) -> new ProductEntity(
             resultSet.getLong("product_id"),
-            resultSet.getString("name"),
-            resultSet.getInt("price"),
-            resultSet.getString("image_url")
-    );
-
-    private final RowMapper<CartProductEntity> cartProductRowMapper = (resultSet, rowNum) -> new CartProductEntity(
-            resultSet.getLong("cart_id"),
             resultSet.getString("name"),
             resultSet.getInt("price"),
             resultSet.getString("image_url")
@@ -66,17 +58,5 @@ public class JdbcProductDao implements ProductDao {
     public int deleteById(final long id) {
         final String sql = "DELETE FROM product WHERE product_id = ?";
         return jdbcTemplate.update(sql, id);
-    }
-
-    @Override
-    public List<CartProductEntity> findProductsByUser(final String email) {
-        final String sql = "SELECT c.cart_id, p.name, p.price, p.image_url\n" +
-                "FROM product AS p\n" +
-                "JOIN cart AS c ON p.product_id = c.product_id\n" +
-                "WHERE c.user_id = (\n" +
-                "    SELECT user_id\n" +
-                "    FROM user_info\n" +
-                "    WHERE email = ?)";
-        return jdbcTemplate.query(sql, cartProductRowMapper, email);
     }
 }
