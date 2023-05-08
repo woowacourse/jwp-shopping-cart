@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cart.auth.Auth;
@@ -18,6 +19,7 @@ import cart.dao.CartDao;
 import cart.domain.Product;
 
 @RestController
+@RequestMapping("/cart/products")
 public class CartController {
 
     private final CartDao cartDao;
@@ -26,14 +28,14 @@ public class CartController {
         this.cartDao = cartDao;
     }
 
-    @PostMapping("/cart/products/{productId}")
+    @PostMapping("/{productId}")
     public ResponseEntity<Void> addProduct(@PathVariable final Long productId, @Auth final AuthInfo authInfo) {
         cartDao.saveCartItemByMemberEmail(authInfo.getEmail(), productId);
 
         return ResponseEntity.created(URI.create("/cart/products" + productId)).build();
     }
 
-    @GetMapping("/cart/products")
+    @GetMapping
     public ResponseEntity<List<CartResponse>> findAllProductsByMember(@Auth final AuthInfo authInfo) {
         List<Product> cartItems = cartDao.findCartItemsByMemberEmail(authInfo.getEmail());
         List<CartResponse> cartResponses = cartItems.stream()
@@ -43,7 +45,7 @@ public class CartController {
         return ResponseEntity.ok().body(cartResponses);
     }
 
-    @DeleteMapping("/cart/products/{cartId}")
+    @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> removeProduct(@PathVariable final Long cartId) {
         cartDao.deleteCartItemById(cartId);
 

@@ -65,7 +65,7 @@ class ProductControllerTest {
     void removeProduct() throws Exception {
         // when, then
         mockMvc.perform(delete("/products/{productId}", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @DisplayName("API요청 시 이름이 공백이 들어온 경우 400")
