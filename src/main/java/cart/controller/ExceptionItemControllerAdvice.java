@@ -16,7 +16,18 @@ public class ExceptionItemControllerAdvice {
 
     private static final Logger log = LoggerFactory.getLogger(ExceptionItemControllerAdvice.class);
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, NotFoundResultException.class, IllegalArgumentException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        log.info(exception.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                exception.getMessage());
+        return ResponseEntity.badRequest()
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(exceptionResponse);
+    }
+
+    @ExceptionHandler({NotFoundResultException.class, IllegalArgumentException.class})
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(Exception exception) {
         log.warn(exception.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
