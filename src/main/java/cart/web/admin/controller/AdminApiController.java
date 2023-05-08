@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import cart.domain.persistence.entity.ProductEntity;
-import cart.domain.admin.AdminService;
+import cart.persistence.entity.Product;
+import cart.service.AdminService;
 import cart.web.admin.dto.PostProductRequest;
 import cart.web.admin.dto.PutProductRequest;
 
@@ -28,8 +28,8 @@ public class AdminApiController {
 
     @PostMapping("/admin/products")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final PostProductRequest request) {
-        final ProductEntity productEntity = PostProductRequest.toEntity(request);
-        final long id = adminService.create(productEntity);
+        final Product product = PostProductRequest.toEntity(request);
+        final long id = adminService.create(product);
         return ResponseEntity.created(URI.create("/admin/products/" + id)).build();
     }
 
@@ -38,8 +38,8 @@ public class AdminApiController {
         @PathVariable final Long id,
         @RequestBody @Valid final PutProductRequest putProductRequest
     ) {
-        final ProductEntity productEntity = PutProductRequest.toEntity(putProductRequest);
-        adminService.update(id, productEntity);
+        final Product product = PutProductRequest.toEntity(putProductRequest);
+        adminService.update(id, product);
         return ResponseEntity.ok().build();
     }
 

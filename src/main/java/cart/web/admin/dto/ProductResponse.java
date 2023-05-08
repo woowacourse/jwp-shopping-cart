@@ -1,6 +1,6 @@
 package cart.web.admin.dto;
 
-import cart.domain.persistence.entity.ProductEntity;
+import cart.persistence.entity.Product;
 
 public class ProductResponse {
 
@@ -16,9 +16,9 @@ public class ProductResponse {
         this.imageUrl = imageUrl;
     }
 
-    public static ProductResponse from(final ProductEntity productEntity) {
-        return new ProductResponse(productEntity.getId(), productEntity.getName(),
-            productEntity.getPrice(), productEntity.getImageUrl());
+    public static ProductResponse from(final Product product) {
+        return new ProductResponse(product.getId(), product.getName(),
+            product.getPrice(), product.getImageUrl());
     }
 
     public Long getId() {

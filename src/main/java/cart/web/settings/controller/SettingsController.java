@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import cart.domain.member.MemberService;
+import cart.service.MemberService;
 import cart.web.settings.dto.MemberResponse;
 
 @Controller

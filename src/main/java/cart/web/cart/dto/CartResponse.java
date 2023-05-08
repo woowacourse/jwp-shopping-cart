@@ -1,6 +1,6 @@
 package cart.web.cart.dto;
 
-import cart.domain.persistence.ProductDto;
+import cart.persistence.CartProduct;
 
 public class CartResponse {
 
@@ -16,8 +16,8 @@ public class CartResponse {
         this.imageUrl = imageUrl;
     }
 
-    public static CartResponse from(final ProductDto productDto) {
-        return new CartResponse(productDto.getCartId(), productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+    public static CartResponse from(final CartProduct cartProduct) {
+        return new CartResponse(cartProduct.getCartId(), cartProduct.getName(), cartProduct.getPrice(), cartProduct.getImageUrl());
     }
 
     public long getId() {

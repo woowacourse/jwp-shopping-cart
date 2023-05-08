@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import cart.domain.member.AuthService;
+import cart.service.AuthService;
 import cart.web.AuthorizationException;
 import cart.web.cart.dto.AuthInfo;
 

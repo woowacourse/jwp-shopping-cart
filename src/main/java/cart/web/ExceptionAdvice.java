@@ -12,8 +12,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import cart.domain.exception.DbNotAffectedException;
-import cart.domain.exception.EntityMappingException;
+import cart.exception.DbNotAffectedException;
+import cart.exception.EntityMappingException;
 
 @ControllerAdvice
 public class ExceptionAdvice {

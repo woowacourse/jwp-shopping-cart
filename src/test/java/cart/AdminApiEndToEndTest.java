@@ -17,8 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
-import cart.domain.persistence.dao.ProductDao;
-import cart.domain.persistence.entity.ProductEntity;
+import cart.persistence.dao.ProductDao;
+import cart.persistence.entity.Product;
 import cart.web.admin.dto.PostProductRequest;
 import cart.web.admin.dto.PutProductRequest;
 import io.restassured.RestAssured;
@@ -66,7 +66,7 @@ class AdminApiEndToEndTest {
         void Product_POST_API_테스트() {
             final ExtractableResponse<Response> response = saveProduct("modi", 10000, "https://woowacourse.github.io/");
 
-            final ProductEntity savedEntity = productDao.findByName("modi");
+            final Product savedEntity = productDao.findByName("modi");
 
             SoftAssertions.assertSoftly(softAssertions -> {
                 softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -79,8 +79,8 @@ class AdminApiEndToEndTest {
 
         @Test
         void Product_GET_API_테스트() {
-            final ProductEntity productEntity = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
-            productDao.save(productEntity);
+            final Product product = new Product("modi", 10000, "https://woowacourse.github.io/");
+            productDao.save(product);
 
             given()
                 .when()
@@ -102,7 +102,7 @@ class AdminApiEndToEndTest {
                 .then()
                 .statusCode(HttpStatus.OK.value());
 
-            final ProductEntity changedEntity = productDao.findByName("modi");
+            final Product changedEntity = productDao.findByName("modi");
             SoftAssertions.assertSoftly(softAssertions -> {
                 softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
                 softAssertions.assertThat(response.header("Location")).contains("/admin/products/" + changedEntity.getId());
@@ -208,7 +208,7 @@ class AdminApiEndToEndTest {
 
         @Test
         void Product_PUT_없는_ID_예외_테스트() {
-            final ProductEntity request = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
+            final Product request = new Product("modi", 10000, "https://woowacourse.github.io/");
             productDao.save(request);
 
             final long wrongId = 0L;

@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import cart.domain.member.AuthService;
+import cart.service.AuthService;
 import cart.web.argumentResolver.AuthenticationArgumentResolver;
 import cart.web.cart.dto.AuthInfo;
 import cart.web.interceptor.AuthorizationExtractor;

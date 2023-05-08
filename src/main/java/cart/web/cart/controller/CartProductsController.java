@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import cart.domain.cart.CartService;
-import cart.domain.persistence.ProductDto;
+import cart.service.CartService;
+import cart.persistence.CartProduct;
 import cart.web.argumentResolver.AuthorizeMember;
 import cart.web.argumentResolver.AuthorizedMember;
 import cart.web.cart.dto.CartResponse;
@@ -31,8 +31,8 @@ public class CartProductsController {
     @GetMapping("/cart-products")
     public List<CartResponse> getAllCartProducts(@AuthorizeMember AuthorizedMember authorizedMember) {
         final String email = authorizedMember.getEmail();
-        final List<ProductDto> productDtos = cartService.findProductsByEmail(email);
-        return productDtos.stream()
+        final List<CartProduct> cartProducts = cartService.findProductsByEmail(email);
+        return cartProducts.stream()
             .map(CartResponse::from)
             .collect(Collectors.toList());
     }

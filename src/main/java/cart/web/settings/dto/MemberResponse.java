@@ -1,6 +1,6 @@
 package cart.web.settings.dto;
 
-import cart.domain.persistence.entity.MemberEntity;
+import cart.persistence.entity.Member;
 
 public class MemberResponse {
 
@@ -12,8 +12,8 @@ public class MemberResponse {
         this.password = password;
     }
 
-    public static MemberResponse from(final MemberEntity memberEntity) {
-        return new MemberResponse(memberEntity.getEmail(), memberEntity.getPassword());
+    public static MemberResponse from(final Member member) {
+        return new MemberResponse(member.getEmail(), member.getPassword());
     }
 
     public String getEmail() {

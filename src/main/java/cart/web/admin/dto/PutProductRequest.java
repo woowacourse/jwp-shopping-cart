@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
-import cart.domain.persistence.entity.ProductEntity;
+import cart.persistence.entity.Product;
 
 public class PutProductRequest {
 
@@ -31,8 +31,8 @@ public class PutProductRequest {
         this.imageUrl = imageUrl;
     }
 
-    public static ProductEntity toEntity(final PutProductRequest request) {
-        return new ProductEntity(request.getName(), request.getPrice(), request.getImageUrl());
+    public static Product toEntity(final PutProductRequest request) {
+        return new Product(request.getName(), request.getPrice(), request.getImageUrl());
     }
 
     public String getName() {
