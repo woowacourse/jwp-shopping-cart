@@ -105,7 +105,9 @@
 - [x] [ResController 확장성 고려하여 어노테이션 대신 ResponseEntity 사용](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780234)
 - [x] [에러 발생 시 클라이언트 쪽 alert 띄우기](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780402)
 - [x] [/cartitems URL 구분자 추가](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780736)
-- [ ] [이메일, 비밀번호 검증 로직 추가](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186781377)
+- [x] [이메일, 비밀번호 검증 로직 추가](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186781377)
+    - 사용자 인증 쪽에서도 이메일, 비밀번호 형식 검증을 해주면 DB까지 접근하지 않고도 잘못된 정보를 검증할 수 있다.
+    - [ ] 하지만 이메일, 비밀번호 형식 정책이 중간에 변경돼 DB 정보와 일치하지 않는다면?
 - [x] [인증 관련 클래스 클린 코드](https://github.com/woowacourse/jwp-shopping-cart/pull/337/files/64e714428fd62e79b2d59f61f6a0159fc8d7f071#r1186781824)
     - [x] final 키워드 누락 수정
     - [x] 불필요한 상수 선언, 소문자 변환 등 수정

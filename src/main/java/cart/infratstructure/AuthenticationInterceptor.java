@@ -4,7 +4,6 @@ import static cart.infratstructure.AuthenticationAttribute.LOGIN_MEMBER_ID;
 
 import cart.domain.member.Member;
 import cart.domain.member.MemberService;
-import cart.dto.AuthInfo;
 import cart.exception.AuthenticationException;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
@@ -29,8 +28,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
                              final Object handler) {
         AuthInfo authInfo = extractAutoInfo(request);
-        Long loginMemberId = findLoginMemberId(authInfo.getEmail(), authInfo.getPassword());
-        
+        Long loginMemberId = findLoginMemberId(authInfo);
+
         request.setAttribute(LOGIN_MEMBER_ID.name(), loginMemberId);
         return true;
     }
@@ -43,7 +42,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         return authInfo;
     }
 
-    private Long findLoginMemberId(final String email, final String password) {
+    private Long findLoginMemberId(AuthInfo authInfo) {
+        String email = authInfo.getEmail();
+        String password = authInfo.getPassword();
         Member member = memberService.findByEmail(email)
                 .orElseThrow(() -> new AuthenticationException(EXCEPTION_MESSAGE_WRONG_AUTH_INFO));
         if (!Objects.equals(password, member.getPassword())) {
