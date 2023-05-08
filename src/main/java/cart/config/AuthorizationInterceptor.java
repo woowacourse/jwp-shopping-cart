@@ -4,12 +4,13 @@ import cart.authorization.BasicAuthorizationExtractor;
 import cart.dto.AuthorizationInformation;
 import cart.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
+public class AuthorizationInterceptor implements HandlerInterceptor {
 
     @Autowired
     private MemberService memberService;
