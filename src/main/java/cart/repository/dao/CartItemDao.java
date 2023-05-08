@@ -1,11 +1,11 @@
 package cart.repository.dao;
 
+import cart.domain.cart.Cart;
 import cart.domain.item.Item;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
@@ -28,14 +28,15 @@ public class CartItemDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long insert(Long cartId, Long itemId) {
-        Map<String, Object> parameters = new HashMap<>(2);
-        parameters.put("cart_id", cartId);
-        parameters.put("item_id", itemId);
+    public void insertCartItem(Cart cart) {
+        MapSqlParameterSource[] insertParameters = cart.getItems()
+                .stream()
+                .map(item -> new MapSqlParameterSource()
+                        .addValue("cart_id", cart.getId())
+                        .addValue("item_id", item.getId()))
+                .toArray(MapSqlParameterSource[]::new);
 
-        Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
-
-        return key.longValue();
+        simpleJdbcInsert.executeBatch(insertParameters);
     }
 
     public List<Item> findAllByCartId(Long cartId) {
@@ -47,9 +48,9 @@ public class CartItemDao {
         return jdbcTemplate.query(sql, actorRowMapper, cartId);
     }
 
-    public int delete(Long cartId, Long itemId) {
-        String sql = "DELETE FROM CART_ITEM WHERE cart_id = ? AND item_id = ?";
+    public void deleteByCartId(Long cartId) {
+        String sql = "DELETE FROM CART_ITEM WHERE cart_id = ?";
 
-        return jdbcTemplate.update(sql, cartId, itemId);
+        jdbcTemplate.update(sql, cartId);
     }
 }

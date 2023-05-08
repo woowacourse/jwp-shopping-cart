@@ -36,7 +36,7 @@ class CartRepositoryTest {
     }
 
     @Test
-    @DisplayName("장바구니에 상품을 추가한다.")
+    @DisplayName("장바구니의 상품을 저장한다.")
     void saveSuccess() {
         Cart cart = new Cart(1L, List.of(MAC_BOOK));
 
@@ -55,13 +55,5 @@ class CartRepositoryTest {
                 () -> assertThat(cart.getId()).isEqualTo(1L),
                 () -> assertThat(cart.getItems()).hasSize(1)
         );
-    }
-    
-    @Test
-    @DisplayName("장바구니에 상품을 삭제한다.")
-    void deleteCartItemSuccess() {
-        Cart cart = new Cart(1L, List.of(MAC_BOOK));
-
-        assertDoesNotThrow(() -> cartRepository.deleteCartItem(cart));
     }
 }

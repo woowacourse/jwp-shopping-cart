@@ -9,7 +9,6 @@ import cart.repository.CartRepository;
 import cart.repository.ItemRepository;
 import cart.repository.UserRepository;
 import cart.service.dto.CartDto;
-import cart.service.dto.ItemDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +37,7 @@ public class CartService {
     }
 
     @Transactional
-    public ItemDto addItem(String email, Long itemId) {
+    public CartDto addItem(String email, Long itemId) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(NOT_FOUND_USER_MESSAGE));
         Item item = itemRepository.findById(itemId)
@@ -48,19 +47,20 @@ public class CartService {
         cart.addItem(item);
         cartRepository.save(cart);
 
-        return ItemDto.from(item);
+        return CartDto.from(cart);
     }
 
     @Transactional
-    public void deleteCartItem(String email, Long cartItemId) {
+    public CartDto deleteCartItem(String email, Long cartItemId) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(NOT_FOUND_USER_MESSAGE));
         Item item = itemRepository.findById(cartItemId)
                 .orElseThrow(() -> new ItemNotFoundException("장바구니에서 일치하는 상품을 찾을 수 없습니다."));
-
         Cart cart = cartRepository.findCart(user);
-        cart.removeItem(item);
 
-        cartRepository.deleteCartItem(cart);
+        cart.removeItem(item);
+        cartRepository.save(cart);
+
+        return CartDto.from(cart);
     }
 }

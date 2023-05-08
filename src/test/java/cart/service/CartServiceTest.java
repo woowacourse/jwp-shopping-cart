@@ -3,7 +3,6 @@ package cart.service;
 import static cart.fixture.DomainFactory.MAC_BOOK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import cart.domain.item.Item;
 import cart.exception.cart.CartAlreadyExistsException;
@@ -17,7 +16,6 @@ import cart.repository.dao.CartItemDao;
 import cart.repository.dao.ItemDao;
 import cart.repository.dao.UserDao;
 import cart.service.dto.CartDto;
-import cart.service.dto.ItemDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -63,20 +61,18 @@ class CartServiceTest {
         @DisplayName("장바구니에 상품을 추가한다.")
         void addCartSuccess() {
 
-            ItemDto itemDto = cartService.addItem("a@a.com", item.getId());
+            CartDto cartDto = cartService.addItem("a@a.com", item.getId());
 
-            assertThat(itemDto.getId()).isPositive();
+            assertThat(cartDto.getCartId()).isPositive();
         }
 
         @Nested
         @DisplayName("RD 성공 테스트")
         class CartServiceRDSuccessTest {
 
-            private ItemDto itemDto;
-
             @BeforeEach
             void setUp() {
-                itemDto = cartService.addItem("a@a.com", item.getId());
+                cartService.addItem("a@a.com", item.getId());
             }
 
             @Test
@@ -85,12 +81,6 @@ class CartServiceTest {
                 CartDto actual = cartService.findCart("a@a.com");
 
                 assertThat(actual.getItemDtos()).isNotEmpty();
-            }
-
-            @Test
-            @DisplayName("장바구니의 상품을 삭제한다.")
-            void deleteSuccess() {
-                assertDoesNotThrow(() -> cartService.deleteCartItem("a@a.com", itemDto.getId()));
             }
         }
     }

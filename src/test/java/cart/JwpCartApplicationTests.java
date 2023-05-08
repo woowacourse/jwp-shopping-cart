@@ -377,10 +377,11 @@ class JwpCartApplicationTests {
                     .post("/carts")
                     .then().log().all()
                     .statusCode(HttpStatus.CREATED.value())
-                    .body("id", is(2))
-                    .body("name", is(MAC_BOOK_RESPONSE.getName()))
-                    .body("imageUrl", is(MAC_BOOK_RESPONSE.getImageUrl()))
-                    .body("price", is(MAC_BOOK_RESPONSE.getPrice()));
+                    .body("cartId", greaterThan(0))
+                    .body("itemDtos[0].id", greaterThan(0))
+                    .body("itemDtos[0].name", is(MAC_BOOK_RESPONSE.getName()))
+                    .body("itemDtos[0].imageUrl", is(MAC_BOOK_RESPONSE.getImageUrl()))
+                    .body("itemDtos[0].price", is(MAC_BOOK_RESPONSE.getPrice()));
         }
 
         @Test

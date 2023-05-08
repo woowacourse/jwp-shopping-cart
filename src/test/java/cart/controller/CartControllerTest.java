@@ -1,14 +1,13 @@
 package cart.controller;
 
 import static cart.fixture.DtoFactory.MAC_BOOK_CART_DTO;
-import static cart.fixture.DtoFactory.MAC_BOOK_ITEM_DTO;
 import static cart.fixture.DtoFactory.createAuthInfo;
 import static cart.fixture.ResponseFactory.MAC_BOOK_RESPONSE;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -100,18 +99,19 @@ class CartControllerTest {
     void addCartSuccess() throws Exception {
         given(authArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(createAuthInfo());
-        given(cartService.addItem(anyString(), anyLong())).willReturn(MAC_BOOK_ITEM_DTO);
+        given(cartService.addItem(anyString(), anyLong())).willReturn(MAC_BOOK_CART_DTO);
         AddCartRequest addCartRequest = new AddCartRequest(1L);
 
         mockMvc.perform(post("/carts")
                         .content(objectMapper.writeValueAsString(addCartRequest))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isCreated()).andExpect(header().string("Location", "/items/1"))
-                .andExpect(jsonPath("$.id").value(MAC_BOOK_RESPONSE.getId()))
-                .andExpect(jsonPath("$.name").value(MAC_BOOK_RESPONSE.getName()))
-                .andExpect(jsonPath("$.imageUrl").value(MAC_BOOK_RESPONSE.getImageUrl()))
-                .andExpect(jsonPath("$.price").value(MAC_BOOK_RESPONSE.getPrice()));
+                .andExpect(status().isCreated()).andExpect(header().string("Location", "/carts"))
+                .andExpect(jsonPath("$.cartId", greaterThan(0)))
+                .andExpect(jsonPath("$.itemDtos[0].id").value(MAC_BOOK_RESPONSE.getId()))
+                .andExpect(jsonPath("$.itemDtos[0].name").value(MAC_BOOK_RESPONSE.getName()))
+                .andExpect(jsonPath("$.itemDtos[0].imageUrl").value(MAC_BOOK_RESPONSE.getImageUrl()))
+                .andExpect(jsonPath("$.itemDtos[0].price").value(MAC_BOOK_RESPONSE.getPrice()));
     }
 
     @Test
@@ -185,7 +185,7 @@ class CartControllerTest {
     void deleteCartSuccess() throws Exception {
         given(authArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(createAuthInfo());
-        willDoNothing().given(cartService).deleteCartItem(anyString(), anyLong());
+        given(cartService.deleteCartItem(anyString(), anyLong())).willReturn(MAC_BOOK_CART_DTO);
 
         mockMvc.perform(delete("/carts/{id}", 1L))
                 .andExpect(status().isNoContent());

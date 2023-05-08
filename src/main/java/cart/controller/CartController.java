@@ -6,7 +6,6 @@ import cart.controller.dto.request.AddCartRequest;
 import cart.controller.dto.response.ItemResponse;
 import cart.service.CartService;
 import cart.service.dto.CartDto;
-import cart.service.dto.ItemDto;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,14 +41,14 @@ public class CartController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemResponse> addCart(
+    public ResponseEntity<CartDto> addCartItem(
             @RequestBody @Valid AddCartRequest addCartRequest,
             @AuthenticationPrincipal AuthInfo authInfo
     ) {
-        ItemDto itemDto = cartService.addItem(authInfo.getEmail(), addCartRequest.getId());
+        CartDto cartDto = cartService.addItem(authInfo.getEmail(), addCartRequest.getId());
 
-        return ResponseEntity.created(URI.create("/items/" + itemDto.getId()))
-                .body(ItemResponse.from(itemDto));
+        return ResponseEntity.created(URI.create("/carts"))
+                .body(cartDto);
     }
 
     @DeleteMapping("/{cartId}")
