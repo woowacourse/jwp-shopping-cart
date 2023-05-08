@@ -3,7 +3,7 @@ package cart.repository;
 import java.util.List;
 import java.util.Optional;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 
 public interface ProductRepository {
 

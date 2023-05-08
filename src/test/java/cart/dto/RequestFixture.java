@@ -1,6 +1,8 @@
 package cart.dto;
 
 
+import cart.controller.dto.ProductRequest;
+
 @SuppressWarnings("SpellCheckingInspection")
 public class RequestFixture {
 

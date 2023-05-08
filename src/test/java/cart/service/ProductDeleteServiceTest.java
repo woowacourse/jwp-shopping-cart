@@ -1,11 +1,12 @@
 package cart.service;
 
-import static cart.domain.ProductFixture.ODO_PRODUCT;
+import static cart.domain.product.ProductFixture.ODO_PRODUCT;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.Product;
-import cart.repository.StubProductRepository;
 import java.util.Optional;
+
+import cart.domain.product.Product;
+import cart.repository.StubProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +26,7 @@ class ProductDeleteServiceTest {
     void 제거_테스트() {
         //given
         final Product product = stubProductRepository.save(ODO_PRODUCT);
-        final long productId = product.getProductId().getValue();
+        final long productId = product.getId();
 
         //when
         productDeleteService.delete(productId);
