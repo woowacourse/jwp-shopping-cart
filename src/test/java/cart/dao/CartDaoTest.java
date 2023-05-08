@@ -1,9 +1,11 @@
 package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
+import java.util.Optional;
 
 import cart.entiy.CartEntity;
 import cart.entiy.ProductEntity;
@@ -49,11 +51,32 @@ class CartDaoTest {
         void 생성_테스트() {
             final CartEntity result = cartDao.insert(new CartEntity("a@a.com", productId));
             assertAll(
+                    () -> assertThat(result.getCartId()).isPositive(),
                     () -> assertThat(result.getEmail()).isEqualTo("a@a.com"),
                     () -> assertThat(result.getProductId()).isEqualTo(productId)
             );
             final List<CartEntity> cartEntities = cartDao.findByEmail("a@a.com");
             assertThat(cartEntities).hasSize(1);
+        }
+
+        @Nested
+        @DisplayName("Cart가 저장되어 있을 때")
+        class DescribeCartSaved {
+            private long cartId;
+
+            @BeforeEach
+            void setUp() {
+                final CartEntity cartEntity = cartDao.insert(new CartEntity("a@a.com", productId));
+                cartId = cartEntity.getCartId();
+            }
+
+            @Test
+            void 삭제_테스트() {
+                assertThatCode(() -> cartDao.deleteById(cartId))
+                        .doesNotThrowAnyException();
+                final Optional<CartEntity> cart = cartDao.findById(cartId);
+                assertThat(cart).isEmpty();
+            }
         }
     }
 }
