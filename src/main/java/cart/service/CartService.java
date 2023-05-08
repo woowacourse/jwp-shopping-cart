@@ -3,9 +3,9 @@ package cart.service;
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dto.AuthInfo;
+import cart.dto.ProductResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
-import cart.entity.ProductEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -26,7 +26,7 @@ public class CartService {
         cartDao.insert(member.getId(), productId);
     }
 
-    public List<ProductEntity> showProductsBy(final AuthInfo authInfo) {
+    public List<ProductResponse> showProductsBy(final AuthInfo authInfo) {
         final MemberEntity member = findBy(authInfo);
 
         final List<CartEntity> cartOfUser = cartDao.findByMemberId(member.getId());

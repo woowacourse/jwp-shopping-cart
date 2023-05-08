@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.dto.AuthInfo;
-import cart.entity.ProductEntity;
+import cart.dto.ProductResponse;
 import cart.service.CartService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -25,8 +25,8 @@ public class CartController {
 
     @ApiOperation(value = "사용자 장바구니 상품 조회")
     @GetMapping("/products")
-    public ResponseEntity<List<ProductEntity>> getProductsOfCart(final AuthInfo authInfo) {
-        final List<ProductEntity> products = cartService.showProductsBy(authInfo);
+    public ResponseEntity<List<ProductResponse>> getProductsOfCart(final AuthInfo authInfo) {
+        final List<ProductResponse> products = cartService.showProductsBy(authInfo);
 
         return ResponseEntity.ok(products);
     }

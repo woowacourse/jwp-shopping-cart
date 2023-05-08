@@ -9,9 +9,9 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dto.AuthInfo;
+import cart.dto.ProductResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
-import cart.entity.ProductEntity;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -72,11 +72,11 @@ class CartServiceTest {
 
         Mockito.when(productService.findByProductIds(any()))
                 .thenReturn(List.of(
-                        new ProductEntity(1L, "item1", 1000, "image1"),
-                        new ProductEntity(2L, "item2", 2000, "image2")
+                        new ProductResponse(1L, "item1", 1000, "image1"),
+                        new ProductResponse(2L, "item2", 2000, "image2")
                 ));
 
-        final List<ProductEntity> productResponses = cartService.showProductsBy(authInfo);
+        final var productResponses = cartService.showProductsBy(authInfo);
         assertThat(productResponses.size()).isEqualTo(2);
     }
 }

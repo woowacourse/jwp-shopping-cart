@@ -1,14 +1,16 @@
 package cart.service;
 
+import static java.util.stream.Collectors.toList;
+
 import cart.dao.CartDao;
 import cart.dao.ProductDao;
 import cart.dto.ProductDto;
+import cart.dto.ProductResponse;
 import cart.entity.ProductEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -17,8 +19,12 @@ public class ProductService {
     private final ProductDao productDao;
     private final CartDao cartDao;
 
-    public List<ProductEntity> findAll() {
-        return productDao.findAll();
+    public List<ProductResponse> findAll() {
+        final List<ProductEntity> result = productDao.findAll();
+
+        return result.stream()
+                .map(ProductResponse::from)
+                .collect(toList());
     }
 
     public Long register(final ProductDto productDto) {
@@ -43,14 +49,14 @@ public class ProductService {
         productDao.delete(id);
     }
 
-    public List<ProductEntity> findByProductIds(final List<Long> productIds) {
-        for (final Long productId : productIds) {
-            findBy(productId);
-        }
-
-        return productIds.stream()
+    public List<ProductResponse> findByProductIds(final List<Long> productIds) {
+        final List<ProductEntity> products = productIds.stream()
                 .map(this::findBy)
-                .collect(Collectors.toList());
+                .collect(toList());
+
+        return products.stream()
+                .map(ProductResponse::from)
+                .collect(toList());
     }
 
     private ProductEntity findBy(final long id) {

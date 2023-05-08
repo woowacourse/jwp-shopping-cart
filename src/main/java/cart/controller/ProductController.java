@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.entity.ProductEntity;
+import cart.dto.ProductResponse;
 import cart.service.ProductService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ public class ProductController {
     @ApiOperation(value = "등록된 모든 상품 조회")
     @GetMapping(value = {"/products", "/"})
     public String indexPage(final Model model) {
-        final List<ProductEntity> products = productService.findAll();
+        final List<ProductResponse> products = productService.findAll();
 
         model.addAttribute("products", products);
 
