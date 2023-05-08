@@ -3,7 +3,7 @@ package cart.cart.service;
 import cart.cart.dao.CartDao;
 import cart.cart.dto.CartResponse;
 import cart.cart.entity.Cart;
-import cart.global.infrastructure.AuthorizationException;
+import cart.cart.exception.AuthorizationException;
 import cart.member.entity.Member;
 import cart.member.service.MemberService;
 import org.springframework.stereotype.Service;
