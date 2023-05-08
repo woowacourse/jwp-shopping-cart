@@ -1,11 +1,14 @@
 package cart.controller;
 
+import cart.dto.request.LoginRequestDto;
 import cart.dto.request.SignUpRequestDto;
+import cart.dto.response.UserResponseDto;
 import cart.exception.DuplicateEmailException;
 import cart.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +29,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid final SignUpRequestDto signUpRequestDto) {
+    @PostMapping("/signUp")
+    public ResponseEntity<Void> signUp(@RequestBody @Valid final SignUpRequestDto signUpRequestDto) {
         userService.signUp(signUpRequestDto);
         return ResponseEntity.created(URI.create(REDIRECT_URI)).build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserResponseDto> login(@RequestBody @Valid final LoginRequestDto loginRequestDto) {
+        final UserResponseDto response = userService.login(loginRequestDto);
+        return ResponseEntity.created(URI.create(REDIRECT_URI)).body(response);
     }
 
     @ExceptionHandler(DuplicateEmailException.class)

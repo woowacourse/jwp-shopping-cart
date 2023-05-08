@@ -11,9 +11,12 @@ public class UserConverter {
 
     public static List<UserResponseDto> entitiesToResponseDtos(final List<UserEntity> users) {
         return users.stream()
-                .map(userEntity ->
-                        new UserResponseDto(userEntity.getEmail(), userEntity.getPassword(), userEntity.getName()))
+                .map(UserConverter::entityToResponseDto)
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public static UserResponseDto entityToResponseDto(final UserEntity entity) {
+        return new UserResponseDto(entity.getEmail(), entity.getPassword(), entity.getName());
     }
 
     public static UserEntity requestDtoToEntity(final SignUpRequestDto requestDto) {

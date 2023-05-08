@@ -1,6 +1,9 @@
 package cart.repository;
 
 import cart.entity.UserEntity;
+import cart.exception.AuthorizationException;
+import cart.exception.IncorrectEmailOrPasswordException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -49,6 +52,15 @@ public class UserDao {
             return jdbcTemplate.queryForObject(sql, Integer.class, email);
         } catch (EmptyResultDataAccessException e) {
             return null;
+        }
+    }
+
+    public UserEntity findByEmailAndPassword(final String email, final String password) {
+        final String sql = "select * from users where email = ? and password = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, userEntityRowMapper, email, password);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IncorrectEmailOrPasswordException();
         }
     }
 }

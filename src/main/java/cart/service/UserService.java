@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.dto.request.LoginRequestDto;
 import cart.dto.request.SignUpRequestDto;
 import cart.dto.response.UserResponseDto;
 import cart.entity.UserEntity;
@@ -34,5 +35,11 @@ public class UserService {
         if (userDao.findIdByEmail(email) != null) {
             throw new DuplicateEmailException();
         }
+    }
+
+    public UserResponseDto login(final LoginRequestDto loginRequestDto) {
+        final UserEntity user =
+                userDao.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+        return UserConverter.entityToResponseDto(user);
     }
 }

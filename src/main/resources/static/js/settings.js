@@ -6,20 +6,24 @@ const selectMember = (member) => {
     alert(`${name} 님 반갑습니다!`);
 }
 
-const showAddModal = () => {
-    modal.dataset.formType = 'add';
-    modal.style.display = 'block';
+const signUpModal = document.getElementById('signUp-modal');
+
+const showSignUpAddModal = () => {
+    signUpModal.dataset.formType = 'add';
+    signUpModal.style.display = 'block';
 };
 
-const hideAddModal = () => {
-    modal.style.display = 'none';
-    const elements = modal.getElementsByTagName('input');
+const hideSignUpAddModal = () => {
+    signUpModal.style.display = 'none';
+    const elements = signUpModal.getElementsByTagName('input');
     for (const element of elements) {
         element.value = '';
     }
 }
 
-form.addEventListener('submit', (event) => {
+const signUpForm = document.getElementById('signUp-form');
+
+signUpForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -40,7 +44,7 @@ const createMember = (member) => {
         name: member.name
     }
     axios.post(
-        '/users',
+        '/users/signUp',
         JSON.stringify(data), {
             headers: {
                 "Content-Type": `application/json`
@@ -49,8 +53,59 @@ const createMember = (member) => {
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
-            console.log(error.response.data);
             alert(error.response.data);
             window.location.reload();
+    });
+};
+
+const loginModal = document.getElementById('login-modal');
+
+const showLoginAddModal = () => {
+    loginModal.dataset.formType = 'add';
+    loginModal.style.display = 'block';
+};
+
+const hideLoginAddModal = () => {
+    loginModal.style.display = 'none';
+    const elements = loginModal.getElementsByTagName('input');
+    for (const element of elements) {
+        element.value = '';
+    }
+}
+
+const loginForm = document.getElementById('login-form');
+
+loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    console.log(formData);
+    let member = {};
+    for (const entry of formData.entries()) {
+        const [key, value] = entry;
+        member[key] = value;
+    }
+
+    loginMember(member);
+});
+
+const loginMember = (member) => {
+    const data = {
+        email: member.email,
+        password: member.password
+    }
+    axios.post(
+        '/users/login',
+        JSON.stringify(data), {
+            headers: {
+                "Content-Type": `application/json`
+            }
+        })
+        .then((response) => {
+            selectMember(response.data);
+            window.location.reload();
+        }).catch((error) => {
+        alert(error.response.data);
+        window.location.reload();
     });
 };

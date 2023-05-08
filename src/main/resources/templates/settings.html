@@ -33,20 +33,37 @@
         </div>
     </div>
     <div class="btn-group">
-        <button class="add-btn" onclick="showAddModal()">사용자 추가</button>
+        <button class="add-btn" onclick="showSignUpAddModal()">사용자 추가</button>
     </div>
-    <div id="modal" class="modal" data-form-type="add">
+    <div id="signUp-modal" class="modal" data-form-type="add">
         <div class="modal-content">
-            <span class="close" onclick="hideAddModal()">&times;</span>
-            <form id="form">
-                <label for="email">이메일</label><br>
-                <input type="text" id="email" name="email" required><br>
+            <span class="close" onclick="hideSignUpAddModal()">&times;</span>
+            <form id="signUp-form">
+                <label for="signUp-email">이메일</label><br>
+                <input type="text" id="signUp-email" name="email" required><br>
 
-                <label for="password">패스워드</label><br>
-                <input type="text" id="password" name="password" required><br>
+                <label for="signUp-password">패스워드</label><br>
+                <input type="text" id="signUp-password" name="password" required><br>
 
-                <label for="name">이름</label><br>
-                <input type="text" id="name" name="name" required><br>
+                <label for="signUp-name">이름</label><br>
+                <input type="text" id="signUp-name" name="name" required><br>
+
+                <button type="submit">제출</button>
+            </form>
+        </div>
+    </div>
+    <div class="btn-group">
+        <button class="add-btn" onclick="showLoginAddModal()">로그인</button>
+    </div>
+    <div id="login-modal" class="modal" data-form-type="add">
+        <div class="modal-content">
+            <span class="close" onclick="hideLoginAddModal()">&times;</span>
+            <form id="login-form">
+                <label for="login-email">이메일</label><br>
+                <input type="text" id="login-email" name="email" required><br>
+
+                <label for="login-password">패스워드</label><br>
+                <input type="text" id="login-password" name="password" required><br>
 
                 <button type="submit">제출</button>
             </form>

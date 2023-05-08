@@ -53,11 +53,11 @@
     - [x] service 구현
     - [x] controller 구현
     - [x] view 연결
-  - [ ] 로그인
-      - [ ] repository 구현
-      - [ ] service 구현
-      - [ ] controller 구현
-      - [ ] view 연결
+  - [x] 로그인
+      - [x] repository 구현
+      - [x] service 구현
+      - [x] controller 구현
+      - [x] view 연결
 
 - [x] 장바구니 설정
   - [x] 장바구니에 상품 추가 api 구현
