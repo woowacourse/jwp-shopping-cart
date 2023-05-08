@@ -19,12 +19,12 @@ public class MemberController {
     }
 
     @PostMapping("/members")
-    void memberSave(@RequestBody MemberDto memberDto) {
+    void saveMember(@RequestBody MemberDto memberDto) {
         memberService.createMember(memberDto);
     }
 
     @GetMapping("/members")
-    List<MemberDto> memberList() {
+    List<MemberDto> findAllMember() {
        return memberService.findAll();
     }
 }

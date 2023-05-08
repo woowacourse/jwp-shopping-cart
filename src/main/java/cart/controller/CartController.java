@@ -21,25 +21,25 @@ public class CartController {
     }
 
     @GetMapping("/carts/{memberId}")
-    public ResponseEntity<List<ProductDto>> cartProductList(@PathVariable long memberId) {
+    public ResponseEntity<List<ProductDto>> findCartProducts(@PathVariable long memberId) {
         CartDto cart = cartService.findById(memberId);
         return ResponseEntity.ok().body(cart.getProducts());
     }
 
     @PostMapping("/carts")
-    public ResponseEntity<String> cartSave(@RequestBody CartRequest cartRequest) {
+    public ResponseEntity<String> saveCart(@RequestBody CartRequest cartRequest) {
         cartService.addProducts(cartRequest);
         return ResponseEntity.created(URI.create("/carts/" + cartRequest.getMemberId())).build();
     }
 
-    @PostMapping("/carts/{member_id}")
-    public ResponseEntity<String> cartProductAdd(@PathVariable long member_id, @RequestBody ProductIdDto productId) {
-        cartService.addProduct(member_id, productId.getProductId());
+    @PostMapping("/carts/{memberId}")
+    public ResponseEntity<String> addProductToCart(@PathVariable long memberId, @RequestBody ProductIdDto productId) {
+        cartService.addProduct(memberId, productId.getProductId());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/carts/{memberId}")
-    public ResponseEntity<String> cartProductRemove(@PathVariable long memberId, @RequestParam long productId) {
+    public ResponseEntity<String> removeProductFromCart(@PathVariable long memberId, @RequestParam long productId) {
         cartService.removeProduct(memberId, productId);
         return ResponseEntity.ok().build();
     }
