@@ -1,7 +1,7 @@
 package cart.controller;
 
+import cart.auth.LoginUser;
 import cart.auth.MemberInfo;
-import cart.auth.Principal;
 import cart.dto.response.ProductDto;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public class CartController {
 
     @PostMapping("/{productId}")
     public ResponseEntity<Void> addProduct(
-            @Principal MemberInfo memberInfo,
+            @LoginUser MemberInfo memberInfo,
             @PathVariable Integer productId) {
         cartService.addProduct(memberInfo, productId);
         return ResponseEntity.created(URI.create("/carts")).build();
@@ -35,14 +35,14 @@ public class CartController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduct(
-            @Principal MemberInfo memberInfo,
+            @LoginUser MemberInfo memberInfo,
             @PathVariable Integer productId) {
         cartService.deleteProduct(memberInfo, productId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<ProductDto>> getProduct(@Principal MemberInfo memberInfo) {
+    public ResponseEntity<List<ProductDto>> getProduct(@LoginUser MemberInfo memberInfo) {
         final List<ProductDto> productsOf = cartService.getProductsOf(memberInfo);
         return ResponseEntity.ok(productsOf);
     }
