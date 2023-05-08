@@ -48,4 +48,14 @@ public class ProductEntity {
     public int hashCode() {
         return Objects.hash(id, name, price, imageUrl);
     }
+
+    @Override
+    public String toString() {
+        return "ProductEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }

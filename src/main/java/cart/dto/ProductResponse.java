@@ -51,4 +51,14 @@ public class ProductResponse {
     public int hashCode() {
         return Objects.hash(id, name, price, imageUrl);
     }
+
+    @Override
+    public String toString() {
+        return "ProductResponse{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }

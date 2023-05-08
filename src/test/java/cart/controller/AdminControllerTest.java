@@ -15,10 +15,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Transactional
+@Sql(scripts = {"classpath:schema-truncate.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @ActiveProfiles("test")
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -44,7 +44,7 @@ class AdminControllerTest {
 
     @Test
     void Product_POST_API_유효성_검증_테스트() {
-        final ProductRequest request = new ProductRequest("modi", 10000, "imageUrl");
+        final ProductRequest request = new ProductRequest("jena", 10000, "imageUrl");
 
         given()
                 .body(request)
@@ -56,7 +56,7 @@ class AdminControllerTest {
 
     @Test
     void Product_GET_API_테스트() {
-        saveProduct("modi", 10000, "http:://naver.com");
+        saveProduct("bingbong", 10000, "http:://naver.com");
 
         given()
                 .when()
@@ -67,11 +67,11 @@ class AdminControllerTest {
 
     @Test
     void Product_UPDATE_API_테스트() {
-        final ExtractableResponse<Response> response = saveProduct("modi", 10000, "http:://naver.com");
+        final ExtractableResponse<Response> response = saveProduct("tom", 10000, "http:://naver.com");
         final String[] locations = response.header("Location").split("/");
         final String id = locations[locations.length - 1];
 
-        final ProductRequest productRequest = new ProductRequest("modi", 15000, "http:://naver.com");
+        final ProductRequest productRequest = new ProductRequest("tom", 15000, "http:://naver.com");
         given()
                 .body(productRequest)
                 .when().put("/admin/product/" + id)
@@ -81,7 +81,7 @@ class AdminControllerTest {
 
     @Test
     void Product_DELETE_API_테스트() {
-        final ExtractableResponse<Response> response = saveProduct("modi", 10000, "http:://naver.com");
+        final ExtractableResponse<Response> response = saveProduct("shine", 10000, "http:://naver.com");
         final String[] locations = response.header("Location").split("/");
         final String id = locations[locations.length - 1];
 
