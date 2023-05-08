@@ -33,10 +33,10 @@
         <tbody id="product-list">
         <tr th:each="product : ${products}">
             <td th:text="${product.id}"></td>
-            <td th:text="${product.name}"></td> <!-- 상품 이름 -->
-            <td th:text="${product.price}"></td> <!-- 상품 가격 -->
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
             <td>
-                <img style="max-width: 100px;" th:src="${product.image}"> <!-- 상품 이미지 -->
+                <img style="max-width: 100px;" th:src="${product.image}">
             </td>
             <td>
                 <button th:onclick="showEditModal([[${product}]])">수정</button>

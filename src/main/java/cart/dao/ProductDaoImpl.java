@@ -1,15 +1,15 @@
 package cart.dao;
 
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Optional;
-
 import cart.domain.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -22,19 +22,17 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<ProductEntity> findAll() {
-        final String sql = "SELECT * FROM PRODUCT";
+        final String sql = "SELECT * FROM PRODUCTS";
 
         return jdbcTemplate.query(sql, productEntityRowMapper());
     }
 
     @Override
     public long insert(ProductEntity productEntity) {
-        final String sql = "INSERT INTO PRODUCT(name, image, price) values (?, ?, ?)";
+        final String sql = "INSERT INTO PRODUCTS(name, image, price) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            final PreparedStatement preparedStatement = con.prepareStatement(
-                    sql, new String[]{"ID"}
-            );
+            final PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"ID"});
             preparedStatement.setString(1, productEntity.getName());
             preparedStatement.setString(2, productEntity.getImage());
             preparedStatement.setInt(3, productEntity.getPrice());
@@ -46,7 +44,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Optional<ProductEntity> findById(final int id) {
-        final String sql = "SELECT * FROM PRODUCT WHERE id = ?";
+        final String sql = "SELECT * FROM PRODUCTS WHERE id = ?";
         ProductEntity productEntity = jdbcTemplate.queryForObject(sql, productEntityRowMapper(), id);
         if (productEntity == null) {
             return Optional.empty();

@@ -7,7 +7,8 @@ import java.util.Optional;
 
 public interface ProductDao {
 
-    List<ProductEntity> findAll();
+    List<ProductEntity>
+    findAll();
 
     long insert(final ProductEntity productEntity);
 

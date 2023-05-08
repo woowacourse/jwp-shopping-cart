@@ -28,4 +28,10 @@ public class MemberDao {
 
         );
     }
+
+    public MemberEntity findBy(String email) {
+        String sql = "SELECT * FROM MEMBERS WHERE email = ?";
+        return jdbcTemplate.queryForObject(sql, getMemberEntityRowMapper(), email);
+    }
+
 }

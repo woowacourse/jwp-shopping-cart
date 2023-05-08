@@ -3,8 +3,9 @@ package cart.service;
 import cart.dao.ProductDao;
 import cart.domain.ProductEntity;
 import cart.dto.ProductDto;
-import java.util.List;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -33,7 +34,7 @@ public class ProductService {
         productDao.update(updatedEntity);
     }
 
-    private ProductEntity findProductById(final int id) {
+    public ProductEntity findProductById(final int id) {
         return productDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("상품 id를 확인해주세요."));
     }

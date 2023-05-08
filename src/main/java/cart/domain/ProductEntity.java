@@ -45,4 +45,38 @@ public class ProductEntity {
         return price;
     }
 
+    public static class Builder {
+
+        private int id;
+        private String name;
+        private String image;
+        private int price;
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder image(String image) {
+            this.image = image;
+            return this;
+        }
+
+        public Builder price(int price) {
+            this.price = price;
+            return this;
+        }
+
+        public ProductEntity build() {
+            return new ProductEntity(id, name, image, price);
+        }
+
+    }
+
+
 }
