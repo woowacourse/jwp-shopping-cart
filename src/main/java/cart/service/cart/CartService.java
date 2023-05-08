@@ -60,17 +60,17 @@ public class CartService {
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public void deleteCartItem(final MemberRequest memberRequest, final Long productId) {
+    public void deleteCartItem(final MemberRequest memberRequest, final Long cartItemId) {
         Member member = memberDao.findByEmailAndPassword(memberRequest.getEmail(), memberRequest.getPassword())
             .orElseThrow(MemberNotFoundException::new);
-        Cart cart = cartDao.findByMemberIdAndProductId(member, productId)
+        Cart cart = cartDao.findByMemberIdAndProductId(member, cartItemId)
             .orElseThrow(ProductNotFoundException::new);
 
         if (cart.getCount() > 1) {
             update(cart, -1);
             return;
         }
-        cartDao.deleteCart(member, productId);
+        cartDao.deleteCart(member, cartItemId);
     }
 
     private Long update(final Cart cart, final int count) {
