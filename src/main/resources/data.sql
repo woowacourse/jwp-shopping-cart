@@ -5,6 +5,7 @@ values ('연필', 'https://ppss.kr/wp-content/uploads/2018/07/01-65.jpg', 1000)
 , ('볼팬', 'https://img.danawa.com/prod_img/500000/665/448/img/1448665_1.jpg?shrink=330:*&_v=20200805125500', 1500);
 
 -- member 더미 데이터
-INSERT INTO member(email, password)
-values ('ako@wooteco.com', 'ako')
-,('oz@wooteco.com', 'oz');
+INSERT INTO member(email, password, role)
+values ('ako@wooteco.com', 'ako', 'USER')
+,('oz@wooteco.com', 'oz', 'USER')
+,('admin@wooteco.com', 'admin', 'ADMIN');

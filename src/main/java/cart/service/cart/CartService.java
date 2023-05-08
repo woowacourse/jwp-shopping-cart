@@ -39,10 +39,10 @@ public class CartService {
         Product product = productDao.findById(cartItemRequest.getProductId())
             .orElseThrow(ProductNotFoundException::new);
 
-        Optional<Cart> cart = cartDao.findByMemberIdAndProductId(member, cartItemRequest.getProductId());
+        Optional<Cart> cart = cartDao.findByMemberIdAndProductId(member, product.getId());
 
         if (cart.isEmpty()) {
-            return cartDao.insertCart(new Cart(member.getId(), cartItemRequest.getProductId(), 1));
+            return cartDao.insertCart(new Cart(member.getId(), product.getId(), 1));
         }
 
         return update(cart.get(), 1);

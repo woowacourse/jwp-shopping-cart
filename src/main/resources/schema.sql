@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS member (
     id BIGINT NOT NULL UNIQUE AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
+    role VARCHAR(5) NOT NULL,
     primary key (id)
 );
 

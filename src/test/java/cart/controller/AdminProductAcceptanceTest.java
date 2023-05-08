@@ -36,10 +36,13 @@ class AdminProductAcceptanceTest {
     @Test
     void create_product_success() {
         // givn
+        String adminEmail = "admin@wooteco.com";
+        String adminPassword = "admin";
         ProductRequest productAddRequest = new ProductRequest("연필", "이미지", 1000);
 
         // when
         ExtractableResponse<Response> result = given()
+            .auth().preemptive().basic(adminEmail, adminPassword)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productAddRequest)
             .when()
@@ -56,8 +59,13 @@ class AdminProductAcceptanceTest {
     @MethodSource("createWrongProduct")
     @ParameterizedTest(name = "{displayName}")
     void create_product_fail(ProductRequest productRequest) {
+        // given
+        String adminEmail = "admin@wooteco.com";
+        String adminPassword = "admin";
+
         // when
         ExtractableResponse<Response> result = given()
+            .auth().preemptive().basic(adminEmail, adminPassword)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productRequest)
             .when()
@@ -84,12 +92,15 @@ class AdminProductAcceptanceTest {
     @Test
     void update_product_success() {
         // given
+        String adminEmail = "admin@wooteco.com";
+        String adminPassword = "admin";
         ExtractableResponse<Response> addResult = addProduct();
         Long id = Long.valueOf(addResult.header("Location").split("/")[1]);
         ProductRequest productUpdateDto = new ProductRequest("지우개", "이미지 url", 2000);
 
         // when
         ExtractableResponse<Response> result = given()
+            .auth().preemptive().basic(adminEmail, adminPassword)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .queryParam("id", id)
             .body(productUpdateDto)
@@ -107,12 +118,15 @@ class AdminProductAcceptanceTest {
     @Test
     void update_not_exist_product() {
         // given
+        String adminEmail = "admin@wooteco.com";
+        String adminPassword = "admin";
         ExtractableResponse<Response> addResult = addProduct();
         Long id = Long.valueOf(addResult.header("Location").split("/")[1]);
         ProductRequest productUpdateDto = new ProductRequest("지우개", "이미지 url", 2000);
 
         // when
         ExtractableResponse<Response> result = given()
+            .auth().preemptive().basic(adminEmail, adminPassword)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .queryParam("id", id + 1)
             .body(productUpdateDto)
@@ -131,11 +145,14 @@ class AdminProductAcceptanceTest {
     @ParameterizedTest(name = "{displayName}")
     void update_product_fail(ProductRequest productUpdateDto) {
         // given
+        String adminEmail = "admin@wooteco.com";
+        String adminPassword = "admin";
         ExtractableResponse<Response> addResult = addProduct();
         Long id = Long.valueOf(addResult.header("Location").split("/")[1]);
 
         // when
         ExtractableResponse<Response> result = given()
+            .auth().preemptive().basic(adminEmail, adminPassword)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .queryParam("id", id)
             .body(productUpdateDto)
@@ -163,11 +180,14 @@ class AdminProductAcceptanceTest {
     @Test
     void delete_product_success() {
         // given
+        String adminEmail = "admin@wooteco.com";
+        String adminPassword = "admin";
         ExtractableResponse<Response> addResult = addProduct();
         Long id = Long.valueOf(addResult.header("Location").split("/")[1]);
 
         // when
         ExtractableResponse<Response> result = given()
+            .auth().preemptive().basic(adminEmail, adminPassword)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .queryParam("id", id)
             .when()
@@ -185,11 +205,14 @@ class AdminProductAcceptanceTest {
     @Test
     void delete_product_fail() {
         // given
+        String adminEmail = "admin@wooteco.com";
+        String adminPassword = "admin";
         ExtractableResponse<Response> addResult = addProduct();
         Long id = Long.valueOf(addResult.header("Location").split("/")[1]);
 
         // when
         ExtractableResponse<Response> result = given()
+            .auth().preemptive().basic(adminEmail, adminPassword)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .queryParam("id", id + 1)
             .when()
@@ -203,8 +226,12 @@ class AdminProductAcceptanceTest {
 
 
     private ExtractableResponse<Response> addProduct() {
+        String adminEmail = "admin@wooteco.com";
+        String adminPassword = "admin";
+
         ProductRequest productRequest = new ProductRequest("지우개", "이미지", 2000);
         return given()
+            .auth().preemptive().basic(adminEmail, adminPassword)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(productRequest)
             .post("admin/products")
