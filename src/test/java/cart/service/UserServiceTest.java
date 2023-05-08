@@ -17,9 +17,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -36,6 +37,7 @@ public class UserServiceTest {
         given(userDao.insert(any())).willReturn(1L);
 
         assertThat(userService.save("test12@mail.com", "12121212")).isEqualTo(1L);
+        verify(userDao, times(1)).insert(any());
     }
 
     @Test
@@ -46,6 +48,7 @@ public class UserServiceTest {
         final User actual = userService.findByEmail(testUser.getEmail());
 
         assertThat(actual.getId()).isEqualTo(1L);
+        verify(userDao, times(1)).findByEmail(anyString());
     }
 
     @Test
@@ -59,6 +62,7 @@ public class UserServiceTest {
                 () -> assertThat(actual.size()).isEqualTo(1),
                 () -> assertThat(actual.get(0).getEmail()).isEqualTo(testUser.getEmail())
         );
+        verify(userDao, times(1)).findAll();
     }
 
     @Test
@@ -73,5 +77,6 @@ public class UserServiceTest {
                         .isInstanceOf(IllegalArgumentException.class)
                         .hasMessage(USER_ID_NOT_EXIST_ERROR_MESSAGE)
         );
+        verify(userDao, times(2)).isExist(anyLong());
     }
 }

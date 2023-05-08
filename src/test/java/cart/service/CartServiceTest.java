@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CartServiceTest {
@@ -41,6 +41,7 @@ class CartServiceTest {
         given(cartDao.insert(anyLong(), anyLong())).willReturn(id);
 
         assertThat(cartService.save(1L, 1L)).isEqualTo(id);
+        verify(cartDao, times(1)).insert(anyLong(), anyLong());
     }
 
     @Test
@@ -61,6 +62,7 @@ class CartServiceTest {
                 () -> assertThat(actual.get(0).getProductPrice()).isEqualTo(expected.getProductPrice()),
                 () -> assertThat(actual.get(0).getProductImage()).isEqualTo(expected.getProductImage())
         );
+        verify(cartDao, times(1)).findByUserId(anyLong());
     }
 
     @Test
@@ -69,5 +71,6 @@ class CartServiceTest {
         doNothing().when(cartDao).deleteById(anyLong());
 
         assertDoesNotThrow(() -> cartService.delete(1L));
+        verify(cartDao, times(1)).deleteById(anyLong());
     }
 }

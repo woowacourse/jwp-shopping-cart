@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,6 +41,8 @@ public class ProductControllerTest {
                         .content(request))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/product/1"));
+
+        verify(productService, times(1)).save(anyString(), anyInt(), any());
     }
 
     @Test
@@ -56,7 +58,10 @@ public class ProductControllerTest {
                         .content(request))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/product/1"));
+
+        verify(productService, times(1)).update(anyLong(), anyString(), anyInt(), any());
     }
+
 
     @Test
     @DisplayName("DELETE /product/{id}")
@@ -66,5 +71,7 @@ public class ProductControllerTest {
 
         mockMvc.perform(delete("/product/" + id))
                 .andExpect(status().isOk());
+
+        verify(productService, times(1)).delete(anyLong());
     }
 }

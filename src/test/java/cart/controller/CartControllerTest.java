@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -51,6 +51,8 @@ class CartControllerTest {
                 .andExpect(jsonPath("$[0].productName", is("치킨")))
                 .andExpect(jsonPath("$[0].productPrice", is(1000)))
                 .andExpect(jsonPath("$[0].productImage", is("www.abc.com")));
+
+        verify(cartService, times(1)).findByUserId(anyLong());
     }
 
     @Test
@@ -67,6 +69,8 @@ class CartControllerTest {
                         .content(request))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, "/cart/items/1"));
+
+        verify(cartService, times(1)).save(anyLong(), anyLong());
     }
 
     @Test
@@ -77,5 +81,7 @@ class CartControllerTest {
 
         mockMvc.perform(delete("/cart/items/" + id))
                 .andExpect(status().isOk());
+
+        verify(cartService, times(1)).delete(anyLong());
     }
 }

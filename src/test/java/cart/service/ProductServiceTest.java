@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
@@ -38,6 +38,7 @@ class ProductServiceTest {
         given(productDao.insert(any())).willReturn(1L);
 
         assertThat(productService.save("이오", 1, null)).isEqualTo(1L);
+        verify(productDao, times(1)).insert(any());
     }
 
 
@@ -49,6 +50,7 @@ class ProductServiceTest {
         final Product actual = productService.findById(1L);
 
         assertThat(actual.getName()).isEqualTo("이오");
+        verify(productDao, times(1)).findById(anyLong());
     }
 
     @Test
@@ -62,6 +64,7 @@ class ProductServiceTest {
                 () -> assertThat(actual.size()).isEqualTo(1),
                 () -> assertThat(actual.get(0).getName()).isEqualTo("이오")
         );
+        verify(productDao, times(1)).findAll();
     }
 
     @Test
@@ -72,6 +75,7 @@ class ProductServiceTest {
         assertThatThrownBy(() -> productService.update(-1L, "애쉬", 1000, null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE);
+        verify(productDao, never()).update(any());
     }
 
     @Test
@@ -81,6 +85,7 @@ class ProductServiceTest {
         doNothing().when(productDao).update(any());
 
         assertThat(productService.update(1L, "카프카", 9999, null)).isEqualTo(1L);
+        verify(productDao, times(1)).update(any());
     }
 
     @Test
@@ -95,6 +100,7 @@ class ProductServiceTest {
                         .isInstanceOf(IllegalArgumentException.class)
                         .hasMessage(PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE)
         );
+        verify(productDao, times(2)).isExist(anyLong());
     }
 
     @Test
@@ -104,5 +110,6 @@ class ProductServiceTest {
         doNothing().when(productDao).deleteById(anyLong());
 
         assertDoesNotThrow(() -> productService.delete(1L));
+        verify(productDao, times(1)).deleteById(anyLong());
     }
 }
