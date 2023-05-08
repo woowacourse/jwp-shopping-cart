@@ -6,6 +6,7 @@ public class Price {
 
     private static final int PRICE_LOWER_BOUND_EXCLUSIVE = 1;
     private static final int PRICE_UPPER_BOUND_EXCLUSIVE = 1_000_000_000;
+
     private final int value;
 
     private Price(int value) {
