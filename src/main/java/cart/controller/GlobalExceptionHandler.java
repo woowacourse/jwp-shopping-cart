@@ -3,6 +3,7 @@ package cart.controller;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import cart.controller.auth.HeaderNotFoundException;
 import cart.service.EmailNotFoundException;
 import cart.service.PasswordMismatchException;
 import org.slf4j.Logger;
@@ -29,11 +30,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler
+    private ResponseEntity<String> handleHeaderNotFoundException(final HeaderNotFoundException exception) {
+        log.debug("인증 헤더가 존재하지 않습니다.", exception);
+        return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @ExceptionHandler
     private ResponseEntity<String> handleEmailNotFoundException(final EmailNotFoundException exception) {
         log.debug("존재하지 않는 email입니다.", exception);
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
-    
+
     @ExceptionHandler
     private ResponseEntity<String> handlePasswordMismatchException(final PasswordMismatchException exception) {
         log.debug("password가 일치하지 않습니다.", exception);
