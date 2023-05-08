@@ -80,7 +80,7 @@ class ProductApiControllerTest {
     }
 
     private int insertProduct(final String name, final Integer price, final String image) {
-        final String sql = "INSERT INTO PRODUCT (name, price, image) VALUES (?, ?, ?)";
+        final String sql = "INSERT INTO PRODUCTS (name, price, image) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(

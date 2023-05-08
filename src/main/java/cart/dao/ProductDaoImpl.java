@@ -63,7 +63,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public void update(final ProductEntity updatedEntity) {
-        final String sql = "UPDATE PRODUCT SET name = ?, image = ?, price = ? WHERE id = ?";
+        final String sql = "UPDATE PRODUCTS SET name = ?, image = ?, price = ? WHERE id = ?";
 
         jdbcTemplate.update(sql, updatedEntity.getName(), updatedEntity.getImage(), updatedEntity.getPrice(),
                 updatedEntity.getId());
@@ -71,7 +71,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public void delete(final int id) {
-        final String sql = "DELETE FROM PRODUCT WHERE id = ?";
+        final String sql = "DELETE FROM PRODUCTS WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
     }
