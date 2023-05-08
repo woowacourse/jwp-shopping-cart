@@ -1,7 +1,8 @@
 package cart.entity;
 
 public class ProductEntity {
-    private int id;
+
+    private Integer id;
     private String name;
     private String imgUrl;
     private int price;
@@ -9,7 +10,7 @@ public class ProductEntity {
     public ProductEntity() {
     }
 
-    public ProductEntity(int id, String name, String imgUrl, int price) {
+    public ProductEntity(Integer id, String name, String imgUrl, int price) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
@@ -22,7 +23,7 @@ public class ProductEntity {
         this.price = price;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -38,7 +39,7 @@ public class ProductEntity {
         return price;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

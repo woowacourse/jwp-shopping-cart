@@ -11,25 +11,26 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class CartControllerAdvice {
-    public static final String SERVER_ERROR = "server error";
+
+    public static final String SERVER_ERROR = "알 수 없는 에러가 발생했습니다.";
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        log.error(errorMessage);
+        log.info(errorMessage);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<String> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
-        log.error(e.getMessage());
+        log.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        log.error(e.getMessage());
+        log.info(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
