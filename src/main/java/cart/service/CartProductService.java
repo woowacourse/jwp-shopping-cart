@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.dao.cart.CartDao;
 import cart.domain.member.Member;
+import cart.domain.product.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +23,9 @@ public class CartProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Long> findAllProductIds(final String email, final String password) {
+    public List<Product> findAllCartProduct(final String email, final String password) {
         final Member member = memberService.find(email, password);
-        return cartDao.findAllProductIdByMemberId(member.getId());
+        return cartDao.findAllProductByMemberId(member.getId());
     }
 
     @Transactional

@@ -50,13 +50,13 @@ class CartProductServiceTest {
     @Test
     void 특정_유저가_등록한_장바구니_상품_목록을_가져오는지_확인한다() {
         when(memberService.find(any(), any())).thenReturn(DUMMY_MEMBER_ONE);
-        when(cartDao.findAllProductIdByMemberId(any())).thenReturn(List.of());
+        when(cartDao.findAllProductByMemberId(any())).thenReturn(List.of());
 
-        cartProductService.findAllProductIds(DUMMY_MEMBER_ONE.getEmail(), DUMMY_MEMBER_ONE.getPassword());
+        cartProductService.findAllCartProduct(DUMMY_MEMBER_ONE.getEmail(), DUMMY_MEMBER_ONE.getPassword());
 
         SoftAssertions.assertSoftly(softAssertions -> {
             verify(memberService, times(1)).find(any(), any());
-            verify(cartDao, times(1)).findAllProductIdByMemberId(any());
+            verify(cartDao, times(1)).findAllProductByMemberId(any());
         });
     }
 

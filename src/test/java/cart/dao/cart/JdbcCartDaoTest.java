@@ -1,6 +1,7 @@
 package cart.dao.cart;
 
 import cart.dao.DaoTest;
+import cart.domain.product.Product;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -25,11 +26,11 @@ class JdbcCartDaoTest extends DaoTest {
     @Test
     void 특정_사용자_id에_대한_상품_id_목록을_확인한다() {
         final Long memberId = 1L;
-        final List<Long> productEntities = cartDao.findAllProductIdByMemberId(memberId);
+        final List<Product> productEntities = cartDao.findAllProductByMemberId(memberId);
 
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(productEntities.size()).isEqualTo(1);
-            softAssertions.assertThat(productEntities.get(0)).isEqualTo(2L);
+            softAssertions.assertThat(productEntities.get(0).getId()).isEqualTo(2L);
         });
     }
 

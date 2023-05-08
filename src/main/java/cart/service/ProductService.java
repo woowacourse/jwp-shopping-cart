@@ -24,16 +24,6 @@ public class ProductService {
         return productDao.findAll();
     }
 
-    @Transactional(readOnly = true)
-    public List<Product> findByIds(final List<Long> productIds) {
-        final List<Product> products = new ArrayList<>();
-        for (Long productId : productIds) {
-            products.add(productDao.findById(productId));
-        }
-
-        return products;
-    }
-
     public void updateById(final Long id, final Product product) {
         productDao.updateById(id, product);
     }

@@ -1,7 +1,9 @@
 package cart.dao.cart;
 
+import cart.domain.product.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,6 +14,13 @@ public class JdbcCartDao implements CartDao {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final RowMapper<Product> memberRowMapper = (resultSet, rowNum) -> Product.of(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getString("image_url"),
+            resultSet.getInt("price")
+    );
+
     @Override
     public void insert(final Long memberId, final Long productId) {
         final String sql = "INSERT INTO cart_product(member_id, product_id) VALUES (?, ?)";
@@ -19,9 +28,9 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
-    public List<Long> findAllProductIdByMemberId(final Long memberId) {
-        final String sql = "SELECT product_id FROM cart_product WHERE member_id = ?";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> resultSet.getLong(1), memberId);
+    public List<Product> findAllProductByMemberId(final Long memberId) {
+        final String sql = "SELECT p.id, p.name, p.image_url, p.price FROM cart_product as cp JOIN product as p ON cp.product_id = p.id WHERE member_id = ?";
+        return jdbcTemplate.query(sql, memberRowMapper, memberId);
     }
 
     @Override

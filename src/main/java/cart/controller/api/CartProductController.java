@@ -2,6 +2,7 @@ package cart.controller.api;
 
 import cart.auth.AuthenticationPrincipal;
 import cart.domain.member.Member;
+import cart.domain.product.Product;
 import cart.dto.ProductResponse;
 import cart.mapper.ProductResponseMapper;
 import cart.service.CartProductService;
@@ -36,11 +37,9 @@ public class CartProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getCartProduct(@AuthenticationPrincipal final Member member) {
-        final List<Long> productIds = cartProductService.findAllProductIds(member.getEmail(), member.getPassword());
+        final List<Product> products = cartProductService.findAllCartProduct(member.getEmail(), member.getPassword());
 
-        final List<ProductResponse> productResponses = ProductResponseMapper.from(productService.findByIds(productIds));
-
-        return ResponseEntity.ok(productResponses);
+        return ResponseEntity.ok(ProductResponseMapper.from(products));
     }
 
     @DeleteMapping("/{productId}")
