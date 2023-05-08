@@ -1,14 +1,14 @@
 package cart.controller;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -17,9 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import cart.auth.BasicAuthorizationExtractor;
+import cart.controller.dto.CartResponse;
 import cart.dao.CartDao;
 import cart.dao.ProductDao;
 import cart.domain.Product;
@@ -37,39 +42,41 @@ class CartControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private BasicAuthorizationExtractor basicAuthorizationExtractor;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    @DisplayName("'/'로 GET 요청을 했을 때 index template을 반환한다.")
+    @DisplayName("addProduct의 POST가 정상적으로 요청된다.")
     @Test
-    void findAllProducts() throws Exception {
-        // given
-        Product product = new Product(1, "치킨", "image.url", 10000);
-        given(productDao.findAll()).willReturn(List.of(product));
-
+    void addProduct() throws Exception {
         // when, then
-        mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", hasItem(hasProperty("id", is(1L)))))
-                .andExpect(model().attribute("products", hasItem(hasProperty("name", is("치킨")))))
-                .andExpect(model().attribute("products", hasItem(hasProperty("imageUrl", is("image.url")))))
-                .andExpect(model().attribute("products", hasItem(hasProperty("price", is(10000)))))
-                .andExpect(view().name("index"));
+        mockMvc.perform(post("/cart/products/{productId}", "1")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic amVvbXhvbkBnbWFpbC5jb206cGFzc3dvcmQxMjM="))
+                .andExpect(status().isCreated());
     }
 
-//    @DisplayName("ff")
-//    @Test
-//    void postTest() throws Exception {
-//        // given
-//        given(basicAuthorizationExtractor.extract(any(HttpServletRequest.class)))
-//                .willReturn(new AuthInfo("jeomxon@gmail.com", "password1"));
-//
-//        // when
-//
-//        // then
-//        mockMvc.perform(post("/cart/products/{productId}", 1)
-//                        .header("Authorization", "Basic amVvbXhvbkBnbWFpbC5jb206cGFzc3dvcmQx=="))
-//                .andExpect(status().isCreated());
-//    }
+    @DisplayName("findAllProductsByMember의 GET요청과 Response가 정상적으로 작동한다.")
+    @Test
+    void findAllProductsByMember() throws Exception {
+        // given
+        Product product = new Product(1L, "닭다리", "image.url", 12000);
+        List<CartResponse> cartResponses = Collections.singletonList(CartResponse.from(product));
+
+        given(cartDao.findCartItemsByMemberEmail(any())).willReturn(List.of(product));
+
+        // when, then
+        mockMvc.perform(get("/cart/products")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic amVvbXhvbkBnbWFpbC5jb206cGFzc3dvcmQxMjM="))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(content().json(objectMapper.writeValueAsString(cartResponses)));
+    }
+
+    @DisplayName("removeProduct의 DELETE가 정상적으로 요청된다.")
+    @Test
+    void removeProduct() throws Exception {
+        // when, then
+        mockMvc.perform(delete("/cart/products/{productId}", "1")
+                        .header(HttpHeaders.AUTHORIZATION, "Basic amVvbXhvbkBnbWFpbC5jb206cGFzc3dvcmQxMjM="))
+                .andExpect(status().isNoContent());
+    }
 }
