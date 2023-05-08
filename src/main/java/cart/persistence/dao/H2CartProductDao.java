@@ -1,6 +1,7 @@
 package cart.persistence.dao;
 
 import cart.persistence.entity.CartProductEntity;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,8 +31,13 @@ public class H2CartProductDao implements CartProductDao {
     }
 
     @Override
-    public List<CartProductEntity> findAllByUserId() {
-        return null;
+    public List<CartProductEntity> findAllByMemberId(long memberId) {
+        String sql = "SELECT id, member_id, product_id FROM cart_product WHERE member_id = ?";
+        try {
+            return this.jdbcTemplate.query(sql, rowMapper, memberId);
+        } catch (EmptyResultDataAccessException ignored) {
+            return Collections.emptyList();
+        }
     }
 
     @Override

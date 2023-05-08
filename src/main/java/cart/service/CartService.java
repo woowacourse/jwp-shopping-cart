@@ -25,20 +25,20 @@ public class CartService {
 
     public List<Product> findProductsInCartByUser(MemberAuthDto memberAuthDto) {
         Member signedUpMember = this.memberService.signUp(memberAuthDto);
-        return this.cartRepository.findByUserId(signedUpMember.getId()).getProducts();
+        return this.cartRepository.findByMemberId(signedUpMember.getId()).getProducts();
     }
 
     public void addProductToCartById(MemberAuthDto memberAuthDto, Long productId) {
         Member signedUpMember = this.memberService.signUp(memberAuthDto);
         Product product = this.productService.findById(productId);
-        Cart cart = this.cartRepository.findByUserId(signedUpMember.getId());
+        Cart cart = this.cartRepository.findByMemberId(signedUpMember.getId());
         this.cartRepository.saveProductToCart(cart, product);
     }
 
     public void deleteProductFromCartById(MemberAuthDto memberAuthDto, Long productId) {
         Member signedUpMember = this.memberService.signUp(memberAuthDto);
         Product product = this.productService.findById(productId);
-        Cart cart = this.cartRepository.findByUserId(signedUpMember.getId());
+        Cart cart = this.cartRepository.findByMemberId(signedUpMember.getId());
         this.cartRepository.deleteProductFromCart(cart, product);
     }
 }

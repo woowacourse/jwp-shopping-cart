@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface CartProductDao {
 
-    List<CartProductEntity> findAllByUserId();
+    List<CartProductEntity> findAllByMemberId(long memberId);
 
     long save(CartProductEntity cartProductEntity);
 

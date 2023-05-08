@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.persistence.entity.CartProductEntity;
 import java.sql.PreparedStatement;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -85,8 +86,34 @@ class H2CartProductDaoTest {
         this.productId2 = keyHolder.getKey().longValue();
     }
 
-//    @DisplayName("모든 장바구니 상품을 불러온다.")
-//    @Test
+    @DisplayName("모든 장바구니 상품을 불러온다.")
+    @Test
+    void shouldReturnAllCartProductsOfMemberWhenRequest() {
+        // 1번째 cart_product 생성
+        CartProductEntity cartProductEntityToSave = CartProductEntity.createToSave(this.memberId, this.productId1);
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(cartProductEntityToSave);
+        this.simpleJdbcInsert.execute(parameterSource);
+
+        // 2번째 cart_product 생성
+        cartProductEntityToSave = CartProductEntity.createToSave(this.memberId, this.productId2);
+        parameterSource = new BeanPropertySqlParameterSource(cartProductEntityToSave);
+        this.simpleJdbcInsert.execute(parameterSource);
+
+        List<CartProductEntity> cartProductEntities = this.cartProductDao.findAllByMemberId(this.memberId);
+
+        assertAll(
+                () -> assertThat(cartProductEntities).hasSize(2),
+                () -> assertThat(cartProductEntities.get(0).getProductId()).isEqualTo(this.productId1),
+                () -> assertThat(cartProductEntities.get(1).getProductId()).isEqualTo(this.productId2)
+        );
+    }
+
+    @DisplayName("장바구니 상품이 없으면 빈 리스트를 반환한다.")
+    @Test
+    void shouldReturnEmptyListWhenHaveNoCartProduct() {
+        List<CartProductEntity> cartProductEntities = this.cartProductDao.findAllByMemberId(this.memberId);
+        assertThat(cartProductEntities).isEmpty();
+    }
 
     @DisplayName("장바구니 상품을 저장한다.")
     @Test

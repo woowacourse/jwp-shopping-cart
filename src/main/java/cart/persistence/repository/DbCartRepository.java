@@ -27,13 +27,13 @@ public class DbCartRepository implements CartRepository {
     }
 
     @Override
-    public Cart findByUserId(long userId) {
-        List<CartProductEntity> cartProductEntities = this.cartProductDao.findAllByUserId();
+    public Cart findByMemberId(long memberId) {
+        List<CartProductEntity> cartProductEntities = this.cartProductDao.findAllByMemberId(memberId);
         List<Product> products = new ArrayList<>();
         for (CartProductEntity cartProductEntity : cartProductEntities) {
             products.add(mapToProductFromCartProductEntity(cartProductEntity));
         }
-        return Cart.createWithProducts(userId, products);
+        return Cart.createWithProducts(memberId, products);
     }
 
     @Override

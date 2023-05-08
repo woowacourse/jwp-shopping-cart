@@ -6,7 +6,7 @@ public interface CartRepository {
 
     void create(long userId);
 
-    Cart findByUserId(long userId);
+    Cart findByMemberId(long userId);
 
     long saveProductToCart(Cart cartToAdd, Product product);
 
