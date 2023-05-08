@@ -48,6 +48,11 @@ public class RdsCartRepository implements CartRepository {
     }
 
     @Override
+    public Optional<CartEntity> findById(final Long id) {
+        return cartDao.findById(id);
+    }
+
+    @Override
     public void deleteById(final Long id) {
         cartDao.deleteById(id);
     }
