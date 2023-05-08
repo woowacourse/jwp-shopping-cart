@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.CreateItem;
 import cart.entity.Item;
+import cart.exception.DaoDuplicateException;
 import cart.exception.ServiceIllegalArgumentException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,7 +25,7 @@ public class JdbcItemDao implements ItemDao {
     @Override
     public void save(final CreateItem createItem) {
         if (isItemExistsByCreateItem(createItem)) {
-            throw new ServiceIllegalArgumentException(EXISTS_ITEM_MESSAGE);
+            throw new DaoDuplicateException(EXISTS_ITEM_MESSAGE);
         }
         String sql = "insert into item(name, item_url, price) values (?, ?, ?)";
 
@@ -63,7 +64,7 @@ public class JdbcItemDao implements ItemDao {
     @Override
     public int update(final Long id, final CreateItem item) {
         if (isItemExistsByCreateItem(item)) {
-            throw new ServiceIllegalArgumentException(EXISTS_ITEM_MESSAGE);
+            throw new DaoDuplicateException(EXISTS_ITEM_MESSAGE);
         }
         String sql = "update item set name = ?, item_url = ?, price = ? where id = ?";
 

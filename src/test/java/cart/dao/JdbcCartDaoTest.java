@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.Cart;
 import cart.entity.PutCart;
+import cart.exception.DaoDuplicateException;
 import cart.exception.ServiceIllegalArgumentException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +53,7 @@ class JdbcCartDaoTest {
     @Test
     void save_fail() {
         Assertions.assertThatThrownBy(() -> cartDao.save(PUT_CART1))
-                .isInstanceOf(ServiceIllegalArgumentException.class)
+                .isInstanceOf(DaoDuplicateException.class)
                 .hasMessage("이미 장바구니에 담은 상품입니다.");
     }
 

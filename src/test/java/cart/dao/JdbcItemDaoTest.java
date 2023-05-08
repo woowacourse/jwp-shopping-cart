@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.CreateItem;
 import cart.entity.Item;
+import cart.exception.DaoDuplicateException;
 import cart.exception.ServiceIllegalArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +50,7 @@ class JdbcItemDaoTest {
     @Test
     void save_fail() {
         assertThatThrownBy(() -> itemDao.save(CREATE_ITEM1))
-                .isInstanceOf(ServiceIllegalArgumentException.class)
+                .isInstanceOf(DaoDuplicateException.class)
                 .hasMessage("이미 동일한 상품이 존재합니다.");
     }
 
@@ -108,7 +109,7 @@ class JdbcItemDaoTest {
     @Test
     void update_DuplicatedItemFail() {
         assertThatThrownBy(() -> itemDao.update(2L, CREATE_ITEM1))
-                .isInstanceOf(ServiceIllegalArgumentException.class)
+                .isInstanceOf(DaoDuplicateException.class)
                 .hasMessage("이미 동일한 상품이 존재합니다.");
     }
 

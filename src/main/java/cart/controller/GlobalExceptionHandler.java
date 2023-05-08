@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.exception.AuthenticationFailureException;
+import cart.exception.DaoDuplicateException;
 import cart.exception.ServiceIllegalArgumentException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    @ExceptionHandler({ServiceIllegalArgumentException.class, AuthenticationFailureException.class})
+    @ExceptionHandler({ServiceIllegalArgumentException.class, AuthenticationFailureException.class, DaoDuplicateException.class})
     public ResponseEntity<Map<String, String>> handleServiceIllegalAccessException(Exception exception) {
         Map<String, String> errors = new HashMap<>();
         errors.put("message", exception.getMessage());

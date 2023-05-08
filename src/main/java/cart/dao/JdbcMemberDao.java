@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.AuthMember;
 import cart.entity.Member;
+import cart.exception.DaoDuplicateException;
 import cart.exception.ServiceIllegalArgumentException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,7 +41,7 @@ public class JdbcMemberDao implements MemberDao {
     @Override
     public void save(AuthMember authMember) {
         if (isEmailExists(authMember.getEmail())) {
-            throw new ServiceIllegalArgumentException(DUPLICATED_EMAIL_MESSAGE);
+            throw new DaoDuplicateException(DUPLICATED_EMAIL_MESSAGE);
         }
         String sql = "insert into member(email, password) values(?, ?)";
 

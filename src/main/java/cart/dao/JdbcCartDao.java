@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.Cart;
 import cart.entity.PutCart;
+import cart.exception.DaoDuplicateException;
 import cart.exception.ServiceIllegalArgumentException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,7 +24,7 @@ public class JdbcCartDao implements CartDao {
     @Override
     public void save(PutCart putCart) {
         if (isCartExists(putCart)) {
-            throw new ServiceIllegalArgumentException(EXISTS_ITEM_IN_CART_MESSAGE);
+            throw new DaoDuplicateException(EXISTS_ITEM_IN_CART_MESSAGE);
         }
         String sql = "insert into cart(member_id, item_id) values(?, ?)";
 
