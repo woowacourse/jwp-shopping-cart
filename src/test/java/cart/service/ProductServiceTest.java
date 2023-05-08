@@ -6,29 +6,31 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
+import cart.dao.CartDao;
 import cart.dao.ProductDao;
 import cart.dto.ProductDto;
 import cart.entity.ProductEntity;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 import java.util.Optional;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @Sql("classpath:schema.sql")
-@MockitoSettings
 class ProductServiceTest {
 
-    @Autowired
+    @InjectMocks
     private ProductService productService;
 
-    @MockBean
+    @Mock
     private ProductDao productDao;
+    @Mock
+    private CartDao cartDao;
 
     @Test
     void 모든_상품_목록_조회() {

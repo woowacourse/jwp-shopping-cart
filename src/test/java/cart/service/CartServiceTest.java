@@ -14,25 +14,25 @@ import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
 import cart.exception.MemberNotFoundException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-@SpringBootTest
-@MockitoSettings
+@ExtendWith(MockitoExtension.class)
 class CartServiceTest {
 
-    @Autowired
+    @InjectMocks
     private CartService cartService;
-    @MockBean
+
+    @Mock
     private MemberDao memberDao;
-    @MockBean
+    @Mock
     private CartDao cartDao;
-    @MockBean
+    @Mock
     private ProductService productService;
 
     private final MemberEntity MEMBER_ENTITY = new MemberEntity(1L, "email", "password", "name", "address", 10);

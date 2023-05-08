@@ -6,22 +6,20 @@ import cart.dao.MemberDao;
 import cart.dto.MemberResponse;
 import cart.entity.MemberEntity;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
-@SpringBootTest
-@MockitoSettings
+@ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 
-    @MockBean
-    private MemberDao memberDao;
-
-    @Autowired
+    @InjectMocks
     private MemberService memberService;
+    @Mock
+    private MemberDao memberDao;
 
     @Test
     void 모든_회원_조회() {
