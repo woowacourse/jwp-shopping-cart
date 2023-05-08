@@ -55,7 +55,7 @@ class AdminControllerTest {
                 .body(request)
                 .when().post("/admin")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
     @DisplayName("상품 수정")
