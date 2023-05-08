@@ -2,17 +2,17 @@ package cart.controller.auth;
 
 import cart.dao.UserDao;
 import cart.domain.User;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Component
-public class Authorization {
+@Service
+public class AuthorizationService {
 
     private final UserDao userDao;
 
-    public Authorization(final UserDao userDao) {
+    public AuthorizationService(final UserDao userDao) {
         this.userDao = userDao;
     }
 

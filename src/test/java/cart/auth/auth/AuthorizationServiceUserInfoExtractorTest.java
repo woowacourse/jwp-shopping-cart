@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class AuthorizationUserInfoExtractorTest {
+public class AuthorizationServiceUserInfoExtractorTest {
 
     @DisplayName("Base64로 인코딩된 값을 디코딩해서 LoginUser객체를 반환")
     @Test

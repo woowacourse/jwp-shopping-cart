@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.controller.auth.Authorization;
+import cart.controller.auth.AuthorizationService;
 import cart.dao.UserDao;
 import cart.domain.Email;
 import cart.domain.Password;
@@ -18,12 +18,12 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthorizationTest {
+public class AuthorizationServiceTest {
 
     @Mock
     private UserDao userDao;
     @InjectMocks
-    private Authorization authorization;
+    private AuthorizationService authorizationService;
 
     @DisplayName("이메일과 비밀번호가 일치하면 true를 반환한다.")
     @Test
@@ -34,7 +34,7 @@ public class AuthorizationTest {
         User user = new User(new Email(email), new Password(password));
         Mockito.when(userDao.findBy(Mockito.anyString())).thenReturn(Optional.of(user));
         //when
-        boolean check = authorization.checkLogin(email, password);
+        boolean check = authorizationService.checkLogin(email, password);
         //then
         assertThat(check).isTrue();
     }
@@ -47,7 +47,7 @@ public class AuthorizationTest {
         String password = "12345678";
         Mockito.when(userDao.findBy(email)).thenReturn(Optional.empty());
         //when
-        boolean check = authorization.checkLogin(email, password);
+        boolean check = authorizationService.checkLogin(email, password);
         //then
         assertThat(check).isFalse();
     }
@@ -61,7 +61,7 @@ public class AuthorizationTest {
         User user = new User(new Email(email), new Password(password));
         Mockito.when(userDao.findBy(Mockito.anyString())).thenReturn(Optional.of(user));
         //when
-        boolean check = authorization.checkLogin(email, "123456781");
+        boolean check = authorizationService.checkLogin(email, "123456781");
         //then
         assertThat(check).isFalse();
     }
