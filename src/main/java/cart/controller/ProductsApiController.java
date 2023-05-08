@@ -4,7 +4,7 @@ import cart.controller.dto.ProductRequest;
 import cart.controller.dto.ProductResponse;
 import cart.service.ProductService;
 import cart.service.dto.ProductDto;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,38 +32,29 @@ public class ProductsApiController {
     }
 
     @PostMapping
-    public void insertProduct(
-            @Valid @RequestBody final ProductRequest productRequest,
-            final HttpServletResponse httpServletResponse
-    ) {
+    public ResponseEntity<Void> insertProduct(@Valid @RequestBody final ProductRequest productRequest) {
         final Long productId = productService.insertProduct(new ProductDto.Builder()
                 .name(productRequest.getName())
                 .price(productRequest.getPrice())
                 .imageUrl(productRequest.getImageUrl())
                 .build());
-        httpServletResponse.setStatus(HttpStatus.CREATED.value());
-        httpServletResponse.setHeader("Location", PRODUCTS_LOCATION_PREFIX + productId);
+        return ResponseEntity.created(URI.create(PRODUCTS_LOCATION_PREFIX + productId))
+                .build();
     }
 
     @GetMapping
-    public List<ProductResponse> readAllProducts(final HttpServletResponse httpServletResponse) {
-        httpServletResponse.setStatus(HttpStatus.OK.value());
-        return productService.findAll()
+    public ResponseEntity<List<ProductResponse>> readAllProducts() {
+        final List<ProductResponse> response = productService.findAll()
                 .stream()
-                .map(productDto -> new ProductResponse(
-                        productDto.getId(),
-                        productDto.getName(),
-                        productDto.getPrice(),
-                        productDto.getImageUrl()
-                ))
+                .map(ProductResponse::new)
                 .collect(Collectors.toUnmodifiableList());
+        return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/{id}")
-    public void updateProduct(
+    public ResponseEntity<Void> updateProduct(
             @PathVariable final Long id,
-            @Valid @RequestBody final ProductRequest productRequest,
-            final HttpServletResponse httpServletResponse
+            @Valid @RequestBody final ProductRequest productRequest
     ) {
         productService.updateById(new ProductDto.Builder()
                 .id(id)
@@ -71,15 +62,12 @@ public class ProductsApiController {
                 .price(productRequest.getPrice())
                 .imageUrl(productRequest.getImageUrl())
                 .build());
-        httpServletResponse.setStatus(HttpStatus.OK.value());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(
-            @PathVariable final Long id,
-            final HttpServletResponse httpServletResponse
-    ) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable final Long id) {
         productService.deleteById(id);
-        httpServletResponse.setStatus(HttpStatus.NO_CONTENT.value());
+        return ResponseEntity.noContent().build();
     }
 }

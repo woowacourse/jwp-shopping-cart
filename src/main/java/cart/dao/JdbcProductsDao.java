@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.entity.Product;
-import cart.exception.NoSuchProductException;
+import cart.exception.TableIdNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,11 +31,11 @@ public class JdbcProductsDao implements ProductsDao {
     }
 
     @Override
-    public Long create(final String name, final int price, final String image) {
+    public Long create(final Product product) {
         final MapSqlParameterSource parameterMap = new MapSqlParameterSource()
-                .addValue("product_name", name)
-                .addValue("product_price", price)
-                .addValue("product_image", image);
+                .addValue("product_name", product.getName())
+                .addValue("product_price", product.getPrice())
+                .addValue("product_image", product.getImageUrl());
 
         return simpleJdbcInsert.executeAndReturnKey(parameterMap).longValue();
     }
@@ -53,7 +53,7 @@ public class JdbcProductsDao implements ProductsDao {
         try {
             return jdbcTemplate.queryForObject(sql, productRowMapper, id);
         } catch (EmptyResultDataAccessException exception) {
-            throw new NoSuchProductException("해당 상품이 없습니다. 입략된 상품 id : " + id);
+            throw new TableIdNotFoundException("해당 상품이 id를 찾을 수 없습니다. 입략된 상품 id : " + id);
         }
     }
 
@@ -70,9 +70,7 @@ public class JdbcProductsDao implements ProductsDao {
                 imageUrlToUpdate,
                 product.getId()
         );
-        product.setName(nameToUpdate);
-        product.setPrice(priceToUpdate);
-        product.setImageUrl(imageUrlToUpdate);
+        product.update(new Product(product.getId(), nameToUpdate, priceToUpdate, imageUrlToUpdate));
     }
 
     @Override

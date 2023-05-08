@@ -10,21 +10,26 @@ public class Product {
     private int price;
     private String imageUrl;
 
+    public Product(final String name, final int price, final String imageUrl) {
+        validateFields(name, price, imageUrl);
+        this.id = null;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     public Product(final Long id, final String name, final int price, final String imageUrl) {
-        validateId(id);
-        validateName(name);
-        validatePrice(price);
-        validateImageUrl(imageUrl);
+        validateFields(name, price, imageUrl);
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    private void validateId(final Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("id값이 null입니다.");
-        }
+    private void validateFields(final String name, final int price, final String imageUrl) {
+        validateName(name);
+        validatePrice(price);
+        validateImageUrl(imageUrl);
     }
 
     private void validateName(final String name) {
@@ -45,19 +50,10 @@ public class Product {
         }
     }
 
-    public void setName(final String name) {
-        validateName(name);
-        this.name = name;
-    }
-
-    public void setPrice(final int price) {
-        validatePrice(price);
-        this.price = price;
-    }
-
-    public void setImageUrl(final String imageUrl) {
-        validateImageUrl(imageUrl);
-        this.imageUrl = imageUrl;
+    public void update(final Product product) {
+        this.name = product.name;
+        this.price = product.price;
+        this.imageUrl = product.imageUrl;
     }
 
     public Long getId() {

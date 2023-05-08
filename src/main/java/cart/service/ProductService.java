@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.dao.ProductsDao;
-import cart.service.dto.ProductDto;
 import cart.entity.Product;
+import cart.service.dto.ProductDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class ProductService {
     }
 
     public Long insertProduct(final ProductDto productDto) {
-        return productsDao.create(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+        return productsDao.create(new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl()));
     }
 
     public List<ProductDto> findAll() {

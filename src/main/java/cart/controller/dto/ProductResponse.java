@@ -1,5 +1,7 @@
 package cart.controller.dto;
 
+import cart.service.dto.ProductDto;
+
 public class ProductResponse {
 
     private final Long id;
@@ -7,11 +9,11 @@ public class ProductResponse {
     private final Integer price;
     private final String imageUrl;
 
-    public ProductResponse(final long id, final String name, final int price, final String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public ProductResponse(final ProductDto productDto) {
+        this.id = productDto.getId();
+        this.name = productDto.getName();
+        this.price = productDto.getPrice();
+        this.imageUrl = productDto.getImageUrl();
     }
 
     public Long getId() {
