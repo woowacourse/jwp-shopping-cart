@@ -10,7 +10,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class BasicAuthorizationArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(BasicAuthorization.class);
+        return parameter.hasParameterAnnotation(AuthorizationUserInfo.class);
     }
 
     @Override

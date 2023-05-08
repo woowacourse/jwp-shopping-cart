@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.auth.argumentresolver.BasicAuthorization;
+import cart.controller.auth.argumentresolver.AuthorizationUserInfo;
 import cart.controller.auth.dto.LoginUser;
 import cart.controller.dto.CartResponse;
 import cart.service.CartService;
@@ -22,7 +22,7 @@ public class CartController {
     }
 
     @PostMapping("/{itemId}")
-    public ResponseEntity<Void> createCart(@BasicAuthorization final LoginUser loginUser, @PathVariable final Long itemId) {
+    public ResponseEntity<Void> createCart(@AuthorizationUserInfo final LoginUser loginUser, @PathVariable final Long itemId) {
         cartService.saveCart(loginUser.getEmail(), itemId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(URI.create("/"))
@@ -30,14 +30,14 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartResponse>> readCart(@BasicAuthorization LoginUser loginUser) {
+    public ResponseEntity<List<CartResponse>> readCart(@AuthorizationUserInfo LoginUser loginUser) {
         List<CartResponse> carts = cartService.loadItemInsideCart(loginUser.getEmail());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(carts);
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteCart(@BasicAuthorization final LoginUser loginUser, @PathVariable final Long cartId) {
+    public ResponseEntity<Void> deleteCart(@AuthorizationUserInfo final LoginUser loginUser, @PathVariable final Long cartId) {
         cartService.deleteCart(loginUser.getEmail(), cartId);
         return ResponseEntity.status(HttpStatus.OK)
                 .location(URI.create("/"))
