@@ -9,11 +9,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final CredentialThreadLocal credentialThreadLocal;
 
-    public AuthArgumentResolver(CredentialThreadLocal credentialThreadLocal) {
-        this.credentialThreadLocal = credentialThreadLocal;
-    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -24,8 +20,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        Credential credential = credentialThreadLocal.get();
-        credentialThreadLocal.clear();
+        Credential credential = CredentialThreadLocal.get();
         return credential;
     }
 }

@@ -1,21 +1,18 @@
 package cart.auth;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class CredentialThreadLocal {
 
-    private ThreadLocal<Credential> local = new ThreadLocal<>();
+    private static ThreadLocal<Credential> credentialHolder = new ThreadLocal<>();
 
-    public void set(Credential credential) {
-        local.set(credential);
+    public static void set(Credential credential) {
+        credentialHolder.set(credential);
     }
 
-    public Credential get() {
-        return local.get();
+    public static Credential get() {
+        return credentialHolder.get();
     }
 
-    public void clear() {
-        local.remove();
+    public static void clear() {
+        credentialHolder.remove();
     }
 }
