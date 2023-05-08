@@ -32,10 +32,9 @@ public class H2ProductDao implements ProductDao {
 
     @Override
     public List<ProductEntity> findAll() {
-        final String sql = "select * from product";
+        final String sql = "SELECT * FROM product";
 
-        return jdbcTemplate.query(sql, rowMapper()
-        );
+        return jdbcTemplate.query(sql, rowMapper());
     }
 
     @Override
@@ -60,14 +59,14 @@ public class H2ProductDao implements ProductDao {
 
     @Override
     public void update(final ProductEntity productEntity) {
-        final String sql = "update product set name = :name, image_url = :imageUrl, price = :price where id = :id";
+        final String sql = "UPDATE product SET name = :name, image_url = :imageUrl, price = :price WHERE id = :id";
         final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(productEntity);
         jdbcTemplate.update(sql, parameterSource);
     }
 
     @Override
     public void delete(final Long id) {
-        final String sql = "delete from product where id=?";
+        final String sql = "DELETE FROM product WHERE id=?";
         jdbcTemplate.getJdbcOperations().update(sql, id);
     }
 }

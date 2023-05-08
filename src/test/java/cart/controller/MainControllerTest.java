@@ -1,36 +1,26 @@
 package cart.controller;
 
-import cart.controller.dto.ProductResponse;
-import cart.service.ProductService;
-import org.junit.jupiter.api.BeforeEach;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@WebMvcTest(MainController.class)
+@AutoConfigureMockMvc
+@Transactional
+@SpringBootTest
+@Sql("/scheme.sql")
 class MainControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private ProductService productService;
-
-    @BeforeEach
-    void setUp() {
-        final List<ProductResponse> responses = List.of(
-                new ProductResponse(1L, "무민", "moomin", 10000),
-                new ProductResponse(2L, "포이", "poi", 100000));
-        given(productService.findAll()).willReturn(responses);
-    }
 
     @Test
     void showHome() throws Exception {
@@ -46,5 +36,20 @@ class MainControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin"))
                 .andExpect(model().attributeExists("products"));
+    }
+
+    @Test
+    void showSettings() throws Exception {
+        mockMvc.perform(get("/settings"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings"))
+                .andExpect(model().attributeExists("members"));
+    }
+
+    @Test
+    void showCart() throws Exception {
+        mockMvc.perform(get("/cart"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("cart"));
     }
 }

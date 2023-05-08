@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/products")
 public class ProductController {
+
     private final ProductService productService;
 
     public ProductController(final ProductService productService) {
@@ -35,7 +36,6 @@ public class ProductController {
         return ResponseEntity.ok(productService.findProductById(id));
     }
 
-
     @PostMapping
     public ResponseEntity<String> addProduct(@Valid @RequestBody final ProductRequest productRequest) {
         final Long id = productService.addProduct(productRequest);
@@ -44,7 +44,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable final Long id,
-                                                @Valid @RequestBody final ProductRequest productRequest) {
+                                                         @Valid @RequestBody final ProductRequest productRequest) {
         final ProductResponse productResponse = productService.updateProduct(id, productRequest);
         return ResponseEntity.ok(productResponse);
     }

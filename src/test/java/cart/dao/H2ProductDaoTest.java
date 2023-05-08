@@ -1,6 +1,11 @@
 package cart.dao;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import cart.entity.ProductEntity;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,15 +14,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-
-import java.util.List;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@Sql("/scheme.sql")
 class H2ProductDaoTest {
 
     private H2ProductDao h2ProductDao;
@@ -139,7 +140,7 @@ class H2ProductDaoTest {
     }
 
     private List<ProductEntity> getProducts() {
-        final String sql = "select * from product";
+        final String sql = "SELECT * FROM product";
         final List<ProductEntity> productEntities = jdbcTemplate.getJdbcOperations().query(sql, (resultSet, count) ->
                 new ProductEntity(
                         resultSet.getLong("id"),
