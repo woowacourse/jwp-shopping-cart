@@ -1,5 +1,7 @@
 package cart.controller;
 
+import cart.auth.AuthUserDetail;
+import cart.auth.AuthorizationExtractor;
 import cart.dto.CartDto;
 import cart.dto.CartRequest;
 import cart.dto.ProductDto;
@@ -7,6 +9,7 @@ import cart.auth.AuthService;
 import cart.service.CartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +41,16 @@ class CartControllerUnitTest {
     AuthService authService;
 
     @MockBean
+    AuthorizationExtractor<AuthUserDetail> authorizationExtractor;
+
+    @MockBean
     private CartService cartService;
+
+    @BeforeEach
+    void setUp() {
+        BDDMockito.given(authorizationExtractor.extract(any()))
+                .willReturn(new AuthUserDetail("test", "pass"));
+    }
 
     @Test
     void cart_save_success() throws Exception {

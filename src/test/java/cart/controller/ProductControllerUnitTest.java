@@ -1,12 +1,16 @@
 package cart.controller;
 
 import cart.auth.AuthService;
+import cart.auth.AuthUserDetail;
+import cart.auth.AuthorizationExtractor;
 import cart.dto.ProductDto;
 import cart.dto.request.ProductSaveRequest;
 import cart.dto.request.ProductUpdateRequest;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,6 +39,15 @@ class ProductControllerUnitTest {
 
     @MockBean
     AuthService authService;
+
+    @MockBean
+    AuthorizationExtractor<AuthUserDetail> authorizationExtractor;
+
+    @BeforeEach
+    void setUp() {
+        BDDMockito.given(authorizationExtractor.extract(any()))
+                .willReturn(new AuthUserDetail("test", "pass"));
+    }
 
     @Test
     void saveProduct는_상품을_저장하고_created상태코드를_반환한다() throws Exception {
