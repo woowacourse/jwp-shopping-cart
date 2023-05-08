@@ -47,12 +47,14 @@ form.addEventListener('submit', (event) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
     axios.request({
-        url: '/admin',
+        url: '/products',
         method: 'post',
         data: product
     }).then((response) => {
+        alert('해당 물품을 생성했습니다.');
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data.message);
         console.error(error);
     });
 };
@@ -62,12 +64,14 @@ const updateProduct = (product) => {
     const { id } = product;
 
     axios.request({
-        url: '/admin/' + id,
+        url: '/products/' + id,
         method: 'put',
         data: product
     }).then((response) => {
+        alert('해당 물품을 수정했습니다.');
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data.message);
         console.error(error);
     });
 };
@@ -75,9 +79,10 @@ const updateProduct = (product) => {
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
     axios.request({
-        url: '/admin/' + id,
+        url: '/products/' + id,
         method: 'delete'
     }).then((response) => {
+        alert('해당 물품을 삭제했습니다.');
         window.location.reload();
     }).catch((error) => {
         console.error(error);
