@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({AuthenticationException.class})
     public ResponseEntity<String> handle(AuthenticationException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
     @ExceptionHandler({ProductionServiceException.class, ProductionRepoException.class})
