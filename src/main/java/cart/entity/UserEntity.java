@@ -20,11 +20,8 @@ public class UserEntity {
     }
 
     private void validate(final String email, final String password, final String name) {
-        if (Objects.isNull(email) || Objects.isNull(password)) {
-            throw new IllegalArgumentException("User 의 email, password 는 null 을 허용하지 않습니다.");
-        }
-        if (Objects.isNull(name)) {
-            throw new RuntimeException("name이 null인 서버 내부 오류입니다.");
+        if (Objects.isNull(email) || Objects.isNull(password) || Objects.isNull(name)) {
+            throw new IllegalArgumentException("User 의 email, password, name 는 null 을 허용하지 않습니다.");
         }
     }
 
