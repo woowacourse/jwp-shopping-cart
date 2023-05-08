@@ -51,10 +51,12 @@ public class CartService {
         return cartDao.insert(new CartEntity(userId, productId));
     }
 
-    public void deleteCartItem(final int userId, final int productId) {
+    public int deleteCartItem(final int userId, final int productId) {
         int affectedRow = cartDao.delete(userId, productId);
         if (affectedRow < MINAFFECTEDROW) {
             throw new IllegalArgumentException("장바구니에 존재하지 않는 상품입니다.");
         }
+
+        return affectedRow;
     }
 }

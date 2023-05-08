@@ -16,7 +16,7 @@ import java.util.List;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @JdbcTest
-public class JdbcTemplateCartDaoTest {
+class JdbcTemplateCartDaoTest {
 
     private CartDao cartDao;
     private UserDao userDao;

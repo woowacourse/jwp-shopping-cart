@@ -17,7 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @JdbcTest
-public class JdbcTemplateUserDaoTest {
+class JdbcTemplateUserDaoTest {
     private UserDao userDao;
 
     @Autowired

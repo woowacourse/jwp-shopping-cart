@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CartApiController.class)
-public class CartApiControllerTest {
+class CartApiControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
