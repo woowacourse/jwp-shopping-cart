@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +34,7 @@ public class ProductsApiController {
                 .build();
     }
 
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<List<ProductResponseDto>> readAllProducts() {
         List<ProductResponseDto> products = productService.findAll()
                 .stream()
@@ -47,7 +46,7 @@ public class ProductsApiController {
                 ))
                 .collect(Collectors.toUnmodifiableList());
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .ok()
                 .body(products);
     }
 

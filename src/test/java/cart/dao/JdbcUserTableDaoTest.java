@@ -35,8 +35,8 @@ class JdbcUserTableDaoTest {
 
     @Test
     @DisplayName("없는 이메일 입력시 에러")
-    void notUser(){
-        Assertions.assertThatThrownBy(()->jdbcUserTableDao.findByEmail("t@test1.com"))
+    void notUser() {
+        Assertions.assertThatThrownBy(() -> jdbcUserTableDao.findByEmail("t@test1.com"))
                 .isInstanceOf(NoSuchDataException.class)
                 .hasMessage("해당 유저가 없습니다");
     }

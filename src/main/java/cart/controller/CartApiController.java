@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.authorization.BasicAuthorization;
+import cart.authorization.EmailPasswordAuthorization;
 import cart.controller.dto.ProductResponseDto;
 import cart.service.CartService;
 import cart.service.dto.UserDto;
@@ -21,7 +21,7 @@ public class CartApiController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<ProductResponseDto>> displayProduct(@BasicAuthorization UserDto userDto) {
+    public ResponseEntity<List<ProductResponseDto>> displayProduct(@EmailPasswordAuthorization UserDto userDto) {
         List<ProductResponseDto> carts = cartService.displayUserCart(userDto.getEmail())
                 .stream().map(productDto ->
                         new ProductResponseDto(
@@ -35,7 +35,7 @@ public class CartApiController {
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity addCart(@PathVariable Long productId, @BasicAuthorization UserDto userDto) {
+    public ResponseEntity addCart(@PathVariable Long productId, @EmailPasswordAuthorization UserDto userDto) {
         cartService.addCart(userDto.getId(), productId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)

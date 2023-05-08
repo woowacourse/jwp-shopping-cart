@@ -1,8 +1,6 @@
 package cart.service;
 
 import cart.dao.JdbcUserTableDao;
-import cart.exception.NoAuthorizationUserException;
-import cart.exception.NoSuchDataException;
 import cart.service.dto.UserDto;
 import org.springframework.stereotype.Service;
 

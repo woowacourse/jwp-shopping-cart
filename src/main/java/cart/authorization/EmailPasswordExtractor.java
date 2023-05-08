@@ -3,18 +3,16 @@ package cart.authorization;
 import cart.service.UserService;
 import cart.service.dto.UserDto;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BasicAuthorizationExtractor {
+public class EmailPasswordExtractor {
     private static UserService userService;
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
-    @Autowired
-    public BasicAuthorizationExtractor(UserService userService) {
-        BasicAuthorizationExtractor.userService = userService;
+    public EmailPasswordExtractor(UserService userService) {
+        EmailPasswordExtractor.userService = userService;
     }
 
     public static UserDto extract(final String header) throws IllegalAccessException {

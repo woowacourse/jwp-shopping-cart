@@ -30,7 +30,7 @@ public class JdbcUserTableDao {
 
     public User findByEmail(final String userEmail) {
         final String sql = "SELECT * FROM user_table where user_email = ?";
-        try{
+        try {
             return jdbcTemplate.queryForObject(
                     sql,
                     (rs, rowNUm) -> {
@@ -40,7 +40,7 @@ public class JdbcUserTableDao {
                                 rs.getString("user_password")
                         );
                     }, userEmail);
-        }catch(EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             throw new NoSuchDataException("해당 유저가 없습니다");
         }
 

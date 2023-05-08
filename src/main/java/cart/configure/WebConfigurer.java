@@ -1,7 +1,7 @@
 package cart.configure;
 
-import cart.authorization.BasicAuthorizationArgumentResolver;
-import cart.authorization.BasicAuthorizationInterceptor;
+import cart.authorization.EmailPasswordArgumentResolver;
+import cart.authorization.EmailPasswordAuthInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -11,20 +11,20 @@ import java.util.List;
 
 @Configuration
 public class WebConfigurer implements WebMvcConfigurer {
-    private final BasicAuthorizationInterceptor basicAuthorizationInterceptor;
+    private final EmailPasswordAuthInterceptor emailPasswordAuthInterceptor;
 
-    public WebConfigurer(BasicAuthorizationInterceptor basicAuthorizationInterceptor) {
-        this.basicAuthorizationInterceptor = basicAuthorizationInterceptor;
+    public WebConfigurer(EmailPasswordAuthInterceptor emailPasswordAuthInterceptor) {
+        this.emailPasswordAuthInterceptor = emailPasswordAuthInterceptor;
     }
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(basicAuthorizationInterceptor)
+        registry.addInterceptor(emailPasswordAuthInterceptor)
                 .addPathPatterns("/carts/**");
     }
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new BasicAuthorizationArgumentResolver());
+        resolvers.add(new EmailPasswordArgumentResolver());
     }
 }
