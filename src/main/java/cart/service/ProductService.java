@@ -9,8 +9,8 @@ import java.util.List;
 
 @Service
 public class ProductService {
-
     public static final String PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE = "존재하지 않는 상품 ID 입니다.";
+
     private final ProductDao productDao;
 
     public ProductService(final ProductDao productDao) {
@@ -50,7 +50,7 @@ public class ProductService {
     }
 
     private boolean isProductIdExist(final Long id) {
-        return productDao.findById(id).isPresent();
+        return productDao.isExist(id);
     }
 
     @Transactional

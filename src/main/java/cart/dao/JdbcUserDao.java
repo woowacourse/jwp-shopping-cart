@@ -38,7 +38,13 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public Optional<User> findById(final Long id) {
+    public boolean isExist(final long id) {
+        final String sql = "SELECT EXISTS (SELECT 1 FROM user_list WHERE id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
+    }
+
+    @Override
+    public Optional<User> findById(final long id) {
         final String sql = "SELECT * FROM user_list WHERE id = ?";
         try {
             final User user = jdbcTemplate.queryForObject(sql, userRowMapper, id);

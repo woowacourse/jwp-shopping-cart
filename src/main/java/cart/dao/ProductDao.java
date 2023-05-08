@@ -9,6 +9,8 @@ public interface ProductDao {
 
     Long insert(final Product product);
 
+    boolean isExist(final long id);
+
     Optional<Product> findById(final long id);
 
     List<Product> findAll();

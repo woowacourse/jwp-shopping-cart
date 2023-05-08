@@ -39,6 +39,12 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
+    public boolean isExist(final long id) {
+        final String sql = "SELECT EXISTS (SELECT 1 FROM product WHERE id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
+    }
+
+    @Override
     public Optional<Product> findById(final long id) {
         final String sql = "SELECT * FROM product WHERE id = ?";
         try {

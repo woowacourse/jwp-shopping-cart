@@ -9,7 +9,9 @@ public interface UserDao {
 
     Long insert(User user);
 
-    Optional<User> findById(Long id);
+    boolean isExist(final long id);
+
+    Optional<User> findById(long id);
 
     Optional<User> findByEmail(String email);
 
