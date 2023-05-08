@@ -2,6 +2,8 @@ package cart.controller.integration;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -152,6 +154,22 @@ class CartApiControllerTest {
         }
 
         @Test
+        void 삭제하려는_상품이_없는_경우_예외를_던진다() {
+            //given
+            memberJdbcInsert.execute(MEMBER_PARAMS);
+
+            //expect
+            given()
+                    .log().all().header("Authorization", "Basic " + ENCODED_CREDENTIALS)
+                    .when()
+                    .delete("/carts/{id}", 99999L)
+                    .then()
+                    .log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .body(containsString("접근하려는 데이터가 존재하지 않습니다."));
+        }
+
+        @Test
         void 존재하지_않는_회원인_경우_예외를_던진다() {
             final Long productId = productJdbcInsert.executeAndReturnKey(PRODUCT_PARAMS).longValue();
 
@@ -166,6 +184,100 @@ class CartApiControllerTest {
         }
     }
 
+    @Nested
+    class AuthenticationTest {
+
+        @Test
+        void header에_인증_정보가_없는_경우_예외를_던진다() {
+            given()
+                    .log().all()
+                    .when()
+                    .get("/carts")
+                    .then()
+                    .log().all()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .body(equalTo("header에 회원 정보가 입력되지 않았습니다."));
+        }
+
+        @ParameterizedTest
+        @EmptySource
+        void header의_인증_정보가_빈_경우_예외를_던진다(final String empty) {
+            given()
+                    .log().all().header("Authorization", empty)
+                    .when()
+                    .get("/carts")
+                    .then()
+                    .log().all()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .body(equalTo("header에 회원 정보가 입력되지 않았습니다."));
+        }
+
+        @Test
+        void header의_인증_방식이_Basic이_아닌_경우_예외를_던진다() {
+            given()
+                    .log().all().header("Authorization", "Bearer " + ENCODED_CREDENTIALS)
+                    .when()
+                    .get("/carts")
+                    .then()
+                    .log().all()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .body(equalTo("지원하지 않는 인증 방식입니다. Basic 인증 방식을 사용해주세요."));
+        }
+
+        @Test
+        void 회원_정보_입력_형식이_잘못된_경우_예외를_던진다() {
+            final String wrongCredentials = "aHVjaHVAd29vd2FoYW4uY29tLDEyMzQ1NjdhIQ=="; // "huchu@woowahan.com,1234567a!"
+
+            given()
+                    .log().all().header("Authorization", "Basic " + wrongCredentials)
+                    .when()
+                    .get("/carts")
+                    .then()
+                    .log().all()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .body(equalTo("회원 정보 입력 형식이 잘못되었습니다. \"email:password\"로 입력해주세요."));
+        }
+
+        @Test
+        void 계정이_빈_값인_경우_예외를_던진다() {
+            final String emptyCredentials = "OjEyMzQ1NjdhIQ=="; // ":1234567a!" encoded by Base64
+
+            given()
+                    .log().all().header("Authorization", "Basic " + emptyCredentials)
+                    .when()
+                    .get("/carts")
+                    .then()
+                    .log().all()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .body(equalTo("회원 계정이 입력되지 않았습니다."));
+        }
+
+        @Test
+        void 비밀번호가_빈_값인_경우_예외를_던진다() {
+            final String emptyCredentials = "aHVjaHVAd29vd2FoYW4uY29tOg=="; // "huchu@woowahan.com:" encoded by Base64
+
+            given()
+                    .log().all().header("Authorization", "Basic " + emptyCredentials)
+                    .when()
+                    .get("/carts")
+                    .then()
+                    .log().all()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .body(equalTo("회원 비밀번호가 입력되지 않았습니다."));
+        }
+
+        @Test
+        void 존재하지_않는_회원인_경우_예외를_던진다() {
+            given()
+                    .log().all().header("Authorization", "Basic " + UNAUTHORIZED_ENCODED_CREDENTIALS)
+                    .when()
+                    .get("/carts")
+                    .then()
+                    .log().all()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .body(equalTo("입력한 정보의 회원은 존재하지 않습니다."));
+        }
+    }
 
     @AfterEach
     void tearDown() {

@@ -20,12 +20,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
-        final AuthInfo authInfo = BasicAuthorizationExtractor.extract(request.getHeader(HttpHeaders.AUTHORIZATION));
+        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final AuthInfo authInfo = BasicAuthorizationExtractor.extract(header);
 
         if (memberService.hasMember(authInfo.getEmail(), authInfo.getPassword())) {
             return HandlerInterceptor.super.preHandle(request, response, handler);
         }
 
-        throw new AuthorizationException();
+        throw new AuthorizationException("입력한 정보의 회원은 존재하지 않습니다.");
     }
 }
