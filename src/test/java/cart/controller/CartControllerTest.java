@@ -86,6 +86,6 @@ class CartControllerTest {
   void deleteCart() throws Exception {
     mockMvc.perform(delete("/carts/" + 1L)
             .header(AUTHORIZATION, BASIC_TYPE + Base64Coder.encodeString(email + DELIMITER + password)))
-        .andExpect(status().isOk());
+        .andExpect(status().isNoContent());
   }
 }

@@ -76,12 +76,12 @@ class ProductControllerTest {
         mockMvc.perform(put("/products/1")
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
     void deleteProduct() throws Exception {
         mockMvc.perform(delete("/products/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 }
