@@ -34,11 +34,19 @@ public class ProductService {
     }
 
     public void modifyById(Long id, ProductDto productDto) {
-        productDao.updateById(id, productDto.toEntity());
+        int numberOfUpdateRow = productDao.updateById(id, productDto.toEntity());
+
+        if (numberOfUpdateRow == 0) {
+            throw new IllegalStateException("변경하려는 상품이 존재하지 않습니다.");
+        }
     }
 
     public void removeById(Long id) {
-        productDao.deleteById(id);
+        int numberOfDeleteRow = productDao.deleteById(id);
+
+        if (numberOfDeleteRow == 0) {
+            throw new IllegalStateException("삭제하려는 상품이 존재하지 않습니다.");
+        }
     }
 
 }

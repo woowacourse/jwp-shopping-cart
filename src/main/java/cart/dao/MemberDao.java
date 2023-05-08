@@ -28,9 +28,9 @@ public class MemberDao {
         return jdbcTemplate.query(sqlForSelectAll, rowMapper);
     }
 
-    public Member findByEmail(String email) {
-        String sqlForFindByEmail = "SELECT * FROM Member WHERE email = ?";
-        return jdbcTemplate.queryForObject(sqlForFindByEmail, rowMapper, email);
+    public Member findByEmailAndPassword(String email, String password) {
+        String sqlForFindByEmail = "SELECT * FROM Member WHERE email = ? AND password = ?";
+        return jdbcTemplate.queryForObject(sqlForFindByEmail, rowMapper, email, password);
     }
 
 }

@@ -18,7 +18,7 @@ public class BasicLoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
         AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
-        return memberDao.findByEmail(authInfo.getEmail()) != null;
+        return memberDao.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword()) != null;
     }
 
 }

@@ -38,14 +38,14 @@ public class ProductDao {
         jdbcTemplate.update(sqlForSave, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public void deleteById(Long id) {
+    public int deleteById(Long id) {
         String sqlForDeleteById = "DELETE FROM Product WHERE id = ?";
-        jdbcTemplate.update(sqlForDeleteById, id);
+        return jdbcTemplate.update(sqlForDeleteById, id);
     }
 
-    public void updateById(Long id, Product product) {
+    public int updateById(Long id, Product product) {
         String sqlForUpdateById = "UPDATE Product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sqlForUpdateById, product.getName(), product.getPrice(), product.getImageUrl(), id);
+        return jdbcTemplate.update(sqlForUpdateById, product.getName(), product.getPrice(), product.getImageUrl(), id);
     }
 
     public Product findById(Long id) {

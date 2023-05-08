@@ -35,7 +35,7 @@ class MemberDaoTest {
     @Test
     @DisplayName("resources 내의 sql 파일로 인해서 데이터베이스에 초기화된 Member 데이터 중 이메일을 통해서 조회")
     void findByEmail() {
-        Member member = memberDao.findByEmail("kpeel5839@a.com");
+        Member member = memberDao.findByEmailAndPassword("kpeel5839@a.com", "password1!");
 
         assertThat(member.getEmail()).isEqualTo("kpeel5839@a.com");
         assertThat(member.getPassword()).isEqualTo("password1!");

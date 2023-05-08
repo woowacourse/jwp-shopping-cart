@@ -29,7 +29,7 @@ public class BasicAuthorizationExtractor {
         byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
         String decodedHeaderValue = new String(decodedBytes);
         String[] credentials = decodedHeaderValue.split(DELIMITER);
-        return new AuthInfo(credentials[0]);
+        return new AuthInfo(credentials[0], credentials[1]);
     }
 
 }
