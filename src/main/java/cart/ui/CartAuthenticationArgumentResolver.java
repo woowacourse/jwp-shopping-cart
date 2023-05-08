@@ -31,15 +31,6 @@ public class CartAuthenticationArgumentResolver implements HandlerMethodArgument
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
         Member member = basicAuthorizationExtractor.extract(request);
-
-        if (member == null || member.getEmail() == null || member.getPassword() == null) {
-            throw new AuthorizationException();
-        }
-
-        if (member.getEmail().isBlank() || member.getPassword().isBlank()) {
-            throw new AuthorizationException();
-        }
-
         return member.getEmail();
     }
 }
