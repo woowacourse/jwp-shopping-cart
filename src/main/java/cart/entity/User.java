@@ -1,5 +1,7 @@
 package cart.entity;
 
+import static java.lang.String.format;
+
 public final class User {
     private static final int MIN_EMAIL_LENGTH = 5;
     private static final int MAX_EMAIL_LENGTH = 30;
@@ -29,7 +31,7 @@ public final class User {
     private void validateEmail(final String email) {
         if (email.length() < MIN_EMAIL_LENGTH || MAX_EMAIL_LENGTH < email.length()) {
             throw new IllegalArgumentException(
-                    String.format("이메일은 %d ~ %d 길이여야 합니다.", MIN_EMAIL_LENGTH, MAX_EMAIL_LENGTH));
+                    format("이메일은 %d ~ %d 길이여야 합니다.", MIN_EMAIL_LENGTH, MAX_EMAIL_LENGTH));
         }
 
         final long count = email.chars()
@@ -43,7 +45,7 @@ public final class User {
     private void validatePassword(final String password) {
         if (password.length() < MIN_PASSWORD_LENGTH || MAX_PASSWORD_LENGTH < password.length()) {
             throw new IllegalArgumentException(
-                    String.format("비밀번호는 %d ~ %d 길이여야 합니다.", MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH));
+                    format("비밀번호는 %d ~ %d 길이여야 합니다.", MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH));
         }
     }
 

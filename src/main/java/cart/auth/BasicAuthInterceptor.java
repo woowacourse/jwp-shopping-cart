@@ -2,20 +2,24 @@ package cart.auth;
 
 import cart.dao.UserDao;
 import cart.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Component
 public final class BasicAuthInterceptor implements HandlerInterceptor {
     private static final String AUTHORIZATION = "Authorization";
     private static final String INVALID_USER_INFO = "잘못된 유저 정보입니다.";
 
-    @Autowired
-    private UserDao userDao;
-    @Autowired
-    private BasicAuthExtractor basicAuthExtractor;
+    private final UserDao userDao;
+    private final BasicAuthExtractor basicAuthExtractor;
+
+    public BasicAuthInterceptor(final UserDao userDao, final BasicAuthExtractor basicAuthExtractor) {
+        this.userDao = userDao;
+        this.basicAuthExtractor = basicAuthExtractor;
+    }
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
