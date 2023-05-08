@@ -12,20 +12,20 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     private final AuthService authService;
-    private final AuthorizationExtractor<AuthInfo> authorizationExtractor;
+    private final AuthorizationExtractor<AuthUserDetail> authorizationExtractor;
 
-    public LoginInterceptor(AuthService authService, AuthorizationExtractor<AuthInfo> authorizationExtractor) {
+    public LoginInterceptor(AuthService authService, AuthorizationExtractor<AuthUserDetail> authorizationExtractor) {
         this.authService = authService;
         this.authorizationExtractor = authorizationExtractor;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        AuthInfo authInfo = authorizationExtractor.extract(request);
-        if (authInfo == null) {
+        AuthUserDetail authUserDetail = authorizationExtractor.extract(request);
+        if (authUserDetail == null) {
             throw new AuthenticationException(ErrorCode.INVALID_AUTH_HEADER.getMessage());
         }
-        authService.validateLogin(authInfo.getEmail(), authInfo.getPassword());
+        authService.validateLogin(authUserDetail.getEmail(), authUserDetail.getPassword());
 
         return true;
     }

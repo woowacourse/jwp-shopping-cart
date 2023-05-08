@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 
 @Component
-public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthInfo> {
+public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthUserDetail> {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
     public static final int AUTH_INFO_SIZE = 2;
 
     @Override
-    public AuthInfo extract(HttpServletRequest request) {
+    public AuthUserDetail extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
         if (header == null) {
@@ -27,13 +27,13 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
         return null;
     }
 
-    private AuthInfo getAuthInfo(String[] credentials) {
+    private AuthUserDetail getAuthInfo(String[] credentials) {
         if (credentials.length < AUTH_INFO_SIZE) {
             return null;
         }
         String email = credentials[0];
         String password = credentials[1];
-        return new AuthInfo(email, password);
+        return new AuthUserDetail(email, password);
     }
 
     private String[] extractCredentials(String header) {

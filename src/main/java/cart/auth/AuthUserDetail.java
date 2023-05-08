@@ -1,10 +1,10 @@
 package cart.auth;
 
-public class AuthInfo {
+public class AuthUserDetail {
     private String email;
     private String password;
 
-    public AuthInfo(String email, String password) {
+    public AuthUserDetail(String email, String password) {
         this.email = email;
         this.password = password;
     }
