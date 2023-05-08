@@ -23,7 +23,7 @@ public class ProductControllerAdvice {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ExceptionResponse> handleAuthenticationException(final AuthenticationException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionResponse(exception.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
