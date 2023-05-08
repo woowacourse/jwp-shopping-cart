@@ -47,7 +47,6 @@ public class CartIntegrationTest {
 		final ExtractableResponse<Response> result = RestAssured.given()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.auth().preemptive().basic("a@a.com", "pw")
-			.pathParam("email", member.getEmail())
 			.when().log().all()
 			.get("/cart/items")
 			.then().log().all()
