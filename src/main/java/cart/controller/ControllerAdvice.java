@@ -25,7 +25,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handleAuthenticationException(final CartException exception) {
+    public ResponseEntity<String> handleException(final CartException exception) {
         return ResponseEntity.status(exception.getStatus()).body(exception.getMessage());
     }
 }
