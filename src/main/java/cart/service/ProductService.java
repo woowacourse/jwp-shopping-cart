@@ -29,12 +29,7 @@ public class ProductService {
         final List<ProductEntity> products = productDao.selectAll();
 
         return products.stream()
-                .map(product -> new ProductResponseDto(
-                        product.getId(),
-                        product.getImage(),
-                        product.getName(),
-                        product.getPrice()
-                ))
+                .map(ProductResponseDto::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 

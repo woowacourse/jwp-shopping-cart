@@ -31,10 +31,7 @@ public class CartService {
         final List<UserEntity> users = userDao.selectAll();
 
         return users.stream()
-                .map(user -> new UserResponseDto(
-                        user.getEmail(),
-                        user.getPassword()
-                ))
+                .map(UserResponseDto::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -46,12 +43,7 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
 
         return cartItems.stream()
-                .map(product -> new ProductResponseDto(
-                        product.getId(),
-                        product.getImage(),
-                        product.getName(),
-                        product.getPrice()
-                ))
+                .map(ProductResponseDto::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
