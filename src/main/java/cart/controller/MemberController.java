@@ -1,9 +1,11 @@
 package cart.controller;
 
 import cart.auth.EncodePassword;
+import cart.domain.member.dto.MemberCreateDto;
+import cart.domain.member.dto.MemberInformation;
 import cart.domain.member.service.MemberService;
-import cart.domain.member.dto.MemberCreateRequest;
-import cart.domain.member.dto.MemberCreateResponse;
+import cart.dto.MemberCreateRequest;
+import cart.dto.MemberCreateResponse;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,10 @@ public class MemberController {
     @PostMapping("/member")
     public ResponseEntity<MemberCreateResponse> createMember(
         @RequestBody @Valid @EncodePassword final MemberCreateRequest request) {
-        final MemberCreateResponse response = memberService.create(request);
+        final MemberInformation memberInformation = new MemberInformation(request.getEmail(),
+            request.getPassword());
+        final MemberCreateDto memberCreateDto = memberService.create(memberInformation);
+        final MemberCreateResponse response = MemberCreateResponse.of(memberCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

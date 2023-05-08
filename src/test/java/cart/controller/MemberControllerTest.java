@@ -7,9 +7,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.domain.member.dto.MemberCreateRequest;
-import cart.domain.member.dto.MemberCreateResponse;
+import cart.domain.member.dto.MemberCreateDto;
 import cart.domain.member.service.MemberService;
+import cart.dto.MemberCreateRequest;
+import cart.dto.MemberCreateResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.UnsupportedEncodingException;
@@ -43,11 +44,11 @@ class MemberControllerTest {
         //given
         final MemberCreateRequest request = new MemberCreateRequest("test@test.com", "password");
         final String jsonRequest = objectMapper.writeValueAsString(request);
-        final MemberCreateResponse expectedResponse = new MemberCreateResponse(1L,
-            request.getEmail(),
-            LocalDateTime.now(), LocalDateTime.now());
+        final MemberCreateDto memberCreateDto = new MemberCreateDto(1L,
+            request.getEmail(), LocalDateTime.now(), LocalDateTime.now());
+        final MemberCreateResponse expectedResponse = MemberCreateResponse.of(memberCreateDto);
         when(memberService.create(any()))
-            .thenReturn(expectedResponse);
+            .thenReturn(memberCreateDto);
 
         //when
         //then

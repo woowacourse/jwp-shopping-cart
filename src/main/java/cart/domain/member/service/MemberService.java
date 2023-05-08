@@ -1,10 +1,10 @@
 package cart.domain.member.service;
 
 import cart.dao.MemberDao;
-import cart.domain.member.entity.Member;
-import cart.domain.member.dto.MemberCreateRequest;
-import cart.domain.member.dto.MemberCreateResponse;
+import cart.domain.member.dto.MemberCreateDto;
+import cart.domain.member.dto.MemberInformation;
 import cart.domain.member.dto.MemberResponse;
+import cart.domain.member.entity.Member;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -21,15 +21,17 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberCreateResponse create(final MemberCreateRequest request) {
-        checkMemberExist(request);
-        final Member requestMember = request.makeMember();
-        final Member savedMember = memberDao.save(requestMember);
-        return MemberCreateResponse.of(savedMember);
+    public MemberCreateDto create(final MemberInformation memberInformation) {
+        checkMemberExist(memberInformation.getEmail());
+        final Member member = new Member(null, memberInformation.getEmail(),
+            memberInformation.getPassword(), null, null);
+        final Member savedMember = memberDao.save(member);
+        return new MemberCreateDto(savedMember.getId(), savedMember.getEmail(),
+            savedMember.getCreatedAt(), savedMember.getUpdatedAt());
     }
 
-    private void checkMemberExist(final MemberCreateRequest request) {
-        memberDao.findByEmail(request.getEmail())
+    private void checkMemberExist(final String email) {
+        memberDao.findByEmail(email)
             .ifPresent(member -> {
                 throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
             });

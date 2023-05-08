@@ -6,10 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import cart.dao.MemberDao;
-import cart.domain.member.dto.MemberCreateRequest;
-import cart.domain.member.dto.MemberCreateResponse;
+import cart.domain.member.dto.MemberCreateDto;
+import cart.domain.member.dto.MemberInformation;
 import cart.domain.member.dto.MemberResponse;
 import cart.domain.member.entity.Member;
+import cart.dto.MemberCreateRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +34,10 @@ class MemberServiceTest {
     @DisplayName("회원을 생성한다.")
     public void testCreate() {
         //given
-        final MemberCreateRequest request = new MemberCreateRequest("test@test.com", "password");
-        final Member member = new Member(1L, request.getEmail(), request.getPassword(),
+        final MemberInformation memberInformation = new MemberInformation("test@test.com",
+            "password");
+        final Member member = new Member(1L, memberInformation.getEmail(),
+            memberInformation.getPassword(),
             LocalDateTime.now(), LocalDateTime.now());
         given(memberDao.findByEmail(any()))
             .willReturn(Optional.empty());
@@ -42,10 +45,10 @@ class MemberServiceTest {
             .willReturn(member);
 
         //when
-        final MemberCreateResponse response = memberService.create(request);
+        final MemberCreateDto memberCreateDto = memberService.create(memberInformation);
 
         //then
-        assertThat(response)
+        assertThat(memberCreateDto)
             .extracting("id", "email", "createdAt", "updatedAt")
             .containsExactly(
                 member.getId(),
@@ -59,15 +62,16 @@ class MemberServiceTest {
     @DisplayName("회원을 생성 실패 - 중복 이메일")
     public void testCreateDuplicateEmail() {
         //given
-        final MemberCreateRequest request = new MemberCreateRequest("test@test.com", "password");
-        final Member member = new Member(1L, request.getEmail(), request.getPassword(),
+        final MemberInformation memberInformation = new MemberInformation("test@test.com",
+            "password");
+        final Member member = new Member(1L, memberInformation.getEmail(), memberInformation.getPassword(),
             LocalDateTime.now(), LocalDateTime.now());
         given(memberDao.findByEmail(any()))
             .willReturn(Optional.of(member));
 
         //when
         //then
-        assertThatThrownBy(() -> memberService.create(request))
+        assertThatThrownBy(() -> memberService.create(memberInformation))
             .isInstanceOf(IllegalArgumentException.class);
     }
 

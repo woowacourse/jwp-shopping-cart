@@ -3,17 +3,14 @@ package cart.domain.member.dto;
 import cart.domain.member.entity.Member;
 import java.time.LocalDateTime;
 
-public class MemberCreateResponse {
+public class MemberCreateDto {
 
-    private Long id;
-    private String email;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private final Long id;
+    private final String email;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
-    public MemberCreateResponse() {
-    }
-
-    public MemberCreateResponse(final Long id, final String email, final LocalDateTime createdAt,
+    public MemberCreateDto(final Long id, final String email, final LocalDateTime createdAt,
         final LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
@@ -21,8 +18,8 @@ public class MemberCreateResponse {
         this.updatedAt = updatedAt;
     }
 
-    public static MemberCreateResponse of(final Member member) {
-        return new MemberCreateResponse(member.getId(), member.getEmail(), member.getCreatedAt(),
+    public static MemberCreateDto of(final Member member) {
+        return new MemberCreateDto(member.getId(), member.getEmail(), member.getCreatedAt(),
             member.getUpdatedAt());
     }
 
