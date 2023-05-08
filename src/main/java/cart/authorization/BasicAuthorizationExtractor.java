@@ -5,6 +5,7 @@ import cart.exception.AuthenticationFailureException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,6 +19,10 @@ public class BasicAuthorizationExtractor {
     public AuthorizationInformation extract(HttpServletRequest request) {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
+        return extract(header);
+    }
+
+    public AuthorizationInformation extract(String header) {
         validateHeader(header);
 
         String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
@@ -40,12 +45,9 @@ public class BasicAuthorizationExtractor {
         return !header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase());
     }
 
-    public AuthorizationInformation extract(String header) {
-        validateHeader(header);
+    public AuthorizationInformation extract(NativeWebRequest request) {
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
-        String decoded = new String(Base64.decodeBase64(authHeaderValue));
-        String[] credentials = decoded.split(DELIMITER);
-        return new AuthorizationInformation(credentials[0], credentials[1]);
+        return extract(header);
     }
 }
