@@ -1,6 +1,7 @@
 package cart.service;
 
 
+import static cart.fixture.CartFixtures.CART_ADD_REQUEST;
 import static cart.fixture.MemberFixtures.*;
 import static cart.fixture.ProductFixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
+import cart.dto.CartAddRequest;
 import cart.dto.CartResponse;
 import cart.exception.CartProductNotFoundException;
 import cart.exception.MemberNotFoundException;
@@ -38,7 +40,7 @@ public class CartServiceTest {
     @DisplayName("장바구니 상품 추가 시 사용자 정보로 조회한 사용자가 없으면 예외가 발생한다.")
     void saveProduct_throw_not_found_member() {
         // when, then
-        assertThatThrownBy(() -> cartService.saveProduct(MEMBER_AUTH_REQUEST, DUMMY_SEONGHA_ID))
+        assertThatThrownBy(() -> cartService.saveProduct(MEMBER_AUTH_REQUEST, CART_ADD_REQUEST))
                 .isInstanceOf(MemberNotFoundException.class)
                 .hasMessage("사용자 인증 정보에 해당하는 사용자가 존재하지 않습니다.");
     }
@@ -51,7 +53,7 @@ public class CartServiceTest {
         long insertedMemberId = memberDao.insert(INSERT_MEMBER_ENTITY);
 
         // when, then
-        assertDoesNotThrow(() -> cartService.saveProduct(MEMBER_AUTH_REQUEST, insertedProductId));
+        assertDoesNotThrow(() -> cartService.saveProduct(MEMBER_AUTH_REQUEST, new CartAddRequest(insertedProductId)));
     }
 
     @Test
@@ -62,7 +64,7 @@ public class CartServiceTest {
         long insertedMemberId = memberDao.insert(INSERT_MEMBER_ENTITY);
 
         // when
-        cartService.saveProduct(MEMBER_AUTH_REQUEST, insertedProductId);
+        cartService.saveProduct(MEMBER_AUTH_REQUEST, new CartAddRequest(insertedProductId));
         List<CartResponse> allProductByMemberInfo = cartService.findAllProductByMemberInfo(MEMBER_AUTH_REQUEST);
 
         // then
@@ -90,7 +92,7 @@ public class CartServiceTest {
         // given
         long insertedProductId = productDao.insert(INSERT_PRODUCT_ENTITY);
         long insertedMemberId = memberDao.insert(INSERT_MEMBER_ENTITY);
-        cartService.saveProduct(MEMBER_AUTH_REQUEST, insertedProductId);
+        cartService.saveProduct(MEMBER_AUTH_REQUEST, new CartAddRequest(insertedProductId));
 
         // when
         cartService.removeProductByMemberInfoAndProductId(MEMBER_AUTH_REQUEST, insertedProductId);

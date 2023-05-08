@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
+import cart.dto.CartAddRequest;
 import cart.dto.CartResponse;
 import cart.dto.AuthMember;
 import cart.entity.CartEntity;
@@ -25,12 +26,12 @@ public class CartService {
         this.memberDao = memberDao;
     }
 
-    public long saveProduct(AuthMember authMember, long productId) {
+    public long saveProduct(AuthMember authMember, CartAddRequest cartAddRequest) {
         checkMemberExistByMemberInfo(authMember);
         MemberEntity findMemberEntity = memberDao.selectByEmailAndPassword(authMember.getEmail(), authMember.getPassword());
         CartEntity cartEntity = new CartEntity.Builder()
                 .memberId(findMemberEntity.getMemberId())
-                .productId(productId)
+                .productId(cartAddRequest.getProductId())
                 .build();
         return cartDao.insert(cartEntity);
     }

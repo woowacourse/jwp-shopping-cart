@@ -10,6 +10,7 @@ import java.util.List;
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
+import cart.dto.CartAddRequest;
 import cart.entity.ProductEntity;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -68,27 +70,30 @@ class CartControllerTest {
     }
 
     @Test
-    @DisplayName("POST /cart/{productId}로 요청 시 헤더에 Authorization가 없으면 401을 반환한다.")
+    @DisplayName("POST /cart로 요청 시 헤더에 Authorization가 없으면 401을 반환한다.")
     void add_no_authorization_header_401() {
         // given
         long insertedProductId = productDao.insert(INSERT_PRODUCT_ENTITY);
 
         RestAssured.given().log().all()
-                .post("/cart/" + insertedProductId)
+                .body(new CartAddRequest(insertedProductId))
+                .post("/cart")
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @Test
-    @DisplayName("POST /cart/{productId}로 요청하면 201을 반환하고, 장바구니에 상품이 담긴다.")
+    @DisplayName("POST /cart로 요청하면 201을 반환하고, 장바구니에 상품이 담긴다.")
     void add_201() {
         // given
         long insertedMemberId = memberDao.insert(INSERT_MEMBER_ENTITY);
         long insertedProductId = productDao.insert(INSERT_PRODUCT_ENTITY);
 
         Response response = RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CartAddRequest(insertedProductId))
                 .auth().preemptive().basic(DUMMY_EMAIL, DUMMY_PASSWORD)
-                .post("/cart/" + insertedProductId)
+                .post("/cart")
                 .then()
                 .extract().response();
 
@@ -115,8 +120,10 @@ class CartControllerTest {
         long insertedProductId = productDao.insert(INSERT_PRODUCT_ENTITY);
 
         RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CartAddRequest(insertedProductId))
                 .auth().preemptive().basic(DUMMY_EMAIL, DUMMY_PASSWORD)
-                .post("/cart/" + insertedProductId);
+                .post("/cart");
 
         Response response = RestAssured.given().log().all()
                 .auth().preemptive().basic(DUMMY_EMAIL, DUMMY_PASSWORD)
@@ -153,8 +160,10 @@ class CartControllerTest {
         long insertedProductId = productDao.insert(INSERT_PRODUCT_ENTITY);
 
         RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new CartAddRequest(insertedProductId))
                 .auth().preemptive().basic(DUMMY_EMAIL, DUMMY_PASSWORD)
-                .post("/cart/" + insertedProductId);
+                .post("/cart");
 
         RestAssured.given().log().all()
                 .auth().preemptive().basic(DUMMY_EMAIL, DUMMY_PASSWORD)

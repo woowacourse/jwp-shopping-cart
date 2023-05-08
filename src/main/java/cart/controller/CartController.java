@@ -3,16 +3,14 @@ package cart.controller;
 import java.net.URI;
 import java.util.List;
 
+import cart.dto.CartAddRequest;
 import cart.dto.CartResponse;
 import cart.dto.AuthMember;
 import cart.mvcconfig.argumentresolver.AuthPrincipal;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class CartController {
@@ -34,10 +32,10 @@ public class CartController {
         return ResponseEntity.ok(allProduct);
     }
 
-    @PostMapping("/cart/{productId}")
+    @PostMapping("/cart")
     public ResponseEntity<Void> add(@AuthPrincipal AuthMember authMember,
-                    @PathVariable long productId) {
-        long savedId = cartService.saveProduct(authMember, productId);
+                                    @RequestBody CartAddRequest cartAddRequest) {
+        long savedId = cartService.saveProduct(authMember, cartAddRequest);
         return ResponseEntity.created(URI.create("/cart/" + savedId)).build();
     }
 
