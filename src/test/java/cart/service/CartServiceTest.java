@@ -80,6 +80,18 @@ class CartServiceTest {
         assertDoesNotThrow(() -> cartService.removeById(1L, email));
     }
 
+    @Test
+    @DisplayName("카트가 존재하지 않는 경우 예외 발생")
+    void removeByIdFailByCartIsNull() {
+        Email email = Email.from("kpeel5839@a.com");
+        given(cartDao.findById(1L))
+                .willReturn(null);
+
+        assertThatThrownBy(() -> cartService.removeById(1L, email))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("해당 상품이 장바구니에 존재하지 않습니다.");
+    }
+
     private Cart getCart(long id, Email email) {
         return new Cart.Builder()
                 .id(id)
