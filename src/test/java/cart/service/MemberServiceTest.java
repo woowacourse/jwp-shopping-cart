@@ -3,7 +3,6 @@ package cart.service;
 import cart.dto.MemberDto;
 import cart.entity.Member;
 import cart.exception.customexceptions.DataNotFoundException;
-import cart.exception.customexceptions.NotUniqueValueException;
 import cart.exception.customexceptions.NotValidDataException;
 import cart.exception.customexceptions.PasswordNotMatchException;
 import cart.repository.dao.memberDao.MemberDao;
