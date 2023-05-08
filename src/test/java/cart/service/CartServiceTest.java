@@ -96,7 +96,7 @@ class CartServiceTest {
 
         List<ItemResponse> itemResponses = cartService.findAllItemByAuthInfo(authorizationInformation);
 
-        assertThat(itemResponses).hasSize(0);
+        assertThat(itemResponses).isEmpty();
     }
 
     @DisplayName("장바구니에 없는 상품을 삭제하면 예외가 발생한다.")

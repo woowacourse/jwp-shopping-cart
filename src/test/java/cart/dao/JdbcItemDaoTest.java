@@ -103,9 +103,18 @@ class JdbcItemDaoTest {
         );
     }
 
+
+    @DisplayName("동일한 상품으로 수정하는 경우 상품을 수정할 수 없다.")
+    @Test
+    void update_DuplicatedItemFail() {
+        assertThatThrownBy(() -> itemDao.update(2L, CREATE_ITEM1))
+                .isInstanceOf(ServiceIllegalArgumentException.class)
+                .hasMessage("이미 동일한 상품이 존재합니다.");
+    }
+
     @DisplayName("없는 상품 정보를 수정하면 0이 반환된다.")
     @Test
-    void update_fail() {
+    void update_NoItemFail() {
         CreateItem item = CREATE_ITEM3;
 
         assertThat(itemDao.update(3L, item)).isZero();
