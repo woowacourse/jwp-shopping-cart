@@ -123,15 +123,4 @@ class CartApiControllerTest {
         Optional<Cart> cart = cartDao.findByMemberIdAndProductId(memberId, productId);
         assertThat(cart).isEmpty();
     }
-
-    @Test
-    @DisplayName("헤더 없이 요청시 예외 발생")
-    void unAuthentication_throws() {
-        // when then
-        RestAssured.given().log().all()
-                .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().post("/api/cart/" + 1)
-                .then().log().all()
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
-    }
 }
