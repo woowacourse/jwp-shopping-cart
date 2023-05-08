@@ -1,5 +1,8 @@
 package cart.controller.member;
 
+import cart.config.WebConfig;
+import cart.config.admin.Base64AdminAccessInterceptor;
+import cart.config.auth.Base64AuthInterceptor;
 import cart.dto.MemberDto;
 import cart.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,7 +25,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@WebMvcTest(MemberController.class)
+@WebMvcTest(value = MemberController.class, excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {Base64AuthInterceptor.class, Base64AdminAccessInterceptor.class, WebConfig.class})
+})
 public class MemberControllerTest {
 
     @Autowired

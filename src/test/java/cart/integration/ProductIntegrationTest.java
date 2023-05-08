@@ -15,7 +15,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.Base64Utils;
 
 import static cart.config.admin.Base64AdminAccessInterceptor.ADMIN_EMAIL;
-import static cart.config.admin.Base64AdminAccessInterceptor.ADMIN_NAME;
 import static cart.config.auth.Base64AuthInterceptor.AUTHORIZATION_HEADER;
 import static io.restassured.RestAssured.given;
 
@@ -24,7 +23,8 @@ import static io.restassured.RestAssured.given;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProductIntegrationTest {
 
-    public static final String ADMIN = ADMIN_EMAIL + ":" + ADMIN_NAME;
+    public static final String ADMIN_PASSWORD = "1234";
+    public static final String ADMIN = ADMIN_EMAIL + ":" + ADMIN_PASSWORD;
     public static final String ADMIN_CREDENTIALS = Base64AuthInterceptor.BASIC + " " + Base64Utils.encodeToString(ADMIN.getBytes());
 
     @Autowired
@@ -36,12 +36,16 @@ public class ProductIntegrationTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        String sql = "INSERT INTO MEMBER (email, name, password) VALUES ('admin@wootech.com', 'admin', '1234')";
+        jdbcTemplate.execute(sql);
     }
 
     @AfterEach
     void clear() {
         String sql = "TRUNCATE TABLE PRODUCT";
+        String sql2 = "TRUNCATE TABLE MEMBER";
         jdbcTemplate.execute(sql);
+        jdbcTemplate.execute(sql2);
     }
 
     @Test

@@ -1,5 +1,8 @@
 package cart.controller.cart;
 
+import cart.config.WebConfig;
+import cart.config.admin.Base64AdminAccessInterceptor;
+import cart.config.auth.Base64AuthArgumentResolver;
 import cart.config.auth.Base64AuthInterceptor;
 import cart.service.CartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,12 +11,18 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.Base64Utils;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static cart.config.admin.Base64AdminAccessInterceptor.ADMIN_EMAIL;
@@ -28,8 +37,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@WebMvcTest(CartController.class)
+@WebMvcTest(value = CartController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                        classes = {Base64AuthInterceptor.class, Base64AdminAccessInterceptor.class, WebConfig.class})
+        })
+
 public class CartControllerTest {
+
+    @TestConfiguration
+    static class testWebConfig implements WebMvcConfigurer {
+        @Override
+        public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+            resolvers.add(new Base64AuthArgumentResolver());
+        }
+    }
 
     public static final String ADMIN = ADMIN_EMAIL + ":" + ADMIN_NAME;
     public static final String ADMIN_CREDENTIALS = BASIC + " " + Base64Utils.encodeToString(ADMIN.getBytes());
