@@ -53,8 +53,6 @@ public class H2CartDao implements CartDao {
     try {
       final String sql = "delete from cart where member_id=? and product_id=?";
       namedParameterjdbcTemplate.getJdbcOperations().update(sql, memberId, productId);
-    } catch (DataIntegrityViolationException exception) {
-      throw new InternalServerException("제약조건 때문에 삭제할 수 없습니다.");
     } catch (EmptyResultDataAccessException exception) {
       throw new InternalServerException("카트가 존재하지 않습니다.");
     }
