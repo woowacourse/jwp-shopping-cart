@@ -1,11 +1,9 @@
 package cart.infratstructure;
 
 import javax.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 public class BasicAuthorizationExtractor implements AuthorizationExtractor {
     private static final String BASIC_TYPE = "basic";
