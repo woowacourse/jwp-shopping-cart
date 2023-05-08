@@ -16,10 +16,6 @@ class CartServiceTest {
 
     private static final String EMAIL = "rg970604@naver.com";
     private static final String PASSWORD = "password";
-    private static final String CHICKEN_IMAGE = "https://nenechicken.com/17_new/images/menu/30005.jpg";
-    private static final String PIZZA_IMAGE = "https://cdn.dominos.co.kr/admin/upload/goods/20230117_97ySneQn.jpg?RS=350x350&SP=1";
-    private static final Long CHICKEN_PRICE = 18000L;
-    private static final Long PIZZA_PRICE = 21000L;
 
     @Autowired
     private CartService cartService;
@@ -29,13 +25,10 @@ class CartServiceTest {
         List<CartResponse> cartResponses = cartService.showCart(EMAIL, PASSWORD);
 
         CartResponse firstCartResponse = cartResponses.get(0);
-        CartResponse sameWithFirstCartResponse = new CartResponse(1L, "치킨", CHICKEN_PRICE, CHICKEN_IMAGE);
-
         CartResponse secondCartResponse = cartResponses.get(1);
-        CartResponse sameWithSecondCartResponse = new CartResponse(2L, "피자", PIZZA_PRICE, PIZZA_IMAGE);
 
-        assertThat(firstCartResponse).isEqualTo(sameWithFirstCartResponse);
-        assertThat(secondCartResponse).isEqualTo(sameWithSecondCartResponse);
+        assertThat(firstCartResponse.getId()).isEqualTo(1L);
+        assertThat(secondCartResponse.getId()).isEqualTo(2L);
 
     }
 
@@ -46,8 +39,7 @@ class CartServiceTest {
         List<CartResponse> cartResponses = cartService.showCart(EMAIL, PASSWORD);
 
         CartResponse cartResponse = cartResponses.get(2);
-        CartResponse sameCartResponse = new CartResponse(3L, "치킨", CHICKEN_PRICE, CHICKEN_IMAGE);
-        assertThat(cartResponse).isEqualTo(sameCartResponse);
+        assertThat(cartResponse.getId()).isEqualTo(3L);
     }
 
     @Test

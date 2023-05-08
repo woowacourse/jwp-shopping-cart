@@ -28,7 +28,7 @@ public class CartControllerMockTest {
 
     @Test
     void 장바구니_페이지_조회() throws Exception {
-        mockMvc.perform(get("/cart")
+        mockMvc.perform(get("/carts")
                         .accept(ContentType.HTML.toString())
                 )
                 .andExpect(status().isOk());
@@ -37,20 +37,20 @@ public class CartControllerMockTest {
     @Test
     void 개별_장바구니_조회() throws Exception {
         mockMvc
-                .perform(get("/cart/all").with(SecurityMockMvcRequestPostProcessors.httpBasic(EMAIL, PASSWORD))
+                .perform(get("/carts/all").with(SecurityMockMvcRequestPostProcessors.httpBasic(EMAIL, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     void 장바구니_상품_추가() throws Exception {
-        mockMvc.perform(post("/cart?productId=1").with(SecurityMockMvcRequestPostProcessors.httpBasic(EMAIL, PASSWORD)))
+        mockMvc.perform(post("/carts?productId=1").with(SecurityMockMvcRequestPostProcessors.httpBasic(EMAIL, PASSWORD)))
                 .andExpect(status().isCreated());
     }
 
     @Test
     void 장바구니_상품_삭제() throws Exception {
-        mockMvc.perform(delete("/cart/1").with(SecurityMockMvcRequestPostProcessors.httpBasic(EMAIL, PASSWORD))
+        mockMvc.perform(delete("/carts/1").with(SecurityMockMvcRequestPostProcessors.httpBasic(EMAIL, PASSWORD))
                         .accept(ContentType.HTML.toString()))
                 .andExpect(status().isNoContent());
     }

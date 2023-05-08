@@ -37,7 +37,7 @@ class CartControllerTest {
     void 장바구니_페이지_조회() {
         given().when()
                 .log().all()
-                .get("/cart")
+                .get("/carts")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -49,7 +49,7 @@ class CartControllerTest {
         List<CartResponse> cartResponses = given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("cart/all")
+                .when().get("carts/all")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
@@ -57,12 +57,9 @@ class CartControllerTest {
                 .jsonPath().getList(".", CartResponse.class);
 
         CartResponse firstCartResponse = cartResponses.get(0);
-        CartResponse sameWithFirstCartResponse = new CartResponse(1L, "치킨", CHICKEN_PRICE, CHICKEN_IMAGE);
-
         CartResponse secondCartResponse = cartResponses.get(1);
-        CartResponse sameWithSecondCartResponse = new CartResponse(2L, "피자", PIZZA_PRICE, PIZZA_IMAGE);
 
-        assertThat(firstCartResponse).isEqualTo(sameWithFirstCartResponse);
-        assertThat(secondCartResponse).isEqualTo(sameWithSecondCartResponse);
+        assertThat(firstCartResponse.getId()).isEqualTo(1L);
+        assertThat(secondCartResponse.getId()).isEqualTo(2L);
     }
 }

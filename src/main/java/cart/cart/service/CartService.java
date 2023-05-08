@@ -42,7 +42,7 @@ public class CartService {
     public void deleteCartById(Long cartId, String email, String password) {
         Member member = memberService.selectMemberByEmailAndPassword(email, password);
         Cart cart = cartDao.findCartByCartId(cartId);
-        if (!cart.getMember().equals(member)) {
+        if (!(cart.getMember().getId() == member.getId())) {
             throw new AuthorizationException("본인의 상품만 삭제할 수 있습니다");
         }
         cartDao.deleteCartByCartId(cartId);
