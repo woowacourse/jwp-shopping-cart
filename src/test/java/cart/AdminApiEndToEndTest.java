@@ -17,10 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
-import cart.dto.ProductPostRequest;
-import cart.dto.ProductPutRequest;
 import cart.persistence.dao.ProductDao;
-import cart.persistence.entity.ProductEntity;
+import cart.persistence.entity.Product;
+import cart.web.admin.dto.PostProductRequest;
+import cart.web.admin.dto.PutProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -44,12 +44,12 @@ class AdminApiEndToEndTest {
     }
 
     private ExtractableResponse<Response> saveProduct(final String name, final int price, final String imageUrl) {
-        final ProductPostRequest request = new ProductPostRequest(name, price, imageUrl);
+        final PostProductRequest request = new PostProductRequest(name, price, imageUrl);
 
         return given()
             .body(request)
             .when()
-            .post("/admin/product")
+            .post("/admin/products")
             .then()
             .extract();
     }
@@ -66,11 +66,11 @@ class AdminApiEndToEndTest {
         void Product_POST_API_테스트() {
             final ExtractableResponse<Response> response = saveProduct("modi", 10000, "https://woowacourse.github.io/");
 
-            final ProductEntity savedEntity = productDao.findByName("modi");
+            final Product savedEntity = productDao.findByName("modi");
 
             SoftAssertions.assertSoftly(softAssertions -> {
                 softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-                softAssertions.assertThat(response.header("Location")).contains("/admin/product/");
+                softAssertions.assertThat(response.header("Location")).contains("/admin/products/");
                 softAssertions.assertThat(savedEntity.getName()).isEqualTo("modi");
                 softAssertions.assertThat(savedEntity.getPrice()).isEqualTo(10000);
                 softAssertions.assertThat(savedEntity.getImageUrl()).isEqualTo("https://woowacourse.github.io/");
@@ -79,8 +79,8 @@ class AdminApiEndToEndTest {
 
         @Test
         void Product_GET_API_테스트() {
-            final ProductEntity productEntity = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
-            productDao.save(productEntity);
+            final Product product = new Product("modi", 10000, "https://woowacourse.github.io/");
+            productDao.save(product);
 
             given()
                 .when()
@@ -95,17 +95,17 @@ class AdminApiEndToEndTest {
             final String[] locations = response.header("Location").split("/");
             final String id = locations[locations.length - 1];
 
-            final ProductPostRequest productPostRequest = new ProductPostRequest("modi", 15000, "https://changed.com/");
+            final PostProductRequest postProductRequest = new PostProductRequest("modi", 15000, "https://changed.com/");
             given()
-                .body(productPostRequest)
-                .when().put("/admin/product/" + id)
+                .body(postProductRequest)
+                .when().put("/admin/products/" + id)
                 .then()
                 .statusCode(HttpStatus.OK.value());
 
-            final ProductEntity changedEntity = productDao.findByName("modi");
+            final Product changedEntity = productDao.findByName("modi");
             SoftAssertions.assertSoftly(softAssertions -> {
                 softAssertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-                softAssertions.assertThat(response.header("Location")).contains("/admin/product/" + changedEntity.getId());
+                softAssertions.assertThat(response.header("Location")).contains("/admin/products/" + changedEntity.getId());
                 softAssertions.assertThat(changedEntity.getName()).isEqualTo("modi");
                 softAssertions.assertThat(changedEntity.getPrice()).isEqualTo(15000);
                 softAssertions.assertThat(changedEntity.getImageUrl()).isEqualTo("https://changed.com/");
@@ -119,7 +119,7 @@ class AdminApiEndToEndTest {
             final String id = locations[locations.length - 1];
 
             given()
-                .when().delete("/admin/product/" + id)
+                .when().delete("/admin/products/" + id)
                 .then()
                 .statusCode(HttpStatus.OK.value());
 
@@ -208,18 +208,18 @@ class AdminApiEndToEndTest {
 
         @Test
         void Product_PUT_없는_ID_예외_테스트() {
-            final ProductEntity request = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
+            final Product request = new Product("modi", 10000, "https://woowacourse.github.io/");
             productDao.save(request);
 
-            final Long wrongId = 0L;
-            final ProductPutRequest putRequest = new ProductPutRequest("modi", 7770, "https://woowacourse.github.io/");
+            final long wrongId = 0L;
+            final PutProductRequest putRequest = new PutProductRequest("modi", 7770, "https://woowacourse.github.io/");
 
             final ExtractableResponse<Response> response = given()
                 .body(putRequest)
                 .when()
-                .put("/admin/product/" + wrongId)
+                .put("/admin/products/" + wrongId)
                 .then()
-                .statusCode(HttpStatus.NOT_FOUND.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();
 
             assertThat(response.body().asString()).contains("변경된 정보가 없습니다.");
@@ -227,13 +227,13 @@ class AdminApiEndToEndTest {
 
         @Test
         void Product_DELETE_없는_ID_예외_테스트() {
-            final Long wrongId = 0L;
+            final long wrongId = 0L;
 
             final ExtractableResponse<Response> response = given()
                 .when()
-                .delete("/admin/product/" + wrongId)
+                .delete("/admin/products/" + wrongId)
                 .then()
-                .statusCode(HttpStatus.NOT_FOUND.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();
 
             assertThat(response.body().asString()).contains("변경된 정보가 없습니다.");

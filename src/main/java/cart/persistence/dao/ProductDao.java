@@ -2,17 +2,19 @@ package cart.persistence.dao;
 
 import java.util.List;
 
-import cart.persistence.entity.ProductEntity;
+import cart.persistence.entity.Product;
 
 public interface ProductDao {
 
-    Long save(ProductEntity productEntity);
+    long save(Product product);
 
-    ProductEntity findByName(String name);
+    Product findByName(String name);
 
-    List<ProductEntity> findAll();
+    List<Product> findAll();
 
-    int update(ProductEntity productEntity);
+    int update(Product product);
 
     int deleteById(long id);
+
+    boolean existsById(long id);
 }

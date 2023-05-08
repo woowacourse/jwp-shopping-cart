@@ -24,9 +24,11 @@
         <!-- TODO: [2단계] 사용자 정보에 맞게 변경 -->
         <div class="cart-item" th:each="member : ${members}">
             <div class="cart-item-info">
-                <div class="cart-item-name"></div> <!-- 사용자 이메일 -->
-                <div class="cart-item-price"></div> <!-- 사용자 비밀번호 -->
-                <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">Select</button>
+                <div class="cart-item-name" th:text="${member.email}">사용자 이메일</div>
+                <div class="cart-item-price" th:text="${member.password}">사용자 비밀번호</div>
+                <button class="cart-item-delete" id="delete-btn" th:onclick="selectMember([[${member}]])" type="submit">
+                    Select
+                </button>
             </div>
         </div>
     </div>

@@ -1,9 +1,10 @@
 package cart.service;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.List;
 
-import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -11,11 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import cart.dto.ProductPostRequest;
-import cart.dto.ProductPutRequest;
-import cart.dto.ProductResponse;
+import cart.exception.DbNotAffectedException;
+import cart.persistence.CartProduct;
+import cart.persistence.dao.CartDao;
+import cart.persistence.dao.MemberDao;
 import cart.persistence.dao.ProductDao;
-import cart.persistence.entity.ProductEntity;
+import cart.persistence.entity.Cart;
+import cart.persistence.entity.Member;
+import cart.persistence.entity.Product;
+import cart.service.CartService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "classpath:schema-truncate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -23,72 +28,70 @@ import cart.persistence.entity.ProductEntity;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class CartServiceTest {
 
-    @Autowired
-    private ProductDao productDao;
+    private final CartDao cartDao;
+    private final MemberDao memberDao;
+    private final ProductDao productDao;
+    private final CartService cartService;
 
     @Autowired
-    private CartService cartService;
+    public CartServiceTest(final CartDao cartDao, final MemberDao memberDao, final ProductDao productDao,
+        final CartService cartService) {
+        this.cartDao = cartDao;
+        this.memberDao = memberDao;
+        this.productDao = productDao;
+        this.cartService = cartService;
+    }
 
     @Test
-    void create_메서드로_productPostRequest를_저장한다() {
-        final ProductPostRequest request = new ProductPostRequest("modi", 10000, "https://woowacourse.github.io/");
-        cartService.create(request);
+    void 유효한_사용자_정보로_장바구니에_상품을_저장하고_조회한다() {
+        final String email = "a@a.com";
+        final String password = "password1";
+        memberDao.save(new Member(email, password));
+        final long chickenId = productDao.save(new Product("chicken", 30000, "https://a.com"));
 
-        final ProductEntity findEntity = productDao.findByName("modi");
-
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(findEntity.getName()).isEqualTo("modi");
-            softAssertions.assertThat(findEntity.getPrice()).isEqualTo(10000);
-            softAssertions.assertThat(findEntity.getImageUrl()).isEqualTo("https://woowacourse.github.io/");
+        assertAll(() -> {
+            assertDoesNotThrow(() -> cartService.addProductByEmail(chickenId, email));
+            List<CartProduct> products = cartService.findProductsByEmail(email);
+            assertThat(products.size()).isEqualTo(1);
         });
     }
 
     @Test
-    void readAll_메서드로_모든_ProductResponse를_불러온다() {
-        final ProductEntity productEntity = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
-        productDao.save(productEntity);
+    void 틀린_이메일로_카트_저장하면_예외가_발생한다() {
+        final String email = "a@a.com";
+        final String password = "password1";
+        memberDao.save(new Member(email, password));
+        final long chickenId = productDao.save(new Product("chicken", 30000, "https://a.com"));
 
-        final List<ProductResponse> responses = cartService.readAll();
-        final ProductResponse productResponse = responses.get(0);
-
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(responses.size()).isEqualTo(1);
-            softAssertions.assertThat(productResponse.getName()).isEqualTo("modi");
-            softAssertions.assertThat(productResponse.getPrice()).isEqualTo(10000);
-            softAssertions.assertThat(productResponse.getImageUrl()).isEqualTo("https://woowacourse.github.io/");
-        });
+        assertThrows(IllegalArgumentException.class,
+            () -> cartService.addProductByEmail(chickenId, "b@a.com"));
     }
 
     @Test
-    void update_메서드로_ProductEntity를_변경한다() {
-        final ProductEntity productEntity = new ProductEntity("modi", 10000, "https://woowacourse.github.io/");
-        final Long id = productDao.save(productEntity);
+    void 틀린_이메일로_카트를_조회하면_예외가_발생한다() {
+        final String email = "a@a.com";
+        final String password = "password1";
+        memberDao.save(new Member(email, password));
 
-        final ProductPutRequest changeRequest = new ProductPutRequest("modi", 2000, "https://changed.com/");
-        cartService.update(id, changeRequest);
-
-        final ProductEntity changedEntity = productDao.findByName("modi");
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(changedEntity.getId()).isEqualTo(id);
-            softAssertions.assertThat(changedEntity.getName()).isEqualTo(changeRequest.getName());
-            softAssertions.assertThat(changedEntity.getPrice()).isEqualTo(changeRequest.getPrice());
-            softAssertions.assertThat(changedEntity.getImageUrl()).isEqualTo(changeRequest.getImageUrl());
-        });
+        assertThrows(IllegalArgumentException.class,
+            () -> cartService.findProductsByEmail("b@a.com"));
     }
 
     @Test
-    void 존재하지_않는_id를_update_하면_예외가_발생한다() {
-        final ProductPutRequest changeRequest = new ProductPutRequest("modi", 2000, "https://changed.com/");
-        final long wrongId = 1L;
+    void deleteByCartId_메서드로_카트의_특정_상품을_삭제한다() {
+        final String email = "a@a.com";
+        final String password = "password1";
+        memberDao.save(new Member(email, password));
+        final long savedId = cartDao.save(new Cart(1, 1));
 
-        Assertions.assertThrows(DbNotAffectedException.class,
-            () -> cartService.update(wrongId, changeRequest));
+        assertDoesNotThrow(() -> cartService.deleteByCartId(savedId));
     }
 
     @Test
-    void 존재하지_않는_id를_delete_하면_예외가_발생한다() {
-        final long wrongId = 0L;
-
-        Assertions.assertThrows(DbNotAffectedException.class, () -> cartService.delete(wrongId));
+    void deleteByCartId_메서드로_삭제된_상품이_없다면_예외가_발생한다() {
+        final String email = "a@a.com";
+        final String password = "password1";
+        memberDao.save(new Member(email, password));
+        assertThrows(DbNotAffectedException.class, () -> cartService.deleteByCartId(1L));
     }
 }
