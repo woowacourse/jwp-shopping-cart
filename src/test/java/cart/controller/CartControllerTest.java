@@ -79,6 +79,7 @@ class CartControllerTest {
                 .header("Authorization", authHeader)
                 .when().get("/carts")
                 .then().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .statusCode(HttpStatus.OK.value());
     }
 
