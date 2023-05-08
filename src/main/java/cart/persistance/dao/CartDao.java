@@ -1,7 +1,8 @@
 package cart.persistance.dao;
 
+import cart.domain.cart.Cart;
+import cart.domain.product.Product;
 import cart.persistance.dao.exception.ProductNotFoundException;
-import cart.persistance.entity.CartProductEntity;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,19 +20,21 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CartProductEntity> findByUserId(final long memberId) {
+    public Cart findByUserId(final long memberId) {
         final String sql = "SELECT cart.id, product.name, product.price, product.image_url " +
                 "FROM cart " +
                 "JOIN product " +
                 "ON cart.product_id = product.id " +
                 "WHERE cart.member_id = :member_id";
         final var sqlParameterSource = new MapSqlParameterSource("member_id", memberId);
-        return jdbcTemplate.query(sql, sqlParameterSource, (rs, rowNum) -> new CartProductEntity(
+        final List<Product> products = jdbcTemplate.query(sql, sqlParameterSource, (rs, rowNum) -> Product.create(
                 rs.getLong("cart.id"),
                 rs.getString("product.name"),
                 rs.getLong("product.price"),
                 rs.getString("product.image_url")
         ));
+
+        return new Cart(products);
     }
 
     public long addProduct(final long memberId, final long productId) {
@@ -43,7 +46,7 @@ public class CartDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void removeFromCartById(final long id) {
+    public void removeById(final long id) {
         final String sql = "DELETE FROM cart " +
                 "WHERE id = :id";
         final var sqlParameterSource =

@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.controller.auth.LoginId;
 import cart.controller.dto.AddCartRequest;
+import cart.domain.cart.Cart;
 import cart.persistance.dao.CartDao;
-import cart.persistance.entity.CartProductEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.List;
 
 @Validated
 @RestController
@@ -29,11 +28,11 @@ public class CartController {
     }
 
     @GetMapping("/cart-products")
-    public ResponseEntity<List<CartProductEntity>> cartProducts(
+    public ResponseEntity<Cart> cartProducts(
             @LoginId final Long memberId
     ) {
-        final List<CartProductEntity> cartProducts = cartDao.findByUserId(memberId);
-        return ResponseEntity.ok().body(cartProducts);
+        final Cart cart = cartDao.findByUserId(memberId);
+        return ResponseEntity.ok().body(cart);
     }
 
     @PostMapping("/cart-products")
@@ -49,7 +48,7 @@ public class CartController {
     public ResponseEntity<Void> removeProductFromCart(
             @Positive @PathVariable final Long id
     ) {
-        cartDao.removeFromCartById(id);
+        cartDao.removeById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
