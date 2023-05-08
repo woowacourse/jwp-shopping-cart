@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ViewController {
 
-    public final CustomerService customerService;
+    private final CustomerService customerService;
     private final ProductService productService;
 
     public ViewController(final ProductService productService, final CustomerService customerService) {
