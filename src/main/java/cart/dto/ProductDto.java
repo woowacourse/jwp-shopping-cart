@@ -17,6 +17,14 @@ public class ProductDto {
         this.imageUrl = imageUrl;
     }
 
+    public Product toEntity() {
+        return new Product.Builder()
+                .name(Name.from(name))
+                .price(Price.from(price))
+                .imageUrl(Url.from(imageUrl))
+                .build();
+    }
+
     public String getName() {
         return name;
     }
@@ -27,14 +35,6 @@ public class ProductDto {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public Product toEntity() {
-        return new Product.Builder()
-                .name(Name.from(name))
-                .price(Price.from(price))
-                .imageUrl(Url.from(imageUrl))
-                .build();
     }
 
 }

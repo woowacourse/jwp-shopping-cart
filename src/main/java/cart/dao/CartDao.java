@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public class CartDao {
 
-    RowMapper<Cart> cartRowMapper = (resultSet, rowNum) -> new Cart.Builder()
+    private final RowMapper<Cart> cartRowMapper = (resultSet, rowNum) -> new Cart.Builder()
             .id(resultSet.getLong("id"))
             .email(Email.from(resultSet.getString("member_email")))
             .productId(resultSet.getLong("product_id"))

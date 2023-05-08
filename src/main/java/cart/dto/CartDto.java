@@ -13,19 +13,19 @@ public class CartDto {
         this.productId = productId;
     }
 
+    public Cart toEntity() {
+        return new Cart.Builder()
+                .email(email)
+                .productId(productId)
+                .build();
+    }
+
     public Email getEmail() {
         return email;
     }
 
     public Long getProductId() {
         return productId;
-    }
-
-    public Cart toEntity() {
-        return new Cart.Builder()
-                .email(email)
-                .productId(productId)
-                .build();
     }
 
 }

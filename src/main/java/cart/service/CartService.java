@@ -27,23 +27,19 @@ public class CartService {
         cartDao.save(cartDto.toEntity());
     }
 
+    public List<CartResponseDto> findAll(Email email) {
+        return cartDao.selectAll(email)
+                .stream()
+                .map(this::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
     public CartResponseDto toResponseDto(Cart cart) {
         return new CartResponseDto(
                 cart.getId(),
                 cart.getEmail(),
                 new ProductResponseDto(productDao.findById(cart.getProductId()))
         );
-    }
-
-    public Cart findById(Long id) {
-        return cartDao.findById(id);
-    }
-
-    public List<CartResponseDto> findAll(Email email) {
-        return cartDao.selectAll(email)
-                .stream()
-                .map(this::toResponseDto)
-                .collect(Collectors.toList());
     }
 
     public void removeById(Long id, Email email) {
@@ -55,6 +51,10 @@ public class CartService {
         }
 
         throw new IllegalStateException("삭제할 권한이 없습니다.");
+    }
+
+    public Cart findById(Long id) {
+        return cartDao.findById(id);
     }
 
 }

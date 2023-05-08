@@ -30,6 +30,10 @@ public class ProductRequestDto {
         this.imageUrl = imageUrl;
     }
 
+    public ProductDto toDto() {
+        return new ProductDto(name, price, imageUrl);
+    }
+
     public String getName() {
         return name;
     }
@@ -40,10 +44,6 @@ public class ProductRequestDto {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public ProductDto toDto() {
-        return new ProductDto(name, price, imageUrl);
     }
 
 }

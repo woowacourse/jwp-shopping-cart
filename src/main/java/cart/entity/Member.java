@@ -13,14 +13,6 @@ public class Member {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email.getValue();
-    }
-
-    public String getPassword() {
-        return password.getValue();
-    }
-
     public static class Builder {
 
         private Email email;
@@ -40,6 +32,14 @@ public class Member {
             return new Member(email, password);
         }
 
+    }
+
+    public String getEmail() {
+        return email.getValue();
+    }
+
+    public String getPassword() {
+        return password.getValue();
     }
 
 }

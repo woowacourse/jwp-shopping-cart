@@ -14,22 +14,15 @@ public class Cart {
         this.productId = productId;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email.getValue();
-    }
-
-    public Long getProductId() {
-        return productId;
+    public boolean canUserWithThisEmailBeDeleted(Email email) {
+        return this.email.equals(email);
     }
 
     public static class Builder {
 
         private Long id;
         private Email email;
+
         private Long productId;
 
         public Builder id(Long id) {
@@ -53,8 +46,16 @@ public class Cart {
 
     }
 
-    public boolean canUserWithThisEmailBeDeleted(Email email) {
-        return this.email.equals(email);
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email.getValue();
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
 }

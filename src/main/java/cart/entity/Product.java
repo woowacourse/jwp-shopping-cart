@@ -18,22 +18,6 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name.getValue();
-    }
-
-    public Integer getPrice() {
-        return price.getValue();
-    }
-
-    public String getImageUrl() {
-        return imageUrl.getValue();
-    }
-
     public static class Builder {
 
         private Long id;
@@ -65,6 +49,22 @@ public class Product {
             return new Product(id, name, price, imageUrl);
         }
 
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name.getValue();
+    }
+
+    public Integer getPrice() {
+        return price.getValue();
+    }
+
+    public String getImageUrl() {
+        return imageUrl.getValue();
     }
 
 }
