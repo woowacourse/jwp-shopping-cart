@@ -1,6 +1,8 @@
 package cart.auth;
 
 import cart.exception.CustomAuthException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -12,6 +14,8 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     private static final String DELIMITER = ":";
     private static final String AUTHENTICATION_HEADER_NAME = "Basic";
+    private static final String EMAIL_REGX = "^(.+)@(.+)$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGX);
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -28,11 +32,19 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         String decodedStringHeaderValue = new String(decodedHeaderValue);
         validateDecodedHeaderValue(decodedStringHeaderValue);
         String[] splitDecodedStringHeaderValue = decodedStringHeaderValue.split(DELIMITER);
+        validateEmail(splitDecodedStringHeaderValue[1]);
         int id = Integer.parseInt(splitDecodedStringHeaderValue[0]);
         String email = splitDecodedStringHeaderValue[1];
         String password = splitDecodedStringHeaderValue[2];
 
         return new AuthMember(id, email, password);
+    }
+
+    private void validateEmail(final String email) {
+        Matcher matcher = EMAIL_PATTERN.matcher(email);
+        if (!matcher.matches()) {
+            throw new CustomAuthException("유효하지 않은 이메일입니다.");
+        }
     }
 
     private void validateDecodedHeaderValue(final String decodedStringHeaderValue) {
@@ -44,7 +56,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
             Integer.parseInt(decodedSplitHeaderValue[0]);
             validateDecodedSplitHeaderValueSize(decodedSplitHeaderValue);
         } catch (NumberFormatException exception) {
-            throw new IllegalArgumentException("잘못된 인증 정보입니다.");
+            throw new CustomAuthException("잘못된 인증 정보입니다.");
         }
     }
 
