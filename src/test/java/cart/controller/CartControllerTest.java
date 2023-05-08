@@ -124,7 +124,7 @@ class CartControllerTest {
                 "[" +
                         "{\"id\":1,\"name\":\"삼겹살\",\"image\":\"3-hierarchy-meat.jpg\",\"price\":16000}," +
                         "{\"id\":2,\"name\":\"목살\",\"image\":\"neck-meat.jpg\",\"price\":15000}" +
-                "]";
+                        "]";
         mockMvc.perform(get("/carts")
                         .header("Authorization", authenticationHeader))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
