@@ -156,11 +156,11 @@ class AdminControllerTest {
     }
 
     @Test
-    @DisplayName("상품 가격이 0원 미만인 경우 테스트")
+    @DisplayName("상품 가격이 0원 이하인 경우 테스트")
     void newItemPriceNegativeFailTest() {
         //given
-        Integer price = -1;
-        String message = "가격은 최소 0원 이상이어야합니다.";
+        Integer price = 0;
+        String message = "가격은 최소 1원 이상이어야합니다.";
         ItemRequest itemRequest = new ItemRequest("국밥", "c", price);
 
         //then

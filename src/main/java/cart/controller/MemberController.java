@@ -15,7 +15,6 @@ import javax.annotation.PostConstruct;
 @RequestMapping("/settings")
 public class MemberController {
 
-    @Autowired
     private final MemberService memberService;
 
     public MemberController(MemberService memberService) {
