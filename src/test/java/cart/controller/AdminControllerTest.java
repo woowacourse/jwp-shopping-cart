@@ -30,12 +30,12 @@ public class AdminControllerTest {
         RestAssured.port = port;
     }
 
-    private Response givenWhenPost(final Object body, final ContentType contentType, final String path) {
+    private Response givenWhenPost(final Object body) {
         return RestAssured.given()
-                .contentType(contentType)
+                .contentType(ContentType.JSON)
                 .body(body)
                 .when()
-                .post(path);
+                .post("/admin/product");
     }
 
     @Test
@@ -50,9 +50,7 @@ public class AdminControllerTest {
     @Test
     void 상품_추가() {
         final Response response = givenWhenPost(
-                new ProductRequest("족발", 5000, "https://image.com"),
-                ContentType.JSON,
-                "/admin/product"
+                new ProductRequest("족발", 5000, "https://image.com")
         );
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -63,9 +61,7 @@ public class AdminControllerTest {
         final long id = 1L;
 
         givenWhenPost(
-                new ProductRequest("족발", 5000, "https://image.com"),
-                ContentType.JSON,
-                "/admin/product"
+                new ProductRequest("족발", 5000, "https://image.com")
         );
 
         RestAssured.given()
@@ -82,9 +78,7 @@ public class AdminControllerTest {
         final long id = 1L;
 
         givenWhenPost(
-                new ProductRequest("족발", 5000, "https://image.com"),
-                ContentType.JSON,
-                "/admin/product"
+                new ProductRequest("족발", 5000, "https://image.com")
         );
 
         RestAssured.given()
@@ -99,9 +93,7 @@ public class AdminControllerTest {
     @NullSource
     void 상품의_이름에_빈값_널_공백이_들어가면_예외_발생(final String name) {
         final Response response = givenWhenPost(
-                new ProductRequest(name, 1000, "https://image.com"),
-                ContentType.JSON,
-                "/admin/product"
+                new ProductRequest(name, 1000, "https://image.com")
         );
 
         assertThat(response.statusCode()).isEqualTo(400);
@@ -111,9 +103,7 @@ public class AdminControllerTest {
     @ValueSource(ints = {-1, 100_000_001})
     void 범위가_벗어난_가격을_입력하면_예외_발생(final int price) {
         final Response response = givenWhenPost(
-                new ProductRequest("상품 이름", price, "https://image.com"),
-                ContentType.JSON,
-                "/admin/product"
+                new ProductRequest("상품 이름", price, "https://image.com")
         );
 
         assertThat(response.statusCode()).isEqualTo(400);
@@ -124,9 +114,7 @@ public class AdminControllerTest {
     @NullSource
     void 범위가_벗어난_가격을_입력하면_예외_발생(final String imageUrl) {
         final Response response = givenWhenPost(
-                new ProductRequest("상품 이름", 1000, imageUrl),
-                ContentType.JSON,
-                "/admin/product"
+                new ProductRequest("상품 이름", 1000, imageUrl)
         );
 
         assertThat(response.statusCode()).isEqualTo(400);
@@ -138,9 +126,7 @@ public class AdminControllerTest {
         final String url = "https://" + "a".repeat(repeatCount) + ".com";
 
         final Response response = givenWhenPost(
-                new ProductRequest("상품 이름", 1000, url),
-                ContentType.JSON,
-                "/admin/product"
+                new ProductRequest("상품 이름", 1000, url)
         );
 
         assertThat(response.statusCode()).isEqualTo(400);
