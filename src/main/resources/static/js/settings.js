@@ -32,7 +32,7 @@ document.getElementById("form").addEventListener("submit", function (event) {
         })
         .catch(function (error) {
             console.error(error);
-            alert(error)
+            alertError(error)
         });
 });
 

@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/cart.css}">
 </head>
 <body>
+<script th:src="@{/js/error.js}"></script>
 <header class="gnb">
     <nav>
         <ul class="gnb-group">
@@ -60,6 +61,7 @@
             document.querySelector('.cart-items').innerHTML = productElement;
         }).catch((error) => {
             console.error(error);
+            alertError(error)
         });
 
     });
