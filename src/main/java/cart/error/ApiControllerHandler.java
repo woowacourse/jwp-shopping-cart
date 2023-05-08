@@ -22,9 +22,9 @@ public class ApiControllerHandler {
     @ExceptionHandler(CartException.class)
     public ResponseEntity<ErrorResponse> handlingApplicationException(final CartException e) {
         final ErrorCode errorCode = e.getErrorCode();
-        log.error("STATUS : {}", errorCode.getStatus());
-        log.error("CODE : {}", errorCode.getCode());
-        log.error("MESSAGE : {}", errorCode.getMessage());
+        log.error("\nSTATUS : {}\nCODE : {}\nMESSAGE : {}\n",
+                errorCode.getStatus(), errorCode.getCode(), errorCode.getMessage());
+
         return new ResponseEntity<>(
                 new ErrorResponse(
                         errorCode.getStatus(),
