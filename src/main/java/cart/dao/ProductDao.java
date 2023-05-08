@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Repository
 public class ProductDao {
-    private static final int ITEM_NOT_FOUND = 0;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -66,13 +65,13 @@ public class ProductDao {
     public boolean exitingProduct(final int id) {
         final String sql = "select * from product where id = ?";
         final List<Object> findItems = jdbcTemplate.query(sql, nullMapper(), id);
-        return findItems.size() != ITEM_NOT_FOUND;
+        return !findItems.isEmpty();
     }
 
     public boolean exitingProductName(final String name) {
         final String sql = "select * from product where name = ?";
         final List<Object> findItems = jdbcTemplate.query(sql, nullMapper(), name);
-        return findItems.size() != ITEM_NOT_FOUND;
+        return !findItems.isEmpty();
     }
 
     public Optional<ProductEntity> findBy(final int id) {
