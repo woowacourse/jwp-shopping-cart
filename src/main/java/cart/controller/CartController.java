@@ -21,8 +21,8 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/{itemId}")
-    public ResponseEntity<Void> createCart(@AuthorizationUserInfo final LoginUser loginUser, @PathVariable final Long itemId) {
+    @PostMapping
+    public ResponseEntity<Void> createCart(@AuthorizationUserInfo final LoginUser loginUser, @RequestParam final Long itemId) {
         cartService.saveCart(loginUser.getEmail(), itemId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(URI.create("/"))

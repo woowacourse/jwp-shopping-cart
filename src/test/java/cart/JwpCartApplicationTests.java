@@ -228,8 +228,9 @@ class JwpCartApplicationTests {
         String password = "12345678";
         RestAssured.given()
                 .auth().preemptive().basic(email, password)
+                .param("itemId", "3")
                 .when()
-                .post("/carts/1")
+                .post("/carts")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .header("location", "/");
@@ -270,8 +271,9 @@ class JwpCartApplicationTests {
         String password = "12345678";
         RestAssured.given()
                 .auth().preemptive().basic(email, password)
+                .param("itemId", "100")
                 .when()
-                .post("/carts/100")
+                .post("/carts")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -280,8 +282,9 @@ class JwpCartApplicationTests {
     @Test
     void createCartExceptionWithUnauthorized() {
         RestAssured.given()
+                .param("itemId", "1")
                 .when()
-                .post("/carts/1")
+                .post("/carts")
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }

@@ -55,7 +55,7 @@ public class CartControllerTest {
     @InjectMocks
     CartController mockCartController;
 
-    @DisplayName("POST /carts/{itemId} 요청 시 createCart 메서드 호출")
+    @DisplayName("POST /carts 요청 시 createCart 메서드 호출")
     @Test
     void createCartMappingURL() throws Exception {
         //given
@@ -63,7 +63,7 @@ public class CartControllerTest {
         String password = "12345678";
         Mockito.doNothing().when(cartService).saveCart(email, 1L);
         //when
-        mockMvc.perform(MockMvcRequestBuilders.post("/carts/1"));
+        mockMvc.perform(MockMvcRequestBuilders.post("/carts").param("itemId", "1"));
         //given
         Mockito.verify(cartController, Mockito.times(1)).createCart(Mockito.any(), Mockito.anyLong());
     }

@@ -7,10 +7,13 @@ const addCartItem = (productId) => {
     }
 
     axios.request({
-        url: '/carts/' + productId,
+        url: '/carts',
         method: 'POST',
         headers: {
             'Authorization': `Basic ${credentials}`
+        },
+        params: {
+            itemId: productId
         }
     }).then((response) => {
         alert('장바구니에 담았습니다.');
