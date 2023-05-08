@@ -51,7 +51,7 @@ public class ProductService {
         }
     }
 
-    private boolean isProductIdExist(final Long id) {
+    public boolean isProductIdExist(final Long id) {
         return productDao.isExist(id);
     }
 

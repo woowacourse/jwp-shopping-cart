@@ -12,12 +12,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static cart.service.UserService.USER_ID_NOT_EXIST_ERROR_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -63,20 +61,5 @@ public class UserServiceTest {
                 () -> assertThat(actual.get(0).getEmail()).isEqualTo(testUser.getEmail())
         );
         verify(userDao, times(1)).findAll();
-    }
-
-    @Test
-    @DisplayName("Id로 사용자 존재여부를 검증한다")
-    void validateExistsUserId() {
-        given(userDao.isExist(1L)).willReturn(true);
-        given(userDao.isExist(-1L)).willReturn(false);
-
-        assertAll(
-                () -> assertDoesNotThrow(() -> userService.validateUserIdExist(1L)),
-                () -> assertThatThrownBy(() -> userService.validateUserIdExist(-1L))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessage(USER_ID_NOT_EXIST_ERROR_MESSAGE)
-        );
-        verify(userDao, times(2)).isExist(anyLong());
     }
 }

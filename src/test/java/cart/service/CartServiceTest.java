@@ -13,7 +13,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static cart.service.CartService.CART_INVALID_PRODUCT_ID_ERROR_MESSAGE;
+import static cart.service.CartService.CART_INVALID_USER_ID_ERROR_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -33,15 +36,38 @@ class CartServiceTest {
     private CartDao cartDao;
 
     @Test
-    @DisplayName("상품을 저장한다")
+    @DisplayName("장바구니에 상품을 저장한다")
     void save() {
         final Long id = 1L;
-        doNothing().when(userService).validateUserIdExist(anyLong());
-        doNothing().when(productService).validateProductIdExist(anyLong());
+        given(userService.isUserIdExist(anyLong())).willReturn(true);
+        given(productService.isProductIdExist(anyLong())).willReturn(true);
         given(cartDao.insert(anyLong(), anyLong())).willReturn(id);
 
         assertThat(cartService.save(1L, 1L)).isEqualTo(id);
         verify(cartDao, times(1)).insert(anyLong(), anyLong());
+    }
+
+    @Test
+    @DisplayName("사용자 ID가 존재하지 않으면 장바구니에 상품을 저장할 수 없다")
+    void saveInvalidUserId() {
+        given(userService.isUserIdExist(anyLong())).willReturn(false);
+
+        assertThatThrownBy(() -> cartService.save(-1L, 1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(CART_INVALID_USER_ID_ERROR_MESSAGE);
+        verify(cartDao, never()).insert(anyLong(), anyLong());
+    }
+
+    @Test
+    @DisplayName("상품 ID가 존재하지 않으면 장바구니에 상품을 저장할 수 없다")
+    void saveInvalidProductId() {
+        given(userService.isUserIdExist(anyLong())).willReturn(true);
+        given(productService.isProductIdExist(anyLong())).willReturn(false);
+
+        assertThatThrownBy(() -> cartService.save(1L, -1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(CART_INVALID_PRODUCT_ID_ERROR_MESSAGE);
+        verify(cartDao, never()).insert(anyLong(), anyLong());
     }
 
     @Test

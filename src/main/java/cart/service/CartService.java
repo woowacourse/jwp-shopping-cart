@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CartService {
+    public static final String CART_INVALID_USER_ID_ERROR_MESSAGE = "장바구니에 상품을 추가할 수 없습니다: 잘못된 사용자 ID";
+    public static final String CART_INVALID_PRODUCT_ID_ERROR_MESSAGE = "장바구니에 상품을 추가할 수 없습니다: 잘못된 상품 ID";
 
     private final CartDao cartDao;
     private final ProductService productService;
@@ -25,8 +27,12 @@ public class CartService {
 
     @Transactional
     public Long save(final Long userId, final Long productId) {
-        userService.validateUserIdExist(userId);
-        productService.validateProductIdExist(productId);
+        if (!userService.isUserIdExist(userId)) {
+            throw new IllegalArgumentException(CART_INVALID_USER_ID_ERROR_MESSAGE);
+        }
+        if (!productService.isProductIdExist(productId)) {
+            throw new IllegalArgumentException(CART_INVALID_PRODUCT_ID_ERROR_MESSAGE);
+        }
 
         return cartDao.insert(userId, productId);
     }
