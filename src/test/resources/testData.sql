@@ -14,14 +14,16 @@ CREATE TABLE MEMBER (
     id          INT           NOT NULL AUTO_INCREMENT,
     email       VARCHAR(255)  NOT NULL UNIQUE,
     password    VARCHAR(255)  NOT NULL,
-    PRIMARY KEY (email)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE CART (
     id          INT           NOT NULL AUTO_INCREMENT,
     product_id  INT           NOT NULL,
     member_id   INT           NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (product_id) REFERENCES PRODUCT (id) ON DELETE CASCADE,
+    FOREIGN KEY (member_id) REFERENCES MEMBER (id) ON DELETE CASCADE
 );
 
 insert into PRODUCT(`name`, image, price) values ('item1', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5c6VkPCiNvUmomb-iGTLqP76uu9FOsJWRpg&usqp=CAU', 1000);

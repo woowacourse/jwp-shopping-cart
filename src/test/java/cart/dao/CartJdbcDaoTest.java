@@ -27,8 +27,10 @@ class CartJdbcDaoTest {
     @Test
     void addCart() {
         // given
-        int productId = 1;
-        int memberId = 1;
+        Integer memberId = jdbcTemplate.queryForObject("select id from Member limit 1",
+                (rs, rowNum) -> rs.getInt("id"));
+        Integer productId = jdbcTemplate.queryForObject("select id from Product limit 1",
+                (rs, rowNum) -> rs.getInt("id"));
         CartEntity cartEntityForAdd = new CartEntity(productId, memberId);
 
         // when
@@ -43,8 +45,10 @@ class CartJdbcDaoTest {
     @Test
     void findCartByMemberId() {
         // given
-        int productId = 1;
-        int memberId = 1;
+        Integer memberId = jdbcTemplate.queryForObject("select id from Member limit 1",
+                (rs, rowNum) -> rs.getInt("id"));
+        Integer productId = jdbcTemplate.queryForObject("select id from Product limit 1",
+                (rs, rowNum) -> rs.getInt("id"));
         CartEntity cartEntityForAdd = new CartEntity(productId, memberId);
         cartDao.addCart(cartEntityForAdd);
 
@@ -59,8 +63,10 @@ class CartJdbcDaoTest {
     @Test
     void deleteById() {
         // given
-        int productId = 1;
-        int memberId = 1;
+        Integer memberId = jdbcTemplate.queryForObject("select id from Member limit 1",
+                (rs, rowNum) -> rs.getInt("id"));
+        Integer productId = jdbcTemplate.queryForObject("select id from Product limit 1",
+                (rs, rowNum) -> rs.getInt("id"));
         CartEntity cartEntityForAdd = new CartEntity(productId, memberId);
         cartDao.addCart(cartEntityForAdd);
 
