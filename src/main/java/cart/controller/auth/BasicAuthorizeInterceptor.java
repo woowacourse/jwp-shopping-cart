@@ -8,7 +8,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 @Component
 public class BasicAuthorizeInterceptor implements HandlerInterceptor {
@@ -18,9 +17,11 @@ public class BasicAuthorizeInterceptor implements HandlerInterceptor {
     private static final String DELIMITER = ":";
 
     private final MemberDao memberDao;
+    private final AuthRequest authRequest;
 
-    public BasicAuthorizeInterceptor(final MemberDao memberDao) {
+    public BasicAuthorizeInterceptor(final MemberDao memberDao, final AuthRequest authRequest) {
         this.memberDao = memberDao;
+        this.authRequest = authRequest;
     }
 
     @Override
@@ -30,8 +31,7 @@ public class BasicAuthorizeInterceptor implements HandlerInterceptor {
         final String password = info[1];
         final Long id = authorize(email, password);
 
-        final HttpSession session = request.getSession();
-        session.setAttribute("auth", id);
+        authRequest.setId(id);
         return true;
     }
 

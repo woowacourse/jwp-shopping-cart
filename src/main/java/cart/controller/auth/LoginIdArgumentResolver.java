@@ -7,14 +7,14 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Component
 public class LoginIdArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final String AUTHORIZATION = "Authorization";
-    private static final String BASIC = "basic";
-    private static final String DELIMITER = ":";
+    private final AuthRequest authRequest;
+
+    public LoginIdArgumentResolver(final AuthRequest authRequest) {
+        this.authRequest = authRequest;
+    }
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
@@ -28,10 +28,8 @@ public class LoginIdArgumentResolver implements HandlerMethodArgumentResolver {
             final ModelAndViewContainer mavContainer,
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
-    ) throws Exception {
-        final var request = (HttpServletRequest) webRequest.getNativeRequest();
-        final Long id = ((Long) request.getSession().getAttribute("auth"));
-        return id;
+    ) {
+        return authRequest.getId();
     }
 
 }
