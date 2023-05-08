@@ -19,7 +19,7 @@ public final class ExceptionAdvice {
     public ResponseEntity<ErrorResponseDto> handleException(final Exception exception) {
         logger.error(exception.getMessage());
         return ResponseEntity.internalServerError()
-            .body(new ErrorResponseDto(exception.getMessage()));
+            .body(new ErrorResponseDto("의도치 않은 서버 오류가 발생했습니다."));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
