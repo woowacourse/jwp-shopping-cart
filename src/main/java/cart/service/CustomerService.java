@@ -1,8 +1,8 @@
 package cart.service;
 
-import cart.argumentresolver.basicauthorization.BasicAuthInfo;
 import cart.dao.CustomerDao;
 import cart.entity.customer.CustomerEntity;
+import cart.exception.UnAuthorizedCustomerException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +17,9 @@ public class CustomerService {
         this.customerDao = customerDao;
     }
 
-    public Long findCustomerIdByBasicAuthInfo(final BasicAuthInfo basicAuthInfo) {
-        return customerDao.findIdByEmailAndPassword(basicAuthInfo.getEmail(), basicAuthInfo.getPassword())
-            .orElseThrow(() -> new IllegalArgumentException("해당 인증에 부합하는 고객이 없습니다."));
+    public Long findCertifiedMemberIdByEmailAndPassword(final String email, final String password) {
+        return customerDao.findIdByEmailAndPassword(email, password)
+            .orElseThrow(() -> new UnAuthorizedCustomerException("해당 정보에 부합하는 고객이 없습니다."));
     }
 
     public List<CustomerEntity> findAll() {

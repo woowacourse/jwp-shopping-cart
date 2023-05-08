@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import cart.argumentresolver.basicauthorization.BasicAuthInfo;
 import cart.dao.CustomerDao;
 import cart.entity.customer.CustomerEntity;
 import java.util.List;
@@ -54,11 +53,9 @@ class CustomerServiceTest {
             .thenReturn(Optional.of(1L));
 
         //when
-        final Long customerId = customerService.findCustomerIdByBasicAuthInfo(
-            new BasicAuthInfo(
-                "email@email.com",
-                "password"
-            )
+        final Long customerId = customerService.findCertifiedMemberIdByEmailAndPassword(
+            "email@email.com",
+            "password"
         );
 
         //then

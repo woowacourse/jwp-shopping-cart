@@ -1,13 +1,12 @@
 package cart.controller.api;
 
-import cart.annotation.BasicAuthorization;
-import cart.argumentresolver.basicauthorization.BasicAuthInfo;
+import cart.auth.annotation.Authorization;
+import cart.dto.request.CertifiedCustomer;
 import cart.dto.response.CartProductResponseDto;
 import cart.dtomapper.CartProductResponseDtoMapper;
 import cart.entity.cart.CartEntity;
 import cart.entity.product.ProductEntity;
 import cart.service.CartService;
-import cart.service.CustomerService;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.MediaType;
@@ -24,37 +23,32 @@ import org.springframework.web.bind.annotation.RestController;
 public final class CartApiController {
 
     private final CartService cartService;
-    private final CustomerService customerService;
 
-    public CartApiController(final CartService cartService, final CustomerService customerService) {
+    public CartApiController(final CartService cartService) {
         this.cartService = cartService;
-        this.customerService = customerService;
     }
 
     @GetMapping(value = "/items", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CartProductResponseDto>> showCart(@BasicAuthorization BasicAuthInfo basicAuthInfo) {
-        final Long customerId = customerService.findCustomerIdByBasicAuthInfo(basicAuthInfo);
-        final List<ProductEntity> products = cartService.findAllProductsByCustomerId(customerId);
+    public ResponseEntity<List<CartProductResponseDto>> showCart(@Authorization CertifiedCustomer certifiedCustomer) {
+        final List<ProductEntity> products = cartService.findAllProductsByCustomerId(certifiedCustomer.getId());
         return ResponseEntity.ok().body(CartProductResponseDtoMapper.asList(products));
     }
 
     @PostMapping("/{productId}")
     public ResponseEntity<Void> addItem(
         @PathVariable(name = "productId") Long productId,
-        @BasicAuthorization BasicAuthInfo basicAuthInfo
+        @Authorization CertifiedCustomer certifiedCustomer
     ) {
-        final Long customerId = customerService.findCustomerIdByBasicAuthInfo(basicAuthInfo);
-        final Long savedCartId = cartService.save(new CartEntity(customerId, productId));
+        final Long savedCartId = cartService.save(new CartEntity(certifiedCustomer.getId(), productId));
         return ResponseEntity.created(URI.create("/cart/" + savedCartId)).build();
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteItem(
         @PathVariable(name = "productId") Long productId,
-        @BasicAuthorization BasicAuthInfo basicAuthInfo
+        @Authorization CertifiedCustomer certifiedCustomer
     ) {
-        final Long customerId = customerService.findCustomerIdByBasicAuthInfo(basicAuthInfo);
-        final Long cartId = cartService.findFirstCartIdBy(customerId, productId);
+        final Long cartId = cartService.findFirstCartIdBy(certifiedCustomer.getId(), productId);
         cartService.delete(cartId);
         return ResponseEntity.noContent().build();
     }

@@ -1,6 +1,6 @@
-package cart.argumentresolver.basicauthorization;
+package cart.auth.extractor;
 
-public final class BasicAuthorizationExtractor {
+public final class BasicAuthorizationExtractor implements AuthorizationExtractor {
 
     private static final String CREDENTIAL_DELIMITER = ":";
     private static final int USERNAME_INDEX = 0;

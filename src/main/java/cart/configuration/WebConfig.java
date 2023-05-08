@@ -1,7 +1,7 @@
 package cart.configuration;
 
-import cart.argumentresolver.basicauthorization.BasicAuthorizationArgumentResolver;
-import cart.interceptor.AuthInterceptor;
+import cart.auth.argumentresolver.CertifiedCustomerArgumentResolver;
+import cart.auth.interceptor.AuthInterceptor;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -12,14 +12,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final BasicAuthorizationArgumentResolver basicAuthorizationArgumentResolver;
     private final AuthInterceptor authInterceptor;
 
-    public WebConfig(
-        final BasicAuthorizationArgumentResolver basicAuthorizationArgumentResolver,
-        final AuthInterceptor authInterceptor
-    ) {
-        this.basicAuthorizationArgumentResolver = basicAuthorizationArgumentResolver;
+    public WebConfig(final AuthInterceptor authInterceptor) {
         this.authInterceptor = authInterceptor;
     }
 
@@ -31,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(basicAuthorizationArgumentResolver);
+        resolvers.add(new CertifiedCustomerArgumentResolver());
     }
 
     @Override
