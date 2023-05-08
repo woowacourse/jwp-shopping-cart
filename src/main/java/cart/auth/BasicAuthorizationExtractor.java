@@ -1,9 +1,11 @@
 package cart.auth;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Component
 public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthInfo> {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
@@ -25,7 +27,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
         return null;
     }
 
-    private static AuthInfo getAuthInfo(String[] credentials) {
+    private AuthInfo getAuthInfo(String[] credentials) {
         if (credentials.length < AUTH_INFO_SIZE) {
             return null;
         }
@@ -34,7 +36,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
         return new AuthInfo(email, password);
     }
 
-    private static String[] extractCredentials(String header) {
+    private String[] extractCredentials(String header) {
         String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
         byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
         String decodedString = new String(decodedBytes);

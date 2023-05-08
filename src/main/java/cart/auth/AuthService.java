@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
 
-    private MemberDao memberDao;
+    private final MemberDao memberDao;
 
     public AuthService(MemberDao memberDao) {
         this.memberDao = memberDao;

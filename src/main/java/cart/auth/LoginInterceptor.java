@@ -11,13 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
-    private AuthService authService;
+    private final AuthService authService;
+    private final AuthorizationExtractor<AuthInfo> authorizationExtractor;
 
-    public LoginInterceptor(AuthService authService) {
+    public LoginInterceptor(AuthService authService, AuthorizationExtractor<AuthInfo> authorizationExtractor) {
         this.authService = authService;
+        this.authorizationExtractor = authorizationExtractor;
     }
-
-    private AuthorizationExtractor<AuthInfo> authorizationExtractor = new BasicAuthorizationExtractor();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -27,6 +27,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
         authService.validateLogin(authInfo.getEmail(), authInfo.getPassword());
 
-        return super.preHandle(request, response, handler);
+        return true;
     }
 }
