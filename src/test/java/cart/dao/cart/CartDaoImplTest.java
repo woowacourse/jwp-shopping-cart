@@ -54,7 +54,7 @@ class CartDaoImplTest {
     }
 
     @Test
-    @DisplayName("사용자와 상품의 아이드를 통해 장바구니 조회한다.")
+    @DisplayName("사용자와 상품의 아이디를 통해 장바구니 조회한다.")
     void find_cart_by_member_and_product() {
         // given
         Product product = new Product(1L, new Name("연필"), new ImageUrl("이미지"), new Price(1000));
