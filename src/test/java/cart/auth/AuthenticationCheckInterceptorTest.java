@@ -7,9 +7,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import cart.auth.AuthenticationCheckInterceptor;
-import cart.auth.AuthenticationException;
-import cart.auth.AuthService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -59,7 +56,7 @@ class AuthenticationCheckInterceptorTest {
 
         //then
         assertThatThrownBy(
-                () -> authenticationCheckInterceptor.preHandle(request, response, response))
+            () -> authenticationCheckInterceptor.preHandle(request, response, response))
             .isInstanceOf(AuthenticationException.class);
     }
 }
