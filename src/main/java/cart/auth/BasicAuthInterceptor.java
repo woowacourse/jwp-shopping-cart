@@ -5,6 +5,7 @@ import cart.entity.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,12 +28,12 @@ public final class BasicAuthInterceptor implements HandlerInterceptor {
         final UserInfo userInfo = basicAuthExtractor.extract(header);
 
         final User user = userDao.findByEmail(userInfo.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException(INVALID_USER_INFO));
+                .orElseThrow(() -> new AuthenticationException(INVALID_USER_INFO));
 
         if (userInfo.isCorrect(user)) {
             return true;
         }
 
-        throw new IllegalArgumentException(INVALID_USER_INFO);
+        throw new AuthenticationException(INVALID_USER_INFO);
     }
 }

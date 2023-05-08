@@ -56,7 +56,7 @@ class UserRestControllerTest {
                     .statusCode(HttpStatus.CREATED.value());
         }
 
-        @DisplayName("이메일이 유효하지 않으면 400을 리턴한다")
+        @DisplayName("이메일이 유효하지 않으면 401을 리턴한다")
         @Test
         void invalidUserId() {
             //given
@@ -70,7 +70,7 @@ class UserRestControllerTest {
                     .body(new UserCartRequest(product.getId()))
                     .when().post("/user/cart")
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+                    .statusCode(HttpStatus.UNAUTHORIZED.value());
         }
 
         @DisplayName("상품이 유효하지 않으면 400을 리턴한다")
@@ -125,14 +125,14 @@ class UserRestControllerTest {
                     .statusCode(HttpStatus.OK.value());
         }
 
-        @DisplayName("없는 유저의 장바구니를 조회하면 400을 리턴한다")
+        @DisplayName("없는 유저의 장바구니를 조회하면 401을 리턴한다")
         @Test
         void notExistUser() {
             given()
                     .auth().preemptive().basic("없는 이메일", "password")
                     .when().get("user/cart")
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+                    .statusCode(HttpStatus.UNAUTHORIZED.value());
         }
     }
 }
