@@ -1,7 +1,7 @@
 package cart.config;
 
-import cart.interceptor.AuthValidateInterceptor;
-import cart.util.UserInfoArgumentResolver;
+import cart.api.interceptor.AuthValidateInterceptor;
+import cart.api.argumentResolver.UserInfoArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

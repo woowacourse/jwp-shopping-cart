@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfigurator {
 
     private static final String PROJECT_NAME = "cart";
-    private static final String CONTROLLER_PACKAGE = "cart.controller";
+    private static final String CONTROLLER_PACKAGE = "cart.api.controller";
     private static final String TITLE = "장바구니";
     private static final String DESCRIPTION = "도기 - 장바구니 미션";
     private static final String VERSION = "1.0";

@@ -1,4 +1,4 @@
-package cart.interceptor;
+package cart.api.interceptor;
 
 import cart.exception.AuthException;
 import org.springframework.web.servlet.HandlerInterceptor;

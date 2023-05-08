@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.api.controller;
 
 import cart.dto.MemberResponse;
 import cart.service.MemberService;
