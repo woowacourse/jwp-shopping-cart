@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
 @Sql({"classpath:truncateTable.sql", "classpath:userTestData.sql", "classpath:productsTestData.sql", "classpath:cartTestData.sql"})
-public class CartApiControllerTest {
+public class CartProductsApiControllerTest {
     @Autowired
     JdbcCartDao jdbcCartDao;
     @LocalServerPort
