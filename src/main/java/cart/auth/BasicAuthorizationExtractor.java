@@ -14,7 +14,7 @@ public class BasicAuthorizationExtractor {
     private static final String AUTHORIZATION_VALUE_DELIMITER = ":";
     private static final String AUTH_EMPTY_ERROR_MESSAGE = "인증 정보가 없습니다.";
     private static final String HEADER_INVALID_ERROR_MESSAGE = "올바르지 않은 헤더입니다.";
-    private static final Pattern pattern = Pattern.compile(BASIC_REGEX);
+    private static final Pattern BASIC_AUTH_PATTERN = Pattern.compile(BASIC_REGEX);
     private static final int AUTHORIZATION_VALUE_INDEX = 1;
     private static final int NAME_INDEX = 0;
     private static final int EMAIL_INDEX = 1;
@@ -24,11 +24,7 @@ public class BasicAuthorizationExtractor {
     public MemberDto extract(String authorization) {
         validate(authorization);
 
-        String encodedValue = authorization.split(AUTHORIZATION_DELIMITER)[AUTHORIZATION_VALUE_INDEX];
-        byte[] decodedBytes = Base64.decodeBase64(encodedValue);
-        String decodedValue = new String(decodedBytes);
-
-        String[] credentials = decodedValue.split(AUTHORIZATION_VALUE_DELIMITER);
+        String[] credentials = getCredentials(authorization);
         validateCredentials(credentials);
 
         String name = credentials[NAME_INDEX];
@@ -45,19 +41,21 @@ public class BasicAuthorizationExtractor {
         if (isInvalidHeader(authorization)) {
             throw new AuthException(HEADER_INVALID_ERROR_MESSAGE);
         }
-
-        if (isInvalidValue(authorization)) {
-            throw new AuthException(HEADER_INVALID_ERROR_MESSAGE);
-        }
     }
 
     private boolean isInvalidHeader(String authorization) {
-        return !pattern.matcher(authorization).matches();
+        return !BASIC_AUTH_PATTERN.matcher(authorization).matches();
     }
 
-    private boolean isInvalidValue(String authorization) {
+    private String[] getCredentials(String authorization) {
         String encodedValue = authorization.split(AUTHORIZATION_DELIMITER)[AUTHORIZATION_VALUE_INDEX];
-        return encodedValue.isBlank();
+        if (encodedValue.isBlank()) {
+            throw new AuthException(HEADER_INVALID_ERROR_MESSAGE);
+        }
+
+        byte[] decodedBytes = Base64.decodeBase64(encodedValue);
+        String decodedValue = new String(decodedBytes);
+        return decodedValue.split(AUTHORIZATION_VALUE_DELIMITER);
     }
 
     private void validateCredentials(String[] credentials) {
