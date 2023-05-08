@@ -6,6 +6,7 @@ import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class CartController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> addProduct(@RequestBody CartItemDto cartItemDto, @Auth final String email) {
+    public ResponseEntity<Void> addProduct(@RequestBody @Valid CartItemDto cartItemDto, @Auth final String email) {
         final Long id = cartService.addProductInCart(cartItemDto.getProductId(), email);
         return ResponseEntity.created(URI.create("/carts/" + id)).build();
     }
