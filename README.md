@@ -20,7 +20,7 @@
 - [x] 아무 계정을 선택하고, 아무 상품을 장바구니에 담은 후, 관리자 탭에서 장바구니에 담은 상품을 삭제했을 때 발생하는 예외 확인
 - [x] 서버에서 에러 확인할 수 있게 하기
 - [x] 에러 발생 시 클라이언트에서 alert 창 띄우기
-- [ ] @DirtiesContext를 사용한 이유
+- [x] @DirtiesContext를 사용한 이유
 - [ ] user와 join을 한 번 더 하지 않고 서브쿼리를 작성한 이유
 - [ ] Interceptor와 ArgumentResolver, Filter 역할 정리
 - [ ] equals, hashCode 를 재구현 -> 테스트 코드를 위해 프로덕션 코드를 수정한 것?
