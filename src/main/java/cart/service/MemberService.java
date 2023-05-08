@@ -37,17 +37,14 @@ public class MemberService {
     public MemberDto loginMember(final String email, final String password) {
         final Member member = memberDao.findByEmail(email)
                 .orElseThrow(() -> new DataNotFoundException("해당 사용자가 존재하지 않습니다."));
-
-        final String encryptedPassword = member.getPassword();
-        if (!encryptedPassword.equals(CaesarCipher.encrypt(password))) {
+        if (!member.matchPassword(CaesarCipher.encrypt(password))) {
             throw new PasswordNotMatchException("비밀번호가 일치하지 않습니다.");
         }
-
         return new MemberDto(
                 member.getId(),
                 member.getEmail(),
                 member.getName(),
-                member.getPassword());
+                CaesarCipher.decrypt(member.getPassword()));
     }
 
     @Transactional(readOnly = true)
