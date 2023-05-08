@@ -7,9 +7,13 @@ public class Member {
     private final MemberUsername username;
     private final MemberPassword password;
 
-    public Member(final String username, final String password) {
+    public Member(final String username, final String password, final boolean isRawPassword) {
         this.username = new MemberUsername(username);
         this.password = new MemberPassword(password);
+
+        if (isRawPassword) {
+            this.password.encrypt();
+        }
     }
 
     public String getUsername() {

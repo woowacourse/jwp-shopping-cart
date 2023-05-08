@@ -22,7 +22,8 @@ public class MemberDao {
         return (resultSet, rowNum) -> new MemberEntity(
                 resultSet.getLong("id"),
                 resultSet.getString("username"),
-                resultSet.getString("password")
+                resultSet.getString("password"),
+                false
         );
     }
 

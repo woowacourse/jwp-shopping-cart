@@ -40,4 +40,8 @@ public class MemberPassword {
     public int hashCode() {
         return Objects.hash(value);
     }
+
+    public void encrypt() {
+        System.out.println("Password Encrypted");
+    }
 }

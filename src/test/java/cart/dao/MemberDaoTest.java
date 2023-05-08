@@ -1,16 +1,17 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import cart.domain.member.Member;
 import cart.domain.member.MemberEntity;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @Sql("classpath:test.sql")
@@ -34,7 +35,7 @@ class MemberDaoTest {
 
     @Test
     void 사용자_존재_여부_확인() {
-        final boolean isExist = memberDao.isMember(new Member("user1@email.com", "password1"));
+        final boolean isExist = memberDao.isMember(new Member("user1@email.com", "password1", true));
 
         assertThat(isExist).isTrue();
     }

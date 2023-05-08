@@ -27,13 +27,13 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public boolean isMember(final MemberDto memberDto) {
-        final Member member = new Member(memberDto.getUsername(), memberDto.getPassword());
+        final Member member = new Member(memberDto.getUsername(), memberDto.getPassword(), true);
         return memberDao.isMember(member);
     }
 
     @Transactional(readOnly = true)
     public long findMemberId(final MemberDto memberDto) {
-        final Member member = new Member(memberDto.getUsername(), memberDto.getPassword());
+        final Member member = new Member(memberDto.getUsername(), memberDto.getPassword(), true);
         return memberDao.findMemberId(member);
     }
 }

@@ -7,9 +7,9 @@ public class MemberEntity {
     private final MemberId id;
     private final Member member;
 
-    public MemberEntity(final long id, final String username, final String password) {
+    public MemberEntity(final long id, final String username, final String password, final boolean isRawPassword) {
         this.id = new MemberId(id);
-        this.member = new Member(username, password);
+        this.member = new Member(username, password, isRawPassword);
     }
 
     public long getId() {
