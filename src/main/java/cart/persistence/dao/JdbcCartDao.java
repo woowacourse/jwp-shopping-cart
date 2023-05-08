@@ -70,10 +70,7 @@ public class JdbcCartDao implements CartDao {
         final String sql = "SELECT c.cart_id, p.name, p.price, p.image_url\n" +
                 "FROM product AS p\n" +
                 "JOIN cart AS c ON p.product_id = c.product_id\n" +
-                "WHERE c.user_id = (\n" +
-                "    SELECT user_id\n" +
-                "    FROM user_info\n" +
-                "    WHERE email = ?)";
+                "JOIN user_info AS u ON c.user_id = u.user_id WHERE u.email = ?";
         return jdbcTemplate.query(sql, cartProductRowMapper, email);
     }
 }
