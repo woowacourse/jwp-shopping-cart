@@ -43,7 +43,7 @@ class UserServiceTest {
                 () -> assertThatThrownBy(() -> userService.addProductToCart(userInfo, 1L))
                         .isInstanceOf(IllegalArgumentException.class)
                         .hasMessage("잘못된 유저 정보입니다."),
-                () -> assertThatThrownBy(() -> userService.removeProductInCart(userInfo, 1L))
+                () -> assertThatThrownBy(() -> userService.deleteProductInCart(userInfo, 1L))
                         .isInstanceOf(IllegalArgumentException.class)
                         .hasMessage("잘못된 유저 정보입니다."),
                 () -> assertThatThrownBy(() -> userService.getAllProductsInCart(userInfo))

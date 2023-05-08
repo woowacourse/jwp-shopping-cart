@@ -50,7 +50,7 @@ public class UserService {
     }
 
     @Transactional
-    public void removeProductInCart(final UserInfo userInfo, final Long userProductId) {
+    public void deleteProductInCart(final UserInfo userInfo, final Long userProductId) {
         final User user = getUser(userInfo);
 
         cartDao.deleteProductInCart(user.getId(), userProductId);

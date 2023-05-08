@@ -32,7 +32,7 @@ public final class UserRestController {
     @DeleteMapping("/user/cart/{id}")
     public ResponseEntity<Void> deleteProductInCart(@AuthParam UserInfo userInfo,
                                                     @PathVariable("id") Long userProductId) {
-        userService.removeProductInCart(userInfo, userProductId);
+        userService.deleteProductInCart(userInfo, userProductId);
 
         return ResponseEntity.noContent().build();
     }
