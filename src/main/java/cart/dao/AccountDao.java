@@ -37,7 +37,7 @@ public class AccountDao {
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, email, password);
         } catch (EmptyResultDataAccessException exception) {
-            throw new CanNotFoundAccountException();
+            throw new CanNotFoundAccountException("회원이 존재하지 않습니다.");
         }
     }
 }

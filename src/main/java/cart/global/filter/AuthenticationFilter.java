@@ -1,6 +1,6 @@
 package cart.global.filter;
 
-import cart.global.exception.auth.CanNotFountHeaderException;
+import cart.global.exception.auth.CanNotFoundHeaderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -44,7 +44,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             validateHeader(header);
 
             filterChain.doFilter(request, response);
-        } catch (CanNotFountHeaderException exception) {
+        } catch (CanNotFoundHeaderException exception) {
             writeErrorResponse(response, exception);
             log.error(exception.getMessage());
         }
@@ -52,7 +52,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private void writeErrorResponse(
             final HttpServletResponse response,
-            final CanNotFountHeaderException exception
+            final CanNotFoundHeaderException exception
     ) throws IOException {
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -66,7 +66,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private void validateHeader(final String header) {
         if (hasNotHeader(header)) {
-            throw new CanNotFountHeaderException("헤더가 존재하지 않습니다.");
+            throw new CanNotFoundHeaderException("헤더가 존재하지 않습니다.");
         }
     }
 

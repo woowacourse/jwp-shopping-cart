@@ -4,18 +4,14 @@ import org.springframework.http.HttpStatus;
 
 public class BusinessException extends RuntimeException {
 
-    private final ExceptionStatus exceptionStatus;
+    private final HttpStatus httpStatus;
 
-    public BusinessException(ExceptionStatus exceptionStatus) {
-        super(exceptionStatus.getMessage());
-        this.exceptionStatus = exceptionStatus;
+    public BusinessException(final String message, final HttpStatus httpStatus) {
+        super(message);
+        this.httpStatus = httpStatus;
     }
 
     public HttpStatus getHttpStatus() {
-        return exceptionStatus.getHttpStatus();
-    }
-
-    public int getStatus() {
-        return exceptionStatus.getStatus();
+        return httpStatus;
     }
 }

@@ -1,11 +1,11 @@
 package cart.global.exception.auth;
 
 import cart.global.exception.common.BusinessException;
-import cart.global.exception.common.ExceptionStatus;
+import org.springframework.http.HttpStatus;
 
 public class InvalidAuthorizationTypeException extends BusinessException {
 
-    public InvalidAuthorizationTypeException() {
-        super(ExceptionStatus.INVALID_AUTHORIZATION_TYPE_EXCEPTION);
+    public InvalidAuthorizationTypeException(final String message) {
+        super(message, HttpStatus.UNAUTHORIZED);
     }
 }

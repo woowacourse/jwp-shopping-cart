@@ -1,11 +1,11 @@
 package cart.global.exception.account;
 
 import cart.global.exception.common.BusinessException;
-import cart.global.exception.common.ExceptionStatus;
+import org.springframework.http.HttpStatus;
 
 public class CanNotFoundAccountException extends BusinessException {
 
-    public CanNotFoundAccountException() {
-        super(ExceptionStatus.CAN_NOT_FOUND_ACCOUNT_EXCEPTION);
+    public CanNotFoundAccountException(final String message) {
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }

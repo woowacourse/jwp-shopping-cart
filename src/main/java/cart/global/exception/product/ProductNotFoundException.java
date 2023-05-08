@@ -1,8 +1,11 @@
 package cart.global.exception.product;
 
-public class ProductNotFoundException extends RuntimeException {
+import cart.global.exception.common.BusinessException;
+import org.springframework.http.HttpStatus;
+
+public class ProductNotFoundException extends BusinessException {
 
     public ProductNotFoundException(final String message) {
-        super(message);
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }

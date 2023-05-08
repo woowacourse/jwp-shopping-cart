@@ -1,6 +1,6 @@
 package cart.global.exception.common;
 
-import cart.global.exception.response.ExceptionResponse;
+import cart.global.exception.response.BindingResultExceptionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -8,8 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
 
 @RestControllerAdvice
 public class ExceptionHandlerController {
@@ -17,44 +18,47 @@ public class ExceptionHandlerController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse handleMethodArgumentNotValidException(
+    public ResponseEntity<List<BindingResultExceptionResponse>> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException exception
     ) {
-        return ExceptionResponse.convertFrom(ExceptionStatus.INVALID_INPUT_VALUE_EXCEPTION, exception);
+        errorLogging(exception);
+
+        final List<BindingResultExceptionResponse> bindingResultExceptionResponses =
+                BindingResultExceptionResponse.from(exception.getBindingResult());
+
+        return new ResponseEntity<>(bindingResultExceptionResponses, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DataAccessResourceFailureException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionResponse handleDatabaseException(DataAccessResourceFailureException exception) {
+    public ResponseEntity<String> handleDatabaseException(DataAccessResourceFailureException exception) {
         errorLogging(exception);
 
-        return ExceptionResponse.convertFrom(ExceptionStatus.DATABASE_EXCEPTION);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ExceptionResponse> handleBusinessException(BusinessException exception) {
+    public ResponseEntity<String> handleBusinessException(BusinessException exception) {
         errorLogging(exception);
 
-        final ExceptionResponse exceptionResponse = ExceptionResponse.convertFrom(exception);
         final HttpStatus httpStatus = exception.getHttpStatus();
 
-        return new ResponseEntity<>(exceptionResponse, httpStatus);
+        return new ResponseEntity<>(exception.getMessage(), httpStatus);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleUnexpectedException(Exception exception) {
         errorLogging(exception);
 
-        return ResponseEntity.internalServerError().body("전화 주세요");
+        return ResponseEntity.internalServerError()
+                             .body("전화 주세요");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse handleDomainException(IllegalArgumentException exception) {
+    public ResponseEntity<String> handleDomainException(IllegalArgumentException exception) {
         errorLogging(exception);
 
-        return ExceptionResponse.convertFrom(ExceptionStatus.INVALID_INPUT_VALUE_EXCEPTION);
+        return ResponseEntity.badRequest()
+                             .body(exception.getMessage());
     }
 
     private void errorLogging(Exception e) {

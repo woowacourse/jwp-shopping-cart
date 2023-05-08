@@ -44,6 +44,6 @@ public class LogInArgumentResolverComposite implements HandlerMethodArgumentReso
             }
         }
 
-        throw new InvalidAuthorizationTypeException();
+        throw new InvalidAuthorizationTypeException("올바르지 않는 인증 형태입니다.");
     }
 }
