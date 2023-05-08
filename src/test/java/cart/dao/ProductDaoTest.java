@@ -1,4 +1,4 @@
-package cart.domain.product.dao;
+package cart.dao;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
