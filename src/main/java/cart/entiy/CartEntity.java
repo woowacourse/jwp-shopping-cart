@@ -10,6 +10,10 @@ public class CartEntity {
         this(null, email, productId);
     }
 
+    public CartEntity(final long cartId, final CartEntity other) {
+        this(cartId, other.email, other.productId);
+    }
+
     public CartEntity(final Long cartId, final String email, final Long productId) {
         this.cartId = cartId;
         this.email = email;
