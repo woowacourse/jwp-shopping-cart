@@ -19,7 +19,6 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (authorization == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인 후 이용가능합니다.");
         }
-
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
 }
