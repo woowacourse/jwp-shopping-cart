@@ -6,6 +6,7 @@ import cart.dto.ProductResponse;
 import cart.mapper.ProductMapper;
 import cart.mapper.ProductResponseMapper;
 import cart.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,14 +22,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/products")
+@RequiredArgsConstructor
 @RestController
 public class ProductController {
 
     private final ProductService productService;
-
-    public ProductController(final ProductService productService) {
-        this.productService = productService;
-    }
 
     @PostMapping
     public ResponseEntity<Void> postProducts(@Valid @RequestBody ProductCreationRequest request) {

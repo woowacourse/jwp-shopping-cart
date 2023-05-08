@@ -2,22 +2,18 @@ package cart.service;
 
 import cart.dao.cart.CartDao;
 import cart.domain.member.Member;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CartProductService {
 
     private final MemberService memberService;
     private final CartDao cartDao;
-
-    public CartProductService(final MemberService memberService,
-                              final CartDao cartDao) {
-        this.memberService = memberService;
-        this.cartDao = cartDao;
-    }
 
     @Transactional
     public void addCartProduct(final Long productId, final String email, final String password) {

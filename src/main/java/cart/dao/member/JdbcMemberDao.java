@@ -1,6 +1,7 @@
 package cart.dao.member;
 
 import cart.domain.member.Member;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -8,13 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcMemberDao implements MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public JdbcMemberDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     private final RowMapper<Member> memberRowMapper = (resultSet, rowNum) -> Member.of(
             resultSet.getLong("id"),

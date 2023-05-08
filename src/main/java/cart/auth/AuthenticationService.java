@@ -3,10 +3,12 @@ package cart.auth;
 import cart.dao.member.MemberDao;
 import cart.domain.member.Member;
 import cart.dto.AuthInfo;
+import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationService {
 
     private static final String BASIC_TYPE = "Basic";
@@ -15,10 +17,6 @@ public class AuthenticationService {
     private static final int PASSWORD_INDEX = 1;
 
     private final MemberDao memberDao;
-
-    public AuthenticationService(final MemberDao memberDao) {
-        this.memberDao = memberDao;
-    }
 
     public boolean canLogin(final String email, final String password) {
         final Member member = memberDao.findByEmailAndPassword(email, password);

@@ -1,18 +1,16 @@
 package cart.dao.cart;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcCartDao implements CartDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public JdbcCartDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public void insert(final Long memberId, final Long productId) {

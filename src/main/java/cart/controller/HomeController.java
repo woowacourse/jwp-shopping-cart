@@ -4,23 +4,17 @@ import cart.mapper.MemberResponseMapper;
 import cart.mapper.ProductResponseMapper;
 import cart.service.MemberService;
 import cart.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
 
     private final ProductService productService;
     private final MemberService memberService;
-
-    public HomeController(
-            final ProductService productService,
-            final MemberService memberService
-    ) {
-        this.productService = productService;
-        this.memberService = memberService;
-    }
 
     @GetMapping("/")
     public ModelAndView home(ModelAndView modelAndView) {

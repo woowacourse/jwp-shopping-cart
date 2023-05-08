@@ -2,6 +2,7 @@ package cart.config;
 
 import cart.auth.AuthenticationArgumentResolver;
 import cart.auth.AuthenticationInterceptor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -10,16 +11,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 @Configuration
+@RequiredArgsConstructor
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     private final AuthenticationArgumentResolver authenticationArgumentResolver;
     private final AuthenticationInterceptor authenticationInterceptor;
-
-    public WebMvcConfiguration(final AuthenticationArgumentResolver authenticationArgumentResolver,
-                               final AuthenticationInterceptor authenticationInterceptor) {
-        this.authenticationArgumentResolver = authenticationArgumentResolver;
-        this.authenticationInterceptor = authenticationInterceptor;
-    }
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {

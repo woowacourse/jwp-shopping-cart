@@ -6,30 +6,25 @@ import cart.dto.ProductResponse;
 import cart.mapper.ProductResponseMapper;
 import cart.service.CartProductService;
 import cart.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/cart/products")
 public class CartProductController {
 
     private final ProductService productService;
     private final CartProductService cartProductService;
-
-    public CartProductController(final ProductService productService,
-                                 final CartProductService cartProductService) {
-        this.productService = productService;
-        this.cartProductService = cartProductService;
-    }
 
     @PostMapping("/{productId}")
     public ResponseEntity<Void> postCartProduct(@PathVariable final Long productId,

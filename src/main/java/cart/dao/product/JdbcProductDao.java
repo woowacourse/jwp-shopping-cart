@@ -1,6 +1,7 @@
 package cart.dao.product;
 
 import cart.domain.product.Product;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -8,13 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcProductDao implements ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public JdbcProductDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     private final RowMapper<Product> productEntityRowMapper = (resultSet, rowNum) -> Product.of(
             resultSet.getLong("id"),

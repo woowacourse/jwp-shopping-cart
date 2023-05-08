@@ -2,6 +2,7 @@ package cart.auth;
 
 import cart.dto.AuthInfo;
 import cart.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -10,17 +11,13 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
+@RequiredArgsConstructor
 public class AuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String AUTHORIZATION = "authorization";
 
     private final AuthenticationService authenticationService;
     private final MemberService memberService;
-
-    public AuthenticationArgumentResolver(final AuthenticationService authenticationService, final MemberService memberService) {
-        this.authenticationService = authenticationService;
-        this.memberService = memberService;
-    }
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
