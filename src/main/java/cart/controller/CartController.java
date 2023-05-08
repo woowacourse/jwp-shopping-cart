@@ -3,8 +3,8 @@ package cart.controller;
 import cart.auth.Login;
 import cart.domain.Cart;
 import cart.domain.Member;
-import cart.domain.Product;
 import cart.dto.CartDto;
+import cart.dto.response.ProductResponse;
 import cart.service.CartService;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -32,15 +32,15 @@ public class CartController {
 
     @GetMapping("/carts/products")
     @ResponseBody
-    public ResponseEntity<List<Product>> get(@Login Member member) {
+    public ResponseEntity<List<ProductResponse>> get(@Login Member member) {
         List<Cart> carts = cartService.findAll(member.getId());
-        List<Product> products = new ArrayList<>();
+        List<ProductResponse> productResponses = new ArrayList<>();
 
         for (Cart cart : carts) {
-            products.add(productService.findById(cart.getProductId()));
+            productResponses.add(new ProductResponse(productService.findById(cart.getProductId())));
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(products);
+        return ResponseEntity.status(HttpStatus.OK).body(productResponses);
     }
 
     @GetMapping("/cart")
