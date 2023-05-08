@@ -60,6 +60,7 @@
 
             document.querySelector('.cart-items').innerHTML = productElement;
         }).catch((error) => {
+            alert(error.response.data);
             console.error(error);
         });
 
