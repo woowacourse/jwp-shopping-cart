@@ -1,0 +1,13 @@
+PUT http://localhost:8080/products/1
+Content-Type: application/json
+
+{
+  "name": "MackBook Pro",
+  "price":  2000000,
+  "imageUrl": "https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/macbook-air-midnight-select-20220606?wid=904&hei=840&fmt=jpeg&qlt=90&.v=1653084303665"
+}
+
+
+
+
+
