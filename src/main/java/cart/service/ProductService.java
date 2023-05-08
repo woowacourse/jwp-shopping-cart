@@ -27,6 +27,7 @@ public class ProductService {
         productRepository.create(product);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findAll() {
         final ArrayList<ProductDto> productDtos = new ArrayList<>();
         for (Product product : productRepository.findAll()) {

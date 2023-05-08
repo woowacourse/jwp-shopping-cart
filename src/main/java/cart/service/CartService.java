@@ -64,6 +64,7 @@ public class CartService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> getProductsOf(MemberInfo memberInfo) {
         final Cart cart = cartRepository.getCartOf(memberInfo.getId());
         final ArrayList<ProductDto> productDtos = new ArrayList<>();
