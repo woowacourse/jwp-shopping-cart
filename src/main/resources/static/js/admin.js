@@ -56,7 +56,7 @@ const createProduct = (product) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
-        console.error(error);
+        alert(error.response.data.message)
     });
 };
 
@@ -64,13 +64,15 @@ const updateProduct = (product) => {
     const {id, name, imgUrl, price} = product;
 
     axios.request({
-        url: '/products/' + id, method: 'PATCH', data: {
+        url: '/products/' + id,
+        method: 'PUT',
+        data: {
             "name": name, "imgUrl": imgUrl, "price": price
         }
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
-        console.error(error);
+        alert(error.response.data.message)
     });
 };
 
@@ -81,6 +83,6 @@ const deleteProduct = (id) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
-        console.error(error);
+        alert(error.response.data.message)
     });
 };
