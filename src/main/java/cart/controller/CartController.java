@@ -1,11 +1,10 @@
 package cart.controller;
 
-import cart.config.auth.BasicTokenDecoder;
+import cart.config.auth.Authenticated;
 import cart.service.CartService;
 import cart.service.dto.MemberAuthDto;
 import cart.service.dto.ProductDto;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,28 +25,25 @@ public class CartController {
     }
 
     @GetMapping("/me/products")
-    public ResponseEntity<List<ProductDto>> getProductsOfMyCart(HttpServletRequest request) {
-        MemberAuthDto memberAuthDto = BasicTokenDecoder.extract(request);
+    public ResponseEntity<List<ProductDto>> getProductsOfMyCart(@Authenticated MemberAuthDto memberAuthDto) {
         List<ProductDto> products = this.cartService.findProductsInCartByUser(memberAuthDto);
         return ResponseEntity.ok().body(products);
     }
 
     @PostMapping("/me/{productId}")
     public ResponseEntity<Void> addProductToMyCart(
-            HttpServletRequest request,
+            @Authenticated MemberAuthDto memberAuthDto,
             @NotNull @PathVariable Long productId
     ) {
-        MemberAuthDto memberAuthDto = BasicTokenDecoder.extract(request);
         this.cartService.addProductToCartById(memberAuthDto, productId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/me/{productId}")
     public ResponseEntity<Void> deleteProductFromMyCart(
-            HttpServletRequest request,
+            @Authenticated MemberAuthDto memberAuthDto,
             @NotNull @PathVariable Long productId
     ) {
-        MemberAuthDto memberAuthDto = BasicTokenDecoder.extract(request);
         this.cartService.deleteProductFromCartById(memberAuthDto, productId);
         return ResponseEntity.ok().build();
     }
