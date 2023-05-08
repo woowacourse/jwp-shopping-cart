@@ -2,8 +2,6 @@ package cart.dao;
 
 import cart.entity.CreateItem;
 import cart.entity.Item;
-import cart.exception.DaoDuplicateException;
-import cart.exception.ServiceIllegalArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,14 +42,6 @@ class JdbcItemDaoTest {
                         .usingRecursiveComparison()
                         .isEqualTo(ITEM3)
         );
-    }
-
-    @DisplayName("이미 상품이 있는 경우 상품을 저장할 수 없다.")
-    @Test
-    void save_fail() {
-        assertThatThrownBy(() -> itemDao.save(CREATE_ITEM1))
-                .isInstanceOf(DaoDuplicateException.class)
-                .hasMessage("이미 동일한 상품이 존재합니다.");
     }
 
     @DisplayName("상품 목록을 조회할 수 있다.")
@@ -105,13 +95,6 @@ class JdbcItemDaoTest {
     }
 
 
-    @DisplayName("동일한 상품으로 수정하는 경우 상품을 수정할 수 없다.")
-    @Test
-    void update_DuplicatedItemFail() {
-        assertThatThrownBy(() -> itemDao.update(2L, CREATE_ITEM1))
-                .isInstanceOf(DaoDuplicateException.class)
-                .hasMessage("이미 동일한 상품이 존재합니다.");
-    }
 
     @DisplayName("없는 상품 정보를 수정하면 0이 반환된다.")
     @Test

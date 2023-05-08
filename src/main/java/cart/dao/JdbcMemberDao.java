@@ -2,8 +2,6 @@ package cart.dao;
 
 import cart.entity.AuthMember;
 import cart.entity.Member;
-import cart.exception.DaoDuplicateException;
-import cart.exception.ServiceIllegalArgumentException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,8 +11,6 @@ import java.util.List;
 
 @Repository
 public class JdbcMemberDao implements MemberDao {
-
-    private static final String DUPLICATED_EMAIL_MESSAGE = "이메일이 중복되었습니다.";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -40,9 +36,6 @@ public class JdbcMemberDao implements MemberDao {
 
     @Override
     public void save(AuthMember authMember) {
-        if (isEmailExists(authMember.getEmail())) {
-            throw new DaoDuplicateException(DUPLICATED_EMAIL_MESSAGE);
-        }
         String sql = "insert into member(email, password) values(?, ?)";
 
         jdbcTemplate.update(sql, authMember.getEmail(), authMember.getPassword());

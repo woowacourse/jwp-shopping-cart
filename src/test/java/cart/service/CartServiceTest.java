@@ -5,6 +5,7 @@ import cart.dao.MemberDao;
 import cart.dto.AuthorizationInformation;
 import cart.dto.ItemResponse;
 import cart.exception.ServiceIllegalArgumentException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,6 +60,16 @@ class CartServiceTest {
         assertThatThrownBy(() -> cartService.putItemIntoCart(3L, authorizationInformation))
                 .isInstanceOf(ServiceIllegalArgumentException.class)
                 .hasMessage("상품 정보를 다시 입력해주세요.");
+    }
+
+    @DisplayName("장바구니에 이미 상품을 담은 경우 상품을 추가할 수 없다.")
+    @Test
+    void save_fail() {
+        AuthorizationInformation authorizationInformation = new AuthorizationInformation(AUTH_MEMBER1.getEmail(), AUTH_MEMBER1.getPassword());
+
+        Assertions.assertThatThrownBy(() -> cartService.putItemIntoCart(1L, authorizationInformation))
+                .isInstanceOf(ServiceIllegalArgumentException.class)
+                .hasMessage("이미 장바구니에 담은 상품입니다.");
     }
 
     @DisplayName("올바르지 않은 사람에 대한 장바구니에 상품을 추가할 수 없다.")

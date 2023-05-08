@@ -111,6 +111,16 @@ class ItemServiceTest {
         assertThat(itemService.findAll()).hasSize(1);
     }
 
+    @DisplayName("이미 상품이 있는 경우 상품을 저장할 수 없다.")
+    @Test
+    void save_fail() {
+        ItemRequest itemRequest = new ItemRequest("치킨", "a", 10000);
+
+        assertThatThrownBy(() -> itemService.save(itemRequest))
+                .isInstanceOf(ServiceIllegalArgumentException.class)
+                .hasMessage("이미 동일한 상품이 존재합니다.");
+    }
+
     @Test
     @DisplayName("존재하지 않는 상품 번호를 업데이트할 경우 예외가 발생한다.")
     void updateInvalidItemIdFailTest() {
@@ -121,6 +131,17 @@ class ItemServiceTest {
         assertThatThrownBy(() -> itemService.updateItem(itemId, itemRequest))
                 .isInstanceOf(ServiceIllegalArgumentException.class)
                 .hasMessageContaining(exceptionMessage);
+    }
+
+    @DisplayName("동일한 상품으로 수정하는 경우 상품을 수정할 수 없다.")
+    @Test
+    void update_DuplicatedItemFail() {
+        ItemRequest itemRequest = new ItemRequest("치킨", "a", 10000);
+        Long itemId = 2L;
+
+        assertThatThrownBy(() -> itemService.updateItem(itemId, itemRequest))
+                .isInstanceOf(ServiceIllegalArgumentException.class)
+                .hasMessage("이미 동일한 상품이 존재합니다.");
     }
 
     @Test

@@ -2,8 +2,6 @@ package cart.dao;
 
 import cart.entity.AuthMember;
 import cart.entity.Member;
-import cart.exception.DaoDuplicateException;
-import cart.exception.ServiceIllegalArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -72,17 +70,6 @@ class JdbcMemberDaoTest {
         memberDao.save(authMember);
 
         assertThat(memberDao.isMemberExists(authMember)).isTrue();
-    }
-
-    @DisplayName("중복된 사용자는 저장할 수 없다.")
-    @Test
-    void save_fail() {
-        AuthMember authMember = AUTH_MEMBER3;
-
-        memberDao.save(authMember);
-        assertThatThrownBy(() -> memberDao.save(authMember))
-                .isInstanceOf(DaoDuplicateException.class)
-                .hasMessage("이메일이 중복되었습니다.");
     }
 
     @Test
