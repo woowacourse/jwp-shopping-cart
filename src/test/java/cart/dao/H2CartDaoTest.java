@@ -46,7 +46,7 @@ class H2CartDaoTest {
     //then
     final List<CartEntity> carts = getCarts();
     final CartEntity findEntity = carts.get(0);
-    assertThat(carts.size()).isEqualTo(1);
+    assertThat(carts).hasSize(1);
     assertThat(findEntity)
         .usingRecursiveComparison()
         .ignoringFields("id")
