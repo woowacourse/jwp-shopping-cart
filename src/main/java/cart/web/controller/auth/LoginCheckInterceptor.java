@@ -1,7 +1,7 @@
 package cart.web.controller.auth;
 
-import cart.domain.user.User;
 import cart.exception.UnAuthorizedException;
+import cart.web.controller.cart.dto.AuthCredentials;
 import cart.web.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,10 +21,12 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
-        final User user = BasicAuthorizationExtractor.extract(request);
-        if (userService.isExistUser(user)) {
+        final AuthCredentials authCredentials = BasicAuthorizationExtractor.extract(request);
+        request.setAttribute("authCredentials", authCredentials);
+        if (userService.isExistUser(authCredentials)) {
             return true;
         }
+
         throw new UnAuthorizedException();
     }
 }

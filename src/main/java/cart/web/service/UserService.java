@@ -2,6 +2,7 @@ package cart.web.service;
 
 import cart.domain.user.User;
 import cart.domain.user.UserRepository;
+import cart.web.controller.cart.dto.AuthCredentials;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +24,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public boolean isExistUser(final User user) {
+    public boolean isExistUser(final AuthCredentials authCredentials) {
         final Optional<User> userOptional = userRepository.findUserByEmailAndPassword(
-                user.getUserEmailValue(), user.getUserPasswordValue());
+                authCredentials.getEmail(), authCredentials.getPassword());
         return userOptional.isPresent();
     }
 }

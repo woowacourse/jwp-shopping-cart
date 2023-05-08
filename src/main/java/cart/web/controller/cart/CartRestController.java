@@ -1,8 +1,8 @@
 package cart.web.controller.cart;
 
 import cart.domain.cart.CartProduct;
-import cart.domain.user.UserEmail;
 import cart.web.controller.auth.AuthorizedUser;
+import cart.web.controller.cart.dto.AuthCredentials;
 import cart.web.controller.cart.dto.CartResponse;
 import cart.web.service.CartService;
 import org.slf4j.Logger;
@@ -32,24 +32,24 @@ public class CartRestController {
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<Void> addProduct(@AuthorizedUser UserEmail userEmail,
+    public ResponseEntity<Void> addProduct(@AuthorizedUser AuthCredentials authCredentials,
                                            @PathVariable Long productId) {
-        final Long addedProductId = cartService.add(userEmail, productId);
+        final Long addedProductId = cartService.add(authCredentials, productId);
 
         return ResponseEntity.created(URI.create("/cart/" + addedProductId)).build();
     }
 
     @DeleteMapping("/{cartProductId}")
-    public ResponseEntity<Void> deleteProduct(@AuthorizedUser UserEmail userEmail,
+    public ResponseEntity<Void> deleteProduct(@AuthorizedUser AuthCredentials authCredentials,
                                               @PathVariable Long cartProductId) {
-        cartService.delete(userEmail, cartProductId);
+        cartService.delete(authCredentials, cartProductId);
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<CartResponse>> getProducts(@AuthorizedUser UserEmail userEmail) {
-        final List<CartProduct> cartProducts = cartService.getCartProducts2(userEmail);
+    public ResponseEntity<List<CartResponse>> getProducts(@AuthorizedUser AuthCredentials authCredentials) {
+        final List<CartProduct> cartProducts = cartService.getCartProducts2(authCredentials);
         final List<CartResponse> productResponses = cartProducts.stream()
                 .map(product -> new CartResponse(product.getCartProductId(), product.getProductId(), product.getProductNameValue(),
                         product.getImageUrlValue(), product.getPriceValue(), product.getCategory()))

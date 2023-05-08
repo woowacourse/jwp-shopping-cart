@@ -1,7 +1,7 @@
 package cart.web.controller.auth;
 
-import cart.domain.user.User;
 import cart.exception.UnAuthorizedException;
+import cart.web.controller.cart.dto.AuthCredentials;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ public final class BasicAuthorizationExtractor {
     private BasicAuthorizationExtractor() {
     }
 
-    public static User extract(HttpServletRequest request) {
+    public static AuthCredentials extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
         if (header == null) {
             throw new UnAuthorizedException();
@@ -29,7 +29,7 @@ public final class BasicAuthorizationExtractor {
             String email = credentials[0];
             String password = credentials[1];
 
-            return new User(email, password);
+            return new AuthCredentials(email, password);
         }
         throw new UnAuthorizedException();
     }
