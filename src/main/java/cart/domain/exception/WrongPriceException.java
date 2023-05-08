@@ -1,9 +1,12 @@
 package cart.domain.exception;
 
-public class WrongPriceException extends RuntimeException {
+import cart.controller.exceptionhandler.CustomException;
+import java.util.Arrays;
 
-    public WrongPriceException(Language language) {
-        super(language.msg);
+public class WrongPriceException extends RuntimeException implements CustomException {
+
+    public WrongPriceException() {
+        super();
     }
 
     public enum Language {
@@ -16,6 +19,18 @@ public class WrongPriceException extends RuntimeException {
         Language(String msg) {
             this.msg = msg;
         }
+    }
+
+    @Override
+    public String findMessageByLanguage(String language) {
+        if (language == null) {
+            return Language.KO.msg;
+        }
+        Language matchingLanguage = Arrays.stream(Language.values())
+                .filter(lan -> language.contains(lan.name()))
+                .findFirst()
+                .orElse(Language.KO);
+        return matchingLanguage.msg;
     }
 
 }

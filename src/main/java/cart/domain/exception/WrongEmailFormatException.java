@@ -1,9 +1,12 @@
 package cart.domain.exception;
 
-public class WrongEmailFormatException extends RuntimeException {
+import cart.controller.exceptionhandler.CustomException;
+import java.util.Arrays;
 
-    public WrongEmailFormatException(Language language) {
-        super(language.msg);
+public class WrongEmailFormatException extends RuntimeException implements CustomException {
+
+    public WrongEmailFormatException() {
+        super();
     }
 
     public enum Language {
@@ -16,6 +19,18 @@ public class WrongEmailFormatException extends RuntimeException {
         Language(String msg) {
             this.msg = msg;
         }
+    }
+
+    @Override
+    public String findMessageByLanguage(String language) {
+        if (language == null) {
+            return Language.KO.msg;
+        }
+        Language matchingLanguage = Arrays.stream(Language.values())
+                .filter(lan -> language.contains(lan.name()))
+                .findFirst()
+                .orElse(Language.KO);
+        return matchingLanguage.msg;
     }
 
 }

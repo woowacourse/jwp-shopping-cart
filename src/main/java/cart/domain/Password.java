@@ -1,7 +1,6 @@
 package cart.domain;
 
 import cart.domain.exception.WrongPasswordFormatException;
-import cart.domain.exception.WrongPasswordFormatException.Language;
 
 public class Password {
 
@@ -17,7 +16,7 @@ public class Password {
 
     private void validate(final String password) {
         if (password.length() < MIN_LENGTH || password.length() > MAX_LENGTH) {
-            throw new WrongPasswordFormatException(Language.KO);
+            throw new WrongPasswordFormatException();
         }
     }
 

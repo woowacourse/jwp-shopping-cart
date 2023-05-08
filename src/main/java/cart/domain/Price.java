@@ -1,7 +1,6 @@
 package cart.domain;
 
 import cart.domain.exception.WrongPriceException;
-import cart.domain.exception.WrongPriceException.Language;
 
 public class Price {
 
@@ -18,7 +17,7 @@ public class Price {
         if (price > AMOUNT_LIMIT) {
             return;
         }
-        throw new WrongPriceException(Language.KO);
+        throw new WrongPriceException();
     }
 
     public int getValue() {

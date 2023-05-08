@@ -4,7 +4,6 @@ import cart.dao.CartDao;
 import cart.service.dto.CartDto;
 import cart.service.dto.CartInfoDto;
 import cart.service.exception.DuplicateCartException;
-import cart.service.exception.DuplicateCartException.Language;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ public class CartService {
     public long save(final CartDto cartDto, final long customerId) {
         boolean isProductAlreadyInCart = cartDao.isProductIdInCustomerCart(customerId, cartDto.getProductId());
         if (isProductAlreadyInCart) {
-            throw new DuplicateCartException(Language.KO);
+            throw new DuplicateCartException();
         }
         return cartDao.insert(customerId, cartDto.getProductId());
     }

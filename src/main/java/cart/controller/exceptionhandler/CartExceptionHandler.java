@@ -12,11 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice
 public class CartExceptionHandler {
 
     private static final String UNEXPECTED_EXCEPTION_MESSAGE = "관리자에게 문의하세요.";
+    private static final String LANGUAGE_PARAM = "lan";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodValidException(MethodArgumentNotValidException exception) {
@@ -25,23 +27,28 @@ public class CartExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
+    public ResponseEntity<String> handleUnauthorizedException(WebRequest request, UnauthorizedException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(getExceptionMessageByLanguage(request, exception));
     }
 
     @ExceptionHandler(DuplicateCartException.class)
-    public ResponseEntity<String> handleDuplicateCartException(DuplicateCartException exception) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
+    public ResponseEntity<String> handleDuplicateCartException(WebRequest request, DuplicateCartException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(getExceptionMessageByLanguage(request, exception));
     }
 
     @ExceptionHandler({WrongEmailFormatException.class, WrongPasswordFormatException.class, WrongPriceException.class,
             WrongProductNameException.class, InvalidEmailException.class})
-    public ResponseEntity<String> handleWrongValueException(RuntimeException runtimeException) {
-        return ResponseEntity.badRequest().body(runtimeException.getMessage());
+    public ResponseEntity<String> handleWrongValueException(WebRequest request, CustomException exception) {
+        return ResponseEntity.badRequest().body(getExceptionMessageByLanguage(request, exception));
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleUnexpectedException(RuntimeException exception) {
         return ResponseEntity.internalServerError().body(UNEXPECTED_EXCEPTION_MESSAGE);
+    }
+
+    private String getExceptionMessageByLanguage(WebRequest request, CustomException exception) {
+        String lan = request.getParameter(LANGUAGE_PARAM);
+        return exception.findMessageByLanguage(lan);
     }
 }

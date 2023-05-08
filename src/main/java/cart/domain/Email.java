@@ -1,7 +1,6 @@
 package cart.domain;
 
 import cart.domain.exception.WrongEmailFormatException;
-import cart.domain.exception.WrongEmailFormatException.Language;
 import java.util.regex.Pattern;
 
 public class Email {
@@ -19,7 +18,7 @@ public class Email {
         if (EMAIL_PATTERN.matcher(email).matches()) {
             return;
         }
-        throw new WrongEmailFormatException(Language.KO);
+        throw new WrongEmailFormatException();
     }
 
     public String getEmail() {

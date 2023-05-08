@@ -8,7 +8,6 @@ import cart.domain.Password;
 import cart.service.dto.CustomerInfoDto;
 import cart.service.dto.SignUpDto;
 import cart.service.exception.InvalidEmailException;
-import cart.service.exception.InvalidEmailException.Language;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -32,20 +31,20 @@ public class CustomerService {
     private void validateEmailExistence(final Email email) {
         customerDao.findByEmail(email.getEmail())
                 .ifPresent(customer -> {
-                    throw new InvalidEmailException(Language.KO);
+                    throw new InvalidEmailException();
                 });
     }
 
     public CustomerInfoDto findByEmail(final String email) {
         return customerDao.findByEmail(email)
                 .map(CustomerInfoDto::fromEntity)
-                .orElseThrow(() -> new InvalidEmailException(Language.KO));
+                .orElseThrow(InvalidEmailException::new);
     }
 
     public long findIdByEmail(final String email) {
         return customerDao.findByEmail(email)
                 .map(CustomerEntity::getId)
-                .orElseThrow(() -> new UnauthorizedException(UnauthorizedException.Language.KO));
+                .orElseThrow(UnauthorizedException::new);
     }
 
     public List<CustomerInfoDto> findAll() {

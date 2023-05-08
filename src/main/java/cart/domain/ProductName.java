@@ -1,7 +1,6 @@
 package cart.domain;
 
 import cart.domain.exception.WrongProductNameException;
-import cart.domain.exception.WrongProductNameException.Language;
 
 public class ProductName {
 
@@ -17,7 +16,7 @@ public class ProductName {
 
     private void validate(final String name) {
         if (name.length() > MAX_LENGTH || name.length() < MIN_LENGTH) {
-            throw new WrongProductNameException(Language.KO);
+            throw new WrongProductNameException();
         }
     }
 
