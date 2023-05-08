@@ -44,6 +44,6 @@ class UserDaoTest {
     @Test
     void 조회_테스트() {
         final List<UserEntity> userEntities = userDao.findAll();
-        assertThat(userEntities).hasSize(0);
+        assertThat(userEntities).isEmpty();
     }
 }
