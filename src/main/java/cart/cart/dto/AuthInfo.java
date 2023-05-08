@@ -1,4 +1,4 @@
-package cart.member.dto;
+package cart.cart.dto;
 
 public class AuthInfo {
 
