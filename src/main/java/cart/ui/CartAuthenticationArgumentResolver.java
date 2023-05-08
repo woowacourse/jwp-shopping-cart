@@ -1,7 +1,6 @@
 package cart.ui;
 
 import cart.auth.AuthorizationExtractor;
-import cart.auth.BasicAuthorizationExtractor;
 import cart.entity.Member;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -15,10 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class CartAuthenticationArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final AuthorizationExtractor<Member> basicAuthorizationExtractor;
+    private final AuthorizationExtractor<Member> authorizationExtractor;
 
-    public CartAuthenticationArgumentResolver(BasicAuthorizationExtractor basicAuthorizationExtractor) {
-        this.basicAuthorizationExtractor = basicAuthorizationExtractor;
+    public CartAuthenticationArgumentResolver(AuthorizationExtractor authorizationExtractor) {
+        this.authorizationExtractor = authorizationExtractor;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class CartAuthenticationArgumentResolver implements HandlerMethodArgument
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
-        Member member = basicAuthorizationExtractor.extract(request);
+        Member member = authorizationExtractor.extract(request);
         return member.getEmail();
     }
 }
