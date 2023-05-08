@@ -1,6 +1,7 @@
 package cart.exception;
 
 import cart.exception.customexceptions.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -67,9 +69,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleUnexpectedException() {
+    public ResponseEntity<ExceptionResponse> handleUnexpectedException(final Exception e) {
+        log.info(e.getMessage());
         return ResponseEntity.internalServerError().body(
                 new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), DEFAULT_MESSAGE));
     }
-
 }
