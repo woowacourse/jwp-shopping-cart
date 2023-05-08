@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 
 @Component
@@ -43,7 +44,7 @@ public class ProductDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public List<ProductEntity> findProductsByIds(final List<Long> ids) {
+    public List<ProductEntity> findProductsByIds(final Collection<Long> ids) {
         final String sql = "SELECT * FROM PRODUCT P WHERE P.id IN (:ids)";
 
         final MapSqlParameterSource parameterSource =

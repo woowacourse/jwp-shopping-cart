@@ -6,6 +6,7 @@ import cart.service.dto.ProductSearchResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class ProductQueryService {
         return mapToProductSearchResponses(productDao.findAll());
     }
 
-    public List<ProductSearchResponse> searchProductsByIds(final List<Long> productIds) {
+    public List<ProductSearchResponse> searchProductsByIds(final Collection<Long> productIds) {
         return mapToProductSearchResponses(productDao.findProductsByIds(productIds));
     }
 
