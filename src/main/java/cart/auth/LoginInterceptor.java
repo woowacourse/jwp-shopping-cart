@@ -1,10 +1,10 @@
 package cart.auth;
 
-import cart.exception.ErrorCode;
+import cart.exception.AuthUserDetailNullException;
+import cart.exception.UnAuthorizedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,10 +20,10 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws AuthUserDetailNullException, UnAuthorizedException {
         AuthUserDetail authUserDetail = authorizationExtractor.extract(request);
         if (authUserDetail == null) {
-            throw new AuthenticationException(ErrorCode.INVALID_AUTH_HEADER.getMessage());
+            throw new AuthUserDetailNullException();
         }
         authService.validateLogin(authUserDetail.getEmail(), authUserDetail.getPassword());
 

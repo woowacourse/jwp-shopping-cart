@@ -1,9 +1,8 @@
 package cart.domain;
 
-import cart.exception.ErrorCode;
+import cart.exception.InvalidProductIdException;
 import cart.domain.generic.Name;
 import cart.domain.generic.Price;
-import cart.exception.BusinessIllegalArgumentException;
 
 import java.util.Objects;
 
@@ -48,7 +47,7 @@ public class Product {
 
     private void validate(Long productId) {
         if (productId != null && productId < 0) {
-            throw new BusinessIllegalArgumentException(ErrorCode.NOT_VALID_ID);
+            throw new InvalidProductIdException();
         }
     }
 

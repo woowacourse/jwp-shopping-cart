@@ -1,18 +1,10 @@
 package cart.dto.response;
 
-import cart.exception.ErrorCode;
-
 public class ErrorResponse {
-    private final int statusCode;
     private final String errorMessage;
 
-    public ErrorResponse(ErrorCode errorCode) {
-        this.statusCode = errorCode.getStatusCode();
-        this.errorMessage = errorCode.getMessage();
-    }
-
-    public int getStatusCode() {
-        return statusCode;
+    public ErrorResponse(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     public String getErrorMessage() {

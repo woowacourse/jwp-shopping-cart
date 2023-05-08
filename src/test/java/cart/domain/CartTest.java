@@ -1,6 +1,6 @@
 package cart.domain;
 
-import cart.exception.BusinessProductIdNullException;
+import cart.exception.InvalidProductIdException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ class CartTest {
     @Test
     void generate_cart_fail() {
         assertThatThrownBy(() -> new Cart(2L, null))
-                .isInstanceOf(BusinessProductIdNullException.class);
+                .isInstanceOf(InvalidProductIdException.class);
     }
 
     @Test

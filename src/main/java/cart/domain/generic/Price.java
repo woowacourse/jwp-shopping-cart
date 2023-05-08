@@ -1,7 +1,7 @@
 package cart.domain.generic;
 
 import cart.exception.ErrorCode;
-import cart.exception.BusinessIllegalArgumentException;
+import cart.exception.InvalidPriceException;
 
 import java.util.Objects;
 
@@ -23,7 +23,7 @@ public class Price {
 
     private void validate(Long price) {
         if (price < 0) {
-            throw new BusinessIllegalArgumentException(ErrorCode.NOT_VALID_PRICE);
+            throw new InvalidPriceException();
         }
     }
 

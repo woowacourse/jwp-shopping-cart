@@ -1,7 +1,6 @@
 package cart.domain;
 
-import cart.exception.BusinessProductIdNullException;
-import cart.exception.ErrorCode;
+import cart.exception.InvalidProductIdException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +18,7 @@ public class Cart {
 
     public Cart(Long memberId, List<Product> products) {
         if (products == null || products.stream().anyMatch(Product::isIdNull)) {
-            throw new BusinessProductIdNullException(ErrorCode.NULL_PRODUCT_ID);
+            throw new InvalidProductIdException();
         }
         this.memberId = memberId;
         this.products = new ArrayList<>(products);
@@ -27,8 +26,8 @@ public class Cart {
 
     public void add(Product product) {
         if (product.isIdNull()) {
-            throw new BusinessProductIdNullException(ErrorCode.NULL_PRODUCT_ID);
-        } 
+            throw new InvalidProductIdException();
+        }
         products.add(product);
     }
 

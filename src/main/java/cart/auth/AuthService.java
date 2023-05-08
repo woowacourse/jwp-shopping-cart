@@ -1,6 +1,8 @@
 package cart.auth;
 
 import cart.dao.MemberDao;
+import cart.exception.UnAuthorizedException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +16,11 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public long validateLogin(String email, String password) {
-        return memberDao.findByEmailAndPassword(email, password);
+    public long validateLogin(String email, String password) throws UnAuthorizedException {
+        try {
+            return memberDao.findByEmailAndPassword(email, password);
+        } catch (EmptyResultDataAccessException e) {
+            throw new UnAuthorizedException();
+        }
     }
 }
