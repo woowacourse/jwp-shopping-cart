@@ -1,12 +1,9 @@
 package cart.service;
 
-import cart.controller.dto.ItemRequest;
-import cart.controller.dto.ItemResponse;
-import cart.dao.ItemDao;
-import cart.dao.dto.ItemDto;
-import cart.exception.ErrorStatus;
-import cart.exception.ItemException;
-import cart.model.Item;
+import cart.controller.dto.request.UpdateItemRequest;
+import cart.domain.item.Item;
+import cart.repository.ItemRepository;
+import cart.service.dto.ItemDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -16,48 +13,39 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ItemService {
 
-    private final ItemDao itemDao;
+    private final ItemRepository itemRepository;
 
-    public ItemService(ItemDao itemDao) {
-        this.itemDao = itemDao;
+    public ItemService(final ItemRepository itemRepository) {
+        this.itemRepository = itemRepository;
     }
 
     @Transactional
-    public ItemResponse add(ItemRequest itemRequest) {
-        Item item = new Item(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
-        Long savedId = itemDao.insert(item);
+    public ItemDto add(String name, String imageUrl, int price) {
+        Item item = new Item(name, imageUrl, price);
+        Item insertedItem = itemRepository.insert(item);
 
-        ItemDto itemDto = itemDao.findById(savedId)
-                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
-
-        return ItemResponse.from(itemDto);
+        return ItemDto.from(insertedItem);
     }
 
-    public List<ItemResponse> findAll() {
-        return itemDao.findAll()
+    public List<ItemDto> findAll() {
+        return itemRepository.findAll()
                 .stream()
-                .map(ItemResponse::from)
+                .map(ItemDto::from)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public ItemResponse update(Long id, ItemRequest itemRequest) {
-        itemDao.findById(id)
-                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
+    public ItemDto update(Long id, UpdateItemRequest updateItemRequest) {
+        Item updateItem = new Item(id, updateItemRequest.getName(), updateItemRequest.getImageUrl(),
+                updateItemRequest.getPrice());
 
-        Item item = new Item(itemRequest.getName(), itemRequest.getImageUrl(), itemRequest.getPrice());
-        itemDao.update(id, item);
+        itemRepository.update(updateItem);
 
-        ItemDto updatedItemDto = itemDao.findById(id)
-                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
-        return ItemResponse.from(updatedItemDto);
+        return ItemDto.from(updateItem);
     }
 
     @Transactional
     public void delete(Long id) {
-        itemDao.findById(id)
-                .orElseThrow(() -> new ItemException(ErrorStatus.ITEM_NOT_FOUND_ERROR));
-
-        itemDao.delete(id);
+        itemRepository.delete(id);
     }
 }

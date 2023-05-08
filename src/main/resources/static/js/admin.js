@@ -52,20 +52,7 @@ const createProduct = (product) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
-        let message = error.response.data.message;
-
-        if (typeof message === 'string') {
-            alert(message);
-            return;
-        }
-
-        let fields = Object.keys(message);
-        let alertMessage = "";
-
-        for (let i = 0; i < fields.length; i++) {
-           alertMessage += message[fields[i]] + "\n";
-        }
-        alert(alertMessage)
+        alert(error.response.data.message);
         console.error(error);
     });
 };
@@ -80,20 +67,7 @@ const updateProduct = (product) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
-        let message = error.response.data.message;
-
-        if (typeof message === 'string') {
-            alert(message);
-            return;
-        }
-
-        let fields = Object.keys(message);
-        let alertMessage = "";
-
-        for (let i = 0; i < fields.length; i++) {
-            alertMessage += message[fields[i]] + "\n";
-        }
-        alert(alertMessage)
+        alert(error.response.data.message);
         console.error(error);
     });
 };

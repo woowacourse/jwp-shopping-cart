@@ -3,8 +3,9 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.dto.ItemDto;
-import cart.model.Item;
+import cart.domain.item.Item;
+import cart.repository.dao.ItemDao;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,68 +16,61 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class ItemDaoTest {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
     ItemDao itemDao;
+    Item savedItem;
 
     @BeforeEach
-    void setUp() {
+    void setUp(@Autowired JdbcTemplate jdbcTemplate) {
         itemDao = new ItemDao(jdbcTemplate);
+        savedItem = itemDao.insert(createMacBookItem());
     }
 
     @Test
     @DisplayName("상품을 저장한다")
     void insertSuccess() {
-        Item item = new Item("맥북", "image", 10000);
+        Item actual = itemDao.insert(createMacBookItem());
 
-        Long savedId = itemDao.insert(item);
-
-        assertThat(savedId).isNotNull();
+        assertAll(
+                () -> assertThat(actual).isNotNull(),
+                () -> assertThat(actual.getId()).isPositive(),
+                () -> assertThat(actual.getName()).isEqualTo("맥북프로"),
+                () -> assertThat(actual.getImageUrl()).isEqualTo("https://image.com"),
+                () -> assertThat(actual.getPrice()).isEqualTo(10_000)
+        );
     }
 
     @Test
     @DisplayName("지정된 id의 상품을 조회한다")
     void selectSuccess() {
-        Item item = new Item("맥북", "image", 10000);
-        Long savedId = itemDao.insert(item);
-
-        ItemDto findItem = itemDao.findById(savedId).get();
+        Optional<Item> actual = itemDao.findById(savedItem.getId());
 
         assertAll(
-                () -> assertThat(findItem.getId()).isEqualTo(savedId),
-                () -> assertThat(findItem.getName()).isEqualTo(item.getName()),
-                () -> assertThat(findItem.getImageUrl()).isEqualTo(item.getImageUrl()),
-                () -> assertThat(findItem.getPrice()).isEqualTo(item.getPrice())
+                () -> assertThat(actual).isPresent(),
+                () -> assertThat(actual.get().getName()).isEqualTo("맥북프로"),
+                () -> assertThat(actual.get().getImageUrl()).isEqualTo("https://image.com"),
+                () -> assertThat(actual.get().getPrice()).isEqualTo(10_000)
         );
     }
 
     @Test
     @DisplayName("지정된 id의 상품을 변경한다")
     void updateSuccess() {
-        Item originItem = new Item("맥북", "image", 10000);
-        Long savedId = itemDao.insert(originItem);
-        Item updateItem = new Item(originItem.getName(), originItem.getImageUrl(), 50000);
+        Item updateItem = new Item(savedItem.getId(), "맥북", "https://image.net", 50_000);
 
-        itemDao.update(savedId, updateItem);
-        ItemDto findItem = itemDao.findById(savedId).get();
+        int updateRecordCount = itemDao.update(updateItem);
 
-        assertAll(
-                () -> assertThat(findItem.getId()).isEqualTo(savedId),
-                () -> assertThat(findItem.getName()).isEqualTo(originItem.getName()),
-                () -> assertThat(findItem.getImageUrl()).isEqualTo(originItem.getImageUrl()),
-                () -> assertThat(findItem.getPrice()).isEqualTo(updateItem.getPrice())
-        );
+        assertThat(updateRecordCount).isOne();
     }
 
     @Test
     @DisplayName("지정된 id의 상품을 삭제한다")
-    void deleteSuccess() {
-        Item item = new Item("맥북", "image", 10000);
-        Long savedId = itemDao.insert(item);
+    void deleteByIdSuccess() {
+        int deletedRecordCount = itemDao.deleteById(savedItem.getId());
 
-        int deletedCount = itemDao.delete(savedId);
+        assertThat(deletedRecordCount).isOne();
+    }
 
-        assertThat(deletedCount).isEqualTo(1);
+    private Item createMacBookItem() {
+        return new Item("맥북프로", "https://image.com", 10_000);
     }
 }

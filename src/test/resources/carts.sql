@@ -1,0 +1,1 @@
+INSERT INTO CARTS(user_id) VALUES(1);
