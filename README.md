@@ -22,9 +22,9 @@
 - [x] 에러 발생 시 클라이언트에서 alert 창 띄우기
 - [x] @DirtiesContext를 사용한 이유
 - [x] user와 join을 한 번 더 하지 않고 서브쿼리를 작성한 이유
-- [ ] Interceptor와 ArgumentResolver, Filter 역할 정리
-- [ ] equals, hashCode 를 재구현 -> 테스트 코드를 위해 프로덕션 코드를 수정한 것?
-- [ ] 어떤 면에서 Response 객체가 Entity 느낌이라고 생각했는지
+- [x] Interceptor와 ArgumentResolver, Filter 역할 정리
+- [x] equals, hashCode 를 재구현 -> 테스트 코드를 위해 프로덕션 코드를 수정한 것?
+- [x] 어떤 면에서 Response 객체가 Entity 느낌이라고 생각했는지
 
 - [ ] API 요청 확인 시 .http 사용해보기
 - [ ] E2E 테스트 코드 작성하기

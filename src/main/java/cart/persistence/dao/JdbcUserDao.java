@@ -36,7 +36,8 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public Optional<UserEntity> findById(Long id) {
-        throw new UnsupportedOperationException("지원되지 않는 기능입니다");
+        final String sql = "SELECT email, password  FROM user_info WHERE user_id = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, actorRowMapper, id));
     }
 
     @Override

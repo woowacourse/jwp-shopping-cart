@@ -2,9 +2,11 @@ package cart.auth.infrastructure;
 
 import cart.dto.UserAuthInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Component
 public class BasicAuthorizationExtractor implements AuthorizationExtractor<UserAuthInfo> {
     private static final String BASIC_TYPE = "basic";
     private static final String DELIMITER = ":";
@@ -16,7 +18,6 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<UserA
         if (header == null) {
             return null;
         }
-
         if ((header.toLowerCase().startsWith(BASIC_TYPE))) {
             String[] credentials = getCredentials(header);
 

@@ -1,6 +1,7 @@
 package cart.mvcconfig;
 
 import cart.auth.infrastructure.BasicAuthorizationExtractor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -10,9 +11,12 @@ import java.util.List;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
+    @Autowired
+    private UserAuthInterceptor userAuthInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new UserAuthInterceptor(new BasicAuthorizationExtractor())).addPathPatterns("/carts/**");
+        registry.addInterceptor(userAuthInterceptor).addPathPatterns("/carts/**");
     }
 
     @Override
