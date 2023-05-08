@@ -3,18 +3,26 @@ package cart.dao;
 import cart.domain.entity.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
 public class JdbcProductDao implements ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert simpleInsert;
 
-    public JdbcProductDao(JdbcTemplate jdbcTemplate) {
+    public JdbcProductDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
     }
 
     private final RowMapper<Product> productEntityRowMapper = (resultSet, rowNum) -> Product.of(
@@ -39,8 +47,8 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public long insert(final Product product) {
-        final String sql = "INSERT INTO product(name, image, price) VALUES (?, ?, ?)";
-        return jdbcTemplate.update(sql, product.getName(), product.getImage(), product.getPrice());
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
+        return simpleInsert.executeAndReturnKey(parameters).longValue();
     }
 
     @Override
