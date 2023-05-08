@@ -13,17 +13,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-class MemberServiceTest {
+class AuthServiceTest {
 
     private MemberDao memberDao;
-    private MemberService memberService;
+    private AuthService authService;
 
     @BeforeEach
     void setUp() {
         memberDao = Mockito.mock(MemberDao.class);
-        memberService = new MemberService(memberDao);
+        authService = new AuthService(memberDao);
     }
-
+    
     @Test
     @DisplayName("이메일과 비밀번호로 로그인한다")
     void login() {
@@ -32,7 +32,7 @@ class MemberServiceTest {
                 .willReturn(Optional.of(new Member((long) 1, "a@a.com", "password1", "애쉬")));
 
         // when
-        Member member = memberService.login("a@a.com", "password1");
+        Member member = authService.login("a@a.com", "password1");
 
         // then
         assertThat(member.getName()).isEqualTo("애쉬");
@@ -46,7 +46,7 @@ class MemberServiceTest {
                 .willReturn(Optional.empty());
 
         // when then
-        assertThatThrownBy(() -> memberService.login("b@b.com", "password3"))
+        assertThatThrownBy(() -> authService.login("b@b.com", "password3"))
                 .isInstanceOf(UnauthenticatedException.class);
     }
 }
