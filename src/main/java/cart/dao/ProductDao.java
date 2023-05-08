@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -85,11 +84,8 @@ public class ProductDao {
             + "       product.updated_at "
             + "FROM product "
             + "WHERE id = ?";
-        try {
-            final Product product = jdbcTemplate.queryForObject(sql, rowMapper, id);
-            return Optional.ofNullable(product);
-        } catch (final EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.query(sql, rowMapper, id)
+            .stream()
+            .findFirst();
     }
 }

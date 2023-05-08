@@ -23,17 +23,14 @@ public class ProductService {
     @Transactional
     public ProductDto create(final ProductCreateDto productCreateDto) {
         final Product product = new Product(null, productCreateDto.getName(),
-            productCreateDto.getPrice(),
-            productCreateDto.getImageUrl(), null, null);
+            productCreateDto.getPrice(), productCreateDto.getImageUrl(), null, null);
         final Product savedProduct = productDao.save(product);
         return ProductDto.of(savedProduct);
     }
 
     public List<ProductDto> findAll() {
         final List<Product> products = productDao.findAll();
-        return products.stream()
-            .map(ProductDto::of)
-            .collect(Collectors.toUnmodifiableList());
+        return products.stream().map(ProductDto::of).collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional

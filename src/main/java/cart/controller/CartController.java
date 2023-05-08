@@ -2,9 +2,9 @@ package cart.controller;
 
 import cart.auth.AuthInfo;
 import cart.domain.cart.dto.CartDto;
-import cart.dto.response.CartResponse;
 import cart.domain.cart.service.CartService;
 import cart.domain.member.dto.MemberDto;
+import cart.dto.response.CartResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
@@ -27,8 +27,7 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartResponse>> getCarts(
-        @AuthInfo final MemberDto memberDto) {
+    public ResponseEntity<List<CartResponse>> getCarts(@AuthInfo final MemberDto memberDto) {
         final List<CartDto> cartDtos = cartService.findByEmail(memberDto.getEmail());
         final List<CartResponse> responses = cartDtos.stream()
             .map(CartResponse::of)

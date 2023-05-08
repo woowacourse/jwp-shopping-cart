@@ -41,7 +41,7 @@ public class CartDao {
         return new Cart(getId(keyHolder), cart.getProduct(), cart.getMember(), now, now);
     }
 
-    private long getId(final KeyHolder keyHolder) {
+    private Long getId(final KeyHolder keyHolder) {
         return Long.parseLong(Objects.requireNonNull(keyHolder.getKeys()).get("id").toString());
     }
 

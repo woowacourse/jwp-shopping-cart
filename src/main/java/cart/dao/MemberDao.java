@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -56,12 +55,9 @@ public class MemberDao {
         final String sql =
             "SELECT member.id, member.email, member.password, member.created_at, member.updated_at "
                 + "FROM member WHERE email = ?";
-        try {
-            final Member member = jdbcTemplate.queryForObject(sql, rowMapper, email);
-            return Optional.ofNullable(member);
-        } catch (final EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.query(sql, rowMapper, email)
+            .stream()
+            .findFirst();
     }
 
     public List<Member> findAll() {

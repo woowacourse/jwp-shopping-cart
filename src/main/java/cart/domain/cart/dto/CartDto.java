@@ -2,9 +2,7 @@ package cart.domain.cart.dto;
 
 import cart.domain.cart.entity.Cart;
 import cart.domain.member.dto.MemberDto;
-import cart.domain.member.entity.Member;
 import cart.domain.product.dto.ProductDto;
-import cart.domain.product.entity.Product;
 import java.time.LocalDateTime;
 
 public class CartDto {
@@ -16,8 +14,7 @@ public class CartDto {
     private final LocalDateTime updatedAt;
 
     public CartDto(final Long id, final ProductDto productDto, final MemberDto memberDto,
-        final LocalDateTime createdAt,
-        final LocalDateTime updatedAt) {
+        final LocalDateTime createdAt, final LocalDateTime updatedAt) {
         this.id = id;
         this.productDto = productDto;
         this.memberDto = memberDto;

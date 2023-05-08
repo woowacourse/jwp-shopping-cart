@@ -27,26 +27,26 @@ public class ViewController {
 
     @GetMapping("/")
     public String home(final Model model) {
-        final List<ProductResponse> productResponses = makeResponse(productService.findAll());
-        model.addAttribute("products", productResponses);
+        final List<ProductResponse> responses = makeResponses(productService.findAll());
+        model.addAttribute("products", responses);
         return "index";
     }
 
     @GetMapping("/admin")
     public String admin(final Model model) {
-        final List<ProductResponse> productResponses = makeResponse(productService.findAll());
-        model.addAttribute("products", productResponses);
+        final List<ProductResponse> responses = makeResponses(productService.findAll());
+        model.addAttribute("products", responses);
         return "admin";
     }
 
     @GetMapping("/products")
     @ResponseBody
     public ResponseEntity<List<ProductResponse>> findAll() {
-        final List<ProductResponse> productResponses = makeResponse(productService.findAll());
-        return ResponseEntity.ok(productResponses);
+        final List<ProductResponse> responses = makeResponses(productService.findAll());
+        return ResponseEntity.ok(responses);
     }
 
-    private List<ProductResponse> makeResponse(final List<ProductDto> productDtos) {
+    private List<ProductResponse> makeResponses(final List<ProductDto> productDtos) {
         return productDtos.stream()
             .map(ProductResponse::of)
             .collect(Collectors.toUnmodifiableList());
