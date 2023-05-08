@@ -62,6 +62,9 @@ public class JdbcItemDao implements ItemDao {
 
     @Override
     public int update(final Long id, final CreateItem item) {
+        if (isItemExistsByCreateItem(item)) {
+            throw new ServiceIllegalArgumentException(EXISTS_ITEM_MESSAGE);
+        }
         String sql = "update item set name = ?, item_url = ?, price = ? where id = ?";
 
         return jdbcTemplate.update(sql, item.getName(), item.getImageUrl(), item.getPrice(), id);
