@@ -35,9 +35,9 @@ public class CartController {
 
     @PostMapping("/carts")
     public ResponseEntity<Void> addProductToCart(Auth auth, @RequestBody @Valid CartRequestDto cartRequestDto) {
-        CartDto cartDto = new CartDto(Email.from(auth.getEmail()), cartRequestDto.getId());
+        CartDto cartDto = new CartDto(Email.from(auth.getEmail()), cartRequestDto.getProductId());
         cartService.save(cartDto);
-        return ResponseEntity.created(URI.create("carts"))
+        return ResponseEntity.created(URI.create("/cart"))
                 .build();
     }
 

@@ -25,7 +25,7 @@ public class ProductController {
     @PostMapping("/products")
     public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
         productService.add(productRequestDto.toDto());
-        return ResponseEntity.created(URI.create("/admin/products")).build();
+        return ResponseEntity.created(URI.create("")).build();
     }
 
     @PutMapping("/products/{id}")

@@ -5,17 +5,17 @@ import javax.validation.constraints.Positive;
 public class CartRequestDto {
 
     @Positive
-    private Long id;
+    private Long productId;
 
     public CartRequestDto() {
     }
 
-    public CartRequestDto(Long id) {
-        this.id = id;
+    public CartRequestDto(Long productId) {
+        this.productId = productId;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProductId() {
+        return productId;
     }
 
 }
