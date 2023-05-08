@@ -55,7 +55,7 @@ class CartControllerTest {
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when().post("/carts")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
