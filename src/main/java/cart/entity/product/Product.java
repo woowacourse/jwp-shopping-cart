@@ -1,4 +1,4 @@
-package cart.entity;
+package cart.entity.product;
 
 import cart.domain.Id;
 import cart.domain.ImgUrl;
@@ -36,7 +36,7 @@ public class Product {
         return imgUrl.getImgUrl();
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price.getPrice();
     }
 
@@ -51,5 +51,15 @@ public class Product {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name=" + name +
+                ", imgUrl=" + imgUrl +
+                ", price=" + price +
+                '}';
     }
 }

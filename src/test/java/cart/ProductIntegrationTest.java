@@ -65,7 +65,7 @@ public class ProductIntegrationTest {
                 .body(productRequest)
 
                 .when()
-                .post("/products")
+                .post("/admin/products")
 
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
@@ -87,7 +87,7 @@ public class ProductIntegrationTest {
                 .body(productRequest)
 
                 .when()
-                .put("/products/1")
+                .put("/admin/products/1")
 
                 .then()
                 .statusCode(HttpStatus.OK.value());
@@ -98,7 +98,7 @@ public class ProductIntegrationTest {
         RestAssured.given()
 
                 .when()
-                .delete("/products/1")
+                .delete("/admin/products/1")
 
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());

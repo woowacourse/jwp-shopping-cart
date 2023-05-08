@@ -1,6 +1,8 @@
 package cart.dao;
 
-import cart.entity.Product;
+import cart.entity.product.DbProductDao;
+import cart.entity.product.Product;
+import cart.entity.product.ProductDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @JdbcTest
 class DbProductDaoTest {
@@ -47,12 +50,12 @@ class DbProductDaoTest {
 
     @Test
     void updateTest() {
-//        productDao.save(new Product(1L, "깃짱", "gitchan.img", 1000));
-//        Product boxster = productDao.update(new Product(1L, "박스터", "boxster.img", 5000));
-//
-//        Product foundProduct = productDao.findById(boxster.getId());
-//
-//        assertTrue(boxster.getName().equals(foundProduct.getName()));
+        final Product gitchan = productDao.save(new Product("깃짱", "gitchan.img", 1000));
+        Product boxster = productDao.update(new Product(gitchan.getId(), "박스터", "boxster.img", 5000));
+
+        Product foundProduct = productDao.findById(boxster.getId());
+
+        assertTrue(boxster.getName().equals(foundProduct.getName()));
     }
 
     @Test
