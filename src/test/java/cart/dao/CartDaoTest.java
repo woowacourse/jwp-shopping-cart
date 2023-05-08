@@ -33,7 +33,7 @@ class CartDaoTest {
 
         final Cart cart = cartDao.findByUserId(1);
 
-        assertThat(cart.getProducts()).hasSize(5);
+        assertThat(cart.getCartItems()).hasSize(5);
     }
 
     @DisplayName("1번 유저의 장바구니를 모두 조회한다.")
@@ -41,7 +41,7 @@ class CartDaoTest {
     void findAllOfProductForMember1Test() {
         final Cart cart = cartDao.findByUserId(1);
 
-        assertThat(cart.getProducts()).hasSize(2);
+        assertThat(cart.getCartItems()).hasSize(2);
     }
 
     @DisplayName("1번 유저의 장바구니 상품을 지운다.")
@@ -51,7 +51,7 @@ class CartDaoTest {
 
         final Cart cart = cartDao.findByUserId(1);
 
-        assertThat(cart.getProducts()).hasSize(1);
+        assertThat(cart.getCartItems()).hasSize(1);
     }
 
     @DisplayName("삭제할 product가 없을 시 예외가 발생한다")

@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.controller.auth.LoginId;
 import cart.controller.dto.AddCartRequest;
+import cart.controller.dto.CartItemResponse;
 import cart.domain.cart.Cart;
 import cart.persistance.dao.CartDao;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @Validated
 @RestController
@@ -28,11 +30,12 @@ public class CartController {
     }
 
     @GetMapping("/cart-products")
-    public ResponseEntity<Cart> cartProducts(
+    public ResponseEntity<List<CartItemResponse>> cartProducts(
             @LoginId final Long memberId
     ) {
         final Cart cart = cartDao.findByUserId(memberId);
-        return ResponseEntity.ok().body(cart);
+        final List<CartItemResponse> response = CartItemResponse.createResponse(cart);
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/cart-products")

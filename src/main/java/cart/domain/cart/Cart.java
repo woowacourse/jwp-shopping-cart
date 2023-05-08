@@ -1,19 +1,17 @@
 package cart.domain.cart;
 
-import cart.domain.product.Product;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
 
-    private final List<Product> products;
+    private final List<CartItem> cartItems;
 
-    public Cart(final List<Product> products) {
-        this.products = products;
+    public Cart(final List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 
-    public List<Product> getProducts() {
-        return new ArrayList<>(products);
+    public List<CartItem> getCartItems() {
+        return new ArrayList<>(cartItems);
     }
 }
