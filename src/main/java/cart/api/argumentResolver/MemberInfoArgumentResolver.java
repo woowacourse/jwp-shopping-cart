@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 
-public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
+public class MemberInfoArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final int AUTH_VALUE_INDEX = 1;
     private static final String DELIMITER = ":";

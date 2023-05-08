@@ -12,7 +12,7 @@ import cart.dto.AuthInfo;
 import cart.dto.ProductResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
-import cart.exception.UserNotFoundException;
+import cart.exception.MemberNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -54,7 +54,7 @@ class CartServiceTest {
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> cartService.addToCart(authInfo, 1L))
-                .isInstanceOf(UserNotFoundException.class);
+                .isInstanceOf(MemberNotFoundException.class);
     }
 
     @Test

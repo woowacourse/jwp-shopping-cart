@@ -6,7 +6,7 @@ import cart.dto.AuthInfo;
 import cart.dto.ProductResponse;
 import cart.entity.CartEntity;
 import cart.entity.MemberEntity;
-import cart.exception.UserNotFoundException;
+import cart.exception.MemberNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -50,6 +50,6 @@ public class CartService {
         if (result.isPresent()) {
             return result.get();
         }
-        throw new UserNotFoundException();
+        throw new MemberNotFoundException();
     }
 }

@@ -1,7 +1,7 @@
-package cart.exceptionHandler;
+package cart.exception.exceptionHandler;
 
 import cart.exception.AuthException;
-import cart.exception.UserNotFoundException;
+import cart.exception.MemberNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,8 +66,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).headers(httpHeaders).body(body);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleUserNotFoundException(final UserNotFoundException e) {
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserNotFoundException(final MemberNotFoundException e) {
         final Map<String, Object> body = makeBody(HttpStatus.NOT_FOUND, e.getMessage());
 
         logError(body);
