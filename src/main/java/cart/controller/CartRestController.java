@@ -7,6 +7,7 @@ import cart.dto.member.MemberRequest;
 import cart.service.cart.CartService;
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,13 +32,13 @@ public class CartRestController {
     }
 
     @GetMapping("/cart-items")
-    public ResponseEntity<List<CartItemResponse>> findCart(@RequestMember final MemberRequest memberRequest) {
+    public ResponseEntity<List<CartItemResponse>> findCart(@Valid @RequestMember final MemberRequest memberRequest) {
         List<CartItemResponse> cartItemResponses = cartService.findCartByMember(memberRequest);
         return ResponseEntity.ok(cartItemResponses);
     }
 
     @DeleteMapping("/cart-items/{cartItemId}")
-    public ResponseEntity<Void> deleteCart(@RequestMember final MemberRequest memberRequest, @PathVariable final Long cartItemId) {
+    public ResponseEntity<Void> deleteCart(@Valid @RequestMember final MemberRequest memberRequest, @PathVariable final Long cartItemId) {
         cartService.deleteCartItem(memberRequest, cartItemId);
         return ResponseEntity.noContent().build();
     }
