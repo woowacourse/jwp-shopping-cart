@@ -1,10 +1,10 @@
 package cart.controller;
 
+import cart.controller.annotaion.Authentication;
 import cart.controller.dto.request.LoginRequest;
 import cart.controller.dto.response.CartItemResponse;
 import cart.service.AuthService;
 import cart.service.CartService;
-import cart.util.BasicAuthExtractor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -23,7 +22,6 @@ public class CartController {
 
     private final AuthService authService;
     private final CartService cartService;
-    private final BasicAuthExtractor basicAuthExtractor = new BasicAuthExtractor();
 
     public CartController(AuthService authService, CartService cartService) {
         this.authService = authService;
@@ -32,9 +30,8 @@ public class CartController {
 
     @PostMapping("/carts/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addCartItem(HttpServletRequest request, @PathVariable(value = "productId") Long productId) {
-        LoginRequest loginRequest = basicAuthExtractor.extract(request);
-        cartService.addCart(authService.basicLogin(loginRequest), productId);
+    public void addCartItem(@Authentication LoginRequest loginRequest, @PathVariable(value = "productId") Long productId) {
+        cartService.addCart(authService.loadUserByEmailAndPassword(loginRequest), productId);
     }
 
     @GetMapping("/cart")
@@ -46,16 +43,14 @@ public class CartController {
     @GetMapping("/carts")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<List<CartItemResponse>> showCart(HttpServletRequest request) {
-        LoginRequest loginRequest = basicAuthExtractor.extract(request);
-        List<CartItemResponse> cartItemsByUser = cartService.findCartItemsByUser(authService.basicLogin(loginRequest));
+    public ResponseEntity<List<CartItemResponse>> showCart(@Authentication LoginRequest loginRequest) {
+        List<CartItemResponse> cartItemsByUser = cartService.findCartItemsByUser(authService.loadUserByEmailAndPassword(loginRequest));
         return ResponseEntity.ok(cartItemsByUser);
     }
 
     @DeleteMapping("/carts/{cartId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCartItem(HttpServletRequest request, @PathVariable(value = "cartId") Long cartId) {
-        LoginRequest loginRequest = basicAuthExtractor.extract(request);
-        cartService.deleteCartByUserAndProductId(authService.basicLogin(loginRequest), cartId);
+    public void deleteCartItem(@Authentication LoginRequest loginRequest, @PathVariable(value = "cartId") Long cartId) {
+        cartService.deleteCartByUserAndProductId(authService.loadUserByEmailAndPassword(loginRequest), cartId);
     }
 }

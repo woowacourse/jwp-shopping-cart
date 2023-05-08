@@ -41,7 +41,7 @@ public class AuthServiceTest {
         UserResponse expectedResponse = new UserResponse(userEntity.getId(), email, password);
 
         //when
-        UserEntity actualEntity = authService.basicLogin(request);
+        UserEntity actualEntity = authService.loadUserByEmailAndPassword(request);
 
         //then
         assertAll(

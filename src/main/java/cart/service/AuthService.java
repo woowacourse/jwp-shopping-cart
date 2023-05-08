@@ -16,7 +16,7 @@ public class AuthService {
         this.userDao = userDao;
     }
 
-    public UserEntity basicLogin(LoginRequest request) {
+    public UserEntity loadUserByEmailAndPassword(LoginRequest request) {
         return userDao.findByEmailAndPassword(request.getEmail(), request.getPassword());
     }
 }

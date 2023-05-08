@@ -10,6 +10,7 @@ import java.util.Base64;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BasicAuthExtractorTest {
@@ -75,7 +76,7 @@ class BasicAuthExtractorTest {
         BasicAuthExtractor extractor = new BasicAuthExtractor();
 
         //then
-        assertThrows(IllegalArgumentException.class, () -> extractor.extract(request));
+        assertNull(extractor.extract(request));
     }
 
     @DisplayName("헤더의 값이 null인 경우")
