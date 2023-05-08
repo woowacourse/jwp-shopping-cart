@@ -20,7 +20,7 @@ public class StubCartRepository implements CartRepository {
     public CartResponse save(final String email, final Long productId) {
         final long currentId = maxId.incrementAndGet();
 
-        final CartEntity saved = new CartEntity(email, productId);
+        final CartEntity saved = new CartEntity(currentId, email, productId);
         cartEntityMap.put(currentId, saved);
         return new CartResponse(currentId, email, productId);
     }
