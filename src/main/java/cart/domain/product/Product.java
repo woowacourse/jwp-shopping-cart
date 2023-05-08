@@ -17,7 +17,7 @@ public class Product {
 
     private final Long id;
     private final String name;
-    @JsonProperty("image-url")
+    @JsonProperty("imageUrl")
     private final String imageUrl;
     private final int price;
 

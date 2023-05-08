@@ -119,5 +119,5 @@
 - [x] [인증 Extractor Bean 의존성 주입으로 변경(어떤 객체를 빈 등록 해야할까?)](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186783618)
 - [x] [외래키 사용 이유, 장단점](https://github.com/woowacourse/jwp-shopping-cart/pull/337/files/64e714428fd62e79b2d59f61f6a0159fc8d7f071#r1186786702)
 - [x] [패키지 구조와 Dao 추상화 관련](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186786575)
-- [ ] snake case vs carmel case 통일
+- [x] json 주고받는 데이터 carmel case로 통일
 - [ ] 예외메시지 형식 / 마침표 등 통일, 관리하기 쉽게 만들기

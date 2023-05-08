@@ -14,7 +14,7 @@
 POST /products HTTP/1.1
 {
     "name": "치킨",
-    "image-url": "https://ifh.cc/g/bQpAgl.jpg",
+    "imageUrl": "https://ifh.cc/g/bQpAgl.jpg",
     "price": 10000
 }
 ```
@@ -24,7 +24,7 @@ POST /products HTTP/1.1
 | name      | type    | description | required |
 |-----------|---------|-------------|----------|
 | name      | String  | 상품명         | O        |
-| image-url | String  | 상품 이미지 URL  | O        |
+| imageUrl | String  | 상품 이미지 URL  | O        |
 | price     | Integer | 상품가격        | O        |
 
 ### Response
@@ -42,7 +42,7 @@ PUT /products HTTP/1.1
 {
     "id": 1,
     "name": "치킨",
-    "image-url": "https://ifh.cc/g/bQpAgl.jpg",
+    "imageUrl": "https://ifh.cc/g/bQpAgl.jpg",
     "price": 10000
 }
 ```
@@ -53,7 +53,7 @@ PUT /products HTTP/1.1
 |-----------|---------|-------------|----------|
 | id        | Long    | 수정할 상품 아이디  | O        |
 | name      | String  | 상품명         | O        |
-| image-url | String  | 상품 이미지 URL  | O        |
+| imageUrl | String  | 상품 이미지 URL  | O        |
 | price     | Integer | 상품가격        | O        |
 
 ### Response

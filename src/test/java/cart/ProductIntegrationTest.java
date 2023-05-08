@@ -46,7 +46,7 @@ public class ProductIntegrationTest {
     void create() throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", "일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
-                "image-url", "a".repeat(1000),
+                "imageUrl", "a".repeat(1000),
                 "price", 0
         ));
 
@@ -67,7 +67,7 @@ public class ProductIntegrationTest {
     void createFailName(String name) throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", name,
-                "image-url", "url",
+                "imageUrl", "url",
                 "price", 1000
         ));
 
@@ -87,7 +87,7 @@ public class ProductIntegrationTest {
     void createFailUrl() throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", "name",
-                "image-url", "a".repeat(1001),
+                "imageUrl", "a".repeat(1001),
                 "price", 1000
         ));
 
@@ -108,7 +108,7 @@ public class ProductIntegrationTest {
     void createFailPrice(int price) throws JSONException {
         JSONObject productAddRequest = parseJSON(Map.of(
                 "name", "name",
-                "image-url", "url",
+                "imageUrl", "url",
                 "price", price
         ));
 
@@ -131,7 +131,7 @@ public class ProductIntegrationTest {
         JSONObject productUpdateRequest = parseJSON(Map.of(
                 "id", id,
                 "name", "도이",
-                "image-url", "doy.png",
+                "imageUrl", "doy.png",
                 "price", 10000
         ));
 
