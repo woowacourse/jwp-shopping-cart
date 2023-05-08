@@ -56,7 +56,6 @@ public class CartProductDao {
     }
 
     public List<Product> findAllProductByMemberId(final long memberId) {
-
         final String sql = "SELECT product.id, name, image_url, price "
                 + "FROM cart_product "
                 + "LEFT JOIN product "
