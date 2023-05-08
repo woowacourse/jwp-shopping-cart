@@ -1,27 +1,20 @@
 package cart.domain;
 
-import org.springframework.lang.NonNull;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 public class Member {
 
     private final Long id;
 
-    @Email
-    @NonNull
     private final String email;
 
-    @NotBlank
     private final String password;
 
-    public Member(@NonNull String email, String password) {
+    public Member(String email, String password) {
         this(null, email, password);
     }
 
-    public Member(Long id, @NonNull String email, String password) {
+    public Member(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
