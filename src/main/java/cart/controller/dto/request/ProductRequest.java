@@ -7,12 +7,12 @@ import javax.validation.constraints.NotEmpty;
 
 public class ProductRequest {
 
-    @NotEmpty(message = "Null을 허용하지 않습니다.")
+    @NotEmpty(message = "공백 또는 Null을 허용하지 않습니다.")
     private String name;
 
     private int price;
 
-    @NotEmpty(message = "Null을 허용하지 않습니다.")
+    @NotEmpty(message = "공백 또는 Null을 허용하지 않습니다.")
     private String imageUrl;
 
     public ProductRequest() {

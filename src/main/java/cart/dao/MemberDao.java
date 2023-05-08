@@ -1,9 +1,9 @@
 package cart.dao;
 
 import cart.entity.MemberEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -43,7 +43,11 @@ public class MemberDao {
 
     public Optional<MemberEntity> findByEmail(String email) {
         String sql = "SELECT * FROM MEMBER WHERE email = ?";
-        return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, email));
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, email));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.of(null);
+        }
     }
 
 }

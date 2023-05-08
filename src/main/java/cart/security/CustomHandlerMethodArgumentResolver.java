@@ -44,23 +44,23 @@ public class CustomHandlerMethodArgumentResolver implements HandlerMethodArgumen
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
     ) throws Exception {
-        final String token = webRequest.getHeader(HEADER_PREFIX);
-        final String basicToken = getBasicToken(token);
-        final String[] authInformation = getAuthInformation(basicToken);
+        final String credentials = webRequest.getHeader(HEADER_PREFIX);
+        final String basicCredentials = getBasicToken(credentials);
+        final String[] authInformation = getAuthInformation(basicCredentials);
         final String email = authInformation[EMAIL_INDEX];
         final String password = authInformation[PASSWORD_INDEX];
 
         return getMemberId(email, password);
     }
 
-    private String getBasicToken(final String token) {
-        if (!StringUtils.hasText(token)) {
+    private String getBasicToken(final String credentials) {
+        if (!StringUtils.hasText(credentials)) {
             throw HeaderPrefixNotFoundException.EXCEPTION;
         }
-        if (!token.startsWith(BASIC_TYPE)) {
+        if (!credentials.startsWith(BASIC_TYPE)) {
             throw TokenTypeNotMatchException.EXCEPTION;
         }
-        return token.replaceFirst(BASIC_TYPE, "");
+        return credentials.replaceFirst(BASIC_TYPE, "");
     }
 
     private Long getMemberId(String email, String password) {
@@ -73,8 +73,8 @@ public class CustomHandlerMethodArgumentResolver implements HandlerMethodArgumen
         return member.getId();
     }
 
-    private String[] getAuthInformation(final String token) {
-        final String emailAndPassword = new String(Base64Utils.decodeFromString(token));
+    private String[] getAuthInformation(final String credentials) {
+        final String emailAndPassword = new String(Base64Utils.decodeFromString(credentials));
         return emailAndPassword.split(DELIMITER);
     }
 

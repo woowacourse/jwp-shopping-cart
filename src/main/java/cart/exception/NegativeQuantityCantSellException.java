@@ -2,7 +2,10 @@ package cart.exception;
 
 import cart.error.exception.CartException;
 import cart.error.exception.ErrorCode;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+@ResponseStatus(HttpStatus.BAD_REQUEST)
 public class NegativeQuantityCantSellException extends CartException {
 
     public static final CartException EXCEPTION = new NegativeQuantityCantSellException();
