@@ -11,18 +11,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CartController.class)
 class CartControllerTest {
@@ -39,16 +40,17 @@ class CartControllerTest {
     @Test
     @DisplayName("GET /cart/items")
     void showCartItemList() throws Exception {
-        final List<CartItem> cartItemResponse = List.of(new CartItem(1L, "치킨", 1000, null));
-        final String result = objectMapper.writeValueAsString(cartItemResponse);
-
+        final List<CartItem> cartItemResponse = List.of(new CartItem(1L, "치킨", 1000, "www.abc.com"));
         given(userService.findByEmail(anyString())).willReturn(new User(1L, "test01@gmail.com", "12121212"));
         given(cartService.findByUserId(anyLong())).willReturn(cartItemResponse);
 
         mockMvc.perform(get("/cart/items")
                         .header("Authorization", "Basic dGVzdDAxQGdtYWlsLmNvbToxMjEyMTIxMg=="))
                 .andExpect(status().isOk())
-                .andExpect(content().json(result));
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].productName", is("치킨")))
+                .andExpect(jsonPath("$[0].productPrice", is(1000)))
+                .andExpect(jsonPath("$[0].productImage", is("www.abc.com")));
     }
 
     @Test
@@ -63,7 +65,8 @@ class CartControllerTest {
                         .header("Authorization", "Basic dGVzdDAxQGdtYWlsLmNvbToxMjEyMTIxMg==")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string(HttpHeaders.LOCATION, "/cart/items/1"));
     }
 
     @Test
