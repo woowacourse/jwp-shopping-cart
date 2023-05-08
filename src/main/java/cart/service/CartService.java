@@ -39,7 +39,7 @@ public class CartService {
 
     private CartItem generateCartItem(final CartEntity cartEntity) {
         final Product product = productService.findById(cartEntity.productId);
-        return new CartItem(cartEntity.id, product.getName(), product.getPrice(), product.getImage());
+        return new CartItem(cartEntity.id, product);
     }
 
     @Transactional

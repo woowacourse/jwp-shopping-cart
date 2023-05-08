@@ -1,17 +1,26 @@
 package cart.domain.cart;
 
+import cart.domain.product.Product;
+import cart.domain.product.ProductImage;
+import cart.domain.product.ProductName;
+import cart.domain.product.ProductPrice;
+
 public class CartItem {
-    
+
     private final Long id;
-    private final String productName;
-    private final int productPrice;
-    private final String productImage;
+    private final ProductName productName;
+    private final ProductPrice productPrice;
+    private final ProductImage productImage;
+
+    public CartItem(final Long id, final Product product) {
+        this(id, product.getName(), product.getPrice(), product.getImage());
+    }
 
     public CartItem(final Long id, final String productName, final int productPrice, final String productImage) {
         this.id = id;
-        this.productName = productName;
-        this.productPrice = productPrice;
-        this.productImage = productImage;
+        this.productName = new ProductName(productName);
+        this.productPrice = new ProductPrice(productPrice);
+        this.productImage = new ProductImage(productImage);
     }
 
     public Long getId() {
@@ -19,14 +28,14 @@ public class CartItem {
     }
 
     public String getProductName() {
-        return productName;
+        return productName.getValue();
     }
 
     public int getProductPrice() {
-        return productPrice;
+        return productPrice.getValue();
     }
 
     public String getProductImage() {
-        return productImage;
+        return productImage.getValue();
     }
 }
