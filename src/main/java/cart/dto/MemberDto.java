@@ -1,13 +1,10 @@
 package cart.dto;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 public class MemberDto {
 
     private Long id;
-
-    @Email(message = "email 형식으로 입력해주세요.")
     private String email;
 
     @NotBlank(message = "이름은 공백일 수 없습니다.")
