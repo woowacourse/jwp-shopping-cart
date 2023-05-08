@@ -1,5 +1,6 @@
 package cart.api.argumentResolver;
 
+import cart.annotation.Auth;
 import cart.dto.AuthInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
@@ -20,7 +21,7 @@ public class MemberInfoArgumentResolver implements HandlerMethodArgumentResolver
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.getParameterType().equals(AuthInfo.class);
+        return parameter.hasParameterAnnotation(Auth.class);
     }
 
     @Override

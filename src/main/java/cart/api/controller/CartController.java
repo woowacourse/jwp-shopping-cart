@@ -1,5 +1,6 @@
 package cart.api.controller;
 
+import cart.annotation.Auth;
 import cart.dto.AuthInfo;
 import cart.dto.ProductResponse;
 import cart.service.CartService;
@@ -25,7 +26,7 @@ public class CartController {
 
     @ApiOperation(value = "사용자 장바구니 상품 조회")
     @GetMapping("/products")
-    public ResponseEntity<List<ProductResponse>> getProductsOfCart(final AuthInfo authInfo) {
+    public ResponseEntity<List<ProductResponse>> getProductsOfCart(final @Auth AuthInfo authInfo) {
         final List<ProductResponse> products = cartService.showProductsBy(authInfo);
 
         return ResponseEntity.ok(products);
@@ -34,14 +35,14 @@ public class CartController {
     @ApiOperation(value = "장바구니에 상품 추가")
     @PostMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public void addToCart(final AuthInfo authInfo, @PathVariable long productId) {
+    public void addToCart(final @Auth AuthInfo authInfo, @PathVariable long productId) {
         cartService.addToCart(authInfo, productId);
     }
 
     @ApiOperation(value = "장바구니 상품 제거")
     @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteProduct(final AuthInfo authInfo, @PathVariable long productId) {
+    public void deleteProduct(final @Auth AuthInfo authInfo, @PathVariable long productId) {
         cartService.deleteProductBy(authInfo, productId);
     }
 }
