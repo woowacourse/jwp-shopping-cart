@@ -11,12 +11,11 @@ import org.junit.jupiter.api.Test;
 
 class UserSearchServiceTest {
 
-    private StubUserRepository stubUserRepository;
     private UserSearchService userSearchService;
 
     @BeforeEach
     void setUp() {
-        stubUserRepository = new StubUserRepository();
+        final StubUserRepository stubUserRepository = new StubUserRepository();
         userSearchService = new UserSearchService(stubUserRepository);
     }
 

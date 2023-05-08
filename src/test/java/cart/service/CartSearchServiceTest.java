@@ -11,12 +11,11 @@ import org.junit.jupiter.api.Test;
 
 class CartSearchServiceTest {
 
-    private StubCartRepository stubCartRepository;
     private CartSearchService cartSearchService;
 
     @BeforeEach
     void setUp() {
-        stubCartRepository = new StubCartRepository();
+        final StubCartRepository stubCartRepository = new StubCartRepository();
         cartSearchService = new CartSearchService(stubCartRepository);
     }
 
