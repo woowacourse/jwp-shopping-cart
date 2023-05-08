@@ -28,7 +28,7 @@ public class ExceptionItemControllerAdvice {
     }
 
     @ExceptionHandler({NotFoundResultException.class, IllegalArgumentException.class})
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(Exception exception) {
+    public ResponseEntity<ExceptionResponse> handleWarnException(Exception exception) {
         log.warn(exception.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
