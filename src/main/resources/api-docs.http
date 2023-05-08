@@ -11,16 +11,28 @@ GET http://localhost:8080/admin
 ## Cart
 
 ### Cart에 특정 물품 추가
-POST http://localhost:8080/carts/products/1
+POST http://localhost:8080/carts
 Authorization: Basic YWNjb3VudDFAZ2c6MTIzNA==
+Content-Type: application/json
+
+{
+  "productId" : 1
+}
 
 ### 사용자의 Cart 조회
 GET http://localhost:8080/carts
 Authorization: Basic YWNjb3VudDFAZ2c6MTIzNA==
 
 ### Cart에서 특정 물품 삭제
-DELETE http://localhost:8080/carts/products/1
+DELETE http://localhost:8080/carts
 Authorization: Basic YWNjb3VudDFAZ2c6MTIzNA==
+Content-Type: application/json
+
+{
+  "productId" : 1
+}
+
+###
 
 ## Product
 

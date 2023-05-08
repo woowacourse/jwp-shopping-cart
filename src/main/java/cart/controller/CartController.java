@@ -4,13 +4,15 @@ import cart.auth.AuthAccount;
 import cart.global.annotation.LogIn;
 import cart.service.CartCommandService;
 import cart.service.CartQueryService;
+import cart.service.dto.CartInProductDeleteRequest;
+import cart.service.dto.CartInProductRegisterRequest;
 import cart.service.dto.ProductSearchResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -27,12 +29,13 @@ public class CartController {
         this.cartQueryService = cartQueryService;
     }
 
-    @PostMapping("/carts/products/{product-id}")
+    @PostMapping("/carts")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerProductInCart(@LogIn AuthAccount account,
-                                        @PathVariable("product-id") final Long productId) {
-
-        cartCommandService.registerProductInCart(account, productId);
+    public String registerProductInCart(
+            @LogIn AuthAccount account,
+            @RequestBody final CartInProductRegisterRequest cartInProductRegisterRequest
+    ) {
+        cartCommandService.registerProductInCart(account, cartInProductRegisterRequest);
 
         return "redirect:/";
     }
@@ -43,11 +46,12 @@ public class CartController {
         return cartQueryService.findAllProductsInCart(account);
     }
 
-    @DeleteMapping("/carts/products/{product-id}")
-    public String deleteProductInCart(@LogIn AuthAccount account,
-                                      @PathVariable("product-id") final Long productId) {
-
-        cartCommandService.deleteProductInCart(account, productId);
+    @DeleteMapping("/carts")
+    public String deleteProductInCart(
+            @LogIn AuthAccount account,
+            @RequestBody final CartInProductDeleteRequest cartInProductDeleteRequest
+    ) {
+        cartCommandService.deleteProductInCart(account, cartInProductDeleteRequest);
 
         return "cart";
     }
