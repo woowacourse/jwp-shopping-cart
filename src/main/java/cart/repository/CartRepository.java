@@ -1,7 +1,7 @@
 package cart.repository;
 
 import cart.dao.CartDao;
-import cart.dao.joinrequest.CartWithProduct;
+import cart.dao.CartWithProduct;
 import cart.domain.Cart;
 import cart.domain.Product;
 import cart.entity.CartEntity;

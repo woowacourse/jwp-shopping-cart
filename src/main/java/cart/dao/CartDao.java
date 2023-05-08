@@ -1,6 +1,5 @@
 package cart.dao;
 
-import cart.dao.joinrequest.CartWithProduct;
 import cart.entity.CartEntity;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
