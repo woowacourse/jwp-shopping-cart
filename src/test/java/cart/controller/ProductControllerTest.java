@@ -65,7 +65,7 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequest)
-                .when().patch("/products/1")
+                .when().put("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
