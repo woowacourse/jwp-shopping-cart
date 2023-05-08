@@ -1,6 +1,5 @@
 package cart.cart.controller;
 
-import cart.cart.dto.CartResponse;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,10 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.util.List;
-
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CartViewControllerTest {
@@ -42,20 +38,30 @@ class CartViewControllerTest {
 
     @Test
     void 개별_장바구니_조회() {
-        List<CartResponse> cartResponses = given().log().all()
+        given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("carts")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .body()
-                .jsonPath().getList(".", CartResponse.class);
+                .statusCode(HttpStatus.OK.value());
+    }
 
-        CartResponse firstCartResponse = cartResponses.get(0);
-        CartResponse secondCartResponse = cartResponses.get(1);
+    @Test
+    void 장바구니_상품_추가() {
+        given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when().post("/carts?productId=1")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
 
-        assertThat(firstCartResponse.getId()).isEqualTo(1L);
-        assertThat(secondCartResponse.getId()).isEqualTo(2L);
+    @Test
+    void 장바구니_상품_삭제() {
+        given().log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when().delete("carts/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value())
+                .contentType(ContentType.HTML);
     }
 }

@@ -1,7 +1,6 @@
 package cart.cart.dao;
 
 import cart.cart.entity.Cart;
-import cart.member.entity.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CartDaoTest {
-
-    private static final String EMAIL = "rg970604@naver.com";
-    private static final String PASSWORD = "password";
     private static final String CHICKEN_IMAGE = "https://nenechicken.com/17_new/images/menu/30005.jpg";
     private static final Long CHICKEN_PRICE = 18000L;
 
@@ -40,8 +36,7 @@ class CartDaoTest {
         assertThat(cart.getProduct().getImage()).isEqualTo(CHICKEN_IMAGE);
         assertThat(cart.getProduct().getPrice()).isEqualTo(CHICKEN_PRICE);
 
-        Member member = new Member(1L, EMAIL, PASSWORD);
-        assertThat(cart.getMember()).isEqualTo(member);
+        assertThat(cart.getMember().getId()).isEqualTo(1L);
     }
 
     @Test

@@ -24,8 +24,8 @@ public class CartController {
     }
 
     @GetMapping
-    @ResponseBody
     public ResponseEntity<List<CartResponse>> showCarts(@Authorization AuthInfo authInfo) {
+        System.out.println("정보 = " + authInfo);
         List<CartResponse> cartResponses = cartService.showCart(authInfo);
         return ResponseEntity.ok().body(cartResponses);
     }
