@@ -27,7 +27,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> postProducts(@Valid @RequestBody ProductCreationRequest request) {
-        final long id = managementService.save(ProductCreationRequest.toProductDto(request));
+        long id = managementService.save(ProductCreationRequest.toProductDto(request));
         return ResponseEntity.created(URI.create("/admin/products/" + id)).build();
     }
 

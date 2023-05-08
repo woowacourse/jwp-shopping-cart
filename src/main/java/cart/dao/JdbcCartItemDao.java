@@ -34,7 +34,7 @@ public class JdbcCartItemDao implements CartItemDao {
 
     @Override
     public List<CartItem> selectAllByMemberId(final Long memberId) {
-        final String sql = "SELECT * FROM cart_item WHERE member_id = ?";
+        String sql = "SELECT * FROM cart_item WHERE member_id = ?";
         return jdbcTemplate.query(sql, cartItemEntityRowMapper, memberId);
     }
 
@@ -50,7 +50,7 @@ public class JdbcCartItemDao implements CartItemDao {
 
     @Override
     public int deleteByIdAndMemberId(final long id, final long memberId) {
-        final String sql = "DELETE FROM cart_item WHERE id = ? AND member_id = ?";
+        String sql = "DELETE FROM cart_item WHERE id = ? AND member_id = ?";
         return jdbcTemplate.update(sql, id, memberId);
     }
 }

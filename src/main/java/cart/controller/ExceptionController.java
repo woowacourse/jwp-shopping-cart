@@ -22,12 +22,12 @@ public class ExceptionController {
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         log.error(exception.getMessage());
 
-        final String errorMessage = exception.getBindingResult()
+        String errorMessage = exception.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(System.lineSeparator()));
-        final ExceptionResponse exceptionResponse = new ExceptionResponse(errorMessage);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(errorMessage);
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
@@ -35,7 +35,7 @@ public class ExceptionController {
     public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
         log.error(exception.getMessage());
 
-        final ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 
@@ -43,7 +43,7 @@ public class ExceptionController {
     public ResponseEntity<ExceptionResponse> handleAuthenticationException(AuthenticationException exception) {
         log.error(exception.getMessage());
 
-        final ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exceptionResponse);
     }
 
@@ -51,7 +51,7 @@ public class ExceptionController {
     public ResponseEntity<ExceptionResponse> handleException(Exception exception) {
         log.error(exception.getMessage());
 
-        final ExceptionResponse exceptionResponse = new ExceptionResponse("서버에서 장애가 발생하였습니다.");
+        ExceptionResponse exceptionResponse = new ExceptionResponse("서버에서 장애가 발생하였습니다.");
         return ResponseEntity.internalServerError().body(exceptionResponse);
     }
 

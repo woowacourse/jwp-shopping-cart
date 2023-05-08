@@ -33,7 +33,7 @@ public class JdbcMemberDao implements MemberDao {
 
     @Override
     public List<Member> selectAll() {
-        final String sql = "SELECT * FROM member";
+        String sql = "SELECT * FROM member";
         return jdbcTemplate.query(sql, memberEntityRowMapper);
     }
 
@@ -45,7 +45,7 @@ public class JdbcMemberDao implements MemberDao {
 
     @Override
     public Member selectByEmailAndPassword(final Member member) {
-        final String sql = "SELECT * FROM member WHERE email = ? AND password = ?";
+        String sql = "SELECT * FROM member WHERE email = ? AND password = ?";
         try {
             return jdbcTemplate.queryForObject(sql, memberEntityRowMapper, member.getEmail(), member.getPassword());
         } catch (EmptyResultDataAccessException exception) {

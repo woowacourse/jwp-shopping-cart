@@ -17,7 +17,7 @@ public class MemberManagementService {
     }
 
     public List<MemberDto> findAll() {
-        final List<Member> memberEntities = memberDao.selectAll();
+        List<Member> memberEntities = memberDao.selectAll();
         return MemberDto.from(memberEntities);
     }
 

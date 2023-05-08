@@ -6,5 +6,5 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface AuthenticationExtractor<T> {
 
-    MemberDto extract(HttpServletRequest httpServletRequest);
+    MemberDto extract(final HttpServletRequest httpServletRequest);
 }

@@ -17,7 +17,7 @@ public class ProductManagementService {
     }
 
     public List<ProductDto> findAll() {
-        final List<Product> productEntities = productDao.selectAll();
+        List<Product> productEntities = productDao.selectAll();
         return ProductDto.from(productEntities);
     }
 

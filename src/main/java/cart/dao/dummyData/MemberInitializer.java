@@ -19,8 +19,8 @@ public class MemberInitializer implements ApplicationRunner {
 
     @Override
     public void run(final ApplicationArguments args) throws Exception {
-        final Member member1 = Member.of("irene@email.com", "password1");
-        final Member member2 = Member.of("abcd@email.com", "password2");
+        Member member1 = Member.of("irene@email.com", "password1");
+        Member member2 = Member.of("abcd@email.com", "password2");
 
         memberDao.insert(member1);
         memberDao.insert(member2);
