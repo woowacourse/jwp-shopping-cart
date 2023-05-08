@@ -2,9 +2,11 @@ package cart.auth;
 
 import cart.entity.Member;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Component
 public class BasicAuthorizationExtractor implements AuthorizationExtractor<Member> {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";

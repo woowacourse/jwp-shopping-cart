@@ -12,13 +12,21 @@ import java.util.List;
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
 
+    private final CartAuthenticationArgumentResolver cartAuthenticationArgumentResolver;
+    private final CartInterceptor cartInterceptor;
+
+    public WebConfiguration(CartAuthenticationArgumentResolver cartAuthenticationArgumentResolver, CartInterceptor cartInterceptor) {
+        this.cartAuthenticationArgumentResolver = cartAuthenticationArgumentResolver;
+        this.cartInterceptor = cartInterceptor;
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new CartInterceptor()).addPathPatterns("/carts/**");
+        registry.addInterceptor(cartInterceptor).addPathPatterns("/carts/**");
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new CartAuthenticationArgumentResolver());
+        resolvers.add(cartAuthenticationArgumentResolver);
     }
 }
