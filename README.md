@@ -103,7 +103,7 @@
     - auto_increment 값 문제로 매번 테이블을 아예 새로 만들어주거나 관련 처리를 해줘야 한다. => 그럴 바엔 인메모리로 변경함
     - 그럼에도 테스트에서도 로컬 DB를 사용할 수 있는 방법은 없을까?(테스트 간 의존도가 너무 높아서 디버깅이 어려워 일단 중단함)
 - [x] [ResController 확장성 고려하여 어노테이션 대신 ResponseEntity 사용](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780234)
-- [ ] [사용자 인증 실패 시 클라이언트 쪽 alert 띄우기](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780402)
+- [x] [에러 발생 시 클라이언트 쪽 alert 띄우기](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780402)
 - [ ] [/cartitems URL 구분자 추가](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780736)
 - [ ] [이메일, 비밀번호 검증 로직 추가](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186781377)
 - [ ] [인증 관련 클래스 클린 코드](https://github.com/woowacourse/jwp-shopping-cart/pull/337/files/64e714428fd62e79b2d59f61f6a0159fc8d7f071#r1186781824)
