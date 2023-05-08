@@ -11,15 +11,18 @@ public class ProductRequestDto {
 
     @Length(min = 1, max = 100)
     @NotBlank
-    private final String name;
+    private String name;
 
     @Positive
     @Range(min = 1, max = 1_000_000_000)
-    private final Integer price;
+    private Integer price;
 
     @NotEmpty
     @NotBlank
-    private final String imageUrl;
+    private String imageUrl;
+
+    public ProductRequestDto() {
+    }
 
     public ProductRequestDto(String name, Integer price, String imageUrl) {
         this.name = name;

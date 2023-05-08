@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.dto.CartRequestDto;
 import cart.dto.CartResponseDto;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
@@ -30,11 +31,29 @@ class CartControllerTest {
     }
 
     @Test
-    @DisplayName("/carts/{id} (Post) 요청을 보내 장바구니에 상품을 저장한다.")
+    @DisplayName("/carts (Post) 요청을 보내 장바구니에 상품을 저장한다.")
     void addProductToCart() {
+        CartRequestDto cartRequestDto = new CartRequestDto(2L);
+
         RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(cartRequestDto)
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().post("/carts/2")
+                .when().post("/carts")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("/carts (Post) 요청을 보내 상품을 저장하는 과정에서 잘못된 ID 를 보내 에러 발생")
+    void addProductToCartFail() {
+        CartRequestDto cartRequestDto = new CartRequestDto(0L);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(cartRequestDto)
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when().post("/carts")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
