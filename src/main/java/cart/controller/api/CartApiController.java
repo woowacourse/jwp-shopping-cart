@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/cart/products")
 public class CartApiController {
 
     private final CartService cartService;
@@ -27,7 +27,7 @@ public class CartApiController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/product")
+    @PostMapping
     public ResponseEntity<Void> save(
             @Authenticate final Long memberId,
             @RequestBody @Valid final ProductIdRequest productIdRequest
@@ -36,13 +36,13 @@ public class CartApiController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/products")
+    @GetMapping
     public ResponseEntity<List<CartItemResponse>> findAll(@Authenticate final Long memberId) {
         List<CartItemResponse> responses = cartService.findAll(memberId);
         return ResponseEntity.ok(responses);
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable final Long id) {
         cartService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/products")
 public class AdminApiController {
 
     private final ProductService productService;
@@ -25,13 +25,13 @@ public class AdminApiController {
         this.productService = productService;
     }
 
-    @PostMapping("/product")
+    @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final ProductCreateRequest request) {
         productService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/product/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> update(
             @PathVariable final Long id,
             @RequestBody @Valid final ProductUpdateRequest request
@@ -40,7 +40,7 @@ public class AdminApiController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable final Long id
     ) {
