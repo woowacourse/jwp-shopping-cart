@@ -13,9 +13,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import cart.auth.BasicAuthorizationExtractor;
 import cart.controller.dto.ItemRequest;
 import cart.controller.dto.ItemResponse;
-import cart.dao.MemberDao;
 import cart.dao.entity.ItemEntity;
 import cart.service.ItemService;
+import cart.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -42,7 +42,7 @@ class ItemControllerTest {
     BasicAuthorizationExtractor basicAuthorizationExtractor;
 
     @MockBean
-    MemberDao memberDao;
+    MemberService memberService;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
