@@ -18,8 +18,8 @@ public class ControllerAdvice {
     public ResponseEntity<String> handleNotValidInput(final MethodArgumentNotValidException exception) {
         final List<ObjectError> allErrors = exception.getBindingResult().getAllErrors();
         final String errorMessages = allErrors.stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.joining(System.lineSeparator()));
+            .map(DefaultMessageSourceResolvable::getDefaultMessage)
+            .collect(Collectors.joining(System.lineSeparator()));
 
         return ResponseEntity.badRequest().body(errorMessages);
     }
