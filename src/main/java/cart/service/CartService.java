@@ -8,6 +8,7 @@ import cart.dto.ProductResponseDto;
 import cart.entity.Cart;
 import cart.vo.Email;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,14 +43,16 @@ public class CartService {
         );
     }
 
+    @Transactional
     public void removeById(Long id, Email email) {
         Cart cart = findById(id);
-
+        if (cart == null) {
+            throw new IllegalStateException("해당 상품이 장바구니에 존재하지 않습니다.");
+        }
         if (cart.canUserWithThisEmailBeDeleted(email)) {
             cartDao.deleteById(id);
             return;
         }
-
         throw new IllegalStateException("삭제할 권한이 없습니다.");
     }
 
