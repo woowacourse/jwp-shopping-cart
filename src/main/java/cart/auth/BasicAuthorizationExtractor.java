@@ -33,12 +33,12 @@ public class BasicAuthorizationExtractor {
         byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
         String decodedString = new String(decodedBytes);
         if (!decodedString.contains(DELIMITER)) {
-            throw new InvalidBasicAuthException("유효한 Basic Token 값이 아닙니다.");
+            throw new InvalidBasicAuthException("유효한 Basic 인코딩 값이 아닙니다.");
         }
 
         List<String> credentials = List.of(decodedString.split(DELIMITER));
         if (credentials.size() != 2) {
-            throw new InvalidBasicAuthException("유효한 Basic Token 값이 아닙니다.");
+            throw new InvalidBasicAuthException("유효한 Basic 인코딩 값이 아닙니다.");
         }
         return credentials;
     }
