@@ -1,6 +1,7 @@
 package cart.cart.service;
 
 import cart.cart.dao.CartDao;
+import cart.cart.dto.AuthInfo;
 import cart.cart.dto.CartResponse;
 import cart.cart.entity.Cart;
 import cart.cart.exception.AuthorizationException;
@@ -25,13 +26,13 @@ public class CartService {
     }
 
     @Transactional
-    public void addCart(Long productId, String email, String password) {
-        Member member = memberService.selectMemberByEmailAndPassword(email, password);
+    public void addCart(Long productId, AuthInfo authInfo) {
+        Member member = memberService.selectMemberByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
         cartDao.insertCart(productId, member.getId());
     }
 
-    public List<CartResponse> showCart(String email, String password) {
-        Member member = memberService.selectMemberByEmailAndPassword(email, password);
+    public List<CartResponse> showCart(AuthInfo authInfo) {
+        Member member = memberService.selectMemberByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
         List<Cart> carts = cartDao.findCartsByMemberId(member.getId());
         return carts.stream()
                 .map(cart -> new CartResponse(cart.getId(), cart.getProduct().getName(), cart.getProduct().getPrice(), cart.getProduct().getImage()))
@@ -39,8 +40,8 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCartById(Long cartId, String email, String password) {
-        Member member = memberService.selectMemberByEmailAndPassword(email, password);
+    public void deleteCartById(Long cartId, AuthInfo authInfo) {
+        Member member = memberService.selectMemberByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
         Cart cart = cartDao.findCartByCartId(cartId);
         if (!(cart.getMember().getId() == member.getId())) {
             throw new AuthorizationException("본인의 상품만 삭제할 수 있습니다");

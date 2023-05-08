@@ -14,8 +14,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest(CartController.class)
-public class CartControllerMockTest {
+@WebMvcTest(CartViewController.class)
+public class CartViewControllerMockTest {
 
     private static final String EMAIL = "rg970604@naver.com";
     private static final String PASSWORD = "password";

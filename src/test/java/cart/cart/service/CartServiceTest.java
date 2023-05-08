@@ -1,5 +1,6 @@
 package cart.cart.service;
 
+import cart.cart.dto.AuthInfo;
 import cart.cart.dto.CartResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,8 @@ class CartServiceTest {
 
     @Test
     void 개별_장바구니_조회() {
-        List<CartResponse> cartResponses = cartService.showCart(EMAIL, PASSWORD);
+        AuthInfo authInfo = new AuthInfo(EMAIL, PASSWORD);
+        List<CartResponse> cartResponses = cartService.showCart(authInfo);
 
         CartResponse firstCartResponse = cartResponses.get(0);
         CartResponse secondCartResponse = cartResponses.get(1);
@@ -34,9 +36,10 @@ class CartServiceTest {
 
     @Test
     void 장바구니_상품_추가() {
-        cartService.addCart(1L, EMAIL, PASSWORD);
+        AuthInfo authInfo = new AuthInfo(EMAIL, PASSWORD);
+        cartService.addCart(1L, authInfo);
 
-        List<CartResponse> cartResponses = cartService.showCart(EMAIL, PASSWORD);
+        List<CartResponse> cartResponses = cartService.showCart(authInfo);
 
         CartResponse cartResponse = cartResponses.get(2);
         assertThat(cartResponse.getId()).isEqualTo(3L);
@@ -44,9 +47,9 @@ class CartServiceTest {
 
     @Test
     void 장바구니_상품_삭제() {
-        cartService.deleteCartById(1L, EMAIL, PASSWORD);
-
-        List<CartResponse> cartResponses = cartService.showCart(EMAIL, PASSWORD);
+        AuthInfo authInfo = new AuthInfo(EMAIL, PASSWORD);
+        cartService.deleteCartById(1L, authInfo);
+        List<CartResponse> cartResponses = cartService.showCart(authInfo);
         assertThat(cartResponses.size()).isSameAs(1);
     }
 

@@ -16,14 +16,10 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CartControllerTest {
+class CartViewControllerTest {
 
     private static final String EMAIL = "rg970604@naver.com";
     private static final String PASSWORD = "password";
-    private static final String CHICKEN_IMAGE = "https://nenechicken.com/17_new/images/menu/30005.jpg";
-    private static final String PIZZA_IMAGE = "https://cdn.dominos.co.kr/admin/upload/goods/20230117_97ySneQn.jpg?RS=350x350&SP=1";
-    private static final Long CHICKEN_PRICE = 18000L;
-    private static final Long PIZZA_PRICE = 21000L;
 
     @Value("${local.server.port}")
     int port;
