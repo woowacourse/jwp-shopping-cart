@@ -53,14 +53,14 @@ class H2MemberDaoTest {
   void findByMemberEntity() {
     //given
     saveMember();
-    final MemberEntity MemberEntity = new MemberEntity("test", "test");
+    final MemberEntity expectedMember = new MemberEntity("test", "test");
 
     //when
-    final MemberEntity findMember = h2MemberDao.findByMemberEntity(MemberEntity).get();
+    final MemberEntity actualMember = h2MemberDao.findByMemberEntity(expectedMember).get();
 
     //then
-    assertThat(findMember).usingRecursiveComparison()
+    assertThat(expectedMember).usingRecursiveComparison()
         .ignoringFields("id")
-        .isEqualTo(MemberEntity);
+        .isEqualTo(actualMember);
   }
 }
