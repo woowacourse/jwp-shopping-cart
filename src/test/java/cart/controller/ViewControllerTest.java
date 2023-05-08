@@ -2,28 +2,23 @@ package cart.controller;
 
 import static org.hamcrest.Matchers.containsString;
 
-import cart.dto.ProductRequestDto;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class AdminControllerTest {
+@ActiveProfiles("test")
+public class ViewControllerTest {
 
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void beforeEach() {
@@ -31,7 +26,18 @@ public class AdminControllerTest {
     }
 
     @Test
-    @DisplayName("관리자 페이지 호출 확인")
+    @DisplayName("인덱스 페이지를 잘 호출하는지 확인한다.")
+    void productList() {
+        RestAssured.given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when().get("/")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(containsString("상품목록"));
+    }
+
+    @Test
+    @DisplayName("관리자 페이지를 잘 호출하는지 확인한다.")
     void admin() {
         RestAssured.given().log().all()
                 .accept(MediaType.TEXT_HTML_VALUE)
@@ -42,49 +48,25 @@ public class AdminControllerTest {
     }
 
     @Test
-    @DisplayName("상품 추가 확인")
-    void addProduct() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("밋엉", 10000, "미성씨");
-
+    @DisplayName("설정 페이지를 잘 호출하는지 확인한다.")
+    void settings() {
         RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
                 .accept(MediaType.TEXT_HTML_VALUE)
-                .when().post("/admin/products")
+                .when().get("/settings")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body(containsString("<title>관리자 페이지</title>"));
+                .body(containsString("사용자 선택"));
     }
 
     @Test
-    @DisplayName("상품 수정 확인")
-    void modifyProduct() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("샐러드", 10000, "밋밋엉");
-
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(productRequestDto)
-                .accept(MediaType.TEXT_HTML_VALUE)
-                .when().put("/admin/products/2")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body(containsString("<title>관리자 페이지</title>"));
-    }
-
-    @Test
-    @DisplayName("상품 삭제 확인")
-    void removeProduct() {
+    @DisplayName("장바구니 페이지를 잘 호출하는지 확인한다.")
+    void cart() {
         RestAssured.given().log().all()
                 .accept(MediaType.TEXT_HTML_VALUE)
-                .when().delete("/admin/products/2")
+                .when().get("/cart")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body(containsString("<title>관리자 페이지</title>"));
-    }
-
-    @AfterEach
-    void afterEach() {
-        jdbcTemplate.update("TRUNCATE TABLE product");
+                .body(containsString("<title>장바구니</title>"));
     }
 
 }

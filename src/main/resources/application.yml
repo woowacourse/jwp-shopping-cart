@@ -1,0 +1,26 @@
+spring:
+  profiles:
+    default: cart
+---
+spring:
+  config:
+    activate:
+      on-profile: cart
+
+  datasource:
+    url:
+      jdbc:h2:mem:cart;MODE=MySQL
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url:
+      jdbc:h2:mem:test;MODE=MySQL
+    driver-class-name: org.h2.Driver
