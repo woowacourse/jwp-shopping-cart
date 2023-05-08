@@ -4,8 +4,6 @@ import cart.domain.member.Member;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
@@ -17,9 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 class HomeControllerTest extends ControllerTest {
-
-    @Autowired
-    MockMvc mockMvc;
 
     @Test
     void 상품_목록_페이지를_조회하면_상태코드_200을_반환하는지_확인한다() throws Exception {
