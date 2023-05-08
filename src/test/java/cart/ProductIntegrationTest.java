@@ -108,7 +108,7 @@ public class ProductIntegrationTest {
                 .body(productRequest)
 
                 .when()
-                .put("/products/{경id}", gitchan.getId())
+                .put("/products/{id}", gitchan.getId())
 
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
