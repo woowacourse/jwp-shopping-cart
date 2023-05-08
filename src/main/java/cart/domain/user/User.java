@@ -23,6 +23,10 @@ public final class User {
         return id;
     }
 
+    public UserEmail getUserEmail() {
+        return userEmail;
+    }
+
     public String getUserEmailValue() {
         return userEmail.getUserEmail();
     }

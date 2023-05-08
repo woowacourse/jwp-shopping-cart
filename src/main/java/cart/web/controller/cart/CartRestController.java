@@ -1,7 +1,7 @@
 package cart.web.controller.cart;
 
 import cart.domain.cart.CartProduct;
-import cart.domain.user.User;
+import cart.domain.user.UserEmail;
 import cart.web.controller.auth.AuthorizedUser;
 import cart.web.controller.cart.dto.CartResponse;
 import cart.web.service.CartService;
@@ -32,25 +32,24 @@ public class CartRestController {
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<Void> addProduct(@AuthorizedUser User user,
+    public ResponseEntity<Void> addProduct(@AuthorizedUser UserEmail userEmail,
                                            @PathVariable Long productId) {
-        final Long addedProductId = cartService.add(user, productId);
+        final Long addedProductId = cartService.add(userEmail, productId);
 
         return ResponseEntity.created(URI.create("/cart/" + addedProductId)).build();
     }
 
     @DeleteMapping("/{cartProductId}")
-    public ResponseEntity<Void> deleteProduct(@AuthorizedUser User user,
+    public ResponseEntity<Void> deleteProduct(@AuthorizedUser UserEmail userEmail,
                                               @PathVariable Long cartProductId) {
-        cartService.delete(cartProductId);
+        cartService.delete(userEmail, cartProductId);
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<CartResponse>> getProducts(@AuthorizedUser User user) {
-        log.info("all - user = {}", user);
-        final List<CartProduct> cartProducts = cartService.getCartProducts2(user);
+    public ResponseEntity<List<CartResponse>> getProducts(@AuthorizedUser UserEmail userEmail) {
+        final List<CartProduct> cartProducts = cartService.getCartProducts2(userEmail);
         final List<CartResponse> productResponses = cartProducts.stream()
                 .map(product -> new CartResponse(product.getCartProductId(), product.getProductId(), product.getProductNameValue(),
                         product.getImageUrlValue(), product.getPriceValue(), product.getCategory()))

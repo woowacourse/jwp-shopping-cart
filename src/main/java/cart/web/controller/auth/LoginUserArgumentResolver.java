@@ -1,7 +1,7 @@
 package cart.web.controller.auth;
 
 import cart.domain.user.User;
-import cart.exception.UnAuthorizedException;
+import cart.domain.user.UserEmail;
 import cart.web.service.UserService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -11,8 +11,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Objects;
-import java.util.Optional;
 
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
@@ -29,14 +27,11 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     }
 
     @Override
-    public User resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
-                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
+    public UserEmail resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
+                                     final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final User user = BasicAuthorizationExtractor.extract(request);
-        final String userEmailValue = Objects.requireNonNull(user).getUserEmailValue();
-        final String userPasswordValue = Objects.requireNonNull(user.getUserPasswordValue());
-        final Optional<User> userOptional = userService.findUserByEmailAndPassword(userEmailValue, userPasswordValue);
-
-        return userOptional.orElseThrow(UnAuthorizedException::new);
+        
+        return new UserEmail(user.getUserEmailValue());
     }
 }

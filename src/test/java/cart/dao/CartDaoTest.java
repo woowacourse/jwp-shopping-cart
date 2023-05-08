@@ -40,7 +40,7 @@ class CartDaoTest {
     @Test
     void findAllByUser() {
         // given, when
-        final List<CartProduct> cartProducts = cartDao.findAllByUser2(user);
+        final List<CartProduct> cartProducts = cartDao.findAllByUser1(user);
 
         // then
         assertAll(

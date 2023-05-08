@@ -23,10 +23,6 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> findUserByEmailAndPassword(final String email, final String password) {
-        return userRepository.findUserByEmailAndPassword(email, password);
-    }
-
     public boolean isExistUser(final User user) {
         final Optional<User> userOptional = userRepository.findUserByEmailAndPassword(
                 user.getUserEmailValue(), user.getUserPasswordValue());

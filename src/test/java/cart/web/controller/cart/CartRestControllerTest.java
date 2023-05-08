@@ -59,7 +59,7 @@ class CartRestControllerTest {
     @Test
     void deleteProduct() throws Exception {
         // given
-        doNothing().when(cartService).delete(any());
+        doNothing().when(cartService).delete(userEmail, any());
 
         // when, then
         mockMvc.perform(delete("/cart/1").header("Authorization", COOKIE_VALUE))

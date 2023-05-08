@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.user.User;
+import cart.domain.user.UserEmail;
 import cart.domain.user.UserRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,10 +33,10 @@ public class UserDao implements UserRepository {
     }
 
     @Override
-    public Optional<User> findUserByEmail(final String email) {
+    public Optional<User> findUserByEmail(final UserEmail email) {
         final String query = "SELECT u.id, u.email, u.password FROM _user u WHERE u.email = ?";
         try {
-            final User user = jdbcTemplate.queryForObject(query, userRowMapper, email);
+            final User user = jdbcTemplate.queryForObject(query, userRowMapper, email.getUserEmail());
             return Optional.of(user);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();

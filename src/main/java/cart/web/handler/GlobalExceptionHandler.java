@@ -20,26 +20,26 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(GlobalException.class)
     public ResponseEntity<ExceptionResponse> globalException(final GlobalException e) {
-        log.info("error = ", e);
+        log.info("Error from GlobalException = ", e);
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> methodArgumentNotValidException(final MethodArgumentNotValidException e) {
         final String errorMessages = getErrorMessage(e);
-        log.info("error = ", e);
+        log.error("Error from MethodArgumentNotValidException = ", e);
         return new ResponseEntity<>(new ExceptionResponse(errorMessages), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UnAuthorizedException.class)
     public ResponseEntity<ExceptionResponse> unAuthorizedException(final UnAuthorizedException e) {
-        log.info("error = ", e);
-        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+        log.error("Error from UnAuthorizedException = ", e);
+        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> unExpectedException(final Exception e) {
-        log.error("error = ", e);
+        log.error("Error From UnExpectedException = ", e);
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
