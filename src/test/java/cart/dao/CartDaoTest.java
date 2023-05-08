@@ -1,8 +1,7 @@
 package cart.dao;
 
-import static cart.fixture.MemberFixtures.DUMMY_MEMBER_ID;
+import static cart.fixture.MemberFixtures.DUMMY_CART_ID;
 import static cart.fixture.MemberFixtures.INSERT_MEMBER_ENTITY;
-import static cart.fixture.ProductFixtures.DUMMY_SEONGHA_ID;
 import static cart.fixture.ProductFixtures.INSERT_PRODUCT_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -11,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import java.util.List;
 
 import cart.entity.CartEntity;
-import cart.entity.ProductEntity;
+import cart.entity.CartProductJoinEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,26 +57,27 @@ class CartDaoTest {
         // given
         long insertedMemberId = memberDao.insert(INSERT_MEMBER_ENTITY);
         long insertedProductId = productDao.insert(INSERT_PRODUCT_ENTITY);
-        cartDao.insert((new CartEntity.Builder()
+        long insertedCartId = cartDao.insert((new CartEntity.Builder()
                 .memberId(insertedMemberId)
                 .productId(insertedProductId)
                 .build()));
 
         // when
-        List<ProductEntity> productEntities = cartDao.selectAllProductByMemberId(insertedMemberId);
+        List<CartProductJoinEntity> cartProductJoinEntities = cartDao.selectAllProductByMemberId(insertedMemberId);
 
         // then
         assertAll(
-                () -> assertThat(productEntities).hasSize(1),
-                () -> assertThat(productEntities.get(0).getProductId()).isEqualTo(insertedProductId)
+                () -> assertThat(cartProductJoinEntities).hasSize(1),
+                () -> assertThat(cartProductJoinEntities.get(0).getCartId()).isEqualTo(insertedCartId),
+                () -> assertThat(cartProductJoinEntities.get(0).getProductId()).isEqualTo(insertedProductId)
         );
     }
 
     @Test
-    @DisplayName("멤버 ID와 상품 ID에 해당하는 행이 없으면 TRUE를 반환한다.")
-    void isNotExistByMemberIdAndProductId_True() {
+    @DisplayName("카트 ID에 해당하는 행이 없으면 TRUE를 반환한다.")
+    void isNotExistByCartId_True() {
         // when, then
-        assertThat(cartDao.isNotExistByMemberIdAndProductId(DUMMY_MEMBER_ID, DUMMY_SEONGHA_ID)).isTrue();
+        assertThat(cartDao.isNotExistByCartId(DUMMY_CART_ID)).isTrue();
     }
 
     @Test
@@ -86,13 +86,13 @@ class CartDaoTest {
         // given
         long insertedMemberId = memberDao.insert(INSERT_MEMBER_ENTITY);
         long insertedProductId = productDao.insert(INSERT_PRODUCT_ENTITY);
-        cartDao.insert(new CartEntity.Builder()
+        long insertedCartId = cartDao.insert(new CartEntity.Builder()
                 .memberId(insertedMemberId)
                 .productId(insertedProductId)
                 .build());
 
         // when, then
-        assertThat(cartDao.isNotExistByMemberIdAndProductId(insertedMemberId, insertedProductId)).isFalse();
+        assertThat(cartDao.isNotExistByCartId(insertedCartId)).isFalse();
     }
 
     @Test
@@ -101,15 +101,15 @@ class CartDaoTest {
         // given
         long insertedMemberId = memberDao.insert(INSERT_MEMBER_ENTITY);
         long insertedProductId = productDao.insert(INSERT_PRODUCT_ENTITY);
-        cartDao.insert(new CartEntity.Builder()
+        long insertedCartId = cartDao.insert(new CartEntity.Builder()
                 .memberId(insertedMemberId)
                 .productId(insertedProductId)
                 .build());
 
         // when
-        cartDao.deleteByMemberIdAndProductId(insertedMemberId, insertedProductId);
+        cartDao.deleteByCartId(insertedCartId);
 
         // then
-        assertThat(cartDao.isNotExistByMemberIdAndProductId(insertedMemberId, insertedProductId)).isTrue();
+        assertThat(cartDao.isNotExistByCartId(insertedCartId)).isTrue();
     }
 }

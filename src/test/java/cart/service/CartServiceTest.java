@@ -83,7 +83,7 @@ public class CartServiceTest {
         // when, then
         assertThatThrownBy(() -> cartService.removeProductByMemberInfoAndProductId(MEMBER_AUTH_REQUEST, 100L))
                 .isInstanceOf(CartProductNotFoundException.class)
-                .hasMessage("해당 멤버와 상품 ID에 해당하는 상품이 카트에 존재하지 않습니다.");
+                .hasMessage("카트 ID에 해당하는 카트가 존재하지 않습니다.");
     }
 
     @Test
@@ -92,10 +92,10 @@ public class CartServiceTest {
         // given
         long insertedProductId = productDao.insert(INSERT_PRODUCT_ENTITY);
         long insertedMemberId = memberDao.insert(INSERT_MEMBER_ENTITY);
-        cartService.saveProduct(MEMBER_AUTH_REQUEST, new CartAddRequest(insertedProductId));
+        long insertedCartid = cartService.saveProduct(MEMBER_AUTH_REQUEST, new CartAddRequest(insertedProductId));
 
         // when
-        cartService.removeProductByMemberInfoAndProductId(MEMBER_AUTH_REQUEST, insertedProductId);
+        cartService.removeProductByMemberInfoAndProductId(MEMBER_AUTH_REQUEST, insertedCartid);
 
         // then
         assertThat(cartService.findAllProductByMemberInfo(MEMBER_AUTH_REQUEST)).hasSize(0);

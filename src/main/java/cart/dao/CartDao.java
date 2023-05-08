@@ -3,7 +3,7 @@ package cart.dao;
 import java.util.List;
 
 import cart.entity.CartEntity;
-import cart.entity.ProductEntity;
+import cart.entity.CartProductJoinEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -31,30 +31,30 @@ public class CartDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public List<ProductEntity> selectAllProductByMemberId(Long memberId) {
-        String sql = "SELECT PRODUCT.* FROM (SELECT CART.product_id FROM CART WHERE member_id = ?) AS CP "
+    public List<CartProductJoinEntity> selectAllProductByMemberId(Long memberId) {
+        String sql = "SELECT * FROM (SELECT CART.product_id, cart_id FROM CART WHERE member_id = ?) AS CP "
                 + "INNER JOIN PRODUCT ON CP.product_id = PRODUCT.product_id ";
-        return jdbcTemplate.query(sql, productEntityRowMapper(), memberId);
+        return jdbcTemplate.query(sql, cartProductJoinEntityRowMapper(), memberId);
     }
 
-    private RowMapper<ProductEntity> productEntityRowMapper() {
+    private RowMapper<CartProductJoinEntity> cartProductJoinEntityRowMapper() {
         return (rs, rowNum) ->
-                new ProductEntity.Builder()
+                new CartProductJoinEntity.Builder()
+                        .cartId(rs.getLong("cart_id"))
                         .productId(rs.getLong("product_id"))
-                        .name(rs.getString("name"))
-                        .imgUrl(rs.getString("img_url"))
-                        .price(rs.getInt("price"))
+                        .productName(rs.getString("name"))
+                        .productImgUrl(rs.getString("img_url"))
+                        .productPrice(rs.getInt("price"))
                         .build();
     }
 
-    public Boolean isNotExistByMemberIdAndProductId(Long memberId, Long productId) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM (SELECT CART.* FROM CART " +
-                "INNER JOIN PRODUCT ON CART.product_id = PRODUCT.product_id) AS CP WHERE CP.member_id = ? AND CP.product_id = ?)";
-        return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, memberId, productId));
+    public Boolean isNotExistByCartId(Long cartId) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM CART WHERE cart_id = ?)";
+        return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, cartId));
     }
 
-    public void deleteByMemberIdAndProductId(Long memberId, Long productId) {
-        String sql = "DELETE FROM CART WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
+    public void deleteByCartId(Long cartId) {
+        String sql = "DELETE FROM CART WHERE cart_id = ?";
+        jdbcTemplate.update(sql, cartId);
     }
 }

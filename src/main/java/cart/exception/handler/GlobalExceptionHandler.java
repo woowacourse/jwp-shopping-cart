@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> notFoundException(NotFoundException exception) {
         String errorMessage = exception.getMessage();
         log.warn(errorMessage);
-        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
     }
 
     @ExceptionHandler(AuthorizationException.class)

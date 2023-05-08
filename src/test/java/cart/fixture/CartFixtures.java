@@ -10,6 +10,7 @@ public class CartFixtures {
      */
     public static final Long DUMMY_MEMBER_ID = 1L;
     public static final Long DUMMY_PRODUCT_ID = 1L;
+    public static final Long DUMMY_CART_ID = 1L;
 
     /**
      * DUMMY_ENTITY

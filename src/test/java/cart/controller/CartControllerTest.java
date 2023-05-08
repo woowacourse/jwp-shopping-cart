@@ -11,7 +11,7 @@ import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.dto.CartAddRequest;
-import cart.entity.ProductEntity;
+import cart.entity.CartProductJoinEntity;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -134,7 +134,6 @@ class CartControllerTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(jsonPath.getLong("[0].productId")).isEqualTo(insertedProductId),
                 () -> assertThat(jsonPath.getString("[0].imgUrl")).isEqualTo(DUMMY_SEONGHA_IMG_URL),
                 () -> assertThat(jsonPath.getString("[0].name")).isEqualTo(DUMMY_SEONGHA_NAME),
                 () -> assertThat(jsonPath.getInt("[0].price")).isEqualTo(DUMMY_SEONGHA_PRICE)
@@ -171,8 +170,8 @@ class CartControllerTest {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        List<ProductEntity> productEntities = cartDao.selectAllProductByMemberId(insertedMemberId);
+        List<CartProductJoinEntity> cartProductJoinEntities = cartDao.selectAllProductByMemberId(insertedMemberId);
 
-        assertThat(productEntities).hasSize(0);
+        assertThat(cartProductJoinEntities).hasSize(0);
     }
 }

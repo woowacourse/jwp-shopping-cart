@@ -5,12 +5,12 @@ import java.util.stream.Collectors;
 
 import cart.dao.CartDao;
 import cart.dao.MemberDao;
+import cart.dto.AuthMember;
 import cart.dto.CartAddRequest;
 import cart.dto.CartResponse;
-import cart.dto.AuthMember;
 import cart.entity.CartEntity;
+import cart.entity.CartProductJoinEntity;
 import cart.entity.MemberEntity;
-import cart.entity.ProductEntity;
 import cart.exception.CartProductNotFoundException;
 import cart.exception.MemberNotFoundException;
 import org.springframework.stereotype.Service;
@@ -39,19 +39,19 @@ public class CartService {
     public List<CartResponse> findAllProductByMemberInfo(AuthMember authMember) {
         checkMemberExistByMemberInfo(authMember);
         MemberEntity findMemberEntity = memberDao.selectByEmailAndPassword(authMember.getEmail(), authMember.getPassword());
-        List<ProductEntity> productEntities = cartDao.selectAllProductByMemberId(findMemberEntity.getMemberId());
-        return productEntities.stream()
-                .map(productEntity -> new CartResponse(productEntity.getProductId(), productEntity.getImgUrl(),
-                        productEntity.getName(), productEntity.getPrice()))
+        List<CartProductJoinEntity> cartProductJoinEntities = cartDao.selectAllProductByMemberId(findMemberEntity.getMemberId());
+        return cartProductJoinEntities.stream()
+                .map(cartProductJoinEntity -> new CartResponse(cartProductJoinEntity.getCartId(),
+                        cartProductJoinEntity.getProductImgUrl(), cartProductJoinEntity.getProductName(),
+                        cartProductJoinEntity.getProductPrice()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public void removeProductByMemberInfoAndProductId(AuthMember authMember, long productId) {
+    public void removeProductByMemberInfoAndProductId(AuthMember authMember, long cartId) {
         checkMemberExistByMemberInfo(authMember);
-        MemberEntity findMemberEntity = memberDao.selectByEmailAndPassword(authMember.getEmail(), authMember.getPassword());
 
-        checkProductExistBy(findMemberEntity.getMemberId(), productId);
-        cartDao.deleteByMemberIdAndProductId(findMemberEntity.getMemberId(), productId);
+        checkCartExistBy(cartId);
+        cartDao.deleteByCartId(cartId);
     }
 
     private void checkMemberExistByMemberInfo(AuthMember authMember) {
@@ -62,9 +62,9 @@ public class CartService {
         }
     }
 
-    private void checkProductExistBy(long memberId, long productId) {
-        if (cartDao.isNotExistByMemberIdAndProductId(memberId, productId)) {
-            throw new CartProductNotFoundException("해당 멤버와 상품 ID에 해당하는 상품이 카트에 존재하지 않습니다.");
+    private void checkCartExistBy(long cartId) {
+        if (cartDao.isNotExistByCartId(cartId)) {
+            throw new CartProductNotFoundException("카트 ID에 해당하는 카트가 존재하지 않습니다.");
         }
     }
 }
