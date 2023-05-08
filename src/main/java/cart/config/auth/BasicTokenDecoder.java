@@ -1,4 +1,4 @@
-package cart.controller.auth;
+package cart.config.auth;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -14,7 +14,7 @@ public class BasicTokenDecoder {
     public static MemberAuthDto extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
         if (header == null) {
-            throw new UnauthorizedException(AUTHORIZATION + " 헤더가 존재하지 않습니다.");
+            throw new AuthenticationFailException(AUTHORIZATION + " 헤더가 존재하지 않습니다.");
         }
 
         if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
@@ -29,6 +29,6 @@ public class BasicTokenDecoder {
             return new MemberAuthDto(email, password);
         }
 
-        throw new UnauthorizedException(AUTHORIZATION + " 헤더가 " + BASIC_TYPE + "으로 시작하지 않습니다.");
+        throw new AuthenticationFailException(AUTHORIZATION + " 헤더가 " + BASIC_TYPE + "으로 시작하지 않습니다.");
     }
 }

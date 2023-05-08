@@ -26,7 +26,7 @@ public class CartService {
     }
 
     public List<ProductDto> findProductsInCartByUser(MemberAuthDto memberAuthDto) {
-        MemberDto signedUpMemberDto = this.memberService.signUp(memberAuthDto);
+        MemberDto signedUpMemberDto = this.memberService.signIn(memberAuthDto);
         List<Product> products = this.cartRepository.findByMemberId(signedUpMemberDto.getId()).getProducts();
         return products.stream()
                 .map(ProductDto::from)
@@ -34,14 +34,14 @@ public class CartService {
     }
 
     public void addProductToCartById(MemberAuthDto memberAuthDto, Long productId) {
-        MemberDto signedUpMemberDto = this.memberService.signUp(memberAuthDto);
+        MemberDto signedUpMemberDto = this.memberService.signIn(memberAuthDto);
         ProductDto productDto = this.productService.findById(productId);
         Cart cart = this.cartRepository.findByMemberId(signedUpMemberDto.getId());
         this.cartRepository.saveProductToCart(cart, productDto.toDomain());
     }
 
     public void deleteProductFromCartById(MemberAuthDto memberAuthDto, Long productId) {
-        MemberDto signedUpMemberDto = this.memberService.signUp(memberAuthDto);
+        MemberDto signedUpMemberDto = this.memberService.signIn(memberAuthDto);
         ProductDto productDto = this.productService.findById(productId);
         Cart cart = this.cartRepository.findByMemberId(signedUpMemberDto.getId());
         this.cartRepository.deleteProductFromCart(cart, productDto.toDomain());

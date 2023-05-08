@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.auth.UnauthorizedException;
+import cart.config.auth.AuthenticationFailException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handleException(UnauthorizedException exception) {
+    public ResponseEntity<String> handleException(AuthenticationFailException exception) {
         logger.info(exception.getClass().getSimpleName() + " - " + exception.getMessage(), exception);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }

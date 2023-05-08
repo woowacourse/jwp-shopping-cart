@@ -36,7 +36,7 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
-    public MemberDto signUp(MemberAuthDto memberAuthDto) {
+    public MemberDto signIn(MemberAuthDto memberAuthDto) {
         Member member = this.memberRepository.findByEmail(memberAuthDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("해당 이메일의 유저가 존재하지 않습니다." + System.lineSeparator() +
                         "존재하지 않는 이메일: " + memberAuthDto.getEmail()));

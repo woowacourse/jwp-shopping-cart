@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.auth.BasicTokenDecoder;
+import cart.config.auth.BasicTokenDecoder;
 import cart.service.CartService;
 import cart.service.dto.MemberAuthDto;
 import cart.service.dto.ProductDto;
