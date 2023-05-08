@@ -2,7 +2,7 @@ package cart.auth;
 
 import cart.dao.MemberDao;
 import cart.entity.MemberEntity;
-import cart.excpetion.AuthException;
+import cart.excpetion.AuthenticationException;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -31,12 +31,12 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) throws Exception {
         final String loginToken = webRequest.getHeader(AUTHORIZATION);
         if (loginToken == null) {
-            throw new AuthException("로그인 하지 않았습니다");
+            throw new AuthenticationException("로그인 하지 않았습니다");
         }
         final LoginRequest extract = basicAuthorizationExtractor.extract(loginToken);
         final MemberEntity findMember = memberDao.findBy(extract.getEmail(), extract.getPassword())
                 .orElseThrow(() -> {
-                    throw new AuthException("존재 하지 않는 유저의 로그인 정보입니다.");
+                    throw new AuthenticationException("존재 하지 않는 유저의 로그인 정보입니다.");
                 });
         return new MemberInfo(findMember.getId(), findMember.getEmail());
     }

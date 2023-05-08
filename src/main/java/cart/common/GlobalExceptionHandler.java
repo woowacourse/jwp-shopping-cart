@@ -1,6 +1,6 @@
 package cart.common;
 
-import cart.excpetion.AuthException;
+import cart.excpetion.AuthenticationException;
 import cart.excpetion.CartException;
 import cart.excpetion.ProductionRepoException;
 import cart.excpetion.ProductionServiceException;
@@ -24,8 +24,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @ExceptionHandler({AuthException.class})
-    public ResponseEntity<String> handle(AuthException e) {
+    @ExceptionHandler({AuthenticationException.class})
+    public ResponseEntity<String> handle(AuthenticationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 

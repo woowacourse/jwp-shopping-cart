@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.excpetion.AuthException;
+import cart.excpetion.AuthenticationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ public class BasicAuthorizationExtractor {
     private String tokenValue(final String loginToken) {
         final boolean startWithBasic = loginToken.toLowerCase().startsWith(TOKEN_TYPE.toLowerCase());
         if (!startWithBasic) {
-            throw new AuthException("로그인 요청은 Basic 타입만 가능합니다");
+            throw new AuthenticationException("로그인 요청은 Basic 타입만 가능합니다");
         }
         String authHeaderValue = loginToken.substring(TOKEN_TYPE.length()).trim();
         byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
@@ -37,7 +37,7 @@ public class BasicAuthorizationExtractor {
     private List<String> split(final String tokenValue) {
         final List<String> splitedvalue = List.of(tokenValue.split(DELIMITER));
         if (splitedvalue.size() != TOKEN_INFO_COUNT) {
-            throw new AuthException("토큰에는 아이디, 비밀번호가 입력되어야 합니다.");
+            throw new AuthenticationException("토큰에는 아이디, 비밀번호가 입력되어야 합니다.");
         }
         return splitedvalue;
     }
