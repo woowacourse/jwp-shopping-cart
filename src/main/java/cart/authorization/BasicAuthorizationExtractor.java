@@ -27,12 +27,12 @@ public class BasicAuthorizationExtractor {
     }
 
     private void validateHeader(String header) {
-        if (NotContainsAuthorizationHeader(header) || isNotBasicAuthorization(header)) {
+        if (notContainsAuthorizationHeader(header) || isNotBasicAuthorization(header)) {
             throw new AuthenticationFailureException(INVALID_MEMBER_MESSAGE);
         }
     }
 
-    private boolean NotContainsAuthorizationHeader(String header) {
+    private boolean notContainsAuthorizationHeader(String header) {
         return header == null;
     }
 
