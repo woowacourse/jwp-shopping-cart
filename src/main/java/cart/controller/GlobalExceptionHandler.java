@@ -50,16 +50,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<String> handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException exception) {
-        logger.warn(exception.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청 리소스에 맞는 메서드가 아닙니다.");
-    }
-
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handleEmptyResultDataAccessException(final EmptyResultDataAccessException exception) {
         logger.warn(exception.getMessage());
         return ResponseEntity.badRequest().body("접근하려는 데이터가 존재하지 않습니다.");
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<String> handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException exception) {
+        logger.warn(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("요청 리소스에 맞는 메서드가 아닙니다.");
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
