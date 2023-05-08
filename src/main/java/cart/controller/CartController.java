@@ -1,8 +1,7 @@
 package cart.controller;
 
-import cart.controller.auth.BasicAuthentication;
+import cart.controller.auth.LoginId;
 import cart.controller.dto.AddCartRequest;
-import cart.domain.user.Member;
 import cart.persistance.dao.CartDao;
 import cart.persistance.entity.CartProductEntity;
 import org.springframework.http.HttpStatus;
@@ -31,25 +30,24 @@ public class CartController {
 
     @GetMapping("/cart-products")
     public ResponseEntity<List<CartProductEntity>> cartProducts(
-            @BasicAuthentication final Member member
+            @LoginId final Long memberId
     ) {
-        final List<CartProductEntity> cartProducts = cartDao.findByUserId(member.getId());
+        final List<CartProductEntity> cartProducts = cartDao.findByUserId(memberId);
         return ResponseEntity.ok().body(cartProducts);
     }
 
     @PostMapping("/cart-products")
     public ResponseEntity<Void> addProductToCart(
-            @BasicAuthentication final Member member,
+            @LoginId final Long memberId,
             @Valid @RequestBody final AddCartRequest addCartRequest
     ) {
-        cartDao.addProduct(member.getId(), addCartRequest.getProductId());
+        cartDao.addProduct(memberId, addCartRequest.getProductId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/cart-products/{id}")
     public ResponseEntity<Void> removeProductFromCart(
-            @Positive @PathVariable final Long id,
-            @Valid @BasicAuthentication final Member member
+            @Positive @PathVariable final Long id
     ) {
         cartDao.removeFromCartById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
