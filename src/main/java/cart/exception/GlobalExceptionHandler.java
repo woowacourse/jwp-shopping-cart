@@ -1,9 +1,6 @@
 package cart.exception;
 
-import cart.exception.customexceptions.AdminAccessException;
-import cart.exception.customexceptions.DataNotFoundException;
-import cart.exception.customexceptions.NotUniqueValueException;
-import cart.exception.customexceptions.PasswordNotMatchException;
+import cart.exception.customexceptions.*;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,9 +54,16 @@ public class GlobalExceptionHandler {
                 new ExceptionResponse(HttpStatus.FORBIDDEN.value(), e.getMessage()));
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ExceptionResponse> handleUnauthorizedException(final UnauthorizedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ExceptionResponse(HttpStatus.UNAUTHORIZED.value(), e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleUnexpectedException() {
         return ResponseEntity.internalServerError().body(
                 new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), DEFAULT_MESSAGE));
     }
+
 }
