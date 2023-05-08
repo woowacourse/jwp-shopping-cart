@@ -24,7 +24,7 @@ class LoginCheckInterceptorTest {
     @MockBean
     private UserService userService;
 
-    private static final String COOKIE_VALUE = "Basic : YUBhLmNvbTpwYXNzd29yZDE=";
+    private static final String COOKIE_VALUE = "Basic YUBhLmNvbTpwYXNzd29yZDE=";
 
 
     @Test

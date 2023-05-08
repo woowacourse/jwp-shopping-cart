@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 )
 class CartRestControllerTest {
 
-    private static final String COOKIE_VALUE = "Basic : YUBhLmNvbTpwYXNzd29yZDE=";
+    private static final String COOKIE_VALUE = "Basic YUBhLmNvbTpwYXNzd29yZDE=";
 
     @Autowired
     private MockMvc mockMvc;

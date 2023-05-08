@@ -24,11 +24,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(value = {ProductViewController.class, AdminViewController.class},
         excludeFilters = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE,
-        classes = {
-                WebConfig.class, LoginCheckInterceptor.class, LoginUserArgumentResolver.class
-        }
-))
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {
+                        WebConfig.class, LoginCheckInterceptor.class, LoginUserArgumentResolver.class
+                }
+        ))
 class ProductViewControllerTest {
 
     @Autowired

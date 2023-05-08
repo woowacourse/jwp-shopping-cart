@@ -9,6 +9,6 @@ public final class BadRequestException extends GlobalException {
     }
 
     public BadRequestException(final Integer wrongPrice, final String errorMessage) {
-        super(String.format(messageFormat, String.valueOf(wrongPrice), errorMessage));
+        super(String.format(messageFormat, wrongPrice, errorMessage));
     }
 }

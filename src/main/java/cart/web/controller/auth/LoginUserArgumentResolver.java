@@ -20,7 +20,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
     @Override
     public AuthCredentials resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
-                                     final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
+                                           final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
         return (AuthCredentials) request.getAttribute("authCredentials");
