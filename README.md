@@ -104,7 +104,7 @@
     - 그럼에도 테스트에서도 로컬 DB를 사용할 수 있는 방법은 없을까?(테스트 간 의존도가 너무 높아서 디버깅이 어려워 일단 중단함)
 - [x] [ResController 확장성 고려하여 어노테이션 대신 ResponseEntity 사용](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780234)
 - [x] [에러 발생 시 클라이언트 쪽 alert 띄우기](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780402)
-- [ ] [/cartitems URL 구분자 추가](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780736)
+- [x] [/cartitems URL 구분자 추가](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186780736)
 - [ ] [이메일, 비밀번호 검증 로직 추가](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186781377)
 - [ ] [인증 관련 클래스 클린 코드](https://github.com/woowacourse/jwp-shopping-cart/pull/337/files/64e714428fd62e79b2d59f61f6a0159fc8d7f071#r1186781824)
     - [ ] final 키워드 누락 수정
@@ -113,6 +113,6 @@
     - [ ] 함수 분리
     - [ ] 공백 삭제
 - [x] [외래키 사용 이유, 장단점](https://github.com/woowacourse/jwp-shopping-cart/pull/337/files/64e714428fd62e79b2d59f61f6a0159fc8d7f071#r1186786702)
-- [ ] [패키지 구조와 Dao 추상화 관련](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186786575)
+- [x] [패키지 구조와 Dao 추상화 관련](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186786575)
 - [ ] snake case vs carmel case 통일
 - [ ] 예외메시지 형식 / 마침표 등 통일, 관리하기 쉽게 만들기

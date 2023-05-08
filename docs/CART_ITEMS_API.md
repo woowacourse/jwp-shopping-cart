@@ -2,16 +2,16 @@
 
 |                    | method | URI                    | response status | 
 |--------------------|--------|------------------------|-----------------|
-| [아이템 조회](##아이템-조회) | GET    | /cartitems             | 200 OK          |
-| [아이템 등록](##아이템-등록) | POST   | /cartitems/{productId} | 201 CREATED     |
-| [아이템 삭제](##아이템-삭제) | DELETE | /cartitems/{id}        | 204 NO CONTENT  |
+| [아이템 조회](##아이템-조회) | GET    | /cart-items             | 200 OK          |
+| [아이템 등록](##아이템-등록) | POST   | /cart-items/{productId} | 201 CREATED     |
+| [아이템 삭제](##아이템-삭제) | DELETE | /cart-items/{id}        | 204 NO CONTENT  |
 
 ## 아이템 조회
 
 ### Request
 
 ```http request
-GET /cartitems HTTP/1.1
+GET /cart-items HTTP/1.1
 ```
 
 ### Response
@@ -50,7 +50,7 @@ Content-Type: application/json
 ### Request
 
 ```http request
-POST /cartitems/{productId} HTTP/1.1
+POST /cart-items/{productId} HTTP/1.1
 Authorization: Basic {credentials}
 ```
 
@@ -71,7 +71,7 @@ HTTP/1.1 201
 ### Request
 
 ```http request
-DELETE /cartitems/{id} HTTP/1.1
+DELETE /cart-items/{id} HTTP/1.1
 Authorization: Basic {credentials}
 ```
 

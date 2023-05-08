@@ -42,7 +42,7 @@ public class CartItemIntegrationTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(MEMBER1.getEmail(), MEMBER1.getPassword())
-                .when().get("/cartitems")
+                .when().get("/cart-items")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -53,7 +53,7 @@ public class CartItemIntegrationTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(FIXTURE_UNAUTHORIZED_EMAIL, "abcd1234")
-                .when().get("/cartitems")
+                .when().get("/cart-items")
                 .then().log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
@@ -65,7 +65,7 @@ public class CartItemIntegrationTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(MEMBER1.getEmail(), MEMBER1.getPassword())
-                .when().post("/cartitems/1")
+                .when().post("/cart-items/1")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -78,7 +78,7 @@ public class CartItemIntegrationTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(MEMBER1.getEmail(), MEMBER1.getPassword())
-                .when().post("/cartitems/1")
+                .when().post("/cart-items/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -89,7 +89,7 @@ public class CartItemIntegrationTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(FIXTURE_UNAUTHORIZED_EMAIL, "abcd1234")
-                .when().post("/cartitems/1")
+                .when().post("/cart-items/1")
                 .then().log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
@@ -102,7 +102,7 @@ public class CartItemIntegrationTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(MEMBER1.getEmail(), MEMBER1.getPassword())
-                .when().delete("/cartitems/1")
+                .when().delete("/cart-items/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -115,7 +115,7 @@ public class CartItemIntegrationTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(FIXTURE_UNAUTHORIZED_EMAIL, "abcd1234")
-                .when().delete("/cartitems/1")
+                .when().delete("/cart-items/1")
                 .then().log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
@@ -128,7 +128,7 @@ public class CartItemIntegrationTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(MEMBER2.getEmail(), MEMBER2.getPassword())
-                .when().delete("/cartitems/1")
+                .when().delete("/cart-items/1")
                 .then().log().all()
                 .statusCode(HttpStatus.FORBIDDEN.value());
     }
