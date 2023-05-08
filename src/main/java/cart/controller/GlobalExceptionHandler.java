@@ -1,6 +1,9 @@
-package cart.exception;
+package cart.controller;
 
 
+import cart.exception.ExceptionResponse;
+import cart.exception.InvalidBasicAuthException;
+import cart.exception.InvalidDomainException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +26,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 LocalDateTime.now(),
                 Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage()
         );
-        return ResponseEntity
-                .badRequest()
+        return ResponseEntity.badRequest()
                 .body(exceptionResponse);
     }
 
@@ -34,8 +36,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 LocalDateTime.now(),
                 ex.getMessage()
         );
-        return ResponseEntity
-                .badRequest()
+        return ResponseEntity.badRequest()
                 .body(exceptionResponse);
     }
 
@@ -46,8 +47,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "인증된 사용자가 아닙니다."
         );
         exception.printStackTrace();
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(exceptionResponse);
     }
 
@@ -58,8 +58,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage()
         );
 
-        return ResponseEntity
-                .badRequest()
+        return ResponseEntity.badRequest()
                 .body(exceptionResponse);
     }
 
@@ -70,8 +69,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage()
         );
 
-        return ResponseEntity
-                .badRequest()
+        return ResponseEntity.badRequest()
                 .body(exceptionResponse);
     }
 
@@ -83,8 +81,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
 
         exception.printStackTrace();
-        return ResponseEntity
-                .internalServerError()
+        return ResponseEntity.internalServerError()
                 .body(exceptionResponse);
     }
 }

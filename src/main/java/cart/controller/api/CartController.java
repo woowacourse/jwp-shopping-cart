@@ -25,8 +25,7 @@ public class CartController {
     public ResponseEntity<List<ProductResponse>> getProducts(@Auth final AuthMember authMember) {
         List<ProductResponse> productResponses = cartService.findByEmail(authMember.getEmail());
 
-        return ResponseEntity
-                .ok()
+        return ResponseEntity.ok()
                 .body(productResponses);
     }
 
@@ -37,8 +36,7 @@ public class CartController {
     ) {
         cartService.save(authMember.getEmail(), cartProductRequest.getProductId());
 
-        return ResponseEntity
-                .created(URI.create("/cart/products"))
+        return ResponseEntity.created(URI.create("/cart/products"))
                 .build();
     }
 
@@ -46,8 +44,7 @@ public class CartController {
     public ResponseEntity<Void> deleteProduct(@PathVariable final Long productId, @Auth final AuthMember authMember) {
         cartService.delete(authMember.getEmail(), productId);
 
-        return ResponseEntity
-                .noContent()
+        return ResponseEntity.noContent()
                 .build();
     }
 }

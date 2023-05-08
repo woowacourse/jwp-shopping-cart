@@ -22,8 +22,7 @@ public class ProductController {
     public ResponseEntity<Void> createProduct(@Valid @RequestBody final ProductRequest productRequest) {
         Long productId = productService.save(productRequest);
 
-        return ResponseEntity
-                .created(URI.create("/products/" + productId))
+        return ResponseEntity.created(URI.create("/products/" + productId))
                 .build();
     }
 
@@ -31,8 +30,7 @@ public class ProductController {
     public ResponseEntity<Integer> modifyProduct(@PathVariable final Long productId, @Valid @RequestBody final ProductRequest productRequest) {
         int updatedCount = productService.update(productId, productRequest);
 
-        return ResponseEntity
-                .ok()
+        return ResponseEntity.ok()
                 .body(updatedCount);
     }
 
@@ -40,8 +38,7 @@ public class ProductController {
     public ResponseEntity<Void> removeProduct(@PathVariable final Long productId) {
         productService.delete(productId);
 
-        return ResponseEntity
-                .noContent()
+        return ResponseEntity.noContent()
                 .build();
     }
 }
