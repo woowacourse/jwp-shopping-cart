@@ -197,7 +197,7 @@ class ProductApiControllerTest {
 
         @ParameterizedTest
         @NullAndEmptySource
-        void 이름이_빈_상품을_수정할_수_없다(final String name) {
+        void 이름이_빈_상품으로_수정할_수_없다(final String name) {
             given()
                     .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(new RequestUpdateProductDto(id, name, 10_000, "피자 사진"))
@@ -210,7 +210,7 @@ class ProductApiControllerTest {
         }
 
         @Test
-        void 이름이_유효_길이를_넘긴_상품을_수정할_수_없다() {
+        void 이름이_유효_길이를_넘긴_상품으로_수정할_수_없다() {
             final String overName = "피자".repeat(26);
 
             given()
@@ -226,7 +226,7 @@ class ProductApiControllerTest {
 
         @ParameterizedTest
         @NullSource
-        void 가격이_빈_상품을_수정할_수_없다(final Integer price) {
+        void 가격이_빈_상품으로_수정할_수_없다(final Integer price) {
             given()
                     .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(new RequestUpdateProductDto(id, "피자", price, "피자 사진"))
@@ -240,7 +240,7 @@ class ProductApiControllerTest {
 
         @ParameterizedTest
         @ValueSource(ints = {-1, 1000000001})
-        void 가격이_유효_범위를_넘긴_상품을_수정할_수_없다(final Integer price) {
+        void 가격이_유효_범위를_넘긴_상품으로_수정할_수_없다(final Integer price) {
             given()
                     .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(new RequestUpdateProductDto(id, "피자", price, "피자 사진"))
@@ -254,7 +254,7 @@ class ProductApiControllerTest {
 
         @ParameterizedTest
         @NullAndEmptySource
-        void 이미지_주소가_빈_상품을_수정할_수_없다(final String image) {
+        void 이미지_주소가_빈_상품으로_수정할_수_없다(final String image) {
             given()
                     .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(new RequestUpdateProductDto(id, "피자", 10_000, image))
@@ -267,7 +267,7 @@ class ProductApiControllerTest {
         }
 
         @Test
-        void 이미지_주소가_유효_길이를_넘긴_상품을_수정할_수_없다() {
+        void 이미지_주소가_유효_길이를_넘긴_상품으로_수정할_수_없다() {
             final String image = "피자 사진".repeat(401);
 
             given()
