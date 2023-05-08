@@ -21,7 +21,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
+@Sql({"classpath:testData.sql"})
 @DisplayName("장바구니 api 테스트")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class CartApiControllerTest {

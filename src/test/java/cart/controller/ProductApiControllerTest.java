@@ -21,7 +21,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
+@Sql({"classpath:testData.sql"})
 @DisplayName("상품 api 테스트")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ProductApiControllerTest {
