@@ -26,13 +26,12 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public void addProduct(final Member member, final long productId) {
+    public synchronized void addProduct(final Member member, final long productId) {
         Product product = productDao.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
 
         cartDao.findByMemberIdAndProductId(member.getId(), productId)
                 .ifPresent((cart) -> {
-                    // TODO: 커스텀 에러
                     throw new IllegalArgumentException("이미 장바구니에 담은 상품입니다.");
                 });
 
