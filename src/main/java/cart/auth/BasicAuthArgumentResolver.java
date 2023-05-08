@@ -2,6 +2,8 @@ package cart.auth;
 
 import cart.dao.member.MemeberDao;
 import cart.domain.Member;
+import cart.exception.NotFoundMemberException;
+import cart.exception.NotMatchedPassword;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -9,7 +11,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -60,10 +61,10 @@ public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver 
 
     private Member getMember(String password, Optional<Member> member) {
         if (member.isEmpty()) {
-            throw new NoSuchElementException("회원이 존재하지 않습니다");
+            throw new NotFoundMemberException();
         }
         if (!member.get().isPasswordCorrect(password)) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다");
+            throw new NotMatchedPassword();
         }
         return member.get();
     }

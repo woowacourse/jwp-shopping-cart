@@ -5,18 +5,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.NoSuchElementException;
-
 @RestControllerAdvice
 public class LoginExceptionHandler {
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(NoSuchElementException exception) {
+    @ExceptionHandler(NotFoundMemberException.class)
+    public ResponseEntity<ExceptionResponse> handleNotFoundMemberException(NotFoundMemberException exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exceptionResponse);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ExceptionResponse> handleIllegalArgumentException(RuntimeException exception) {
+    @ExceptionHandler(NotMatchedPassword.class)
+    public ResponseEntity<ExceptionResponse> handleNotMatchedPassword(NotMatchedPassword exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exceptionResponse);
     }
