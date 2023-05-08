@@ -23,7 +23,7 @@ public class CartService {
         this.cartMapper = cartMapper;
     }
 
-    public CartResponse create(CartRequest cartRequest, long memberId) {
+    public CartResponse create(CartRequest cartRequest, Long memberId) {
         validateExist(cartRequest, memberId);
         CartEntity cart = cartMapper.requestToCartEntity(memberId, cartRequest);
 
@@ -33,13 +33,13 @@ public class CartService {
         return cartMapper.entityToResponse(save);
     }
 
-    private void validateExist(CartRequest cartRequest, long memberId) {
+    private void validateExist(CartRequest cartRequest, Long memberId) {
         if (isExistProduct(cartRequest.getProductId(), memberId)) {
             throw new IllegalArgumentException("이미 존재하는 상품입니다." + System.lineSeparator() + "productId : " + cartRequest.getProductId());
         }
     }
 
-    private boolean isExistProduct(long productId, long memberId) {
+    private boolean isExistProduct(Long productId, Long memberId) {
         return cartDao.existByMemberIdAndProductId(memberId, productId);
     }
 
@@ -50,7 +50,7 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public List<CartResponse> findAllByMemberId(long memberId) {
+    public List<CartResponse> findAllByMemberId(Long memberId) {
         List<CartEntity> carts = cartDao.findByMemberId(memberId);
         return carts.stream()
                 .map(cartMapper::entityToResponse)

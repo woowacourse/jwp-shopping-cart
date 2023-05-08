@@ -9,12 +9,12 @@ public class CartRequest {
 
     private final int count;
 
-    public CartRequest(long productId, int count) {
+    public CartRequest(Long productId, int count) {
         this.productId = productId;
         this.count = count;
     }
 
-    public long getProductId() {
+    public Long getProductId() {
         return productId;
     }
 

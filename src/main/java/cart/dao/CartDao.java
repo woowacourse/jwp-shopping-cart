@@ -7,19 +7,19 @@ import java.util.Optional;
 
 public interface CartDao {
 
-    Optional<CartEntity> save(CartEntity cart, long productId, long memberId);
+    Optional<CartEntity> save(CartEntity cart, Long productId, Long memberId);
 
     Optional<CartEntity> findById(Long id);
 
-    List<CartEntity> findByMemberId(long memberId);
+    List<CartEntity> findByMemberId(Long memberId);
 
     List<CartEntity> findAll();
 
     CartEntity update(CartEntity entity);
 
-    boolean existByIdAndMemberId(long id, long memberId);
+    boolean existByIdAndMemberId(Long id, Long memberId);
 
-    boolean existByMemberIdAndProductId(long memberId, long productId);
+    boolean existByMemberIdAndProductId(Long memberId, Long productId);
 
     void deleteById(Long id);
 }

@@ -39,7 +39,7 @@ public class H2CartDao implements CartDao {
     }
 
     @Override
-    public Optional<CartEntity> save(CartEntity cart, long productId, long memberId) {
+    public Optional<CartEntity> save(CartEntity cart, Long productId, Long memberId) {
         Map<String, Object> parameterSource = new HashMap<>();
 
         parameterSource.put("member_id", memberId);
@@ -62,7 +62,7 @@ public class H2CartDao implements CartDao {
     }
 
     @Override
-    public List<CartEntity> findByMemberId(long memberId) {
+    public List<CartEntity> findByMemberId(Long memberId) {
         String sql = "SELECT * FROM cart WHERE member_id = ?";
         return jdbcTemplate.query(sql, cartEntityRowMapper(), memberId);
     }
@@ -81,14 +81,14 @@ public class H2CartDao implements CartDao {
     }
 
     @Override
-    public boolean existByIdAndMemberId(long id, long memberId) {
+    public boolean existByIdAndMemberId(Long id, Long memberId) {
         String sql = "SELECT COUNT(*) FROM cart WHERE id = ? AND member_id = ?";
         int count = jdbcTemplate.queryForObject(sql, Integer.class, id, memberId);
         return count > 0;
     }
 
     @Override
-    public boolean existByMemberIdAndProductId(long memberId, long productId) {
+    public boolean existByMemberIdAndProductId(Long memberId, Long productId) {
         String sql = "SELECT COUNT(*) FROM cart WHERE member_id = ? AND product_id = ?";
         int count = jdbcTemplate.queryForObject(sql, Integer.class, memberId, productId);
         return count > 0;

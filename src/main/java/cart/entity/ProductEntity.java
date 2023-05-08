@@ -9,11 +9,11 @@ public class ProductEntity {
     private final Long id;
     private String name;
     private String image;
-    private long price;
+    private Integer price;
     private final Timestamp createdAt;
     private Timestamp updatedAt;
 
-    public ProductEntity(Long id, String name, String image, long price, Timestamp createdAt, Timestamp updatedAt) {
+    public ProductEntity(Long id, String name, String image, Integer price, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -22,7 +22,7 @@ public class ProductEntity {
         this.updatedAt = updatedAt;
     }
 
-    public static ProductEntity create(Long id, String name, String image, long price) {
+    public static ProductEntity create(Long id, String name, String image, Integer price) {
         Timestamp currentTime = Timestamp.valueOf(LocalDateTime.now());
         return new ProductEntity(id, name, image, price, currentTime, null);
     }
@@ -46,7 +46,7 @@ public class ProductEntity {
         return image;
     }
 
-    public long getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
