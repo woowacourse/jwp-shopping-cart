@@ -5,6 +5,7 @@ import cart.dto.request.CertifiedCustomer;
 import cart.service.CustomerService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,9 +15,12 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     public static final String CERTIFIED_CUSTOMER = "CertifiedCustomer";
 
+    @Autowired
+    private final CertifiedCustomer certifiedCustomer;
     private final CustomerService customerService;
 
-    public AuthInterceptor(final CustomerService customerService) {
+    public AuthInterceptor(final CertifiedCustomer certifiedCustomer, final CustomerService customerService) {
+        this.certifiedCustomer = certifiedCustomer;
         this.customerService = customerService;
     }
 
@@ -26,20 +30,20 @@ public class AuthInterceptor implements HandlerInterceptor {
         final HttpServletResponse response,
         final Object handler
     ) throws Exception {
-        request.setAttribute(CERTIFIED_CUSTOMER, authByBasic(request));
-
+        setCertifiedCustomer(request);
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
-    private CertifiedCustomer authByBasic(final HttpServletRequest request) {
+    private void setCertifiedCustomer(final HttpServletRequest request) {
         final String authorizationContent = request.getHeader(HttpHeaders.AUTHORIZATION);
         final BasicAuthorizationExtractor extractor = new BasicAuthorizationExtractor(decode(authorizationContent));
         final Long customerId = customerService.findCertifiedMemberIdByEmailAndPassword(
             extractor.extractUsername(),
             extractor.extractPassword()
         );
-
-        return new CertifiedCustomer(customerId, extractor.extractUsername(), extractor.extractPassword());
+        certifiedCustomer.setId(customerId);
+        certifiedCustomer.setEmail(extractor.extractUsername());
+        certifiedCustomer.setPassword(extractor.extractPassword());
     }
 
     private String decode(final String authorizationContent) {

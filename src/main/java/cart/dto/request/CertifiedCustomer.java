@@ -1,14 +1,25 @@
 package cart.dto.request;
 
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
+
+@RequestScope
+@Component
 public class CertifiedCustomer {
 
-    private final Long id;
-    private final String email;
-    private final String password;
+    private Long id;
+    private String email;
+    private String password;
 
-    public CertifiedCustomer(final Long id, final String email, final String password) {
+    public void setId(final Long id) {
         this.id = id;
+    }
+
+    public void setEmail(final String email) {
         this.email = email;
+    }
+
+    public void setPassword(final String password) {
         this.password = password;
     }
 
