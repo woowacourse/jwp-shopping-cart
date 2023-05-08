@@ -1,5 +1,6 @@
 package cart.service.converter;
 
+import cart.dto.request.SignUpRequestDto;
 import cart.dto.response.UserResponseDto;
 import cart.entity.UserEntity;
 
@@ -13,5 +14,9 @@ public class UserConverter {
                 .map(userEntity ->
                         new UserResponseDto(userEntity.getEmail(), userEntity.getPassword(), userEntity.getName()))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public static UserEntity requestDtoToEntity(final SignUpRequestDto requestDto) {
+        return new UserEntity(requestDto.getEmail(), requestDto.getPassword(), requestDto.getName());
     }
 }

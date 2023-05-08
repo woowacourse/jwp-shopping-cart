@@ -42,6 +42,5 @@ class UserDaoTest {
                 () -> assertThat(allUsers.get(0).getName()).isEqualTo("디투"),
                 () -> assertThat(allUsers.get(3).getName()).isEqualTo("익명의 사용자")
         );
-
     }
 }

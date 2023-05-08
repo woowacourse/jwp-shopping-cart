@@ -48,6 +48,16 @@
     - [x] controller 구현
   - [x] 로그인 된 사용자 정보 조회 기능 구현
   - [x] 사용자 설정 페이지 연동
+  - [x] 회원 가입
+    - [x] repository 구현
+    - [x] service 구현
+    - [x] controller 구현
+    - [x] view 연결
+  - [ ] 로그인
+      - [ ] repository 구현
+      - [ ] service 구현
+      - [ ] controller 구현
+      - [ ] view 연결
 
 - [x] 장바구니 설정
   - [x] 장바구니에 상품 추가 api 구현

@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.dto.request.SignUpRequestDto;
 import cart.dto.response.UserResponseDto;
 import cart.entity.UserEntity;
 import cart.repository.UserDao;
@@ -20,5 +21,10 @@ public class UserService {
     public List<UserResponseDto> findAll() {
         final List<UserEntity> entities = userDao.findAll();
         return UserConverter.entitiesToResponseDtos(entities);
+    }
+
+    public int signUp(final SignUpRequestDto requestDto) {
+        final UserEntity userEntity = UserConverter.requestDtoToEntity(requestDto);
+        return userDao.create(userEntity);
     }
 }
