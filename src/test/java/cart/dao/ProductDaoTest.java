@@ -34,10 +34,7 @@ class ProductDaoTest {
         productDao.save(FIRST_PRODUCT.PRODUCT);
         productDao.save(SECOND_PRODUCT.PRODUCT);
 
-        final Product expetedFirstProduct = new Product(1L, "홍고", "https://ca.slack-edge.com/TFELTJB7V-U04M4NFB5TN-e18b78fabe81-512", 10_000_000);
-        final Product expectedSecondProduct = new Product(2L, "아벨", "https://ca.slack-edge.com/TFELTJB7V-U04LMNLQ78X-a7ef923d5391-512", 10_000_000);
-
-        assertThat(productDao.findAll()).containsExactly(expetedFirstProduct, expectedSecondProduct);
+        assertThat(productDao.findAll()).containsExactly(FIRST_PRODUCT.PRODUCT_WITH_ID, SECOND_PRODUCT.PRODUCT_WITH_ID);
     }
 
     @Test
