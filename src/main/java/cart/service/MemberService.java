@@ -10,6 +10,7 @@ import cart.domain.member.Password;
 import cart.dto.MemberFindResponse;
 import cart.dto.MemberRegisterRequest;
 import cart.entity.MemberEntity;
+import cart.exception.MemberNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -52,5 +53,11 @@ public class MemberService {
                 .map(memberEntity -> new MemberFindResponse(memberEntity.getNickname(),
                         memberEntity.getEmail(), memberEntity.getPassword()))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    public void checkMemberExistByMemberInfo(String email, String password) {
+        if (memberDao.isNotExistByEmailAndPassword(email, password)) {
+            throw new MemberNotFoundException("사용자 인증 정보에 해당하는 사용자가 존재하지 않습니다.");
+        }
     }
 }

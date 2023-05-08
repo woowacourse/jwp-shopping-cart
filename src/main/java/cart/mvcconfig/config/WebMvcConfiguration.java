@@ -12,9 +12,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
+    private final AuthInterceptor authInterceptor;
+
+    public WebMvcConfiguration(final AuthInterceptor authInterceptor) {
+        this.authInterceptor = authInterceptor;
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthInterceptor()).addPathPatterns("/cart/**");
+        registry.addInterceptor(authInterceptor).addPathPatterns("/cart/**");
     }
 
     @Override

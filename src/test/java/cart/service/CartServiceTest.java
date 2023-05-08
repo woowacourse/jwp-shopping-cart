@@ -1,9 +1,10 @@
 package cart.service;
 
 
-import static cart.fixture.CartFixtures.CART_ADD_REQUEST;
-import static cart.fixture.MemberFixtures.*;
-import static cart.fixture.ProductFixtures.*;
+import static cart.fixture.MemberFixtures.INSERT_MEMBER_ENTITY;
+import static cart.fixture.MemberFixtures.MEMBER_AUTH_REQUEST;
+import static cart.fixture.ProductFixtures.DUMMY_SEONGHA_NAME;
+import static cart.fixture.ProductFixtures.INSERT_PRODUCT_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -16,7 +17,6 @@ import cart.dao.ProductDao;
 import cart.dto.CartAddRequest;
 import cart.dto.CartResponse;
 import cart.exception.CartProductNotFoundException;
-import cart.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +35,6 @@ public class CartServiceTest {
 
     @Autowired
     private ProductDao productDao;
-
-    @Test
-    @DisplayName("장바구니 상품 추가 시 사용자 정보로 조회한 사용자가 없으면 예외가 발생한다.")
-    void saveProduct_throw_not_found_member() {
-        // when, then
-        assertThatThrownBy(() -> cartService.saveProduct(MEMBER_AUTH_REQUEST, CART_ADD_REQUEST))
-                .isInstanceOf(MemberNotFoundException.class)
-                .hasMessage("사용자 인증 정보에 해당하는 사용자가 존재하지 않습니다.");
-    }
 
     @Test
     @DisplayName("사용자 정보와 상품 ID로 장바구니에 상품을 추가한다.")
@@ -81,7 +72,7 @@ public class CartServiceTest {
         memberDao.insert(INSERT_MEMBER_ENTITY);
 
         // when, then
-        assertThatThrownBy(() -> cartService.removeProductByMemberInfoAndProductId(MEMBER_AUTH_REQUEST, 100L))
+        assertThatThrownBy(() -> cartService.removeByCartId(100L))
                 .isInstanceOf(CartProductNotFoundException.class)
                 .hasMessage("카트 ID에 해당하는 카트가 존재하지 않습니다.");
     }
@@ -95,7 +86,7 @@ public class CartServiceTest {
         long insertedCartid = cartService.saveProduct(MEMBER_AUTH_REQUEST, new CartAddRequest(insertedProductId));
 
         // when
-        cartService.removeProductByMemberInfoAndProductId(MEMBER_AUTH_REQUEST, insertedCartid);
+        cartService.removeByCartId(insertedCartid);
 
         // then
         assertThat(cartService.findAllProductByMemberInfo(MEMBER_AUTH_REQUEST)).hasSize(0);

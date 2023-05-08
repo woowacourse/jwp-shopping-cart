@@ -39,10 +39,9 @@ public class CartController {
         return ResponseEntity.created(URI.create("/cart/" + savedId)).build();
     }
 
-    @DeleteMapping("/cart/{productId}")
-    public ResponseEntity<Void> delete(@AuthPrincipal AuthMember authMember,
-                       @PathVariable long productId) {
-        cartService.removeProductByMemberInfoAndProductId(authMember, productId);
+    @DeleteMapping("/cart/{cartId}")
+    public ResponseEntity<Void> delete(@PathVariable long cartId) {
+        cartService.removeByCartId(cartId);
         return ResponseEntity.noContent().build();
     }
 }

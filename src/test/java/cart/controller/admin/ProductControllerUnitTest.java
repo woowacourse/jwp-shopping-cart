@@ -10,6 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import cart.dto.ProductRegisterRequest;
+import cart.mvcconfig.interceptor.AuthInterceptor;
+import cart.service.MemberService;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +40,12 @@ public class ProductControllerUnitTest {
     private ObjectMapper objectMapper;
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private AuthInterceptor authInterceptor;
+
+    @MockBean
+    private MemberService memberService;
 
     @BeforeEach
     void setUp() {
