@@ -13,6 +13,8 @@ import org.springframework.test.context.jdbc.Sql;
 import java.net.URISyntaxException;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Sql("/test.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -51,12 +53,18 @@ class ViewControllerTest {
     @DisplayName("GET /settings 요청 시 Status OK 및 HTML 반환")
     @Test
     void shouldResponseHtmlWithStatusOkWhenRequestGetToSettings() {
-        given().log().all()
+        final var result = given().log().all()
                 .when()
                 .get("/settings")
                 .then().log().all()
                 .statusCode(HttpStatus.SC_OK)
-                .contentType(ContentType.HTML);
+                .contentType(ContentType.HTML)
+                .extract();
+
+        assertAll(
+                () -> assertThat(result.asString()).contains("user1@woowa.com"),
+                () -> assertThat(result.asString()).contains("user2@woowa.com")
+        );
     }
 
 }

@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.controller.dto.MemberResponse;
 import cart.domain.product.Product;
 import cart.domain.user.Member;
 import cart.persistance.dao.MemberDao;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public final class ViewController {
@@ -40,11 +42,13 @@ public final class ViewController {
         return "cart";
     }
 
-    //TODO: 다른 방법?
     @GetMapping("/settings")
     public String memberList(final Model model) {
         final List<Member> members = memberDao.findAll();
-        model.addAttribute("members", members);
+        final List<MemberResponse> memberResponses = members.stream()
+                .map(MemberResponse::new)
+                .collect(Collectors.toList());
+        model.addAttribute("members", memberResponses);
         return "settings";
     }
 }
