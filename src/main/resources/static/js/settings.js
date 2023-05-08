@@ -10,6 +10,7 @@ const showEditModal = (member) => {
     modal.dataset.formType = 'edit';
     modal.dataset.email = member.email;
     modal.dataset.name = member.name;
+    modal.dataset.password = member.password;
     modal.style.display = 'block';
 };
 
