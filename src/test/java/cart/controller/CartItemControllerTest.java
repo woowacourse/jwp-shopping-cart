@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.dto.request.CartItemCreationRequest;
 import io.restassured.RestAssured;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -46,7 +47,8 @@ class CartItemControllerTest {
                     .body(request)
                     .when().post("/cart/cart-items")
                     .then().log().all()
-                    .statusCode(HttpStatus.CREATED.value());
+                    .statusCode(HttpStatus.CREATED.value())
+                    .header("Location", Matchers.equalTo("/cart/cart-items/2"));
         }
 
         @DisplayName("정상 등록이 되지 않았다면 상태코드 400을 반환하는지 확인한다")

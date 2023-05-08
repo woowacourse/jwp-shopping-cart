@@ -3,6 +3,7 @@ package cart.controller;
 import cart.dto.request.ProductCreationRequest;
 import cart.dto.request.ProductModificationRequest;
 import io.restassured.RestAssured;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -45,7 +46,8 @@ class ProductControllerTest {
                     .body(request)
                     .when().post("/admin/products")
                     .then().log().all()
-                    .statusCode(HttpStatus.CREATED.value());
+                    .statusCode(HttpStatus.CREATED.value())
+                    .header("Location", Matchers.equalTo("/admin/products/3"));
         }
 
         @DisplayName("잘못된 형식의 이름이 들어오면 상태코드 400을 반환하는지 확인한다")
