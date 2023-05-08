@@ -7,5 +7,5 @@ VALUES ('스프링', 1000, 'https://previews.123rf.com/images/marucyan/marucyan1
 
 INSERT
 IGNORE INTO user_info(email, password)
-    VALUES ('jena@naver.com', 'pwjena12'),
+    VALUES ('jena@naver.com', '1234'),
     ('spring@gmail.com', 'pwspring34');

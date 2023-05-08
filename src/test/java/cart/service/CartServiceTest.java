@@ -45,7 +45,7 @@ class CartServiceTest {
         List<UserResponse> userResponses = cartService.readAllUsers();
 
         //then
-        assertThat(userResponses).isEqualTo(List.of(new UserResponse("jena@naver.com", "pwjena12"),
+        assertThat(userResponses).isEqualTo(List.of(new UserResponse("jena@naver.com", "1234"),
                 new UserResponse("spring@gmail.com", "pwspring34")));
     }
 

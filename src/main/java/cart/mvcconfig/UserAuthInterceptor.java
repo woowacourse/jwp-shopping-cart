@@ -3,10 +3,10 @@ package cart.mvcconfig;
 import cart.auth.infrastructure.BasicAuthorizationExtractor;
 import cart.auth.service.AuthService;
 import cart.dto.UserAuthInfo;
+import cart.exception.UserAuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,6 +26,6 @@ public class UserAuthInterceptor implements HandlerInterceptor {
         if (userAuthInfo != null && authService.validAuthentication(userAuthInfo)) {
             return true;
         }
-        throw new AuthenticationException("사용자 정보가 없습니다");
+        throw new UserAuthenticationException("사용자 정보가 없습니다");
     }
 }

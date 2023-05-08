@@ -40,7 +40,7 @@ public class CartControllerTest {
     void 장바구니_목록_GET_API_테스트() {
         RestAssured
                 .given().log().all()
-                .auth().preemptive().basic("jena@email.com", "1234")
+                .auth().preemptive().basic("jena@naver.com", "1234")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/carts")
                 .then().log().all()
@@ -79,7 +79,7 @@ public class CartControllerTest {
                 .auth().preemptive().basic("jena@naver.com", "1234")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productId)
-                .when().delete("/carts/product/1")
+                .when().delete("/carts/product/" + productId.getId())
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
