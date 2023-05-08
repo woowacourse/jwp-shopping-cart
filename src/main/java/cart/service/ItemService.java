@@ -16,6 +16,7 @@ public class ItemService {
 
     private static final int ZERO_AFFECTED_ROW = 0;
     private static final String INVALID_ITEM_ID_MESSAGE = "잘못된 상품 번호를 입력하셨습니다.";
+    private static final String EXISTS_ITEM_MESSAGE = "이미 동일한 상품이 존재합니다.";
 
     private final ItemDao itemDao;
 
@@ -25,6 +26,7 @@ public class ItemService {
 
     public void save(ItemRequest itemRequest) {
         CreateItem createItem = itemRequest.toCreateItem();
+        validateDuplicatedItem(createItem);
 
         itemDao.save(createItem);
     }
@@ -42,9 +44,20 @@ public class ItemService {
 
     public void updateItem(Long itemId, ItemRequest itemRequest) {
         CreateItem createItem = itemRequest.toCreateItem();
+        validateDuplicatedItem(createItem);
 
         int updatedRow = itemDao.update(itemId, createItem);
         validateItemId(updatedRow);
+    }
+
+    private void validateDuplicatedItem(CreateItem createItem) {
+        if (isItemDuplicated(createItem)) {
+            throw new ServiceIllegalArgumentException(EXISTS_ITEM_MESSAGE);
+        }
+    }
+
+    private boolean isItemDuplicated(CreateItem createItem) {
+        return itemDao.isItemExistsByCreateItem(createItem);
     }
 
     private void validateItemId(int changedRow) {

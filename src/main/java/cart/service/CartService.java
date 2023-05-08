@@ -18,6 +18,7 @@ public class CartService {
     private static final int ZERO_AFFECTED_ROW = 0;
     private static final String INVALID_ITEM_ID_MESSAGE = "상품 정보를 다시 입력해주세요.";
     private static final String INVALID_MEMBER_MESSAGE = "email과 password를 다시 입력해주세요.";
+    private static final String EXISTS_ITEM_IN_CART_MESSAGE = "이미 장바구니에 담은 상품입니다.";
 
     private final CartDao cartDao;
     private final MemberDao memberDao;
@@ -31,11 +32,11 @@ public class CartService {
 
     public void putItemIntoCart(Long itemId, AuthorizationInformation authorizationInformation) {
         AuthMember authMember = authorizationInformation.toAuthMember();
-
         validatePutCart(itemId, authMember);
 
         Member member = memberDao.findByAuthMember(authMember);
         PutCart putCart = new PutCart(member.getId(), itemId);
+        validateDuplicatedCart(putCart);
 
         cartDao.save(putCart);
     }
@@ -47,6 +48,16 @@ public class CartService {
         if (!itemDao.isItemExistsById(itemId)) {
             throw new ServiceIllegalArgumentException(INVALID_ITEM_ID_MESSAGE);
         }
+    }
+
+    private void validateDuplicatedCart(PutCart putCart) {
+        if (isCartDuplicated(putCart)) {
+            throw new ServiceIllegalArgumentException(EXISTS_ITEM_IN_CART_MESSAGE);
+        }
+    }
+
+    private boolean isCartDuplicated(PutCart putCart) {
+        return cartDao.isCartExists(putCart);
     }
 
     public List<ItemResponse> findAllItemByAuthInfo(AuthorizationInformation authorizationInformation) {
