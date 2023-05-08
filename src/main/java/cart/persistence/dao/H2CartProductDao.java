@@ -52,7 +52,13 @@ public class H2CartProductDao implements CartProductDao {
     }
 
     @Override
-    public void delete(CartProductEntity cartProductEntity) {
-        
+    public boolean delete(CartProductEntity cartProductEntity) {
+        String sql = "DELETE FROM cart_product WHERE member_id = ? AND product_id = ?";
+        int deletedRowsCount = this.jdbcTemplate.update(
+                sql,
+                cartProductEntity.getMemberId(),
+                cartProductEntity.getProductId()
+        );
+        return deletedRowsCount != 0;
     }
 }

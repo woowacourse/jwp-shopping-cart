@@ -9,5 +9,5 @@ public interface CartProductDao {
 
     long save(CartProductEntity cartProductEntity);
 
-    void delete(CartProductEntity cartProductEntity);
+    boolean delete(CartProductEntity cartProductEntity);
 }

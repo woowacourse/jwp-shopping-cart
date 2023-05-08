@@ -1,6 +1,7 @@
 package cart.persistence.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.persistence.entity.CartProductEntity;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -83,14 +85,17 @@ class H2CartProductDaoTest {
         this.productId2 = keyHolder.getKey().longValue();
     }
 
+//    @DisplayName("모든 장바구니 상품을 불러온다.")
+//    @Test
+
     @DisplayName("장바구니 상품을 저장한다.")
     @Test
     void shouldSaveCartProductWhenRequest() {
         CartProductEntity cartProductEntity = CartProductEntity.createToSave(this.memberId, this.productId1);
-        this.cartProductDao.save(cartProductEntity);
+        long savedId = this.cartProductDao.save(cartProductEntity);
 
         String sql = "SELECT id, member_id, product_id FROM cart_product WHERE id = ?";
-        CartProductEntity cartProductEntityFromDb = this.jdbcTemplate.queryForObject(sql, rowMapper, 1L);
+        CartProductEntity cartProductEntityFromDb = this.jdbcTemplate.queryForObject(sql, rowMapper, savedId);
 
         assertAll(
                 () -> assertThat(cartProductEntityFromDb.getMemberId()).isEqualTo(cartProductEntity.getMemberId()),
@@ -108,5 +113,33 @@ class H2CartProductDaoTest {
         long idSavedAlready = this.cartProductDao.save(cartProductEntity);
 
         assertThat(idSavedAlready).isEqualTo(cartProductId);
+    }
+
+    @DisplayName("장바구니 상품을 삭제하고 true를 반환한다.")
+    @Test
+    void shouldReturnTrueWhenDeleteCartProduct() {
+        CartProductEntity cartProductEntityToSave = CartProductEntity.createToSave(this.memberId, this.productId1);
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(cartProductEntityToSave);
+        long savedId = this.simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
+
+        CartProductEntity cartProductEntityToDelete = CartProductEntity.createToSave(this.memberId, this.productId1);
+        boolean isDeleted = this.cartProductDao.delete(cartProductEntityToDelete);
+
+        String sql = "SELECT id, member_id, product_id FROM cart_product WHERE id = ?";
+
+        assertAll(
+                () -> assertThat(isDeleted).isTrue(),
+                () -> assertThatThrownBy(() -> this.jdbcTemplate.queryForObject(sql, rowMapper, savedId))
+                        .isInstanceOf(EmptyResultDataAccessException.class)
+        );
+    }
+
+    @DisplayName("없는 장바구니 상품을 삭제하면 false를 반환한다.")
+    @Test
+    void shouldReturnFalseWhenRequestToDeleteCartProductNotExist() {
+        CartProductEntity cartProductEntityToDelete = CartProductEntity.createToSave(this.memberId, this.productId1);
+        boolean isDeleted = this.cartProductDao.delete(cartProductEntityToDelete);
+
+        assertThat(isDeleted).isFalse();
     }
 }
