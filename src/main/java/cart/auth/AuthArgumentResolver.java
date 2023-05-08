@@ -25,6 +25,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String email = (String) request.getAttribute("email");
         String password = (String) request.getAttribute("password");
-        return new AuthMemberDetails(email, password);
+        return new AuthMember(email, password);
     }
 }

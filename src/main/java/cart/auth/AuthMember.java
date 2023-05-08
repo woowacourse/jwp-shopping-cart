@@ -1,10 +1,10 @@
 package cart.auth;
 
-public class AuthMemberDetails {
+public class AuthMember {
     private final String email;
     private final String password;
 
-    public AuthMemberDetails(final String email, final String password) {
+    public AuthMember(final String email, final String password) {
         this.email = email;
         this.password = password;
     }
