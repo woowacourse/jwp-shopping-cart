@@ -23,6 +23,7 @@ public class JdbcProductRepository implements ProductRepository {
         final int price = rs.getInt("price");
         return new Product(id, name, imageUrl, price);
     };
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public JdbcProductRepository(final DataSource dataSource) {

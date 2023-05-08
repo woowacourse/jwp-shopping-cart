@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import cart.service.ProductService;
 import cart.service.dto.ProductRequest;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/product")
+@RequestMapping("/products")
 @RestController
 public class ProductController {
 
@@ -30,8 +30,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> editProduct(@RequestBody @Valid final ProductRequest productRequest) {
-        productService.updateProduct(productRequest);
+    public ResponseEntity<Void> editProduct(@PathVariable final Long id,
+                                            @RequestBody @Valid final ProductRequest productRequest) {
+        productService.updateProduct(id, productRequest);
         return ResponseEntity.ok().build();
     }
 

@@ -2,38 +2,92 @@
 
 ## 요구 기능 목록
 
-- [x] 페이지 접속
-    - [x] 상품 목록 페이지 연동
-        - [x] "/" 로 접근하면 상품 목록 페이지(index.html)로 접근한다.
-        - [x] 상품 조회 기능이 동작하게 만든다.
-    - [x] 관리자 도구 페이지 연동
-        - [x] "/admin" 으로 접근할 경우 관리자 도구 페이지(admin.html)로 접근한다.
-        - [x] 상품 추가 기능이 동작하게 만든다.
-        - [x] 상품 수정 기능이 동작하게 만든다.
-        - [x] 상품 삭제 기능이 동작하게 만든다.
+### view
 
-- [x] 상품에 대한 정보
-    - [x] 상품 ID
-    - [x] 상품 이름
-    - [x] 상품 이미지(url)
-    - [x] 상품 가격
+- [x] 상품 목록 페이지 연동
+    - [x] "/" 로 접근하면 상품 목록 페이지(index.html)로 접근한다.
+    - [x] 상품 조회 기능이 동작하게 만든다.
+    - [x] 장바구니에 상품을 추가하는 기능이 동작하게 한다.
+- [x] 관리자 도구 페이지 연동
+    - [x] "/admin" 으로 접근할 경우 관리자 도구 페이지(admin.html)로 접근한다.
+    - [x] 상품 추가 기능이 동작하게 만든다.
+    - [x] 상품 수정 기능이 동작하게 만든다.
+    - [x] 상품 삭제 기능이 동작하게 만든다.
+- [x] 사용자 설정 페이지 연동
+    - [x] "/settings"로 접근하면, 유저를 선택하는 페이지(settings.html)로 접근한다.
+    - [x] 사용자를 선택하면, 이후 요청에서 사용자의 인증 정보가 포함된다.
+- [x] 장바구니 페이지 연동
+    - [x] "/cart"로 접근하면, 장바구니 페이지(cart.html)로 접근한다.
+    - [x] 장바구니 목록을 제거하는 기능이 동작하게 한다.
 
-- [x] 상품 관리 CRUD API
+### service
+
+- [x] 상품 service
     - [x] 상품 생성
     - [x] 상품 목록 조회
     - [x] 상품 수정
     - [x] 상품 삭제
 
+- [x] 장바구니 service
+    - [x] 장바구니에 상품 추가
+    - [x] 장바구니에 담긴 상품 제거
+    - [x] 장바구니 목록 조회
+    - [x] 사용자 정보는 요청 Header의 Authorization 필드를 사용해 인증 처리를 하여 얻습니다.
+        - Basic 인증방식을 사용한다.
+
+- [x] 유저 service
+    - [x] 저장된 유저 전체를 조회
+    - [x] 유효한 Member인지 인증
+
+### domain
+
+- [x] 상품
+    - [x] 상품 ID
+    - [x] 상품 이름
+    - [x] 상품 이미지(url)
+    - [x] 상품 가격
+
+- [x] 유저
+    - [x] 유저 ID
+    - [x] 유저의 이메일
+    - [x] 유저의 비밀번호
+
+### validate
+
 - [x] validate
-    - [x] 가격 : 0이상인 정수
-    - [x] 이름 : 255자까지
-    - [x] imageUrl : 확장자 종류 validation(regex)
+    - [x] Product
+        - [x] 가격 : 0이상인 정수
+        - [x] 이름 : 255자까지
+        - [x] imageUrl : 확장자 종류 validation(regex)
+        - [x] notFound : 없는 상품으로 행위를 실행하는 경우에 대한 validation
+    - [x] Member
+        - [x] email : 이메일 형식에 대한 validation
+        - [x] notFound : 없는 멤버를 행위를 실행하는 경우에 대한 validation
+    - [x] Auth
+        - [x] Auth : Basic Auth 값이 없는 경우에 대한 validation
+        - [x] certification : basic Auth의 값이 실제 유저 디비와 일치하지 않는 경우에 대한 validation
+
+### 시간이 날 경우 추가로 적용하고 싶은 내용
+
+- [ ] 회원가입 기능(+로그인) 만들기
+- [ ] 장바구니에서 상품의 수량 추가하기
 
 ## 📚 API
 
 ### Product
-| 기능 | Method | URL             |
-|----|--------|-----------------|
-| 생성 | POST   | /products       |
-| 수정 | PUT    | /products/{id}  |
-| 삭제 | DELETE | /products/{id}  |
+
+| 기능 | Method | URL             | request body                   |
+|----|--------|-----------------|--------------------------------|
+| 생성 | POST   | /products       | product{name, imageUrl, price} |
+| 수정 | PUT    | /products/{id}  | product{name, imageUrl, price} |
+| 삭제 | DELETE | /products/{id}  | x                              |
+
+### Cart
+
+Cart API 요청 시 `Authorization : Basic Auth 필요`
+
+| 기능    | Method | URL                 | request body |
+|-------|-------|---------------------|--------------|
+| 생성    | POST  | /cart/products      | {productId}  |
+| 전체 조회 | GET   | /cart/products      | x            |
+| 삭제    | DELETE | /cart/products/{id} | x            |

@@ -8,6 +8,7 @@ import cart.service.dto.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -20,17 +21,19 @@ public class ProductService {
 
     public List<ProductResponse> findAll() {
         return productRepository.findAll().stream()
-                .map(ProductService::toResponse)
+                .map(ProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public long createProduct(final ProductRequest httpRequest) {
-        final Product savedProduct = productRepository.save(toProduct(httpRequest));
+    @Transactional
+    public long createProduct(final ProductRequest request) {
+        final Product savedProduct = productRepository.save(request.toProduct());
         return savedProduct.getId();
     }
 
-    public void updateProduct(final ProductRequest productRequest) {
-        final int updatedCount = productRepository.update(toProduct(productRequest));
+    @Transactional
+    public void updateProduct(final Long id, final ProductRequest productRequest) {
+        final int updatedCount = productRepository.update(productRequest.toProduct(id));
         validateProductNotFound(updatedCount);
     }
 
@@ -40,17 +43,8 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public void deleteById(final long id) {
         productRepository.deleteById(id);
-    }
-
-    private static ProductResponse toResponse(final Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getImageUrl(),
-                product.getPrice());
-    }
-
-    private static Product toProduct(final ProductRequest productRequest) {
-        return new Product(productRequest.getId(), productRequest.getName(), productRequest.getImageUrl(),
-                productRequest.getPrice());
     }
 }

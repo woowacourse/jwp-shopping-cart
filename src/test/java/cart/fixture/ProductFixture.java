@@ -1,4 +1,4 @@
-package cart;
+package cart.fixture;
 
 import cart.entity.Product;
 

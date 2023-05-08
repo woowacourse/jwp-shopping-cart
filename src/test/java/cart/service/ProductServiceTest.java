@@ -24,9 +24,9 @@ class ProductServiceTest {
         @Test
         @DisplayName("업데이트하려는 상품이 없는 경우 ProductNotFoundException 발생")
         void productNotFound() {
-            final ProductRequest appleRequest = new ProductRequest(10L, "사과", "apple.png", 2000);
+            final ProductRequest appleRequest = new ProductRequest("사과", "apple.png", 2000);
 
-            assertThatThrownBy(() -> productService.updateProduct(appleRequest))
+            assertThatThrownBy(() -> productService.updateProduct(20L, appleRequest))
                     .isInstanceOf(ProductNotFoundException.class);
         }
     }

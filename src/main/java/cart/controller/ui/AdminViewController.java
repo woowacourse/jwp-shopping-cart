@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.ui;
 
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminViewController {
 
     private final ProductService productService;
 
-    public AdminController(final ProductService productService) {
+    public AdminViewController(final ProductService productService) {
         this.productService = productService;
     }
 

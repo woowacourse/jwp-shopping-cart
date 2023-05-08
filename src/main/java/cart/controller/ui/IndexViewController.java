@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.ui;
 
 import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -6,11 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class ShoppingCartController {
+public class IndexViewController {
 
     private final ProductService productService;
 
-    public ShoppingCartController(final ProductService productService) {
+    public IndexViewController(final ProductService productService) {
         this.productService = productService;
     }
 
