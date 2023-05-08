@@ -1,7 +1,9 @@
-package cart.infrastructure;
+package cart.auth;
 
 import cart.dto.AuthInfo;
+import cart.exception.AuthorizationException;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,10 +14,10 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor {
 
     @Override
     public AuthInfo extract(HttpServletRequest request) {
-        String header = request.getHeader(AUTHORIZATION);
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (header == null) {
-            return null;
+            throw new AuthorizationException("Authorization 헤더가 존재하지 않습니다.");
         }
 
         if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
@@ -30,6 +32,6 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor {
             return new AuthInfo(email, password);
         }
 
-        return null;
+        throw new AuthorizationException("Basic 타입 authorization이 아닙니다.");
     }
 }
