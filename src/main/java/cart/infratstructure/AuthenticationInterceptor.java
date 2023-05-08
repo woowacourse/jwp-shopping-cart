@@ -37,6 +37,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
 
         request.setAttribute(LOGIN_MEMBER_ID.name(), member.getId());
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
 }
