@@ -33,7 +33,7 @@ class CartViewControllerTest {
     void 장바구니_페이지_조회() {
         given().when()
                 .log().all()
-                .get("/carts")
+                .get("cart")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -45,7 +45,7 @@ class CartViewControllerTest {
         List<CartResponse> cartResponses = given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("carts/all")
+                .when().get("carts")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
