@@ -29,9 +29,6 @@ class CartServiceTest {
     @Mock
     private MemberDao memberDao;
 
-    @Mock
-    private ProductDao productDao;
-
     @InjectMocks
     private CartService cartService;
 
