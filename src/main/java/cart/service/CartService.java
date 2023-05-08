@@ -7,14 +7,14 @@ import cart.dto.response.ProductDto;
 import cart.excpetion.CartException;
 import cart.repository.CartRepository;
 import cart.repository.ProductRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Service
 @Transactional
 public class CartService {
 
