@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,21 +36,21 @@ public class ProductControllerTest {
         mockMvc.perform(post("/product")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
     @DisplayName("PUT /product/{id}")
     void updateProduct() throws Exception {
-        doNothing().when(productService).update(anyLong(), anyString(), anyInt(), anyString());
         final ProductRequest productRequest = new ProductRequest("애쉬", 2000, "image");
         final String request = objectMapper.writeValueAsString(productRequest);
         final int id = 1;
+        given(productService.update(anyLong(), anyString(), anyInt(), anyString())).willReturn(1L);
 
         mockMvc.perform(put("/product/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test

@@ -63,7 +63,7 @@ class CartControllerTest {
                         .header("Authorization", "Basic dGVzdDAxQGdtYWlsLmNvbToxMjEyMTIxMg==")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test

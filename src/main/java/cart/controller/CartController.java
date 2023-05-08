@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -30,8 +31,8 @@ public class CartController {
     public ResponseEntity<Void> createCartItem(@RequestBody final CartItemRequest cartItemRequset, final HttpServletRequest httpServletRequest) {
         final Long userId = extractUserId(httpServletRequest);
         final Long productId = cartItemRequset.getProductId();
-        cartService.save(userId, productId);
-        return ResponseEntity.ok().build();
+        final Long id = cartService.save(userId, productId);
+        return ResponseEntity.created(URI.create("/cart/items/" + id)).build();
     }
 
     private Long extractUserId(final HttpServletRequest request) {

@@ -36,11 +36,13 @@ public class ProductService {
     }
 
     @Transactional
-    public void update(final Long id, final String name, final int price, final String image) {
+    public Long update(final Long id, final String name, final int price, final String image) {
         validateProductIdExist(id);
 
         final Product product = new Product(id, name, price, image);
         productDao.update(product);
+
+        return id;
     }
 
     public void validateProductIdExist(final Long id) {
