@@ -36,8 +36,6 @@ public class CartDao {
                 rs.getString("image"),
                 rs.getLong("price")), memberId);
 
-        System.out.println(products);
-
         return new Cart(memberId, products);
     }
 

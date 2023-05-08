@@ -34,7 +34,6 @@ public class CartController {
 
     @PostMapping("/carts/{member_id}")
     public ResponseEntity<String> cartProductAdd(@PathVariable long member_id, @RequestBody ProductIdDto productId) {
-        System.out.println(member_id + productId.getProductId() + "!!!!");
         cartService.addProduct(member_id, productId.getProductId());
         return ResponseEntity.ok().build();
     }
