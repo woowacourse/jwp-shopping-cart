@@ -28,5 +28,4 @@ class MemberTest {
                 () -> new Member(1L, "a@a.com", password)
         );
     }
-
 }
