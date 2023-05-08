@@ -7,15 +7,17 @@ import cart.cart.service.CartService;
 import cart.product.dto.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/cart/items")
+@Validated
 public class CartApiController {
 
     private final CartService cartService;
@@ -40,11 +42,7 @@ public class CartApiController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteItemFromCart(@AuthorizedMember long memberId, @PathVariable Long productId) {
-        if (Objects.isNull(productId)) {
-            throw new IllegalArgumentException("상품 번호를 입력해주세요");
-        }
-
+    public ResponseEntity<Void> deleteItemFromCart(@NotNull(message = "상품 번호를 입력해주세요") @AuthorizedMember long memberId, @PathVariable Long productId) {
         cartService.deleteItemFromCart(memberId, productId);
 
         return ResponseEntity.noContent().build();

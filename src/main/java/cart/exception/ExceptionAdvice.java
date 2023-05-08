@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ public class ExceptionAdvice {
                              .body(errors);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, UnauthorizedMemberException.class})
+    @ExceptionHandler({IllegalArgumentException.class, UnauthorizedMemberException.class, ConstraintViolationException.class})
     public ResponseEntity<ErrorDto> handleException(Exception exception, HttpServletRequest request) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         return handleException(exception, httpStatus, request.getRequestURI());
