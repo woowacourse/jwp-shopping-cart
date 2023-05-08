@@ -14,10 +14,13 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     private final AuthenticateInterceptor authenticateInterceptor;
     private final AuthorityInterceptor authorityInterceptor;
+    private final BasicAuthorizationArgumentResolver basicAuthorizationArgumentResolver;
 
-    public WebConfiguration(final AuthenticateInterceptor authenticateInterceptor, final AuthorityInterceptor authorityInterceptor) {
+    public WebConfiguration(final AuthenticateInterceptor authenticateInterceptor, final AuthorityInterceptor authorityInterceptor,
+        final BasicAuthorizationArgumentResolver basicAuthorizationArgumentResolver) {
         this.authenticateInterceptor = authenticateInterceptor;
         this.authorityInterceptor = authorityInterceptor;
+        this.basicAuthorizationArgumentResolver = basicAuthorizationArgumentResolver;
     }
 
     @Override
@@ -33,6 +36,6 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new BasicAuthorizationArgumentResolver());
+        resolvers.add(basicAuthorizationArgumentResolver);
     }
 }

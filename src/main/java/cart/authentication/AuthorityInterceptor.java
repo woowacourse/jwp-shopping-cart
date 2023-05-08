@@ -3,6 +3,7 @@ package cart.authentication;
 import cart.dao.member.MemberDao;
 import cart.entity.member.Member;
 import cart.entity.member.Role;
+import cart.exception.member.AuthorityException;
 import cart.exception.notfound.MemberNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,31 +18,29 @@ public class AuthorityInterceptor implements HandlerInterceptor {
     private static final String DELIMITER = ":";
 
     private final MemberDao memberDao;
+    private final AuthorizationExtractor authorizationExtractor;
 
-    public AuthorityInterceptor(final MemberDao memberDao) {
+    public AuthorityInterceptor(final MemberDao memberDao, final AuthorizationExtractor authorizationExtractor) {
         this.memberDao = memberDao;
+        this.authorizationExtractor = authorizationExtractor;
     }
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
-        String authorization = request.getHeader("Authorization");
-        if (authorization == null) {
+        Object extactedMember = authorizationExtractor.extact(request);
+        if (!(extactedMember instanceof MemberInfo)) {
             throw new MemberNotFoundException();
         }
 
-        if ((authorization.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
-            String authHeaderValue = authorization.substring(BASIC_TYPE.length()).trim();
-            byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
-            String decodedString = new String(decodedBytes);
+        MemberInfo memberInfo = (MemberInfo) extactedMember;
+        Member member = memberDao.findByEmailAndPassword(memberInfo.getEmail(), memberInfo.getPassword())
+            .orElseThrow(MemberNotFoundException::new);
 
-            String[] credentials = decodedString.split(DELIMITER);
-            String email = credentials[0];
-            String password = credentials[1];
-            Member member = memberDao.findByEmailAndPassword(email, password).orElseThrow(MemberNotFoundException::new);
-            return checkAuthority(member);
+        if(!checkAuthority(member)) {
+            throw new AuthorityException();
         }
 
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
 
     private boolean checkAuthority(Member member) {

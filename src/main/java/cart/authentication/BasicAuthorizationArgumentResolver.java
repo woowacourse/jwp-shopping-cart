@@ -1,18 +1,27 @@
 package cart.authentication;
 
 import cart.dto.member.MemberRequest;
+import cart.entity.member.Member;
 import cart.exception.notfound.MemberNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@Component
 public class BasicAuthorizationArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
+    private final AuthorizationExtractor authorizationExtractor;
+
+    public BasicAuthorizationArgumentResolver(final AuthorizationExtractor authorizationExtractor) {
+        this.authorizationExtractor = authorizationExtractor;
+    }
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
@@ -22,23 +31,14 @@ public class BasicAuthorizationArgumentResolver implements HandlerMethodArgument
     @Override
     public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest,
         final WebDataBinderFactory binderFactory) throws Exception {
-        String authorization = webRequest.getHeader("Authorization");
-        if (authorization == null) {
+        HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
+        Object extactedMember = authorizationExtractor.extact(httpServletRequest);
+        if (!(extactedMember instanceof MemberInfo)) {
             throw new MemberNotFoundException();
         }
 
-        if ((authorization.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
-            String authHeaderValue = authorization.substring(BASIC_TYPE.length()).trim();
-            byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
-            String decodedString = new String(decodedBytes);
+        MemberInfo memberInfo = (MemberInfo) extactedMember;
 
-            String[] credentials = decodedString.split(DELIMITER);
-            String email = credentials[0];
-            String password = credentials[1];
-
-            return new MemberRequest(email, password);
-        }
-
-        throw new Exception();
+        return new MemberRequest(memberInfo.getEmail(), memberInfo.getPassword());
     }
 }

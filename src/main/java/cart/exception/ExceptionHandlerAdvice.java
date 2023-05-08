@@ -1,6 +1,7 @@
 package cart.exception;
 
 import cart.exception.common.CommonException;
+import cart.exception.member.AuthorityException;
 import cart.exception.notfound.NotFoundException;
 import java.util.stream.Collectors;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -29,5 +30,10 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(AuthorityException.class)
+    public ResponseEntity<String> handleAuthorityException(AuthorityException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 }
