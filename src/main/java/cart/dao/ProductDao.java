@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductDao {
+    
     Optional<ProductEntity> save(Product product);
 
     ProductEntity update(ProductEntity entity);

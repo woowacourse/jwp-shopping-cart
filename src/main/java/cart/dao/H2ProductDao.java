@@ -16,11 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class ProductDaoImpl implements ProductDao {
-
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
-    private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) ->
+public class H2ProductDao implements ProductDao {
+    private static final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) ->
             ProductEntity.create(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
@@ -28,7 +25,10 @@ public class ProductDaoImpl implements ProductDao {
                     resultSet.getInt("price")
             );
 
-    public ProductDaoImpl(JdbcTemplate jdbcTemplate) {
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
+
+    public H2ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
@@ -50,8 +50,8 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public ProductEntity update(ProductEntity entity) {
-        String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
-        jdbcTemplate.update(sql, entity.getName(), entity.getImage(), entity.getPrice(), entity.getId());
+        String sql = "UPDATE product SET name = ?, image = ?, price = ?, updated_at = ? WHERE id = ?";
+        jdbcTemplate.update(sql, entity.getName(), entity.getImage(), entity.getPrice(), entity.getUpdatedAt(), entity.getId());
         return entity;
     }
 

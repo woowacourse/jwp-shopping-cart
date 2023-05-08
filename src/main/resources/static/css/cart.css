@@ -10,12 +10,12 @@
     margin-bottom: 20px;
     padding: 20px;
     background-color: #fff;
-    box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease-in-out;
 }
 
 .cart-item:hover {
-    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2);
     transform: translateY(-5px);
 }
 
@@ -61,4 +61,32 @@
 
 .cart-item-delete:hover {
     background-color: #e74c3c;
+}
+
+.cart-item-update {
+    margin-left: auto;
+    background-color: #234ea4;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.cart-item-update:hover {
+    background-color: #4176e3;
+}
+
+.cart-item-count {
+    height: 32px;
+    font-size: 15px;
+    border: 0;
+    border-radius: 15px;
+    outline: none;
+    padding: 0 10px 0 10px;
+    background-color: rgb(233, 233, 233);
 }

@@ -2,11 +2,15 @@ package cart.domain;
 
 import cart.fixture.ImageFixture;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 class ProductTest {
 
     @Test
@@ -15,7 +19,7 @@ class ProductTest {
 
         Assertions.assertThatThrownBy(() -> new Product(name, ImageFixture.url, 1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("상품명은 50자를 초과할 수 없습니다.");
+                .hasMessage("상품명은 50자를 초과할 수 없습니다." + System.lineSeparator() + "name : " + name);
     }
 
     @ParameterizedTest
@@ -24,6 +28,6 @@ class ProductTest {
     void 상품명이_빈_값이면_예외가_발생한다(String name) {
         Assertions.assertThatThrownBy(() -> new Product(name, ImageFixture.url, 1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("상품명은 비어있을 수 없습니다.");
+                .hasMessage("상품명은 비어있을 수 없습니다." + System.lineSeparator() + "name : " + name);
     }
 }

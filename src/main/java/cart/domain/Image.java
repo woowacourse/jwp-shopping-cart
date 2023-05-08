@@ -13,12 +13,12 @@ public class Image {
 
     private void validateUrl(String url) {
         if (url == null || url.isBlank()) {
-            throw new IllegalArgumentException("이미지 URL은 비어있을 수 없습니다.");
+            throw new IllegalArgumentException("이미지 URL은 비어있을 수 없습니다." + System.lineSeparator() + "url : " + url);
         }
         try {
             new URL(url);
         } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("적절한 형태의 url이 아닙니다.");
+            throw new IllegalArgumentException("적절한 형태의 url이 아닙니다." + System.lineSeparator() + "url : " + url);
         }
     }
 

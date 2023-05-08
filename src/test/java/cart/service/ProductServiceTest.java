@@ -2,13 +2,15 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import cart.entity.ProductEntity;
 import cart.fixture.ImageFixture;
 import cart.fixture.ProductFixture.COFFEE;
 import cart.fixture.ProductFixture.RAMYEON;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import static cart.fixture.ProductFixture.WATER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest
 @Transactional
 class ProductServiceTest {
@@ -54,7 +58,7 @@ class ProductServiceTest {
 
             assertThatThrownBy(() -> productService.create(request))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품명은 50자를 초과할 수 없습니다.");
+                    .hasMessage("상품명은 50자를 초과할 수 없습니다." + System.lineSeparator() + "name : " + invalidProductName);
         }
 
         @Test
@@ -63,7 +67,7 @@ class ProductServiceTest {
 
             assertThatThrownBy(() -> productService.create(request))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("이미지 URL은 비어있을 수 없습니다.");
+                    .hasMessage("이미지 URL은 비어있을 수 없습니다." + System.lineSeparator() + "url : " + request.getImage());
         }
 
         @Test
@@ -72,7 +76,7 @@ class ProductServiceTest {
 
             assertThatThrownBy(() -> productService.create(request))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("가격은 음수 혹은 빈 값이 될 수 없습니다.");
+                    .hasMessage("가격은 음수 혹은 빈 값이 될 수 없습니다." + System.lineSeparator() + "price : " + request.getPrice());
         }
     }
 

@@ -1,8 +1,8 @@
 package cart.fixture;
 
 import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 
 public class ProductFixture {
     public static class PIZZA {

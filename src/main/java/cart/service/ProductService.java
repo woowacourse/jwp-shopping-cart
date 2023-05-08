@@ -2,8 +2,8 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.dto.request.ProductRequest;
+import cart.dto.response.ProductResponse;
 import cart.entity.ProductEntity;
 import cart.exception.ResourceNotFoundException;
 import cart.mapper.ProductMapper;
@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-
     private final ProductDao productDao;
     private final ProductMapper productMapper;
 
@@ -34,7 +33,7 @@ public class ProductService {
     public List<ProductResponse> findAll() {
         List<ProductEntity> products = productDao.findAll();
         return products.stream()
-                .map(ProductResponse::from)
+                .map(productMapper::entityToResponse)
                 .collect(Collectors.toList());
     }
 
@@ -47,8 +46,8 @@ public class ProductService {
     }
 
     public void deleteById(Long id) {
-        productDao.findById(id)
+        ProductEntity product = productDao.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다." + System.lineSeparator() + "id : " + id));
-        productDao.deleteById(id);
+        productDao.deleteById(product.getId());
     }
 }
