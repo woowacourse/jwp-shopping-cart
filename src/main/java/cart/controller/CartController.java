@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @Validated
@@ -29,7 +31,7 @@ public class CartController {
         this.cartDao = cartDao;
     }
 
-    @GetMapping("/cart-products")
+    @GetMapping("/cart/products")
     public ResponseEntity<List<CartItemResponse>> cartProducts(
             @LoginId final Long memberId
     ) {
@@ -38,16 +40,16 @@ public class CartController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/cart-products")
+    @PostMapping("/cart/products")
     public ResponseEntity<Void> addProductToCart(
             @LoginId final Long memberId,
             @Valid @RequestBody final AddCartRequest addCartRequest
-    ) {
-        cartDao.addProduct(memberId, addCartRequest.getProductId());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    ) throws URISyntaxException {
+        final long createdId = cartDao.addProduct(memberId, addCartRequest.getProductId());
+        return ResponseEntity.created(new URI("/cart/products/" + createdId)).build();
     }
 
-    @DeleteMapping("/cart-products/{id}")
+    @DeleteMapping("/cart/products/{id}")
     public ResponseEntity<Void> removeProductFromCart(
             @Positive @PathVariable final Long id
     ) {

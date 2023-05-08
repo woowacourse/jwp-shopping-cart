@@ -52,7 +52,8 @@ class ProductControllerTest {
                     .when()
                     .post("/product")
                     .then().log().all()
-                    .statusCode(HttpStatus.SC_CREATED);
+                    .statusCode(HttpStatus.SC_CREATED)
+                    .header("Location", "/product/3");
         }
 
         @DisplayName("이름이 공백인 경우 예외가 발생한다.")

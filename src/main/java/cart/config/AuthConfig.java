@@ -31,6 +31,6 @@ public class AuthConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(basicAuthorizeInterceptor)
-                .addPathPatterns("/cart-products/**");
+                .addPathPatterns("/cart/products/**");
     }
 }
