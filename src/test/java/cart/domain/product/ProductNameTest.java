@@ -1,6 +1,5 @@
 package cart.domain.product;
 
-import cart.persistance.entity.product.ProductName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

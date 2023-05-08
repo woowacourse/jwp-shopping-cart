@@ -1,9 +1,9 @@
 package cart.controller;
 
+import cart.domain.product.Product;
+import cart.domain.user.Member;
 import cart.persistance.dao.MemberDao;
 import cart.persistance.dao.ProductDao;
-import cart.persistance.entity.product.Product;
-import cart.persistance.entity.user.Member;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

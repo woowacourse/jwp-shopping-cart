@@ -1,27 +1,30 @@
-package cart.persistance.entity.user;
+package cart.domain.user;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-public final class Member {
+public class Member {
 
     @NotNull
     @Positive
-    private final long id;
+    private final Long id;
 
     @Email
-    @NotBlank
     private final String email;
 
     @NotBlank
     private final String password;
 
-    public Member(final long id, final String email, final String password) {
+    public Member(final Long id, final String email, final String password) {
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -30,9 +33,5 @@ public final class Member {
 
     public String getPassword() {
         return password;
-    }
-
-    public Long getId() {
-        return id;
     }
 }

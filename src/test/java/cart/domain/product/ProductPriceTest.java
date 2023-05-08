@@ -1,6 +1,5 @@
 package cart.domain.product;
 
-import cart.persistance.entity.product.ProductPrice;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
