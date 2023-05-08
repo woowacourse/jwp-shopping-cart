@@ -6,6 +6,7 @@ Admin 사용자는 판매할 상품을 등록하거나, 수정, 삭제할 수 �
 # 프로그램 설계
 
 ## Class Diagram
+### Web application architecture
 ```mermaid
 classDiagram
     Web Environment <--> ViewController
@@ -16,10 +17,49 @@ classDiagram
     Web Environment <--> ProductController
     ProductController --> ProductService
     ProductService --> ProductRepository
+    ProductRepository --> H2ProductDao
     
-    Web Environment <--> UserController
-    UserController --> UserService
-    UserService --> UserRepository
+    Web Environment <--> MemberController
+    MemberController --> MemberService
+    MemberService --> MemberRepository
+    MemberRepository --> H2MemberDao
+    
+    Web Environment <--> CartController
+    CartController --> CartService
+    CartService --> ProductService
+    CartService --> MemberService
+    CartService --> CartRepository
+    CartRepository --> H2CartProductDao
+```
+
+### Entity Relationship Diagram
+```mermaid
+erDiagram
+    MEMBER {
+        BIGINT id PK
+        VARCHAR(255) email
+        VARCHAR(255) password
+        VARCHAR(255) name
+        VARCHAR(50) password
+    }
+    
+    PRODUCT {
+        BIGINT id PK
+        VARCHAR(50) name
+        BIGINT price
+        TEXT image_url
+    }
+    
+    CART_PRODUCT {
+        BIGINT id PK
+        BIGINT member_id FK
+        BIGINT product_id FK
+    }
+        
+    MEMBER ||--|{ CART_PRODUCT : ""
+    PRODUCT ||--|{ CART_PRODUCT : ""
+    
+    
 ```
 
 ## Database
@@ -30,16 +70,19 @@ classDiagram
     - 2)`localhost:8080/h2-console` 접속
     - 3)`application.properties` 참고하여 Login 정보 입력하고 `Connect`
 
-### DDL
+### DML (Dummy data 삽입)
 ```sql
-CREATE TABLE product
-(
-    id        BIGINT       NOT NULL AUTO_INCREMENT,
-    name      VARCHAR(50)  NOT NULL,
-    price     BIGINT       NOT NULL,
-    image_url VARCHAR(500) NOT NULL,정
-    PRIMARY KEY (id)
-);
+INSERT INTO member(email, password, name, phone_number)
+VALUES ('email1@test.com', '1234abcd!@', 'Test Name', '01012341234');
+
+INSERT INTO member(email, password)
+VALUES ('email2@test.com', '1234abcd!@');
+
+INSERT INTO product(name, price, image_url)
+VALUES ('자전거', 240000, 'https://mediahub.seoul.go.kr/uploads/mediahub/2022/04/jqPSSIsMrKiOfOZEvcRVkTCdhYrzBWuh.png');
+
+INSERT INTO product(name, price, image_url)
+VALUES ('물통', 10000, 'https://image.babosarang.co.kr/product/detail/E6G/2106161821325983/_600.jpg');
 ```
 
 
