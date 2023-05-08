@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dto.CartResponse;
+import cart.controller.dto.CartResponse;
 import cart.repository.CartRepository;
 import org.springframework.stereotype.Service;
 

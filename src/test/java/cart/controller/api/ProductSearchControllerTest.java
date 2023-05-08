@@ -12,8 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 
 import cart.controller.AbstractProductControllerTest;
+import cart.controller.dto.ProductResponse;
 import cart.domain.product.Product;
-import cart.dto.ProductResponse;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({"NonAsciiCharacters", "SpellCheckingInspection"})

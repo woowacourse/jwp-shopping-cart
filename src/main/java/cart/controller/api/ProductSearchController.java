@@ -3,7 +3,7 @@ package cart.controller.api;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cart.dto.ProductResponse;
+import cart.controller.dto.ProductResponse;
 import cart.service.ProductSearchService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -2,8 +2,8 @@ package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.controller.dto.CartResponse;
 import cart.domain.user.User;
-import cart.dto.CartResponse;
 import cart.repository.StubCartRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

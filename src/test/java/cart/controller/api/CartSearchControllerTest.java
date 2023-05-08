@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 import cart.controller.AbstractProductControllerTest;
+import cart.controller.dto.ProductResponse;
 import cart.domain.cart.Cart;
 import cart.domain.product.Product;
 import cart.domain.user.User;
-import cart.dto.ProductResponse;
 import org.junit.jupiter.api.Test;
 
 class CartSearchControllerTest extends AbstractProductControllerTest {

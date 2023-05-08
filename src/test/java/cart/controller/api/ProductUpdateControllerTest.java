@@ -10,8 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.controller.AbstractProductControllerTest;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
+import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductResponse;
 import cart.dto.RequestFixture;
 import cart.dto.ResponseFixture;
 import org.junit.jupiter.api.Test;

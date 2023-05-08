@@ -11,9 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Optional;
 
 import cart.controller.AbstractProductControllerTest;
+import cart.controller.dto.CartRequest;
+import cart.controller.dto.CartResponse;
 import cart.domain.user.User;
-import cart.dto.CartRequest;
-import cart.dto.CartResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 

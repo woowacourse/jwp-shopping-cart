@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import cart.controller.auth.AuthenticationPrincipal;
+import cart.controller.dto.ProductResponse;
 import cart.domain.cart.Cart;
 import cart.domain.user.User;
-import cart.dto.ProductResponse;
 import cart.service.CartSearchService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -3,8 +3,8 @@ package cart.controller.view;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import cart.controller.dto.UserResponse;
 import cart.domain.user.User;
-import cart.dto.UserResponse;
 import cart.service.UserSearchService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

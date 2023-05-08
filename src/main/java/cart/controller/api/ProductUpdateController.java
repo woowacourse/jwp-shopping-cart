@@ -2,9 +2,9 @@ package cart.controller.api;
 
 import javax.validation.Valid;
 
+import cart.controller.dto.ProductRequest;
+import cart.controller.dto.ProductResponse;
 import cart.domain.product.Product;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
 import cart.service.ProductUpdateService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

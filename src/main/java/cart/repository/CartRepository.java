@@ -3,9 +3,9 @@ package cart.repository;
 import java.util.List;
 import java.util.Optional;
 
+import cart.controller.dto.CartResponse;
 import cart.domain.cart.Cart;
 import cart.domain.user.Email;
-import cart.dto.CartResponse;
 import cart.entiy.CartEntity;
 
 public interface CartRepository {
