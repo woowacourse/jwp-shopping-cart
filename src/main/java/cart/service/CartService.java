@@ -17,7 +17,7 @@ public class CartService {
     }
 
     public void add(CartDto cartDto) {
-        cartDao.save(cartDto);
+        cartDao.save(cartDto.getMemeberId(), cartDto.getProductId());
     }
 
     public List<Cart> findAll(Long memberId) {
@@ -25,7 +25,7 @@ public class CartService {
     }
 
     public void delete(CartDto cartDto) {
-        cartDao.delete(cartDto);
+        cartDao.delete(cartDto.getMemeberId(), cartDto.getProductId());
     }
 
 }

@@ -1,7 +1,6 @@
 package cart.dao.cart;
 
 import cart.domain.Cart;
-import cart.dto.CartDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -32,15 +31,15 @@ public class DbCartDao implements CartDao {
     }
 
     @Override
-    public void save(CartDto cartDto) {
+    public void save(Long memberId, Long productId) {
         String sql = "insert into cart(member_id, product_id) values (?,?)";
-        jdbcTemplate.update(sql, cartDto.getMemeberId(), cartDto.getProductId());
+        jdbcTemplate.update(sql, memberId, productId);
     }
 
     @Override
-    public void delete(CartDto cartDto) {
+    public void delete(Long memberId, Long productId) {
         String sql = "delete from cart where member_id = ? and product_id = ?";
-        jdbcTemplate.update(sql, cartDto.getMemeberId(), cartDto.getProductId());
+        jdbcTemplate.update(sql, memberId, productId);
     }
 
 }

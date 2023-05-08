@@ -31,7 +31,7 @@ class DbCartDaoTest {
     @Test
     @DisplayName("장바구니에 상품을 저장한다.")
     void save() {
-        dbCartDao.save(CART_DTO_A);
+        dbCartDao.save(CART_DTO_A.getMemeberId(), CART_DTO_B.getProductId());
 
         String sql = "select count(*) from cart";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
@@ -41,10 +41,10 @@ class DbCartDaoTest {
     @Test
     @DisplayName("장바구니 상품을 제거한다.")
     void delete() {
-        dbCartDao.save(CART_DTO_A);
-        dbCartDao.save(CART_DTO_B);
+        dbCartDao.save(CART_DTO_A.getMemeberId(), CART_DTO_A.getProductId());
+        dbCartDao.save(CART_DTO_B.getMemeberId(), CART_DTO_B.getProductId());
 
-        dbCartDao.delete(CART_DTO_A);
+        dbCartDao.delete(CART_DTO_A.getMemeberId(), CART_DTO_B.getProductId());
 
         String sql = "select count(*) from cart";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
@@ -54,8 +54,8 @@ class DbCartDaoTest {
     @Test
     @DisplayName("장바구니의 모든 상품을 memberId를 통해 불러온다.")
     void findAll() {
-        dbCartDao.save(CART_DTO_A);
-        dbCartDao.save(CART_DTO_B);
+        dbCartDao.save(CART_DTO_A.getMemeberId(), CART_DTO_A.getProductId());
+        dbCartDao.save(CART_DTO_B.getMemeberId(), CART_DTO_B.getProductId());
 
         List<Cart> carts = dbCartDao.findAll(CART_DTO_A.getMemeberId());
 
