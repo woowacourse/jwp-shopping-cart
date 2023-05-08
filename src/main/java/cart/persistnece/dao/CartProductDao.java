@@ -17,7 +17,7 @@ public class CartProductDao {
     private final SimpleJdbcInsert insertActor;
     private final JdbcTemplate jdbcTemplate;
 
-    private RowMapper<CartProduct> rowMapper = (resultSet, rowNum) -> new CartProduct(
+    private final RowMapper<CartProduct> rowMapper = (resultSet, rowNum) -> new CartProduct(
             resultSet.getLong("id"),
             new Product(
                     resultSet.getLong("product_id"),

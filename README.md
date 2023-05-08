@@ -28,12 +28,13 @@
 #### 장바구니 상품 API
 
 - [x] 장바구니 전체 상품 
-    - GET "/cart/{id}"
+    - GET "/cart-products/{id}"
+    - HEADER: Basic Auth
     - Response: 200 OK
         - List : id, name, price, image_url
 
 - [x] 장바구니 상품 추가
-    - POST "/cart"
+    - POST "/cart-products"
     - HEADER: Basic Auth
     - Request: productId
     - Response: 201 Created
@@ -41,9 +42,8 @@
             - location: "/products/{id}"
 - [x] 상품 삭제
     - HEADER: Basic Auth
-    - DELETE "/cart/{id}"
+    - DELETE "/cart-products/{id}"
     - Response: 200 No Content
-
 
 ### View
 
@@ -53,6 +53,12 @@ URL : "/"
 URL : "/admin"
     - 존재하는 모든 상품의 리스트를 제공한다.
     - 상품의 추가, 수정, 삭제가 가능하다.
+
+URL : "/cart"
+    - 회원이 장바구니에 담은 모든 상품을 제공하낟.
+
+URL : "/settings"
+    - 등록된 모든 회원의 정보를 제공한다.
 
 ### 도메인 
 
@@ -71,4 +77,11 @@ Product
   - name
   - price
   - image_url 
-
+ Member
+  - id(pk)
+  - email (unique)
+  - password
+ Cart_Product
+  - id(pk)
+  - member_id(fk)
+  - product_id(fk)
