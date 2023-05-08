@@ -1,9 +1,9 @@
 package cart.controller;
 
 import cart.controller.auth.BasicTokenDecoder;
-import cart.domain.product.Product;
 import cart.service.CartService;
 import cart.service.dto.MemberAuthDto;
+import cart.service.dto.ProductDto;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
@@ -26,9 +26,9 @@ public class CartController {
     }
 
     @GetMapping("/me/products")
-    public ResponseEntity<List<Product>> getProductsOfMyCart(HttpServletRequest request) {
+    public ResponseEntity<List<ProductDto>> getProductsOfMyCart(HttpServletRequest request) {
         MemberAuthDto memberAuthDto = BasicTokenDecoder.extract(request);
-        List<Product> products = this.cartService.findProductsInCartByUser(memberAuthDto);
+        List<ProductDto> products = this.cartService.findProductsInCartByUser(memberAuthDto);
         return ResponseEntity.ok().body(products);
     }
 

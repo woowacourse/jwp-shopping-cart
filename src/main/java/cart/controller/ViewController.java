@@ -1,9 +1,9 @@
 package cart.controller;
 
-import cart.domain.member.Member;
-import cart.domain.product.Product;
 import cart.service.MemberService;
 import cart.service.ProductService;
+import cart.service.dto.MemberDto;
+import cart.service.dto.ProductDto;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,22 +24,22 @@ public class ViewController {
 
     @GetMapping
     public String viewHome(final Model model) {
-        List<Product> products = productService.findAll();
-        model.addAttribute("products", products);
+        List<ProductDto> productDtos = productService.findAll();
+        model.addAttribute("products", productDtos);
         return "index";
     }
 
     @GetMapping("/admin")
     public String viewAdmin(final Model model) {
-        final List<Product> products = productService.findAll();
-        model.addAttribute("products", products);
+        final List<ProductDto> productDtos = productService.findAll();
+        model.addAttribute("products", productDtos);
         return "admin";
     }
 
     @GetMapping("/members")
     public String viewUsers(final Model model) {
-        final List<Member> members = memberService.findAll();
-        model.addAttribute("members", members);
+        final List<MemberDto> memberDtos = memberService.findAll();
+        model.addAttribute("members", memberDtos);
         return "members";
     }
 

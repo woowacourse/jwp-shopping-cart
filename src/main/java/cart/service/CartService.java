@@ -2,10 +2,12 @@ package cart.service;
 
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartRepository;
-import cart.domain.member.Member;
 import cart.domain.product.Product;
 import cart.service.dto.MemberAuthDto;
+import cart.service.dto.MemberDto;
+import cart.service.dto.ProductDto;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,22 +25,25 @@ public class CartService {
         this.cartRepository = cartRepository;
     }
 
-    public List<Product> findProductsInCartByUser(MemberAuthDto memberAuthDto) {
-        Member signedUpMember = this.memberService.signUp(memberAuthDto);
-        return this.cartRepository.findByMemberId(signedUpMember.getId()).getProducts();
+    public List<ProductDto> findProductsInCartByUser(MemberAuthDto memberAuthDto) {
+        MemberDto signedUpMemberDto = this.memberService.signUp(memberAuthDto);
+        List<Product> products = this.cartRepository.findByMemberId(signedUpMemberDto.getId()).getProducts();
+        return products.stream()
+                .map(ProductDto::from)
+                .collect(Collectors.toList());
     }
 
     public void addProductToCartById(MemberAuthDto memberAuthDto, Long productId) {
-        Member signedUpMember = this.memberService.signUp(memberAuthDto);
-        Product product = this.productService.findById(productId);
-        Cart cart = this.cartRepository.findByMemberId(signedUpMember.getId());
-        this.cartRepository.saveProductToCart(cart, product);
+        MemberDto signedUpMemberDto = this.memberService.signUp(memberAuthDto);
+        ProductDto productDto = this.productService.findById(productId);
+        Cart cart = this.cartRepository.findByMemberId(signedUpMemberDto.getId());
+        this.cartRepository.saveProductToCart(cart, productDto.toDomain());
     }
 
     public void deleteProductFromCartById(MemberAuthDto memberAuthDto, Long productId) {
-        Member signedUpMember = this.memberService.signUp(memberAuthDto);
-        Product product = this.productService.findById(productId);
-        Cart cart = this.cartRepository.findByMemberId(signedUpMember.getId());
-        this.cartRepository.deleteProductFromCart(cart, product);
+        MemberDto signedUpMemberDto = this.memberService.signUp(memberAuthDto);
+        ProductDto productDto = this.productService.findById(productId);
+        Cart cart = this.cartRepository.findByMemberId(signedUpMemberDto.getId());
+        this.cartRepository.deleteProductFromCart(cart, productDto.toDomain());
     }
 }
