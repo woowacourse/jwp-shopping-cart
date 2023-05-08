@@ -1,45 +1,52 @@
 package cart.service;
 
-import cart.dao.JdbcProductDao;
+import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static cart.service.ProductService.PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 
-@JdbcTest
-@Sql(scripts = {"classpath:test.sql"})
+@ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
+    private static final Product testProduct = new Product("이오", 1, null);
 
-    private final ProductService productService;
+    @InjectMocks
+    private ProductService productService;
 
-    public ProductServiceTest(@Autowired final JdbcTemplate jdbcTemplate) {
-        this.productService = new ProductService(new JdbcProductDao(jdbcTemplate));
-    }
+    @Mock
+    private ProductDao productDao;
 
     @Test
     @DisplayName("상품을 저장한다")
     void save() {
-        assertDoesNotThrow(() -> productService.save("이오", 1000, null));
+        given(productDao.insert(any())).willReturn(1L);
+
+        assertThat(productService.save("이오", 1, null)).isEqualTo(1L);
     }
 
 
     @Test
     @DisplayName("Id로 상품을 조회한다")
     void findById() {
-        final long id = productService.save("이오", 1000, null);
+        given(productDao.findById(anyLong())).willReturn(Optional.of(testProduct));
 
-        final Product actual = productService.findById(id);
+        final Product actual = productService.findById(1L);
 
         assertThat(actual.getName()).isEqualTo("이오");
     }
@@ -47,19 +54,22 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품 리스트를 조회한다")
     void findAll() {
-        productService.save("이오", 1000, null);
-        productService.save("애쉬", 1000, null);
+        given(productDao.findAll()).willReturn(List.of(testProduct));
 
         final List<Product> actual = productService.findAll();
 
-        assertThat(actual).extracting("name")
-                .containsExactly("이오", "애쉬");
+        assertAll(
+                () -> assertThat(actual.size()).isEqualTo(1),
+                () -> assertThat(actual.get(0).getName()).isEqualTo("이오")
+        );
     }
 
     @Test
     @DisplayName("상품을 갱신시 id가 유효하지 않으면 예외 발생")
     void updateInvalidId() {
-        assertThatThrownBy(() -> productService.update((long) 9999, "애쉬", 1000, null))
+        given(productDao.isExist(anyLong())).willReturn(false);
+
+        assertThatThrownBy(() -> productService.update(-1L, "애쉬", 1000, null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE);
     }
@@ -67,26 +77,20 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품을 갱신한다")
     void update() {
-        final long id = productService.save("이오", 1000, null);
+        given(productDao.isExist(anyLong())).willReturn(true);
+        doNothing().when(productDao).update(any());
 
-        productService.update(id, "애쉬", 2000, "image");
-
-        final Product product = productService.findById(id);
-        assertAll(
-                () -> assertThat(product.getId()).isEqualTo(id),
-                () -> assertThat(product.getName()).isEqualTo("애쉬"),
-                () -> assertThat(product.getPrice()).isEqualTo(2000),
-                () -> assertThat(product.getImage()).isEqualTo("image")
-        );
+        assertThat(productService.update(1L, "카프카", 9999, null)).isEqualTo(1L);
     }
 
     @Test
     @DisplayName("Id로 상품 존재여부를 검증한다")
     void validateExistProductId() {
-        final long id = productService.save("이오", 1000, null);
+        given(productDao.isExist(1L)).willReturn(true);
+        given(productDao.isExist(-1L)).willReturn(false);
 
         assertAll(
-                () -> assertDoesNotThrow(() -> productService.validateProductIdExist(id)),
+                () -> assertDoesNotThrow(() -> productService.validateProductIdExist(1L)),
                 () -> assertThatThrownBy(() -> productService.validateProductIdExist(-1L))
                         .isInstanceOf(IllegalArgumentException.class)
                         .hasMessage(PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE)
@@ -96,12 +100,9 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품을 삭제한다")
     void delete() {
-        final long id = productService.save("이오", 1000, null);
+        given(productDao.isExist(anyLong())).willReturn(true);
+        doNothing().when(productDao).deleteById(anyLong());
 
-        productService.delete(id);
-
-        assertThatThrownBy(() -> productService.findById(id))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(PRODUCT_ID_NOT_EXIST_ERROR_MESSAGE);
+        assertDoesNotThrow(() -> productService.delete(1L));
     }
 }
