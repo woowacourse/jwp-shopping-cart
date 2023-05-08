@@ -1,6 +1,8 @@
 package cart.dao;
 
+import cart.auth.AuthenticationException;
 import cart.domain.Member;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -51,7 +53,11 @@ public class MemberDao {
     public Member findByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email=:email";
         final SqlParameterSource sqlParameterSource = new MapSqlParameterSource("email", email);
-        return namedParameterJdbcTemplate.queryForObject(sql, sqlParameterSource, rowMapper);
+        try {
+            return namedParameterJdbcTemplate.queryForObject(sql, sqlParameterSource, rowMapper);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new AuthenticationException();
+        }
     }
 
     public void deleteAll() {

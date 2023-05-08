@@ -1,6 +1,5 @@
 package cart.controller;
 
-import cart.auth.AuthenticationException;
 import cart.auth.AuthenticationPrincipal;
 import cart.auth.Credential;
 import cart.dto.CartProductRequest;
@@ -9,7 +8,6 @@ import cart.dto.ProductResponse;
 import cart.service.CartProductService;
 import cart.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,12 +43,6 @@ public class CartProductController {
     }
 
     private MemberResponse findMemberByCredential(Credential credential) {
-        MemberResponse memberResponse = null;
-        try {
-            memberResponse = memberService.findByEmail(credential.getEmail());
-        } catch (EmptyResultDataAccessException exception) {
-            throw new AuthenticationException();
-        }
-        return memberResponse;
+        return memberService.findByEmail(credential.getEmail());
     }
 }
