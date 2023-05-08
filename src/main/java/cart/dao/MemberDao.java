@@ -25,7 +25,7 @@ public class MemberDao {
         ));
     }
 
-    public Long findByEmail(final String email) {
+    public Long findIdByEmail(final String email) {
         String sql = "SELECT id FROM member WHERE email LIKE ? ";
 
         return jdbcTemplate.queryForObject(sql, Long.class, email);

@@ -23,7 +23,7 @@ public class CartService {
     }
 
     public void save(final String email, final Long productId) {
-        Long memberId = memberDao.findByEmail(email);
+        Long memberId = memberDao.findIdByEmail(email);
 
         cartDao.existsByMemberIdAndProductId(memberId, productId)
                 .ifPresent((action) -> {
@@ -41,7 +41,7 @@ public class CartService {
     }
 
     public void delete(final String email, final Long productId) {
-        Long memberId = memberDao.findByEmail(email);
+        Long memberId = memberDao.findIdByEmail(email);
         cartDao.deleteByMemberIdAndProductId(memberId, productId);
     }
 }

@@ -44,7 +44,7 @@ class MemberDaoTest {
     @Test
     void findByEmail() {
         // when
-        Long memberId = memberDao.findByEmail("a@a.com");
+        Long memberId = memberDao.findIdByEmail("a@a.com");
 
         // then
         Assertions.assertThat(memberId).isEqualTo(1L);

@@ -35,7 +35,7 @@ class CartServiceTest {
     @Test
     void save_success() {
         // given
-        given(memberDao.findByEmail(any())).willReturn(1L);
+        given(memberDao.findIdByEmail(any())).willReturn(1L);
         given(cartDao.existsByMemberIdAndProductId(any(), any())).willReturn(Optional.empty());
 
         // when, then
@@ -46,7 +46,7 @@ class CartServiceTest {
     @Test
     void save_fail() {
         // given
-        given(memberDao.findByEmail(any())).willReturn(1L);
+        given(memberDao.findIdByEmail(any())).willReturn(1L);
         given(cartDao.existsByMemberIdAndProductId(any(), any())).willReturn(Optional.of(1L));
 
         // when, then
@@ -81,7 +81,7 @@ class CartServiceTest {
     @Test
     void delete() {
         // given
-        given(memberDao.findByEmail(any())).willReturn(1L);
+        given(memberDao.findIdByEmail(any())).willReturn(1L);
         willDoNothing().given(cartDao).deleteByMemberIdAndProductId(any(), any());
 
         // when, then
