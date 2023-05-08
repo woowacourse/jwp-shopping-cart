@@ -1,6 +1,5 @@
 package cart.domain.generic;
 
-import cart.exception.ErrorCode;
 import cart.exception.InvalidPriceException;
 
 import java.util.Objects;

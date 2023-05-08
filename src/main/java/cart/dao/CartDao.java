@@ -3,7 +3,6 @@ package cart.dao;
 import cart.domain.Cart;
 import cart.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
