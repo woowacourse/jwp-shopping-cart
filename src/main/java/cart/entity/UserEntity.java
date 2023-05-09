@@ -3,18 +3,18 @@ package cart.entity;
 import javax.validation.constraints.Email;
 
 public final class UserEntity {
-    private final Long id;
+    private final long id;
     @Email
     private final String email;
     private final String password;
 
-    public UserEntity(Long id, String email, String password) {
+    public UserEntity(long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

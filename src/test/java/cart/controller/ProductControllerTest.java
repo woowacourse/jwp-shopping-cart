@@ -25,7 +25,7 @@ class ProductControllerTest {
     void setUp() {
         RestAssured.port = port;
 
-        productDao.create(new ProductEntity(null, "product1", "test", 1000));
+        productDao.create(new ProductEntity(0, "product1", "test", 1000));
     }
 
     @DisplayName("물품 조회")

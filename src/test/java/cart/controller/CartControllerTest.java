@@ -44,8 +44,8 @@ class CartControllerTest {
         password = "password";
         authHeader = "Basic " + Base64.getEncoder().encodeToString((email + ":" + password).getBytes());
 
-        userDao.create(new UserEntity(null, email, password));
-        productDao.create(new ProductEntity(null, "product1", "test", 1000));
+        userDao.create(new UserEntity(0, email, password));
+        productDao.create(new ProductEntity(0, "product1", "test", 1000));
         cartDao.create(1L, 1L, 1);
     }
 

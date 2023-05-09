@@ -1,31 +1,31 @@
 package cart.entity;
 
 public final class CartItemEntity {
-    private final Long id;
-    private final Long userId;
-    private final Long productId;
-    private final Integer count;
+    private final long id;
+    private final long userId;
+    private final long productId;
+    private final int count;
 
-    public CartItemEntity(Long id, Long userId, Long productId, Integer count) {
+    public CartItemEntity(long id, long userId, long productId, int count) {
         this.id = id;
         this.userId = userId;
         this.productId = productId;
         this.count = count;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public Long getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public Long getProductId() {
+    public long getProductId() {
         return productId;
     }
 
-    public Integer getCount() {
+    public int getCount() {
         return count;
     }
 }
