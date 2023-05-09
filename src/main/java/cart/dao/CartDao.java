@@ -1,59 +1,9 @@
 package cart.dao;
 
-import cart.dto.CartProductResponse;
 import cart.entity.Cart;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
+public interface CartDao {
+    int insert(Cart cart);
 
-@Repository
-public class CartDao {
-
-    private final SimpleJdbcInsert simpleJdbcInsert;
-    private final JdbcTemplate jdbcTemplate;
-
-    private final RowMapper<CartProductResponse> cartMapper
-            = (resultSet, rowNum) -> CartProductResponse.from(
-            resultSet.getInt("id"),
-            resultSet.getString("name"),
-            resultSet.getInt("price"),
-            resultSet.getString("image")
-    );
-
-    public CartDao(JdbcTemplate jdbcTemplate) {
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("cart")
-                .usingGeneratedKeyColumns("id");
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public int insert(Cart cart) {
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(cart);
-        Number id = simpleJdbcInsert.executeAndReturnKey(parameterSource);
-        return id.intValue();
-    }
-
-
-    public int delete(int cartId, String email) {
-        String sql = "delete from cart where id = ? and email = ? ";
-        return jdbcTemplate.update(sql, cartId, email);
-    }
-
-    public List<CartProductResponse> selectById(String email) {
-        String sql = "select C.id, name, price, image\n" +
-                "from product P\n" +
-                "join \n" +
-                "(\n" +
-                "  select product_id, id \n" +
-                "  from cart\n" +
-                "  where email = ? \n" +
-                ") as C\n" +
-                "on p.id = C.product_id";
-        return jdbcTemplate.query(sql, cartMapper, email);
-    }
+    int delete(int cartId, String email);
 }

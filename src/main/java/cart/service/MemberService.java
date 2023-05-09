@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.MemberDao;
+import cart.dao.h2Implement.MemberH2Dao;
 import cart.dto.MemberResponse;
 import cart.entity.Member;
 import org.springframework.stereotype.Service;
@@ -10,15 +10,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class MemberService {
-    private final MemberDao memberDao;
+    private final MemberH2Dao memberH2Dao;
 
-    public MemberService(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberService(MemberH2Dao memberH2Dao) {
+        this.memberH2Dao = memberH2Dao;
     }
 
 
     public List<MemberResponse> selectAllMember() {
-        List<Member> members = memberDao.selectAll();
+        List<Member> members = memberH2Dao.selectAll();
         return members.stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toUnmodifiableList());
