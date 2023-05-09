@@ -13,12 +13,12 @@ public final class BasicAuthExtractor {
     private static final int EMAIL_OFFSET = 0;
     private static final int PASSWORD_OFFSET = 1;
 
-    public UserInfo extract(String header) throws AuthenticationException {
-        if (header == null || !header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
+    public UserInfo extract(String authorizationValue) throws AuthenticationException {
+        if (authorizationValue == null || !authorizationValue.toLowerCase().startsWith(BASIC_TYPE.toLowerCase())) {
             throw new AuthenticationException("사용자 인증이 필요합니다.");
         }
 
-        String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
+        String authHeaderValue = authorizationValue.substring(BASIC_TYPE.length()).trim();
         byte[] decodedBytes = decodeBase64(authHeaderValue);
         String decodedString = new String(decodedBytes);
 

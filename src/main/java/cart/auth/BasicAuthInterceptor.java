@@ -24,8 +24,8 @@ public final class BasicAuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
-        final String header = request.getHeader(AUTHORIZATION);
-        final UserInfo userInfo = basicAuthExtractor.extract(header);
+        final String authorizationValue = request.getHeader(AUTHORIZATION);
+        final UserInfo userInfo = basicAuthExtractor.extract(authorizationValue);
 
         final User user = userDao.findByEmail(userInfo.getEmail())
                 .orElseThrow(() -> new AuthenticationException(INVALID_USER_INFO));
