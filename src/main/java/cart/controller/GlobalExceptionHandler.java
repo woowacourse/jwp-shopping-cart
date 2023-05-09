@@ -74,10 +74,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleCommonException(final Exception exception) {
+    public ResponseEntity<ExceptionResponse> handleException(final Exception exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 LocalDateTime.now(),
-                "알 수 없는 서버 에러가 발생헀습니다."
+                "알 수 없는 서버 에러가 발생했습니다."
         );
 
         exception.printStackTrace();

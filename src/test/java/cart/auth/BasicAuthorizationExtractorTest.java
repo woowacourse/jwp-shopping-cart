@@ -19,12 +19,12 @@ import static org.mockito.Mockito.mock;
 class BasicAuthorizationExtractorTest {
 
     private HttpServletRequest request;
-    private BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
-
+    private BasicAuthorizationExtractor basicAuthorizationExtractor;
 
     @BeforeEach
     void setUp() {
         request = mock(HttpServletRequest.class);
+        basicAuthorizationExtractor = new BasicAuthorizationExtractor();
     }
 
     @DisplayName("request의 Authorization 헤더가 null이면 InvalidBasicAuthException을 반환한다.")
