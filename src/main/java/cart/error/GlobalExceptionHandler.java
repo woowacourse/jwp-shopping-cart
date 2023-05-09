@@ -8,27 +8,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
-public class ApiControllerHandler {
+@RestControllerAdvice
+public class GlobalExceptionHandler {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(CartException.class)
     public ResponseEntity<ErrorResponse> handlingApplicationException(final CartException e) {
         final ErrorCode errorCode = e.getErrorCode();
-        log.error(
-                "{\n" +
-                        "\n\t\"status\": " + errorCode.getStatus() + '\"' +
-                        ",\n\t\"code\": \"" + errorCode.getCode() + '\"' +
-                        ",\n\t\"message\": \"" + errorCode.getMessage() + '\"' +
-                        "\n}"
-        );
+        log.error("\nSTATUS : {}\nCODE : {}\nMESSAGE : {}\n",
+                errorCode.getStatus(), errorCode.getCode(), errorCode.getMessage());
+
         return new ResponseEntity<>(
                 new ErrorResponse(
                         errorCode.getStatus(),

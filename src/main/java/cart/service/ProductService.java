@@ -27,7 +27,7 @@ public class ProductService {
 
     public List<ProductResponse> findAll() {
         return productDao.findAll().stream()
-                .map(ProductResponse::new)
+                .map(ProductResponse::of)
                 .collect(Collectors.toList());
     }
 

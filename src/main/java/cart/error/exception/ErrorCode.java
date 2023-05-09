@@ -1,15 +1,12 @@
 package cart.error.exception;
 
-public enum ErrorCode {
-
-    CANT_SELL_NEGATIVE_QUANTITY(400, "PRODUCT-400-1", "Product can't be sold at a negative price."),
-    INTERNAL_SERVER_ERROR(500, "SERVER-500-1", "Internal Server Error");
+public class ErrorCode {
 
     private final int status;
     private final String code;
     private final String message;
 
-    ErrorCode(
+    public ErrorCode(
             final int status,
             final String code,
             final String message

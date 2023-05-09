@@ -107,8 +107,8 @@ class ProductDaoTest {
     void deleteById() {
         // given
         ProductCreateRequest createRequest1 = new ProductCreateRequest("product1", 5000, "image url");
-        ProductCreateRequest createRequest2 = new ProductCreateRequest("product1", 5000, "image url");
-        ProductCreateRequest createRequest3 = new ProductCreateRequest("product1", 5000, "image url");
+        ProductCreateRequest createRequest2 = new ProductCreateRequest("product2", 5000, "image url");
+        ProductCreateRequest createRequest3 = new ProductCreateRequest("product3", 5000, "image url");
         productDao.create(createRequest1.toEntity());
         productDao.create(createRequest2.toEntity());
         productDao.create(createRequest3.toEntity());

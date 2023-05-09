@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+class AdminApiControllerTest {
 
     @LocalServerPort
     int port;
@@ -20,15 +20,6 @@ class AdminControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-    }
-
-    @DisplayName("어드민 메인 페이지 접속")
-    @Test
-    void adminPage() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("상품 추가")
@@ -39,9 +30,9 @@ class AdminControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().post("/admin")
+                .when().post("/admin/product")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("상품 수정")
@@ -53,7 +44,7 @@ class AdminControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put("/admin/" + id)
+                .when().put("/admin/product/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -64,7 +55,7 @@ class AdminControllerTest {
         Long id = 1L;
 
         RestAssured.given().log().all()
-                .when().delete("/admin/" + id)
+                .when().delete("/admin/product/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

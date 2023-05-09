@@ -1,18 +1,18 @@
 package cart.controller.dto.request;
 
 import cart.entity.ProductEntity;
-import cart.exception.CantSellNegativeQuantity;
+import cart.exception.NegativeQuantityCantSellException;
 
 import javax.validation.constraints.NotEmpty;
 
 public class ProductRequest {
 
-    @NotEmpty(message = "Null을 허용하지 않습니다.")
+    @NotEmpty(message = "공백 또는 Null을 허용하지 않습니다.")
     private String name;
 
     private int price;
 
-    @NotEmpty(message = "Null을 허용하지 않습니다.")
+    @NotEmpty(message = "공백 또는 Null을 허용하지 않습니다.")
     private String imageUrl;
 
     public ProductRequest() {
@@ -31,7 +31,7 @@ public class ProductRequest {
 
     public void validatePrice(final int price) {
         if (price < 0) {
-            throw CantSellNegativeQuantity.EXCEPTION;
+            throw NegativeQuantityCantSellException.EXCEPTION;
         }
     }
 
