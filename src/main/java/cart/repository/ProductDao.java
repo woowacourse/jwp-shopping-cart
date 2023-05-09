@@ -1,6 +1,6 @@
 package cart.repository;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.request.ProductRequestDto;
 import cart.entity.ProductEntity;
 import cart.exception.ProductNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;

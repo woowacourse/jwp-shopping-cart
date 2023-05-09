@@ -7,12 +7,12 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class ProductEntityTest {
+class CartEntityTest {
 
     @Test
     @DisplayName("entity 생성 성공 케이스")
     void create_success() {
-        assertThatCode(() -> new ProductEntity("name", "image", 100))
+        assertThatCode(() -> new CartEntity(1, 1))
                 .doesNotThrowAnyException();
     }
 
@@ -20,11 +20,9 @@ class ProductEntityTest {
     @DisplayName("Id 를 제외한 필드에 null 이 들어오면 예외가 발생한다.")
     void create_fail() {
         assertAll(
-                () -> assertThatThrownBy(() -> new ProductEntity(null, "image.jpg", 100))
+                () -> assertThatThrownBy(() -> new CartEntity(null, 1))
                         .isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> new ProductEntity("name", null, 100))
-                        .isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> new ProductEntity("name", "image.jpg", null))
+                () -> assertThatThrownBy(() -> new CartEntity(1, null))
                         .isInstanceOf(IllegalArgumentException.class)
         );
     }

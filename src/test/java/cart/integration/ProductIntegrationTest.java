@@ -1,8 +1,7 @@
-package cart;
+package cart.integration;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.request.ProductRequestDto;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,7 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 추가 성공")
-    public void createProduct_success() {
+    void create_success() {
         final ProductRequestDto requestDto = new ProductRequestDto("name", "name.jpg", 1000);
 
         RestAssured
@@ -39,7 +38,7 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 추가 실패 - null이 존재하는 경우")
-    public void createProduct_fail_include_null() {
+    void create_fail_include_null() {
         final ProductRequestDto requestDto = new ProductRequestDto(null, "name.jpg", 1000);
 
         RestAssured
@@ -52,7 +51,7 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 추가 실패 - 가격이 음수인 경우")
-    public void createProduct_fail_negative_price_value() {
+    void create_fail_negative_price_value() {
         final ProductRequestDto requestDto = new ProductRequestDto("ditoo", "ditoo.jpg", -1000);
 
         RestAssured
@@ -64,29 +63,9 @@ public class ProductIntegrationTest {
     }
 
     @Test
-    @DisplayName("상품 전체 조회 성공")
-    public void getProducts_success() {
-        RestAssured
-                .given()
-                .when().get("")
-                .then().statusCode(HttpStatus.OK.value())
-                .contentType(ContentType.HTML);
-    }
-
-    @Test
-    @DisplayName("상품 전체 조회 성공 - '/admin'")
-    public void getProducts_in_admin_success() {
-        RestAssured
-                .given()
-                .when().get("/admin")
-                .then().statusCode(HttpStatus.OK.value())
-                .contentType(ContentType.HTML);
-    }
-
-    @Test
     @DisplayName("상품 수정 성공")
-    @Sql("/dummy_data.sql")
-    public void updateProduct_success() {
+    @Sql("/product_dummy_data.sql")
+    void update_success() {
         final ProductRequestDto requestDto = new ProductRequestDto("name", "name.jpg", 1000);
 
         RestAssured
@@ -100,8 +79,8 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 수정 실패 - null이 존재하는 경우")
-    @Sql("/dummy_data.sql")
-    public void updateProduct_fail_include_null() {
+    @Sql("/product_dummy_data.sql")
+    void update_fail_include_null() {
         final ProductRequestDto requestDto = new ProductRequestDto("name", null, 1000);
 
         RestAssured
@@ -115,8 +94,8 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 수정 실패 - 가격이 음수인 경우")
-    @Sql("/dummy_data.sql")
-    public void updateProduct_fail_negative_price_value() {
+    @Sql("/product_dummy_data.sql")
+    void update_fail_negative_price_value() {
         final ProductRequestDto requestDto = new ProductRequestDto("name", "image.png", -1000);
 
         RestAssured
@@ -130,8 +109,8 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 수정 실패 - 존재하지 않는 상품인 경우")
-    @Sql("/dummy_data.sql")
-    public void updateProduct_fail_product_not_found() {
+    @Sql("/product_dummy_data.sql")
+    void update_fail_product_not_found() {
         final ProductRequestDto requestDto = new ProductRequestDto("name", "image.png", 1000);
 
         RestAssured
@@ -145,8 +124,8 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 삭제 성공")
-    @Sql("/dummy_data.sql")
-    public void deleteProduct_success() {
+    @Sql("/product_dummy_data.sql")
+    void delete_success() {
         RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -157,8 +136,8 @@ public class ProductIntegrationTest {
 
     @Test
     @DisplayName("상품 삭제 실패 - 존재하지 않는 상품인 경우")
-    @Sql("/dummy_data.sql")
-    public void deleteProduct_fail_product_not_found() {
+    @Sql("/product_dummy_data.sql")
+    void delete_fail_product_not_found() {
         RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

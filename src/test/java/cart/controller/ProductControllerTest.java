@@ -1,6 +1,7 @@
 package cart.controller;
 
-import cart.dto.ProductRequestDto;
+import cart.auth.AuthArgumentResolver;
+import cart.dto.request.ProductRequestDto;
 import cart.exception.ProductNotFoundException;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +32,9 @@ class ProductControllerTest {
 
     @MockBean
     private ProductService productService;
+
+    @MockBean
+    private AuthArgumentResolver authArgumentResolver;
 
     @Test
     @DisplayName("상품 생성 성공")

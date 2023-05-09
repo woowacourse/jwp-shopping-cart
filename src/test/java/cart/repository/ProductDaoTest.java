@@ -1,6 +1,6 @@
 package cart.repository;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.request.ProductRequestDto;
 import cart.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -67,7 +67,7 @@ class ProductDaoTest {
 
     @Test
     @DisplayName("상품 전체 조회 성공")
-    @Sql(scripts = "/dummy_data.sql")
+    @Sql(scripts = "/product_dummy_data.sql")
     void findALl_success() {
         // given, when
         final List<ProductEntity> allProducts = productDao.findAll();
@@ -75,20 +75,20 @@ class ProductDaoTest {
         // then
         assertAll(
                 () -> assertThat(allProducts).hasSize(3),
-                () -> assertThat(allProducts.get(0).getName()).isEqualTo("pooh"),
-                () -> assertThat(allProducts.get(0).getImage()).isEqualTo("pooh.jpg"),
-                () -> assertThat(allProducts.get(0).getPrice()).isEqualTo(1_000_000),
-                () -> assertThat(allProducts.get(2).getPrice()).isEqualTo(10)
+                () -> assertThat(allProducts.get(0).getName()).isEqualTo("삼겹살"),
+                () -> assertThat(allProducts.get(0).getImage()).isEqualTo("3-hierarchy-meat.jpg"),
+                () -> assertThat(allProducts.get(0).getPrice()).isEqualTo(16000),
+                () -> assertThat(allProducts.get(2).getPrice()).isEqualTo(14000)
         );
     }
 
     @Test
     @DisplayName("상품 수정 성공")
-    @Sql(scripts = "/dummy_data.sql")
+    @Sql(scripts = "/product_dummy_data.sql")
     void update_success() {
         // given
         final ProductRequestDto requestDto = new ProductRequestDto("푸우", "pooh.png", 1_000_001);
-        final Integer targetId = findPoohId();
+        final Integer targetId = findThreeHierarchyMeatId();
 
         // when
         productDao.update(requestDto, targetId);
@@ -111,7 +111,7 @@ class ProductDaoTest {
 
     @Test
     @DisplayName("상품 수정 실패 - 존재하지 않는 상품 id")
-    @Sql(scripts = "/dummy_data.sql")
+    @Sql(scripts = "/product_dummy_data.sql")
     void update_fail_invalid_product_id() {
         // given
         final ProductRequestDto requestDto = new ProductRequestDto("푸우", "pooh.png", 1_000_001);
@@ -124,23 +124,23 @@ class ProductDaoTest {
 
     @Test
     @DisplayName("상품 삭제 성공")
-    @Sql(scripts = "/dummy_data.sql")
+    @Sql(scripts = "/product_dummy_data.sql")
     void delete_success() {
         // given
-        final Integer poohId = findPoohId();
+        final Integer id = findThreeHierarchyMeatId();
 
         // when
-        productDao.delete(poohId);
+        productDao.delete(id);
 
         // then
         String sql = "select * from product where id = ?";
-        assertThatThrownBy(() -> jdbcTemplate.queryForObject(sql, Integer.class, poohId))
+        assertThatThrownBy(() -> jdbcTemplate.queryForObject(sql, Integer.class, id))
                 .isInstanceOf(DataAccessException.class);
     }
 
     @Test
     @DisplayName("상품 삭제 실패 - 존재하지 않는 상품 id")
-    @Sql(scripts = "/dummy_data.sql")
+    @Sql(scripts = "/product_dummy_data.sql")
     void delete_fail() {
         // given
         final int invalidId = 0;
@@ -150,8 +150,8 @@ class ProductDaoTest {
                 .isInstanceOf(DataAccessException.class);
     }
 
-    private Integer findPoohId() {
-        final String sql = "select id from product where name = 'pooh'";
+    private Integer findThreeHierarchyMeatId() {
+        final String sql = "select id from product where name = '삼겹살'";
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 }

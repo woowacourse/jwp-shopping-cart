@@ -1,7 +1,6 @@
-CREATE TABLE IF NOT EXISTS product (
-    id       INT           AUTO_INCREMENT,
-    name     VARCHAR(20)   NOT NULL,
-    image    VARCHAR       NOT NULL,
-    price    INT           NOT NULL,
-    PRIMARY KEY (id)
-);
+TRUNCATE TABLE users;
+ALTER TABLE users auto_increment = 1;
+INSERT INTO users(email, password, name) VALUES ('ditoo@wooteco.com', 'ditoo1234', '디투'),
+                         ('barrel@wooteco.com', 'barrel1234', '배럴'),
+                         ('brown@wooteco.com', 'brown1234', '브라운');
+INSERT INTO users(email, password) VALUES ('anonymous@wooteco.com', '12345678');
