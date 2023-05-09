@@ -1,7 +1,7 @@
 package cart.config;
 
-import cart.web.auth.*;
-import org.springframework.context.annotation.Bean;
+import cart.web.auth.AuthInterceptor;
+import cart.web.auth.AuthenticationPrincipalArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -20,11 +20,6 @@ public class CartConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthenticationPrincipalArgumentResolver(basicAuthorizationExtractor()));
-    }
-
-    @Bean
-    public AuthorizationExtractor<UserInfo> basicAuthorizationExtractor() {
-        return new BasicAuthorizationExtractor();
+        resolvers.add(new AuthenticationPrincipalArgumentResolver());
     }
 }

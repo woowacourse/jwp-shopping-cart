@@ -5,14 +5,22 @@ import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class BasicAuthorizationExtractor implements AuthorizationExtractor<UserInfo> {
+public class BasicAuthorizationExtractor {
+    private static final BasicAuthorizationExtractor EXTRACTOR = new BasicAuthorizationExtractor();
     private static final int INDEX_OF_EMAIL = 0;
     private static final int INDEX_OF_PASSWORD = 1;
     private static final int SIZE_OF_CREDENTIAL = 2;
+    private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "basic";
     private static final String DELIMITER = ":";
 
-    @Override
+    private BasicAuthorizationExtractor() {
+    }
+
+    public static BasicAuthorizationExtractor getInstance() {
+        return EXTRACTOR;
+    }
+
     public UserInfo extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
