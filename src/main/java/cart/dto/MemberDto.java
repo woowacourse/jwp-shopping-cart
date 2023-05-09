@@ -1,7 +1,5 @@
 package cart.dto;
 
-import cart.domain.Member;
-
 public class MemberDto {
 
     private String email;
@@ -13,10 +11,6 @@ public class MemberDto {
     public MemberDto(final String email, final String password) {
         this.email = email;
         this.password = password;
-    }
-
-    public Member toMember() {
-        return new Member(email, password);
     }
 
     public String getEmail() {
