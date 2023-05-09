@@ -2,56 +2,73 @@ package cart.service;
 
 import static java.util.stream.Collectors.toList;
 
-import cart.domain.Product;
-import cart.dto.ProductDto;
+import cart.domain.product.ImageUrl;
+import cart.domain.product.Price;
+import cart.domain.product.Product;
+import cart.domain.product.ProductName;
+import cart.dto.product.ProductDto;
 import cart.entity.ProductEntity;
+import cart.exception.ProductConstraintException;
 import cart.exception.ProductNotFoundException;
-import cart.repository.ProductRepository;
+import cart.repository.CartDao;
+import cart.repository.ProductDao;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductService {
-    private final ProductRepository productRepository;
+    private final ProductDao productDao;
+    private final CartDao cartDao;
 
+    public ProductService(ProductDao productDao, CartDao cartDao) {
+        this.productDao = productDao;
+        this.cartDao = cartDao;
+    }
+
+    @Transactional
     public ProductDto createProduct(String name, int price, String imageUrl) {
-        Product product = Product.builder()
-                .name(name)
-                .price(price)
-                .imageUrl(imageUrl)
-                .build();
-        ProductEntity productEntity = productRepository.save(product);
+        Product product = new Product(new ProductName(name), new Price(price), ImageUrl.from(imageUrl));
+        ProductEntity productEntity = productDao.save(product);
         return ProductDto.fromEntity(productEntity);
     }
 
     public List<ProductDto> findAllProducts() {
-        return productRepository.findAll().stream()
+        return productDao.findAll().stream()
                 .map(ProductDto::fromEntity)
                 .collect(toList());
     }
 
+    @Transactional
     public void deleteById(Long id) {
         validateId(id);
-        productRepository.deleteById(id);
+        validateProductInCart(id);
+        productDao.deleteById(id);
     }
 
+    private void validateProductInCart(Long id) {
+        if (cartDao.existsByProductId(id)) {
+            throw new ProductConstraintException();
+        }
+    }
+
+    @Transactional
     public ProductDto updateProductById(Long id, String name, int price, String imageUrl) {
         validateId(id);
-        ProductEntity productEntity = ProductEntity.builder()
+        ProductEntity productEntity = ProductEntity.Builder.builder()
                 .id(id)
                 .name(name)
                 .price(price)
                 .imageUrl(imageUrl)
                 .build();
-        productRepository.update(productEntity);
+        productDao.update(productEntity);
         return ProductDto.fromEntity(productEntity);
     }
 
     private void validateId(Long id) {
-        if (!productRepository.existsById(id)) {
-            throw new ProductNotFoundException("존재하지 않는 상품의 ID 입니다.");
+        if (!productDao.existsById(id)) {
+            throw new ProductNotFoundException();
         }
     }
 }
