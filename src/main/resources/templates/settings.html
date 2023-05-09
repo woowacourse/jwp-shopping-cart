@@ -20,13 +20,12 @@
 </header>
 <div class="container">
     <h1>사용자 선택</h1>
-    <div class="cart-items">
-        <!-- TODO: [2단계] 사용자 정보에 맞게 변경 -->
-        <div class="cart-item" th:each="member : ${members}">
-            <div class="cart-item-info">
-                <div class="cart-item-name"></div> <!-- 사용자 이메일 -->
-                <div class="cart-item-price"></div> <!-- 사용자 비밀번호 -->
-                <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">Select</button>
+    <div class="members">
+        <div class="member" th:each="member : ${members}">
+            <div class="member-info">
+                <div th:text="${member.email}" class="member-name"></div> <!-- 사용자 이메일 -->
+                <div th:text="${member.password}" class="member-password"></div> <!-- 사용자 비밀번호 -->
+                <button type="submit" id="delete-btn" class="member-select" th:onclick="selectMember([[${member}]])">Select</button>
             </div>
         </div>
     </div>

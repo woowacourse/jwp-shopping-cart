@@ -1,24 +1,22 @@
 package cart.controller;
 
-import cart.domain.product.dto.ProductCreateRequest;
-import cart.domain.product.dto.ProductResponse;
-import cart.domain.product.dto.ProductUpdateRequest;
+import cart.domain.product.dto.ProductCreateDto;
+import cart.domain.product.dto.ProductUpdateDto;
 import cart.domain.product.service.ProductService;
-import java.net.URI;
-import java.util.List;
+import cart.dto.request.ProductCreateRequest;
+import cart.dto.request.ProductUpdateRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("/admin")
+@RestController
+@RequestMapping("/api/admin")
 public class AdminController {
 
     private final ProductService productService;
@@ -27,24 +25,18 @@ public class AdminController {
         this.productService = productService;
     }
 
-    @GetMapping("")
-    public String home(Model model) {
-        final List<ProductResponse> products = productService.findAll();
-        model.addAttribute("products", products);
-        return "admin";
-    }
-
     @PostMapping("/products")
     public ResponseEntity<Void> add(@RequestBody final ProductCreateRequest productCreateRequest) {
-        productService.create(productCreateRequest);
-        return ResponseEntity.created(URI.create("/admin")).build();
+        final ProductCreateDto productCreateDto = ProductCreateDto.of(productCreateRequest);
+        productService.create(productCreateDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping("/products/{id}")
     public ResponseEntity<Void> update(@PathVariable final Long id,
         @RequestBody final ProductUpdateRequest productUpdateRequest) {
-        productUpdateRequest.setId(id);
-        productService.update(productUpdateRequest);
+        final ProductUpdateDto productUpdateDto = ProductUpdateDto.of(id, productUpdateRequest);
+        productService.update(productUpdateDto);
         return ResponseEntity.ok().build();
     }
 

@@ -1,4 +1,4 @@
-package cart.domain.product.dao;
+package cart.dao;
 
 import cart.domain.product.entity.Product;
 import java.sql.PreparedStatement;
@@ -7,13 +7,14 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -30,7 +31,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Product add(final Product product) {
+    public Product save(final Product product) {
         final String sql = "INSERT INTO product(name, price, image_url, created_at, updated_at) VALUES(?,?,?,?,?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         final LocalDateTime now = LocalDateTime.now();
@@ -72,5 +73,19 @@ public class ProductDao {
     public int delete(final Long id) {
         final String sql = "DELETE FROM product WHERE id=?";
         return jdbcTemplate.update(sql, id);
+    }
+
+    public Optional<Product> findById(final Long id) {
+        final String sql = "SELECT product.id,"
+            + "       product.name,"
+            + "       product.image_url,"
+            + "       product.price,"
+            + "       product.created_at,"
+            + "       product.updated_at "
+            + "FROM product "
+            + "WHERE id = ?";
+        return jdbcTemplate.query(sql, rowMapper, id)
+            .stream()
+            .findFirst();
     }
 }

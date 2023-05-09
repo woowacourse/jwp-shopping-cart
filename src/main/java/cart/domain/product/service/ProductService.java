@@ -1,43 +1,49 @@
 package cart.domain.product.service;
 
-import cart.domain.product.dto.ProductCreateRequest;
-import cart.domain.product.dto.ProductResponse;
-import cart.domain.product.dto.ProductUpdateRequest;
+import cart.dao.ProductDao;
+import cart.domain.product.dto.ProductCreateDto;
+import cart.domain.product.dto.ProductDto;
+import cart.domain.product.dto.ProductUpdateDto;
 import cart.domain.product.entity.Product;
-import cart.domain.product.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductDao productDao;
 
-    public ProductService(final ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductService(final ProductDao productDao) {
+        this.productDao = productDao;
     }
 
-    public ProductResponse create(final ProductCreateRequest productCreateRequest) {
-        final Product product = productCreateRequest.makeProduct();
-        final Product savedProduct = productRepository.save(product);
-        return ProductResponse.of(savedProduct);
+    @Transactional
+    public ProductDto create(final ProductCreateDto productCreateDto) {
+        final Product product = new Product(null, productCreateDto.getName(),
+            productCreateDto.getPrice(), productCreateDto.getImageUrl(), null, null);
+        final Product savedProduct = productDao.save(product);
+        return ProductDto.of(savedProduct);
     }
 
-    public List<ProductResponse> findAll() {
-        final List<Product> products = productRepository.findAll();
-        return products.stream()
-            .map(ProductResponse::of)
-            .collect(Collectors.toUnmodifiableList());
+    public List<ProductDto> findAll() {
+        final List<Product> products = productDao.findAll();
+        return products.stream().map(ProductDto::of).collect(Collectors.toUnmodifiableList());
     }
 
-    public void update(final ProductUpdateRequest productUpdateRequest) {
-        final int count = productRepository.update(productUpdateRequest.makeProduct());
+    @Transactional
+    public void update(final ProductUpdateDto productUpdateDto) {
+        final Product product = new Product(productUpdateDto.getId(), productUpdateDto.getName(),
+            productUpdateDto.getPrice(), productUpdateDto.getImageUrl(), null, null);
+        final int count = productDao.update(product);
         checkProductExist(count);
     }
 
+    @Transactional
     public void delete(final Long id) {
-        final int count = productRepository.delete(id);
+        final int count = productDao.delete(id);
         checkProductExist(count);
     }
 

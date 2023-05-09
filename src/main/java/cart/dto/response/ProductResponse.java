@@ -1,19 +1,23 @@
-package cart.domain.product.dto;
+package cart.dto.response;
 
-import cart.domain.product.entity.Product;
+import cart.domain.product.dto.ProductDto;
 import java.time.LocalDateTime;
 
 public class ProductResponse {
 
-    private final Long id;
-    private final String name;
-    private final int price;
-    private final String imageUrl;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private Long id;
+    private String name;
+    private int price;
+    private String imageUrl;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    public ProductResponse() {
+    }
 
     public ProductResponse(final Long id, final String name, final int price, final String imageUrl,
-        final LocalDateTime createdAt, final LocalDateTime updatedAt) {
+        final LocalDateTime createdAt,
+        final LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -22,9 +26,9 @@ public class ProductResponse {
         this.updatedAt = updatedAt;
     }
 
-    public static ProductResponse of(final Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
-            product.getImageUrl(), product.getCreatedAt(), product.getUpdatedAt());
+    public static ProductResponse of(final ProductDto productDto) {
+        return new ProductResponse(productDto.getId(), productDto.getName(), productDto.getPrice(),
+            productDto.getImageUrl(), productDto.getCreatedAt(), productDto.getUpdatedAt());
     }
 
     public Long getId() {

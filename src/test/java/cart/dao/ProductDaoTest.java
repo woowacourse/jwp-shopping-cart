@@ -1,41 +1,53 @@
-package cart.domain.product.dao;
+package cart.dao;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import cart.dao.ProductDao;
 import cart.domain.product.entity.Product;
 import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
-@JdbcTest
+@DataJdbcTest
 @ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = Replace.NONE)
 class ProductDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    private ProductDao productDao;
+
+    @BeforeEach
+    public void setUp() {
+        productDao = new ProductDao(jdbcTemplate);
+    }
 
     @Test
     @DisplayName("db에 상품을 추가한다.")
     public void testAdd() {
         //given
-        final ProductDao productDao = new ProductDao(jdbcTemplate);
         final Product givenProduct = new Product(null, "연필", 1000, "imageUrl", null, null);
 
         //when
-        final Product savedProduct = productDao.add(givenProduct);
+        final Product savedProduct = productDao.save(givenProduct);
 
         //then
-        assertThat(savedProduct.getId()).isEqualTo(1);
-        assertThat(savedProduct.getName()).isEqualTo(givenProduct.getName());
-        assertThat(savedProduct.getPrice()).isEqualTo(givenProduct.getPrice());
-        assertThat(savedProduct.getImageUrl()).isEqualTo(givenProduct.getImageUrl());
+        assertThat(savedProduct)
+            .extracting("name", "price", "imageUrl")
+            .containsExactly(
+                givenProduct.getName(),
+                givenProduct.getPrice(),
+                givenProduct.getImageUrl()
+            );
         assertThat(savedProduct.getCreatedAt()).isNotNull();
         assertThat(savedProduct.getUpdatedAt()).isNotNull();
     }
@@ -44,11 +56,10 @@ class ProductDaoTest {
     @DisplayName("db에서 모든 상품을 조회한다.")
     public void testFindAll() {
         //given
-        final ProductDao productDao = new ProductDao(jdbcTemplate);
         final Product givenProduct1 = new Product(null, "연필", 1000, "imageUrl1", null, null);
         final Product givenProduct2 = new Product(null, "지우개", 2000, "imageUrl2", null, null);
-        final Product savedProduct1 = productDao.add(givenProduct1);
-        final Product savedProduct2 = productDao.add(givenProduct2);
+        final Product savedProduct1 = productDao.save(givenProduct1);
+        final Product savedProduct2 = productDao.save(givenProduct2);
 
         //when
         final List<Product> result = productDao.findAll();
@@ -63,9 +74,8 @@ class ProductDaoTest {
     @DisplayName("db에서 상품을 수정한다.")
     public void testUpdate() {
         //given
-        final ProductDao productDao = new ProductDao(jdbcTemplate);
         final Product givenProduct = new Product(null, "연필", 1000, "imageUrl1", null, null);
-        final Product savedProduct = productDao.add(givenProduct);
+        final Product savedProduct = productDao.save(givenProduct);
         final Product updateProduct = new Product(savedProduct.getId(), "지우개", 2000, "imageUrl2",
             null, null);
 
@@ -80,14 +90,29 @@ class ProductDaoTest {
     @DisplayName("db에서 상품을 삭제한다.")
     public void testDelete() {
         //given
-        final ProductDao productDao = new ProductDao(jdbcTemplate);
         final Product givenProduct = new Product(null, "연필", 1000, "imageUrl1", null, null);
-        final Product savedProduct = productDao.add(givenProduct);
+        final Product savedProduct = productDao.save(givenProduct);
 
         //when
         int result = productDao.delete(savedProduct.getId());
 
         //then
         assertThat(result).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("상품을 id로 조회한다.")
+    public void testFindById() {
+        //given
+        final Product givenProduct = new Product(null, "연필", 1000, "imageUrl1", null, null);
+        final Product saved = productDao.save(givenProduct);
+
+        //when
+        final Optional<Product> result = productDao.findById(saved.getId());
+
+        //then
+        assertThat(result.isPresent()).isTrue();
+        final Product product = result.get();
+        assertThat(product.getId()).isEqualTo(saved.getId());
     }
 }
