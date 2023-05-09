@@ -10,7 +10,7 @@ public class ItemResponse {
 
     private final String name;
 
-    @JsonProperty("image-url")
+    @JsonProperty("image_url")
     private final String imageUrl;
 
     private final int price;

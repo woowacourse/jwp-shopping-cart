@@ -2,6 +2,7 @@ package cart.dao;
 
 import cart.entity.CreateItem;
 import cart.entity.Item;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -31,7 +32,18 @@ public class JdbcItemDao implements ItemDao {
         return jdbcTemplate.query(sql, mapRow());
     }
 
-    public RowMapper<Item> mapRow() {
+    @Override
+    public Item findById(Long itemId) {
+        String sql = "select * from item where id = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sql, mapRow(), itemId);
+        } catch (EmptyResultDataAccessException exception) {
+            return null;
+        }
+    }
+
+    private RowMapper<Item> mapRow() {
         return (rs, rowNum) -> {
             Long id = rs.getLong(1);
             String name = rs.getString(2);
@@ -54,5 +66,19 @@ public class JdbcItemDao implements ItemDao {
         String sql = "delete from item where id = ?";
 
         return jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public boolean isItemExistsById(Long itemId) {
+        String sql = "select exists(select id from item where id = ?)";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, itemId);
+    }
+
+    @Override
+    public boolean isItemExistsByCreateItem(CreateItem createItem) {
+        String sql = "select exists(select id from item where name = ? and item_url = ? and price = ?)";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, createItem.getName(), createItem.getImageUrl(), createItem.getPrice());
     }
 }

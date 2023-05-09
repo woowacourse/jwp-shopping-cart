@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.exception.AuthenticationFailureException;
 import cart.exception.ServiceIllegalArgumentException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleIllegalArgumentException(DataAccessException exception) {
 
         Map<String, String> error = new HashMap<>();
-        error.put("message", "데이터베이스에 접근할 수 없습니다.");
+        error.put("message", "데이터베이스에 접근할 수 없습니다. 서버 관리자에게 문의해주세요.");
 
         return ResponseEntity.internalServerError().body(error);
     }
@@ -34,8 +35,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    @ExceptionHandler(ServiceIllegalArgumentException.class)
-    public ResponseEntity<Map<String, String>> handleServiceIllegalAccessException(ServiceIllegalArgumentException exception) {
+    @ExceptionHandler({ServiceIllegalArgumentException.class, AuthenticationFailureException.class})
+    public ResponseEntity<Map<String, String>> handleServiceIllegalAccessException(Exception exception) {
         Map<String, String> errors = new HashMap<>();
         errors.put("message", exception.getMessage());
 
