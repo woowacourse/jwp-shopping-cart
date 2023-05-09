@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.domain.Product;
-import cart.service.ProductService;
+import cart.dto.application.ProductEntityDto;
+import cart.service.product.ProductFindService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,27 +10,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ProductViewController {
 
-    private final ProductService productService;
+    private final ProductFindService productFindService;
 
-    public ProductViewController(final ProductService productService) {
-        this.productService = productService;
+    public ProductViewController(final ProductFindService productFindService) {
+        this.productFindService = productFindService;
     }
 
     @GetMapping("/")
     public String indexPage(final Model model) {
-        final List<Product> products = productService.findAll();
+        final List<ProductEntityDto> products = productFindService.findAll();
 
         model.addAttribute("products", products);
 
-        return "index.html";
+        return "index";
     }
 
     @GetMapping("/admin")
     public String adminPage(final Model model) {
-        final List<Product> products = productService.findAll();
+        final List<ProductEntityDto> products = productFindService.findAll();
 
         model.addAttribute("products", products);
 
-        return "admin.html";
+        return "admin";
     }
 }
