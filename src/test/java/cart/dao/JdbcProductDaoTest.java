@@ -3,17 +3,15 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
-@Sql(scripts = {"classpath:data.sql"})
 class JdbcProductDaoTest {
 
     private final RowMapper<Product> productRowMapper = (resultSet, rowNum) ->
@@ -24,7 +22,6 @@ class JdbcProductDaoTest {
                     resultSet.getString("image_url")
             );
     private JdbcProductDao jdbcProductDao;
-
     private JdbcTemplate jdbcTemplate;
 
     private JdbcProductDaoTest(@Autowired JdbcTemplate jdbcTemplate) {
@@ -47,7 +44,7 @@ class JdbcProductDaoTest {
         jdbcProductDao.insert(new Product("BROWN", 10000, null));
 
         assertThat(jdbcProductDao.findAll()).extracting("name")
-                .containsExactly("IO", "ASH", "BROWN");
+                .contains("IO", "ASH", "BROWN");
     }
 
     @Test

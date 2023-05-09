@@ -1,15 +1,17 @@
 package cart.controller;
 
 import cart.dto.ErrorResponse;
+import cart.exception.auth.UnauthenticatedException;
+import cart.exception.notfound.NotFoundException;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.List;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -18,15 +20,15 @@ public class ControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
     private ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
-        logger.info("[IllegalArgumentException] ", exception);
-        
+        logger.warn("[IllegalArgumentException] ", exception);
+
         return ResponseEntity.badRequest()
                 .body(new ErrorResponse(exception.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     private ResponseEntity<ErrorResponse> handleInvalidArgument(MethodArgumentNotValidException exception) {
-        logger.info("[MethodArgumentNotValidException] ", exception);
+        logger.warn("[MethodArgumentNotValidException] ", exception);
 
         List<FieldError> fieldErrors = exception.getFieldErrors();
 
@@ -37,6 +39,22 @@ public class ControllerAdvice {
 
         return ResponseEntity.badRequest()
                 .body(new ErrorResponse(stringBuilder.toString()));
+    }
+
+    @ExceptionHandler(UnauthenticatedException.class)
+    private ResponseEntity<ErrorResponse> handleUnauthenticatedException(UnauthenticatedException exception) {
+        logger.warn("[UnauthenticatedException] ", exception);
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    private ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exception) {
+        logger.warn("[NotFoundException] ", exception);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(exception.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

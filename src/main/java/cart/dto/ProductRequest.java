@@ -1,8 +1,8 @@
 package cart.dto;
 
-import cart.domain.ProductImageUrl;
-import cart.domain.ProductName;
-import cart.domain.ProductPrice;
+import cart.domain.product.ProductImageUrl;
+import cart.domain.product.ProductName;
+import cart.domain.product.ProductPrice;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
@@ -11,9 +11,9 @@ public class ProductRequest {
 
     @NotBlank
     @Size(
-            min = ProductName.MIN_NAME_LENGTH,
-            max = ProductName.MAX_NAME_LENGTH,
-            message = ProductName.NAME_LENGTH_ERROR_MESSAGE)
+            min = ProductName.MIN_PRODUCT_NAME_LENGTH,
+            max = ProductName.MAX_PRODUCT_NAME_LENGTH,
+            message = ProductName.PRODUCT_NAME_LENGTH_ERROR_MESSAGE)
     private final String name;
 
     @Range(

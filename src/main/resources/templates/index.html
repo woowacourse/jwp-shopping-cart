@@ -23,8 +23,7 @@
     <li class="product" th:each="product : ${products.products}">
       <div class="product-image">
         <img alt="상품 이미지"
-             th:src="${product.imageUrl != null && !#strings.isEmpty(product.imageUrl)
-                     ? product.imageUrl: '/img/default_image.jpeg'}">
+             onerror="this.src = '/img/default_image.jpeg'" th:src="${product.imageUrl}">
       </div>
       <div class="product-info">
         <div class="product-desc">

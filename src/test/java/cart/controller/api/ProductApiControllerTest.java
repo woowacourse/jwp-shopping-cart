@@ -1,10 +1,10 @@
-package cart.controller;
+package cart.controller.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import cart.dao.ProductDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.ProductRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
@@ -19,7 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ProductControllerTest {
+class ProductApiControllerTest {
 
     @Autowired
     private ProductDao productDao;
@@ -34,11 +34,12 @@ class ProductControllerTest {
 
     @AfterEach
     void clear() {
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
         jdbcTemplate.execute("TRUNCATE TABLE product");
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
     }
 
-
-    @DisplayName("POST /product")
+    @DisplayName("POST /api/product")
     @Test
     void createProduct() {
         ProductRequest request = new ProductRequest("이오", 1000, null);
@@ -46,12 +47,12 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().post("/product")
+                .when().post("/api/product")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("PUT /product/{id}")
+    @DisplayName("PUT /api/product/{id}")
     @Test
     void updateProduct() {
         Long id = productDao.insert(new Product("이오", 1000, null));
@@ -61,7 +62,7 @@ class ProductControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().put("/product/" + id)
+                .when().put("/api/product/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
@@ -76,16 +77,39 @@ class ProductControllerTest {
         );
     }
 
-    @DisplayName("DELETE /product/{id}")
+    @DisplayName("PUT /api/product/{id} NotFoundException")
+    @Test
+    void updateProduct_notFound() {
+        ProductRequest request = new ProductRequest("애쉬", 2000, "image");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().put("/api/product/" + 9999)
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+
+    }
+
+    @DisplayName("DELETE /api/product/{id}")
     @Test
     void deleteProduct() {
         Long id = productDao.insert(new Product("이오", 1000, null));
 
         RestAssured.given().log().all()
-                .when().delete("/product/" + id)
+                .when().delete("/api/product/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 
         assertThat(productDao.findById(id)).isEmpty();
+    }
+
+    @DisplayName("DELETE /api/product/{id} NotFoundException")
+    @Test
+    void deleteProduct_notFound() {
+        RestAssured.given().log().all()
+                .when().delete("/api/product/" + 9999)
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }
