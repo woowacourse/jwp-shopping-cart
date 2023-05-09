@@ -4,7 +4,6 @@ import cart.controller.dto.response.CartItemResponse;
 import cart.database.dao.CartDao;
 import cart.database.dao.ProductDao;
 import cart.database.repository.CartRepository;
-import cart.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,24 +43,24 @@ public class CartServiceTest {
     @Test
     public void addCart() {
         // given
-        UserEntity userEntity = new UserEntity(1L, "user@test.com", "password");
+        Long userId = 1L;
         Long productId = 1L;
         Integer count = 1;
 
         when(productDao.existById(productId)).thenReturn(true);
 
         // when
-        cartService.addCart(userEntity, productId);
+        cartService.addCart(userId, productId);
 
         // then
-        verify(cartDao, times(1)).create(userEntity.getId(), productId, count);
+        verify(cartDao, times(1)).create(userId, productId, count);
     }
 
     @DisplayName("ProductId가 유효하지 않은 경우 카트아이템 추가를 실패")
     @Test
     public void addCartIfNotExistProductId() {
         // given
-        UserEntity userEntity = new UserEntity(1L, "user@test.com", "password");
+        Long userId = 1L;
         Long productId = 1L;
         Integer count = 1;
 
@@ -69,26 +68,26 @@ public class CartServiceTest {
 
         // when, then
         IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> cartService.addCart(userEntity, productId));
+                () -> cartService.addCart(userId, productId));
         assertEquals("제품 아이디가 없습니다.", exception.getMessage());
 
-        verify(cartDao, never()).create(userEntity.getId(), productId, count);
+        verify(cartDao, never()).create(userId, productId, count);
     }
 
     @DisplayName("유저가 가진 장바구니 아이템 조회")
     @Test
     public void findCartItemsByUser() {
         // given
-        UserEntity userEntity = new UserEntity(1L, "user@test.com", "password");
+        Long userId = 1L;
 
         List<CartItemResponse> expectedList = new ArrayList<>();
         expectedList.add(new CartItemResponse(1L, 1L, "Product 1", "test", 1000, 2));
         expectedList.add(new CartItemResponse(2L, 2L, "Product 2", "test", 2000, 1));
 
-        when(cartRepository.findCartsWithProductByUserId(userEntity.getId())).thenReturn(expectedList);
+        when(cartRepository.findCartsWithProductByUserId(userId)).thenReturn(expectedList);
 
         // when
-        List<CartItemResponse> responses = cartService.findCartItemsByUser(userEntity);
+        List<CartItemResponse> responses = cartService.findCartItems(userId);
 
         // then
         assertEquals(expectedList.size(), responses.size());
@@ -106,13 +105,13 @@ public class CartServiceTest {
     @Test
     public void deleteCartItemByUserAndProductId() {
         // given
-        UserEntity userEntity = new UserEntity(1L, "user@test.com", "password");
+        Long userId = 1L;
         Long cartId = 1L;
 
         // when
-        cartService.deleteCartByUserAndProductId(userEntity, cartId);
+        cartService.deleteCartItem(userId, cartId);
 
         // then
-        verify(cartDao, times(1)).deleteByUserIdAndCartId(userEntity.getId(), cartId);
+        verify(cartDao, times(1)).deleteByUserIdAndCartId(userId, cartId);
     }
 }

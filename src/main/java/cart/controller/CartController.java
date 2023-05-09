@@ -31,7 +31,7 @@ public class CartController {
     @PostMapping("/carts/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addCartItem(@Authentication LoginRequest loginRequest, @PathVariable(value = "productId") Long productId) {
-        cartService.addCart(authService.loadUserByEmailAndPassword(loginRequest), productId);
+        cartService.addCart(authService.loadUserByEmailAndPassword(loginRequest).getId(), productId);
     }
 
     @GetMapping("/cart")
@@ -44,13 +44,13 @@ public class CartController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<List<CartItemResponse>> showCart(@Authentication LoginRequest loginRequest) {
-        List<CartItemResponse> cartItemsByUser = cartService.findCartItemsByUser(authService.loadUserByEmailAndPassword(loginRequest));
+        List<CartItemResponse> cartItemsByUser = cartService.findCartItems(authService.loadUserByEmailAndPassword(loginRequest).getId());
         return ResponseEntity.ok(cartItemsByUser);
     }
 
     @DeleteMapping("/carts/{cartId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCartItem(@Authentication LoginRequest loginRequest, @PathVariable(value = "cartId") Long cartId) {
-        cartService.deleteCartByUserAndProductId(authService.loadUserByEmailAndPassword(loginRequest), cartId);
+        cartService.deleteCartItem(authService.loadUserByEmailAndPassword(loginRequest).getId(), cartId);
     }
 }

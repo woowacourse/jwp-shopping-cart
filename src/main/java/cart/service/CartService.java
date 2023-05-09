@@ -4,7 +4,6 @@ import cart.controller.dto.response.CartItemResponse;
 import cart.database.dao.CartDao;
 import cart.database.dao.ProductDao;
 import cart.database.repository.CartRepository;
-import cart.entity.UserEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,20 +26,20 @@ public class CartService {
     }
 
     @Transactional
-    public void addCart(UserEntity userEntity, Long productId) {
+    public void addCart(Long userId, Long productId) {
         if (!productDao.existById(productId)) {
             throw new IllegalStateException("제품 아이디가 없습니다.");
         }
 
-        cartDao.create(userEntity.getId(), productId, DEFAULT_COUNT);
+        cartDao.create(userId, productId, DEFAULT_COUNT);
     }
 
-    public List<CartItemResponse> findCartItemsByUser(UserEntity userEntity) {
-        return cartRepository.findCartsWithProductByUserId(userEntity.getId());
+    public List<CartItemResponse> findCartItems(Long userId) {
+        return cartRepository.findCartsWithProductByUserId(userId);
     }
 
     @Transactional
-    public void deleteCartByUserAndProductId(UserEntity userEntity, Long cartId) {
-        cartDao.deleteByUserIdAndCartId(userEntity.getId(), cartId);
+    public void deleteCartItem(Long userId, Long cartId) {
+        cartDao.deleteByUserIdAndCartId(userId, cartId);
     }
 }
