@@ -1,7 +1,7 @@
 package cart.dao;
 
 import cart.entity.Product;
-import cart.exception.NoSuchProductException;
+import cart.exception.NoSuchDataException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -18,7 +18,7 @@ public class JdbcProductsDao implements ProductsDao {
     public JdbcProductsDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("products")
+                .withTableName("products_table")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -34,7 +34,7 @@ public class JdbcProductsDao implements ProductsDao {
 
     @Override
     public List<Product> readAll() {
-        final String sql = "SELECT * FROM products";
+        final String sql = "SELECT * FROM products_table";
         return jdbcTemplate.query(sql,
                 (rs, rowNum) ->
                         new Product(rs.getLong("id"),
@@ -47,7 +47,7 @@ public class JdbcProductsDao implements ProductsDao {
 
     @Override
     public void update(final Product product) {
-        final String sql = "UPDATE products SET product_name = ?, product_price = ? , product_image = ? where id = ?";
+        final String sql = "UPDATE products_table SET product_name = ?, product_price = ? , product_image = ? where id = ?";
         final int updatedCount = jdbcTemplate.update(sql,
                 product.getName(),
                 product.getPrice(),
@@ -55,13 +55,14 @@ public class JdbcProductsDao implements ProductsDao {
                 product.getId()
         );
         if (updatedCount == 0) {
-            throw new NoSuchProductException("해당 상품이 없습니다.");
+            throw new NoSuchDataException("해당 상품이 없습니다.");
         }
     }
 
     @Override
     public void delete(final long id) {
-        final String sql = "DELETE FROM products WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        final String sql = "DELETE FROM cart_table WHERE product_id = ?;" +
+                "DELETE FROM products_table WHERE id = ?;";
+        jdbcTemplate.update(sql, id, id);
     }
 }

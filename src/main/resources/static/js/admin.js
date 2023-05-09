@@ -45,7 +45,7 @@ form.addEventListener('submit', (event) => {
 });
 
 const createProduct = (product) => {
-    axios.request( {
+    axios.request({
         url: '/products',
         method: 'post',
         data: product
