@@ -1,7 +1,6 @@
 package cart.dao;
 
 import cart.domain.Product;
-import cart.dto.request.ProductSaveRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -28,17 +27,20 @@ class ProductDaoTest {
 
     @Test
     void save는_상품을_저장한다() {
-        ProductSaveRequest productSaveRequest = new ProductSaveRequest("치킨",
-                "https://img.freepik.com/free-photo/crispy-fried-chicken-on-a-plate-with-salad-and-carrot_1150-20212.jpg",
-                19000L);
+        //given
+        Product product = new Product(null, "치킨",
+                "https://img.freepik.com/free-photo/crispy-fried-chicken-on-a-plate-with-salad-and-carrot_1150-20212.jpg", 19000L);
 
-        productDao.save(productSaveRequest);
+        //when
+        productDao.save(product);
+
+        //then
 
         List<Product> allProducts = productDao.findAllProducts();
         assertThat(allProducts.get(0))
                 .usingRecursiveComparison()
                 .ignoringFields("productId")
-                .isEqualTo(productSaveRequest);
+                .isEqualTo(product);
     }
 
     @Test
@@ -49,8 +51,7 @@ class ProductDaoTest {
 
     @Test
     void updateProduct는_상품_정보를_수정한다() {
-        ProductSaveRequest saveRequest = new ProductSaveRequest("chicken", "imagelink", 1000L);
-        long productId = productDao.save(saveRequest);
+        long productId = productDao.save(new Product(null, "chicken", "imagelink", 1000L));
 
         Product product = new Product(productId, "chicken", "imagelink", 19000L);
         productDao.updateProduct(product);
@@ -61,8 +62,7 @@ class ProductDaoTest {
 
     @Test
     void deleteProduct는_상품을_삭제한다() {
-        ProductSaveRequest saveRequest = new ProductSaveRequest("chicken", "imagelink", 1000L);
-        long productId = productDao.save(saveRequest);
+        long productId = productDao.save(new Product(null, "chicken", "imagelink", 1000L));
         assertThat(productDao.findAllProducts()).hasSize(1);
 
         productDao.deleteProduct(productId);

@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.Product;
+import cart.dto.request.ProductSaveRequest;
 import cart.dto.request.ProductUpdateRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,15 +30,15 @@ class ProductControllerAcceptanceTest {
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new Product(1L, "pizza", "image", 12000))
-                .when().post("/product")
+                .body(new ProductSaveRequest("pizza", "image", 12000L))
+                .when().post("/products")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new Product(1L, "chicken!!!!!!", "image2", 12000))
-                .when().put("/product")
+                .body(new ProductUpdateRequest("chicken!!!!!!", "image2", 12000L))
+                .when().put("/products/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -46,8 +46,8 @@ class ProductControllerAcceptanceTest {
     @Test
     void updateProduct_실패_유효하지_않은_id() {
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductUpdateRequest(-5L, "pdpd2", "image2", 15000L))
-                .when().put("/product")
+                .body(new ProductUpdateRequest("pdpd2", "image2", 15000L))
+                .when().put("/products/-5")
                 .then().statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("errorMessage", is("유효하지 않은 id 입니다."));
     }

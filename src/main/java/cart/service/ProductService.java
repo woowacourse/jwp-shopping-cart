@@ -2,12 +2,16 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import java.util.List;
-
+import cart.dto.ProductDto;
 import cart.dto.request.ProductSaveRequest;
 import cart.dto.request.ProductUpdateRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Transactional
 @Service
 public class ProductService {
 
@@ -17,17 +21,21 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public long saveProduct(ProductSaveRequest productSaveRequest) {
-        // todo: save시에도 validation
-        return productDao.save(productSaveRequest);
+    public long saveProduct(ProductSaveRequest request) {
+        Product product = new Product(request.getName(), request.getImage(), request.getPrice());
+        return productDao.save(product);
     }
 
-    public List<Product> findAllProducts() {
-        return productDao.findAllProducts();
+    @Transactional(readOnly = true)
+    public List<ProductDto> findAllProducts() {
+        List<Product> products = productDao.findAllProducts();
+        return products.stream()
+                .map(ProductDto::new)
+                .collect(Collectors.toList());
     }
 
-    public void updateProduct(ProductUpdateRequest updateRequest) {
-        Product product = new Product(updateRequest.getProductId(), updateRequest.getName(), updateRequest.getImage(), updateRequest.getPrice());
+    public void updateProduct(long productId, ProductUpdateRequest request) {
+        Product product = new Product(productId, request.getName(), request.getImage(), request.getPrice());
         productDao.updateProduct(product);
     }
 
