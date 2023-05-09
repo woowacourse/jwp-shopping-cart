@@ -25,6 +25,10 @@ public class AuthInfo {
     }
 
     private void validatePassword(final String password) {
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("비밀번호는 비어 있을 수 업습니다.");
+        }
+
         if (password.length() > 30) {
             throw new IllegalArgumentException("비밀번호는 30자 이하입니다.");
         }

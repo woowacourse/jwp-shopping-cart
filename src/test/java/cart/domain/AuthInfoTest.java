@@ -41,4 +41,14 @@ class AuthInfoTest {
         Assertions.assertThatThrownBy(() -> new AuthInfo(invalidEmail, validPassword))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @DisplayName("비어 있는 패스워드가 들어왔을 때 얘외가 발생한다.")
+    @Test
+    void throwExceptionWhenNullPasswordTest() {
+        String invalidEmail = "email@email.com";
+        String validPassword = null;
+
+        Assertions.assertThatThrownBy(() -> new AuthInfo(invalidEmail, validPassword))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }
