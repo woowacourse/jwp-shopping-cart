@@ -101,7 +101,7 @@ class CartControllerTest {
 
         assertAll(
                 () -> assertThat(cartProducts).hasSize(1),
-                () -> assertThat(cartProducts).extracting("name", "price", "image")
+                () -> assertThat(cartProducts).extracting("product.name", "product.price", "product.image")
                         .contains(tuple(productRequest.getName(), productRequest.getPrice(), productRequest.getImage()))
         );
 

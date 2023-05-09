@@ -3,9 +3,12 @@ package cart.entity;
 public class Product {
 
     private int id;
-    private final String name;
-    private final int price;
-    private final String image;
+    private String name;
+    private int price;
+    private String image;
+
+    public Product() {
+    }
 
     public Product(int id, String name, int price, String image) {
         this.id = id;
