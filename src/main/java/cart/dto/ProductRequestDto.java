@@ -1,28 +1,37 @@
 package cart.dto;
 
-import cart.entity.Product;
-import cart.vo.Name;
-import cart.vo.Price;
-import cart.vo.Url;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 
 public class ProductRequestDto {
 
-    @NotNull
-    private final String name;
+    @Length(min = 1, max = 100)
+    @NotBlank
+    private String name;
 
     @Positive
-    private final Integer price;
+    @Range(min = 1, max = 1_000_000_000)
+    private Integer price;
 
-    @NotNull
-    private final String imageUrl;
+    @NotEmpty
+    @NotBlank
+    private String imageUrl;
+
+    public ProductRequestDto() {
+    }
 
     public ProductRequestDto(String name, Integer price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public ProductDto toDto() {
+        return new ProductDto(name, price, imageUrl);
     }
 
     public String getName() {
@@ -35,14 +44,6 @@ public class ProductRequestDto {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public Product toEntity() {
-        return new Product.Builder()
-                .name(Name.of(name))
-                .price(Price.of(price))
-                .imageUrl(Url.of(imageUrl))
-                .build();
     }
 
 }

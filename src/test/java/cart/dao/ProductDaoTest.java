@@ -40,9 +40,9 @@ class ProductDaoTest {
     void save() {
         productDao.save(
                 new Product.Builder()
-                        .name(Name.of("샐러드"))
-                        .price(Price.of(10000))
-                        .imageUrl(Url.of("밋엉씨"))
+                        .name(Name.from("샐러드"))
+                        .price(Price.from(10000))
+                        .imageUrl(Url.from("밋엉씨"))
                         .build()
         );
 
@@ -53,7 +53,7 @@ class ProductDaoTest {
     @Test
     @DisplayName("기존의 상품을 삭제하여, 기존의 상품 2개에 1개가 삭제된 1개가 맞는지 확인한다.")
     void deleteById() {
-        productDao.deleteById(1);
+        productDao.deleteById(1L);
 
         assertThat(productDao.selectAll()).hasSize(1);
     }
@@ -61,10 +61,10 @@ class ProductDaoTest {
     @Test
     @DisplayName("기존의 상품을 수정하고, 데이터가 수정되었는지 확인한다.")
     void updateById() {
-        productDao.updateById(1, new Product.Builder()
-                        .name(Name.of("skdkfkak"))
-                        .price(Price.of(10000))
-                        .imageUrl(Url.of("asdfkasdfk"))
+        productDao.updateById(1L, new Product.Builder()
+                        .name(Name.from("skdkfkak"))
+                        .price(Price.from(10000))
+                        .imageUrl(Url.from("asdfkasdfk"))
                         .build()
         );
 

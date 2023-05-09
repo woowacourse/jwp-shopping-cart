@@ -5,6 +5,7 @@ import cart.vo.Name;
 import cart.vo.Price;
 import cart.vo.Url;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,6 +13,12 @@ import java.util.List;
 @Repository
 public class ProductDao {
 
+    private final RowMapper<Product> rowMapper = (resultSet, rowNum) -> new Product.Builder()
+                    .id(resultSet.getLong("id"))
+                    .price(Price.from(resultSet.getInt("price")))
+                    .name(Name.from(resultSet.getString("name")))
+                    .imageUrl(Url.from(resultSet.getString("image_url")))
+                    .build();
     private final JdbcTemplate jdbcTemplate;
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
@@ -22,12 +29,7 @@ public class ProductDao {
         String sqlForSelectAll = "SELECT * FROM Product";
         return jdbcTemplate.query(
                 sqlForSelectAll,
-                (resultSet, rowNum) ->
-                        new Product.Builder().id(resultSet.getInt("id"))
-                                .price(Price.of(resultSet.getInt("price")))
-                                .name(Name.of(resultSet.getString("name")))
-                                .imageUrl(Url.of(resultSet.getString("image_url")))
-                                .build()
+                rowMapper
         );
     }
 
@@ -36,14 +38,19 @@ public class ProductDao {
         jdbcTemplate.update(sqlForSave, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public void deleteById(int id) {
+    public int deleteById(Long id) {
         String sqlForDeleteById = "DELETE FROM Product WHERE id = ?";
-        jdbcTemplate.update(sqlForDeleteById, id);
+        return jdbcTemplate.update(sqlForDeleteById, id);
     }
 
-    public void updateById(int id, Product product) {
+    public int updateById(Long id, Product product) {
         String sqlForUpdateById = "UPDATE Product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sqlForUpdateById, product.getName(), product.getPrice(), product.getImageUrl(), id);
+        return jdbcTemplate.update(sqlForUpdateById, product.getName(), product.getPrice(), product.getImageUrl(), id);
+    }
+
+    public Product findById(Long id) {
+        String sqlForFindById = "SELECT * FROM Product WHERE id = ?";
+        return jdbcTemplate.queryForObject(sqlForFindById, rowMapper, id);
     }
 
 }

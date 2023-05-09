@@ -45,4 +45,26 @@ class ViewControllerTest {
                 .body(containsString("<title>관리자 페이지</title>"));
     }
 
+    @Test
+    @DisplayName("/settings 을 통해, 사용자 설정 페이지를 반환받는다. (settings.html)")
+    void settings() {
+        RestAssured.given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when().get("/settings")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(containsString("<title>설정</title>"));
+    }
+
+    @Test
+    @DisplayName("/cart 를 통해, 장바구니 페이지를 반환받는다. (cart.html)")
+    void cart() {
+        RestAssured.given().log().all()
+                .accept(MediaType.TEXT_HTML_VALUE)
+                .when().get("/cart")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(containsString("<title>장바구니</title>"));
+    }
+
 }

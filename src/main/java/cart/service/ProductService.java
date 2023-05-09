@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductDto;
 import cart.dto.ProductResponseDto;
 import cart.entity.Product;
 import org.springframework.stereotype.Service;
@@ -29,16 +29,24 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
-    public void add(ProductRequestDto productRequestDto) {
-        productDao.save(productRequestDto.toEntity());
+    public void add(ProductDto productDto) {
+        productDao.save(productDto.toEntity());
     }
 
-    public void modifyById(int id, ProductRequestDto productRequestDto) {
-        productDao.updateById(id, productRequestDto.toEntity());
+    public void modifyById(Long id, ProductDto productDto) {
+        int numberOfUpdateRow = productDao.updateById(id, productDto.toEntity());
+
+        if (numberOfUpdateRow == 0) {
+            throw new IllegalStateException("변경하려는 상품이 존재하지 않습니다.");
+        }
     }
 
-    public void removeById(int id) {
-        productDao.deleteById(id);
+    public void removeById(Long id) {
+        int numberOfDeleteRow = productDao.deleteById(id);
+
+        if (numberOfDeleteRow == 0) {
+            throw new IllegalStateException("삭제하려는 상품이 존재하지 않습니다.");
+        }
     }
 
 }

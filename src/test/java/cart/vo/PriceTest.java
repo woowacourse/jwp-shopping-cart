@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static cart.vo.Price.of;
+import static cart.vo.Price.from;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -14,7 +14,7 @@ class PriceTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1_000_000_001})
     void createPriceFail(int input) {
-        assertThatThrownBy(() -> Price.of(input))
+        assertThatThrownBy(() -> Price.from(input))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("올바르지 않은 가격입니다.");
     }
@@ -23,7 +23,7 @@ class PriceTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 1_000_000_000})
     void createPriceSuccess(int input) {
-        Price price = of(input);
+        Price price = from(input);
 
         assertThat(price.getValue()).isEqualTo(input);
     }

@@ -1,5 +1,7 @@
 package cart.vo;
 
+import java.util.Objects;
+
 public class Url {
 
     private final String value;
@@ -8,7 +10,7 @@ public class Url {
         this.value = value;
     }
 
-    public static Url of(String value) {
+    public static Url from(String value) {
         validateUrl(value);
         return new Url(value);
     }
@@ -21,6 +23,19 @@ public class Url {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Url url = (Url) o;
+        return Objects.equals(value, url.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
 }

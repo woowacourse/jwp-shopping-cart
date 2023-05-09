@@ -4,7 +4,7 @@ package cart.vo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static cart.vo.Name.of;
+import static cart.vo.Name.from;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -16,10 +16,10 @@ class NameTest {
         String length0 = "";
         String length101 = "a".repeat(101);
 
-        assertThatThrownBy(() -> Name.of(length0))
+        assertThatThrownBy(() -> Name.from(length0))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("올바르지 않은 이름입니다.");
-        assertThatThrownBy(() -> Name.of(length101))
+        assertThatThrownBy(() -> Name.from(length101))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("올바르지 않은 이름입니다.");
     }
@@ -30,8 +30,8 @@ class NameTest {
         String length1 = "a";
         String length100 = "a".repeat(100);
 
-        Name nameOfLength1 = Name.of(length1);
-        Name nameOfLength100 = of(length100);
+        Name nameOfLength1 = Name.from(length1);
+        Name nameOfLength100 = from(length100);
 
         assertThat(nameOfLength1.getValue()).isEqualTo(length1);
         assertThat(nameOfLength100.getValue()).isEqualTo(length100);
