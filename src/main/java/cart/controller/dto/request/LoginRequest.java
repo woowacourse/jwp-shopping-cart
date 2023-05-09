@@ -1,9 +1,6 @@
 package cart.controller.dto.request;
 
-import javax.validation.constraints.Email;
-
 public final class LoginRequest {
-    @Email
     private final String email;
     private final String password;
 
