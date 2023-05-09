@@ -1,10 +1,8 @@
 package cart.entity;
 
-import javax.validation.constraints.Email;
-
 public final class UserEntity {
+
     private final long id;
-    @Email
     private final String email;
     private final String password;
 
