@@ -10,18 +10,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dao.product.ProductRepository;
-import cart.domain.Id;
-import cart.domain.product.ImageUrl;
-import cart.domain.product.Price;
+import cart.dao.product.ProductDao;
 import cart.domain.product.Product;
-import cart.domain.product.ProductName;
-import cart.dto.ProductResponse;
 import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -48,15 +45,13 @@ class ProductApiControllerUnitTest {
     ProductService productService;
 
     @MockBean
-    ProductRepository productRepository;
+    ProductDao productDao;
 
     @Test
     @DisplayName("/products로 POST 요청과 상품의 정보를 보내면, HTTP 201 코드와 상품이 등록된다.")
     void saveProduct는_상품을_저장하고_created상태코드를_반환한다() throws Exception {
         //given
         ProductRequest request = new ProductRequest("치킨", "치킨image", BigDecimal.valueOf(20000L));
-//        given(productService.saveProduct(request))
-//                .willReturn(1L);
 
         //when
         mockMvc.perform(post("/products")
@@ -72,8 +67,6 @@ class ProductApiControllerUnitTest {
         // given
         ProductRequest request = new ProductRequest("치킨ㄴㅇ라ㅣ낭러;ㅣㅁㄴ얼;ㅣㅁㄴ아ㅓㄹ;ㅣㄴ멍리;ㄴ얼;ㅣㅁ넝ㄹ;ㅣㄴ마얼;ㅁㄴㅇㄹㅁㄴㅇㄹㅇㄴㄹㄴㅇㄹ",
                 "치킨image", BigDecimal.valueOf(20000L));
-//        given(productService.saveProduct(request))
-//                .willReturn(1L);
 
         // when
         mockMvc.perform(post("/products")
@@ -90,9 +83,6 @@ class ProductApiControllerUnitTest {
     void saveProduct예외2_name이_Blank(String name) throws Exception {
         // given
         ProductRequest request = new ProductRequest(name, "치킨image", BigDecimal.valueOf(20000L));
-//        given(productService.saveProduct(request))
-//                .willReturn(1L);
-
         // when
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -153,12 +143,11 @@ class ProductApiControllerUnitTest {
     @DisplayName("/products/{id}로 put 요청과 상품의 정보를 보내면, HTTP 200 코드와 함께 상품이 수정된다.")
     void updateProduct는_요청한_id를_가진_상품의_정보를_수정하고_200코드를_반환한다() throws Exception {
         // given
-        long productId = 1;
-        Product savedProduct = new Product(new Id(1L), new ProductName("치킨"), new ImageUrl("치킨image"),
-                new Price(BigDecimal.valueOf(15000L)));
-        ProductRequest request = new ProductRequest("치킨", "치킨image", BigDecimal.valueOf(20000L));
+        long productId = 1L;
+        Optional<Product> savedProduct = Optional.of(new Product(productId, "치킨", "치킨image", BigDecimal.valueOf(15000)));
+        ProductRequest request = new ProductRequest("치킨", "치킨image", BigDecimal.valueOf(20000));
 
-        given(productRepository.getProduct(productId))
+        given(productDao.findById(productId))
                 .willReturn(savedProduct);
 
         // when
@@ -169,7 +158,7 @@ class ProductApiControllerUnitTest {
                 .andExpect(jsonPath("$.productId").value(1L))
                 .andExpect(jsonPath("$.name").value("치킨"))
                 .andExpect(jsonPath("$.image").value("치킨image"))
-                .andExpect(jsonPath("$.price").value(20000L));
+                .andExpect(jsonPath("$.price").value(20000));
     }
 
 
@@ -209,10 +198,10 @@ class ProductApiControllerUnitTest {
     @DisplayName("/products/{productId}로 DELETE 요청을 보내면, HTTP 204 코드와 상품이 삭제된다.")
     void deleteProduct는_상품을_삭제하고_200상태코드를_반환한다() throws Exception {
         // given
-        long productId = 1;
-        given(productRepository.getProduct(productId))
-                .willReturn(new Product(new Id(productId), new ProductName("치킨"), new ImageUrl("치킨image"),
-                        new Price(BigDecimal.valueOf(20000L))));
+        long productId = 1L;
+        Optional<Product> savedProduct = Optional.of(new Product(productId, "치킨", "치킨image", BigDecimal.valueOf(15000)));
+        given(productDao.findById(productId))
+                .willReturn(savedProduct);
 
         // when
         mockMvc.perform(delete("/products/" + productId)
@@ -242,7 +231,7 @@ class ProductApiControllerUnitTest {
 
         willReturn(products)
                 .given(productService)
-                .findAllProducts();
+                .findProducts();
 
         // expect
         mockMvc.perform(get("/products"))

@@ -28,14 +28,14 @@ public class ProductApiController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> findAllProducts() {
-        List<ProductResponse> allProducts = productService.findAllProducts();
+        List<ProductResponse> allProducts = productService.findProductResponses();
         return ResponseEntity.ok(allProducts);
     }
 
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@RequestBody @Valid ProductRequest productRequest) {
-        ProductResponse savedProduct = productService.createProduct(productRequest);
-        return ResponseEntity.created(URI.create("products/"+ savedProduct.getId())).body(savedProduct);
+        Long savedProductId = productService.createProduct(productRequest);
+        return ResponseEntity.created(URI.create("products/"+ savedProductId)).build();
     }
 
     @PutMapping("/{productId}")

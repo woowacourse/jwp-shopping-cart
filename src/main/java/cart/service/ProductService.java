@@ -1,13 +1,10 @@
 package cart.service;
 
-import cart.dao.product.ProductRepository;
-import cart.domain.Id;
-import cart.domain.product.ImageUrl;
-import cart.domain.product.Price;
+import cart.dao.product.ProductDao;
 import cart.domain.product.Product;
-import cart.domain.product.ProductName;
 import cart.dto.ProductResponse;
 import cart.dto.ProductRequest;
+import cart.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -15,46 +12,46 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductDao productDao;
 
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductService(ProductDao productDao) {
+        this.productDao = productDao;
     }
 
-    public ProductResponse createProduct(ProductRequest request) {
-        Product product = new Product(Id.EMPTY_ID,
-                new ProductName(request.getName()),
-                new ImageUrl(request.getImage()),
-                new Price(request.getPrice()));
-        Long productId = productRepository.addProduct(product);
-        return new ProductResponse(productId, product.getName(), request.getImage(), product.getPrice());
+    public Long createProduct(ProductRequest request) {
+        Product product = new Product(request.getName(), request.getImage(), request.getPrice());
+        return productDao.insert(product);
     }
 
-    public List<ProductResponse> findAllProducts() {
-        List<Product> products = productRepository.getAllProducts();
-        return products.stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getImageUrl(),
-                        product.getPrice()))
+    public List<Product> findProducts() {
+        return productDao.findAll();
+    }
+
+    public List<ProductResponse> findProductResponses() {
+        return findProducts().stream()
+                .map(ProductResponse::from)
                 .collect(Collectors.toList());
     }
 
-    public ProductResponse findProduct(Long id) {
-        Product product = productRepository.getProduct(id);
-        return new ProductResponse(product.getId(), product.getName(), product.getImageUrl(),
-                product.getPrice());
+    public Product findProduct(Long id) {
+        return productDao.findById(id)
+                .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
     }
 
-    public ProductResponse updateProduct(Long productId, ProductRequest request) {
-        Product product = new Product(new Id(productId),
-                new ProductName(request.getName()),
-                new ImageUrl(request.getImage()),
-                new Price(request.getPrice()));
-        productRepository.updateProduct(product);
-        return new ProductResponse(productId, product.getName(), product.getImageUrl(), product.getPrice());
+    public ProductResponse findProductResponse(Long id) {
+        return ProductResponse.from(findProduct(id));
     }
 
-    public void removeMember(Long productId) {
-        productRepository.removeProduct(productId);
+    public ProductResponse updateProduct(Long id, ProductRequest request) {
+        findProduct(id); //checkIfExist
+        Product updateProduct = new Product(id, request.getName(), request.getImage(), request.getPrice());
+        productDao.update(updateProduct);
+        return ProductResponse.from(updateProduct);
+    }
+
+    public void removeMember(Long id) {
+        findProduct(id); //checkIfExist
+        productDao.delete(id);
     }
 
 }

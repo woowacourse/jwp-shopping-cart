@@ -1,5 +1,6 @@
 package cart.dto;
 
+import cart.domain.product.Product;
 import java.math.BigDecimal;
 
 public class ProductResponse {
@@ -14,6 +15,10 @@ public class ProductResponse {
         this.name = name;
         this.image = image;
         this.price = price;
+    }
+
+    public static ProductResponse from(Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getImageUrl(), product.getPrice());
     }
 
     public Long getId() {

@@ -1,55 +1,42 @@
 package cart.domain.product;
 
-import cart.domain.Id;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class Product {
 
-    private final Id id;
-    private final ProductName name;
-    private final ImageUrl imageUrl;
-    private final Price price;
+    private final Long id;
+    private final String name;
+    private final String imageUrl;
+    private final BigDecimal price;
 
-    public Product(Id id, ProductName name, ImageUrl imageUrl, Price price) {
+    public Product(Long id, String name, String imageUrl, BigDecimal price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
     }
 
-    //todo 질문 : getter를 통해 vo(필드 속성값)이 아닌, vo내부의 원시값을 반환하는 게 맞을까요?
-    // 원래는 객체를 반환하였다가, 엔티티를 생성할 때 Product.getId().getId()를 해야해서 이와 같이 바꾸었습니다.
+    public Product(String name, String imageUrl, BigDecimal price) {
+        this.id = null;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.price = price;
+    }
+
     public Long getId() {
-        return id.getId();
+        return id;
     }
 
     public String getName() {
-        return name.getName();
+        return name;
     }
 
     public String getImageUrl() {
-        return imageUrl.getImageUrl();
+        return imageUrl;
     }
 
     public BigDecimal getPrice() {
-        return price.getPrice();
+        return price;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Product product = (Product) o;
-        return Objects.equals(id, product.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

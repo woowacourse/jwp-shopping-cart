@@ -3,7 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.product.ProductDao;
-import cart.dao.product.ProductEntity;
+import cart.domain.product.Product;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ class ProductDaoTest {
     @Test
     void save는_상품을_저장한다() {
         //given
-        ProductEntity product = new ProductEntity(null, "치킨",
+        Product product = new Product(null, "치킨",
                 "https://img.freepik.com/free-photo/crispy-fried-chicken-on-a-plate-with-salad-and-carrot_1150-20212.jpg",
                 BigDecimal.valueOf(19000));
 
@@ -42,7 +42,7 @@ class ProductDaoTest {
 
     @Test
     void findAllProducts는_저장된_모든_상품을_조회한다() {
-        List<ProductEntity> allProducts = productDao.findAll();
+        List<Product> allProducts = productDao.findAll();
 
         assertThat(allProducts).isNotNull();
     }
@@ -56,22 +56,22 @@ class ProductDaoTest {
     @Test
     void updateProduct는_상품_정보를_수정한다() {
         //given
-        ProductEntity savedProduct = new ProductEntity(null, "chicken", "imagelink", BigDecimal.valueOf(100));
+        Product savedProduct = new Product(null, "chicken", "imagelink", BigDecimal.valueOf(100));
         Long productId = productDao.insert(savedProduct);
 
         //when
-        ProductEntity productToUpdate = new ProductEntity(productId, "chicken", "imagelink",BigDecimal.valueOf(19000));
+        Product productToUpdate = new Product(productId, "chicken", "imagelink",BigDecimal.valueOf(19000));
         productDao.update(productToUpdate);
 
         //then
-        ProductEntity updatedroduct = productDao.findById(productId).get();
+        Product updatedroduct = productDao.findById(productId).get();
         assertThat(updatedroduct).usingRecursiveComparison().isEqualTo(productToUpdate);
     }
 
     @Test
     void deleteProduct는_상품을_삭제한다() {
         //given
-        ProductEntity product = new ProductEntity(null, "chicken", "imagelink", BigDecimal.valueOf(100));
+        Product product = new Product(null, "chicken", "imagelink", BigDecimal.valueOf(100));
         Long productId = productDao.insert(product);
         assertThat(productDao.findAll()).hasSize(1);
 
