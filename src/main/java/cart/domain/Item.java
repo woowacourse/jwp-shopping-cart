@@ -15,20 +15,24 @@ public class Item {
         private ImageUrl imageUrl;
         private Price price;
 
-        public Builder() {}
+        public Builder() {
+        }
 
         public Builder id(Long value) {
             id = value;
             return this;
         }
+
         public Builder name(Name value) {
             name = value;
             return this;
         }
+
         public Builder imageUrl(ImageUrl value) {
             imageUrl = value;
             return this;
         }
+
         public Builder price(Price value) {
             price = value;
             return this;
@@ -42,7 +46,7 @@ public class Item {
     private Item(Builder builder) {
         validate(builder);
         this.id = builder.id;
-        this.name =  builder.name;
+        this.name = builder.name;
         this.imageUrl = builder.imageUrl;
         this.price = builder.price;
     }

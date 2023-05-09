@@ -2,12 +2,13 @@ package cart.domain;
 
 import java.util.Objects;
 
-public class ImageUrl {
+public class Email {
 
-    public static final int MAX_LENGTH = 5000;
+    private static final int MAX_LENGTH = 100;
+
     private final String value;
 
-    public ImageUrl(final String value) {
+    public Email(final String value) {
         validateNotEmpty(value);
         validateLength(value);
         this.value = value;
@@ -15,13 +16,13 @@ public class ImageUrl {
 
     private static void validateNotEmpty(String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("이미지 URL은 빈 값일 수 없습니다.");
+            throw new IllegalArgumentException("이메일은 빈 값일 수 없습니다.");
         }
     }
 
     private void validateLength(final String value) {
         if (value.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("이미지 URL은 5000자 이하여야 합니다.");
+            throw new IllegalArgumentException("이메일은 100자 이하여야 합니다.");
         }
     }
 
@@ -30,11 +31,11 @@ public class ImageUrl {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ImageUrl imageUrl = (ImageUrl) o;
-        return Objects.equals(value, imageUrl.value);
+        final Email email = (Email) o;
+        return Objects.equals(value, email.value);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class ImageUrl {
 
     @Override
     public String toString() {
-        return "ImageUrl{" +
+        return "Email{" +
                 "value='" + value + '\'' +
                 '}';
     }
