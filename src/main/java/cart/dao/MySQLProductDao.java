@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.controller.dto.ProductRequest;
 import cart.dao.entity.ProductEntity;
+import cart.domain.Product;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
@@ -20,14 +20,14 @@ public class MySQLProductDao implements ProductDao {
     }
 
     @Override
-    public long add(ProductRequest request) {
+    public long add(Product product) {
         String query = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
-            ps.setString(1, request.getName());
-            ps.setInt(2, request.getPrice());
-            ps.setString(3, request.getImageUrl());
+            ps.setString(1, product.getName());
+            ps.setInt(2, product.getPrice());
+            ps.setString(3, product.getImageUrl());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -47,24 +47,23 @@ public class MySQLProductDao implements ProductDao {
     @Override
     public Optional<ProductEntity> findById(Long id) {
         String query = "SELECT * FROM product WHERE id = ?";
-        try{
+        try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, (resultSet, rowNum) ->
                 new ProductEntity(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getInt("price"),
                     resultSet.getString("image_url")), id));
-        } catch (EmptyResultDataAccessException exception){
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
-
     }
 
     @Override
-    public int updateById(Long id, ProductRequest request) {
+    public int updateById(Long id, Product product) {
         String query = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        return jdbcTemplate.update(query, request.getName(), request.getPrice(),
-            request.getImageUrl(),
+        return jdbcTemplate.update(query, product.getName(), product.getPrice(),
+            product.getImageUrl(),
             id);
     }
 
