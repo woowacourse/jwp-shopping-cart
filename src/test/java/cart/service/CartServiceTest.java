@@ -20,7 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -63,15 +63,15 @@ class CartServiceTest {
 
         List<ProductResponseDto> cartItems = cartService.getCartProducts(1);
 
-        assertAll(
-                () -> assertThat(cartItems).hasSize(2),
-                () -> assertThat(cartItems.get(0).getName()).isEqualTo("name"),
-                () -> assertThat(cartItems.get(0).getPrice()).isEqualTo(1000),
-                () -> assertThat(cartItems.get(0).getImage()).isEqualTo("image"),
-                () -> assertThat(cartItems.get(1).getName()).isEqualTo("name2"),
-                () -> assertThat(cartItems.get(1).getPrice()).isEqualTo(2000),
-                () -> assertThat(cartItems.get(1).getImage()).isEqualTo("image2")
-        );
+        assertSoftly(softly -> {
+            softly.assertThat(cartItems).hasSize(2);
+            softly.assertThat(cartItems.get(0).getName()).isEqualTo("name");
+            softly.assertThat(cartItems.get(0).getPrice()).isEqualTo(1000);
+            softly.assertThat(cartItems.get(0).getImage()).isEqualTo("image");
+            softly.assertThat(cartItems.get(1).getName()).isEqualTo("name2");
+            softly.assertThat(cartItems.get(1).getPrice()).isEqualTo(2000);
+            softly.assertThat(cartItems.get(1).getImage()).isEqualTo("image2");
+        });
     }
 
     @DisplayName("유저의 장바구니에 아이템을 추가한다.")
