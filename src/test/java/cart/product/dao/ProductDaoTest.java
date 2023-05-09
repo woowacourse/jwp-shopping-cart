@@ -14,7 +14,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import cart.product.entity.Product;
+import org.springframework.test.context.jdbc.Sql;
 
+@Sql("/testdata.sql")
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ProductDaoTest {

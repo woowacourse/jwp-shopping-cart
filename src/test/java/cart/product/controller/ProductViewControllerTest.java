@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.springframework.test.context.jdbc.Sql;
 
+@Sql("/testdata.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductViewControllerTest {
 

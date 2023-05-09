@@ -4,10 +4,14 @@ import cart.product.entity.Product;
 
 public class ProductResponse {
 
-    private final Long id;
-    private final String name;
-    private final String image;
-    private final Long price;
+    private Long id;
+    private String name;
+    private String image;
+    private Long price;
+
+    public ProductResponse() {
+    }
+
 
     public ProductResponse(Long id, String name, String image, Long price) {
         this.id = id;
@@ -15,6 +19,7 @@ public class ProductResponse {
         this.image = image;
         this.price = price;
     }
+
 
     public ProductResponse(Product product) {
         this(product.getId(), product.getName(), product.getImage(), product.getPrice());

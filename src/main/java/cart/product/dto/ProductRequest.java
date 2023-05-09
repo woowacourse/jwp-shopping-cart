@@ -9,12 +9,15 @@ import org.hibernate.validator.constraints.Range;
 public class ProductRequest {
 	@NotBlank(message = "상품명을 입력해주세요.")
 	@Size(max = 20, message = "{max} 글자 이하만 입력 가능합니다.")
-	private final String name;
+	private String name;
 
 	@NotNull(message = "상품가격을 입력해주세요.")
 	@Range(min = 0, message = "상품 금액은 {min}원 이상의 정수만 입력가능 합니다.")
-	private final Long price;
-	private final String image;
+	private Long price;
+	private String image;
+
+	public ProductRequest() {
+	}
 
 	public ProductRequest(String name, Long price, String image) {
 		this.name = name;
