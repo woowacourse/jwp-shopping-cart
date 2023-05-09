@@ -10,46 +10,48 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import java.util.List;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
-class H2ProductDaoTestEntity {
+class H2ProductDaoTest {
+
+    private final ProductEntity productEntity = new ProductEntity("포이", "poi", 30000);
 
     private H2ProductDao h2ProductDao;
 
+    private SimpleJdbcInsert simpleJdbcInsert;
     @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterjdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        h2ProductDao = new H2ProductDao(jdbcTemplate);
-        jdbcTemplate.getJdbcOperations().execute("ALTER TABLE product ALTER COLUMN id RESTART WITH 1");
+        simpleJdbcInsert = new SimpleJdbcInsert(namedParameterjdbcTemplate.getJdbcTemplate())
+            .withTableName("product")
+            .usingGeneratedKeyColumns("id");
+        h2ProductDao = new H2ProductDao(namedParameterjdbcTemplate);
     }
 
     @Test
     void save() {
-        //given
-        final ProductEntity productEntity = new ProductEntity(1L, "포이", "poi", 30000);
-
         //when
         h2ProductDao.save(productEntity);
 
         //then
         final List<ProductEntity> productEntities = getProducts();
         final ProductEntity actual = productEntities.get(0);
-        assertAll(
-                () -> assertThat(productEntities).hasSize(1),
-                () -> assertThat(actual.getName()).isEqualTo("포이"),
-                () -> assertThat(actual.getImageUrl()).isEqualTo("poi"),
-                () -> assertThat(actual.getPrice()).isEqualTo(30000)
-        );
+
+        assertThat(productEntities).hasSize(1);
+        assertThat(actual)
+            .usingRecursiveComparison()
+            .ignoringFields("id")
+            .isEqualTo(productEntity);
     }
 
     private List<ProductEntity> getProducts() {
         final String sql = "select * from product";
-        final List<ProductEntity> productEntities = jdbcTemplate.getJdbcOperations().query(sql, (resultSet, count) ->
+        final List<ProductEntity> productEntities = namedParameterjdbcTemplate.getJdbcOperations().query(sql, (resultSet, count) ->
                 new ProductEntity(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
@@ -69,26 +71,23 @@ class H2ProductDaoTestEntity {
 
         //then
         final ProductEntity actual = productEntities.get(0);
-        assertAll(
-                () -> assertThat(productEntities).hasSize(1),
-                () -> assertThat(actual.getName()).isEqualTo("포이"),
-                () -> assertThat(actual.getImageUrl()).isEqualTo("poi"),
-                () -> assertThat(actual.getPrice()).isEqualTo(30000)
-        );
+        assertThat(productEntities).hasSize(1);
+        assertThat(actual)
+            .usingRecursiveComparison()
+            .ignoringFields("id")
+            .isEqualTo(productEntity);
     }
 
-    private void saveProduct() {
-        final ProductEntity productEntity = new ProductEntity(1L, "포이", "poi", 30000);
-        final String sql = "insert into product (name, image_url, price) values(:name, :imageUrl, :price)";
+    private Long saveProduct() {
         final SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(productEntity);
-        jdbcTemplate.update(sql, parameterSource);
+        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
     @Test
     void update() {
         //given
-        saveProduct();
-        final ProductEntity productEntity = new ProductEntity(1L, "포이2", "poi2", 50000);
+        final Long id = saveProduct();
+        final ProductEntity productEntity = new ProductEntity(id, "포이2", "poi2", 50000);
 
         //when
         h2ProductDao.update(productEntity);
@@ -96,24 +95,35 @@ class H2ProductDaoTestEntity {
         //then
         final List<ProductEntity> productEntities = getProducts();
         final ProductEntity actual = productEntities.get(0);
-        assertAll(
-                () -> assertThat(productEntities).hasSize(1),
-                () -> assertThat(actual.getName()).isEqualTo("포이2"),
-                () -> assertThat(actual.getImageUrl()).isEqualTo("poi2"),
-                () -> assertThat(actual.getPrice()).isEqualTo(50000)
-        );
+
+        assertThat(productEntities).hasSize(1);
+        assertThat(actual)
+            .usingRecursiveComparison()
+            .isEqualTo(productEntity);
     }
 
     @Test
     void delete() {
         //given
-        saveProduct();
+        final Long id = saveProduct();
 
         //when
-        h2ProductDao.delete(1L);
+        h2ProductDao.delete(id);
 
         //then
         final List<ProductEntity> productEntities = getProducts();
-        assertThat(productEntities).hasSize(0);
+        assertThat(productEntities).isEmpty();
+    }
+
+    @Test
+    void findById() {
+        //given
+        final Long id = saveProduct();
+
+        ///when
+        final ProductEntity productEntity = h2ProductDao.findById(id).get();
+
+        //then
+        assertThat(productEntity).isNotNull();
     }
 }
