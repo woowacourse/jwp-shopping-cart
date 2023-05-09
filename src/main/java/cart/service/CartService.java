@@ -39,6 +39,7 @@ public class CartService {
         return cartRepository.findCartsWithProductByUserId(userEntity.getId());
     }
 
+    @Transactional
     public void deleteCartByUserAndProductId(UserEntity userEntity, Long cartId) {
         cartDao.deleteByUserIdAndCartId(userEntity.getId(), cartId);
     }
