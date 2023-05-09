@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class ProductEntity {
+
     private final long id;
     @NotBlank(message = "빈 값을 허용하지 않습니다.")
     @Size(max = 32)
