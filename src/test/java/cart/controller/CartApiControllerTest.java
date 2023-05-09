@@ -54,10 +54,19 @@ class CartApiControllerTest {
 
     @DisplayName("DELETE /cart/{product} 성공 테스트")
     @Test
-    void delteProductInCartTest() throws Exception {
+    void deleteProductInCartTest() throws Exception {
         this.mockMvc.perform(delete("/cart/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
                 .andExpect(status().isNoContent());
+    }
+
+    @DisplayName("올바른 Authorization 헤더값이 들어오지 않을 때 실패한다")
+    @Test
+    void throwExceptionWhenInvalidAuthorizationHeader() throws Exception {
+        this.mockMvc.perform(get("/cart/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
+                .andExpect(status().isUnauthorized());
     }
 }
