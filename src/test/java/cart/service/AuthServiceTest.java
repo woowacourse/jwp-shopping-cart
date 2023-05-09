@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.UserDao;
-import cart.dto.AuthInfo;
+import cart.dto.AuthRequest;
 import cart.exception.AuthorizationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class AuthServiceTest {
     void findUserByAuthSuccessTest() {
         when(userDao.selectByAuth(any())).thenReturn(1);
 
-        Integer userId = authService.findUserIdByAuthInfo(new AuthInfo("email", "password"));
+        Integer userId = authService.findUserIdByAuth(new AuthRequest("email@email.com", "password"));
 
         assertThat(userId).isEqualTo(1);
     }
@@ -39,7 +39,7 @@ class AuthServiceTest {
     void findUserByAuthFailTest() {
         when(userDao.selectByAuth(any())).thenReturn(null);
 
-        assertThatThrownBy(() -> authService.findUserIdByAuthInfo(new AuthInfo("email", "password")))
+        assertThatThrownBy(() -> authService.findUserIdByAuth(new AuthRequest("email@email.com", "password")))
                 .isInstanceOf(AuthorizationException.class);
     }
 }

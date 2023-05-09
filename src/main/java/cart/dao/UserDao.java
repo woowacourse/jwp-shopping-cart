@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dto.AuthInfo;
+import cart.domain.AuthInfo;
 import cart.entity.UserEntity;
 
 import java.util.List;

@@ -61,12 +61,21 @@ class CartApiControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    @DisplayName("올바른 Authorization 헤더값이 들어오지 않을 때 실패한다")
+    @DisplayName("올바른 Basic Authorization 헤더값이 들어오지 않을 때 실패한다")
     @Test
     void throwExceptionWhenInvalidAuthorizationHeader() throws Exception {
-        this.mockMvc.perform(get("/cart/1")
+        this.mockMvc.perform(get("/cart-products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
+                        .header("Authorization", "Basic 123456789="))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("Basic Authorization 헤더값이 들어오지 않을 때 실패한다")
+    @Test
+    void throwExceptionWhenNotBasicAuthorizationHeader() throws Exception {
+        this.mockMvc.perform(get("/cart-products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer 123456789="))
                 .andExpect(status().isUnauthorized());
     }
 }

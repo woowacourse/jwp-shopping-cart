@@ -1,6 +1,7 @@
 package cart.dao;
 
-import cart.dto.AuthInfo;
+import cart.domain.AuthInfo;
+import cart.dto.AuthRequest;
 import cart.entity.UserEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,8 +46,8 @@ class JdbcTemplateUserDaoTest {
     @DisplayName("selectByAuth 테스트")
     @Test
     void selectByAuthTest() {
-        int userId = userDao.insert(new UserEntity(null, "email", "password"));
-        int selectedUserId = userDao.selectByAuth(new AuthInfo("email", "password"));
+        int userId = userDao.insert(new UserEntity(null, "email@email.com", "password"));
+        int selectedUserId = userDao.selectByAuth(new AuthInfo("email@email.com", "password"));
 
         Assertions.assertThat(selectedUserId).isEqualTo(userId);
     }
@@ -64,9 +65,9 @@ class JdbcTemplateUserDaoTest {
     @DisplayName("update 테스트")
     @Test
     void updateTest() {
-        int userId = userDao.insert(new UserEntity(null, "email1", "password1"));
-        userDao.update(new UserEntity(userId, "email2", "password2"));
-        Integer selectedUserId = userDao.selectByAuth(new AuthInfo("email2", "password2"));
+        int userId = userDao.insert(new UserEntity(null, "email1@email.com", "password1"));
+        userDao.update(new UserEntity(userId, "email2@email.com", "password2"));
+        Integer selectedUserId = userDao.selectByAuth(new AuthInfo("email2@email.com", "password2"));
 
         Assertions.assertThat(selectedUserId).isEqualTo(userId);
     }
@@ -74,9 +75,9 @@ class JdbcTemplateUserDaoTest {
     @DisplayName("delete 테스트")
     @Test
     void deleteTest() {
-        int userId = userDao.insert(new UserEntity(null, "email1", "password1"));
+        int userId = userDao.insert(new UserEntity(null, "email1@email.com", "password1"));
         userDao.delete(userId);
-        Assertions.assertThatThrownBy(() -> userDao.selectByAuth(new AuthInfo("email1", "password1")))
+        Assertions.assertThatThrownBy(() -> userDao.selectByAuth(new AuthInfo("email1@email.com", "password1")))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 

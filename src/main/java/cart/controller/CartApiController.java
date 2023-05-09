@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.dto.AuthInfo;
+import cart.dto.AuthRequest;
 import cart.dto.CartItem;
 import cart.dto.ProductResponseDto;
 import cart.service.AuthService;
@@ -24,23 +24,23 @@ public class CartApiController {
     }
 
     @GetMapping(value="/cart-products", produces="application/json")
-    public List<ProductResponseDto> getCartProduct(@AuthPrincipal AuthInfo authInfo) {
-        return cartService.getCartProducts(getUserIdByAuth(authInfo));
+    public List<ProductResponseDto> getCartProduct(@AuthPrincipal AuthRequest authRequest) {
+        return cartService.getCartProducts(getUserIdByAuth(authRequest));
     }
 
     @PostMapping("/cart/{productId}")
-    public ResponseEntity addProductToCart(@PathVariable int productId, @AuthPrincipal AuthInfo authInfo) {
-        cartService.addCartItem(new CartItem(getUserIdByAuth(authInfo), productId));
+    public ResponseEntity addProductToCart(@PathVariable int productId, @AuthPrincipal AuthRequest authRequest) {
+        cartService.addCartItem(new CartItem(getUserIdByAuth(authRequest), productId));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/cart/{productId}")
-    public ResponseEntity deleteProductInCart(@PathVariable int productId, @AuthPrincipal AuthInfo authInfo) {
-        cartService.deleteCartItem(new CartItem(getUserIdByAuth(authInfo), productId));
+    public ResponseEntity deleteProductInCart(@PathVariable int productId, @AuthPrincipal AuthRequest authRequest) {
+        cartService.deleteCartItem(new CartItem(getUserIdByAuth(authRequest), productId));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    private int getUserIdByAuth(final AuthInfo authInfo) {
-        return authService.findUserIdByAuthInfo(authInfo);
+    private int getUserIdByAuth(final AuthRequest authRequest) {
+        return authService.findUserIdByAuth(authRequest);
     }
 }

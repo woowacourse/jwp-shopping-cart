@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dto.AuthInfo;
+import cart.domain.AuthInfo;
 import cart.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

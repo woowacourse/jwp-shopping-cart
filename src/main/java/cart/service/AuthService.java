@@ -1,7 +1,8 @@
 package cart.service;
 
 import cart.dao.UserDao;
-import cart.dto.AuthInfo;
+import cart.domain.AuthInfo;
+import cart.dto.AuthRequest;
 import cart.exception.AuthorizationException;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,13 @@ public class AuthService {
         this.userDao = userDao;
     }
 
-    public int findUserIdByAuthInfo(AuthInfo authInfo) {
-         Integer userId = userDao.selectByAuth(authInfo);
-         if (userId == null) {
-             throw new AuthorizationException("인가되지 않은 사용자 정보입니다.");
-         }
+    public int findUserIdByAuth(AuthRequest authRequest) {
+        AuthInfo authInfo = new AuthInfo(authRequest.getEmail(), authRequest.getPassword());
+        Integer userId = userDao.selectByAuth(authInfo);
+        if (userId == null) {
+            throw new AuthorizationException("인가되지 않은 사용자 정보입니다.");
+        }
 
-         return userId.intValue();
+        return userId.intValue();
     }
 }
