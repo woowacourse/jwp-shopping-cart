@@ -1,17 +1,15 @@
 package cart.controller;
 
-import cart.dto.ProductDto;
-import cart.dto.ProductRequestDto;
-import cart.dto.ProductResponseDto;
-import cart.service.JwpCartService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import cart.dto.member.MemberDto;
+import cart.dto.member.MemberResponseDto;
+import cart.dto.product.ProductDto;
+import cart.dto.product.ProductResponseDto;
+import cart.service.MemberService;
+import cart.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -19,17 +17,19 @@ import static java.util.stream.Collectors.toList;
 @Controller
 public class JwpCartController {
 
-    private final JwpCartService jwpCartService;
+    private final ProductService productService;
+    private final MemberService memberService;
 
-    public JwpCartController(JwpCartService jwpCartService) {
-        this.jwpCartService = jwpCartService;
+    public JwpCartController(ProductService productService, MemberService memberService) {
+        this.productService = productService;
+        this.memberService = memberService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        List<ProductDto> productDtos = jwpCartService.findAll();
+        List<ProductDto> productDtos = productService.findAll();
         List<ProductResponseDto> response = productDtos.stream()
-                .map(ProductResponseDto::fromProductDto)
+                .map(ProductResponseDto::fromDto)
                 .collect(toList());
         model.addAttribute("products", response);
         return "index";
@@ -37,36 +37,26 @@ public class JwpCartController {
 
     @GetMapping("/admin")
     public String admin(Model model) {
-        List<ProductDto> productDtos = jwpCartService.findAll();
+        List<ProductDto> productDtos = productService.findAll();
         List<ProductResponseDto> response = productDtos.stream()
-                .map(ProductResponseDto::fromProductDto)
+                .map(ProductResponseDto::fromDto)
                 .collect(toList());
         model.addAttribute("products", response);
         return "admin";
     }
 
-    @PostMapping("/admin/products")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ProductResponseDto> addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
-        ProductDto productdto = jwpCartService.add(productRequestDto);
-        ProductResponseDto response = ProductResponseDto.fromProductDto(productdto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .location(URI.create("/admin/products/" + response.getId()))
-                .body(response);
+    @GetMapping("/settings")
+    public String setting(Model model) {
+        List<MemberDto> memberDtos = memberService.findAll();
+        List<MemberResponseDto> response = memberDtos.stream()
+                .map(MemberResponseDto::fromDto)
+                .collect(toList());
+        model.addAttribute("members", response);
+        return "settings";
     }
 
-    @PutMapping("/admin/products/{id}")
-    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") Long id,
-                                                            @RequestBody @Valid ProductRequestDto productRequestDto) {
-        ProductDto productDto = jwpCartService.updateById(productRequestDto, id);
-        ProductResponseDto response = ProductResponseDto.fromProductDto(productDto);
-        return ResponseEntity.ok().body(response);
-    }
-
-    @DeleteMapping("/admin/products/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
-        jwpCartService.deleteById(id);
-        return ResponseEntity.ok()
-                .build();
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
     }
 }

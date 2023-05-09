@@ -1,27 +1,28 @@
-package cart.entity;
+package cart.dto.product;
 
 import cart.domain.product.ImgUrl;
 import cart.domain.product.Name;
 import cart.domain.product.Price;
+import cart.entity.ProductEntity;
 
 import java.util.Objects;
 
-public class ProductEntity {
+public class ProductDto {
 
     private final Long id;
     private final Name name;
     private final ImgUrl imgUrl;
     private final Price price;
 
-    public ProductEntity(Long id, String name, String imgUrl, int price) {
+    private ProductDto(Long id, String name, String imgUrl, int price) {
         this.id = id;
         this.name = new Name(name);
         this.imgUrl = new ImgUrl(imgUrl);
         this.price = new Price(price);
     }
 
-    public Long getId() {
-        return id;
+    public static ProductDto fromEntity(ProductEntity entity) {
+        return new ProductDto(entity.getId(), entity.getName(), entity.getImgUrl(), entity.getPrice());
     }
 
     public String getName() {
@@ -36,6 +37,10 @@ public class ProductEntity {
         return price.getPrice();
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -44,12 +49,22 @@ public class ProductEntity {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ProductEntity that = (ProductEntity) o;
-        return Objects.equals(id, that.id);
+        ProductDto that = (ProductDto) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(imgUrl, that.imgUrl) && Objects.equals(price, that.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name, imgUrl, price);
+    }
+
+    @Override
+    public String toString() {
+        return "ProductDto{" +
+                "id=" + id +
+                ", name=" + name +
+                ", imgUrl=" + imgUrl +
+                ", price=" + price +
+                '}';
     }
 }

@@ -1,4 +1,4 @@
-package cart.dto;
+package cart.dto.product;
 
 import java.util.Objects;
 
@@ -15,11 +15,7 @@ public class ProductResponseDto {
         this.price = price;
     }
 
-    public static ProductResponseDto of(String name, String imgUrl, int price) {
-        return new ProductResponseDto(null, name, imgUrl, price);
-    }
-
-    public static ProductResponseDto fromProductDto(ProductDto productDto) {
+    public static ProductResponseDto fromDto(ProductDto productDto) {
         return new ProductResponseDto(productDto.getId(), productDto.getName(), productDto.getImgUrl(), productDto.getPrice());
     }
 
@@ -40,6 +36,11 @@ public class ProductResponseDto {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(id, name, imgUrl, price);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -49,10 +50,5 @@ public class ProductResponseDto {
         }
         ProductResponseDto that = (ProductResponseDto) o;
         return price == that.price && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(imgUrl, that.imgUrl);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, imgUrl, price);
     }
 }
