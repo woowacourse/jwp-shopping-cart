@@ -29,7 +29,7 @@ class BasicAuthorizationExtractorTest {
 
     @DisplayName("request의 Authorization 헤더가 null이면 InvalidBasicAuthException을 반환한다.")
     @Test
-    void extractTest_validationFail1() {
+    void extract_NullAuthHeader() {
         // given
         given(request.getHeader(anyString())).willReturn(null);
 
@@ -41,7 +41,7 @@ class BasicAuthorizationExtractorTest {
 
     @DisplayName("request의 Authorization 헤더가 Basic Type이 아니면 InvalidBasicAuthException을 반환한다.")
     @Test
-    void extractTest_validationFail2() {
+    void extract_NotBasicAuthHeader() {
         // given
         given(request.getHeader(anyString())).willReturn("jamie");
 
@@ -54,9 +54,9 @@ class BasicAuthorizationExtractorTest {
     @DisplayName("request의 Authorization 헤더가 파싱할 수 없는 값이면, InvalidBasicAuthException을 반환한다.")
     @ParameterizedTest
     @ValueSource(strings = {"YUBhLmNvbS9wYXNzd29yZDE=", "YUBhLmNvbTo="})
-    void extractTest_parsingFail(String encodedString) {
+    void extract_InvalidEncodingValue(String invalidEncodedString) {
         // given
-        given(request.getHeader(anyString())).willReturn("Basic " + encodedString);
+        given(request.getHeader(anyString())).willReturn("Basic " + invalidEncodedString);
 
         // when, then
         assertThatThrownBy(() -> basicAuthorizationExtractor.extract(request))
@@ -66,9 +66,10 @@ class BasicAuthorizationExtractorTest {
 
     @DisplayName("request의 Authorization 헤더에서 성공적으로 이메일과 패스워드를 추출하여 반환한다.")
     @Test
-    void extract_success() {
+    void extract() {
         // given
-        given(request.getHeader(anyString())).willReturn("Basic YUBhLmNvbTpwYXNzd29yZDE=");
+        String validBasicAuthHeader = "Basic YUBhLmNvbTpwYXNzd29yZDE=";
+        given(request.getHeader(anyString())).willReturn(validBasicAuthHeader);
 
         // when
         List<String> credentials = basicAuthorizationExtractor.extract(request);
