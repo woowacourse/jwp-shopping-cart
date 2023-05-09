@@ -1,7 +1,8 @@
 package cart;
 
-import cart.domain.member.Member;
-import cart.domain.product.Product;
+import cart.cart.domain.Cart;
+import cart.member.domain.Member;
+import cart.product.domain.Product;
 
 public class DummyData {
 
@@ -42,5 +43,10 @@ public class DummyData {
             3L,
             "dummy@dummy.com",
             "dummy"
+    );
+
+    public static final Cart DUMMY_CART_ONE = Cart.of(
+            1L,
+            1L
     );
 }

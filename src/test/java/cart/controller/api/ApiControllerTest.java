@@ -1,7 +1,7 @@
 package cart.controller.api;
 
-import cart.dao.cart.CartDao;
-import cart.dao.product.ProductDao;
+import cart.cart_product.dao.CartProductDao;
+import cart.product.dao.ProductDao;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public abstract class ApiControllerTest {
     int port;
 
     @Autowired
-    CartDao cartDao;
+    CartProductDao cartProductDao;
 
     @Autowired
     ProductDao productDao;

@@ -1,7 +1,6 @@
 package cart.auth;
 
-import cart.dto.AuthInfo;
-import cart.service.MemberService;
+import cart.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

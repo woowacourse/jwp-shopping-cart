@@ -1,7 +1,7 @@
 package cart.dao.member;
 
 import cart.dao.DaoTest;
-import cart.domain.member.Member;
+import cart.member.domain.Member;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

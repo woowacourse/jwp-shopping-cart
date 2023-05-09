@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.product.Product;
+import cart.product.domain.Product;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;

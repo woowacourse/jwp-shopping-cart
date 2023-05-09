@@ -1,7 +1,7 @@
 package cart.controller.api;
 
-import cart.dto.ProductCreationRequest;
-import cart.dto.ProductModificationRequest;
+import cart.product.dto.ProductCreationRequest;
+import cart.product.dto.ProductModificationRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

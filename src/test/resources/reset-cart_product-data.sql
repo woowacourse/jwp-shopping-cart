@@ -1,16 +1,12 @@
-DELETE
-FROM cart_product;
-DELETE
-FROM product;
-DELETE
-FROM member;
+DELETE FROM cart_product;
+DELETE FROM cart;
+DELETE FROM product;
+DELETE FROM member;
 
-ALTER TABLE cart_product
-    ALTER COLUMN ID RESTART WITH 1;
-ALTER TABLE product
-    ALTER COLUMN ID RESTART WITH 1;
-ALTER TABLE member
-    ALTER COLUMN ID RESTART WITH 1;
+ALTER TABLE cart_product ALTER COLUMN ID RESTART WITH 1;
+ALTER TABLE cart ALTER COLUMN ID RESTART WITH 1;
+ALTER TABLE product ALTER COLUMN ID RESTART WITH 1;
+ALTER TABLE member ALTER COLUMN ID RESTART WITH 1;
 
 INSERT INTO product(name, image_url, price)
 VALUES ('mouse', 'https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg', 100000),
@@ -21,7 +17,11 @@ INSERT INTO member(email, password)
 VALUES ('test@test.com', 'test'),
        ('woowacourse@woowa.com', 'pobi');
 
-INSERT INTO cart_product(member_id, product_id)
+INSERT INTO cart(id, member_id)
+VALUES (1, 1),
+       (2, 2);
+
+INSERT INTO cart_product(cart_id, product_id)
 VALUES (1, 2),
        (2, 1),
        (2, 2);

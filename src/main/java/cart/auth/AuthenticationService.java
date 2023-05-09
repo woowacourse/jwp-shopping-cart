@@ -1,8 +1,7 @@
 package cart.auth;
 
-import cart.dao.member.MemberDao;
-import cart.domain.member.Member;
-import cart.dto.AuthInfo;
+import cart.member.dao.MemberDao;
+import cart.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
