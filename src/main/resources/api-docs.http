@@ -1,0 +1,60 @@
+## Account
+
+### 관리자 선택
+GET http://localhost:8080/settings
+
+## Admin
+
+### 관리자 페이지 조회
+GET http://localhost:8080/admin
+
+## Cart
+
+### Cart에 특정 물품 추가
+POST http://localhost:8080/carts
+Authorization: Basic YWNjb3VudDFAZ2c6MTIzNA==
+Content-Type: application/json
+
+{
+  "productId" : 1
+}
+
+### 사용자의 Cart 조회
+GET http://localhost:8080/carts
+Authorization: Basic YWNjb3VudDFAZ2c6MTIzNA==
+
+### Cart에서 특정 물품 삭제
+DELETE http://localhost:8080/carts
+Authorization: Basic YWNjb3VudDFAZ2c6MTIzNA==
+Content-Type: application/json
+
+{
+  "productId" : 1
+}
+
+###
+
+## Product
+
+### 물품 추가
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+  "name" : "콜라",
+  "price" : 1000,
+  "imageUrl" : "https://www.shutterstock.com/image-photo/london-uk-may-6th-2016-260nw-417875092.jpg"
+}
+
+### 물품 정보 수정
+PATCH http://localhost:8080/products/3
+Content-Type: application/json
+
+{
+  "name" : "변경된 콜라",
+  "price" : "2000",
+  "imageUrl" : "https://www.shutterstock.com/image-photo/london-uk-may-6th-2016-260nw-417875092.jpg"
+}
+
+### 물품 삭제
+DELETE http://localhost:8080/products/3

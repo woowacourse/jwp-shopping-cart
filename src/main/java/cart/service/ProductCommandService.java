@@ -2,7 +2,8 @@ package cart.service;
 
 import cart.dao.ProductDao;
 import cart.dao.ProductEntity;
-import cart.domain.Product;
+import cart.domain.product.Product;
+import cart.global.exception.product.ProductNotFoundException;
 import cart.service.dto.ProductModifyRequest;
 import cart.service.dto.ProductRegisterRequest;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,9 @@ public class ProductCommandService {
     }
 
     public void modifyProduct(final Long productId, final ProductModifyRequest productModifyRequest) {
-        final Product modifiedProduct = Product.of(
+        checkExistProduct(productId);
+
+        final Product modifiedProduct = new Product(
                 productModifyRequest.getName(),
                 productModifyRequest.getPrice(),
                 productModifyRequest.getImageUrl()
@@ -47,6 +50,14 @@ public class ProductCommandService {
     }
 
     public void deleteProduct(final Long productId) {
+        checkExistProduct(productId);
+
         productDao.deleteById(productId);
+    }
+
+    private void checkExistProduct(final Long productId) {
+        if (productDao.isNotExistProduct(productId)) {
+            throw new ProductNotFoundException("해당 상품은 존재하지 않습니다");
+        }
     }
 }
