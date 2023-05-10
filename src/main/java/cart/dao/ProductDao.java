@@ -16,14 +16,14 @@ public class ProductDao {
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("product").usingGeneratedKeyColumns("id");
+                .withTableName("product").usingGeneratedKeyColumns("product_id");
     }
 
     public List<ProductEntity> findAll() {
         String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, (rs, rowNum) ->
                 new ProductEntity.Builder()
-                        .id(rs.getLong("id"))
+                        .id(rs.getLong("product_id"))
                         .name(rs.getString("name"))
                         .imgUrl(rs.getString("img_url"))
                         .price(rs.getInt("price"))
@@ -31,7 +31,7 @@ public class ProductDao {
         );
     }
 
-    public long insert(ProductEntity productEntity) {
+    public long insert(final ProductEntity productEntity) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", productEntity.getName())
                 .addValue("price", productEntity.getPrice())
@@ -40,8 +40,8 @@ public class ProductDao {
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public void update(ProductEntity productEntity) {
-        String sql = "UPDATE product SET name = ?, img_url = ?, price = ? WHERE id = ?";
+    public void update(final ProductEntity productEntity) {
+        String sql = "UPDATE product SET name = ?, img_url = ?, price = ? WHERE product_id = ?";
         jdbcTemplate.update(sql,
                 productEntity.getName(),
                 productEntity.getImgUrl(),
@@ -49,8 +49,8 @@ public class ProductDao {
                 productEntity.getId());
     }
 
-    public void delete(long id) {
-        String sql = "DELETE FROM product WHERE id = ?";
+    public void delete(final long id) {
+        String sql = "DELETE FROM product WHERE product_id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

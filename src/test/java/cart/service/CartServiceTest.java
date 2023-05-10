@@ -1,81 +1,70 @@
 package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.service.dto.ProductRequest;
-import cart.service.dto.ProductResponse;
+import cart.controller.dto.CartResponse;
+import cart.service.dto.CartDto;
+import cart.service.dto.CartInfoDto;
+import cart.service.exception.DuplicateCartException;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @SpringBootTest
+@Transactional
 class CartServiceTest {
 
     @Autowired
     private CartService cartService;
 
-    private final ProductRequest cuteSeonghaDoll =
-            new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
-                    "CuteSeonghaDoll", 25000);
+    private long productId = 1L;
+    private long customerId = 1L;
 
-    private final ProductRequest cuteBaronDoll =
-            new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
-                    "CuteBaronDoll", 250000);
-
+    @DisplayName("장바구니 상품을 저장하고 조회할 수 있다.")
     @Test
-    @DisplayName("상품을 저장하고, 모든 상품을 조회할 수 있다.")
-    void findAll() {
+    @Sql("/cart_initialize.sql")
+    void saveAndFindCartItems() {
         // given
-        long savedId1 = cartService.save(cuteSeonghaDoll);
-        long savedId2 = cartService.save(cuteBaronDoll);
+        long cartId = cartService.save(new CartDto(productId), customerId);
 
         // when
-        List<ProductResponse> products = cartService.findAllProducts();
-        List<Long> foundIds = products.stream()
-                .map(ProductResponse::getId)
-                .collect(Collectors.toList());
+        List<CartInfoDto> cartItems = cartService.findAllByCustomerId(customerId);
 
         // then
-        assertThat(foundIds).containsExactly(savedId1, savedId2);
+        List<CartResponse> expectedItems = List.of(new CartResponse(cartId, "baron", "tempUrl", 2000));
+        assertThat(cartItems).usingRecursiveComparison()
+                .isEqualTo(expectedItems);
     }
 
+    @DisplayName("장바구니에 있는 상품을 추가하면 중복 예외가 발생한다.")
     @Test
-    @DisplayName("상품을 저장하고 수정할 수 있다.")
-    void modifyById() {
+    @Sql("/cart_initialize.sql")
+    void exceptionWhenDuplicateProductInCart() {
         // given
-        long savedId = cartService.save(cuteSeonghaDoll);
-        ProductRequest productToModify = cuteBaronDoll;
+        long cartId = cartService.save(new CartDto(productId), customerId);
+
+        // when, then
+        assertThatThrownBy(() -> cartService.save(new CartDto(productId), customerId))
+                .isInstanceOf(DuplicateCartException.class);
+    }
+
+    @DisplayName("장바구니 상품을 삭제할 수 있다.")
+    @Test
+    @Sql("/cart_initialize.sql")
+    void deleteCartItem() {
+        // given
+        long cartId = cartService.save(new CartDto(productId), customerId);
 
         // when
-        cartService.modifyById(productToModify, savedId);
+        cartService.deleteById(cartId);
 
         // then
-        ProductResponse foundProduct = cartService.findAllProducts().get(0);
-
-        assertAll(
-                () -> assertThat(foundProduct.getId()).isEqualTo(savedId),
-                () -> assertThat(foundProduct.getName()).isEqualTo(productToModify.getName()),
-                () -> assertThat(foundProduct.getPrice()).isEqualTo(productToModify.getPrice()),
-                () -> assertThat(foundProduct.getImgUrl()).isEqualTo(productToModify.getImgUrl())
-        );
+        assertThat(cartService.findAllByCustomerId(customerId)).isEmpty();
     }
 
-    @Test
-    @DisplayName("상품을 저장하고 삭제할 수 있다.")
-    void deleteById() {
-        // given
-        long savedId = cartService.save(cuteSeonghaDoll);
-
-        // when
-        cartService.removeById(savedId);
-
-        // then
-        assertThat(cartService.findAllProducts()).isEmpty();
-    }
 }

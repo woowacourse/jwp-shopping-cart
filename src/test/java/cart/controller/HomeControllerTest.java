@@ -1,7 +1,6 @@
 package cart.controller;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;

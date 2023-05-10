@@ -4,7 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.service.dto.ProductRequest;
+import cart.controller.dto.ProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,13 +18,18 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
+@Sql("/customer_initialize.sql")
 class AdminControllerIntegrationTest {
 
     @LocalServerPort
     int port;
+
+    private final String email = "baron@gmail.com";
+    private final String password = "password";
 
     @BeforeEach
     void setUp() {
@@ -36,6 +41,7 @@ class AdminControllerIntegrationTest {
     void showAllProducts() {
         given().log().all()
                 .when()
+                .auth().preemptive().basic(email, password)
                 .get("/admin")
                 .then()
                 .log().all()
@@ -47,7 +53,9 @@ class AdminControllerIntegrationTest {
     void registerProduct() {
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDollFromController",
+                .auth().preemptive().basic(email, password)
+                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
+                        "CuteSeonghaDollFromController",
                         25000))
                 .when()
                 .post("/admin/product")
@@ -62,6 +70,7 @@ class AdminControllerIntegrationTest {
         String baseUrl = "/admin/product/";
         //given
         String redirectURI = given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
                 .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
                         "CuteSeonghaDoll", 25000))
                 .when()
@@ -72,7 +81,9 @@ class AdminControllerIntegrationTest {
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/70891072?v=4", "CuteBaronDollFromController", 2500))
+                .auth().preemptive().basic(email, password)
+                .body(new ProductRequest("https://avatars.githubusercontent.com/u/70891072?v=4",
+                        "CuteBaronDollFromController", 2500))
                 .when()
                 .put("/admin/product/" + savedId)
                 .then()
@@ -86,6 +97,7 @@ class AdminControllerIntegrationTest {
         String baseUrl = "/admin/product/";
         //given
         String redirectURI = given().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
                 .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
                         "CuteSeonghaDoll", 25000))
                 .when()
@@ -95,6 +107,7 @@ class AdminControllerIntegrationTest {
         long savedId = Long.parseLong(redirectURI.replace(baseUrl, ""));
 
         given().log().all()
+                .auth().preemptive().basic(email, password)
                 .when()
                 .delete("/admin/product/" + savedId)
                 .then()
@@ -109,6 +122,7 @@ class AdminControllerIntegrationTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
                 .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
                         price))
                 .when()
@@ -124,13 +138,14 @@ class AdminControllerIntegrationTest {
         );
     }
 
-    @DisplayName("이름이 1자 미만이거나 50자 초과면 예외가 발생한다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"dskjgfdsvesvurevhjdsbvehsbvhjesbvhjesbvfhvsdhvhdsvhfdshv", ""})
-    void exceptionWhenNameWrongLength(String name) {
+    @DisplayName("이름이 50글자보다 크면 예외가 발생한다.")
+    @Test
+    void exceptionWhenNameWrongLength() {
         // when
+        String name = "dskjgfdsvesvurevhjdsbvehsbvhjesbvhjesbvfhvsdhvhdsvhfdshv";
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
                 .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", name,
                         10000))
                 .when()
@@ -142,7 +157,7 @@ class AdminControllerIntegrationTest {
         // then
         assertAll(
                 () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(response.getBody().asString()).isEqualTo("이름은 1글자 이상 50글자 이하여야합니다.")
+                () -> assertThat(response.getBody().asString()).isEqualTo("상품명은 1글자 이상, 50글자 이하여야합니다.")
         );
     }
 
@@ -153,6 +168,7 @@ class AdminControllerIntegrationTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
                 .body(new ProductRequest(imgUrl, "cuteSeongHa", 10000))
                 .when()
                 .post("/admin/product")
@@ -164,6 +180,28 @@ class AdminControllerIntegrationTest {
         assertAll(
                 () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(response.getBody().asString()).isEqualTo("이미지 URL은 필수입니다.")
+        );
+    }
+
+    @DisplayName("이름이 입력되지 않으면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    void exceptionWhenBlankName(String name) {
+        // when
+        Response response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(email, password)
+                .body(new ProductRequest("tmpImg", name, 2000))
+                .when()
+                .post("/admin/product")
+                .then()
+                .log().all()
+                .extract().response();
+
+        // then
+        assertAll(
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.getBody().asString()).isEqualTo("상품명은 필수입니다.")
         );
     }
 }

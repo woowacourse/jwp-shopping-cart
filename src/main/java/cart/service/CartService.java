@@ -1,9 +1,9 @@
 package cart.service;
 
-import cart.dao.ProductDao;
-import cart.dao.entity.ProductEntity;
-import cart.service.dto.ProductRequest;
-import cart.service.dto.ProductResponse;
+import cart.dao.CartDao;
+import cart.service.dto.CartDto;
+import cart.service.dto.CartInfoDto;
+import cart.service.exception.DuplicateCartException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -11,30 +11,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class CartService {
 
-    private final ProductDao productDao;
+    private final CartDao cartDao;
 
-    public CartService(final ProductDao productDao) {
-        this.productDao = productDao;
+    public CartService(final CartDao cartDao) {
+        this.cartDao = cartDao;
     }
 
-    public List<ProductResponse> findAllProducts() {
-        List<ProductEntity> allProducts = productDao.findAll();
-        return allProducts.stream()
-                .map(ProductResponse::fromEntity)
-                .collect(Collectors.toUnmodifiableList());
+    public long save(final CartDto cartDto, final long customerId) {
+        boolean isProductAlreadyInCart = cartDao.isProductIdInCustomerCart(customerId, cartDto.getProductId());
+        if (isProductAlreadyInCart) {
+            throw new DuplicateCartException();
+        }
+        return cartDao.insert(customerId, cartDto.getProductId());
     }
 
-    public long save(ProductRequest productRequest) {
-        ProductEntity productEntity = productRequest.toEntity();
-        return productDao.insert(productEntity);
+    public List<CartInfoDto> findAllByCustomerId(final long customerId) {
+        return cartDao.findAllCartProductByCustomerId(customerId)
+                .stream()
+                .map(CartInfoDto::from)
+                .collect(Collectors.toList());
     }
 
-    public void modifyById(ProductRequest productRequest, long id) {
-        ProductEntity productEntity = productRequest.toEntityBy(id);
-        productDao.update(productEntity);
+    public void deleteById(final long cartId) {
+        cartDao.deleteById(cartId);
     }
 
-    public void removeById(long id) {
-        productDao.delete(id);
-    }
 }
