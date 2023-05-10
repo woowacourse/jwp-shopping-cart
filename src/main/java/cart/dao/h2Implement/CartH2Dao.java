@@ -1,10 +1,7 @@
 package cart.dao.h2Implement;
 
 import cart.dao.CartDao;
-import cart.entity.Cart;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -22,10 +19,9 @@ public class CartH2Dao implements CartDao {
     }
 
     @Override
-    public int insert(Cart cart) {
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(cart);
-        Number id = simpleJdbcInsert.executeAndReturnKey(parameterSource);
-        return id.intValue();
+    public int insert(int productId, String email) {
+        String sql = "insert into cart (product_id, email) values (? , ?)";
+        return jdbcTemplate.update(sql, productId, email);
     }
 
     @Override

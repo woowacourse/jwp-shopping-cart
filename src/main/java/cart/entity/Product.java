@@ -23,6 +23,10 @@ public class Product {
         this.image = image;
     }
 
+    public Product(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

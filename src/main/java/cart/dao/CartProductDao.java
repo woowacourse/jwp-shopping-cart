@@ -1,9 +1,9 @@
 package cart.dao;
 
-import cart.dto.CartProductResponse;
+import cart.entity.Cart;
 
 import java.util.List;
 
 public interface CartProductDao {
-    List<CartProductResponse> selectById(String email);
+    List<Cart> selectById(String email);
 }

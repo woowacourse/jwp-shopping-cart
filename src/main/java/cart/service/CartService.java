@@ -3,11 +3,11 @@ package cart.service;
 import cart.dao.h2Implement.CartH2Dao;
 import cart.dao.h2Implement.CartProductH2Dao;
 import cart.dto.CartProductResponse;
-import cart.entity.Cart;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -23,12 +23,14 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public List<CartProductResponse> getCartsByEmail(String email) {
-        return cartProductH2Dao.selectById(email);
+        return cartProductH2Dao.selectById(email)
+                .stream()
+                .map(CartProductResponse::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public int addCart(int productId, String email) {
-        Cart cart = new Cart(productId, email);
-        return cartH2Dao.insert(cart);
+        return cartH2Dao.insert(productId, email);
     }
 
     public void deleteCart(int cartId, String email) {
