@@ -1,7 +1,6 @@
 package cart.service;
 
 import cart.dao.h2Implement.CartH2Dao;
-import cart.dao.h2Implement.CartProductH2Dao;
 import cart.dto.CartProductResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,16 +13,13 @@ import java.util.stream.Collectors;
 public class CartService {
     private final CartH2Dao cartH2Dao;
 
-    private final CartProductH2Dao cartProductH2Dao;
-
-    public CartService(CartH2Dao cartH2Dao, CartProductH2Dao cartProductH2Dao) {
+    public CartService(CartH2Dao cartH2Dao) {
         this.cartH2Dao = cartH2Dao;
-        this.cartProductH2Dao = cartProductH2Dao;
     }
 
     @Transactional(readOnly = true)
     public List<CartProductResponse> getCartsByEmail(String email) {
-        return cartProductH2Dao.selectById(email)
+        return cartH2Dao.selectById(email)
                 .stream()
                 .map(CartProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
