@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.exception.InvalidBasicAuthException;
+import cart.exception.InvalidAuthException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class BasicAuthorizationExtractorTest {
 
         // when, then
         assertThatThrownBy(() -> basicAuthorizationExtractor.extract(request))
-                .isInstanceOf(InvalidBasicAuthException.class)
+                .isInstanceOf(InvalidAuthException.class)
                 .hasMessage("Header에 사용자 인증 정보가 존재하지 않습니다.");
     }
 
@@ -47,7 +47,7 @@ class BasicAuthorizationExtractorTest {
 
         // when, then
         assertThatThrownBy(() -> basicAuthorizationExtractor.extract(request))
-                .isInstanceOf(InvalidBasicAuthException.class)
+                .isInstanceOf(InvalidAuthException.class)
                 .hasMessage("Basic 타입의 Header가 아닙니다.");
     }
 
@@ -60,7 +60,7 @@ class BasicAuthorizationExtractorTest {
 
         // when, then
         assertThatThrownBy(() -> basicAuthorizationExtractor.extract(request))
-                .isInstanceOf(InvalidBasicAuthException.class)
+                .isInstanceOf(InvalidAuthException.class)
                 .hasMessage("유효한 Basic 인코딩 값이 아닙니다.");
     }
 

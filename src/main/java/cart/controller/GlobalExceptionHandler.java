@@ -2,7 +2,7 @@ package cart.controller;
 
 
 import cart.exception.ExceptionResponse;
-import cart.exception.InvalidBasicAuthException;
+import cart.exception.InvalidAuthException;
 import cart.exception.InvalidDomainException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -40,8 +40,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(exceptionResponse);
     }
 
-    @ExceptionHandler(InvalidBasicAuthException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidBasicAuth(final InvalidBasicAuthException exception) {
+    @ExceptionHandler(InvalidAuthException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidBasicAuth(final InvalidAuthException exception) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 LocalDateTime.now(),
                 "인증된 사용자가 아닙니다."
