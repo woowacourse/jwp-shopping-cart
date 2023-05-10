@@ -37,17 +37,21 @@ class ViewControllerTest {
     @Test
     void getIndexPage() throws Exception {
         // given
-        Product product = new Product(1L, "치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
+        Long productId = 1L;
+        String name = "치킨";
+        String imageUrl = "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg";
+        int price = 10000;
+        Product product = new Product(productId, name, imageUrl, price);
         given(productService.findAll()).willReturn(List.of(ProductResponse.from(product)));
 
         // when, then
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", hasItem(hasProperty("id", is(1L)))))
-                .andExpect(model().attribute("products", hasItem(hasProperty("name", is("치킨")))))
-                .andExpect(model().attribute("products", hasItem(hasProperty("imageUrl", is("https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg")))))
-                .andExpect(model().attribute("products", hasItem(hasProperty("price", is(10000)))))
+                .andExpect(model().attribute("products", hasItem(hasProperty("id", is(productId)))))
+                .andExpect(model().attribute("products", hasItem(hasProperty("name", is(name)))))
+                .andExpect(model().attribute("products", hasItem(hasProperty("imageUrl", is(imageUrl)))))
+                .andExpect(model().attribute("products", hasItem(hasProperty("price", is(price)))))
                 .andExpect(view().name("index"));
     }
 
@@ -64,15 +68,18 @@ class ViewControllerTest {
     @Test
     void getSettingsPage() throws Exception {
         // given
-        Member member = new Member(1L, "a@a.com", "password1");
+        Long memberId = 1L;
+        String email = "a@a.com";
+        String password = "password1";
+        Member member = new Member(memberId, email, password);
         given(memberService.findAll()).willReturn(List.of(MemberResponse.from(member)));
 
         // when, then
         mockMvc.perform(get("/settings"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("members"))
-                .andExpect(model().attribute("members", hasItem(hasProperty("email", is("a@a.com")))))
-                .andExpect(model().attribute("members", hasItem(hasProperty("password", is("password1")))))
+                .andExpect(model().attribute("members", hasItem(hasProperty("email", is(email)))))
+                .andExpect(model().attribute("members", hasItem(hasProperty("password", is(password)))))
                 .andExpect(view().name("settings"));
     }
 
@@ -80,17 +87,21 @@ class ViewControllerTest {
     @Test
     void getAdminPage() throws Exception {
         // given
-        Product product = new Product(1L, "치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
+        Long productId = 1L;
+        String name = "치킨";
+        String imageUrl = "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg";
+        int price = 10000;
+        Product product = new Product(productId, name, imageUrl, price);
         given(productService.findAll()).willReturn(List.of(ProductResponse.from(product)));
 
         // when, then
         mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", hasItem(hasProperty("id", is(1L)))))
-                .andExpect(model().attribute("products", hasItem(hasProperty("name", is("치킨")))))
-                .andExpect(model().attribute("products", hasItem(hasProperty("imageUrl", is("https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg")))))
-                .andExpect(model().attribute("products", hasItem(hasProperty("price", is(10000)))))
+                .andExpect(model().attribute("products", hasItem(hasProperty("id", is(productId)))))
+                .andExpect(model().attribute("products", hasItem(hasProperty("name", is(name)))))
+                .andExpect(model().attribute("products", hasItem(hasProperty("imageUrl", is(imageUrl)))))
+                .andExpect(model().attribute("products", hasItem(hasProperty("price", is(price)))))
                 .andExpect(view().name("admin"));
     }
 }

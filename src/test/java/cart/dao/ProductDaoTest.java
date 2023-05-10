@@ -94,7 +94,10 @@ class ProductDaoTest {
     void updateById() {
         // given
         Long productId = productDao.save(product);
-        ProductRequest newProductRequest = new ProductRequest("업데이트치킨", "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
+        String newName = "업데이트치킨";
+        String newImageUrl = "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg";
+        int newPrice = 10000;
+        ProductRequest newProductRequest = new ProductRequest(newName, newImageUrl, newPrice);
         Product newProduct = Product.from(productId, newProductRequest.getName(), newProductRequest.getImageUrl(), newProductRequest.getPrice());
 
         // when
@@ -105,9 +108,9 @@ class ProductDaoTest {
                 .orElseThrow(IllegalArgumentException::new);
 
         assertThat(product)
-                .hasFieldOrPropertyWithValue("name", "업데이트치킨")
-                .hasFieldOrPropertyWithValue("imageUrl", imageUrl)
-                .hasFieldOrPropertyWithValue("price", 10000);
+                .hasFieldOrPropertyWithValue("name", newName)
+                .hasFieldOrPropertyWithValue("imageUrl", newImageUrl)
+                .hasFieldOrPropertyWithValue("price", newPrice);
     }
 
     @DisplayName("상품의 ID를 받아 상품을 삭제한다.")

@@ -46,10 +46,12 @@ class CartDaoTest {
     @Test
     void existsByMemberIdAndProductId() {
         // given
-        cartDao.save(1L, 1L);
+        Long memberId = 1L;
+        Long productId = 1L;
+        cartDao.save(memberId, productId);
 
         // when
-        Optional<Long> cartId = cartDao.existsByMemberIdAndProductId(1L, 1L);
+        Optional<Long> cartId = cartDao.existsByMemberIdAndProductId(memberId, productId);
 
         // then
         assertThat(cartId.isPresent()).isTrue();
@@ -79,22 +81,26 @@ class CartDaoTest {
     @Test
     void deleteByProductId() {
         // given
-        cartDao.save(1L, 1L);
+        Long memberId = 1L;
+        Long productId = 1L;
+        cartDao.save(memberId, productId);
 
         // when, then
-        assertDoesNotThrow(() -> cartDao.deleteByProductId(1L));
+        assertDoesNotThrow(() -> cartDao.deleteByProductId(productId));
     }
 
     @DisplayName("ProductId와 MemberId로 장바구니에 있는 상품을 삭제한다.")
     @Test
     void deleteByMemberIdAndProductId() {
         // given
-        cartDao.save(1L, 1L);
+        Long memberId = 1L;
+        Long productId = 1L;
+        cartDao.save(memberId, productId);
 
         // when, then
         assertSoftly(softly -> {
-            assertDoesNotThrow(() -> cartDao.deleteByMemberIdAndProductId(1L, 1L));
-            softly.assertThat(cartDao.existsByMemberIdAndProductId(1L, 1L).isPresent()).isFalse();
+            assertDoesNotThrow(() -> cartDao.deleteByMemberIdAndProductId(memberId, productId));
+            softly.assertThat(cartDao.existsByMemberIdAndProductId(memberId, productId).isPresent()).isFalse();
         });
     }
 }
