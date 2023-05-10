@@ -47,4 +47,10 @@ public class CartController {
         return ResponseEntity.noContent()
                 .build();
     }
+
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<String> handle(Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }
