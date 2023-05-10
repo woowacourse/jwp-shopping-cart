@@ -18,7 +18,7 @@ public class CartExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<BadResponse> handleAuthorizationException(AuthorizationException e){
+    public ResponseEntity<BadResponse> handleAuthorizationException(AuthorizationException e) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new BadResponse("접근 권한이 없습니다."));
@@ -32,7 +32,7 @@ public class CartExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<BadResponse> handleRuntimeException(RuntimeException e) {
+    public ResponseEntity<BadResponse> handleRuntimeException(Exception e) {
         e.printStackTrace();
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
