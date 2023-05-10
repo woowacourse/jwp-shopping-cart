@@ -120,4 +120,6 @@
 - [x] [외래키 사용 이유, 장단점](https://github.com/woowacourse/jwp-shopping-cart/pull/337/files/64e714428fd62e79b2d59f61f6a0159fc8d7f071#r1186786702)
 - [x] [패키지 구조와 Dao 추상화 관련](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1186786575)
 - [x] json 주고받는 데이터 carmel case로 통일
+- [x] [테스트클래스에서 필요한 Bean 등록하기](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1188912364)
+- [x] [예외 처리 ResponseEntityExceptionHandler 활용](https://github.com/woowacourse/jwp-shopping-cart/pull/337#discussion_r1188914633)
 - [ ] 예외메시지 형식 / 마침표 등 통일, 관리하기 쉽게 만들기
