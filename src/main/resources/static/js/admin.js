@@ -46,9 +46,20 @@ form.addEventListener('submit', (event) => {
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const createProduct = (product) => {
+
+    const credentials = localStorage.getItem('credentials');
+    if (!credentials) {
+        alert('사용자 정보가 없습니다.');
+        window.location.href = '/settings';
+        return;
+    }
+
     axios.request({
         method: 'post',
         url: '/admin/products',
+        headers: {
+            'Authorization': `Basic ${credentials}`
+        },
         data: {
             name: product.name,
             imageUrl: product.imageUrl,
@@ -57,7 +68,9 @@ const createProduct = (product) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data.message);
         console.error(error);
+        window.location.reload();
     });
 };
 
@@ -65,9 +78,19 @@ const createProduct = (product) => {
 const updateProduct = (product) => {
     const { id } = product;
 
+    const credentials = localStorage.getItem('credentials');
+    if (!credentials) {
+        alert('사용자 정보가 없습니다.');
+        window.location.href = '/settings';
+        return;
+    }
+
     axios.request({
-        method: "patch",
+        method: "put",
         url: '/admin/products/' + id,
+        headers: {
+            'Authorization': `Basic ${credentials}`
+        },
         data: {
             name: product.name,
             imageUrl: product.imageUrl,
@@ -76,18 +99,33 @@ const updateProduct = (product) => {
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data.message);
         console.error(error);
+        window.location.reload();
     });
 };
 
 // TODO: [1단계] 상품 관리 CRUD API에 맞게 변경
 const deleteProduct = (id) => {
+
+    const credentials = localStorage.getItem('credentials');
+    if (!credentials) {
+        alert('사용자 정보가 없습니다.');
+        window.location.href = '/settings';
+        return;
+    }
+
     axios.request({
         method: "delete",
-        url: '/admin/products/' + id
+        url: '/admin/products/' + id,
+        headers: {
+            'Authorization': `Basic ${credentials}`
+        }
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
+        alert(error.response.data.message);
         console.error(error);
+        window.location.reload();
     });
 };

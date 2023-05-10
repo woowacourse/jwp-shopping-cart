@@ -1,13 +1,16 @@
 package cart.service;
 
 import cart.dto.ProductDto;
-import cart.repository.dao.ProductDao;
-import cart.repository.entity.ProductEntity;
+import cart.entity.Product;
+import cart.exception.customexceptions.DataNotFoundException;
+import cart.repository.dao.productDao.ProductDao;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class ProductManagementService {
 
@@ -22,16 +25,17 @@ public class ProductManagementService {
         final String imageUrl = productDto.getImageUrl();
         final int price = productDto.getPrice();
 
-        return productDao.save(new ProductEntity(name, imageUrl, price));
+        return productDao.save(new Product(name, imageUrl, price));
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findAllProduct() {
         return productDao.findAll().stream()
-                .map(productEntity -> {
-                    final Long id = productEntity.getId();
-                    final String name = productEntity.getName();
-                    final String imageUrl = productEntity.getImageUrl();
-                    final int price = productEntity.getPrice();
+                .map(product -> {
+                    final Long id = product.getId();
+                    final String name = product.getName();
+                    final String imageUrl = product.getImageUrl();
+                    final int price = product.getPrice();
                     return new ProductDto(id, name, imageUrl, price);
                 })
                 .collect(Collectors.toList());
@@ -42,10 +46,17 @@ public class ProductManagementService {
         final String name = productDto.getName();
         final String imageUrl = productDto.getImageUrl();
         final int price = productDto.getPrice();
-        productDao.update(new ProductEntity(id, name, imageUrl, price));
+
+        int amountOfUpdatedProduct = productDao.update(new Product(id, name, imageUrl, price));
+        if (amountOfUpdatedProduct == 0) {
+            throw new DataNotFoundException("해당 상품을 찾을 수 없습니다.");
+        }
     }
 
     public void deleteProduct(final Long id) {
-        productDao.delete(id);
+        int amountOfDeletedProduct = productDao.deleteById(id);
+        if (amountOfDeletedProduct == 0) {
+            throw new DataNotFoundException("해당 상품을 찾을 수 없습니다.");
+        }
     }
 }
