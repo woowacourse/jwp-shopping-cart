@@ -22,5 +22,4 @@ public class IndexController {
         model.addAttribute("products", productService.findAll());
         return "index";
     }
-
 }

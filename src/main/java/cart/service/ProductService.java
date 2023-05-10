@@ -3,41 +3,44 @@ package cart.service;
 import cart.controller.dto.request.ProductCreateRequest;
 import cart.controller.dto.request.ProductUpdateRequest;
 import cart.controller.dto.response.ProductResponse;
-import cart.dao.ProductDao;
-import java.util.List;
-import java.util.stream.Collectors;
+import cart.convertor.ProductEntityConvertor;
+import cart.database.dao.ProductDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Transactional(readOnly = true)
+@Service
 public class ProductService {
 
     private final ProductDao productDao;
+    private final ProductEntityConvertor productEntityConvertor;
 
-    public ProductService(ProductDao productDao) {
+    public ProductService(ProductDao productDao, final ProductEntityConvertor productEntityConvertor) {
         this.productDao = productDao;
+        this.productEntityConvertor = productEntityConvertor;
     }
 
     @Transactional
     public void create(ProductCreateRequest request) {
-        productDao.create(request);
+        productDao.create(productEntityConvertor.dtoToEntity(request));
     }
 
     public List<ProductResponse> findAll() {
         return productDao.findAll().stream()
-                .map(ProductResponse::new)
+                .map(entity -> new ProductResponse(entity.getId(), entity.getName(), entity.getImageUrl(), entity.getPrice()))
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public void update(Long id, ProductUpdateRequest request) {
-        productDao.updateById(id, request);
+        productDao.updateById(id, productEntityConvertor.dtoToEntity(request));
     }
 
     @Transactional
     public void delete(Long id) {
         productDao.deleteById(id);
     }
-
 }

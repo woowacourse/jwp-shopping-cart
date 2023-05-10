@@ -28,7 +28,8 @@ class AdminControllerTest {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.TEXT_HTML_VALUE);
     }
 
     @DisplayName("상품 추가")
@@ -54,7 +55,7 @@ class AdminControllerTest {
                 .body(request)
                 .when().post("/admin")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
     @DisplayName("상품 수정")

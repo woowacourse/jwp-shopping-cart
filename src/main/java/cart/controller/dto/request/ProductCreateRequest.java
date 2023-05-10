@@ -1,51 +1,46 @@
 package cart.controller.dto.request;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
 
 public class ProductCreateRequest {
 
-	@NotEmpty(message = "Null을 허용하지 않습니다.")
-	@Size(max = 32)
-	private String name;
+    @NotBlank(message = "빈 값을 허용하지 않습니다.")
+    private String name;
+    private Integer price;
+    @NotBlank(message = "빈 값을 허용하지 않습니다.")
+    private String imageUrl;
 
-	private Integer price;
+    public ProductCreateRequest() {
 
-	@NotEmpty(message = "Null을 허용하지 않습니다.")
-	private String imageUrl;
+    }
 
-	public ProductCreateRequest () {
+    public ProductCreateRequest(String name, Integer price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
 
-	}
+    public String getName() {
+        return name;
+    }
 
-	public ProductCreateRequest (String name, Integer price, String imageUrl) {
-		this.name = name;
-		this.price = price;
-		this.imageUrl = imageUrl;
-	}
+    public int getPrice() {
+        return price;
+    }
 
-	public String getName () {
-		return name;
-	}
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-	public int getPrice () {
-		return price;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getImageUrl () {
-		return imageUrl;
-	}
+    public void setPrice(int price) {
+        this.price = price;
+    }
 
-	public void setName (String name) {
-		this.name = name;
-	}
-
-	public void setPrice (int price) {
-		this.price = price;
-	}
-
-	public void setImageUrl (String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
