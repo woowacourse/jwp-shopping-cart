@@ -20,20 +20,20 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/carts/products")
+    @GetMapping("/carts")
     public ResponseEntity<CartProductResponseWrapper> allCartProducts(@CartAuthentication String email) {
         List<CartProductResponse> carts = cartService.getCartsByEmail(email);
         return ResponseEntity.ok()
                 .body(CartProductResponseWrapper.from(carts));
     }
 
-    @PostMapping("/carts/products")
+    @PostMapping("/carts")
     public ResponseEntity<Void> addCartProduct(@RequestBody CartRequest cartRequest, @CartAuthentication String email) {
         int cartId = cartService.addCart(cartRequest.getProductId(), email);
         return ResponseEntity.created(URI.create("/carts/" + cartId)).build();
     }
 
-    @DeleteMapping("/carts/{cartId}/products")
+    @DeleteMapping("/carts/{cartId}")
     public ResponseEntity<Void> deleteCartProduct(@PathVariable int cartId, @CartAuthentication String email) {
         cartService.deleteCart(cartId, email);
         return ResponseEntity.noContent().build();
