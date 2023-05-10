@@ -2,17 +2,21 @@ const addCartItem = (productId) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
-        window.location.href = '/settings';
+        window.location.href = '/member/settings';
         return;
     }
 
-    // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
     axios.request({
-        url: '',
+        method: 'post',
+        url: '/cart',
         headers: {
             'Authorization': `Basic ${credentials}`
+        },
+        data: {
+            productId : productId
         }
     }).then((response) => {
+        console.log(productId);
         alert('장바구니에 담았습니다.');
     }).catch((error) => {
         console.error(error);
@@ -23,13 +27,13 @@ const removeCartItem = (id) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
-        window.location.href = '/settings';
+        window.location.href = '/member/settings';
         return;
     }
 
-    // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
     axios.request({
-        url: '',
+        url: '/cart/' + id,
+        method: 'delete',
         headers: {
             'Authorization': `Basic ${credentials}`
         }

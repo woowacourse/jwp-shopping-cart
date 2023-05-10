@@ -1,6 +1,6 @@
-package cart.service.dto;
+package cart.dto;
 
-import cart.dao.entity.ProductEntity;
+import cart.entity.ProductEntity;
 
 public class ProductResponse {
 
@@ -17,7 +17,7 @@ public class ProductResponse {
     }
 
     public static ProductResponse fromEntity(final ProductEntity productEntity) {
-        return new ProductResponse(productEntity.getId(), productEntity.getImgUrl(), productEntity.getName(),
+        return new ProductResponse(productEntity.getProductId(), productEntity.getImgUrl(), productEntity.getName(),
                 productEntity.getPrice());
     }
 

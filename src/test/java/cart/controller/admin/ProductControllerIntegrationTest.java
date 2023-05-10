@@ -1,10 +1,12 @@
-package cart.controller;
+package cart.controller.admin;
 
+import static cart.fixture.ProductFixtures.DUMMY_SEONGHA_MODIFY_REQUEST;
+import static cart.fixture.ProductFixtures.DUMMY_SEONGHA_REGISTER_REQUEST;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.service.dto.ProductRequest;
+import cart.dto.ProductRegisterRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +23,7 @@ import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
-class AdminControllerIntegrationTest {
+class ProductControllerIntegrationTest {
 
     @LocalServerPort
     int port;
@@ -47,8 +49,7 @@ class AdminControllerIntegrationTest {
     void registerProduct() {
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDollFromController",
-                        25000))
+                .body(DUMMY_SEONGHA_REGISTER_REQUEST)
                 .when()
                 .post("/admin/product")
                 .then()
@@ -62,8 +63,7 @@ class AdminControllerIntegrationTest {
         String baseUrl = "/admin/product/";
         //given
         String redirectURI = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
-                        "CuteSeonghaDoll", 25000))
+                .body(DUMMY_SEONGHA_REGISTER_REQUEST)
                 .when()
                 .post(baseUrl)
                 .then()
@@ -72,12 +72,36 @@ class AdminControllerIntegrationTest {
 
         given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/70891072?v=4", "CuteBaronDollFromController", 2500))
+                .body(DUMMY_SEONGHA_MODIFY_REQUEST)
                 .when()
                 .put("/admin/product/" + savedId)
                 .then()
                 .log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("없는 상품 ID로 상품 정보 수정 API 호출 시 404를 반환한다.")
+    @Test
+    void modifyProduct_404() {
+        //given
+        long updateProductId = 100L;
+
+        // when
+        Response response = given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(DUMMY_SEONGHA_MODIFY_REQUEST)
+                .when()
+                .put("/admin/product/" + updateProductId)
+                .then()
+                .log().all()
+                .extract()
+                .response();
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                () -> assertThat(response.asString()).isEqualTo("상품 ID에 해당하는 상품이 존재하지 않습니다.")
+        );
     }
 
     @DisplayName("상품 삭제 API 호출 시 상품이 삭제된다.")
@@ -86,8 +110,7 @@ class AdminControllerIntegrationTest {
         String baseUrl = "/admin/product/";
         //given
         String redirectURI = given().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4",
-                        "CuteSeonghaDoll", 25000))
+                .body(DUMMY_SEONGHA_REGISTER_REQUEST)
                 .when()
                 .post(baseUrl)
                 .then()
@@ -102,6 +125,28 @@ class AdminControllerIntegrationTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
+    @DisplayName("없는 상품 ID로 상품 삭제 API 호출 시 404를 반환한다.")
+    @Test
+    void deleteProduct_404() {
+        // given
+        long deleteProductId = 100L;
+
+        // when
+        Response response = given().log().all()
+                .when()
+                .delete("/admin/product/" + deleteProductId)
+                .then()
+                .log().all()
+                .extract()
+                .response();
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                () -> assertThat(response.asString()).isEqualTo("상품 ID에 해당하는 상품이 존재하지 않습니다.")
+        );
+    }
+
     @DisplayName("가격이 0이하의 값이면 예외가 발생한다.")
     @ParameterizedTest
     @ValueSource(ints = {-1, 0})
@@ -109,7 +154,7 @@ class AdminControllerIntegrationTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
+                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", "CuteSeonghaDoll",
                         price))
                 .when()
                 .post("/admin/product")
@@ -131,7 +176,7 @@ class AdminControllerIntegrationTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest("https://avatars.githubusercontent.com/u/95729738?v=4", name,
+                .body(new ProductRegisterRequest("https://avatars.githubusercontent.com/u/95729738?v=4", name,
                         10000))
                 .when()
                 .post("/admin/product")
@@ -153,7 +198,7 @@ class AdminControllerIntegrationTest {
         // when
         Response response = given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new ProductRequest(imgUrl, "cuteSeongHa", 10000))
+                .body(new ProductRegisterRequest(imgUrl, "cuteSeongHa", 10000))
                 .when()
                 .post("/admin/product")
                 .then()

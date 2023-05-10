@@ -12,8 +12,8 @@
     <nav>
         <ul class="gnb-group">
             <li><a href="/">상품목록</a></li>
-            <li><a href="/cart">장바구니</a></li>
-            <li><a href="/settings">설정</a></li>
+            <li><a href="/view-cart">장바구니</a></li>
+            <li><a href="/member/settings">설정</a></li>
             <li class="nav-admin"><a href="/admin">관리자</a></li>
         </ul>
     </nav>
@@ -30,12 +30,13 @@
         const credentials = localStorage.getItem('credentials');
         if (!credentials) {
             alert('사용자 정보가 없습니다.');
-            window.location.href = '/settings';
+            window.location.href = 'member/settings';
             return;
         }
 
         axios.request({
-            url: '',
+            url: '/cart/products',
+            method: 'get',
             headers: {
                 'Authorization': `Basic ${credentials}`
             }
@@ -43,15 +44,14 @@
             const cartItems = response.data;
 
             let productElement = '';
-            // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
             cartItems.forEach(cartItem => {
                 productElement += `
                         <div class="cart-item">
                           <div class="cart-item-info">
-                            <img src="" alt=""/> <!-- 상품 이미지 -->
-                            <div class="cart-item-name"></div> <!-- 상품 이름 -->
-                            <div class="cart-item-price"></div> <!-- 상품 가격 -->
-                            <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
+                            <img src="${cartItem["imgUrl"]}}" alt=""/><!-- 상품 이미지 -->
+                            <div class="cart-item-name">${cartItem["name"]}</div> <!-- 상품 이름 -->
+                            <div class="cart-item-price">${cartItem["price"]}</div> <!-- 상품 가격 -->
+                            <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.cartId})">Delete</button>
                           </div>
                         </div>
                       `;

@@ -1,8 +1,9 @@
-package cart.controller;
+package cart.controller.admin;
 
-import cart.service.CartService;
-import cart.service.dto.ProductRequest;
-import cart.service.dto.ProductResponse;
+import cart.dto.ProductUpdateRequest;
+import cart.service.ProductService;
+import cart.dto.ProductRegisterRequest;
+import cart.dto.ProductResponse;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
@@ -19,38 +20,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class ProductController {
 
-    private final CartService cartService;
+    private final ProductService productService;
 
-    public AdminController(CartService cartService) {
-        this.cartService = cartService;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
     public String showAllProducts(Model model) {
-        List<ProductResponse> allProducts = cartService.findAllProducts();
+        List<ProductResponse> allProducts = productService.findAllProducts();
         model.addAttribute("products", allProducts);
         return "admin";
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Void> registerProduct(@RequestBody @Valid ProductRequest productRequest) {
-        long savedId = cartService.save(productRequest);
+    public ResponseEntity<Void> registerProduct(@RequestBody @Valid ProductRegisterRequest productRegisterRequest) {
+        long savedId = productService.save(productRegisterRequest);
         return ResponseEntity.created(URI.create("/admin/product/" + savedId)).build();
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<Void> modifyProduct(@RequestBody @Valid ProductRequest productRequest,
+    public ResponseEntity<Void> updateProduct(@RequestBody @Valid ProductUpdateRequest productUpdateRequest,
                                               @PathVariable long id) {
-        cartService.modifyById(productRequest, id);
-        return ResponseEntity.ok().build();
+        productService.updateById(productUpdateRequest, id);
+        return ResponseEntity.noContent().build();
 
     }
 
     @DeleteMapping("/product/{id}")
     public ResponseEntity<Void> removeProduct(@PathVariable long id) {
-        cartService.removeById(id);
+        productService.removeById(id);
         return ResponseEntity.noContent().build();
     }
 }

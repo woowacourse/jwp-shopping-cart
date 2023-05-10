@@ -1,10 +1,12 @@
 package cart.dao;
 
+import static cart.fixture.ProductFixtures.INSERT_PRODUCT_ENTITY;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.entity.ProductEntity;
-import cart.dao.entity.ProductEntity.Builder;
 import java.util.List;
+
+import cart.entity.ProductEntity;
+import cart.entity.ProductEntity.Builder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,11 +21,6 @@ class ProductDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     private ProductDao productDao;
-    private ProductEntity productEntity = new ProductEntity.Builder()
-            .name("cuteSeongHaDoll")
-            .imgUrl("https://avatars.githubusercontent.com/u/95729738?v=4")
-            .price(25000)
-            .build();
 
     @BeforeEach
     void setUp() {
@@ -34,7 +31,7 @@ class ProductDaoTest {
     @Test
     void findAll() {
         //given
-        productDao.insert(productEntity);
+        productDao.insert(INSERT_PRODUCT_ENTITY);
         //when
         List<ProductEntity> products = productDao.findAll();
         //then
@@ -45,19 +42,19 @@ class ProductDaoTest {
     @Test
     void save() {
         // when
-        long savedId = productDao.insert(productEntity);
+        long savedId = productDao.insert(INSERT_PRODUCT_ENTITY);
 
         // then
-        assertThat(productDao.findAll().get(0).getId()).isEqualTo(savedId);
+        assertThat(productDao.findAll().get(0).getProductId()).isEqualTo(savedId);
     }
 
     @DisplayName("상품 정보를 수정한다.")
     @Test
     void update() {
         // given
-        long savedId = productDao.insert(productEntity);
+        long savedId = productDao.insert(INSERT_PRODUCT_ENTITY);
         ProductEntity updateProductEntity = new Builder()
-                .id(savedId)
+                .productId(savedId)
                 .name("cuteBaronDoll")
                 .price(100000)
                 .imgUrl("https://avatars.githubusercontent.com/u/70891072?v=4")
@@ -76,12 +73,32 @@ class ProductDaoTest {
     @Test
     void delete() {
         // given
-        long savedId = productDao.insert(productEntity);
+        long savedId = productDao.insert(INSERT_PRODUCT_ENTITY);
 
         // when
         productDao.delete(savedId);
 
         // then
         assertThat(productDao.findAll()).hasSize(0);
+    }
+
+    @Test
+    @DisplayName("삭제 상품 ID에 해당하는 상품 행이 존재하지 않으면 TRUE를 반환한다.")
+    void isNotExistBy_True() {
+        // given
+        long deleteId = 100L;
+
+        // when, then
+        assertThat(productDao.isNotExistBy(deleteId)).isTrue();
+    }
+
+    @Test
+    @DisplayName("삭제 상품 ID에 해당하는 상품 행이 존재하면 FALSE를 반환한다.")
+    void isNotExistBy_False() {
+        // given
+        long savedId = productDao.insert(INSERT_PRODUCT_ENTITY);
+
+        // when, then
+        assertThat(productDao.isNotExistBy(savedId)).isFalse();
     }
 }
