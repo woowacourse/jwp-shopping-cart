@@ -46,13 +46,14 @@ form.addEventListener('submit', (event) => {
 
 const createProduct = (product) => {
     axios.request({
-        url: '/product/add',
+        url: `/products`,
         method: 'post',
         data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
+        alertError(error)
     });
 };
 
@@ -60,23 +61,25 @@ const updateProduct = (product) => {
     const {id} = product;
 
     axios.request({
-        url: '/product/edit',
+        url: `/products`,
         method: 'put',
         data: product
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
+        alertError(error);
     });
 };
 
 const deleteProduct = (id) => {
     axios.request({
-        url: `/product/delete/${id}`,
+        url: `/products/${id}`,
         method: 'delete'
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
         console.error(error);
+        alertError(error);
     });
 };
