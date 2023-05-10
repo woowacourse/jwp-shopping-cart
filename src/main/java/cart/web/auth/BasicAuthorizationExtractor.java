@@ -24,27 +24,40 @@ public class BasicAuthorizationExtractor {
     public UserInfo extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
+        validateHeader(header);
+
+        String decodedString = decodeAuthorizationHeader(header);
+
+        return createUserInfo(decodedString);
+    }
+
+    private void validateHeader(String header) {
         if (header == null) {
             throw new AuthorizationException();
         }
 
-        if ((header.toLowerCase().startsWith(BASIC_TYPE))) {
-            String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
-            byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
-            String decodedString = new String(decodedBytes);
+        if (!header.toLowerCase().startsWith(BASIC_TYPE)) {
+            throw new AuthorizationException();
+        }
+    }
 
-            String[] credentials = decodedString.split(DELIMITER);
+    private String decodeAuthorizationHeader(String header) {
+        String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
+        byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
 
-            if (credentials.length != SIZE_OF_CREDENTIAL) {
-                throw new AuthorizationException();
-            }
+        return new String(decodedBytes);
+    }
 
-            String email = credentials[INDEX_OF_EMAIL];
-            String password = credentials[INDEX_OF_PASSWORD];
+    private UserInfo createUserInfo(String decodedString) {
+        String[] credentials = decodedString.split(DELIMITER);
 
-            return new UserInfo(email, password);
+        if (credentials.length != SIZE_OF_CREDENTIAL) {
+            throw new AuthorizationException();
         }
 
-        throw new AuthorizationException();
+        String email = credentials[INDEX_OF_EMAIL];
+        String password = credentials[INDEX_OF_PASSWORD];
+
+        return new UserInfo(email, password);
     }
 }
