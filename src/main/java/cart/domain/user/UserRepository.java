@@ -11,5 +11,7 @@ public interface UserRepository {
 
     User findByEmailAndPassword(Email email, Password password);
 
+    boolean isRegisteredUser(Email email, Password password);
+
     void deleteById(Long id);
 }

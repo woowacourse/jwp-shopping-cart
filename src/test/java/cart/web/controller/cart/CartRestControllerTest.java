@@ -5,6 +5,7 @@ import cart.domain.cart.CartService;
 import cart.domain.cart.dto.CartDto;
 import cart.domain.user.UserService;
 import cart.domain.user.dto.UserDto;
+import cart.web.auth.AuthService;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,6 +45,9 @@ class CartRestControllerTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private AuthService authService;
+
     @DisplayName("상품을 장바구니에 추가할 수 있다.")
     @Test
     void addProduct() {
@@ -52,6 +56,8 @@ class CartRestControllerTest {
 
         when(userService.login(any()))
                 .thenReturn(new UserDto(TestFixture.ZUNY));
+
+        doNothing().when(authService).authenticate(any());
 
         given().log().all()
                 .auth().preemptive().basic(email, password)
@@ -70,6 +76,7 @@ class CartRestControllerTest {
         when(cartService.getCartOfUser(TestFixture.ZUNY.getId()))
                 .thenReturn(List.of(cartDto));
 
+        doNothing().when(authService).authenticate(any());
 
         given().log().all()
                 .auth().preemptive().basic(email, password)
@@ -87,9 +94,11 @@ class CartRestControllerTest {
     void deleteProduct() {
         doNothing().when(cartService).deleteProduct(any());
 
+        doNothing().when(authService).authenticate(any());
+
         given().log().all()
                 .auth().preemptive().basic(email, password)
-                .when().delete("/carts/{cartId}",1L)
+                .when().delete("/carts/{cartId}", 1L)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

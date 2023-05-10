@@ -8,6 +8,7 @@ import cart.exception.GlobalException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -64,6 +65,13 @@ public class UserRepositoryImpl implements UserRepository {
                 .orElseThrow(() -> new GlobalException("존재하지 않는 회원입니다."));
 
         return toUser(userEntity);
+    }
+
+    @Override
+    public boolean isRegisteredUser(Email email, Password password) {
+        Optional<UserEntity> user = userDao.findByEmailAndPassword(email.getEmail(), password.getPassword());
+
+        return user.isPresent();
     }
 
     @Override

@@ -28,10 +28,9 @@ public class CartRestController {
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<Void> addProduct(@PathVariable Long productId,
-                                           @Auth UserInfo userInfo) {
-        UserDto userDto = userService.login(new UserLoginDto(userInfo.getEmail(), userInfo.getPassword()));
-        CartAdditionProductDto cartAdditionProductDto = new CartAdditionProductDto(userDto.getId(), productId);
+    public ResponseEntity<Void> addProduct(@PathVariable Long productId, @Auth UserInfo userInfo) {
+        UserDto loginUser = userService.login(new UserLoginDto(userInfo.getEmail(), userInfo.getPassword()));
+        CartAdditionProductDto cartAdditionProductDto = new CartAdditionProductDto(loginUser.getId(), productId);
 
         Long savedId = cartService.addProduct(cartAdditionProductDto);
 
@@ -62,10 +61,7 @@ public class CartRestController {
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long cartId,
-                                              @Auth UserInfo userInfo) {
-        userService.login(new UserLoginDto(userInfo.getEmail(), userInfo.getPassword()));
-
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long cartId) {
         cartService.deleteProduct(cartId);
 
         return ResponseEntity.noContent().build();
