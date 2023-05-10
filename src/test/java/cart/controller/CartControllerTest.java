@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.dto.CartProductResponse;
 import cart.dto.CartRequest;
 import cart.dto.ProductRequest;
+import cart.dto.view.CartProductResponseWrapper;
 import cart.service.CartService;
 import cart.service.ProductService;
 import io.restassured.RestAssured;
@@ -15,8 +15,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestExecutionListeners;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
@@ -48,7 +46,7 @@ class CartControllerTest {
     void failWhenNoHeaderMailAndPassword() {
         RestAssured
                 .given().log().all()
-                .when().get("/carts/products")
+                .when().get("/carts")
                 .then().log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .extract();
@@ -61,7 +59,7 @@ class CartControllerTest {
                 .given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/carts/products")
+                .when().get("/carts")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
@@ -84,24 +82,23 @@ class CartControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequest)
-                .when().post("/carts/products")
+                .when().post("/carts")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract();
 
-        List<CartProductResponse> cartProducts = RestAssured
+        CartProductResponseWrapper cartProductResponseWrapper= RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/carts/products")
+                .when().get("/carts")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .extract().body().jsonPath()
-                .getList(".", CartProductResponse.class);
+                .extract().body().as(CartProductResponseWrapper.class);
 
         assertAll(
-                () -> assertThat(cartProducts).hasSize(1),
-                () -> assertThat(cartProducts).extracting("product.name", "product.price", "product.image")
+                () -> assertThat(cartProductResponseWrapper.getCarts()).hasSize(1),
+                () -> assertThat(cartProductResponseWrapper.getCarts()).extracting("product.name", "product.price", "product.image")
                         .contains(tuple(productRequest.getName(), productRequest.getPrice(), productRequest.getImage()))
         );
 
@@ -119,7 +116,7 @@ class CartControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequest)
-                .when().post("/carts/products")
+                .when().post("/carts")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract();
@@ -136,7 +133,7 @@ class CartControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequest)
-                .when().post("/carts/products")
+                .when().post("/carts")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract();
@@ -146,7 +143,7 @@ class CartControllerTest {
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/carts/" + 1 + "/products")
+                .when().delete("/carts/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value())
                 .extract();
@@ -164,7 +161,7 @@ class CartControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cartRequest)
-                .when().post("/carts/products")
+                .when().post("/carts")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract();
@@ -174,7 +171,7 @@ class CartControllerTest {
                 .auth().preemptive().basic("bbbbb@bbb.bbb", PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/carts/" + 1 + "/products")
+                .when().delete("/carts/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();
@@ -189,7 +186,7 @@ class CartControllerTest {
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/carts/" + 1 + "/products")
+                .when().delete("/carts/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();

@@ -1,7 +1,8 @@
 package cart.dao.h2Implement;
 
 import cart.dao.CartProductDao;
-import cart.dto.CartProductResponse;
+import cart.entity.Cart;
+import cart.entity.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -12,12 +13,14 @@ import java.util.List;
 public class CartProductH2Dao implements CartProductDao {
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<CartProductResponse> cartMapper
-            = (resultSet, rowNum) -> CartProductResponse.from(
+    private final RowMapper<Cart> cartMapper
+            = (resultSet, rowNum) -> new Cart(
             resultSet.getInt("id"),
-            resultSet.getString("name"),
-            resultSet.getInt("price"),
-            resultSet.getString("image")
+            new Product(
+                    resultSet.getString("name"),
+                    resultSet.getInt("price"),
+                    resultSet.getString("image")
+            )
     );
 
     public CartProductH2Dao(JdbcTemplate jdbcTemplate) {
@@ -25,7 +28,7 @@ public class CartProductH2Dao implements CartProductDao {
     }
 
     @Override
-    public List<CartProductResponse> selectById(String email) {
+    public List<Cart> selectById(String email) {
         String sql = "select C.id, name, price, image\n" +
                 "from product P\n" +
                 "join \n" +

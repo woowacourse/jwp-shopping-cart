@@ -118,7 +118,7 @@ public class ProductControllerTest {
             .when().patch("/products/2")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
-            .body(Matchers.equalTo("존재하지 않는 상품입니다."));
+            .body("message", Matchers.equalTo("존재하지 않는 상품입니다."));
     }
 
     @DisplayName("상품 삭제 요청 확인 테스트")
@@ -149,6 +149,6 @@ public class ProductControllerTest {
             .when().delete("/products/2")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
-            .body(Matchers.equalTo("존재하지 않는 상품입니다."));
+            .body("message", Matchers.equalTo("존재하지 않는 상품입니다."));
     }
 }

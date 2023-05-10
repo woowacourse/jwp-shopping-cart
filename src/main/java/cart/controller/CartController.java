@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.dto.CartProductResponse;
 import cart.dto.CartRequest;
+import cart.dto.view.CartProductResponseWrapper;
 import cart.service.CartService;
 import cart.ui.CartAuthentication;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,10 @@ public class CartController {
     }
 
     @GetMapping("/carts/products")
-    public ResponseEntity<List<CartProductResponse>> allCartProducts(@CartAuthentication String email) {
+    public ResponseEntity<CartProductResponseWrapper> allCartProducts(@CartAuthentication String email) {
         List<CartProductResponse> carts = cartService.getCartsByEmail(email);
-        return ResponseEntity.ok().body(carts);
+        return ResponseEntity.ok()
+                .body(CartProductResponseWrapper.from(carts));
     }
 
     @PostMapping("/carts/products")
