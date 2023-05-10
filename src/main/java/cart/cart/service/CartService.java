@@ -1,0 +1,51 @@
+package cart.cart.service;
+
+import cart.cart.dao.CartDao;
+import cart.cart.dto.AuthInfo;
+import cart.cart.dto.CartResponse;
+import cart.cart.entity.Cart;
+import cart.cart.exception.AuthorizationException;
+import cart.member.entity.Member;
+import cart.member.service.MemberService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Transactional(readOnly = true)
+@Service
+public class CartService {
+
+    private final CartDao cartDao;
+    private final MemberService memberService;
+
+    public CartService(CartDao cartDao, MemberService memberService) {
+        this.cartDao = cartDao;
+        this.memberService = memberService;
+    }
+
+    @Transactional
+    public void addCart(Long productId, AuthInfo authInfo) {
+        Member member = memberService.selectMemberByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
+        cartDao.insertCart(productId, member.getId());
+    }
+
+    public List<CartResponse> showCart(AuthInfo authInfo) {
+        Member member = memberService.selectMemberByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
+        List<Cart> carts = cartDao.findCartsByMemberId(member.getId());
+        return carts.stream()
+                .map(cart -> new CartResponse(cart.getId(), cart.getProduct().getName(), cart.getProduct().getPrice(), cart.getProduct().getImage()))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteCartById(Long cartId, AuthInfo authInfo) {
+        Member member = memberService.selectMemberByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
+        Cart cart = cartDao.findCartByCartId(cartId);
+        if (!(cart.getMember().getId() == member.getId())) {
+            throw new AuthorizationException("본인의 상품만 삭제할 수 있습니다");
+        }
+        cartDao.deleteCartByCartId(cartId);
+    }
+}

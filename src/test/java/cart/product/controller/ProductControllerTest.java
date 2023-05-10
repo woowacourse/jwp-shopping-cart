@@ -19,9 +19,12 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.springframework.test.context.jdbc.Sql;
 
+
+@Sql("/testdata.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ProductApiControllerTest {
+class ProductControllerTest {
 
 	@Value("${local.server.port}")
 	int port;
@@ -35,7 +38,7 @@ class ProductApiControllerTest {
 	class CrudTest {
 		@Test
 		void createProductsTest() {
-			ProductRequest productRequest = new ProductRequest("name", 1000, "image");
+			ProductRequest productRequest = new ProductRequest("name", 1000L, "image");
 
 			ExtractableResponse<Response> response = saveProducts(productRequest);
 
@@ -44,8 +47,8 @@ class ProductApiControllerTest {
 
 		@Test
 		void updateProductsTest() {
-			ProductRequest productRequest = new ProductRequest("name", 1000, "image");
-			ProductRequest updatedRequest = new ProductRequest("name", 10, "image");
+			ProductRequest productRequest = new ProductRequest("name", 1000L, "image");
+			ProductRequest updatedRequest = new ProductRequest("name", 10L, "image");
 
 			saveProducts(productRequest);
 
@@ -54,7 +57,7 @@ class ProductApiControllerTest {
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.body(updatedRequest)
 				.when()
-				.put("/products/1")
+				.put("/products/3")
 				.then()
 				.log().all()
 				.statusCode(HttpStatus.OK.value())
@@ -64,15 +67,31 @@ class ProductApiControllerTest {
 
 		@Test
 		void deleteProductsTest() {
-			ProductRequest productRequest = new ProductRequest("name", 1000, "image");
-
-			saveProducts(productRequest);
-
 			when()
 				.delete("/products/1")
 				.then()
 				.log().all()
 				.statusCode(HttpStatus.NO_CONTENT.value());
+		}
+
+		@Test
+		void displayHomeTest() {
+			given()
+					.when()
+					.get("/")
+					.then()
+					.statusCode(HttpStatus.OK.value())
+					.contentType(ContentType.HTML);
+		}
+
+		@Test
+		void displayAdminTest() {
+			given()
+					.when()
+					.get("/admin")
+					.then()
+					.statusCode(HttpStatus.OK.value())
+					.contentType(ContentType.HTML);
 		}
 	}
 
@@ -83,7 +102,7 @@ class ProductApiControllerTest {
 		@ValueSource(strings = {"", " "})
 		@NullSource
 		void nameNullTest(String name) {
-			ProductRequest productRequest = new ProductRequest(name, 1000, "image");
+			ProductRequest productRequest = new ProductRequest(name, 1000L, "image");
 
 			ExtractableResponse<Response> response = saveProducts(productRequest);
 
@@ -92,7 +111,7 @@ class ProductApiControllerTest {
 
 		@Test
 		void nameSizeTest() {
-			ProductRequest productRequest = new ProductRequest("fsd;kljgnad;ofgadfs;kgjadsfkjhsadflk", 1000, "image");
+			ProductRequest productRequest = new ProductRequest("fsd;kljgnad;ofgadfs;kgjadsfkjhsadflk", 1000L, "image");
 
 			ExtractableResponse<Response> response = saveProducts(productRequest);
 
@@ -109,8 +128,8 @@ class ProductApiControllerTest {
 		}
 
 		@ParameterizedTest
-		@ValueSource(ints = {-1, -100})
-		void nameRangeTest(int price) {
+		@ValueSource(longs = {-1, -100})
+		void nameRangeTest(Long price) {
 			ProductRequest productRequest = new ProductRequest("name", price, "image");
 
 			ExtractableResponse<Response> response = saveProducts(productRequest);

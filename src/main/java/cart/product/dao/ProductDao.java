@@ -1,36 +1,36 @@
 package cart.product.dao;
 
-import java.sql.PreparedStatement;
-import java.util.List;
-
+import cart.product.entity.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.product.entity.Product;
+import java.sql.PreparedStatement;
+import java.util.List;
 
-@Component
+@Repository
 public class ProductDao {
 	private final JdbcTemplate jdbcTemplate;
+
+	public ProductDao(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
 
 	private final RowMapper<Product> productRowMapper = (resultSet, rowNum) -> {
 		Product product = new Product(
 			resultSet.getLong("id"),
 			resultSet.getString("name"),
 			resultSet.getString("image"),
-			resultSet.getInt("price"),
+			resultSet.getLong("price"),
 			resultSet.getTimestamp("created_at").toLocalDateTime(),
 			resultSet.getTimestamp("updated_at").toLocalDateTime()
 		);
 		return product;
 	};
 
-	public ProductDao(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
 
 	@Transactional
 	public List<Product> findAll() {
@@ -47,7 +47,7 @@ public class ProductDao {
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(sql, new String[] {"id"});
 			ps.setString(1, product.getName());
-			ps.setInt(2, product.getPrice());
+			ps.setLong(2, product.getPrice());
 			ps.setString(3, product.getImage());
 			return ps;
 		}, keyHolder);

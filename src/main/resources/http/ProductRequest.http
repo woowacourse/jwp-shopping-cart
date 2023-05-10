@@ -1,0 +1,30 @@
+### 메인 페이지 조회
+GET http://localhost:8080
+
+### 관리자 페이지 조회
+GET http://localhost:8080/admin
+
+Accept: application/json
+
+### 상품 등록 요청
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+  "name": "하마드",
+  "price" : 10000,
+  "image" : "image"
+}
+
+### 상품 수정 요청
+PUT http://localhost:8080/products/1
+Content-Type: application/json
+
+{
+  "name": "하마드",
+  "price" : 9000,
+  "image" : "image"
+}
+
+### 상품 삭제 요청
+DELETE http://localhost:8080/products/1

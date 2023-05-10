@@ -4,38 +4,44 @@ import cart.product.entity.Product;
 
 public class ProductResponse {
 
-	private final Long id;
-	private final String name;
-	private final String image;
-	private final Integer price;
+    private Long id;
+    private String name;
+    private String image;
+    private Long price;
 
-	public ProductResponse(Product product) {
-		this.id = product.getId();
-		this.name = product.getName();
-		this.image = product.getImage();
-		this.price = product.getPrice();
-	}
+    public ProductResponse() {
+    }
 
-	public ProductResponse(Long id, Product product) {
-		this.id = id;
-		this.name = product.getName();
-		this.image = product.getImage();
-		this.price = product.getPrice();
-	}
 
-	public Long getId() {
-		return id;
-	}
+    public ProductResponse(Long id, String name, String image, Long price) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.price = price;
+    }
 
-	public String getName() {
-		return name;
-	}
 
-	public String getImage() {
-		return image;
-	}
+    public ProductResponse(Product product) {
+        this(product.getId(), product.getName(), product.getImage(), product.getPrice());
+    }
 
-	public Integer getPrice() {
-		return price;
-	}
+    public ProductResponse(Long id, Product product) {
+        this(id, product.getName(), product.getImage(), product.getPrice());
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
 }

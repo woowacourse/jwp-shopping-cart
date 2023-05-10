@@ -2,13 +2,13 @@ package cart.product.dto;
 
 public class ExceptionResponse {
 
-	private final String exceptionMessage;
+	private final String message;
 
-	public ExceptionResponse(String exceptionMessage) {
-		this.exceptionMessage = exceptionMessage;
+	public ExceptionResponse(String message) {
+		this.message = message;
 	}
 
-	public String getExceptionMessage() {
-		return exceptionMessage;
+	public String getMessage() {
+		return message;
 	}
 }

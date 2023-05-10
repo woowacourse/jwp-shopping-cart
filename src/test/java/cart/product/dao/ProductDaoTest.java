@@ -14,7 +14,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import cart.product.entity.Product;
+import org.springframework.test.context.jdbc.Sql;
 
+@Sql("/testdata.sql")
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ProductDaoTest {
@@ -28,7 +30,7 @@ class ProductDaoTest {
 		rs.getLong("id"),
 		rs.getString("name"),
 		rs.getString("image"),
-		rs.getInt("price"),
+		rs.getLong("price"),
 		rs.getTimestamp("created_at").toLocalDateTime(),
 		rs.getTimestamp("updated_at").toLocalDateTime()
 	);
@@ -36,7 +38,7 @@ class ProductDaoTest {
 	@BeforeEach
 	public void setProduct() {
 		productDao = new ProductDao(jdbcTemplate);
-		product = new Product(null, "name", "image", 10000, null, null);
+		product = new Product(null, "name", "image", 10000L, null, null);
 	}
 
 	@Test
@@ -46,7 +48,7 @@ class ProductDaoTest {
 
 		// then
 		assertThat(all).isNotNull();
-		assertThat(all).hasSize(0);
+		assertThat(all).hasSize(3);
 	}
 
 	@Test
@@ -54,7 +56,7 @@ class ProductDaoTest {
 		// when
 		productDao.save(product);
 		List<Product> products = jdbcTemplate.query("SELECT * FROM PRODUCT", productRowMapper);
-		Product savedProduct = products.get(0);
+		Product savedProduct = products.get(3);
 
 		// then
 		assertThat(savedProduct.getName()).isEqualTo(this.product.getName());
@@ -68,7 +70,7 @@ class ProductDaoTest {
 		long id = productDao.save(product);
 
 		// when
-		Product newProduct = new Product(null, "newName", "newImage", 0, null, null);
+		Product newProduct = new Product(null, "newName", "newImage", 0L, null, null);
 		productDao.updateById(id, newProduct);
 
 		// then

@@ -7,11 +7,11 @@ public class Product {
 	private final Long id;
 	private final String name;
 	private final String image;
-	private final Integer price;
+	private final Long price;
 	private final LocalDateTime createdAt;
 	private final LocalDateTime updatedAt;
 
-	public Product(Long id, String name, String image, Integer price, LocalDateTime createdAt,
+	public Product(Long id, String name, String image, Long price, LocalDateTime createdAt,
 		LocalDateTime updatedAt) {
 		this.id = id;
 		this.name = name;
@@ -33,7 +33,7 @@ public class Product {
 		return image;
 	}
 
-	public Integer getPrice() {
+	public Long getPrice() {
 		return price;
 	}
 
