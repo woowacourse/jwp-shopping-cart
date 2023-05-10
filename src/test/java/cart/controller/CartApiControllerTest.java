@@ -1,16 +1,9 @@
 package cart.controller;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import cart.dto.ProductResponseDto;
+import cart.service.AuthService;
 import cart.service.CartService;
-import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,73 +11,71 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest
-public class CartApiControllerTest {
+import java.util.List;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(CartApiController.class)
+class CartApiControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private CartService cartService;
 
-    @Test
-    void insertTest() throws Exception {
-        this.mockMvc.perform(post("/product")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"name\": \"name\", \"image\": \"image\", \"price\": \"1000\"}"))
-                .andExpect(status().isOk());
-    }
+    @MockBean
+    private AuthService authService;
 
+    @DisplayName("GET /cart-products 성공 테스트")
     @Test
-    void insertTest_fail() throws Exception {
-        this.mockMvc.perform(post("/product")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"name\": \"name\", \"image\": \"image\", \"price\": \"abc\"}"))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void getTest() throws Exception {
-        when(cartService.getProducts()).thenReturn(List.of(
+    void getCartItemsTest() throws Exception {
+        when(cartService.getCartProducts(0)).thenReturn(List.of(
                 new ProductResponseDto(1, "image1", "name1", 1000),
-                new ProductResponseDto(2, "image2", "name2", 2000)));
+                new ProductResponseDto(2, "image2", "name2", 2000)
+        ));
 
-        this.mockMvc.perform(get("/product"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value("1"))
-                .andExpect(jsonPath("$[0].name").value("name1"))
-                .andExpect(jsonPath("$[0].price").value("1000"))
-                .andExpect(jsonPath("$[0].image").value("image1"))
-                .andExpect(jsonPath("$[1].id").value("2"))
-                .andExpect(jsonPath("$[1].name").value("name2"))
-                .andExpect(jsonPath("$[1].price").value("2000"))
-                .andExpect(jsonPath("$[1].image").value("image2"));
-    }
-
-    @Test
-    void updateTest() throws Exception {
-        this.mockMvc.perform(put("/product")
+        this.mockMvc.perform(get("/cart-products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"id\": \"1\", \"name\": \"name\", \"image\": \"image\", \"price\": \"1000\"}"))
+                        .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("POST /cart/{product} 성공 테스트")
     @Test
-    void updateTest_fail() throws Exception {
-        this.mockMvc.perform(put("/product")
+    void addProductToCartTest() throws Exception {
+        this.mockMvc.perform(post("/cart/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"id\": \"1\", \"name\": \"name\", \"image\": \"image\", \"price\": \"abc\"}"))
+                        .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
+                .andExpect(status().isCreated());
+    }
+
+    @DisplayName("DELETE /cart/{product} 성공 테스트")
+    @Test
+    void deleteProductInCartTest() throws Exception {
+        this.mockMvc.perform(delete("/cart/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Basic YUBhLmNvbTpwYXNzd29yZDE="))
+                .andExpect(status().isNoContent());
+    }
+
+    @DisplayName("올바른 Basic Authorization 헤더값이 들어오지 않을 때 실패한다")
+    @Test
+    void throwExceptionWhenInvalidAuthorizationHeader() throws Exception {
+        this.mockMvc.perform(get("/cart-products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Basic 123456789="))
                 .andExpect(status().isBadRequest());
     }
 
+    @DisplayName("Basic Authorization 헤더값이 들어오지 않을 때 실패한다")
     @Test
-    void deleteTest() throws Exception {
-        this.mockMvc.perform(delete("/product/1"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void deleteTest_fail() throws Exception {
-        this.mockMvc.perform(delete("/product/a"))
-                .andExpect(status().isBadRequest());
+    void throwExceptionWhenNotBasicAuthorizationHeader() throws Exception {
+        this.mockMvc.perform(get("/cart-products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer 123456789="))
+                .andExpect(status().isUnauthorized());
     }
 }

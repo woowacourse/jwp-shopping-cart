@@ -1,20 +1,20 @@
 package cart.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import cart.entity.ProductEntity;
-import java.util.List;
-import org.assertj.core.api.AssertionsForClassTypes;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @JdbcTest
 class JdbcTemplateProductDaoTest {
@@ -29,16 +29,7 @@ class JdbcTemplateProductDaoTest {
         productDao = new JdbcTemplateProductDao(jdbcTemplate);
     }
 
-    private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNumber) -> {
-        ProductEntity productEntity = new ProductEntity(
-                resultSet.getInt("id"),
-                resultSet.getString("name"),
-                resultSet.getInt("price"),
-                resultSet.getString("image")
-        );
-        return productEntity;
-    };
-
+    @DisplayName("ProductDao insert 테스트")
     @Test
     void insertTest() {
         int id = productDao.insert(new ProductEntity(null, "name", 1000, "image"));
@@ -67,6 +58,7 @@ class JdbcTemplateProductDaoTest {
         return product;
     }
 
+    @DisplayName("ProductDao 조회 테스트")
     @Test
     void selectAllTest() {
         productDao.insert(new ProductEntity(null, "name1", 1000, "image1"));
@@ -76,6 +68,7 @@ class JdbcTemplateProductDaoTest {
         assertThat(products).hasSize(2);
     }
 
+    @DisplayName("ProductDao 수정 테스트")
     @Test
     void updateTest() {
         final ProductEntity product = new ProductEntity(null, "name1", 1000, "image1");
@@ -92,6 +85,7 @@ class JdbcTemplateProductDaoTest {
         });
     }
 
+    @DisplayName("ProductDao 삭제 테스트")
     @Test
     void deleteTest() {
         final ProductEntity product = new ProductEntity(null, "name1", 1000, "image1");

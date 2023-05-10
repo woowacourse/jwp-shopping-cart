@@ -20,8 +20,6 @@ class JwpCartApplicationTests {
 
     @Test
     void contextLoads() {
-        System.out.println(port);
-        System.out.println("JwpCarApplicationTests Thread: "+Thread.currentThread());
     }
 
 }

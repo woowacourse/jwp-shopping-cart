@@ -1,17 +1,18 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Repository
-public class JdbcTemplateProductDao implements ProductDao{
+public class JdbcTemplateProductDao implements ProductDao {
 
     private final SimpleJdbcInsert insertProducts;
     private final JdbcTemplate jdbcTemplate;
@@ -35,6 +36,13 @@ public class JdbcTemplateProductDao implements ProductDao{
     }
 
     @Override
+    public ProductEntity selectById(final int productId) {
+        String sql = "select * from products where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, productEntityRowMapper, productId);
+    }
+
+    @Override
     public List<ProductEntity> selectAll() {
         String sql = "select * from products";
 
@@ -52,15 +60,14 @@ public class JdbcTemplateProductDao implements ProductDao{
     };
 
     @Override
-    public void update(final ProductEntity product) {
+    public int update(final ProductEntity product) {
         String sql = "update products set (name, price, image) = (?, ?, ?) where id = ?";
-
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(), product.getId());
+        return jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImage(), product.getId());
     }
 
     @Override
-    public void delete(final int productId) {
+    public int delete(final int productId) {
         String sql = "delete from products where id = ?";
-        jdbcTemplate.update(sql, productId);
+        return jdbcTemplate.update(sql, productId);
     }
 }
