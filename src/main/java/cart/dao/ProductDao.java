@@ -1,16 +1,31 @@
 package cart.dao;
 
-import cart.domain.Product;
-import java.util.List;
+import cart.entity.ProductEntity;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductDao {
+
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final String PRICE = "price";
+    private static final String IMAGE_URL = "image_url";
+    private static final String ALL_COLUMNS = String.join(", ", ID, NAME, PRICE, IMAGE_URL);
+
+    private static final RowMapper<ProductEntity> productRowMapper = (resultSet, rowNum) -> new ProductEntity(
+            resultSet.getLong(ID),
+            resultSet.getString(NAME),
+            resultSet.getInt(PRICE),
+            resultSet.getString(IMAGE_URL)
+    );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -22,25 +37,30 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public long insert(final Product product) {
-        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
+    public long insert(final ProductEntity productEntity) {
+        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(productEntity);
 
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
 
-    public Product findById(final long id) {
-        final String sql = "select id, name, price, image_url from Product where id = ?";
+    public Optional<ProductEntity> findById(final long id) {
+        final String sql = "select " + ALL_COLUMNS + " from Product where id = ?";
 
-        return jdbcTemplate.queryForObject(sql, productRowMapper(), id);
+        try {
+            final ProductEntity productEntity = jdbcTemplate.queryForObject(sql, productRowMapper, id);
+            return Optional.ofNullable(productEntity);
+        } catch (final DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
-    public List<Product> findAll() {
-        final String sql = "select id, name, price, image_url from Product";
+    public List<ProductEntity> findAll() {
+        final String sql = "select " + ALL_COLUMNS + " from Product";
 
-        return jdbcTemplate.query(sql, productRowMapper());
+        return jdbcTemplate.query(sql, productRowMapper);
     }
 
-    public void update(final Product newProduct) {
+    public void update(final ProductEntity newProduct) {
         final String sql = "update Product set name = ?, price = ?, image_url = ? where id = ?";
 
         jdbcTemplate.update(sql,
@@ -52,23 +72,8 @@ public class ProductDao {
     }
 
     public void delete(final long id) {
-        final String sql = "delete Product where id = ?";
+        final String sql = "DELETE FROM Product WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
-    }
-
-    public boolean isExist(final long id) {
-        final String sql = "select count(*) from Product where id = ?";
-
-        return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
-    }
-
-    private RowMapper<Product> productRowMapper() {
-        return (resultSet, rowNum) -> new Product(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getInt("price"),
-                resultSet.getString("image_url")
-        );
     }
 }

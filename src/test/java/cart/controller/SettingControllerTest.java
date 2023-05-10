@@ -3,35 +3,34 @@ package cart.controller;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql({"/schema.sql"})
-public class ProductControllerTest {
+class SettingControllerTest {
 
     @LocalServerPort
     private int port;
 
     @BeforeEach
     void setUp() {
-        RestAssured.port = port;
+        RestAssured.port = this.port;
     }
 
     @Test
-    void 상품_목록_조회() {
+    void 사용사_설정_페이지_연동_성공() {
         final String htmlBody = RestAssured.when()
-                .get("/products")
+                .get("/settings")
                 .then()
-                .contentType(MediaType.TEXT_HTML_VALUE)
+                .contentType(ContentType.HTML)
                 .statusCode(HttpStatus.OK.value())
-                .extract().asString();
+                .extract()
+                .asString();
 
-        assertThat(htmlBody.contains("<title>상품목록</title>")).isTrue();
+        assertThat(htmlBody).contains("<title>설정</title>");
     }
 }

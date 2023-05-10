@@ -1,96 +1,101 @@
 package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 
+import cart.dao.CartDao;
 import cart.dao.ProductDao;
-import cart.domain.Product;
 import cart.dto.ProductDto;
-import io.restassured.RestAssured;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
+import cart.entity.ProductEntity;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.jdbc.Sql;
+import java.util.List;
+import java.util.Optional;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@ExtendWith(MockitoExtension.class)
 @Sql("classpath:schema.sql")
 class ProductServiceTest {
 
-    @LocalServerPort
-    private int port;
-
-    @Autowired
+    @InjectMocks
     private ProductService productService;
-    @Autowired
+
+    @Mock
     private ProductDao productDao;
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-
-        productDao.insert(new Product("pizza", 1000,
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg/800px-Eq_it-na_pizza-margherita_sep2005_sml.jpg"));
-        productDao.insert(
-                new Product("salad", 2000,
-                        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Salad_platter.jpg/1200px-Salad_platter.jpg"));
-    }
+    @Mock
+    private CartDao cartDao;
 
     @Test
     void 모든_상품_목록_조회() {
-        final List<Product> products = productService.findAll();
+        Mockito.when(productDao.findAll()).thenReturn(List.of(
+                createProductEntity(1L),
+                createProductEntity(2L),
+                createProductEntity(3L))
+        );
 
-        assertThat(products.size()).isEqualTo(2);
+        final var products = productService.findAll();
+
+        assertThat(products.size()).isEqualTo(3);
     }
 
-    @ParameterizedTest
-    @CsvSource(value = {"applePizza:10000:사과피자 이미지", "salmonSalad:20000:연어 샐러드 이미지"}, delimiter = ':')
-    void 상품_등록(final String name, final int price, final String imageUrl) {
-        final long expectedId = 3L;
-        final Long savedId = productService.register(new ProductDto(name, price, imageUrl));
+    @Test
+    void 상품_등록() {
+        Mockito.when(productDao.insert(any(ProductEntity.class)))
+                .thenReturn(4L);
 
-        assertThat(savedId).isEqualTo(expectedId);
+        final var savedId = productService.register(createProductDto(1000));
+
+        assertThat(savedId).isEqualTo(4L);
     }
 
-    @ParameterizedTest
-    @CsvSource(value = {"1:applePizza:10000:사과피자 이미지", "2:salmonSalad:20000:연어 샐러드 이미지"}, delimiter = ':')
-    void 상품_수정(final long id, final String newName, final int newPrice, final String newImageUrl) {
-        productService.updateProduct(id, new ProductDto(newName, newPrice, newImageUrl));
+    @Test
+    void 상품_수정_성공() {
+        Mockito.when(productDao.findById(anyLong()))
+                .thenReturn(Optional.of(createProductEntity(1L)));
 
-        final Product updatedProduct = productDao.findById(id);
-        assertAll(
-                () -> assertThat(updatedProduct.getName()).isEqualTo(newName),
-                () -> assertThat(updatedProduct.getPrice()).isEqualTo(newPrice),
-                () -> assertThat(updatedProduct.getImageUrl()).isEqualTo(newImageUrl)
+        assertThatNoException().isThrownBy(() -> productService.updateProduct(1L, new ProductDto("new Name", 10, "new Image Url")));
+    }
+
+    @Test
+    void 존재하지_않는_ID의_상품을_수정시_예외_발생() {
+        Mockito.when(productDao.findById(anyLong()))
+                .thenReturn(Optional.empty());
+
+        assertThatIllegalArgumentException().isThrownBy(
+                () -> productService.updateProduct(1L, createProductDto(10))
         );
     }
 
     @Test
-    void 존재하지_않는_상품_수정시_예외_발생() {
-        assertThatIllegalArgumentException().isThrownBy(
-                () -> productService.updateProduct(10L, new ProductDto("name", 1234, "imageUrl"))
-        ).withMessage("존재하지 않는 id 입니다.");
-    }
+    void 상품_삭제_성공() {
+        Mockito.when(productDao.findById(anyLong()))
+                .thenReturn(Optional.of(createProductEntity(1L)));
 
-    @ParameterizedTest
-    @ValueSource(ints = {1, 2})
-    void 상품_삭제(final long id) {
-        productService.deleteProduct(id);
-
-        assertThat(productService.findAll().size()).isEqualTo(1);
+        assertThatNoException().isThrownBy(() -> productService.deleteProduct(1L));
     }
 
     @Test
     void 존재하지_않는_상품_삭제시_예외_발생() {
+        Mockito.when(productDao.findById(anyLong()))
+                .thenReturn(Optional.empty());
+
         assertThatIllegalArgumentException().isThrownBy(
                 () -> productService.deleteProduct(3L)
-        ).withMessage("존재하지 않는 id 입니다.");
+        );
+    }
+
+    private ProductEntity createProductEntity(final long id) {
+        return new ProductEntity(id, "name", 1000, "imageUrl");
+    }
+
+    private ProductDto createProductDto(final int price) {
+        return new ProductDto("name", price, "imageUrl");
     }
 }
