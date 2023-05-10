@@ -2,7 +2,7 @@ package cart.config;
 
 import cart.web.auth.AuthInterceptor;
 import cart.web.auth.AuthService;
-import cart.web.auth.AuthenticationPrincipalArgumentResolver;
+import cart.web.auth.AuthArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -26,6 +26,6 @@ public class CartConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthenticationPrincipalArgumentResolver());
+        resolvers.add(new AuthArgumentResolver());
     }
 }
