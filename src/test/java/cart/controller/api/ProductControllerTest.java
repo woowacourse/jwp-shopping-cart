@@ -1,6 +1,5 @@
-package cart.controller;
+package cart.controller.api;
 
-import cart.controller.api.ProductController;
 import cart.controller.dto.ProductRequest;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;

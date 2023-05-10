@@ -1,8 +1,7 @@
-package cart.controller;
+package cart.controller.view;
 
 import cart.controller.dto.MemberResponse;
 import cart.controller.dto.ProductResponse;
-import cart.controller.view.ViewController;
 import cart.domain.Member;
 import cart.domain.Product;
 import cart.service.MemberService;

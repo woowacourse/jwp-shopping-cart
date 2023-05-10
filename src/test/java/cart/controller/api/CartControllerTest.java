@@ -1,6 +1,5 @@
-package cart.controller;
+package cart.controller.api;
 
-import cart.controller.api.CartController;
 import cart.controller.dto.ProductResponse;
 import cart.domain.Product;
 import cart.service.CartService;
