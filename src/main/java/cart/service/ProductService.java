@@ -14,23 +14,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductDao productDao;
-    
+
     public List<ProductResponse> findAll() {
         return productDao.findAll().stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
-    
-    public void save(final ProductRequest productRequest) {
-        Product product = new Product(null, productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
-        productDao.save(product);
+
+    public long save(final ProductRequest productRequest) {
+        final Product product = new Product(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        return productDao.save(product);
     }
-    
+
     public void update(final Long id, final ProductRequest productRequest) {
-        Product product = new Product(id, productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        final Product product = new Product(id, productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
         productDao.update(product);
     }
-    
+
     public void delete(final Long id) {
         productDao.delete(id);
     }

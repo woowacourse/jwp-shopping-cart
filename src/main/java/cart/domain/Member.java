@@ -9,13 +9,12 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class Product {
+public class Member {
     private final Long id;
-    private final String name;
-    private final String imageUrl;
-    private final Integer price;
+    private final String email;
+    private final String password;
 
-    public Product(String name, String imageUrl, Integer price) {
-        this(null, name, imageUrl, price);
+    public Member(String email, String password) {
+        this(null, email, password);
     }
 }

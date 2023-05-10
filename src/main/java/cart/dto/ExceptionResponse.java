@@ -7,7 +7,7 @@ import lombok.ToString;
 @ToString
 public class ExceptionResponse {
     private final String message;
-    
+
     public ExceptionResponse(final String message) {
         this.message = message;
     }

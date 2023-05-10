@@ -17,19 +17,19 @@ public class ProductDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<Product> rowMapper;
-    
+
     public ProductDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.simpleJdbcInsert = initSimpleJdbcInsert(namedParameterJdbcTemplate);
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.rowMapper = initRowMapper();
     }
-    
+
     private SimpleJdbcInsert initSimpleJdbcInsert(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         return new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
     }
-    
+
     private RowMapper<Product> initRowMapper() {
         return (rs, rowNum) -> new Product(
                 rs.getLong("id"),
@@ -38,36 +38,36 @@ public class ProductDao {
                 rs.getInt("price")
         );
     }
-    
-    public Product findById(Long id) {
-        final String sql = "SELECT * FROM PRODUCT WHERE ID=:id";
-        final SqlParameterSource params = new MapSqlParameterSource("id", id);
-        return namedParameterJdbcTemplate.queryForObject(sql, params, rowMapper);
-    }
-    
-    public List<Product> findAll() {
-        final String sql = "SELECT * FROM PRODUCT";
-        return namedParameterJdbcTemplate.query(sql, rowMapper);
-    }
-    
+
     public long save(final Product product) {
         final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
         return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
     }
-    
+
+    public Product findById(final Long id) {
+        final String sql = "SELECT * FROM PRODUCT WHERE ID=:id";
+        final SqlParameterSource params = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.queryForObject(sql, params, rowMapper);
+    }
+
+    public List<Product> findAll() {
+        final String sql = "SELECT * FROM PRODUCT";
+        return namedParameterJdbcTemplate.query(sql, rowMapper);
+    }
+
     public void update(final Product product) {
-        String sql = "UPDATE PRODUCT SET NAME=:name,IMAGE_URL=:imageUrl, PRICE=:price WHERE ID=:id";
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
+        final String sql = "UPDATE PRODUCT SET NAME=:name,IMAGE_URL=:imageUrl, PRICE=:price WHERE ID=:id";
+        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(product);
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
-    
+
     public void delete(final Long id) {
         final String sql = "DELETE FROM PRODUCT WHERE ID=:id";
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", id);
         namedParameterJdbcTemplate.update(sql, params);
     }
-    
+
     public void deleteAll() {
         final String sql = "DELETE FROM PRODUCT";
         namedParameterJdbcTemplate.update(sql, Collections.emptyMap());
