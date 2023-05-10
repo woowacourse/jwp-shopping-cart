@@ -1,14 +1,58 @@
 package cart.controller;
 
+import java.net.URI;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cart.controller.argumentresolver.AuthenticationPrincipal;
+import cart.dto.cart.CartCreateRequest;
+import cart.dto.cart.CartProductResponse;
+import cart.dto.user.UserRequest;
+import cart.service.CartService;
 
 @Controller
+@RequestMapping("/carts")
 public class CartController {
-    @GetMapping("/")
-    public String home() {
-        return "index";
+
+    private final CartService cartService;
+
+    public CartController(CartService cartService) {
+        this.cartService = cartService;
     }
 
+    @GetMapping
+    public String cart() {
+        return "cart";
+    }
 
+    @GetMapping("/products")
+    public ResponseEntity<List<CartProductResponse>> products(@AuthenticationPrincipal UserRequest userRequest) {
+        return ResponseEntity.ok(cartService.findAllProductsInCart(userRequest));
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> addProductToCart(
+            @AuthenticationPrincipal UserRequest userRequest,
+            @RequestBody CartCreateRequest cartCreateRequest
+    ) {
+        final Long cartId = cartService.addProduct(userRequest, cartCreateRequest.getProductId());
+        return ResponseEntity.created(URI.create("/cart/product/" + cartId)).build();
+    }
+
+    @DeleteMapping("/{cartId}")
+    public ResponseEntity<Void> removeProductInCart(
+            @AuthenticationPrincipal UserRequest userRequest,
+            @PathVariable Long cartId
+    ) {
+        cartService.removeProductInCart(userRequest, cartId);
+        return ResponseEntity.noContent().build();
+    }
 }

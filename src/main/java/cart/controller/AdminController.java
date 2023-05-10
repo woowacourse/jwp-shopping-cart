@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cart.dto.ProductCreateRequest;
-import cart.dto.ProductResponse;
-import cart.dto.ProductUpdateRequest;
+import cart.dto.product.ProductCreateRequest;
+import cart.dto.product.ProductResponse;
+import cart.dto.product.ProductUpdateRequest;
 import cart.service.ProductService;
 
 @Controller

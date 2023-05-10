@@ -13,8 +13,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import cart.dto.ErrorResponse;
 
-@ControllerAdvice(assignableTypes = AdminController.class)
-public class AdminControllerAdvice {
+@ControllerAdvice
+public class GlobalControllerAdvice {
 
     public static final String UNKNOWN_ERROR_MESSAGE = "Unknown Error";
     private final Logger logger = LoggerFactory.getLogger(getClass());

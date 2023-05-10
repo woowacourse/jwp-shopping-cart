@@ -15,8 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
-import cart.dto.ProductCreateRequest;
-import cart.dto.ProductUpdateRequest;
+import cart.dto.product.ProductCreateRequest;
+import cart.dto.product.ProductUpdateRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

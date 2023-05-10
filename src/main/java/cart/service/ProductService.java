@@ -5,31 +5,32 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import cart.dao.ProductDao;
 import cart.dao.entity.Product;
-import cart.dto.ProductCreateRequest;
-import cart.dto.ProductMapper;
-import cart.dto.ProductResponse;
-import cart.dto.ProductUpdateRequest;
+import cart.dao.product.ProductDao;
+import cart.dto.product.ProductCreateRequest;
+import cart.dto.product.ProductMapper;
+import cart.dto.product.ProductResponse;
+import cart.dto.product.ProductUpdateRequest;
 
 @Service
 public class ProductService {
-    private final static ProductMapper MAPPER = new ProductMapper();
+    private final ProductMapper productMapper;
     private final ProductDao productDao;
 
-    public ProductService(ProductDao productDao) {
+    public ProductService(ProductMapper productMapper, ProductDao productDao) {
+        this.productMapper = productMapper;
         this.productDao = productDao;
     }
 
     public Long save(ProductCreateRequest productCreateRequest) {
-        final Product product = MAPPER.toProduct(productCreateRequest);
+        final Product product = productMapper.toProduct(productCreateRequest);
         return productDao.save(product);
     }
 
     public List<ProductResponse> findAll() {
         final List<Product> products = productDao.findAll();
         return products.stream()
-                .map(MAPPER::toResponse)
+                .map(productMapper::toResponse)
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -38,6 +39,6 @@ public class ProductService {
     }
 
     public void update(final Long id, final ProductUpdateRequest productUpdateRequest) {
-        productDao.update(id, MAPPER.toProduct(productUpdateRequest));
+        productDao.update(id, productMapper.toProduct(productUpdateRequest));
     }
 }
