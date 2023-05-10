@@ -1,30 +1,46 @@
 package cart.controller;
 
-import cart.service.ProductService;
+import cart.domain.member.MemberService;
+import cart.domain.product.ProductService;
+import java.util.Map;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class CartController {
 
     private final ProductService productService;
+    private final MemberService memberService;
 
-    public CartController(final ProductService productService) {
+    public CartController(final ProductService productService, final MemberService memberService) {
         this.productService = productService;
+        this.memberService = memberService;
     }
 
     @GetMapping(path = "/")
-    public String home(Model model) {
-        model.addAttribute("products", productService.findAll());
-
-        return "index";
+    public ModelAndView home() {
+        return new ModelAndView("index", Map.of(
+                "products", productService.findAll()
+        ));
     }
 
     @GetMapping(path = "/admin")
-    public String admin(Model model) {
-        model.addAttribute("products", productService.findAll());
+    public ModelAndView admin() {
+        return new ModelAndView("admin", Map.of(
+                "products", productService.findAll()
+        ));
+    }
 
-        return "admin";
+    @GetMapping(path = "/settings")
+    public ModelAndView settings() {
+        return new ModelAndView("settings", Map.of(
+                "members", memberService.findAll()
+        ));
+    }
+
+    @GetMapping(path = "/cart")
+    public ModelAndView cart() {
+        return new ModelAndView("cart");
     }
 }

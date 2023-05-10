@@ -1,6 +1,5 @@
 package cart.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,6 @@ public class ProductRequest {
 
         @NotNull
         private String name;
-        @JsonProperty("image-url")
         @NotNull
         private String imageUrl;
         @NotNull
@@ -28,7 +26,6 @@ public class ProductRequest {
         private Long id;
         @NotNull
         private String name;
-        @JsonProperty("image-url")
         @NotNull
         private String imageUrl;
         @NotNull

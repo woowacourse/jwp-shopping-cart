@@ -1,27 +1,21 @@
-package cart.service;
+package cart.domain.product;
 
-import cart.dao.Dao;
-import cart.domain.Product;
 import java.util.List;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 public class ProductService {
 
-    private final Dao<Product> productDao;
+    private final ProductDao productDao;
 
-    public ProductService(final Dao<Product> productDao) {
+    public ProductService(final ProductDao productDao) {
         this.productDao = productDao;
     }
 
-    @Transactional
     public void add(final Product product) {
         productDao.insert(product);
     }
 
-    @Transactional
     public void update(final Product product) {
         validateIdExist(product.getId());
         productDao.update(product);
@@ -31,13 +25,12 @@ public class ProductService {
         return productDao.findAll();
     }
 
-    @Transactional
     public void deleteById(final Long id) {
         validateIdExist(id);
         productDao.deleteById(id);
     }
 
-    private void validateIdExist(final Long id) {
+    public void validateIdExist(final Long id) {
         if (productDao.isExist(id)) {
             return;
         }

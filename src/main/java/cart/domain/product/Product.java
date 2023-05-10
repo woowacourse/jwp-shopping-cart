@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,7 @@ public class Product {
 
     private final Long id;
     private final String name;
-    @JsonProperty("image-url")
+    @JsonProperty("imageUrl")
     private final String imageUrl;
     private final int price;
 
@@ -61,7 +61,7 @@ public class Product {
 
     private void validatePrice(int price) {
         if (price < PRICE_MINIMUM || price > PRICE_MAXIMUM) {
-            throw new IllegalArgumentException("유효한 상품 금액이 아닙니다.");
+            throw new IllegalArgumentException("유효한 상품 금액이 아닙니다");
         }
     }
 }

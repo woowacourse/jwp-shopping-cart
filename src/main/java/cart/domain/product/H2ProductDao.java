@@ -1,6 +1,5 @@
-package cart.dao;
+package cart.domain.product;
 
-import cart.domain.Product;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,7 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class H2ProductDao implements Dao<Product> {
+public class H2ProductDao extends ProductDao {
 
     private static final RowMapper<Product> PRODUCT_ROW_MAPPER = (rs, rowNum) -> new Product(
             rs.getLong("id"),
