@@ -7,21 +7,18 @@ public class Product {
     private final ProductPrice price;
     private final ProductCategory category;
     private final ImageUrl imageUrl;
-    private Long productId;
+    private final Long id;
 
-    public Product(ProductName name, ProductPrice price, ProductCategory category, ImageUrl imageUrl) {
+    public Product(ProductName name, ProductPrice price, ProductCategory category, ImageUrl imageUrl, Long id) {
         this.name = name;
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
+        this.id = id;
     }
 
-    public Product(ProductName name, ProductPrice price, ProductCategory category, ImageUrl imageUrl, Long productId) {
-        this.name = name;
-        this.price = price;
-        this.category = category;
-        this.imageUrl = imageUrl;
-        this.productId = productId;
+    public Product(ProductName name, ProductPrice price, ProductCategory category, ImageUrl imageUrl) {
+        this(name, price, category, imageUrl, null);
     }
 
     public String getName() {
@@ -40,7 +37,7 @@ public class Product {
         return imageUrl.getUrl();
     }
 
-    public Long getProductId() {
-        return productId;
+    public Long getId() {
+        return id;
     }
 }

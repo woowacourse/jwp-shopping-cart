@@ -3,6 +3,7 @@ package cart.domain.product;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import cart.exception.GlobalException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -18,13 +19,13 @@ class ProductPriceTest {
     @ValueSource(ints = {201, 520, 1515})
     void createProductPriceFailureNotUnit(int input) {
         assertThatThrownBy(() -> ProductPrice.from(input))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(GlobalException.class);
     }
 
     @ParameterizedTest(name = "상품 가격은 100보다 크거나 같아야 한다.")
     @ValueSource(ints = {99, 0, -1})
     void createProductPriceFailureUnderMinimumPrice(int input) {
         assertThatThrownBy(() -> ProductPrice.from(input))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(GlobalException.class);
     }
 }
