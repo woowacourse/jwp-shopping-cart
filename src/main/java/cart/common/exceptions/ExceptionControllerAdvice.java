@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionControllerAdvice {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(final NotFoundException e) {
-        System.out.println("e.getMessage() = " + e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 

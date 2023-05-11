@@ -19,6 +19,7 @@ public class CartDAOImpl implements CartDAO {
     public static final String CART_NOT_FOUND_ERROR = "해당 카트를 찾을 수 없습니다.";
     public static final String TABLE_NAME = "cart_items";
     public static final String NO_USER_OR_PRODUCT_ERROR = "존재하지 않는 유저 혹은 상품입니다.";
+    public static final String CART_ALREADY_EXISTS_ERROR = "이미 장바구니에 담긴 상품입니다.";
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -38,6 +39,7 @@ public class CartDAOImpl implements CartDAO {
 
     @Override
     public Cart create(final CartRequestDTO cartRequestDTO) {
+        this.validateCartExists(cartRequestDTO);
         final MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("user_id", cartRequestDTO.getUserId())
                 .addValue("product_id", cartRequestDTO.getProductId());
@@ -46,6 +48,16 @@ public class CartDAOImpl implements CartDAO {
             return Cart.of(id, cartRequestDTO.getUserId(), cartRequestDTO.getProductId());
         } catch (final Exception e) {
             throw new InvalidInputException(NO_USER_OR_PRODUCT_ERROR);
+        }
+    }
+
+    private void validateCartExists(final CartRequestDTO cartRequestDTO) {
+        final String sql = "select count(*) from cart_items where user_id = ? and product_id = ?";
+        final long userId = cartRequestDTO.getUserId();
+        final long productId = cartRequestDTO.getProductId();
+        final int count = this.jdbcTemplate.queryForObject(sql, Integer.class, userId, productId);
+        if (count > 0) {
+            throw new InvalidInputException(CART_ALREADY_EXISTS_ERROR);
         }
     }
 

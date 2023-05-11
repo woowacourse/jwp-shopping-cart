@@ -161,4 +161,54 @@ public class CartIntegrationTest {
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
+    @Test
+    @DisplayName("카트에 동일한 상품을 두 번 넣고 삭제하는 테스트")
+    void insertAndDelete() {
+        RestAssured.given()
+                .log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when()
+                .post("/cart/items/1")
+                .then()
+                .log().all();
+
+        RestAssured.given()
+                .log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when()
+                .post("/cart/items/1")
+                .then()
+                .log().all();
+
+        final int initialSize = RestAssured.given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when()
+                .get("/cart/items")
+                .then()
+                .extract()
+                .jsonPath()
+                .getList(".", ProductResponseDTO.class)
+                .size();
+
+        RestAssured.given()
+                .log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when()
+                .delete("/cart/items/1")
+                .then()
+                .log().all();
+
+        final int finalSize = RestAssured.given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when()
+                .get("/cart/items")
+                .then()
+                .extract()
+                .jsonPath()
+                .getList(".", ProductResponseDTO.class)
+                .size();
+
+        Assertions.assertEquals(initialSize - 1, finalSize);
+    }
+
 }
