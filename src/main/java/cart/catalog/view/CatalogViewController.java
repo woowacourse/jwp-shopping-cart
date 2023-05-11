@@ -6,11 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class CatalogController {
+public class CatalogViewController {
 
     private final CatalogService catalogService;
 
-    public CatalogController(final CatalogService catalogService) {
+    public CatalogViewController(final CatalogService catalogService) {
         this.catalogService = catalogService;
     }
 

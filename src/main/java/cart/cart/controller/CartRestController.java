@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class CartController {
+public class CartRestController {
     
     private final CartService cartService;
     private final AuthService authService;
     private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
     
-    public CartController(final CartService cartService, final AuthService authService) {
+    public CartRestController(final CartService cartService, final AuthService authService) {
         this.cartService = cartService;
         this.authService = authService;
     }
