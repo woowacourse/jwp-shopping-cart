@@ -57,8 +57,6 @@ public class ProductDao {
     }
 
     public void deleteProduct(int productId) {
-        System.out.println(Thread.currentThread());
-
         String sql = "delete from product where id = ?";
         jdbcTemplate.update(sql, productId);
     }
@@ -67,4 +65,5 @@ public class ProductDao {
         String sql = "delete from product";
         jdbcTemplate.update(sql);
     }
+
 }
