@@ -96,23 +96,8 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteProductFromCart(final Long memberId, final Long productId) {
-        final List<ProductEntity> productEntities = cartDao.findProductsByMemberId(memberId);
-
-        final Cart cart = Cart.from(productEntities);
-        final Product deletingProduct = new Product(productDao.findById(productId).get());
-        cart.deleteProduct(deletingProduct);
-
-        cartDao.deleteProduct(new CartEntity.Builder()
-                .memberId(memberId)
-                .productId(productId)
-                .build()
-        );
-    }
-
-    public Long findCartIdByProduct(AuthInfo authInfo, ProductEntity productEntity) {
-        Long memberId = memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
-        return cartDao.findCartId(memberId, productEntity.getId());
+    public void deleteProductFromCart(final Long cartId) {
+        cartDao.deleteProductFromCart(cartId);
     }
 
     public List<CartEntity> findCarts(AuthInfo authInfo) {

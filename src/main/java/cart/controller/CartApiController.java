@@ -45,8 +45,7 @@ public class CartApiController {
 
     @DeleteMapping("/carts/{id}")
     public ResponseEntity<Void> deleteProductFromCart(@PathVariable final Long id, @AuthenticationPrincipal final AuthInfo authInfo) {
-        final Long memberId = memberService.findIdByAuthInfo(authInfo);
-        cartService.deleteProductFromCart(memberId, id);
+        cartService.deleteProductFromCart(id);
         return ResponseEntity.ok().build();
     }
 }

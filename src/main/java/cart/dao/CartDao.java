@@ -14,8 +14,6 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
 
-import static cart.dao.ObjectMapper.getProductRowMapper;
-
 @Repository
 public class CartDao {
 
@@ -24,11 +22,11 @@ public class CartDao {
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<CartEntity> cartEntityRowMapper = (resultSet, rowNum) ->
-        new CartEntity.Builder()
-                .id(resultSet.getLong("id"))
-                .productId(resultSet.getLong("product_id"))
-                .productId(resultSet.getLong("member_id"))
-                .build();
+            new CartEntity.Builder()
+                    .id(resultSet.getLong("id"))
+                    .productId(resultSet.getLong("product_id"))
+                    .productId(resultSet.getLong("member_id"))
+                    .build();
 
 
     public static RowMapper<ProductEntity> getProductRowMapper() {
@@ -100,5 +98,10 @@ public class CartDao {
         } catch (EmptyResultDataAccessException exception) {
             throw new IllegalArgumentException("디버깅: 카트에 저장되지 않은 상품을 가져오려고 합니다.");
         }
+    }
+
+    public void deleteProductFromCart(final Long cartId) {
+        final String sql = "DELETE FROM CART WHERE id = ?";
+        jdbcTemplate.update(sql, cartId);
     }
 }
