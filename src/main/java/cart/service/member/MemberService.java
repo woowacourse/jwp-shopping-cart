@@ -1,7 +1,7 @@
 package cart.service.member;
 
 import cart.dao.member.MemberDao;
-import cart.dto.member.MemberResponse;
+import cart.dto.member.MemberInfoResponse;
 import cart.entity.member.Member;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,10 +16,10 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
-    public List<MemberResponse> findAll() {
+    public List<MemberInfoResponse> findAll() {
         List<Member> members = memberDao.findAll();
         return members.stream()
-            .map(MemberResponse::new)
+            .map(MemberInfoResponse::new)
             .collect(Collectors.toUnmodifiableList());
     }
 }

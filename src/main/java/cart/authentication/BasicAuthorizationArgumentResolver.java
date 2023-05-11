@@ -1,7 +1,5 @@
 package cart.authentication;
 
-import cart.dto.member.MemberRequest;
-import cart.exception.notfound.MemberNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

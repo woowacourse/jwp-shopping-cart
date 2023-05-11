@@ -3,8 +3,8 @@ package cart.controller;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.authentication.MemberInfo;
 import cart.dto.cartitem.CartItemRequest;
-import cart.dto.member.MemberRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -41,7 +41,7 @@ class CartAcceptanceTest {
     @DisplayName("사용자가 상품을 장바구니에 담는 것을 성공한다.")
     void member_put_product_success() {
         // given
-        MemberRequest member = new MemberRequest("ako@wooteco.com", "ako");
+        MemberInfo member = new MemberInfo("ako@wooteco.com", "ako");
         CartItemRequest cartItemRequest = new CartItemRequest(1L);
         // when
         ExtractableResponse<Response> result = given()
@@ -60,7 +60,7 @@ class CartAcceptanceTest {
     @ParameterizedTest(name = "{displayName}")
     @MethodSource("createWrongMemberORProduct")
     @DisplayName("사용자가 상품을 담는 것을 실패한다.")
-    void member_put_product_fail(MemberRequest memberRequest, CartItemRequest cartItemRequest) {
+    void member_put_product_fail(MemberInfo memberRequest, CartItemRequest cartItemRequest) {
         // when
         ExtractableResponse<Response> result = given()
             .auth().preemptive().basic(memberRequest.getEmail(), memberRequest.getPassword())
@@ -77,9 +77,9 @@ class CartAcceptanceTest {
 
     private static Stream<Arguments> createWrongMemberORProduct() {
         return Stream.of(
-            Arguments.arguments(new MemberRequest("fail@wooteco.com", "fail"), new CartItemRequest(1L)),
-            Arguments.arguments(new MemberRequest("ako@wooteco.com", "ako"), new CartItemRequest(100L)),
-            Arguments.arguments(new MemberRequest("fail@wooteco.com", "fail"), new CartItemRequest(100L))
+            Arguments.arguments(new MemberInfo("fail@wooteco.com", "fail"), new CartItemRequest(1L)),
+            Arguments.arguments(new MemberInfo("ako@wooteco.com", "ako"), new CartItemRequest(100L)),
+            Arguments.arguments(new MemberInfo("fail@wooteco.com", "fail"), new CartItemRequest(100L))
         );
     }
 
@@ -88,7 +88,7 @@ class CartAcceptanceTest {
     @DisplayName("사용자가 자신의 장바구니 상품을 조회한다.")
     void member_find_cart_item_success() {
         // given
-        MemberRequest member = new MemberRequest("ako@wooteco.com", "ako");
+        MemberInfo member = new MemberInfo("ako@wooteco.com", "ako");
         String responseBody = "[{\"cartItemId\":1,\"name\":\"연필\",\"imageUrl\":\"이미지\",\"price\":1000,\"itemCount\":2},"
             + "{\"cartItemId\":2,\"name\":\"지우개\",\"imageUrl\":\"이미지\",\"price\":2000,\"itemCount\":1}]";
 
@@ -110,7 +110,7 @@ class CartAcceptanceTest {
     @DisplayName("잘못된 사용자가 자신의 장바구니 상품을 조회한다.")
     void member_find_cart_item_fail() {
         // given
-        MemberRequest member = new MemberRequest("fail@wooteco.com", "fail");
+        MemberInfo member = new MemberInfo("fail@wooteco.com", "fail");
 
         // when
         ExtractableResponse<Response> result = given()
@@ -128,7 +128,7 @@ class CartAcceptanceTest {
     @DisplayName("사용자가 장바구니 상품을 삭제한다.")
     void member_delete_cart_item_success() {
         // given
-        final MemberRequest member = new MemberRequest("ako@wooteco.com", "ako");
+        final MemberInfo member = new MemberInfo("ako@wooteco.com", "ako");
         final CartItemRequest cartItemRequest = new CartItemRequest(1L);
 
         // when
@@ -147,7 +147,7 @@ class CartAcceptanceTest {
     @ParameterizedTest(name = "{displayName}")
     @MethodSource("deleteWrongMemberORProduct")
     @DisplayName("사용자가 장바구니 상품을 삭제하는 것을 실패한다.")
-    void member_delete_cart_item_fail(final MemberRequest memberRequest, final CartItemRequest cartItemRequest) {
+    void member_delete_cart_item_fail(final MemberInfo memberRequest, final CartItemRequest cartItemRequest) {
         // when
         ExtractableResponse<Response> result = given()
             .auth().preemptive().basic(memberRequest.getEmail(), memberRequest.getPassword())
@@ -163,9 +163,9 @@ class CartAcceptanceTest {
 
     private static Stream<Arguments> deleteWrongMemberORProduct() {
         return Stream.of(
-            Arguments.arguments(new MemberRequest("fail@wooteco.com", "fail"), new CartItemRequest(1L)),
-            Arguments.arguments(new MemberRequest("ako@wooteco.com", "ako"), new CartItemRequest(100L)),
-            Arguments.arguments(new MemberRequest("fail@wooteco.com", "fail"), new CartItemRequest(100L))
+            Arguments.arguments(new MemberInfo("fail@wooteco.com", "fail"), new CartItemRequest(1L)),
+            Arguments.arguments(new MemberInfo("ako@wooteco.com", "ako"), new CartItemRequest(100L)),
+            Arguments.arguments(new MemberInfo("fail@wooteco.com", "fail"), new CartItemRequest(100L))
         );
     }
 }

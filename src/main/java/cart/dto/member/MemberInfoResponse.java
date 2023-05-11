@@ -2,17 +2,17 @@ package cart.dto.member;
 
 import cart.entity.member.Member;
 
-public class MemberResponse {
+public class MemberInfoResponse {
 
     private final String email;
     private final String password;
 
-    public MemberResponse(final String email, final String password) {
+    public MemberInfoResponse(final String email, final String password) {
         this.email = email;
         this.password = password;
     }
 
-    public MemberResponse(final Member member) {
+    public MemberInfoResponse(final Member member) {
         this(
             member.getEmail(),
             member.getPassword()

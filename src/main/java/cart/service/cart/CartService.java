@@ -1,12 +1,12 @@
 package cart.service.cart;
 
+import cart.authentication.MemberInfo;
 import cart.dao.cart.CartDao;
 import cart.dao.member.MemberDao;
 import cart.dao.product.ProductDao;
 import cart.dto.cartitem.CartItem;
 import cart.dto.cartitem.CartItemRequest;
 import cart.dto.cartitem.CartItemResponse;
-import cart.dto.member.MemberRequest;
 import cart.entity.cart.Cart;
 import cart.entity.cart.Count;
 import cart.entity.member.Member;
@@ -33,8 +33,8 @@ public class CartService {
     }
 
     @Transactional
-    public Long saveCart(final MemberRequest memberRequest, final CartItemRequest cartItemRequest) {
-        Member member = memberDao.findByEmailAndPassword(memberRequest.getEmail(), memberRequest.getPassword())
+    public Long saveCart(final MemberInfo memberInfo, final CartItemRequest cartItemRequest) {
+        Member member = memberDao.findByEmailAndPassword(memberInfo.getEmail(), memberInfo.getPassword())
             .orElseThrow(MemberNotFoundException::new);
         Product product = productDao.findById(cartItemRequest.getProductId())
             .orElseThrow(ProductNotFoundException::new);
@@ -49,8 +49,8 @@ public class CartService {
     }
 
     @Transactional
-    public List<CartItemResponse> findCartByMember(final MemberRequest memberRequest) {
-        Member member = memberDao.findByEmailAndPassword(memberRequest.getEmail(), memberRequest.getPassword())
+    public List<CartItemResponse> findCartByMember(final MemberInfo memberInfo) {
+        Member member = memberDao.findByEmailAndPassword(memberInfo.getEmail(), memberInfo.getPassword())
             .orElseThrow(MemberNotFoundException::new);
 
         List<CartItem> cartItems = cartDao.findByMemberId(member);
@@ -60,8 +60,9 @@ public class CartService {
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public void deleteCartItem(final MemberRequest memberRequest, final Long cartItemId) {
-        Member member = memberDao.findByEmailAndPassword(memberRequest.getEmail(), memberRequest.getPassword())
+    @Transactional
+    public void deleteCartItem(final MemberInfo memberInfo, final Long cartItemId) {
+        Member member = memberDao.findByEmailAndPassword(memberInfo.getEmail(), memberInfo.getPassword())
             .orElseThrow(MemberNotFoundException::new);
         Cart cart = cartDao.findByMemberIdAndProductId(member, cartItemId)
             .orElseThrow(ProductNotFoundException::new);
