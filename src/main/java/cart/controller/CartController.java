@@ -1,11 +1,9 @@
 package cart.controller;
 
-import cart.auth.AuthInfo;
 import cart.auth.AuthenticationPrincipal;
 import cart.entity.CartItemEntity;
 import cart.entity.ProductEntity;
 import cart.service.CartItemService;
-import cart.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,17 +15,13 @@ import java.util.List;
 public class CartController {
 
     private final CartItemService cartItemService;
-    private final MemberService memberService;
 
-    public CartController(CartItemService cartItemService, MemberService memberService) {
+    public CartController(CartItemService cartItemService) {
         this.cartItemService = cartItemService;
-        this.memberService = memberService;
     }
 
     @GetMapping
-    @ResponseBody
-    public ResponseEntity<List<ProductEntity>> getCartItem(Model model, @AuthenticationPrincipal AuthInfo authInfo) {
-        int memberId = memberService.findMemberId(authInfo.getEmail(), authInfo.getPassword());
+    public ResponseEntity<List<ProductEntity>> getCartItem(Model model, @AuthenticationPrincipal int memberId) {
         List<ProductEntity> cartItems = cartItemService.getCartItems(memberId);
 
         model.addAttribute("cartItems", cartItems);
@@ -35,8 +29,7 @@ public class CartController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> insertCartItem(@RequestParam int productId, @AuthenticationPrincipal AuthInfo authInfo) {
-        int memberId = memberService.findMemberId(authInfo.getEmail(), authInfo.getPassword());
+    public ResponseEntity<Void> insertCartItem(@RequestParam int productId, @AuthenticationPrincipal int memberId) {
         cartItemService.addCartItem(new CartItemEntity(memberId, productId));
 
         return ResponseEntity.ok().build();
