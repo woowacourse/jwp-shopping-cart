@@ -3,14 +3,10 @@ package cart.dao.cart;
 import cart.dao.product.ProductDao;
 import cart.dao.product.ProductEntity;
 import cart.dao.user.UserDao;
-import cart.dao.user.UserEntity;
 import cart.domain.cart.Cart;
-import cart.service.cart.CartRepository;
 import cart.domain.product.*;
-import cart.domain.user.Email;
-import cart.domain.user.Password;
-import cart.domain.user.User;
 import cart.exception.GlobalException;
+import cart.service.cart.CartRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,11 +25,10 @@ public class CartRepositoryImpl implements CartRepository {
     }
 
     @Override
-    public Long save(Cart cart) {
+    public Long save(Cart cart, Long userId) {
         Product product = cart.getProduct();
-        User user = cart.getUser();
 
-        CartEntity cartEntity = new CartEntity(null, product.getId(), user.getId());
+        CartEntity cartEntity = new CartEntity(null, product.getId(), userId);
 
         return cartDao.insert(cartEntity);
     }
@@ -41,23 +36,23 @@ public class CartRepositoryImpl implements CartRepository {
     @Override
     public List<Cart> findAllByUserId(Long userId) {
         List<CartEntity> cartEntities = cartDao.findByUserId(userId);
-        UserEntity userEntity = userDao.findById(userId)
+        userDao.findById(userId)
                 .orElseThrow(() -> new GlobalException("존재하지 않는 회원입니다."));
 
-        return toCarts(toUser(userEntity), cartEntities);
+        return toCarts(cartEntities);
     }
 
-    private List<Cart> toCarts(User user, List<CartEntity> cartEntities) {
+    private List<Cart> toCarts(List<CartEntity> cartEntities) {
         return cartEntities.stream()
-                .map(entity -> toCart(user, entity))
+                .map(this::toCart)
                 .collect(Collectors.toList());
     }
 
-    private Cart toCart(User user, CartEntity cartEntity) {
+    private Cart toCart(CartEntity cartEntity) {
         ProductEntity productEntity = productDao.findById(cartEntity.getProductId())
                 .orElseThrow(() -> new GlobalException("존재하지 않는 상품입니다."));
 
-        return new Cart(user, toProduct(productEntity), cartEntity.getCartId());
+        return new Cart(toProduct(productEntity), cartEntity.getCartId());
     }
 
     private Product toProduct(ProductEntity productEntity) {
@@ -67,14 +62,6 @@ public class CartRepositoryImpl implements CartRepository {
                 ProductCategory.valueOf(productEntity.getCategory()),
                 ImageUrl.from(productEntity.getImageUrl()),
                 productEntity.getId()
-        );
-    }
-
-    private User toUser(UserEntity userEntity) {
-        return new User(
-                Email.from(userEntity.getEmail()),
-                Password.from(userEntity.getPassword()),
-                userEntity.getId()
         );
     }
 

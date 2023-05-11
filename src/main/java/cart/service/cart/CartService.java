@@ -1,12 +1,10 @@
 package cart.service.cart;
 
 import cart.domain.cart.Cart;
+import cart.domain.product.Product;
 import cart.service.cart.dto.CartAdditionProductDto;
 import cart.service.cart.dto.CartDto;
-import cart.domain.product.Product;
 import cart.service.product.ProductRepository;
-import cart.domain.user.User;
-import cart.service.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +16,10 @@ import java.util.stream.Collectors;
 public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
 
-    public CartService(CartRepository cartRepository,
-                       ProductRepository productRepository, UserRepository userRepository) {
+    public CartService(CartRepository cartRepository, ProductRepository productRepository) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
-        this.userRepository = userRepository;
     }
 
     public List<CartDto> getCartOfUser(Long userId) {
@@ -40,10 +35,9 @@ public class CartService {
         Long productId = cartAdditionProductDto.getProductId();
         Long userId = cartAdditionProductDto.getUserId();
 
-        User user = userRepository.findById(userId);
         Product product = productRepository.findById(productId);
 
-        return cartRepository.save(new Cart(user, product));
+        return cartRepository.save(new Cart(product), userId);
     }
 
     @Transactional

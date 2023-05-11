@@ -6,12 +6,14 @@ import cart.dao.user.UserDao;
 import cart.dao.user.UserRepositoryImpl;
 import cart.domain.TestFixture;
 import cart.domain.cart.Cart;
-import cart.service.cart.CartRepository;
 import cart.domain.product.Product;
+import cart.service.cart.CartRepository;
 import cart.service.product.ProductRepository;
-import cart.domain.user.User;
 import cart.service.user.UserRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -55,27 +57,25 @@ class CartRepositoryImplTest {
     @DisplayName("Cart를 생성할 수 있다.")
     @Test
     void createCart() {
-        User zuny = userRepository.findById(userId);
         Product chicken = productRepository.findById(chickenId);
-        Cart cart = new Cart(zuny, chicken);
+        Cart cart = new Cart(chicken);
 
-        cartRepository.save(cart);
+        cartRepository.save(cart, userId);
 
         List<Cart> findCart = cartRepository.findAllByUserId(userId);
         assertThat(findCart).hasSize(1);
-        User user = findCart.get(0).getUser();
-        assertThat(user.getEmail()).isEqualTo(TestFixture.ZUNY.getEmail());
-        assertThat(user.getPassword()).isEqualTo(TestFixture.ZUNY.getPassword());
+        Product product = findCart.get(0).getProduct();
+        assertThat(product.getName()).isEqualTo(TestFixture.CHICKEN.getName());
+        assertThat(product.getId()).isEqualTo(chickenId);
     }
 
     @DisplayName("Cart를 삭제할 수 있다.")
     @Test
     void deleteCart() {
-        User zuny = userRepository.findById(userId);
         Product chicken = productRepository.findById(chickenId);
-        Cart cart = new Cart(zuny, chicken);
+        Cart cart = new Cart(chicken);
 
-        Long savedCartId = cartRepository.save(cart);
+        Long savedCartId = cartRepository.save(cart, userId);
         assertThat(cartRepository.findAllByUserId(userId)).hasSize(1);
         cartRepository.deleteById(savedCartId);
 

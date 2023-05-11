@@ -9,13 +9,13 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class EmailTest {
     @ParameterizedTest(name = "이메일 생성 테스트")
-    @ValueSource(strings = {"aaa@naver.com", "a@naver.com","zuny1234@woowahan.com"})
+    @ValueSource(strings = {"aaa@naver.com", "a@naver.com", "zuny1234@woowahan.com"})
     void createEmail(String input) {
         assertDoesNotThrow(() -> Email.from(input));
     }
 
     @ParameterizedTest(name = "이메일의 길이는 1글자 미만, 30글자를 초과할 수 없다.")
-    @ValueSource(strings = {"","0123456789@01234567890123456789"})
+    @ValueSource(strings = {"", "0123456789@01234567890123456789"})
     void createProductNameFailureBlank(String input) {
         assertThatThrownBy(() -> Email.from(input))
                 .isInstanceOf(GlobalException.class);
