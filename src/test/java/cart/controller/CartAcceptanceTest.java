@@ -100,7 +100,6 @@ class CartAcceptanceTest {
             .then()
             .extract();
 
-        System.out.println(result.response().asString());
         // then
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(result.response().as(List.class).size()).isEqualTo(2);

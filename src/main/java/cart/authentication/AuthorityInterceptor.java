@@ -13,9 +13,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class AuthorityInterceptor implements HandlerInterceptor {
 
-    private static final String BASIC_TYPE = "Basic";
-    private static final String DELIMITER = ":";
-
     private final MemberDao memberDao;
     private final AuthorizationExtractor authorizationExtractor;
 

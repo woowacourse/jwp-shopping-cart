@@ -13,8 +13,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class BasicAuthorizationArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final String BASIC_TYPE = "Basic";
-    private static final String DELIMITER = ":";
     private final AuthorizationExtractor authorizationExtractor;
 
     public BasicAuthorizationArgumentResolver(final AuthorizationExtractor authorizationExtractor) {
