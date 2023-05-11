@@ -147,7 +147,7 @@ public class CartIntegrationTest {
                 .when()
                 .get("/cart/items")
                 .then()
-                .statusCode(HttpStatus.NOT_FOUND.value())
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .body(is(JdbcUserDAO.USER_DOES_NOT_EXISTS_ERROR));
     }
 

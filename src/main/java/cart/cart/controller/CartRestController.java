@@ -2,7 +2,7 @@ package cart.cart.controller;
 
 import cart.auth.dto.UserInfo;
 import cart.auth.dto.UserResponseDTO;
-import cart.auth.infrastructure.AuthenticationPrincipal;
+import cart.auth.infrastructure.Auth;
 import cart.auth.service.AuthService;
 import cart.cart.dto.CartRequestDTO;
 import cart.cart.service.CartService;
@@ -24,14 +24,14 @@ public class CartRestController {
     }
 
     @GetMapping("/cart/items")
-    public ResponseEntity<List<ProductResponseDTO>> getCart(@AuthenticationPrincipal final UserInfo userInfo) {
+    public ResponseEntity<List<ProductResponseDTO>> getCart(@Auth final UserInfo userInfo) {
         final UserResponseDTO userResponseDTO = this.authService.findUser(userInfo);
         final List<ProductResponseDTO> userCart = this.cartService.findUserCart(userResponseDTO.getId());
         return ResponseEntity.ok().body(userCart);
     }
 
     @PostMapping("/cart/items/{productId}")
-    public ResponseEntity<Void> add(@AuthenticationPrincipal final UserInfo userInfo,
+    public ResponseEntity<Void> add(@Auth final UserInfo userInfo,
                                     @PathVariable final Long productId) {
         final UserResponseDTO userResponseDTO = this.authService.findUser(userInfo);
         final CartRequestDTO cartRequestDTO = new CartRequestDTO(userResponseDTO.getId(), productId);
@@ -40,7 +40,7 @@ public class CartRestController {
     }
 
     @DeleteMapping("/cart/items/{productId}")
-    public ResponseEntity<Void> remove(@AuthenticationPrincipal final UserInfo userInfo,
+    public ResponseEntity<Void> remove(@Auth final UserInfo userInfo,
                                        @PathVariable final Long productId) {
         final UserResponseDTO userResponseDTO = this.authService.findUser(userInfo);
         final CartRequestDTO cartRequestDTO = new CartRequestDTO(userResponseDTO.getId(), productId);
