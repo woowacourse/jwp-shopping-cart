@@ -1,10 +1,10 @@
 package cart.web.controller.cart;
 
 import cart.domain.TestFixture;
-import cart.domain.cart.CartService;
-import cart.domain.cart.dto.CartDto;
-import cart.domain.user.UserService;
-import cart.domain.user.dto.UserDto;
+import cart.service.cart.CartService;
+import cart.service.cart.dto.CartDto;
+import cart.service.user.UserService;
+import cart.service.user.dto.UserDto;
 import cart.web.auth.AuthService;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;

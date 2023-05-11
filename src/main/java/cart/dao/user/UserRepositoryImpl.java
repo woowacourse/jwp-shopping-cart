@@ -3,7 +3,7 @@ package cart.dao.user;
 import cart.domain.user.Email;
 import cart.domain.user.Password;
 import cart.domain.user.User;
-import cart.domain.user.UserRepository;
+import cart.service.user.UserRepository;
 import cart.exception.GlobalException;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package cart.web.controller.admin;
 
-import cart.domain.product.ProductService;
-import cart.domain.product.dto.ProductDto;
+import cart.service.product.ProductService;
+import cart.service.product.dto.ProductDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

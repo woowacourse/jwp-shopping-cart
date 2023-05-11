@@ -1,15 +1,15 @@
-package cart.domain.cart.dto;
+package cart.service.product.dto;
 
-import cart.domain.cart.Cart;
+import cart.domain.product.Product;
 
-public class CartDto {
+public class ProductDto {
     private final Long id;
     private final String name;
     private final int price;
     private final String category;
     private final String imageUrl;
 
-    public CartDto(Long id, String name, int price, String category, String imageUrl) {
+    public ProductDto(Long id, String name, int price, String category, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -17,13 +17,13 @@ public class CartDto {
         this.imageUrl = imageUrl;
     }
 
-    public CartDto(Cart cart) {
+    public ProductDto(Product product) {
         this(
-                cart.getId(),
-                cart.getProduct().getName(),
-                cart.getProduct().getPrice().intValue(),
-                cart.getProduct().getCategory().name(),
-                cart.getProduct().getImageUrl()
+                product.getId(),
+                product.getName(),
+                product.getPrice().intValue(),
+                product.getCategory().name(),
+                product.getImageUrl()
         );
     }
 

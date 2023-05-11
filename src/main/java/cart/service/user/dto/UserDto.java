@@ -1,4 +1,4 @@
-package cart.domain.user.dto;
+package cart.service.user.dto;
 
 import cart.domain.user.User;
 

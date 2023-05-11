@@ -1,11 +1,14 @@
-package cart.domain.cart;
+package cart.service.cart;
 
 import cart.domain.TestFixture;
-import cart.domain.cart.dto.CartAdditionProductDto;
-import cart.domain.cart.dto.CartDto;
-import cart.domain.product.ProductRepository;
-import cart.domain.user.UserRepository;
-import org.junit.jupiter.api.*;
+import cart.service.cart.dto.CartAdditionProductDto;
+import cart.service.cart.dto.CartDto;
+import cart.service.product.ProductRepository;
+import cart.service.user.UserRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;

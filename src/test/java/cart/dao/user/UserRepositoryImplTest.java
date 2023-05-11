@@ -1,7 +1,7 @@
 package cart.dao.user;
 
 import cart.domain.TestFixture;
-import cart.domain.user.UserRepository;
+import cart.service.user.UserRepository;
 import cart.domain.user.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

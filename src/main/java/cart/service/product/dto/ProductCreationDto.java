@@ -1,14 +1,12 @@
-package cart.domain.product.dto;
+package cart.service.product.dto;
 
-public class ProductModificationDto {
-    private final Long id;
+public class ProductCreationDto {
     private final String name;
     private final Integer price;
     private final String category;
     private final String imageUrl;
 
-    public ProductModificationDto(Long id, String name, Integer price, String category, String imageUrl) {
-        this.id = id;
+    public ProductCreationDto(String name, Integer price, String category, String imageUrl) {
         this.name = name;
         this.price = price;
         this.category = category;
@@ -29,9 +27,5 @@ public class ProductModificationDto {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public Long getId() {
-        return id;
     }
 }

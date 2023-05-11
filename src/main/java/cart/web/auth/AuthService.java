@@ -2,7 +2,7 @@ package cart.web.auth;
 
 import cart.domain.user.Email;
 import cart.domain.user.Password;
-import cart.domain.user.UserRepository;
+import cart.service.user.UserRepository;
 import cart.exception.AuthorizationException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

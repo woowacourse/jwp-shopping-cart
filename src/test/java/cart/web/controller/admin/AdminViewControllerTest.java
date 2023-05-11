@@ -2,8 +2,8 @@ package cart.web.controller.admin;
 
 import cart.config.CartConfiguration;
 import cart.domain.TestFixture;
-import cart.domain.product.ProductService;
-import cart.domain.product.dto.ProductDto;
+import cart.service.product.ProductService;
+import cart.service.product.dto.ProductDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

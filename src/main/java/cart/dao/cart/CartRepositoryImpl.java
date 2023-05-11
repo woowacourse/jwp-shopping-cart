@@ -5,7 +5,7 @@ import cart.dao.product.ProductEntity;
 import cart.dao.user.UserDao;
 import cart.dao.user.UserEntity;
 import cart.domain.cart.Cart;
-import cart.domain.cart.CartRepository;
+import cart.service.cart.CartRepository;
 import cart.domain.product.*;
 import cart.domain.user.Email;
 import cart.domain.user.Password;

@@ -1,4 +1,4 @@
-package cart.domain.cart.dto;
+package cart.service.cart.dto;
 
 public class CartAdditionProductDto {
     private final Long userId;

@@ -1,11 +1,11 @@
-package cart.domain.admin;
+package cart.service.admin;
 
+import cart.domain.TestFixture;
 import cart.domain.product.Product;
 import cart.domain.product.ProductCategory;
-import cart.domain.TestFixture;
-import cart.domain.product.ProductRepository;
-import cart.domain.product.dto.ProductCreationDto;
-import cart.domain.product.dto.ProductModificationDto;
+import cart.service.product.ProductRepository;
+import cart.service.product.dto.ProductCreationDto;
+import cart.service.product.dto.ProductModificationDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,6 +2,7 @@ package cart.dao.product;
 
 import cart.domain.product.*;
 import cart.exception.GlobalException;
+import cart.service.product.ProductRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

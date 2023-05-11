@@ -1,6 +1,6 @@
 package cart.web.controller.admin;
 
-import cart.domain.admin.AdminService;
+import cart.service.admin.AdminService;
 import cart.web.controller.admin.dto.request.ProductModificationRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

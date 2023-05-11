@@ -1,4 +1,4 @@
-package cart.domain.user.dto;
+package cart.service.user.dto;
 
 public class UserLoginDto {
     private final String email;

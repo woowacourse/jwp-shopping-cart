@@ -1,7 +1,7 @@
 package cart.web.auth;
 
 import cart.domain.TestFixture;
-import cart.domain.user.UserRepository;
+import cart.service.user.UserRepository;
 import cart.exception.AuthorizationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

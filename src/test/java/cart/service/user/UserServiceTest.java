@@ -1,7 +1,8 @@
-package cart.domain.user;
+package cart.service.user;
 
 import cart.domain.TestFixture;
-import cart.domain.user.dto.UserDto;
+import cart.domain.user.User;
+import cart.service.user.dto.UserDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

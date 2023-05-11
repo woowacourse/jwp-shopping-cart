@@ -1,4 +1,8 @@
-package cart.domain.user;
+package cart.service.user;
+
+import cart.domain.user.Email;
+import cart.domain.user.Password;
+import cart.domain.user.User;
 
 import java.util.List;
 
