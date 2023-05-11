@@ -3,6 +3,7 @@ package cart.dao;
 import cart.dao.entity.ProductEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -12,12 +13,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static cart.dao.ObjectMapper.getProductRowMapper;
-
 @Repository
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<ProductEntity> rowMapper = (resultSet, rowNum) ->
+            new ProductEntity.Builder()
+                    .id(resultSet.getLong("id"))
+                    .name(resultSet.getString("name"))
+                    .price(resultSet.getInt("price"))
+                    .image(resultSet.getString("image"))
+                    .build();
 
     public ProductDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -25,7 +31,7 @@ public class ProductDao {
 
     public List<ProductEntity> findAll() {
         final String sql = "SELECT * FROM PRODUCT";
-        return jdbcTemplate.query(sql, getProductRowMapper());
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public Long insert(final ProductEntity newProductEntity) {
@@ -63,7 +69,7 @@ public class ProductDao {
     public Optional<ProductEntity> findById(final Long id) {
         final String sql = "SELECT * from product where id = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, getProductRowMapper(), id));
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }

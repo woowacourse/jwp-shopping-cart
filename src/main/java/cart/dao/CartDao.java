@@ -28,7 +28,6 @@ public class CartDao {
                     .productId(resultSet.getLong("member_id"))
                     .build();
 
-
     public static RowMapper<ProductEntity> getProductRowMapper() {
         return (resultSet, rowNum) -> new ProductEntity.Builder()
                 .id(resultSet.getLong("id"))
@@ -88,15 +87,6 @@ public class CartDao {
             return HAS_SAME_PRODUCTS;
         } catch (EmptyResultDataAccessException exception) {
             return DOES_NOT_HAVE_SAME_PRODUCTS;
-        }
-    }
-
-    public Long findCartId(final Long memberId, final Long productId) {
-        try {
-            final String query = "SELECT id FROM CART WHERE member_id = ? AND product_id = ?";
-            return jdbcTemplate.queryForObject(query, Long.class, memberId, productId);
-        } catch (EmptyResultDataAccessException exception) {
-            throw new IllegalArgumentException("디버깅: 카트에 저장되지 않은 상품을 가져오려고 합니다.");
         }
     }
 

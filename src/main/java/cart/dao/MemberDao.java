@@ -3,16 +3,21 @@ package cart.dao;
 import cart.dao.entity.MemberEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
-import static cart.dao.ObjectMapper.getMemberRowMapper;
 
 @Repository
 public class MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<MemberEntity> rowMapper = (resultSet, rowNum) ->
+            new MemberEntity.Builder()
+                    .id(resultSet.getInt("id"))
+                    .email(resultSet.getString("email"))
+                    .password(resultSet.getString("password"))
+                    .build();
 
     @Autowired
     public MemberDao(final JdbcTemplate jdbcTemplate) {
@@ -21,7 +26,7 @@ public class MemberDao {
 
     public List<MemberEntity> findAll() {
         final String query = "SELECT * FROM MEMBER";
-        return jdbcTemplate.query(query, getMemberRowMapper());
+        return jdbcTemplate.query(query, rowMapper);
     }
 
     public Long findIdByAuthInfo(final String email, final String password) {

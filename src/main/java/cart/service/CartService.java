@@ -51,7 +51,7 @@ public class CartService {
 
     @Transactional
     public void update(final Long id, final RequestUpdateProductDto requestUpdateProductDto) {
-        ProductEntity oldProductEntity = productDao.findById(id)
+        final ProductEntity oldProductEntity = productDao.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("찾는 상품이 없습니다."));
         final ProductEntity productEntity = new ProductEntity.Builder()
                 .id(id)
@@ -73,11 +73,6 @@ public class CartService {
     public void delete(final Long id) {
         final int affectedRows = productDao.delete(id);
         validateAffectedRowsCount(affectedRows);
-    }
-
-    public List<ProductEntity> findCartProductsByMember(final AuthInfo authInfo) {
-        final Long memberId = memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
-        return cartDao.findProductsByMemberId(memberId);
     }
 
     @Transactional
