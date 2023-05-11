@@ -1,4 +1,4 @@
-package cart.controller;
+package cart.controller.api;
 
 import cart.controller.dto.ProductRequest;
 import cart.service.ProductService;
@@ -61,10 +61,10 @@ class ProductControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    @DisplayName("API요청 시 이름이 공백이 들어온 경우 400")
+    @DisplayName("API 요청 시 이름이 공백이 들어온 경우 400")
     @ParameterizedTest
     @ValueSource(strings = {"", "  ", "     "})
-    void validateRequestName(String inputName) throws Exception {
+    void validateRequestName1(String inputName) throws Exception {
         // given
         ProductRequest productRequest = new ProductRequest(inputName, "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
 
@@ -75,7 +75,21 @@ class ProductControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    @DisplayName("API요청 시 상품 가격이 범위를 벗어난 경우 400")
+    @DisplayName("API 요청 시 이름의 길이가 10자가 넘어가는 경우 400")
+    @ParameterizedTest
+    @ValueSource(strings = {"이이름은10자가넘어가요"})
+    void validateRequestName2(String inputName) throws Exception {
+        // given
+        ProductRequest productRequest = new ProductRequest(inputName, "https://pelicana.co.kr/resources/images/menu/best_menu02_200824.jpg", 10000);
+
+        // when, then
+        mockMvc.perform(post("/products")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(productRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("API 요청 시 상품 가격이 범위를 벗어난 경우 400")
     @ParameterizedTest
     @ValueSource(ints = {-1, 100_000_001})
     void validateRequestPrice(int inputPrice) throws Exception {
@@ -89,10 +103,24 @@ class ProductControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    @DisplayName("API요청 시 이미지URL에 공백이 들어온 경우 400")
+    @DisplayName("API 요청 시 이미지 URL에 공백이 들어온 경우 400")
     @ParameterizedTest
     @ValueSource(strings = {"", "  ", "     "})
-    void validateRequestImageUrl(String inputImageUrl) throws Exception {
+    void validateRequestImageUrl1(String inputImageUrl) throws Exception {
+        // given
+        ProductRequest productRequest = new ProductRequest("치킨", inputImageUrl, 10000);
+
+        // when, then
+        mockMvc.perform(post("/products")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(productRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("API 요청 시 유효하지 않은 이미지 URL이 들어온 경우 400")
+    @ParameterizedTest
+    @ValueSource(strings = {"image.url", "imageUrl", "example.com"})
+    void validateRequestImageUrl2(String inputImageUrl) throws Exception {
         // given
         ProductRequest productRequest = new ProductRequest("치킨", inputImageUrl, 10000);
 

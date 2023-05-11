@@ -4,16 +4,16 @@ import java.time.LocalDateTime;
 
 public class ExceptionResponse {
 
-    private final LocalDateTime timestamp;
+    private final LocalDateTime localDateTime;
     private final String errorMessage;
 
-    public ExceptionResponse(final LocalDateTime timestamp, final String errorMessage) {
-        this.timestamp = timestamp;
+    public ExceptionResponse(final LocalDateTime localDateTime, final String errorMessage) {
+        this.localDateTime = localDateTime;
         this.errorMessage = errorMessage;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
     }
 
     public String getErrorMessage() {

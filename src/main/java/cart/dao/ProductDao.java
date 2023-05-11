@@ -53,12 +53,12 @@ public class ProductDao {
         try {
             Product product = jdbcTemplate.queryForObject(sql, productRowMapper, productId);
             return Optional.of(product);
-        } catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }
 
-    public int updateById(final Long id, final Product product) {
+    public int update(final Long id, final Product product) {
         String sql = "UPDATE product SET name = ?, image_url = ?, price = ? WHERE id = ?";
 
         return jdbcTemplate.update(sql, ps -> {
