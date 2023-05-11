@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import cart.catalog.domain.Price;
+import cart.common.exceptions.InvalidInputException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ class PriceTest {
     @Test
     @DisplayName("가격이 0보다 작으면 예외가 발생한다.")
     void validateNegative() {
-        assertThrows(IllegalArgumentException.class, () -> new Price(-1000));
+        assertThrows(InvalidInputException.class, () -> new Price(-1000));
     }
     
 }

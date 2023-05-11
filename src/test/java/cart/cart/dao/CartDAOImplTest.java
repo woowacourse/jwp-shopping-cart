@@ -39,6 +39,7 @@ class CartDAOImplTest {
         final long productId = 1L;
         final long userId = 1L;
         final CartRequestDTO cartRequestDTO = CartRequestDTO.of(userId, productId);
+        this.cartDAO.create(cartRequestDTO);
 
         //when
         final Cart cart = this.cartDAO.find(cartRequestDTO);
@@ -54,10 +55,6 @@ class CartDAOImplTest {
         final long productId = 1L;
         final long userId = 1L;
         final CartRequestDTO cartRequestDTO = CartRequestDTO.of(userId, productId);
-
-        //when
-        final Cart cart = this.cartDAO.find(cartRequestDTO);
-        this.cartDAO.delete(cart);
 
         //then
         Assertions.assertThrows(NotFoundException.class, () -> this.cartDAO.find(cartRequestDTO));

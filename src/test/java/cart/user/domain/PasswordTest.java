@@ -3,6 +3,7 @@ package cart.user.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import cart.auth.domain.Password;
+import cart.common.exceptions.InvalidInputException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -28,8 +29,8 @@ class PasswordTest {
         final String password = "#?Hell1";
         
         //when
-        final IllegalArgumentException exception =
-                org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class,
+        final InvalidInputException exception =
+                org.junit.jupiter.api.Assertions.assertThrows(InvalidInputException.class,
                         () -> new Password(password));
         
         //then
@@ -43,8 +44,8 @@ class PasswordTest {
         final String password = "#?Hello1234Hello12345";
         
         //when
-        final IllegalArgumentException exception =
-                org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class,
+        final InvalidInputException exception =
+                org.junit.jupiter.api.Assertions.assertThrows(InvalidInputException.class,
                         () -> new Password(password));
         
         //then
@@ -58,8 +59,8 @@ class PasswordTest {
         final String password = "#?HelloHello";
         
         //when
-        final IllegalArgumentException exception =
-                org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class,
+        final InvalidInputException exception =
+                org.junit.jupiter.api.Assertions.assertThrows(InvalidInputException.class,
                         () -> new Password(password));
         
         //then
@@ -73,8 +74,8 @@ class PasswordTest {
         final String password = "#?12341234";
         
         //when
-        final IllegalArgumentException exception =
-                org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class,
+        final InvalidInputException exception =
+                org.junit.jupiter.api.Assertions.assertThrows(InvalidInputException.class,
                         () -> new Password(password));
         
         //then
@@ -88,8 +89,8 @@ class PasswordTest {
         final String password = "Hello1234";
         
         //when
-        final IllegalArgumentException exception =
-                org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class,
+        final InvalidInputException exception =
+                org.junit.jupiter.api.Assertions.assertThrows(InvalidInputException.class,
                         () -> new Password(password));
         
         //then

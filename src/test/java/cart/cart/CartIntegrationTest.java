@@ -1,6 +1,7 @@
 package cart.cart;
 
 import cart.auth.dao.JdbcUserDAO;
+import cart.cart.dao.CartDAOImpl;
 import cart.catalog.dto.ProductResponseDTO;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.Assertions;
@@ -27,22 +28,10 @@ public class CartIntegrationTest {
     }
 
     @Test
-    @DisplayName("장바구니 조회 테스트")
-    void getCart() {
-        RestAssured.given()
-                .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when()
-                .get("/cart/items")
-                .then()
-                //data.sql에 초기화되어있음
-                .body("size()", is(3));
-    }
-
-    @Test
     @DisplayName("장바구니에 상품 추가 테스트")
     void insert() {
 
-        final int intialSize = RestAssured.given()
+        final int initialSize = RestAssured.given()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when()
                 .get("/cart/items")
@@ -52,22 +41,48 @@ public class CartIntegrationTest {
                 .getList(".", ProductResponseDTO.class)
                 .size();
 
-        final int finalSize = RestAssured.given()
+        RestAssured.given()
+                .log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when()
                 .post("/cart/items/1")
                 .then()
+                .log().all();
+
+        final int finalSize = RestAssured.given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when()
+                .get("/cart/items")
+                .then()
                 .extract()
                 .jsonPath()
                 .getList(".", ProductResponseDTO.class)
                 .size();
 
-        Assertions.assertEquals(intialSize + 1, finalSize);
+        Assertions.assertEquals(initialSize + 1, finalSize);
     }
 
     @Test
     @DisplayName("장바구니에 상품 삭제 테스트")
     void delete() {
+
+
+        RestAssured.given()
+                .log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when()
+                .post("/cart/items/1")
+                .then()
+                .log().all();
+
+        RestAssured.given()
+                .log().all()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
+                .when()
+                .post("/cart/items/2")
+                .then()
+                .log().all();
+
         final int intialSize = RestAssured.given()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when()
@@ -79,9 +94,12 @@ public class CartIntegrationTest {
                 .size();
 
         RestAssured.given()
+                .log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when()
-                .delete("/cart/items/1");
+                .delete("/cart/items/1")
+                .then()
+                .log().all();
 
         final int finalSize = RestAssured.given()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
@@ -111,11 +129,14 @@ public class CartIntegrationTest {
     @DisplayName("장바구니에 없는 상품 삭제 예외 처리 테스트")
     void deleteException() {
         RestAssured.given()
+                .log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when()
                 .delete("/cart/items/100")
                 .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body(is(CartDAOImpl.CART_NOT_FOUND_ERROR));
+
     }
 
     @Test

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import cart.catalog.domain.Name;
+import cart.common.exceptions.InvalidInputException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,12 +20,12 @@ class NameTest {
     @Test
     @DisplayName("이름이 10자를 초과하면 예외가 발생한다.")
     void validateLength() {
-        assertThrows(IllegalArgumentException.class, () -> new Name("스파게티스파게티티티티"));
+        assertThrows(InvalidInputException.class, () -> new Name("스파게티스파게티티티티"));
     }
     
     @Test
     @DisplayName("이름이 비어있으면 예외가 발생한다.")
     void validateEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> new Name(""));
+        assertThrows(InvalidInputException.class, () -> new Name(""));
     }
 }

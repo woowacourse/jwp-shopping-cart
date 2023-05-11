@@ -3,6 +3,7 @@ package cart.user.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import cart.auth.domain.Email;
+import cart.common.exceptions.InvalidInputException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -28,8 +29,8 @@ class EmailTest {
         final String email = "helloecho.com";
         
         //when
-        final IllegalArgumentException exception =
-                org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> new Email(email));
+        final InvalidInputException exception =
+                org.junit.jupiter.api.Assertions.assertThrows(InvalidInputException.class, () -> new Email(email));
         
         //then
         assertEquals(Email.INVALID_EMAIL_FORMAT_ERROR, exception.getMessage());

@@ -17,7 +17,6 @@ public class CartDAOImpl implements CartDAO {
 
     public static final String USER_CART_NOT_FOUND_ERROR = "해당 유저의 장바구니가 없습니다.";
     public static final String CART_NOT_FOUND_ERROR = "해당 카트를 찾을 수 없습니다.";
-    public static final String ITEM_NOT_FOUND_IN_CART_ERROR = "장바구니에 해당 상품이 없습니다.";
     public static final String TABLE_NAME = "cart_items";
     public static final String NO_USER_OR_PRODUCT_ERROR = "존재하지 않는 유저 혹은 상품입니다.";
     private final JdbcTemplate jdbcTemplate;
@@ -58,7 +57,7 @@ public class CartDAOImpl implements CartDAO {
         try {
             return this.jdbcTemplate.queryForObject(sql, this.rowMapper, userId, productId);
         } catch (final Exception e) {
-            throw new NotFoundException(e.getMessage());
+            throw new NotFoundException(CART_NOT_FOUND_ERROR);
         }
     }
 
