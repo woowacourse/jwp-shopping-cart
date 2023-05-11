@@ -11,4 +11,8 @@ public enum Role {
         this.role = role;
     }
 
+    public boolean isAdmin() {
+        return this == ADMIN;
+    }
+
 }

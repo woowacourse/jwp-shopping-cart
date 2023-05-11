@@ -35,14 +35,10 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         Member member = memberDao.findByEmailAndPassword(memberInfo.getEmail(), memberInfo.getPassword())
             .orElseThrow(MemberNotFoundException::new);
 
-        if (!checkAuthority(member)) {
+        if (!member.isAdminUser()) {
             throw new AuthorityException();
         }
 
         return true;
-    }
-
-    private boolean checkAuthority(Member member) {
-        return member.getRole() == Role.ADMIN;
     }
 }

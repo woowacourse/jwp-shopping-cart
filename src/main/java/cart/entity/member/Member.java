@@ -16,6 +16,10 @@ public class Member {
         this.role = role;
     }
 
+    public boolean isAdminUser() {
+        return this.role.isAdmin();
+    }
+
     public Long getId() {
         return id;
     }
