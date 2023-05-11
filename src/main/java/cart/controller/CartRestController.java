@@ -26,7 +26,7 @@ public class CartRestController {
     }
 
     @PostMapping("/cart-items")
-    public ResponseEntity<Long> saveCart(@RequestMember final MemberInfo memberInfo, @RequestBody final CartItemRequest cartItemRequest) {
+    public ResponseEntity<Long> saveCart(@Valid @RequestMember final MemberInfo memberInfo, @RequestBody final CartItemRequest cartItemRequest) {
         Long cartId = cartService.saveCart(memberInfo, cartItemRequest);
         return ResponseEntity.created(URI.create("/carts/" + cartId)).build();
     }
