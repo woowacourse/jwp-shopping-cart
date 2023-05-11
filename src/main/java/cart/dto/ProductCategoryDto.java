@@ -1,11 +1,10 @@
-package cart.dto.response;
+package cart.dto;
 
-import cart.dto.ProductCategoryDto;
 import cart.entity.category.CategoryEntity;
+import cart.entity.product.ProductEntity;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class ProductResponseDto {
+public class ProductCategoryDto {
 
     private final Long id;
     private final String name;
@@ -14,9 +13,14 @@ public class ProductResponseDto {
     private final String description;
     private final List<CategoryEntity> categoryEntities;
 
-    private ProductResponseDto(final Long id, final String name, final String imageUrl, final Integer price,
+    private ProductCategoryDto(
+        final Long id,
+        final String name,
+        final String imageUrl,
+        final Integer price,
         final String description,
-        final List<CategoryEntity> categoryEntities) {
+        final List<CategoryEntity> categoryEntities
+    ) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -25,14 +29,17 @@ public class ProductResponseDto {
         this.categoryEntities = categoryEntities;
     }
 
-    public static ProductResponseDto of(final ProductCategoryDto productCategoryDto) {
-        return new ProductResponseDto(
-            productCategoryDto.getId(),
-            productCategoryDto.getName(),
-            productCategoryDto.getImageUrl(),
-            productCategoryDto.getPrice(),
-            productCategoryDto.getDescription(),
-            productCategoryDto.getCategoryEntities()
+    public static ProductCategoryDto of(
+        final ProductEntity productEntity,
+        final List<CategoryEntity> categoryEntities
+    ) {
+        return new ProductCategoryDto(
+            productEntity.getId(),
+            productEntity.getName(),
+            productEntity.getImageUrl(),
+            productEntity.getPrice(),
+            productEntity.getDescription(),
+            categoryEntities
         );
     }
 
@@ -54,12 +61,6 @@ public class ProductResponseDto {
 
     public String getDescription() {
         return description;
-    }
-
-    public List<String> getCategoryNames() {
-        return categoryEntities.stream()
-            .map(CategoryEntity::getName)
-            .collect(Collectors.toList());
     }
 
     public List<CategoryEntity> getCategoryEntities() {

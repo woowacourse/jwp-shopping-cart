@@ -26,43 +26,47 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/cart.js}"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const credentials = localStorage.getItem('credentials');
-        if (!credentials) {
-            alert('사용자 정보가 없습니다.');
-            window.location.href = '/settings';
-            return;
-        }
+	document.addEventListener("DOMContentLoaded", function () {
+		const credentials = localStorage.getItem('credentials');
+		if (!credentials) {
+			alert('사용자 정보가 없습니다.');
+			window.location.href = '/settings';
+			return;
+		}
 
-        axios.request({
-            url: '',
-            headers: {
-                'Authorization': `Basic ${credentials}`
-            }
-        }).then((response) => {
-            const cartItems = response.data;
+		axios.request({
+			url: '/cart/items',
+			method: 'get',
+			headers: {
+				'Authorization': `Basic ${credentials}`
+			}
+		}).then((response) => {
+			console.log(response);
+			const cartItems = response.data;
 
-            let productElement = '';
-            // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
-            cartItems.forEach(cartItem => {
-                productElement += `
+			let productElement = '';
+			// TODO: [2단계] 장바구니 CRUD API에 맞게 변경
+			cartItems.forEach(cartItem => {
+				productElement += `
                         <div class="cart-item">
+                        <div class="product-image">
+                            <img src="${cartItem.imageUrl}" alt="상품 이미지"/> <!-- 상품 이미지 -->
+                        </div>
                           <div class="cart-item-info">
-                            <img src="" alt=""/> <!-- 상품 이미지 -->
-                            <div class="cart-item-name"></div> <!-- 상품 이름 -->
-                            <div class="cart-item-price"></div> <!-- 상품 가격 -->
+                            <p class="cart-item-name">${cartItem.name}</p>
+                            <p class="cart-item-price">${cartItem.price}</p>
                             <button type="submit" id="delete-btn" class="cart-item-delete" onclick="removeCartItem(${cartItem.id})">Delete</button>
                           </div>
                         </div>
                       `;
-            });
+			});
 
-            document.querySelector('.cart-items').innerHTML = productElement;
-        }).catch((error) => {
-            console.error(error);
-        });
+			document.querySelector('.cart-items').innerHTML = productElement;
+		}).catch((error) => {
+			console.error(error);
+		});
 
-    });
+	});
 </script>
 </body>
 </html>

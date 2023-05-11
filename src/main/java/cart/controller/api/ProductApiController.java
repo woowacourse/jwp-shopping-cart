@@ -1,11 +1,14 @@
-package cart.controller;
+package cart.controller.api;
 
+import cart.dto.ProductCategoryDto;
 import cart.dto.request.ProductRequestDto;
 import cart.dto.response.ProductResponseDto;
+import cart.dtomapper.ProductResponseDtoMapper;
 import cart.service.ProductService;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,10 +29,10 @@ public final class ProductApiController {
         this.productService = productService;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ProductResponseDto>> findProducts() {
-        final List<ProductResponseDto> productResponseDtos = productService.findProducts();
-        return ResponseEntity.ok(productResponseDtos);
+        final List<ProductCategoryDto> productCategoryDtos = productService.findAll();
+        return ResponseEntity.ok(ProductResponseDtoMapper.asList(productCategoryDtos));
     }
 
     @PostMapping
@@ -41,7 +44,7 @@ public final class ProductApiController {
     @PutMapping(path = "/{id}")
     public ResponseEntity<Void> update(
         @PathVariable(name = "id") Long productId,
-        @RequestBody ProductRequestDto productRequestDto
+        @Valid @RequestBody ProductRequestDto productRequestDto
     ) {
         productService.update(productId, productRequestDto);
         return ResponseEntity.ok().build();

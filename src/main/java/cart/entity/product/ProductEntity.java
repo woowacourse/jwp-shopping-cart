@@ -1,5 +1,6 @@
 package cart.entity.product;
 
+import cart.dto.request.ProductRequestDto;
 import java.util.Objects;
 
 public final class ProductEntity {
@@ -10,17 +11,42 @@ public final class ProductEntity {
     private Price price;
     private Description description;
 
-    public ProductEntity(final String name, final String imageUrl, final Integer price, final String description) {
-        this(null, name, imageUrl, price, description);
+    ProductEntity() {
+
     }
 
-    public ProductEntity(final Long id, final String name, final String imageUrl, final Integer price,
-        final String description) {
+    public ProductEntity(
+        final Long id,
+        final String name,
+        final String imageUrl,
+        final Integer price,
+        final String description
+    ) {
         this.id = id;
         this.name = new Name(name);
         this.imageUrl = new ImageUrl(imageUrl);
         this.price = new Price(price);
         this.description = new Description(description);
+    }
+
+
+    public ProductEntity(
+        final String name,
+        final String imageUrl,
+        final Integer price,
+        final String description
+    ) {
+        this(null, name, imageUrl, price, description);
+    }
+
+    public static ProductEntity of(final ProductRequestDto productRequestDto) {
+        return new ProductEntity(
+            null,
+            productRequestDto.getName(),
+            productRequestDto.getImageUrl(),
+            productRequestDto.getPrice(),
+            productRequestDto.getDescription()
+        );
     }
 
     public void update(final String name, final String imageUrl, final Integer price,
