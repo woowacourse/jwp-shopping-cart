@@ -12,7 +12,7 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor {
     private static final String DELIMITER = ":";
 
     @Override
-    public MemberInfo extact(final HttpServletRequest request) {
+    public MemberInfo extract(final HttpServletRequest request) {
 
         String authorization = request.getHeader("Authorization");
         if (authorization == null) {

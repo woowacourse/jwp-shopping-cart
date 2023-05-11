@@ -24,12 +24,7 @@ public class AuthenticateInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
-        Object extactedMember = authorizationExtractor.extact(request);
-        if (!(extactedMember instanceof MemberInfo)) {
-            throw new MemberNotFoundException();
-        }
-
-        MemberInfo memberInfo = (MemberInfo) extactedMember;
+        MemberInfo memberInfo = authorizationExtractor.extract(request);
         Member member = memberDao.findByEmailAndPassword(memberInfo.getEmail(), memberInfo.getPassword())
             .orElseThrow(MemberNotFoundException::new);
 

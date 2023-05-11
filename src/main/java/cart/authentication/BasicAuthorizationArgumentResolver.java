@@ -27,16 +27,9 @@ public class BasicAuthorizationArgumentResolver implements HandlerMethodArgument
     }
 
     @Override
-    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest,
+    public MemberInfo resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer, final NativeWebRequest webRequest,
         final WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        Object extactedMember = authorizationExtractor.extact(httpServletRequest);
-        if (!(extactedMember instanceof MemberInfo)) {
-            throw new MemberNotFoundException();
-        }
-
-        MemberInfo memberInfo = (MemberInfo) extactedMember;
-
-        return new MemberRequest(memberInfo.getEmail(), memberInfo.getPassword());
+        return authorizationExtractor.extract(httpServletRequest);
     }
 }
