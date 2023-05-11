@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.dao.entity.ProductEntity;
+import cart.dto.AddCartRequestDto;
 import cart.dto.auth.AuthInfo;
 import cart.dto.response.ResponseProductDto;
 import cart.service.CartService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,10 +36,10 @@ public class CartApiController {
         return ResponseEntity.ok().body(cartProductsByMember);
     }
 
-    @PutMapping("/carts/{id}")
-    public ResponseEntity<Void> addProductToCart(@PathVariable final Long id, @AuthenticationPrincipal final AuthInfo authInfo) {
+    @PostMapping("/carts")
+    public ResponseEntity<Void> addProductToCart(@RequestBody @Valid final AddCartRequestDto addCartRequestDto, @AuthenticationPrincipal final AuthInfo authInfo) {
         final Long memberId = memberService.findIdByAuthInfo(authInfo);
-        cartService.addProductToCart(memberId, id);
+        cartService.addProductToCart(addCartRequestDto, memberId);
         return ResponseEntity.ok().build();
     }
 

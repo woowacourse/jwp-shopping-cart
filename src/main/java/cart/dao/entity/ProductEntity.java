@@ -1,5 +1,7 @@
 package cart.dao.entity;
 
+import java.util.Objects;
+
 public class ProductEntity {
 
     public static final int MAXIMUM_NAME_LENGTH = 50;
@@ -78,5 +80,18 @@ public class ProductEntity {
             this.image = image;
             return this;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductEntity that = (ProductEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(image, that.image);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, image);
     }
 }

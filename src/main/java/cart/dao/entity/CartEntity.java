@@ -2,10 +2,12 @@ package cart.dao.entity;
 
 public class CartEntity {
 
+    private final Long id;
     private final Long productId;
     private final Long memberId;
 
-    private CartEntity(final Long memberId, final Long productId) {
+    private CartEntity(Long id, final Long memberId, final Long productId) {
+        this.id = id;
         this.memberId = memberId;
         this.productId = productId;
     }
@@ -20,8 +22,14 @@ public class CartEntity {
 
     public static class Builder {
 
+        private Long id;
         private Long productId;
         private Long memberId;
+
+        public Builder id(final Long id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder productId(final Long productId) {
             this.productId = productId;
@@ -34,7 +42,7 @@ public class CartEntity {
         }
 
         public CartEntity build() {
-            return new CartEntity(memberId, productId);
+            return new CartEntity(id, memberId, productId);
         }
     }
 }

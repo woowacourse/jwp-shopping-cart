@@ -4,7 +4,9 @@ import cart.dao.CartDao;
 import cart.dao.ProductDao;
 import cart.dao.entity.CartEntity;
 import cart.dao.entity.ProductEntity;
+import cart.dto.AddCartRequestDto;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -32,9 +34,6 @@ class CartApiControllerTest {
 
     @LocalServerPort
     int port;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private CartDao cartDao;
@@ -73,7 +72,9 @@ class CartApiControllerTest {
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().put("/carts/" + productId)
+                .contentType(ContentType.JSON)
+                .body(new AddCartRequestDto(productId))
+                .when().post("/carts")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -85,10 +86,11 @@ class CartApiControllerTest {
         insertProductToCart(1, productId);
 
         // when
-        RestAssured
-                .given().log().all()
+        given()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().put("/carts/" + productId)
+                .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new AddCartRequestDto(productId))
+                .when().post("/carts")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();

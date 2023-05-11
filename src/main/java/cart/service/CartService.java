@@ -7,6 +7,7 @@ import cart.dao.entity.CartEntity;
 import cart.dao.entity.ProductEntity;
 import cart.domain.Cart;
 import cart.domain.Product;
+import cart.dto.AddCartRequestDto;
 import cart.dto.auth.AuthInfo;
 import cart.dto.request.RequestCreateProductDto;
 import cart.dto.request.RequestUpdateProductDto;
@@ -80,16 +81,16 @@ public class CartService {
     }
 
     @Transactional
-    public void addProductToCart(final Long memberId, final Long productId) {
+    public void addProductToCart(final AddCartRequestDto addCartRequestDto, final Long memberId) {
         final List<ProductEntity> productEntities = cartDao.findProductsByMemberId(memberId);
 
         final Cart cart = Cart.from(productEntities);
-        final Product addingProduct = new Product(productDao.findById(productId).get());
+        final Product addingProduct = new Product(productDao.findById(addCartRequestDto.getProductId()).get());
         cart.addProduct(addingProduct);
 
         cartDao.insert(new CartEntity.Builder()
+                .productId(addCartRequestDto.getProductId())
                 .memberId(memberId)
-                .productId(productId)
                 .build()
         );
     }
