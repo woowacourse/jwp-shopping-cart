@@ -45,7 +45,7 @@ class CartDaoImplTest {
 
         // when
         Long insertedCart = cartDao.insertCart(cart);
-        Optional<Cart> result = cartDao.findByMemberIdAndProductId(member, product.getId());
+        Optional<Cart> result = cartDao.findByMemberIdAndProductId(member.getId(), product.getId());
 
         // then
         assertThat(result.get().getMemberId()).isEqualTo(cart.getMemberId());
@@ -62,7 +62,7 @@ class CartDaoImplTest {
         Cart cart = new Cart(1L, member.getId(), product.getId(), new Count(2));
 
         // when
-        Optional<Cart> result = cartDao.findByMemberIdAndProductId(member, product.getId());
+        Optional<Cart> result = cartDao.findByMemberIdAndProductId(member.getId(), product.getId());
 
         // then
         assertThat(result.get().getMemberId()).isEqualTo(cart.getMemberId());
@@ -78,7 +78,7 @@ class CartDaoImplTest {
         Member member = new Member(1L, new Email("ako@wooteco.com"), new Password("ako"), Role.ADMIN);
 
         // when
-        List<CartItem> result = cartDao.findByMemberId(member);
+        List<CartItem> result = cartDao.findByMemberId(member.getId());
 
         // then
         assertThat(result.size()).isEqualTo(2);
@@ -95,7 +95,7 @@ class CartDaoImplTest {
 
         // when
         cartDao.updateCart(updateCart);
-        Optional<Cart> result = cartDao.findByMemberIdAndProductId(member, product.getId());
+        Optional<Cart> result = cartDao.findByMemberIdAndProductId(member.getId(), product.getId());
 
         // then
         assertThat(result.get().getMemberId()).isEqualTo(updateCart.getMemberId());
@@ -112,8 +112,8 @@ class CartDaoImplTest {
         Cart cart = new Cart(1L, member.getId(), product.getId(), new Count(1));
 
         // when
-        cartDao.deleteCart(member, product.getId());
-        List<CartItem> result = cartDao.findByMemberId(member);
+        cartDao.deleteCart(member.getId(), product.getId());
+        List<CartItem> result = cartDao.findByMemberId(member.getId());
 
         // then
         assertThat(result.size()).isEqualTo(1);

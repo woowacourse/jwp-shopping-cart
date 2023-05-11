@@ -55,22 +55,22 @@ public class CartDaoImpl implements CartDao {
     }
 
     @Override
-    public Optional<Cart> findByMemberIdAndProductId(final Member member, final Long productId) {
+    public Optional<Cart> findByMemberIdAndProductId(final Long memberId, final Long productId) {
         String sql = "SELECT id, member_id, product_id, count FROM cart WHERE member_id = ? AND product_id = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, member.getId(), productId));
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, memberId, productId));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public List<CartItem> findByMemberId(final Member member) {
+    public List<CartItem> findByMemberId(final Long memberId) {
         String sql = "SELECT c.id, c.member_id, c.product_id, c.count, p.name, p.image_url, p.price FROM cart as c "
             + "JOIN product as p "
             + "ON p.id = c.product_id "
             + "WHERE member_id = ?";
-        return jdbcTemplate.query(sql, cartItemRowMapper, member.getId());
+        return jdbcTemplate.query(sql, cartItemRowMapper, memberId);
     }
 
     @Override
@@ -82,10 +82,10 @@ public class CartDaoImpl implements CartDao {
     }
 
     @Override
-    public void deleteCart(final Member member, final Long productId) {
+    public void deleteCart(final Long memberId, final Long productId) {
         String sql = "DELETE FROM cart WHERE member_id = ? AND product_id = ?";
         jdbcTemplate.update(sql,
-            member.getId(),
+            memberId,
             productId);
     }
 }

@@ -39,7 +39,7 @@ public class CartService {
         Product product = productDao.findById(cartItemRequest.getProductId())
             .orElseThrow(ProductNotFoundException::new);
 
-        Optional<Cart> cart = cartDao.findByMemberIdAndProductId(member, product.getId());
+        Optional<Cart> cart = cartDao.findByMemberIdAndProductId(member.getId(), product.getId());
 
         if (cart.isEmpty()) {
             return cartDao.insertCart(new Cart(member.getId(), product.getId(), 1));
@@ -53,7 +53,7 @@ public class CartService {
         Member member = memberDao.findByEmailAndPassword(memberInfo.getEmail(), memberInfo.getPassword())
             .orElseThrow(MemberNotFoundException::new);
 
-        List<CartItem> cartItems = cartDao.findByMemberId(member);
+        List<CartItem> cartItems = cartDao.findByMemberId(member.getId());
 
         return cartItems.stream()
             .map(CartItemResponse::new)
@@ -64,14 +64,14 @@ public class CartService {
     public void deleteCartItem(final MemberInfo memberInfo, final Long cartItemId) {
         Member member = memberDao.findByEmailAndPassword(memberInfo.getEmail(), memberInfo.getPassword())
             .orElseThrow(MemberNotFoundException::new);
-        Cart cart = cartDao.findByMemberIdAndProductId(member, cartItemId)
+        Cart cart = cartDao.findByMemberIdAndProductId(member.getId(), cartItemId)
             .orElseThrow(ProductNotFoundException::new);
 
         if (cart.getCount() > 1) {
             update(cart, -1);
             return;
         }
-        cartDao.deleteCart(member, cartItemId);
+        cartDao.deleteCart(member.getId(), cartItemId);
     }
 
     private Long update(final Cart cart, final int count) {
