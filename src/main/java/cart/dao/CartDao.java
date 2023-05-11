@@ -5,6 +5,7 @@ import cart.dao.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -22,6 +23,23 @@ public class CartDao {
     private static final boolean HAS_SAME_PRODUCTS = true;
     private final JdbcTemplate jdbcTemplate;
 
+    private final RowMapper<CartEntity> cartEntityRowMapper = (resultSet, rowNum) ->
+        new CartEntity.Builder()
+                .id(resultSet.getLong("id"))
+                .productId(resultSet.getLong("product_id"))
+                .productId(resultSet.getLong("member_id"))
+                .build();
+
+
+    public static RowMapper<ProductEntity> getProductRowMapper() {
+        return (resultSet, rowNum) -> new ProductEntity.Builder()
+                .id(resultSet.getLong("id"))
+                .name(resultSet.getString("name"))
+                .price(resultSet.getInt("price"))
+                .image(resultSet.getString("image"))
+                .build();
+    }
+
     @Autowired
     public CartDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -34,6 +52,15 @@ public class CartDao {
                 "JOIN member ON cart.member_id = member.id " +
                 "WHERE member_id = ?";
         return jdbcTemplate.query(query, getProductRowMapper(), memberId);
+    }
+
+    public List<CartEntity> findCartsByMemberId(final Long memberId) {
+        final String query = "SELECT cart.id, product_id, member_id " +
+                "FROM cart " +
+                "JOIN product ON cart.product_id = product.id " +
+                "JOIN member ON cart.member_id = member.id " +
+                "WHERE member_id = ?";
+        return jdbcTemplate.query(query, cartEntityRowMapper, memberId);
     }
 
     public Long insert(final CartEntity cartEntity) {
@@ -63,6 +90,15 @@ public class CartDao {
             return HAS_SAME_PRODUCTS;
         } catch (EmptyResultDataAccessException exception) {
             return DOES_NOT_HAVE_SAME_PRODUCTS;
+        }
+    }
+
+    public Long findCartId(final Long memberId, final Long productId) {
+        try {
+            final String query = "SELECT id FROM CART WHERE member_id = ? AND product_id = ?";
+            return jdbcTemplate.queryForObject(query, Long.class, memberId, productId);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new IllegalArgumentException("디버깅: 카트에 저장되지 않은 상품을 가져오려고 합니다.");
         }
     }
 }

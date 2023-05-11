@@ -20,6 +20,10 @@ public class CartEntity {
         return memberId;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public static class Builder {
 
         private Long id;

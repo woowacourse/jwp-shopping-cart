@@ -109,4 +109,18 @@ public class CartService {
                 .build()
         );
     }
+
+    public Long findCartIdByProduct(AuthInfo authInfo, ProductEntity productEntity) {
+        Long memberId = memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
+        return cartDao.findCartId(memberId, productEntity.getId());
+    }
+
+    public List<CartEntity> findCarts(AuthInfo authInfo) {
+        return cartDao.findCartsByMemberId(memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword()));
+    }
+
+    public ProductEntity findProduct(Long productId) {
+        return productDao.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("디버깅: 상품 테이블에 없는 상품 ID에 접근을 시도하고 있습니다."));
+    }
 }

@@ -21,9 +21,6 @@ public class Cart {
     }
 
     public void addProduct(final Product product) {
-        if (products.contains(product)) {
-            throw new IllegalArgumentException("카트에 이미 존재하는 상품입니다.");
-        }
         products.add(product);
     }
 

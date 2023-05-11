@@ -1,9 +1,9 @@
 package cart.controller;
 
-import cart.dao.entity.ProductEntity;
+import cart.dao.entity.CartEntity;
 import cart.dto.AddCartRequestDto;
 import cart.dto.auth.AuthInfo;
-import cart.dto.response.ResponseProductDto;
+import cart.dto.response.ResponseCartProductDto;
 import cart.service.CartService;
 import cart.service.MemberService;
 import cart.ui.AuthenticationPrincipal;
@@ -28,12 +28,12 @@ public class CartApiController {
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<ResponseProductDto>> getProducts(@AuthenticationPrincipal final AuthInfo authInfo) {
-        final List<ProductEntity> productEntities = cartService.findCartProductsByMember(authInfo);
-        final List<ResponseProductDto> cartProductsByMember = productEntities.stream()
-                .map(ResponseProductDto::transferEntityToDto)
+    public ResponseEntity<List<ResponseCartProductDto>> getProducts(@AuthenticationPrincipal final AuthInfo authInfo) {
+        final List<CartEntity> cartEntities = cartService.findCarts(authInfo);
+        final List<ResponseCartProductDto> cartProductDtos = cartEntities.stream()
+                .map(cartEntity -> ResponseCartProductDto.of(cartEntity.getId(), cartService.findProduct(cartEntity.getProductId())))
                 .collect(Collectors.toList());
-        return ResponseEntity.ok().body(cartProductsByMember);
+        return ResponseEntity.ok().body(cartProductDtos);
     }
 
     @PostMapping("/carts")
