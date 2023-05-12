@@ -102,11 +102,11 @@
 - [x] 장바구니 CRUD
     - [x] Basic Auth 방식의 `Authorization` header를 통해 사용자를 인증한다.
 
-    | Method | Path                |
-    |--------|---------------------|
-    | GET    | /carts              |
-    | POST   | /carts              |
-    | DELETE | /carts/{product_id} |
+    | Method | Path                          |
+    |--------|-------------------------------|
+    | GET    | /carts                        |
+    | POST   | /carts                        |
+    | DELETE | /carts/?productId={productId} |
 
 
 ### 장바구니 페이지 연동
@@ -116,7 +116,7 @@
 ## 2단계 리팩토링 요구사항
 
 - [x] addViewControllers를 이용한 Configuration 방식에서 실제 Controller의 메서드를 만드는 방식으로 변경
-- [ ] cart에 있는 상품을 삭제하는 API에서 @PathVariable 대신 @RequestParam을 사용하도록 변경
+- [x] cart에 있는 상품을 삭제하는 API에서 @PathVariable 대신 @RequestParam을 사용하도록 변경
 - [ ] admin과 다른 서비스 간 ResponseDto 분리
 - [ ] 데이터를 찾지 못한 경우, Bad Request 상태 코드를 반환하도록 변경
 - [ ] 통합 테스트 수정
