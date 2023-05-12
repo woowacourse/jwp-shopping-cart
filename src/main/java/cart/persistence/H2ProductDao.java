@@ -36,7 +36,7 @@ public class H2ProductDao implements ProductDao {
             );
 
     @Override
-    public Long save(Product product) {
+    public long save(Product product) {
         BeanPropertySqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
@@ -49,7 +49,7 @@ public class H2ProductDao implements ProductDao {
     }
 
     @Override
-    public Optional<Product> findById(Long id) {
+    public Optional<Product> findById(long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
 
         return jdbcTemplate.query(sql, productEntityRowMapper, id).stream()
@@ -63,7 +63,7 @@ public class H2ProductDao implements ProductDao {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

@@ -36,7 +36,7 @@ public class CartService {
                 () -> new IllegalArgumentException("존재하지 않는 상품입니다.")
         );
 
-        return cartDao.addCartItem(product, member);
+        return cartDao.addCartItem(product.getId(), member.getId());
 
     }
 
@@ -45,7 +45,7 @@ public class CartService {
         Member member = memberDao.findByEmail(InsertCartItemRequest.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
-        CartItems cartItems = cartDao.findCartItemsByMember(member);
+        CartItems cartItems = cartDao.findCartItemsByMemberId(member.getId());
         return cartItems.toProductResponse();
     }
 
@@ -54,7 +54,7 @@ public class CartService {
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
 
-        Long cartId = cartDao.findOneCartItem(member, deleteCartITemRequest.getProductId()).orElseThrow(
+        Long cartId = cartDao.findOneCartItem(member.getId(), deleteCartITemRequest.getProductId()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 상품은 삭제할 수 없습니다.")
         );
         cartDao.deleteCartItem(cartId);

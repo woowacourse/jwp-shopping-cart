@@ -22,7 +22,7 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public Long create(ProductServiceRequest productServiceRequest) {
+    public long create(ProductServiceRequest productServiceRequest) {
         Product product = new Product(
                 new ProductName(productServiceRequest.getName()),
                 new ProductImage(productServiceRequest.getImageUrl()),

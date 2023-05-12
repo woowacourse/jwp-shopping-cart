@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductDao {
-    Long save(Product product);
+    long save(Product product);
 
     Product update(Product product);
 
-    Optional<Product> findById(Long id);
+    Optional<Product> findById(long id);
 
     List<Product> findAll();
 
-    void deleteById(Long id);
+    void deleteById(long id);
 }

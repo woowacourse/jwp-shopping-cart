@@ -31,7 +31,7 @@ public class ProductRestController {
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody @Valid ProductRequest productRequest) {
         ProductServiceRequest productServiceRequest = new ProductServiceRequest(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
-        Long productId = productService.create(productServiceRequest);
+        long productId = productService.create(productServiceRequest);
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 

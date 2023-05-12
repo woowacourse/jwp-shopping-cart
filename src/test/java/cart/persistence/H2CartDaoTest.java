@@ -38,7 +38,7 @@ class H2CartDaoTest {
         Long productId = productDao.save(new Product(new ProductName("chicken"), new ProductImage("image"), new ProductPrice(1000)));
         Product product = productDao.findById(productId).get();
 
-        assertThat(cartDao.addCartItem(product, member)).isPositive();
+        assertThat(cartDao.addCartItem(product.getId(), member.getId())).isPositive();
     }
 
     @Test
@@ -55,13 +55,13 @@ class H2CartDaoTest {
         Product chicken = productDao.findById(chickenId).get();
         Product pizza = productDao.findById(pizzaId).get();
 
-        cartDao.addCartItem(chicken, member);
-        cartDao.addCartItem(pizza, member);
+        cartDao.addCartItem(chicken.getId(), member.getId());
+        cartDao.addCartItem(pizza.getId(), member.getId());
 
         //then
         Assertions.assertAll(
-                () -> assertThat(cartDao.findCartItemsByMember(member).getCartItems()).hasSize(2),
-                () -> assertThat(cartDao.findCartItemsByMember(memberNoHaveCartItem).getCartItems()).hasSize(0)
+                () -> assertThat(cartDao.findCartItemsByMemberId(member.getId()).getCartItems()).hasSize(2),
+                () -> assertThat(cartDao.findCartItemsByMemberId(memberNoHaveCartItem.getId()).getCartItems()).hasSize(0)
         );
     }
 
@@ -75,12 +75,12 @@ class H2CartDaoTest {
         Product chicken = productDao.findById(chickenId).get();
         Product pizza = productDao.findById(pizzaId).get();
 
-        cartDao.addCartItem(pizza, member);
-        cartDao.addCartItem(chicken, member);
+        cartDao.addCartItem(pizza.getId(), member.getId());
+        cartDao.addCartItem(chicken.getId(), member.getId());
 
-        Long chickenCartItemId = cartDao.findOneCartItem(member, chickenId).get();
+        Long chickenCartItemId = cartDao.findOneCartItem(member.getId(), chickenId).get();
 
         cartDao.deleteCartItem(chickenCartItemId);
-        assertThat(cartDao.findCartItemsByMember(member).getCartItems()).hasSize(1);
+        assertThat(cartDao.findCartItemsByMemberId(member.getId()).getCartItems()).hasSize(1);
     }
 }

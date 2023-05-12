@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -43,10 +44,10 @@ class CartServiceTest {
         given(memberDao.findByEmail(any()))
                 .willReturn(Optional.of(new Member(1L, "Cyh6099@gmail.com", "qwer1234")));
 
-        given(productDao.findById(any()))
+        given(productDao.findById(anyLong()))
                 .willReturn(Optional.of(new Product(1L, new ProductName("치킨"), new ProductImage("image"), new ProductPrice(10000))));
 
-        given(cartDao.addCartItem(any(), any()))
+        given(cartDao.addCartItem(anyLong(), anyLong()))
                 .willReturn(1L);
 
         Long cartId = cartService.createCartItem(new InsertCartItemRequest("cyh6099@gmail.com", 1L));
@@ -68,7 +69,7 @@ class CartServiceTest {
         given(memberDao.findByEmail(any()))
                 .willReturn(Optional.of(new Member(1L, "aa@aa.com", "qwer1234")));
 
-        given(productDao.findById(any()))
+        given(productDao.findById(anyLong()))
                 .willReturn(Optional.empty());
 
         assertThatThrownBy(() -> cartService.createCartItem(new InsertCartItemRequest("cyh6099@gmail.com", 1L)))
