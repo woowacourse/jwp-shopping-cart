@@ -41,24 +41,14 @@ public class CartService {
 
     @Transactional
     public void insert(final RequestCreateProductDto requestCreateProductDto) {
-        final ProductEntity newProductEntity = new ProductEntity.Builder()
-                .name(requestCreateProductDto.getName())
-                .price(requestCreateProductDto.getPrice())
-                .image(requestCreateProductDto.getImage())
-                .build();
+        final ProductEntity newProductEntity = new ProductEntity.Builder().name(requestCreateProductDto.getName()).price(requestCreateProductDto.getPrice()).image(requestCreateProductDto.getImage()).build();
         productDao.insert(newProductEntity);
     }
 
     @Transactional
     public void update(final Long id, final RequestUpdateProductDto requestUpdateProductDto) {
-        final ProductEntity oldProductEntity = productDao.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("찾는 상품이 없습니다."));
-        final ProductEntity productEntity = new ProductEntity.Builder()
-                .id(id)
-                .name(requestUpdateProductDto.getName().orElse(oldProductEntity.getName()))
-                .price(requestUpdateProductDto.getPrice().orElse(oldProductEntity.getPrice()))
-                .image(requestUpdateProductDto.getImage().orElse(oldProductEntity.getImage()))
-                .build();
+        final ProductEntity oldProductEntity = productDao.findById(id).orElseThrow(() -> new NoSuchElementException("찾는 상품이 없습니다."));
+        final ProductEntity productEntity = new ProductEntity.Builder().id(id).name(requestUpdateProductDto.getName().orElse(oldProductEntity.getName())).price(requestUpdateProductDto.getPrice().orElse(oldProductEntity.getPrice())).image(requestUpdateProductDto.getImage().orElse(oldProductEntity.getImage())).build();
         final int updatedRows = productDao.update(productEntity);
         validateAffectedRowsCount(updatedRows);
     }
@@ -77,30 +67,36 @@ public class CartService {
 
     @Transactional
     public void addProductToCart(final AddCartRequestDto addCartRequestDto, final Long memberId) {
-        final List<ProductEntity> productEntities = cartDao.findProductsByMemberId(memberId);
-
-        final Cart cart = Cart.from(productEntities);
+        final Cart cart = getCart(memberId);
         final Product addingProduct = new Product(productDao.findById(addCartRequestDto.getProductId()).get());
         cart.addProduct(addingProduct);
 
-        cartDao.insert(new CartEntity.Builder()
-                .productId(addCartRequestDto.getProductId())
-                .memberId(memberId)
-                .build()
-        );
+        cartDao.insert(new CartEntity.Builder().productId(addCartRequestDto.getProductId()).memberId(memberId).build());
+    }
+
+    private Cart getCart(Long memberId) {
+        final List<ProductEntity> productEntities = cartDao.findProductsByMemberId(memberId);
+        return Cart.from(productEntities);
     }
 
     @Transactional
-    public void deleteProductFromCart(final Long cartId) {
+    public void deleteProductFromCart(final Long cartId, final AuthInfo authInfo) {
+        final Long memberId = memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
+        final ProductEntity productEntity = cartDao.findProductByCartId(cartId).orElseThrow(() -> new NoSuchElementException("디버깅: 없는 프로덕트를 찾으려고 합니다"));
+
+        final Cart cart = getCart(memberId);
+        final Product product = new Product(productEntity);
+        cart.deleteProduct(product);
+
         cartDao.deleteProductFromCart(cartId);
     }
 
     public List<CartEntity> findCarts(AuthInfo authInfo) {
-        return cartDao.findCartsByMemberId(memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword()));
+        Long memberId = memberDao.findIdByAuthInfo(authInfo.getEmail(), authInfo.getPassword());
+        return cartDao.findCartsByMemberId(memberId);
     }
 
     public ProductEntity findProduct(Long productId) {
-        return productDao.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("디버깅: 상품 테이블에 없는 상품 ID에 접근을 시도하고 있습니다."));
+        return productDao.findById(productId).orElseThrow(() -> new IllegalArgumentException("디버깅: 상품 테이블에 없는 상품 ID에 접근을 시도하고 있습니다."));
     }
 }

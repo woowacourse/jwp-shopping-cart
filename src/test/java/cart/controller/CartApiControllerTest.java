@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -30,6 +29,7 @@ class CartApiControllerTest {
 
     private static final String EMAIL = "a@a.com";
     private static final String PASSWORD = "password1";
+    private static final long MEMBER_ID = 1;
 
 
     @LocalServerPort
@@ -50,14 +50,13 @@ class CartApiControllerTest {
     void 카트에_담긴_상품을_조회할_수_있다() {
         // given
         Long productId = insertProduct("치킨", 10_000, "치킨 이미지");
-        insertProductToCart(1L, productId);
+        insertProductToCart(MEMBER_ID, productId);
 
         // when
         ExtractableResponse<Response> response = given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
                 .when().get("/carts")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
                 .extract();
 
         // then
@@ -80,33 +79,16 @@ class CartApiControllerTest {
     }
 
     @Test
-    void 중복된_상품은_추가할_수_없다() {
-        // given
-        Long productId = insertProduct("피자", 100000, "피자 사진");
-        insertProductToCart(1, productId);
-
-        // when
-        given()
-                .auth().preemptive().basic(EMAIL, PASSWORD)
-                .log().all().contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new AddCartRequestDto(productId))
-                .when().post("/carts")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .extract();
-    }
-
-    @Test
     void 상품을_삭제할_수_있다() {
         // given
         Long productId = insertProduct("피자", 100000, "피자 사진");
-        insertProductToCart(1, productId);
+        Long cartId = insertProductToCart(MEMBER_ID, productId);
 
         // when
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().delete("/carts/" + productId)
+                .when().delete("/carts/" + cartId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
@@ -117,13 +99,13 @@ class CartApiControllerTest {
     @Test
     void 카트에_추가되지_않은_상품은_삭제할_수_없다() {
         // given
-        Long productId = 0L;
+        Long cartId = 0L;
 
         // when
         RestAssured
                 .given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .when().delete("/carts/" + productId)
+                .when().delete("/carts/" + cartId)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();

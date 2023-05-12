@@ -24,4 +24,12 @@ public class AuthInfo {
     public String getPassword() {
         return password;
     }
+
+    @Override
+    public String toString() {
+        return "AuthInfo{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

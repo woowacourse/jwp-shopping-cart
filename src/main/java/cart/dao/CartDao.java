@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class CartDao {
@@ -25,17 +26,16 @@ public class CartDao {
             new CartEntity.Builder()
                     .id(resultSet.getLong("id"))
                     .productId(resultSet.getLong("product_id"))
-                    .productId(resultSet.getLong("member_id"))
+                    .memberId(resultSet.getLong("member_id"))
                     .build();
 
-    public static RowMapper<ProductEntity> getProductRowMapper() {
-        return (resultSet, rowNum) -> new ProductEntity.Builder()
-                .id(resultSet.getLong("id"))
-                .name(resultSet.getString("name"))
-                .price(resultSet.getInt("price"))
-                .image(resultSet.getString("image"))
-                .build();
-    }
+    private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) ->
+            new ProductEntity.Builder()
+                    .id(resultSet.getLong("id"))
+                    .name(resultSet.getString("name"))
+                    .price(resultSet.getInt("price"))
+                    .image(resultSet.getString("image"))
+                    .build();
 
     @Autowired
     public CartDao(JdbcTemplate jdbcTemplate) {
@@ -48,7 +48,7 @@ public class CartDao {
                 "JOIN product ON cart.product_id = product.id " +
                 "JOIN member ON cart.member_id = member.id " +
                 "WHERE member_id = ?";
-        return jdbcTemplate.query(query, getProductRowMapper(), memberId);
+        return jdbcTemplate.query(query, productEntityRowMapper, memberId);
     }
 
     public List<CartEntity> findCartsByMemberId(final Long memberId) {
@@ -93,5 +93,13 @@ public class CartDao {
     public void deleteProductFromCart(final Long cartId) {
         final String sql = "DELETE FROM CART WHERE id = ?";
         jdbcTemplate.update(sql, cartId);
+    }
+
+    public Optional<ProductEntity> findProductByCartId(Long cartId) {
+        final String sql = "SELECT PRODUCT.id as id, PRODUCT.name as name, PRODUCT.price as price, PRODUCT.image as image FROM CART JOIN PRODUCT on PRODUCT.id = CART.product_id WHERE CART.id = ?";
+        if (jdbcTemplate.query(sql, productEntityRowMapper, cartId).size() > 0) {
+            return Optional.of(jdbcTemplate.query(sql, productEntityRowMapper, cartId).get(0));
+        }
+        return Optional.empty();
     }
 }
