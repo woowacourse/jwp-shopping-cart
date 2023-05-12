@@ -34,4 +34,16 @@ public class Product {
     public int hashCode() {
         return Objects.hash(name, price, image);
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public String getImage() {
+        return image;
+    }
 }

@@ -1,6 +1,7 @@
 package cart.dto.response;
 
-import cart.dao.entity.ProductEntity;
+import cart.domain.CartProduct;
+import cart.domain.Product;
 
 public class ResponseCartProductDto {
 
@@ -16,8 +17,14 @@ public class ResponseCartProductDto {
         this.image = image;
     }
 
-    public static ResponseCartProductDto of(Long cartIdByProduct, ProductEntity productEntity) {
-        return new ResponseCartProductDto(cartIdByProduct, productEntity.getName(), productEntity.getPrice(), productEntity.getImage());
+    public static ResponseCartProductDto of(final CartProduct cartProduct) {
+        final Product product = cartProduct.getProduct();
+        return new ResponseCartProductDto(
+                cartProduct.getCartId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImage()
+        );
     }
 
     public Long getId() {
@@ -34,5 +41,15 @@ public class ResponseCartProductDto {
 
     public String getImage() {
         return image;
+    }
+
+    @Override
+    public String toString() {
+        return "ResponseCartProductDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", image='" + image + '\'' +
+                '}';
     }
 }

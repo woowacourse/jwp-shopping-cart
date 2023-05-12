@@ -17,7 +17,7 @@ import java.util.Optional;
 public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<ProductEntity> rowMapper = (resultSet, rowNum) ->
+    private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) ->
             new ProductEntity.Builder()
                     .id(resultSet.getLong("id"))
                     .name(resultSet.getString("name"))
@@ -31,7 +31,7 @@ public class ProductDao {
 
     public List<ProductEntity> findAll() {
         final String sql = "SELECT * FROM PRODUCT";
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
     public Long insert(final ProductEntity newProductEntity) {
@@ -69,9 +69,17 @@ public class ProductDao {
     public Optional<ProductEntity> findById(final Long id) {
         final String sql = "SELECT * from product where id = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
+            return Optional.of(jdbcTemplate.queryForObject(sql, productEntityRowMapper, id));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    public Optional<ProductEntity> findProductByCartId(Long cartId) {
+        final String sql = "SELECT PRODUCT.id as id, PRODUCT.name as name, PRODUCT.price as price, PRODUCT.image as image FROM CART JOIN PRODUCT on PRODUCT.id = CART.product_id WHERE CART.id = ?";
+        if (jdbcTemplate.query(sql, productEntityRowMapper, cartId).size() > 0) {
+            return Optional.of(jdbcTemplate.query(sql, productEntityRowMapper, cartId).get(0));
+        }
+        return Optional.empty();
     }
 }

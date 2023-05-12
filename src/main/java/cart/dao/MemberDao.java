@@ -29,8 +29,8 @@ public class MemberDao {
         return jdbcTemplate.query(query, rowMapper);
     }
 
-    public Long findIdByAuthInfo(final String email, final String password) {
+    public Long findIdByAuthInfo(final MemberEntity memberEntity) {
         final String query = "SELECT id FROM MEMBER WHERE email = ? AND password = ?";
-        return jdbcTemplate.queryForObject(query, Long.class, email, password);
+        return jdbcTemplate.queryForObject(query, Long.class, memberEntity.getEmail(), memberEntity.getPassword());
     }
 }

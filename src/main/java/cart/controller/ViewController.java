@@ -1,11 +1,12 @@
 package cart.controller;
 
 import cart.dao.entity.MemberEntity;
-import cart.dao.entity.ProductEntity;
 import cart.dto.response.ResponseMemberDto;
 import cart.dto.response.ResponseProductDto;
+import cart.repository.ProductDto;
 import cart.service.CartService;
 import cart.service.MemberService;
+import cart.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,17 +20,18 @@ public class ViewController {
 
     private final CartService cartService;
     private final MemberService memberService;
+    private final ProductService productService;
 
     @Autowired
-    public ViewController(final CartService cartService, MemberService memberService) {
+    public ViewController(final CartService cartService, MemberService memberService, ProductService productService) {
         this.cartService = cartService;
         this.memberService = memberService;
+        this.productService = productService;
     }
 
     @GetMapping("/")
     public String readProducts(final Model model) {
-        final List<ProductEntity> productEntities = cartService.findAll();
-        List<ResponseProductDto> responseProductDtos = transferProductEntityToDto(productEntities);
+        List<ResponseProductDto> responseProductDtos = getResponseProductDtos();
         model.addAttribute("products", responseProductDtos);
         return "index";
     }
@@ -37,6 +39,13 @@ public class ViewController {
     @GetMapping("/cart")
     public String readCarts() {
         return "cart";
+    }
+
+    @GetMapping("/admin")
+    public String getAdminProducts(final Model model) {
+        List<ResponseProductDto> responseProductDtos = getResponseProductDtos();
+        model.addAttribute("products", responseProductDtos);
+        return "admin";
     }
 
     @GetMapping("/settings")
@@ -49,21 +58,18 @@ public class ViewController {
         return "settings";
     }
 
-    @GetMapping("/admin")
-    public String getAdminProducts(final Model model) {
-        final List<ProductEntity> productEntities = cartService.findAll();
-        List<ResponseProductDto> responseProductDtos = transferProductEntityToDto(productEntities);
-        model.addAttribute("products", responseProductDtos);
-        return "admin";
+    private List<ResponseProductDto> getResponseProductDtos() {
+        final List<ProductDto> productDtos = productService.findAll();
+        return transferProductDtoToResponseDto(productDtos);
     }
 
-    private List<ResponseProductDto> transferProductEntityToDto(List<ProductEntity> productEntities) {
-        return productEntities.stream()
-                .map(entity -> new ResponseProductDto(
-                        entity.getId(),
-                        entity.getName(),
-                        entity.getPrice(),
-                        entity.getImage())
-                ).collect(Collectors.toUnmodifiableList());
+    private List<ResponseProductDto> transferProductDtoToResponseDto(final List<ProductDto> productDtos) {
+        return productDtos.stream()
+                .map(productDto -> new ResponseProductDto(
+                        productDto.getId(),
+                        productDto.getName(),
+                        productDto.getPrice(),
+                        productDto.getImage()
+                )).collect(Collectors.toList());
     }
 }

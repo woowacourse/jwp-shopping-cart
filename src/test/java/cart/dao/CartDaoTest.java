@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.dao.entity.CartEntity;
+import cart.dao.entity.MemberEntity;
 import cart.dao.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class CartDaoTest {
     @Test
     void 카트에_상품을_추가한다() {
         // given
-        final Long memberId = memberDao.findIdByAuthInfo("a@a.com", "password1");
+        final Long memberId = memberDao.findIdByAuthInfo(new MemberEntity.Builder().email("a@a.com").password("password1").build());
         final ProductEntity productEntity = new ProductEntity.Builder()
                 .name("치킨")
                 .price(10000)
@@ -54,7 +55,7 @@ class CartDaoTest {
     @Test
     void 카트_상품을_삭제한다() {
         // given
-        final Long memberId = memberDao.findIdByAuthInfo("b@b.com", "password2");
+        final Long memberId = memberDao.findIdByAuthInfo(new MemberEntity.Builder().email("b@b.com").password("password2").build());
         final ProductEntity productEntity = new ProductEntity.Builder()
                 .name("치킨")
                 .price(10000)
