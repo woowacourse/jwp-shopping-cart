@@ -52,8 +52,8 @@ class CartDaoTest {
         for (int i = 0; i < 10; i++) {
             cartDao.save(cartEntity);
         }
-        
-        assertThat(cartDao.findByProductId(productId)).hasSize(10);
+
+        assertThat(cartDao.findByProductIdAndMemberId(memberId, productId)).hasSize(10);
     }
 
     @DisplayName("장바구니에 상품을 저장하는 테스트")
@@ -86,9 +86,9 @@ class CartDaoTest {
     @DisplayName("장바구니 상품 삭제 테스트")
     @Test
     void Should_Success_When_Delete() {
-        int id = cartDao.save(cartEntity);
-        cartDao.delete(id);
-        List<CartEntity> carts = cartDao.findByProductId(memberId);
+        int productId = cartDao.save(cartEntity);
+        cartDao.delete(productId);
+        List<CartEntity> carts = cartDao.findByProductIdAndMemberId(memberId, productId);
 
         assertThat(carts).hasSize(0);
     }

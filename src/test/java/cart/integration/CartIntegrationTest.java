@@ -91,7 +91,7 @@ public class CartIntegrationTest {
                 .when()
                 .post("/carts/1");
 
-        assertThat(cartDao.findByProductId(productId).get(0).getCount()).isEqualTo(2);
+        assertThat(cartDao.findByProductIdAndMemberId(memberId, productId).get(0).getCount()).isEqualTo(2);
     }
 
     @DisplayName("장바구니 상품 삭제 테스트")

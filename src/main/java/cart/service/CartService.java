@@ -44,10 +44,10 @@ public class CartService {
     }
 
     public int save(AuthInfo authInfo, int productId) {
-        List<CartEntity> cartByProduct = cartDao.findByProductId(productId);
+        int memberId = memberService.findByEmailWithPassword(authInfo.getEmail(), authInfo.getPassword());
+        List<CartEntity> cartByProduct = cartDao.findByProductIdAndMemberId(memberId, productId);
 
         if (cartByProduct.size() == ZERO) {
-            int memberId = memberService.findByEmailWithPassword(authInfo.getEmail(), authInfo.getPassword());
             return cartDao.save(new CartEntity(memberId, productId));
         }
 

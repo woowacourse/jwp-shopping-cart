@@ -28,10 +28,10 @@ public class CartDao {
         return jdbcTemplate.query(sql, mapper, memberId);
     }
 
-    public List<CartEntity> findByProductId(int productId) {
-        final String sql = "SELECT * FROM cart WHERE product_id = ?";
+    public List<CartEntity> findByProductIdAndMemberId(int memberId, int productId) {
+        final String sql = "SELECT * FROM cart WHERE product_id = ? AND member_id = ?";
         BeanPropertyRowMapper<CartEntity> mapper = BeanPropertyRowMapper.newInstance(CartEntity.class);
-        return jdbcTemplate.query(sql, mapper, productId);
+        return jdbcTemplate.query(sql, mapper, productId, memberId);
     }
 
     public int save(CartEntity cartEntity) {
