@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.dao.dummyData.ProductInitializer;
+import cart.dummydata.ProductInitializer;
 import cart.domain.entity.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

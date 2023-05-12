@@ -1,4 +1,4 @@
-package cart.dao.dummyData;
+package cart.dummydata;
 
 import cart.dao.ProductDao;
 import cart.domain.entity.Product;
