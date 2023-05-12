@@ -1,10 +1,9 @@
 package cart.service;
 
 import static cart.service.MemberServiceTest.MEMBER_FIXTURE;
+import static org.assertj.core.api.Assertions.anyOf;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.controller.exception.CartException;
 import cart.dao.CartDao;
 import cart.domain.Cart;
 import cart.dto.MemberDto;
@@ -33,15 +32,11 @@ class CartServiceTest {
     @InjectMocks
     private CartService cartService;
 
-    @BeforeEach
-    void setUp() {
-        Mockito.when(memberService.find(Mockito.any()))
-                .thenReturn(MEMBER_FIXTURE);
-    }
-
     @Test
     void 장바구니를_추가할_수_있다() {
         // given
+        Mockito.when(memberService.find(Mockito.any()))
+                .thenReturn(MEMBER_FIXTURE);
         Mockito.when(cartDao.insert(Mockito.any(), Mockito.any()))
                 .thenReturn(1L);
 
@@ -55,35 +50,30 @@ class CartServiceTest {
     @Test
     void 장바구니_물품은_중복_가능하다() {
         // given
+        Mockito.when(memberService.find(Mockito.any()))
+                .thenReturn(MEMBER_FIXTURE);
         Mockito.when(cartDao.insert(Mockito.any(), Mockito.any()))
                 .thenReturn(1L);
         final Long productId = 1L;
 
         // when
-        final Long cartId = cartService.insert(1L, MEMBER_DTO_FIXTURE);
+        final Long cartId = cartService.insert(productId, MEMBER_DTO_FIXTURE);
 
         // expect
         assertThat(cartService.insert(1L, MEMBER_DTO_FIXTURE)).isNotNull();
     }
 
     @Test
-    void 장바구니를_삭제할_수_있다() {
+    void id_로_장바구니를_삭제할_수_있다() {
         // given
-        Mockito.when(cartDao.delete(Mockito.anyLong(), Mockito.anyLong()))
+        Mockito.when(cartDao.delete(Mockito.any(Long.class)))
                 .thenReturn(1);
+        final Long id = 1L;
 
         // when
-        final int affectedRows = cartService.delete(1L, MEMBER_DTO_FIXTURE);
+        final int affectedRows = cartService.delete(id);
 
         // then
         assertThat(affectedRows).isOne();
-    }
-
-    @Test
-    void 존재하지_않는_물품_삭제시_예외가_발생한다() {
-        // expect
-        assertThatThrownBy(() -> cartService.delete(1L, MEMBER_DTO_FIXTURE))
-                .isInstanceOf(CartException.class)
-                .hasMessage("존재하지 않는 제품입니다.");
     }
 }

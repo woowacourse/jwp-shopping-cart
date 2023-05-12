@@ -4,7 +4,6 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 
 import cart.dto.request.CreateCartRequest;
-import cart.dto.request.DeleteCartRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -75,27 +75,23 @@ class CartControllerTest {
         given()
                 .log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Basic " + GAVI_ENCODED_TOKEN)
-                .body(new DeleteCartRequest(1L))
                 .when()
-                .delete("/carts")
+                .delete("/carts/" + 1L)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.ACCEPTED.value());
     }
 
-    @ParameterizedTest
-    @NullSource
-    void 상품_정보_없이_장바구니_상품을_삭제할_수_없다(final Long wrongId) {
+    @Test
+    void 없는_장바구니를_삭제할_시_성공처리_한다() {
         given()
                 .log().all().contentType(ContentType.JSON)
                 .header("Authorization", "Basic " + GAVI_ENCODED_TOKEN)
-                .body(new DeleteCartRequest(wrongId))
                 .when()
-                .delete("/carts")
+                .delete("/carts/" + 1L)
                 .then()
                 .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body(containsString("상품 id가 입력되지 않았습니다"));
+                .statusCode(HttpStatus.ACCEPTED.value());
     }
 
     @Test

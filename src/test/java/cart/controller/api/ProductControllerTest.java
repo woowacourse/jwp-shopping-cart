@@ -201,14 +201,4 @@ class ProductControllerTest {
                 .statusCode(HttpStatus.ACCEPTED.value());
     }
 
-    @Test
-    void 존재하지_않는_id의_상품은_삭제할_수_없다() {
-        given()
-                .log().all()
-                .when()
-                .delete("/products/" + 0)
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.NOT_FOUND.value());
-    }
 }

@@ -116,14 +116,6 @@ class ProductServiceTest {
         final int affectedRows = productService.delete(id);
 
         // then
-        assertThat(affectedRows).isEqualTo(1);
-    }
-
-    @Test
-    void 존재하지_않은_상품을_삭제하면_예외가_발생한다() {
-        // expect
-        assertThatThrownBy(() -> productService.delete(1L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 상품입니다.");
+        assertThat(affectedRows).isOne();
     }
 }

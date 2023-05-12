@@ -8,7 +8,6 @@ import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.request.CreateCartRequest;
 import cart.dto.request.CreateProductRequest;
-import cart.dto.request.DeleteCartRequest;
 import cart.dto.request.UpdateProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -37,6 +36,9 @@ class ProductIntegrationTest {
             .addValue("name", "치킨")
             .addValue("price", 1000)
             .addValue("image", "치킨 사진");
+    private static final SqlParameterSource MEMBER_PARAMS = new MapSqlParameterSource()
+            .addValue("email", "hucu@woowahan.com")
+            .addValue("password", "1234");
 
     @LocalServerPort
     private int port;
@@ -48,11 +50,15 @@ class ProductIntegrationTest {
     private ProductDao productDao;
 
     private SimpleJdbcInsert productJdbcInsert;
+    private SimpleJdbcInsert memberJdbcInsert;
+    private SimpleJdbcInsert cartJdbcInsert;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
         productJdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("product").usingGeneratedKeyColumns("id");
+        memberJdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("member").usingGeneratedKeyColumns("id");
+        cartJdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("cart").usingGeneratedKeyColumns("id");
     }
 
     @Test
@@ -238,29 +244,21 @@ class ProductIntegrationTest {
     }
 
     @Test
-    void 장바구니에_추가_후_상품을_제거하면_장바구니에서_사라진다() {
+    void 상품을_제거하면_장바구니에서_사라진다() {
         // given
+        final Long memberId = memberJdbcInsert.executeAndReturnKey(MEMBER_PARAMS).longValue();
         final Long productId = productJdbcInsert.executeAndReturnKey(PRODUCT_PARAMS).longValue();
+        final Long cartId = cartJdbcInsert.executeAndReturnKey(new MapSqlParameterSource()
+                .addValue("member_id", memberId)
+                .addValue("product_id", productId)).longValue();
 
         // when
         given()
                 .log().all()
                 .header("Authorization", "Basic " + TOKEN_FIXTURE)
                 .contentType(ContentType.JSON)
-                .body(new CreateCartRequest(productId))
                 .when()
-                .post("/carts")
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.CREATED.value());
-
-        given()
-                .log().all()
-                .header("Authorization", "Basic " + TOKEN_FIXTURE)
-                .contentType(ContentType.JSON)
-                .body(new DeleteCartRequest(productId))
-                .when()
-                .delete("/carts")
+                .delete("/carts/" + cartId)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.ACCEPTED.value());
@@ -278,7 +276,7 @@ class ProductIntegrationTest {
         // then
         assertSoftly(softly -> {
             softly.assertThat(cartResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(cartResponse.body().asString()).doesNotContain("치킨", "10000", "치킨 사진");
+            softly.assertThat(cartResponse.body().asString()).doesNotContain("치킨", "1000", "치킨 사진");
         });
     }
 }
