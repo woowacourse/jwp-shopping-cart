@@ -6,9 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,13 +24,9 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<List<Cart>> findAllByMemberId(final Long memberId) {
+    public List<Cart> findAllByMemberId(final Long memberId) {
         final String sql = "SELECT * FROM CART WHERE member_id = ?";
-        try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, cartRowMapper(), memberId));
-        } catch (EmptyResultDataAccessException error) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.query(sql, cartRowMapper(), memberId);
     }
 
     private RowMapper<Cart> cartRowMapper() {
@@ -66,12 +60,4 @@ public class CartDao {
         return jdbcTemplate.update(sql, productId, memberId);
     }
 
-    public Optional<Cart> find(final Long productId, Long memberId) {
-        final String sql = "SELECT * FROM CART WHERE product_id = ? and member_id = ?";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartRowMapper(), productId, memberId));
-        } catch (EmptyResultDataAccessException error) {
-            return Optional.empty();
-        }
-    }
 }

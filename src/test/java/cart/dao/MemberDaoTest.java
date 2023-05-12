@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cart.domain.Member;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -30,21 +31,28 @@ class MemberDaoTest {
     }
 
     @Test
-    void 회원을_추가할_수_있다() {
-        // when
-        int insertedMember = memberDao.insert(MEMBER_FIXTURE);
-
-        // then
-        assertThat(insertedMember).isOne();
-    }
-
-    @Test
-    void 회원이_존재하는지_확인할_수_있다() {
+    void 이메일로_회원이_존재하는지_확인할_수_있다() {
         // given
-        memberDao.insert(MEMBER_FIXTURE);
+        jdbcTemplate.execute("INSERT INTO MEMBER(email, password) VALUES ('gavi@wooteco.com', '1234')");
 
         // when
         final Optional<Member> MemberOptional = memberDao.findByEmail(MEMBER_FIXTURE.getEmail());
+
+        // then
+        assertSoftly(softly -> {
+            Member memberEntity = MemberOptional.get();
+            softly.assertThat(memberEntity.getEmail()).isEqualTo("gavi@wooteco.com");
+            softly.assertThat(memberEntity.getPassword()).isEqualTo("1234");
+        });
+    }
+
+    @Test
+    void 이메일과_비밀번호로_회원이_존재하는지_확인할_수_있다() {
+        // given
+        jdbcTemplate.execute("INSERT INTO MEMBER(email, password) VALUES ('gavi@wooteco.com', '1234')");
+
+        // when
+        final Optional<Member> MemberOptional = memberDao.findByEmailAndPassword(MEMBER_FIXTURE.getEmail(), MEMBER_FIXTURE.getPassword());
 
         // then
         assertSoftly(softly -> {

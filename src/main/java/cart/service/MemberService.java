@@ -3,11 +3,8 @@ package cart.service;
 import cart.controller.exception.MemberNotFoundException;
 import cart.dao.MemberDao;
 import cart.domain.Member;
-import cart.dto.MemberDto;
 import cart.dto.response.MemberResponse;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,18 +22,15 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public List<MemberResponse> findAll() {
-        final Optional<List<Member>> membersOptional = memberDao.findAll();
-        if (membersOptional.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return membersOptional.get().stream()
+        final List<Member> members = memberDao.findAll();
+        return members.stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional(readOnly = true)
-    public Member find(final MemberDto memberDto) {
-        return memberDao.findByEmail(memberDto.getEmail())
+    public Member find(final String email) {
+        return memberDao.findByEmail(email)
                 .orElseThrow(MemberNotFoundException::new);
     }
 }

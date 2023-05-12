@@ -26,13 +26,9 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<List<Member>> findAll() {
+    public List<Member> findAll() {
         final String sql = "SELECT * FROM MEMBER";
-        try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, MAPPER));
-        } catch (EmptyResultDataAccessException error) {
-            return EMPTY;
-        }
+        return jdbcTemplate.query(sql, MAPPER);
     }
 
     public Optional<Member> findByEmailAndPassword(final String email, final String password) {
@@ -51,10 +47,5 @@ public class MemberDao {
         } catch (EmptyResultDataAccessException | DuplicateKeyException error) {
             return EMPTY;
         }
-    }
-
-    public int insert(final Member member) {
-        final String sql = "INSERT INTO MEMBER (email, password) VALUES (?, ?)";
-        return jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
     }
 }

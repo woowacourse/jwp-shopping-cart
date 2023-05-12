@@ -31,24 +31,6 @@ class MemberServiceTest {
     @InjectMocks
     private MemberService memberService;
 
-    @Test
-    void 모든_회원을_조회한다() {
-        //given
-        Mockito.when(memberDao.findAll())
-                .thenReturn(Optional.ofNullable(List.of(MEMBER_FIXTURE)));
-
-        //when
-        final List<MemberResponse> memberResponses = memberService.findAll();
-
-        //then
-        assertSoftly(softly -> {
-            softly.assertThat(memberResponses).hasSize(1);
-            MemberResponse memberResponse = memberResponses.get(0);
-            softly.assertThat(memberResponse.getId()).isEqualTo(1L);
-            softly.assertThat(memberResponse.getEmail()).isEqualTo("gavi@woowahan.com");
-            softly.assertThat(memberResponse.getPassword()).isEqualTo("1234");
-        });
-    }
 
     @Test
     void 아이디와_비밀번호로_회원을_조회한다() {
@@ -58,7 +40,7 @@ class MemberServiceTest {
         final cart.dto.MemberDto memberDto = new cart.dto.MemberDto("gavi@woowahan.com", "1234");
 
         // when
-        final Member member = memberService.find(memberDto);
+        final Member member = memberService.find(memberDto.getEmail());
 
         // then
         assertSoftly(softly -> {
@@ -73,7 +55,7 @@ class MemberServiceTest {
         final MemberDto memberDto = new MemberDto("gavi@woowahan.com", "1234");
 
         // then
-        assertThatThrownBy(() -> memberService.find(memberDto))
+        assertThatThrownBy(() -> memberService.find(memberDto.getEmail()))
                 .isInstanceOf(MemberNotFoundException.class)
                 .hasMessage("회원 정보가 잘못되었습니다.");
     }
