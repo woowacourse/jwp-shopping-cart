@@ -10,11 +10,7 @@ public class BasicAuthorizationExtractor {
     private static final String DELIMITER = ":";
 
     public AuthInfo extract(String header) throws AuthenticationException {
-        if (header == null) {
-            return null;
-        }
-
-        if (isStartsWithBasic(header)) {
+        if (header != null && isStartsWithBasic(header)) {
             String decodedString = decodeHeader(header);
             return makeAuthInfo(decodedString);
         }
