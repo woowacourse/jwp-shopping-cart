@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.jdbc.Sql;
 
+@Sql(scripts = {"/truncate.sql", "/member_insert.sql", "/item_insert.sql"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class JwpCartApplicationTests {
 
@@ -175,10 +177,22 @@ class JwpCartApplicationTests {
     @Test
     @DisplayName("회원의 장바구니에 담겨 있는 상품을 장바구니에 담으면 예외가 발생한다.")
     void createCartFail() {
+        Long itemId = itemDao.insert(new Item("치킨", "chiken@naver.com", 15000));
+
         given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", headerValue)
-                .queryParam("itemId", 1)
+                .queryParam("itemId", itemId)
+                .when()
+                .post("/carts")
+                .then().log().all()
+                .contentType(ContentType.JSON)
+                .statusCode(HttpStatus.CREATED.value());
+
+        given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", headerValue)
+                .queryParam("itemId", itemId)
                 .when()
                 .post("/carts/")
                 .then().log().all()
@@ -204,7 +218,7 @@ class JwpCartApplicationTests {
     }
 
     private static String createHeaderValue() {
-        String credential = "gray:aaa@aaa.com:helloSpring";
+        String credential = "그레이:gray@wooteco.com:wooteco";
         String encodedCredential = new String(Base64.getEncoder().encode((credential.getBytes())));
         return "Basic " + encodedCredential;
     }
