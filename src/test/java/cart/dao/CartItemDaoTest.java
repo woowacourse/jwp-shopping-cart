@@ -1,29 +1,39 @@
 package cart.dao;
 
-import cart.entity.CartItemEntity;
-import cart.entity.ProductEntity;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@SpringBootTest
-@Transactional
+import cart.entity.CartItemEntity;
+import cart.entity.ProductEntity;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+@JdbcTest
+@AutoConfigureTestDatabase(replace = Replace.NONE)
 class CartItemDaoTest {
 
     private final CartItemEntity cartItemEntity = new CartItemEntity(99, 100);
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private CartItemDao cartItemDao;
 
+    @BeforeEach
+    void setUp() {
+        cartItemDao = new CartItemDao(jdbcTemplate);
+    }
+
+    @DisplayName("addCartItem 성공 테스트")
     @Test
     void addCartItem() {
         assertDoesNotThrow(() -> cartItemDao.addCartItem(cartItemEntity));

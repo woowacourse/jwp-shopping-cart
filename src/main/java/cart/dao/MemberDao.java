@@ -26,8 +26,8 @@ public class MemberDao {
 
     private final RowMapper<Boolean> booleanMapper = (resultSet, rowNum) -> resultSet.getBoolean("isExist");
 
-    public MemberDao(DataSource dataSource, JdbcTemplate jdbcTemplate) {
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+    public MemberDao(JdbcTemplate jdbcTemplate) {
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("member")
                 .usingGeneratedKeyColumns("id");
         this.jdbcTemplate = jdbcTemplate;

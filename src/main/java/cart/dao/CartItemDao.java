@@ -28,11 +28,11 @@ public class CartItemDao {
 
     private final RowMapper<Boolean> booleanMapper = (resultSet, rowNum) -> resultSet.getBoolean("isExist");
 
-    public CartItemDao(DataSource dataSource, JdbcTemplate jdbcTemplate) {
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+    public CartItemDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("cartitem")
                 .usingGeneratedKeyColumns("id");
-        this.jdbcTemplate = jdbcTemplate;
     }
 
     public int addCartItem(CartItemEntity cartItemEntity) {

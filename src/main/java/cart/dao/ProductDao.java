@@ -27,8 +27,8 @@ public class ProductDao {
 
     private final RowMapper<Boolean> booleanMapper = (resultSet, rowNum) -> resultSet.getBoolean("isExist");
 
-    public ProductDao(DataSource dataSource, JdbcTemplate jdbcTemplate) {
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+    public ProductDao(JdbcTemplate jdbcTemplate) {
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
                 .usingGeneratedKeyColumns("id");
         this.jdbcTemplate = jdbcTemplate;
