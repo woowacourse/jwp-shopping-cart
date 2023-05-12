@@ -33,6 +33,7 @@ public class CartService {
         cartDao.save(new CartEntity(memberEntity.getId(), productId));
     }
 
+    @Transactional(readOnly = true)
     public List<ProductEntity> findProductsByAuthInfo(final AuthInfoRequest authInfoRequest) {
         final MemberEntity memberEntity = memberDao.findByEmailAndPassword(authInfoRequest.getEmail(), authInfoRequest.getPassword());
 

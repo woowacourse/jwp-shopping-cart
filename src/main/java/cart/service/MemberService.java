@@ -17,6 +17,7 @@ public class MemberService {
         this.memberDao = memberDao;
     }
 
+    @Transactional(readOnly = true)
     public List<MemberDto> findAllMember() {
         return memberDao.findAll().stream()
                 .map(MemberDto::from)

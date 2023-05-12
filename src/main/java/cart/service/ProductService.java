@@ -27,6 +27,7 @@ public class ProductService {
         productDao.save(ProductEntity.from(product));
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findAllProduct() {
         return productDao.findAll().stream()
                 .map(ProductDto::from)
