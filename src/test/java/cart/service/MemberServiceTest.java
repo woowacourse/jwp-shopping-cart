@@ -7,8 +7,6 @@ import cart.controller.exception.MemberNotFoundException;
 import cart.dao.MemberDao;
 import cart.domain.Member;
 import cart.dto.MemberDto;
-import cart.dto.response.MemberResponse;
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;

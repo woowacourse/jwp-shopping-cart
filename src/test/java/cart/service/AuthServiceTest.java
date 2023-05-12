@@ -3,7 +3,6 @@ package cart.service;
 import static cart.service.MemberServiceTest.MEMBER_FIXTURE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.auth.AuthDto;
 import cart.dao.MemberDao;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;

@@ -1,13 +1,10 @@
 package cart.service;
 
 import static cart.service.MemberServiceTest.MEMBER_FIXTURE;
-import static org.assertj.core.api.Assertions.anyOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.dao.CartDao;
-import cart.domain.Cart;
 import cart.dto.MemberDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -21,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
 class CartServiceTest {
-    public static final Cart CART_FIXTURE = new Cart(1L, 1L, 1L);
     public static final MemberDto MEMBER_DTO_FIXTURE = new MemberDto("gavi@woowahan.com", "1234");
 
     @Mock
@@ -57,7 +53,7 @@ class CartServiceTest {
         final Long productId = 1L;
 
         // when
-        final Long cartId = cartService.insert(productId, MEMBER_DTO_FIXTURE);
+        cartService.insert(productId, MEMBER_DTO_FIXTURE);
 
         // expect
         assertThat(cartService.insert(1L, MEMBER_DTO_FIXTURE)).isNotNull();
