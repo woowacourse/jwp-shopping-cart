@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -100,7 +101,8 @@ class CartItemManagementServiceTest {
         @DisplayName("장바구니에서 상품이 삭제되는지 확인한다")
         @Test
         void successTest() {
-            when(memberDao.selectByEmail(any())).thenReturn(Optional.of(member));
+            when(memberDao.selectByEmail(anyString())).thenReturn(Optional.of(member));
+            when(cartItemDao.selectById(anyLong())).thenReturn(Optional.of(CartItem.of(1L, member, product1)));
             when(cartItemDao.deleteByIdAndMemberId(anyLong(), anyLong())).thenReturn(1);
 
             assertDoesNotThrow(() -> managementService.delete(member.getEmail(), 1L));
@@ -109,7 +111,8 @@ class CartItemManagementServiceTest {
         @DisplayName("장바구니에서 상품이 삭제되지 않으면 예외가 발생하는지 확인한다")
         @Test
         void failTest() {
-            when(memberDao.selectByEmail(any())).thenReturn(Optional.of(member));
+            when(memberDao.selectByEmail(anyString())).thenReturn(Optional.of(member));
+            when(cartItemDao.selectById(anyLong())).thenReturn(Optional.of(CartItem.of(1L, member, product1)));
             when(cartItemDao.deleteByIdAndMemberId(anyLong(), anyLong())).thenReturn(0);
 
             assertThatThrownBy(() -> managementService.delete(member.getEmail(), 3L))

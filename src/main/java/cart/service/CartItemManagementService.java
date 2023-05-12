@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartItemManagementService {
@@ -54,9 +55,11 @@ public class CartItemManagementService {
     @Transactional
     public void delete(final String memberEmail, final long cartItemId) {
         long memberId = findMember(memberEmail).getId();
+        cartItemDao.selectById(cartItemId)
+                .orElseThrow(() -> new IllegalArgumentException("장바구니에 없는 상품입니다."));
         int deletedRowCount = cartItemDao.deleteByIdAndMemberId(cartItemId, memberId);
         if (deletedRowCount == 0) {
-            throw new IllegalArgumentException("장바구니에 없는 상품입니다.");
+            throw new IllegalArgumentException("해당 장바구니 상품의 삭제 권한이 없습니다.");
         }
     }
 

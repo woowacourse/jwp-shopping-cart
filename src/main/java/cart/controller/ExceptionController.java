@@ -2,6 +2,7 @@ package cart.controller;
 
 import cart.dto.response.ExceptionResponse;
 import cart.exception.AuthenticationException;
+import cart.exception.ForbiddenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -45,6 +46,14 @@ public class ExceptionController {
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ExceptionResponse> handleForbiddenException(ForbiddenException exception) {
+        log.error(exception.getMessage());
+
+        ExceptionResponse exceptionResponse = new ExceptionResponse(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exceptionResponse);
     }
 
     @ExceptionHandler

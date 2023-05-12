@@ -4,22 +4,18 @@ import cart.domain.entity.CartItem;
 import cart.domain.entity.Member;
 import cart.domain.entity.Product;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class JdbcCartItemDao implements CartItemDao {
@@ -57,6 +53,20 @@ public class JdbcCartItemDao implements CartItemDao {
                 "LEFT JOIN member AS m ON ci.member_id = m.id " +
                 "WHERE member_id = ? ";
         return jdbcTemplate.query(sql, cartItemEntityRowMapper, memberId);
+    }
+
+    @Override
+    public Optional<CartItem> selectById(final Long id) {
+        try {
+            String sql = "SELECT ci.id, member_id, email AS member_email, password AS member_password, product_id, name AS product_name, image AS product_image, price AS product_price " +
+                    "FROM cart_item AS ci " +
+                    "LEFT JOIN product AS p ON ci.product_id =p.id " +
+                    "LEFT JOIN member AS m ON ci.member_id = m.id " +
+                    "WHERE ci.id = ? ";
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartItemEntityRowMapper, id));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     @Override
