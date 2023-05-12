@@ -27,9 +27,16 @@ public class AdviceHandler {
                 .body(errMessage.toString());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> OtherExceptionHandler(Exception exception) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> MethodIllegalArgumentExceptionHandler(IllegalArgumentException exception) {
         return ResponseEntity.badRequest()
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> OtherExceptionHandler(Exception exception) {
+        return ResponseEntity.badRequest()
+                .body("런타임 에러 발생");
+    }
+
 }

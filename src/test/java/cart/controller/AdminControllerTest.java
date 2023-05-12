@@ -144,4 +144,5 @@ class AdminControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(Matchers.containsStringIgnoringCase("삭제하려는 제품이 존재하지 않습니다."));
     }
+
 }

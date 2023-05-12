@@ -1,3 +1,7 @@
+TRUNCATE TABLE cartItem;
+TRUNCATE TABLE member;
+TRUNCATE TABLE product;
+
 insert into member (email, password)
 values ('dino96@naver.com', 'jjongwa96');
 
