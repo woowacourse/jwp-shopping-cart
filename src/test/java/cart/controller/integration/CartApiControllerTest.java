@@ -249,7 +249,7 @@ class CartApiControllerTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .body(equalTo("형식에 맞지 않는 이메일입니다."));
+                    .body(equalTo("입력한 정보의 회원은 존재하지 않습니다."));
         }
 
         @Test
@@ -263,7 +263,7 @@ class CartApiControllerTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .body(equalTo("비밀번호는 최소 8자 이상, 최대 20자 이하여야 합니다."));
+                    .body(equalTo("입력한 정보의 회원은 존재하지 않습니다."));
         }
 
         @Test

@@ -22,7 +22,7 @@ public class BasicAuthorizationExtractor {
             final List<String> credentials = Arrays.asList(decodedString.split(DELIMITER, 2));
             final String email = credentials.get(0);
             final String password = credentials.get(1);
-            return new AuthInfo(email, password);
+            return generateAuthInfo(email, password);
         }
         throw new AuthorizationException("지원하지 않는 인증 방식입니다. Basic 인증 방식을 사용해주세요.");
     }
@@ -37,5 +37,13 @@ public class BasicAuthorizationExtractor {
         }
 
         return decodedString;
+    }
+
+    private static AuthInfo generateAuthInfo(final String email, final String password) {
+        try {
+            return new AuthInfo(email, password);
+        } catch (IllegalArgumentException exception) {
+            throw new AuthorizationException("입력한 정보의 회원은 존재하지 않습니다.");
+        }
     }
 }
