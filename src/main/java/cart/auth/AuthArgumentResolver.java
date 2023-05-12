@@ -1,6 +1,7 @@
 package cart.auth;
 
 import cart.dto.MemberDto;
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -24,11 +25,15 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
-                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(
+            final MethodParameter parameter,
+            final ModelAndViewContainer mavContainer,
+            final NativeWebRequest webRequest,
+            final WebDataBinderFactory binderFactory
+    ) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
-        final AuthDto authDto = authorizationExtractor.extract(request);
+        final AuthDto authDto = authorizationExtractor.extract(Objects.requireNonNull(request));
 
         final String email = authDto.getEmail();
         final String password = authDto.getPassword();

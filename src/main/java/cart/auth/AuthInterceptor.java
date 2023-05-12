@@ -23,7 +23,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
         final AuthDto authDto = authorizationExtractor.extract(request);
 
-        if (AuthService.isInvalidAuth(authDto)) {
+        if (AuthService.isInvalidAuth(authDto.getEmail(), authDto.getPassword())) {
             throw new IllegalArgumentException("회원 정보가 일치하지 않습니다.");
         }
 

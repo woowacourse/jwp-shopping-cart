@@ -19,8 +19,8 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public boolean isInvalidAuth(final AuthDto authDto) {
-        final Optional<Member> memberOptional = memberDao.findByEmailAndPassword(authDto.getEmail(), authDto.getPassword());
+    public boolean isInvalidAuth(final String email, final String password) {
+        final Optional<Member> memberOptional = memberDao.findByEmailAndPassword(email, password);
         return memberOptional.isEmpty();
     }
 }

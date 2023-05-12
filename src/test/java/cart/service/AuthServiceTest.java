@@ -30,10 +30,11 @@ class AuthServiceTest {
         // given
         Mockito.when(memberDao.findByEmailAndPassword(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.empty());
-        final AuthDto authDto = new AuthDto("gavi@woowahan.com", "1234");
+        final String email = "gavi@woowahan.com";
+        final String password =  "1234";
 
         // expect
-        assertThat(authService.isInvalidAuth(authDto)).isTrue();
+        assertThat(authService.isInvalidAuth(email, password)).isTrue();
     }
 
     @Test
@@ -41,9 +42,10 @@ class AuthServiceTest {
         // given
         Mockito.when(memberDao.findByEmailAndPassword(Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.ofNullable(MEMBER_FIXTURE));
-        final AuthDto authDto = new AuthDto("gavi@woowahan.com", "1234");
+        final String email = "gavi@woowahan.com";
+        final String password =  "1234";
 
         // expect
-        assertThat(authService.isInvalidAuth(authDto)).isFalse();
+        assertThat(authService.isInvalidAuth(email, password)).isFalse();
     }
 }
