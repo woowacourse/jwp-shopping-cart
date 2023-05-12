@@ -1,6 +1,5 @@
 package cart.service;
 
-import cart.controller.exception.CartException;
 import cart.dao.CartDao;
 import cart.domain.Cart;
 import cart.domain.Member;
@@ -34,12 +33,8 @@ public class CartService {
     }
 
     @Transactional
-    public int delete(final Long productId, final MemberDto memberDto) {
-        final Member member = memberService.find(memberDto.getEmail());
-        final int deletedRow = cartDao.delete(productId, member.getId());
-        if (deletedRow == 0) {
-            throw new CartException("존재하지 않는 제품입니다.");
-        }
+    public int delete(final Long id) {
+        final int deletedRow = cartDao.delete(id);
         return deletedRow;
     }
 

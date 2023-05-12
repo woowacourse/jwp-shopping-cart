@@ -71,9 +71,10 @@ class CartDaoTest {
         // given
         final Long productId = simpleProductInsert.executeAndReturnKey(PRODUCT_FIXTURE).longValue();
         final Long memberId = simpleMemberInsert.executeAndReturnKey(MEMBER_FIXTURE).longValue();
+        final Long cartId = cartDao.insert(productId, memberId);
 
         // when
-        cartDao.delete(productId, memberId);
+        cartDao.delete(cartId);
 
         // then
         assertThat(cartDao.findAllByMemberId(memberId)).isEmpty();
@@ -84,31 +85,13 @@ class CartDaoTest {
         // given
         final Long memberId = simpleMemberInsert.executeAndReturnKey(MEMBER_FIXTURE).longValue();
         final Long productId = simpleProductInsert.executeAndReturnKey(PRODUCT_FIXTURE).longValue();
-
-        // when
         cartDao.insert(productId, memberId);
-        cartDao.insert(productId, memberId);
-        cartDao.insert(productId, memberId);
-
-        // then
-        assertSoftly(softly -> {
-            List<Cart> carts = cartDao.findAllByMemberId(memberId);
-            assertThat(carts).hasSize(3);
-        });
-    }
-
-    @Test
-    void product_id와_member_id로_삭제할_수_있다() {
-        // given
-        final Long productId = simpleProductInsert.executeAndReturnKey(PRODUCT_FIXTURE).longValue();
-        final Long memberId = simpleMemberInsert.executeAndReturnKey(MEMBER_FIXTURE).longValue();
         cartDao.insert(productId, memberId);
 
         // when
-        cartDao.delete(productId, memberId);
+        final List<Cart> carts = cartDao.findAllByMemberId(memberId);
 
         // then
-        assertThat(cartDao.findAllByMemberId(memberId)).isEmpty();
+        assertThat(carts).hasSize(2);
     }
-
 }

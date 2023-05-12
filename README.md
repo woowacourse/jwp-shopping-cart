@@ -75,7 +75,7 @@
         - 404 : 회원 정보가 없는 경우
         - 404 : 이미 장바구니에 담은 상품일 경우
   - 장바구니 삭제
-    - URI : `/carts/{cartId}`
+    - URI : `/carts/{id}`
       - [x] 요청 : delete
         - header : Basic 형식의 토큰
         - path variable : 카트 id 전송
