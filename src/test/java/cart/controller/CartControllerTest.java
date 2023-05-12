@@ -38,7 +38,7 @@ class CartControllerTest {
         @DisplayName("Basic Token을 헤더에 담아 요청하면 Status OK를 반환한다.")
         @Test
         void shouldResponseStatusOkWhenRequestWithBasicToken() throws Exception {
-            mockMvc.perform(get("/carts/me/products")
+            mockMvc.perform(get("/carts/products")
                             .header("Authorization", "Basic ZW1haWxAdGVzdC50ZXN0OjEyMzQ="))
                     .andExpect(status().isOk());
         }
@@ -46,7 +46,7 @@ class CartControllerTest {
         @DisplayName("Authorization 헤더가 없으면 Status Unauthorized를 반환한다.")
         @Test
         void shouldResponseStatusUnauthorizedWhenRequestWithoutBasicToken() throws Exception {
-            mockMvc.perform(get("/carts/me/products"))
+            mockMvc.perform(get("/carts/products"))
                     .andExpect(status().isUnauthorized());
         }
     }
@@ -58,7 +58,7 @@ class CartControllerTest {
         @DisplayName("ID와 Basic Token이 올바르면 Status OK를 반환한다.")
         @Test
         void shouldResponseStatusOkWhenRequestWithCorrectIdAndBasicToken() throws Exception {
-            mockMvc.perform(post("/carts/me/1")
+            mockMvc.perform(post("/carts/1")
                             .header("Authorization", "Basic ZW1haWxAdGVzdC50ZXN0OjEyMzQ="))
                     .andExpect(status().isOk());
         }
@@ -66,7 +66,7 @@ class CartControllerTest {
         @DisplayName("Authorization 헤더가 없으면 Status Unauthorized를 반환한다.")
         @Test
         void shouldResponseStatusUnauthorizedWhenRequestWithoutBasicToken() throws Exception {
-            mockMvc.perform(post("/carts/me/1"))
+            mockMvc.perform(post("/carts/1"))
                     .andExpect(status().isUnauthorized());
         }
     }
@@ -78,7 +78,7 @@ class CartControllerTest {
         @DisplayName("ID와 Basic Token이 올바르면 Status OK를 반환한다.")
         @Test
         void shouldResponseStatusOkWhenRequestWithCorrectIdAndBasicToken() throws Exception {
-            mockMvc.perform(delete("/carts/me/1")
+            mockMvc.perform(delete("/carts/1")
                             .header("Authorization", "Basic ZW1haWxAdGVzdC50ZXN0OjEyMzQ="))
                     .andExpect(status().isOk());
         }
@@ -86,7 +86,7 @@ class CartControllerTest {
         @DisplayName("Authorization 헤더가 없으면 Status Unauthorized를 반환한다.")
         @Test
         void shouldResponseStatusUnauthorizedWhenRequestWithoutBasicToken() throws Exception {
-            mockMvc.perform(delete("/carts/me/1"))
+            mockMvc.perform(delete("/carts/1"))
                     .andExpect(status().isUnauthorized());
         }
     }

@@ -24,13 +24,13 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/me/products")
+    @GetMapping("/products")
     public ResponseEntity<List<ProductDto>> getProductsOfMyCart(@Authenticated MemberAuthDto memberAuthDto) {
         List<ProductDto> products = this.cartService.findProductsInCartByUser(memberAuthDto);
         return ResponseEntity.ok().body(products);
     }
 
-    @PostMapping("/me/{productId}")
+    @PostMapping("/{productId}")
     public ResponseEntity<Void> addProductToMyCart(
             @Authenticated MemberAuthDto memberAuthDto,
             @NotNull @PathVariable Long productId
@@ -39,7 +39,7 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/me/{productId}")
+    @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProductFromMyCart(
             @Authenticated MemberAuthDto memberAuthDto,
             @NotNull @PathVariable Long productId
