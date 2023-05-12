@@ -3,11 +3,11 @@ package cart.dto.response;
 import cart.entity.MemberEntity;
 
 public class MemberDto {
-    private final Integer id;
+    private final int id;
     private final String email;
     private final String password;
 
-    public MemberDto(final Integer id, final String email, final String password) {
+    public MemberDto(final int id, final String email, final String password) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -21,7 +21,7 @@ public class MemberDto {
         );
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 

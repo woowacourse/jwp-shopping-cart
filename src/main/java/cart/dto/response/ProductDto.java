@@ -3,12 +3,12 @@ package cart.dto.response;
 import cart.domain.Product;
 
 public class ProductDto {
-    private final Integer id;
+    private final int id;
     private final String name;
     private final String image;
-    private final Integer price;
+    private final int price;
 
-    public ProductDto(final Integer id, final String name, final String image, final Integer price) {
+    public ProductDto(final int id, final String name, final String image, final int price) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -24,7 +24,7 @@ public class ProductDto {
         );
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -36,7 +36,7 @@ public class ProductDto {
         return image;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 }

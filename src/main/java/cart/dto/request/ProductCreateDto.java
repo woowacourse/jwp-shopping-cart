@@ -10,12 +10,12 @@ public class ProductCreateDto {
     @NotNull
     private String image;
     @NotNull
-    private Integer price;
+    private int price;
 
     public ProductCreateDto() {
     }
 
-    public ProductCreateDto(final String name, final String image, final Integer price) {
+    public ProductCreateDto(final String name, final String image, final int price) {
         this.name = name;
         this.image = image;
         this.price = price;
@@ -33,7 +33,7 @@ public class ProductCreateDto {
         return image;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 }

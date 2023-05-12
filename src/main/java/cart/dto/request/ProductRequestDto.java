@@ -4,16 +4,16 @@ import javax.validation.constraints.NotNull;
 
 public class ProductRequestDto {
     @NotNull
-    private Integer productId;
+    private int productId;
 
     public ProductRequestDto() {
     }
 
-    public ProductRequestDto(final Integer productId) {
+    public ProductRequestDto(final int productId) {
         this.productId = productId;
     }
 
-    public Integer getProductId() {
+    public int getProductId() {
         return productId;
     }
 }
