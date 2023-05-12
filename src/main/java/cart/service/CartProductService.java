@@ -27,6 +27,7 @@ public class CartProductService {
         return cartProductDao.saveAndGetId(cartProduct);
     }
 
+    @Transactional(readOnly = true)
     public CartProductDto findAll(final Member member) {
         return cartProductDao.findAllProductByMember(member).stream()
                 .map(ProductDto::from)

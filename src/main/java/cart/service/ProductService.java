@@ -35,12 +35,14 @@ public class ProductService {
                 .orElseThrow(() -> new IllegalStateException("상품을 저장할 수 없습니다."));
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findAll() {
         return productDao.findAll().stream()
                 .map(ProductDto::from)
                 .collect(toUnmodifiableList());
     }
 
+    @Transactional(readOnly = true)
     public ProductDto findById(final Long id) {
         final Product product = productDao.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
