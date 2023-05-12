@@ -1,10 +1,9 @@
 package cart.dto;
 
-import org.hibernate.validator.constraints.URL;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.URL;
 
 public class ProductRequestDto {
 
@@ -36,12 +35,4 @@ public class ProductRequestDto {
         return image;
     }
 
-    @Override
-    public String toString() {
-        return "ProductRequest{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", image='" + image + '\'' +
-                '}';
-    }
 }

@@ -41,4 +41,5 @@ public class MemberEntity {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

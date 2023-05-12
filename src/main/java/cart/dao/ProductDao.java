@@ -1,15 +1,13 @@
 package cart.dao;
 
 import cart.entity.ProductEntity;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
-import java.util.List;
 
 @Repository
 public class ProductDao {
@@ -47,7 +45,8 @@ public class ProductDao {
 
     public void updateProduct(ProductEntity productEntity) {
         String sql = "update product set name = ?, price =? , image = ?  where id = ?";
-        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImage(), productEntity.getId());
+        jdbcTemplate.update(sql, productEntity.getName(), productEntity.getPrice(), productEntity.getImage(),
+                productEntity.getId());
     }
 
     public boolean isProductExist(int productId) {

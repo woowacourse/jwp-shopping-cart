@@ -3,10 +3,9 @@ package cart.service;
 import cart.dao.CartItemDao;
 import cart.entity.CartItemEntity;
 import cart.entity.ProductEntity;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -29,10 +28,6 @@ public class CartItemService {
 
     public void deleteCartItem(int cartItemId) {
         cartItemDao.deleteCartItem(cartItemId);
-    }
-
-    public void deleteAllCartItem() {
-        cartItemDao.deleteAllCartItem();
     }
 
 }

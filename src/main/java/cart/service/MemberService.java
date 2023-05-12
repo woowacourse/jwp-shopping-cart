@@ -2,10 +2,9 @@ package cart.service;
 
 import cart.dao.MemberDao;
 import cart.entity.MemberEntity;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -34,7 +33,4 @@ public class MemberService {
         return memberDao.findMemberId(email, password);
     }
 
-    public void deleteAllMembers() {
-        memberDao.deleteAllMembers();
-    }
 }

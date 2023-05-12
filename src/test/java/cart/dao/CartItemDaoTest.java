@@ -63,8 +63,8 @@ class CartItemDaoTest {
     @Test
     void selectAllCartItems() {
         cartItemDao.deleteAllCartItem();
-        cartItemDao.addCartItem(new CartItemEntity(1,1));
-        cartItemDao.addCartItem(new CartItemEntity(1,2));
+        cartItemDao.addCartItem(new CartItemEntity(1, 1));
+        cartItemDao.addCartItem(new CartItemEntity(1, 2));
 
         List<ProductEntity> productEntities = cartItemDao.selectAllCartItems(1);
 
