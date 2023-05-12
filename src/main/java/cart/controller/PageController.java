@@ -34,4 +34,9 @@ public class PageController {
         model.addAttribute("members", memberService.display());
         return "settings";
     }
+
+    @GetMapping("/cart")
+    public String renderCartPage() {
+        return "cart";
+    }
 }
