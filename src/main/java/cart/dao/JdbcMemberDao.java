@@ -44,16 +44,6 @@ public class JdbcMemberDao implements MemberDao {
     }
 
     @Override
-    public Member selectByEmailAndPassword(final Member member) {
-        String sql = "SELECT * FROM member WHERE email = ? AND password = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql, memberEntityRowMapper, member.getEmail(), member.getPassword());
-        } catch (EmptyResultDataAccessException exception) {
-            return null;
-        }
-    }
-
-    @Override
     public Member selectByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
         try {

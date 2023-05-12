@@ -49,14 +49,14 @@ class JdbcMemberDaoTest {
     }
 
     @Nested
-    @DisplayName("사용자를 이메일과 비밀번호로 조회하는 selectByEmailAndPassword 메서드 테스트")
-    class SelectByEmailAndPasswordTest {
+    @DisplayName("사용자를 이메일로 조회하는 selectByEmail 메서드 테스트")
+    class SelectByEmailTest {
 
         @DisplayName("존재하는 사용자가 조회 되는지 확인한다")
         @Test
         void successTest() {
             final Member member = Member.of("irene@email.com", "password1");
-            Member selectedMember = memberDao.selectByEmailAndPassword(member);
+            Member selectedMember = memberDao.selectByEmail(member.getEmail());
             assertAll(
                     () -> assertThat(selectedMember.getEmail()).isEqualTo(member.getEmail()),
                     () -> assertThat(selectedMember.getPassword()).isEqualTo(member.getPassword())
@@ -68,7 +68,7 @@ class JdbcMemberDaoTest {
         void returnNullTest() {
             final Member member = Member.of("hihi@email.com", "password3");
 
-            assertThat(memberDao.selectByEmailAndPassword(member)).isNull();
+            assertThat(memberDao.selectByEmail(member.getEmail())).isNull();
         }
     }
 

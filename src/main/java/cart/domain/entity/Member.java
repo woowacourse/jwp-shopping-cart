@@ -20,6 +20,10 @@ public class Member {
         return new Member(null, email, password);
     }
 
+    public boolean isSamePassword(final String password) {
+        return this.password.equals(password);
+    }
+
     public Long getId() {
         return id;
     }
@@ -31,4 +35,5 @@ public class Member {
     public String getPassword() {
         return password;
     }
+
 }
