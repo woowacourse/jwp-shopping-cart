@@ -1,15 +1,15 @@
 package cart.service.cart.dto;
 
-public class CartServiceRequest {
+public class InsertCartItemRequest {
     private final String email;
     private final Long productId;
 
-    public CartServiceRequest(String email, Long productId) {
+    public InsertCartItemRequest(String email, Long productId) {
         this.email = email;
         this.productId = productId;
     }
 
-    public CartServiceRequest(String email) {
+    public InsertCartItemRequest(String email) {
         this(email, null);
     }
 

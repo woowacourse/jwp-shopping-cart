@@ -1,6 +1,7 @@
 package cart.service.cart;
 
-import cart.service.cart.dto.CartServiceRequest;
+import cart.service.cart.dto.DeleteCartITemRequest;
+import cart.service.cart.dto.InsertCartItemRequest;
 import cart.service.cart.dto.ProductResponse;
 import cart.service.member.MemberDao;
 import cart.service.member.domain.Member;
@@ -46,14 +47,14 @@ public class CartServiceIntegrationTest {
         Long chickenId = productDao.save(products.get(0));
         Long pizzaId = productDao.save(products.get(1));
 
-        cartService.createCartItem(new CartServiceRequest(email, chickenId));
-        cartService.createCartItem(new CartServiceRequest(email, pizzaId));
+        cartService.createCartItem(new InsertCartItemRequest(email, chickenId));
+        cartService.createCartItem(new InsertCartItemRequest(email, pizzaId));
 
-        List<ProductResponse> productResponses = cartService.findProductsByUserIdOnCart(new CartServiceRequest(member.getEmail()));
+        List<ProductResponse> productResponses = cartService.findProductsByUserIdOnCart(new InsertCartItemRequest(member.getEmail()));
 
         assertAll(
-                () -> assertThat(cartService.findProductsByUserIdOnCart(new CartServiceRequest(member.getEmail()))).hasSize(2),
-                () -> assertThat(cartService.findProductsByUserIdOnCart(new CartServiceRequest(memberNoHaveCartItem.getEmail()))).hasSize(0),
+                () -> assertThat(cartService.findProductsByUserIdOnCart(new InsertCartItemRequest(member.getEmail()))).hasSize(2),
+                () -> assertThat(cartService.findProductsByUserIdOnCart(new InsertCartItemRequest(memberNoHaveCartItem.getEmail()))).hasSize(0),
                 () -> assertThat(productResponses.get(0).getName()).isEqualTo(products.get(0).getName())
         );
     }
@@ -71,9 +72,9 @@ public class CartServiceIntegrationTest {
         Long chickenId = productDao.save(products.get(0));
         Long pizzaId = productDao.save(products.get(1));
 
-        cartService.createCartItem(new CartServiceRequest(email, chickenId));
-        cartService.createCartItem(new CartServiceRequest(email, pizzaId));
+        cartService.createCartItem(new InsertCartItemRequest(email, chickenId));
+        cartService.createCartItem(new InsertCartItemRequest(email, pizzaId));
 
-        Assertions.assertDoesNotThrow(() -> cartService.deleteCartItem(new CartServiceRequest(email, pizzaId)));
+        Assertions.assertDoesNotThrow(() -> cartService.deleteCartItem(new DeleteCartITemRequest(email, pizzaId)));
     }
 }
