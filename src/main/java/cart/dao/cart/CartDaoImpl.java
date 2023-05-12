@@ -3,7 +3,6 @@ package cart.dao.cart;
 import cart.dto.cartitem.CartItem;
 import cart.entity.cart.Cart;
 import cart.entity.cart.Count;
-import cart.entity.member.Member;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
