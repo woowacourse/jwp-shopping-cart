@@ -4,8 +4,6 @@ import cart.domain.product.Product;
 
 public interface CartRepository {
 
-    void create(long userId);
-
     Cart findByMemberId(long userId);
 
     long saveProductToCart(Cart cartToAdd, Product product);
