@@ -41,15 +41,6 @@ public class CartApiControllerTest {
     }
 
     @Test
-    void 장바구니_페이지를_조회한다() {
-        RestAssured
-                .given()
-                .when().get("/cart")
-                .then()
-                .statusCode(HttpStatus.OK.value());
-    }
-
-    @Test
     void 유효한_조회_요청이라면_200_응답코드와_상품_목록을_반환한다() {
         final String email = "kokodakadokok@gmail.com";
         final String password = "12345";
@@ -69,7 +60,7 @@ public class CartApiControllerTest {
     }
 
     @Test
-    void 유효한_추가_요청이라면_200_응답코드를_반환한다() {
+    void 유효한_추가_요청이라면_201_응답코드를_반환한다() {
         final String email = "kokodakadokok@gmail.com";
         final String password = "12345";
 
@@ -79,11 +70,11 @@ public class CartApiControllerTest {
                 .queryParam("productId", 1)
                 .when().post("/cart")
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
-    void 유효한_삭제_요청이라면_200_응답코드를_반환한다() {
+    void 유효한_삭제_요청이라면_204_응답코드를_반환한다() {
         final String email = "kokodakadokok@gmail.com";
         final String password = "12345";
         cartService.addProductByAuthInfo(1L, new AuthInfoRequest(email, password));
@@ -95,7 +86,7 @@ public class CartApiControllerTest {
                 .queryParam("productId", 1)
                 .when().delete("/cart")
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test

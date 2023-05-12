@@ -34,15 +34,6 @@ public class AdminApiControllerTest {
     }
 
     @Test
-    void 어드민_페이지를_조회한다() {
-        RestAssured
-                .given()
-                .when().get("/admin")
-                .then()
-                .statusCode(HttpStatus.OK.value());
-    }
-
-    @Test
     void 유효한_추가_요청이라면_201_응답코드를_반환한다() {
         RestAssured
                 .given()
@@ -65,7 +56,7 @@ public class AdminApiControllerTest {
     }
 
     @Test
-    void 유효한_수정_요청이라면_201_응답코드를_반환한다() {
+    void 유효한_수정_요청이라면_200_응답코드를_반환한다() {
         productService.addProduct(new CreateProductRequest("name", "imageUrl", 1000));
 
         RestAssured
@@ -74,7 +65,7 @@ public class AdminApiControllerTest {
                 .body(new UpdateProductRequest("name", "imageUrl", 50000))
                 .when().patch("/admin/products/" + 1L)
                 .then()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -102,14 +93,14 @@ public class AdminApiControllerTest {
     }
 
     @Test
-    void 유효한_삭제_요청이라면_200_응답코드를_반환한다() {
+    void 유효한_삭제_요청이라면_204_응답코드를_반환한다() {
         productService.addProduct(new CreateProductRequest("name", "imageUrl", 1000));
 
         RestAssured
                 .given()
                 .when().delete("/admin/products/" + 1L)
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
