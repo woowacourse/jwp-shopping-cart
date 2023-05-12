@@ -3,6 +3,7 @@ package cart.service;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 import cart.dto.CreateProductRequest;
 import cart.dto.ProductDto;
@@ -33,10 +34,11 @@ public class ProductServiceTest {
     @Test
     void 상품을_추가한다() {
         final CreateProductRequest request = new CreateProductRequest("name", "imageUrl", 1000);
-        given(productDao.save(any())).willReturn(null);
+        final ProductEntity productEntity = new ProductEntity("name", "imageUrl", 1000);
 
-        assertThatCode(() -> productService.addProduct(request))
-                .doesNotThrowAnyException();
+        productService.addProduct(request);
+
+        verify(productDao).save(productEntity); // 행위 검증
     }
 
     @Test

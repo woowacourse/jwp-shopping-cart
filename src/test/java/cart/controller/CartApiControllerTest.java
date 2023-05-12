@@ -24,7 +24,7 @@ import org.springframework.test.context.jdbc.Sql;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @Sql("/init.sql")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class CartControllerTest {
+public class CartApiControllerTest {
 
     @Autowired
     private ProductService productService;

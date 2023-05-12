@@ -20,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @Sql("/init.sql")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class AdminControllerTest {
+public class AdminApiControllerTest {
 
     @Autowired
     private ProductService productService;
