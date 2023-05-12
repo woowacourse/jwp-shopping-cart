@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
 class MemberServiceTest {
@@ -23,14 +22,16 @@ class MemberServiceTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
     MemberService memberService;
+    Member member;
 
     @BeforeEach
     void setUp() {
         MemberDao memberDao = new MemberDao(jdbcTemplate);
         memberService = new MemberService(memberDao);
+        member = new Member("gray@wooteco.com", "wooteco", "그레이");
+        memberDao.insert(member);
     }
 
-    @Sql("/member_insert.sql")
     @Test
     @DisplayName("모든 회원을 조회한다.")
     void findOneSuccess() {
@@ -39,12 +40,9 @@ class MemberServiceTest {
         assertThat(allMembers).hasSizeGreaterThan(0);
     }
 
-    @Sql("/member_insert.sql")
     @Test
     @DisplayName("이메일, 비밀번호에 해당하는 회원을 조회한다.")
     void findByEmailSuccess() {
-        Member member = new Member("gray@wooteco.com", "wooteco", "그레이");
-
         MemberResponse memberResponse = memberService.findByEmailAndPassword(member.getEmail(),
                 member.getPassword());
 
@@ -55,28 +53,21 @@ class MemberServiceTest {
         );
     }
 
-    @Sql("/member_insert.sql")
     @Test
     @DisplayName("이메일에 해당하는 회원이 없으면 예외가 발생한다.")
     void findByEmailFailWithWrongEmail() {
-        Member member = new Member("gray@wooteco.com", "wooteco", "그레이");
-
         assertThatThrownBy(() -> memberService.findByEmailAndPassword("wrong@wrong.com",
                 member.getPassword()))
                 .isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("일치하는 회원이 존재하지 않습니다.");
     }
 
-    @Sql("/member_insert.sql")
     @Test
     @DisplayName("이메일에 해당하는 회원의 비밀번호가 일치하지 않으면 예외가 발생한다.")
     void findByEmailFailWithWrongPassword() {
-        Member member = new Member("gray@wooteco.com", "wooteco", "그레이");
-
         assertThatThrownBy(() -> memberService.findByEmailAndPassword(member.getEmail(),
                 "wrongPW"))
                 .isInstanceOf(MemberNotFoundException.class)
                 .hasMessageContaining("비밀번호가 일치하지 않습니다.");
     }
-
 }
