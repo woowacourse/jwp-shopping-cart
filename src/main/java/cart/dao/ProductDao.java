@@ -3,12 +3,13 @@ package cart.dao;
 import cart.domain.entity.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductDao {
 
     List<Product> selectAll();
 
-    Product selectById(final long id);
+    Optional<Product> selectById(final long id);
 
     long insert(final Product product);
 

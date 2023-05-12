@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.entity.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberDao {
 
@@ -10,5 +11,5 @@ public interface MemberDao {
 
     long insert(final Member member);
 
-    Member selectByEmail(final String email);
+    Optional<Member> selectByEmail(final String email);
 }

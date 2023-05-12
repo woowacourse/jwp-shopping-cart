@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -56,10 +57,10 @@ class CartItemManagementServiceTest {
             final Product product1 = Product.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
             final Product product2 = Product.of(2L, "pizza", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 20000);
 
-            when(memberDao.selectByEmail(any())).thenReturn(member);
+            when(memberDao.selectByEmail(any())).thenReturn(Optional.of(member));
             when(cartItemDao.selectAllByMemberId(anyLong())).thenReturn(cartItemData);
-            when(productDao.selectById(1L)).thenReturn(product1);
-            when(productDao.selectById(2L)).thenReturn(product2);
+            when(productDao.selectById(1L)).thenReturn(Optional.of(product1));
+            when(productDao.selectById(2L)).thenReturn(Optional.of(product2));
 
             final List<CartItemDetailsDto> cartItemDetailsDtos = managementService.findAll(member.getEmail());
 
@@ -86,7 +87,7 @@ class CartItemManagementServiceTest {
         @DisplayName("장바구니에 상품이 추가되는지 확인한다")
         @Test
         void successTest() {
-            when(memberDao.selectByEmail(any())).thenReturn(member);
+            when(memberDao.selectByEmail(any())).thenReturn(Optional.of(member));
             when(cartItemDao.insert(any())).thenReturn(1L);
 
             assertDoesNotThrow(() -> managementService.save(member.getEmail(), 1L));
@@ -102,7 +103,7 @@ class CartItemManagementServiceTest {
         @DisplayName("장바구니에서 상품이 삭제되는지 확인한다")
         @Test
         void successTest() {
-            when(memberDao.selectByEmail(any())).thenReturn(member);
+            when(memberDao.selectByEmail(any())).thenReturn(Optional.of(member));
             when(cartItemDao.deleteByIdAndMemberId(anyLong(), anyLong())).thenReturn(1);
 
             assertDoesNotThrow(() -> managementService.delete(member.getEmail(), 1L));
@@ -111,7 +112,7 @@ class CartItemManagementServiceTest {
         @DisplayName("장바구니에서 상품이 삭제되지 않으면 예외가 발생하는지 확인한다")
         @Test
         void failTest() {
-            when(memberDao.selectByEmail(any())).thenReturn(member);
+            when(memberDao.selectByEmail(any())).thenReturn(Optional.of(member));
             when(cartItemDao.deleteByIdAndMemberId(anyLong(), anyLong())).thenReturn(0);
 
             assertThatThrownBy(() -> managementService.delete(member.getEmail(), 3L))

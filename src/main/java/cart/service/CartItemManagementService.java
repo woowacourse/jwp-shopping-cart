@@ -33,17 +33,16 @@ public class CartItemManagementService {
         List<CartItem> cartItemEntities = cartItemDao.selectAllByMemberId(memberId);
         List<CartItemDetailsDto> cartItemDetailsDtos = new ArrayList<>();
         for (CartItem cartItem : cartItemEntities) {
-            Product product = productDao.selectById(cartItem.getProductId());
+            Product product = productDao.selectById(cartItem.getProductId())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
             cartItemDetailsDtos.add(CartItemDetailsDto.from(cartItem.getId(), product));
         }
         return cartItemDetailsDtos;
     }
 
     private long findMemberId(final String memberEmail) {
-        Member member = memberDao.selectByEmail(memberEmail);
-        if (member == null) {
-            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
-        }
+        Member member = memberDao.selectByEmail(memberEmail)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         return member.getId();
     }
 

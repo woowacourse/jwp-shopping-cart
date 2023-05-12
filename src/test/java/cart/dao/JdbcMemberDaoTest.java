@@ -56,19 +56,20 @@ class JdbcMemberDaoTest {
         @Test
         void successTest() {
             final Member member = Member.of("irene@email.com", "password1");
-            Member selectedMember = memberDao.selectByEmail(member.getEmail());
+            Member selectedMember = memberDao.selectByEmail(member.getEmail())
+                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));;
             assertAll(
                     () -> assertThat(selectedMember.getEmail()).isEqualTo(member.getEmail()),
                     () -> assertThat(selectedMember.getPassword()).isEqualTo(member.getPassword())
             );
         }
 
-        @DisplayName("존재하지 않는 사용자를 조회할 경우 null을 반환하는지 확인한다")
+        @DisplayName("존재하지 않는 사용자를 조회할 경우 빈값을 반환하는지 확인한다")
         @Test
-        void returnNullTest() {
+        void returnEmptyest() {
             final Member member = Member.of("hihi@email.com", "password3");
 
-            assertThat(memberDao.selectByEmail(member.getEmail())).isNull();
+            assertThat(memberDao.selectByEmail(member.getEmail())).isEmpty();
         }
     }
 

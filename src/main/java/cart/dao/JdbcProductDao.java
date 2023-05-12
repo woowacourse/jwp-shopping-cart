@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcProductDao implements ProductDao {
@@ -40,9 +41,9 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
-    public Product selectById(final long id) {
+    public Optional<Product> selectById(final long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, productEntityRowMapper, id);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, productEntityRowMapper, id));
     }
 
     @Override

@@ -11,12 +11,13 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcMemberDao implements MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert simpleInsert;
+    private final SimpleJdbcInsert simpleInsert;
 
     public JdbcMemberDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -44,12 +45,12 @@ public class JdbcMemberDao implements MemberDao {
     }
 
     @Override
-    public Member selectByEmail(final String email) {
+    public Optional<Member> selectByEmail(final String email) {
         final String sql = "SELECT * FROM member WHERE email = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, memberEntityRowMapper, email);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberEntityRowMapper, email));
         } catch (EmptyResultDataAccessException exception) {
-            return null;
+            return Optional.empty();
         }
     }
 }
