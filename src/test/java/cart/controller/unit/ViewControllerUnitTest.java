@@ -1,7 +1,9 @@
 package cart.controller.unit;
 
 import cart.controller.ViewController;
+import cart.domain.Email;
 import cart.domain.MemberEntity;
+import cart.domain.Password;
 import cart.domain.ProductEntity;
 import cart.dto.ResponseMemberDto;
 import cart.dto.ResponseProductDto;
@@ -79,7 +81,7 @@ class ViewControllerUnitTest {
     void 설정_화면을_반환한다() throws Exception {
         //given
         given(memberService.findAll())
-                .willReturn(List.of(new ResponseMemberDto(new MemberEntity(1L, "huchu@woowahan.com", "1234567a!"))));
+                .willReturn(List.of(new ResponseMemberDto(new MemberEntity(1L, new Email("huchu@woowahan.com"), new Password("1234567a!")))));
 
         //when
         final String html = mockMvc.perform(get("/settings")

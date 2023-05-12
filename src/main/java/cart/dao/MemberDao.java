@@ -1,6 +1,8 @@
 package cart.dao;
 
+import cart.domain.Email;
 import cart.domain.MemberEntity;
+import cart.domain.Password;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,8 +18,8 @@ public class MemberDao {
 
     private static final RowMapper<MemberEntity> MEMBER_ENTITY_ROW_MAPPER = (resultSet, rowNum) -> new MemberEntity(
             resultSet.getLong("id"),
-            resultSet.getString("email"),
-            resultSet.getString("password")
+            new Email(resultSet.getString("email")),
+            new Password(resultSet.getString("password"))
     );
     private static final String[] GENERATED_ID_COLUMN = {"id"};
 
@@ -37,8 +39,8 @@ public class MemberDao {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(sql, GENERATED_ID_COLUMN);
-            preparedStatement.setString(1, memberEntity.getEmail());
-            preparedStatement.setString(2, memberEntity.getPassword());
+            preparedStatement.setString(1, memberEntity.getEmailAddress());
+            preparedStatement.setString(2, memberEntity.getPasswordValue());
             return preparedStatement;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();

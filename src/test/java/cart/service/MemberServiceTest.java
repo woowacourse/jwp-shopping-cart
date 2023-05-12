@@ -1,7 +1,9 @@
 package cart.service;
 
 import cart.dao.MemberDao;
+import cart.domain.Email;
 import cart.domain.MemberEntity;
+import cart.domain.Password;
 import cart.dto.ResponseMemberDto;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -34,7 +36,8 @@ class MemberServiceTest {
     void 사용자를_조회한다() {
         //given
         when(memberDao.findAll())
-                .thenReturn(List.of(new MemberEntity(1L, "huchu@woowahan.com", "1234567a!")));
+                .thenReturn(List.of(new
+                        MemberEntity(1L, new Email("huchu@woowahan.com"), new Password("1234567a!"))));
 
         //when
         final List<ResponseMemberDto> responseMemberDtos = memberService.findAll();
@@ -52,15 +55,15 @@ class MemberServiceTest {
     @Test
     void 계정으로_회원을_조회한다() {
         //given
-        final String email = "huchu@woowahan.com";
-        when(memberDao.findByEmail(email))
-                .thenReturn(new MemberEntity(1L, email, "1234567a!"));
+        final Email email = new Email("huchu@woowahan.com");
+        when(memberDao.findByEmail(email.getAddress()))
+                .thenReturn(new MemberEntity(1L, new Email("huchu@woowahan.com"), new Password("1234567a!")));
 
         //when
         final MemberEntity member = memberService.findByEmail(email);
 
         //then
-        assertThat(member).isEqualTo(new MemberEntity(1L, "huchu@woowahan.com", "1234567a!"));
+        assertThat(member).isEqualTo(new MemberEntity(1L, new Email("huchu@woowahan.com"), new Password("1234567a!")));
     }
 
     @ParameterizedTest
@@ -69,10 +72,10 @@ class MemberServiceTest {
         //given
         final String email = "huchu@woowahan.com";
         when(memberDao.findByEmail(email))
-                .thenReturn(new MemberEntity(1L, email, "1234567a!"));
+                .thenReturn(new MemberEntity(1L, new Email(email), new Password("1234567a!")));
 
         //when
-        final boolean actual = memberService.hasMember(email, password);
+        final boolean actual = memberService.hasMember(new Email(email), new Password(password));
 
         //then
         assertThat(actual).isEqualTo(expected);

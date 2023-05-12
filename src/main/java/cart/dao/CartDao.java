@@ -1,8 +1,6 @@
 package cart.dao;
 
-import cart.domain.CartEntity;
-import cart.domain.MemberEntity;
-import cart.domain.ProductEntity;
+import cart.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,8 +17,8 @@ public class CartDao {
     private static final RowMapper<CartEntity> CART_ENTITY_ROW_MAPPER = (resultSet, rowNum) -> new CartEntity(
             resultSet.getLong("id"),
             new MemberEntity(resultSet.getLong("member_id"),
-                    resultSet.getString("email"),
-                    resultSet.getString("password")),
+                    new Email(resultSet.getString("email")),
+                    new Password(resultSet.getString("password"))),
             new ProductEntity(resultSet.getLong("product_id"),
                     resultSet.getString("name"),
                     resultSet.getInt("price"),

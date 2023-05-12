@@ -1,9 +1,7 @@
 package cart.service;
 
 import cart.dao.CartDao;
-import cart.domain.CartEntity;
-import cart.domain.MemberEntity;
-import cart.domain.ProductEntity;
+import cart.domain.*;
 import cart.dto.ResponseProductDto;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -25,7 +23,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CartServiceTest {
 
-    private static final MemberEntity MEMBER_ENTITY = new MemberEntity(1L, "huchu@woowahan.com", "1234567a!");
+    private static final MemberEntity MEMBER_ENTITY = new MemberEntity(1L, new Email("huchu@woowahan.com"), new Password("1234567a!"));
     private static final ProductEntity PRODUCT_ENTITY = new ProductEntity(1L, "치킨", 10_000, "치킨 사진");
 
     @Mock

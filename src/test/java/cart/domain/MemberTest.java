@@ -17,6 +17,6 @@ class MemberTest {
         final String password = "12345abc!!";
 
         // expect
-        assertThatNoException().isThrownBy(() -> new MemberEntity(email, password));
+        assertThatNoException().isThrownBy(() -> new MemberEntity(new Email(email), new Password(password)));
     }
 }

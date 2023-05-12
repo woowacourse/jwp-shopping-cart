@@ -1,8 +1,6 @@
 package cart.dao;
 
-import cart.domain.CartEntity;
-import cart.domain.MemberEntity;
-import cart.domain.ProductEntity;
+import cart.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -51,14 +49,14 @@ class CartDaoTest {
 
         //when
         final Long id = cartDao.insert(new CartEntity(
-                new MemberEntity(memberId, EMAIL, PASSWORD),
+                new MemberEntity(memberId, new Email(EMAIL), new Password(PASSWORD)),
                 new ProductEntity(productId, NAME, PRICE, IMAGE)));
 
         //then
         assertSoftly(softly -> {
             softly.assertThat(id).isNotNull();
             final CartEntity carEntity = cartDao.findById(id);
-            softly.assertThat(carEntity.getMember()).isEqualTo(new MemberEntity(memberId, EMAIL, PASSWORD));
+            softly.assertThat(carEntity.getMember()).isEqualTo(new MemberEntity(memberId, new Email(EMAIL), new Password(PASSWORD)));
             softly.assertThat(carEntity.getProduct()).isEqualTo(new ProductEntity(productId, NAME, PRICE, IMAGE));
         });
     }
@@ -94,7 +92,7 @@ class CartDaoTest {
         final Long memberId = insertMember(EMAIL, PASSWORD);
         final Long productId = insertProduct(NAME, PRICE, IMAGE);
         final Long id = cartDao.insert(new CartEntity(
-                new MemberEntity(memberId, EMAIL, PASSWORD),
+                new MemberEntity(memberId, new Email(EMAIL), new Password(PASSWORD)),
                 new ProductEntity(productId, NAME, PRICE, IMAGE)));
 
         //when
@@ -102,7 +100,7 @@ class CartDaoTest {
 
         //then
         assertSoftly(softly -> {
-            softly.assertThat(cartEntity.getMember()).isEqualTo(new MemberEntity(memberId, EMAIL, PASSWORD));
+            softly.assertThat(cartEntity.getMember()).isEqualTo(new MemberEntity(memberId, new Email(EMAIL), new Password(PASSWORD)));
             softly.assertThat(cartEntity.getProduct()).isEqualTo(new ProductEntity(productId, NAME, PRICE, IMAGE));
         });
     }
@@ -113,7 +111,7 @@ class CartDaoTest {
         final Long memberId = insertMember(EMAIL, PASSWORD);
         final Long productId = insertProduct(NAME, PRICE, IMAGE);
         final Long id = cartDao.insert(new CartEntity(
-                new MemberEntity(memberId, EMAIL, PASSWORD),
+                new MemberEntity(memberId, new Email(EMAIL), new Password(PASSWORD)),
                 new ProductEntity(productId, NAME, PRICE, IMAGE)));
 
         //when
@@ -124,7 +122,7 @@ class CartDaoTest {
             softly.assertThat(cartEntities).hasSize(1);
             final CartEntity cartEntity = cartEntities.get(0);
             softly.assertThat(cartEntity.getId()).isEqualTo(id);
-            softly.assertThat(cartEntity.getMember()).isEqualTo(new MemberEntity(memberId, EMAIL, PASSWORD));
+            softly.assertThat(cartEntity.getMember()).isEqualTo(new MemberEntity(memberId, new Email(EMAIL), new Password(PASSWORD)));
             softly.assertThat(cartEntity.getProduct()).isEqualTo(new ProductEntity(productId, NAME, PRICE, IMAGE));
         });
     }
@@ -135,7 +133,7 @@ class CartDaoTest {
         final Long memberId = insertMember(EMAIL, PASSWORD);
         final Long productId = insertProduct(NAME, PRICE, IMAGE);
         cartDao.insert(new CartEntity(
-                new MemberEntity(memberId, EMAIL, PASSWORD),
+                new MemberEntity(memberId, new Email(EMAIL), new Password(PASSWORD)),
                 new ProductEntity(productId, NAME, PRICE, IMAGE)));
 
         //when

@@ -10,8 +10,8 @@ public class ResponseMemberDto {
 
     public ResponseMemberDto(final MemberEntity memberEntity) {
         this.id = memberEntity.getId();
-        this.email = memberEntity.getEmail();
-        this.password = memberEntity.getPassword();
+        this.email = memberEntity.getEmailAddress();
+        this.password = memberEntity.getPasswordValue();
     }
 
     public Long getId() {

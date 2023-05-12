@@ -8,26 +8,34 @@ public class MemberEntity {
     private final Email email;
     private final Password password;
 
-    public MemberEntity(final Long id, final String address, final String password) {
+    public MemberEntity(final Long id, final Email email, final Password password) {
         this.id = id;
-        this.email = new Email(address);
-        this.password = new Password(password);
+        this.email = email;
+        this.password = password;
     }
 
-    public MemberEntity(final String address, final String password) {
-        this(null, address, password);
+    public MemberEntity(final Email email, final Password password) {
+        this(null, email, password);
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getEmail() {
+    public String getEmailAddress() {
         return email.getAddress();
     }
 
-    public String getPassword() {
+    public String getPasswordValue() {
         return password.getValue();
+    }
+
+    public Email getEmail() {
+        return email;
+    }
+
+    public Password getPassword() {
+        return password;
     }
 
     @Override

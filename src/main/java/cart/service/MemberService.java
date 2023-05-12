@@ -1,7 +1,9 @@
 package cart.service;
 
 import cart.dao.MemberDao;
+import cart.domain.Email;
 import cart.domain.MemberEntity;
+import cart.domain.Password;
 import cart.dto.ResponseMemberDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -28,14 +30,14 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberEntity findByEmail(final String email) {
-        return memberDao.findByEmail(email);
+    public MemberEntity findByEmail(final Email email) {
+        return memberDao.findByEmail(email.getAddress());
     }
 
     @Transactional(readOnly = true)
-    public boolean hasMember(final String email, final String password) {
+    public boolean hasMember(final Email email, final Password password) {
         try {
-            final MemberEntity memberEntity = memberDao.findByEmail(email);
+            final MemberEntity memberEntity = memberDao.findByEmail(email.getAddress());
             return password.equals(memberEntity.getPassword());
         } catch (EmptyResultDataAccessException e) {
             return false;

@@ -1,6 +1,8 @@
 package cart.dao;
 
+import cart.domain.Email;
 import cart.domain.MemberEntity;
+import cart.domain.Password;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -34,7 +36,7 @@ class MemberDaoTest {
     @Test
     void 모든_데이터를_조회한다() {
         //given
-        memberDao.insert(new MemberEntity("huchu@woowahan.com", "1234567a!"));
+        memberDao.insert(new MemberEntity(new Email("huchu@woowahan.com"), new Password("1234567a!")));
 
         //when
         final List<MemberEntity> memberEntities = memberDao.findAll();
@@ -43,15 +45,15 @@ class MemberDaoTest {
         assertSoftly(softly -> {
             softly.assertThat(memberEntities).hasSize(1);
             final MemberEntity memberEntity = memberEntities.get(0);
-            softly.assertThat(memberEntity.getEmail()).isEqualTo("huchu@woowahan.com");
-            softly.assertThat(memberEntity.getPassword()).isEqualTo("1234567a!");
+            softly.assertThat(memberEntity.getEmailAddress()).isEqualTo("huchu@woowahan.com");
+            softly.assertThat(memberEntity.getPasswordValue()).isEqualTo("1234567a!");
         });
     }
 
     @Test
     void 데이터를_추가한다() {
         //given
-        final MemberEntity member = new MemberEntity("huchu@woowahan.com", "1234567a!");
+        final MemberEntity member = new MemberEntity(new Email("huchu@woowahan.com"), new Password("1234567a!"));
 
         //when
         final Long id = memberDao.insert(member);
@@ -61,15 +63,15 @@ class MemberDaoTest {
             softly.assertThat(id).isNotNull();
             final MemberEntity memberEntity = memberDao.findById(id);
             softly.assertThat(memberEntity.getId()).isEqualTo(id);
-            softly.assertThat(memberEntity.getEmail()).isEqualTo("huchu@woowahan.com");
-            softly.assertThat(memberEntity.getPassword()).isEqualTo("1234567a!");
+            softly.assertThat(memberEntity.getEmailAddress()).isEqualTo("huchu@woowahan.com");
+            softly.assertThat(memberEntity.getPasswordValue()).isEqualTo("1234567a!");
         });
     }
 
     @Test
     void id로_데이터를_찾는다() {
         //given
-        final MemberEntity member = new MemberEntity("huchu@woowahan.com", "1234567a!");
+        final MemberEntity member = new MemberEntity(new Email("huchu@woowahan.com"), new Password("1234567a!"));
         final Long id = memberDao.insert(member);
 
         //when
@@ -78,15 +80,15 @@ class MemberDaoTest {
         //then
         assertSoftly(softly -> {
             softly.assertThat(memberEntity.getId()).isEqualTo(id);
-            softly.assertThat(memberEntity.getEmail()).isEqualTo("huchu@woowahan.com");
-            softly.assertThat(memberEntity.getPassword()).isEqualTo("1234567a!");
+            softly.assertThat(memberEntity.getEmailAddress()).isEqualTo("huchu@woowahan.com");
+            softly.assertThat(memberEntity.getPasswordValue()).isEqualTo("1234567a!");
         });
     }
 
     @Test
     void 모든_데이터를_삭제한다() {
         //given
-        memberDao.insert(new MemberEntity("huchu@woowahan.com", "1234567a!"));
+        memberDao.insert(new MemberEntity(new Email("huchu@woowahan.com"), new Password("1234567a!")));
 
         //when
         memberDao.deleteAll();
@@ -98,7 +100,7 @@ class MemberDaoTest {
     @Test
     void 이메일로_데이터를_찾는다() {
         //given
-        final MemberEntity member = new MemberEntity("huchu@woowahan.com", "1234567a!");
+        final MemberEntity member = new MemberEntity(new Email("huchu@woowahan.com"), new Password("1234567a!"));
         final Long id = memberDao.insert(member);
 
         //when
@@ -107,8 +109,8 @@ class MemberDaoTest {
         //then
         assertSoftly(softly -> {
             softly.assertThat(memberEntity.getId()).isEqualTo(id);
-            softly.assertThat(memberEntity.getEmail()).isEqualTo("huchu@woowahan.com");
-            softly.assertThat(memberEntity.getPassword()).isEqualTo("1234567a!");
+            softly.assertThat(memberEntity.getEmailAddress()).isEqualTo("huchu@woowahan.com");
+            softly.assertThat(memberEntity.getPasswordValue()).isEqualTo("1234567a!");
         });
     }
 }
