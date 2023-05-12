@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/cart")
+@RequestMapping("/carts")
 @RestController()
 public class CartController {
 
@@ -29,7 +29,7 @@ public class CartController {
     @PostMapping
     public ResponseEntity<Void> save(@Auth Member member, @RequestBody @Valid CartProductSaveRequest request) {
         final Long id = cartProductService.save(member, request);
-        return ResponseEntity.created(URI.create("/cart/" + id)).build();
+        return ResponseEntity.created(URI.create("/carts/" + id)).build();
     }
 
     @GetMapping

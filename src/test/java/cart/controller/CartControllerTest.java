@@ -59,7 +59,7 @@ class CartControllerTest {
         final String request = objectMapper.writeValueAsString(cartProductSaveRequest);
 
         // when
-        mockMvc.perform(post("/cart")
+        mockMvc.perform(post("/carts")
                         .header("Authorization", makeAuthorizationHeader(member))
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -95,7 +95,7 @@ class CartControllerTest {
         cartProductDao.saveAndGetId(new CartProduct(member.getId(), productId2));
 
         // expect
-        mockMvc.perform(get("/cart")
+        mockMvc.perform(get("/carts")
                         .header("Authorization", makeAuthorizationHeader(member))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -116,7 +116,7 @@ class CartControllerTest {
         cartProductDao.saveAndGetId(new CartProduct(member.getId(), productId));
 
         // expect
-        mockMvc.perform(delete("/cart/" + productId)
+        mockMvc.perform(delete("/carts/" + productId)
                         .header("Authorization", makeAuthorizationHeader(member))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
