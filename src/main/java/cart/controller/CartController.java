@@ -34,7 +34,7 @@ public class CartController {
     public ResponseEntity<CartResponse> addItem(@RequestParam Long itemId,
                                                 @Authentication Long memberId) {
         CartResponse cartResponse = cartService.save(memberId, itemId);
-        return ResponseEntity.created(URI.create("/carts/" + cartResponse.getCartId()))
+        return ResponseEntity.created(URI.create("/carts"))
                 .body(cartResponse);
     }
 

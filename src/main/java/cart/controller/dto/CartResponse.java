@@ -4,16 +4,16 @@ import java.util.List;
 
 public class CartResponse {
 
-    private final Long cartId;
+    private final Long memberId;
     private final List<ItemResponse> itemResponses;
 
-    public CartResponse(Long cartId, List<ItemResponse> itemResponses) {
-        this.cartId = cartId;
+    public CartResponse(Long memberId, List<ItemResponse> itemResponses) {
+        this.memberId = memberId;
         this.itemResponses = itemResponses;
     }
 
-    public Long getCartId() {
-        return cartId;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public List<ItemResponse> getItemResponses() {

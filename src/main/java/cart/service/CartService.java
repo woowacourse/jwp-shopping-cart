@@ -36,8 +36,8 @@ public class CartService {
             throw new CartException(CART_DUPLICATE_MESSAGE);
         }
 
-        Long savedId = cartDao.insert(memberId, itemId);
-        return new CartResponse(savedId, cartDao.findAllByMemberId(memberId)
+        cartDao.insert(memberId, itemId);
+        return new CartResponse(memberId, cartDao.findAllByMemberId(memberId)
                 .stream()
                 .map(ItemResponse::from)
                 .collect(Collectors.toList()));
