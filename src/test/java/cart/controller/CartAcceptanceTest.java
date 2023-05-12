@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.authentication.MemberInfo;
 import cart.dto.cartitem.CartItemRequest;
+import cart.dto.cartitem.CartItemResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -89,8 +90,10 @@ class CartAcceptanceTest {
     void member_find_cart_item_success() {
         // given
         MemberInfo member = new MemberInfo("ako@wooteco.com", "ako");
-        String responseBody = "[{\"cartItemId\":1,\"name\":\"연필\",\"imageUrl\":\"이미지\",\"price\":1000,\"itemCount\":2},"
-            + "{\"cartItemId\":2,\"name\":\"지우개\",\"imageUrl\":\"이미지\",\"price\":2000,\"itemCount\":1}]";
+        List<CartItemResponse> expectedResult = List.of(
+            new CartItemResponse(1L, "연필", "이미지", 1000, 2),
+            new CartItemResponse(2L, "지우개", "이미지", 2000, 1)
+        );
 
         // when
         ExtractableResponse<Response> result = given()
@@ -99,11 +102,12 @@ class CartAcceptanceTest {
             .get("/cart-items")
             .then()
             .extract();
+        List<CartItemResponse> resultResponseBody = result.jsonPath().getList(".", CartItemResponse.class);
 
         // then
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(result.response().as(List.class).size()).isEqualTo(2);
-        assertThat(result.response().asString()).isEqualTo(responseBody);
+        assertThat(resultResponseBody).usingRecursiveComparison().isEqualTo(expectedResult);
     }
 
     @Test

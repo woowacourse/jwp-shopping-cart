@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -123,9 +124,10 @@ class AdminProductAcceptanceTest {
         // givn
         String adminEmail = "admin@wooteco.com";
         String adminPassword = "admin";
-        String responseBody = "[{\"id\":1,\"name\":\"연필\",\"imageUrl\":\"이미지\",\"price\":1000},"
-            + "{\"id\":2,\"name\":\"지우개\",\"imageUrl\":\"이미지\",\"price\":2000},"
-            + "{\"id\":3,\"name\":\"볼펜\",\"imageUrl\":\"이미지\",\"price\":3000}]";
+        List<ProductResponse> expectedResult = List.of(
+            new ProductResponse(1L, "연필", "이미지", 1000),
+            new ProductResponse(2L, "지우개", "이미지", 2000),
+            new ProductResponse(3L, "볼펜", "이미지", 3000));
 
         // when
         ExtractableResponse<Response> result = given()
@@ -135,11 +137,12 @@ class AdminProductAcceptanceTest {
             .get("admin/products")
             .then()
             .extract();
+        List<ProductResponse> resultResponseBody = result.jsonPath().getList(".", ProductResponse.class);
 
         // then
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(result.response().body().as(List.class).size()).isEqualTo(3);
-        assertThat(result.response().body().asString()).isEqualTo(responseBody);
+        assertThat(resultResponseBody).usingRecursiveComparison().isEqualTo(expectedResult);
     }
 
     @DisplayName("권한 없는 사용자가 상품을 조회하면 상태코드 401을 반환한다.")
