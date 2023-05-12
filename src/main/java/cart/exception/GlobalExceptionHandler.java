@@ -33,12 +33,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> handleDBException(DBException e) {
-        System.out.println(e.getMessage());
-        return ResponseEntity.internalServerError().body(e.getMessage());
-    }
-
-    @ExceptionHandler
     public ResponseEntity<?> handleIllegalArgumentsException(IllegalArgumentException e) {
         System.out.println(e.getMessage());
         return ResponseEntity.badRequest().body(e.getMessage());
