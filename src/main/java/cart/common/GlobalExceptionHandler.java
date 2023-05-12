@@ -1,9 +1,8 @@
 package cart.common;
 
 import cart.excpetion.AuthenticationException;
-import cart.excpetion.CartException;
-import cart.excpetion.ProductionRepoException;
-import cart.excpetion.ProductionServiceException;
+import cart.excpetion.cart.CartException;
+import cart.excpetion.product.ProductException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -29,8 +28,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
-    @ExceptionHandler({ProductionServiceException.class, ProductionRepoException.class})
-    public ResponseEntity<String> handleProduct(Exception e) {
+    @ExceptionHandler({ProductException.class})
+    public ResponseEntity<String> handleProduct(ProductException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 

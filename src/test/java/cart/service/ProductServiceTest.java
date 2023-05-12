@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dto.request.ProductCreateDto;
-import cart.excpetion.ProductionServiceException;
+import cart.excpetion.product.InvalidProductException;
 import cart.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -48,6 +48,6 @@ class ProductServiceTest {
 
         //expect
         Assertions.assertThatThrownBy(() -> productService.create(request))
-                .isInstanceOf(ProductionServiceException.class);
+                .isInstanceOf(InvalidProductException.class);
     }
 }

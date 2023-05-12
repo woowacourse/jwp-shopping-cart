@@ -1,5 +1,8 @@
 package cart.domain;
 
+import cart.excpetion.cart.DuplicateCartItemException;
+import cart.excpetion.product.ProductNotFoundException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +35,7 @@ public class Cart {
 
     private void checkDuplication(final Product product) {
         if (Collections.frequency(products, product) != NOT_EXIST_ITEM) {
-            throw new IllegalStateException("이미 존재하는 상품을 더할 수는 없습니다.");
+            throw new DuplicateCartItemException("이미 존재하는 상품을 더할 수는 없습니다.");
         }
     }
 
@@ -41,7 +44,7 @@ public class Cart {
             products.remove(products.indexOf(product));
             return;
         }
-        throw new IllegalStateException("장바구니에 없는 상품을 삭제할 수 없습니다.");
+        throw new ProductNotFoundException("장바구니에 없는 상품을 삭제할 수 없습니다.");
     }
 
     public Integer getMemberId() {

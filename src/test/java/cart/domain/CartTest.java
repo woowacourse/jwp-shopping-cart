@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.excpetion.cart.DuplicateCartItemException;
+import cart.excpetion.product.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +34,7 @@ class CartTest {
 
         //when,then
         assertThatThrownBy(() -> cart.add(product))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(DuplicateCartItemException.class);
     }
 
     @DisplayName("아이템을 추가한다")
@@ -57,7 +59,7 @@ class CartTest {
 
         //when,then
         assertThatThrownBy(() -> cart.delete(nonexistentProduct))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(ProductNotFoundException.class);
     }
 
     @DisplayName("카트에서 상품을 제거한다")

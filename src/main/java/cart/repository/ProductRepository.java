@@ -3,7 +3,7 @@ package cart.repository;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.entity.ProductEntity;
-import cart.excpetion.ProductionRepoException;
+import cart.excpetion.product.DuplicateProductException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class ProductRepository {
 
     public void create(Product product) {
         if (productDao.exitingProductName(product.getName())) {
-            throw new ProductionRepoException("이미 존재하는 상품명입니다");
+            throw new DuplicateProductException("이미 존재하는 상품명입니다");
         }
         productDao.create(new ProductEntity(
                         product.getName(),

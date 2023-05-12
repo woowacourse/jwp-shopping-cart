@@ -1,5 +1,7 @@
 package cart.domain;
 
+import cart.excpetion.product.InvalidProductException;
+
 import java.util.Objects;
 
 public class Product {
@@ -30,26 +32,26 @@ public class Product {
 
     private void validateName(final String name) {
         if (name == null) {
-            throw new IllegalArgumentException("상품의 이름은 필수 입니다.");
+            throw new InvalidProductException("상품의 이름은 필수 입니다.");
         }
         if (name.length() < MIN_NAME_LENGTH || name.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException(String.format("상품의 이름은 %d이상 %d이하 입니다", MIN_NAME_LENGTH, MAX_NAME_LENGTH));
+            throw new InvalidProductException(String.format("상품의 이름은 %d이상 %d이하 입니다", MIN_NAME_LENGTH, MAX_NAME_LENGTH));
         }
     }
 
     private void validateImage(final String image) {
         if (image == null) {
-            throw new IllegalArgumentException("상품은 이미지를 가져야 합니다.");
+            throw new InvalidProductException("상품은 이미지를 가져야 합니다.");
         }
     }
 
     private void validatePrice(final Integer price) {
         if (price == null) {
-            throw new IllegalArgumentException("상품은 가격을 가져야 합니다.");
+            throw new InvalidProductException("상품은 가격을 가져야 합니다.");
         }
 
         if (price < 0) {
-            throw new IllegalArgumentException("상품의 가격은 0보다 커야합니다.");
+            throw new InvalidProductException("상품의 가격은 0보다 커야합니다.");
         }
     }
 

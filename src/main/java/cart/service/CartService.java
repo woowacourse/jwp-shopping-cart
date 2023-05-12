@@ -4,7 +4,7 @@ import cart.auth.MemberInfo;
 import cart.domain.Cart;
 import cart.domain.Product;
 import cart.dto.response.ProductDto;
-import cart.excpetion.CartException;
+import cart.excpetion.product.ProductNotFoundException;
 import cart.repository.CartRepository;
 import cart.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,41 +26,31 @@ public class CartService {
     }
 
     public void addProduct(final MemberInfo memberInfo, final int productId) {
-        final Optional<Product> product = productRepository.findBy(productId);
-        if (product.isPresent()) {
-            add(memberInfo, product.get());
-            return;
-        }
-        throw new CartException("존재하지 않는 상품을 카트에 등록할 수 없습니다");
+        final Product product = productRepository.findBy(productId)
+                .orElseThrow(() -> {
+                    throw new ProductNotFoundException("상품이 존재하지 않습니다.");
+                });
+        add(memberInfo, product);
     }
 
     private void add(final MemberInfo memberInfo, final Product product) {
-        try {
-            final Cart cart = cartRepository.getCartOf(memberInfo.getId());
-            cart.add(product);
-            cartRepository.save(cart);
-        } catch (IllegalStateException e) {
-            throw new CartException(e.getMessage());
-        }
+        final Cart cart = cartRepository.getCartOf(memberInfo.getId());
+        cart.add(product);
+        cartRepository.save(cart);
     }
 
     public void deleteProduct(final MemberInfo memberInfo, final Integer productId) {
-        final Optional<Product> product = productRepository.findBy(productId);
-        if (product.isPresent()) {
-            delete(memberInfo, product.get());
-            return;
-        }
-        throw new CartException("존재하지 않는 상품을 카트에 등록할 수 없습니다");
+        final Product product = productRepository.findBy(productId)
+                .orElseThrow(() -> {
+                    throw new ProductNotFoundException("상품이 존재하지 않습니다.");
+                });
+        delete(memberInfo, product);
     }
 
     private void delete(final MemberInfo memberInfo, final Product product) {
-        try {
-            final Cart cart = cartRepository.getCartOf(memberInfo.getId());
-            cart.delete(product);
-            cartRepository.save(cart);
-        } catch (IllegalStateException e) {
-            throw new CartException(e.getMessage());
-        }
+        final Cart cart = cartRepository.getCartOf(memberInfo.getId());
+        cart.delete(product);
+        cartRepository.save(cart);
     }
 
     @Transactional(readOnly = true)

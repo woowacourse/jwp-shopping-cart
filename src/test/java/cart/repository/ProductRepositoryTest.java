@@ -3,7 +3,7 @@ package cart.repository;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.entity.ProductEntity;
-import cart.excpetion.ProductionRepoException;
+import cart.excpetion.product.DuplicateProductException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +46,7 @@ class ProductRepositoryTest {
 
         //then
         assertThatThrownBy(() -> productRepository.create(product))
-                .isInstanceOf(ProductionRepoException.class);
+                .isInstanceOf(DuplicateProductException.class);
     }
 
     @DisplayName("상품명이 존재하지 않았다면 생성한다")

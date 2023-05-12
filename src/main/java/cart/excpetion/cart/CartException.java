@@ -1,4 +1,4 @@
-package cart.excpetion;
+package cart.excpetion.cart;
 
 public class CartException extends RuntimeException {
 

@@ -4,7 +4,8 @@ import cart.auth.MemberInfo;
 import cart.domain.Cart;
 import cart.domain.Product;
 import cart.dto.response.ProductDto;
-import cart.excpetion.CartException;
+import cart.excpetion.cart.DuplicateCartItemException;
+import cart.excpetion.product.ProductNotFoundException;
 import cart.repository.CartRepository;
 import cart.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +59,7 @@ class CartServiceTest {
 
         //when,then
         assertThatThrownBy(() -> cartService.addProduct(MEMBER_INFO, 1))
-                .isInstanceOf(CartException.class);
+                .isInstanceOf(DuplicateCartItemException.class);
     }
 
     @DisplayName("만약 존재하지 않는 MemberId 혹은 ProductId 를 넣는다면 예외를 발생시킨다")
@@ -69,7 +70,7 @@ class CartServiceTest {
                 .willReturn(Optional.empty());
 
         //when,then
-        assertThatThrownBy(() -> cartService.addProduct(MEMBER_INFO, 1)).isInstanceOf(CartException.class);
+        assertThatThrownBy(() -> cartService.addProduct(MEMBER_INFO, 1)).isInstanceOf(ProductNotFoundException.class);
     }
 
     @DisplayName("정상 요청 시 카트에 새로운 아이템을 넣는다")
@@ -103,7 +104,7 @@ class CartServiceTest {
                 .willReturn(defaultCart);
 
         //when,then
-        assertThatThrownBy(() -> cartService.deleteProduct(MEMBER_INFO, productNotInCart)).isInstanceOf(CartException.class);
+        assertThatThrownBy(() -> cartService.deleteProduct(MEMBER_INFO, productNotInCart)).isInstanceOf(ProductNotFoundException.class);
     }
 
     @DisplayName("만약 해당 유저의 cart 항목이 있다면 해당 Cart 아이템을 삭제한다")
