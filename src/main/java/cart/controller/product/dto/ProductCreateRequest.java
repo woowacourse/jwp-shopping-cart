@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-public class ProductRequest {
+public class ProductCreateRequest {
 
     @NotNull(message = "이미지 url은 비어있을 수 없습니다.")
     private String imageUrl;
@@ -17,13 +17,13 @@ public class ProductRequest {
     @Positive(message = "가격은 0 이상이어야 합니다.")
     private Integer price;
 
-    public ProductRequest(String imageUrl, String name, Integer price) {
+    public ProductCreateRequest(String imageUrl, String name, Integer price) {
         this.imageUrl = imageUrl;
         this.name = name;
         this.price = price;
     }
 
-    public ProductRequest() {
+    public ProductCreateRequest() {
     }
 
     public String getImageUrl() {

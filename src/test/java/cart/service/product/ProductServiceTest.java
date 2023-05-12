@@ -2,8 +2,8 @@ package cart.service.product;
 
 import cart.fixture.ProductFixture;
 import cart.service.product.domain.Product;
+import cart.service.product.dto.ProductInsertRequest;
 import cart.service.product.dto.ProductResponse;
-import cart.service.product.dto.ProductServiceRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ class ProductServiceTest {
 
     @Test
     void 상품을_저장한다() {
-        productService.create(new ProductServiceRequest("name", "image", 1000));
+        productService.create(new ProductInsertRequest("name", "image", 1000));
         List<ProductResponse> products = productService.findAll();
 
         assertThat(products).hasSize(1);
@@ -55,7 +55,7 @@ class ProductServiceTest {
         Product ramyeon = RAMYEON;
         Long productId = productDao.save(ramyeon);
 
-        ProductServiceRequest updateRequest = new ProductServiceRequest("expectedUrl", "expected", 1000);
+        ProductInsertRequest updateRequest = new ProductInsertRequest("expectedUrl", "expected", 1000);
 
         ProductResponse updatedResponse = productService.update(
                 updateRequest,
@@ -72,7 +72,7 @@ class ProductServiceTest {
     @Test
     void 존재하지_않는_상품정보를_수정하면_예외가_발생한다() {
         Long productId = 0L;
-        ProductServiceRequest updateRequest = new ProductServiceRequest("expectedUrl", "expected", 1000);
+        ProductInsertRequest updateRequest = new ProductInsertRequest("expectedUrl", "expected", 1000);
 
         assertThatThrownBy(() -> productService.update(
                 updateRequest,

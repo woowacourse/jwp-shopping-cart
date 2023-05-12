@@ -1,6 +1,6 @@
 package cart.persistence;
 
-import cart.controller.product.dto.ProductRequest;
+import cart.controller.product.dto.ProductCreateRequest;
 import cart.service.product.ProductDao;
 import cart.service.product.domain.Product;
 import cart.service.product.domain.ProductImage;
@@ -17,7 +17,11 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 import java.util.Optional;
 
-import static cart.fixture.ProductFixture.*;
+import static cart.fixture.ProductFixture.COFFEE;
+import static cart.fixture.ProductFixture.PIZZA;
+import static cart.fixture.ProductFixture.RAMYEON;
+import static cart.fixture.ProductFixture.SNACK;
+import static cart.fixture.ProductFixture.WATER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -76,7 +80,7 @@ class H2ProductDaoTest {
         Long productId = productDao.save(RAMYEON);
         Product product = productDao.findById(productId).get();
 
-        ProductRequest updateRequest = new ProductRequest("expectedUrl", "expectedName", 1000);
+        ProductCreateRequest updateRequest = new ProductCreateRequest("expectedUrl", "expectedName", 1000);
 
         Product newInfoProduct = product.replaceProduct(
                 new ProductName(updateRequest.getName()),

@@ -33,14 +33,14 @@ class ProductRequestTest {
 
     @Test
     void 이미지값은_notNull() {
-        ProductRequest request = new ProductRequest(null, "name", 1000);
-        Set<ConstraintViolation<ProductRequest>> validate = validator.validate(request);
+        ProductCreateRequest request = new ProductCreateRequest(null, "name", 1000);
+        Set<ConstraintViolation<ProductCreateRequest>> validate = validator.validate(request);
 
-        Iterator<ConstraintViolation<ProductRequest>> iterator = validate.iterator();
+        Iterator<ConstraintViolation<ProductCreateRequest>> iterator = validate.iterator();
 
         List<String> messages = new ArrayList<>();
         while (iterator.hasNext()) {
-            ConstraintViolation<ProductRequest> next = iterator.next();
+            ConstraintViolation<ProductCreateRequest> next = iterator.next();
             messages.add(next.getMessage());
         }
 
@@ -49,14 +49,14 @@ class ProductRequestTest {
 
     @Test
     void 상품_이름은_notNull() {
-        ProductRequest request = new ProductRequest("image", null, 1000);
-        Set<ConstraintViolation<ProductRequest>> validate = validator.validate(request);
+        ProductCreateRequest request = new ProductCreateRequest("image", null, 1000);
+        Set<ConstraintViolation<ProductCreateRequest>> validate = validator.validate(request);
 
-        Iterator<ConstraintViolation<ProductRequest>> iterator = validate.iterator();
+        Iterator<ConstraintViolation<ProductCreateRequest>> iterator = validate.iterator();
 
         List<String> messages = new ArrayList<>();
         while (iterator.hasNext()) {
-            ConstraintViolation<ProductRequest> next = iterator.next();
+            ConstraintViolation<ProductCreateRequest> next = iterator.next();
             messages.add(next.getMessage());
         }
 
@@ -65,14 +65,14 @@ class ProductRequestTest {
 
     @Test
     void 상품_이름은_notBlank() {
-        ProductRequest request = new ProductRequest("image", "", 1000);
-        Set<ConstraintViolation<ProductRequest>> validate = validator.validate(request);
+        ProductCreateRequest request = new ProductCreateRequest("image", "", 1000);
+        Set<ConstraintViolation<ProductCreateRequest>> validate = validator.validate(request);
 
-        Iterator<ConstraintViolation<ProductRequest>> iterator = validate.iterator();
+        Iterator<ConstraintViolation<ProductCreateRequest>> iterator = validate.iterator();
 
         List<String> messages = new ArrayList<>();
         while (iterator.hasNext()) {
-            ConstraintViolation<ProductRequest> next = iterator.next();
+            ConstraintViolation<ProductCreateRequest> next = iterator.next();
             messages.add(next.getMessage());
         }
 
@@ -81,14 +81,14 @@ class ProductRequestTest {
 
     @Test
     void 상품_가격은_notNull() {
-        ProductRequest request = new ProductRequest("image", "name", null);
-        Set<ConstraintViolation<ProductRequest>> validate = validator.validate(request);
+        ProductCreateRequest request = new ProductCreateRequest("image", "name", null);
+        Set<ConstraintViolation<ProductCreateRequest>> validate = validator.validate(request);
 
-        Iterator<ConstraintViolation<ProductRequest>> iterator = validate.iterator();
+        Iterator<ConstraintViolation<ProductCreateRequest>> iterator = validate.iterator();
 
         List<String> messages = new ArrayList<>();
         while (iterator.hasNext()) {
-            ConstraintViolation<ProductRequest> next = iterator.next();
+            ConstraintViolation<ProductCreateRequest> next = iterator.next();
             messages.add(next.getMessage());
         }
 
@@ -98,14 +98,14 @@ class ProductRequestTest {
     @ParameterizedTest
     @ValueSource(ints = {0, -1, -100})
     void 상품_가격은_양수(int price) {
-        ProductRequest request = new ProductRequest("image", "name", price);
-        Set<ConstraintViolation<ProductRequest>> validate = validator.validate(request);
+        ProductCreateRequest request = new ProductCreateRequest("image", "name", price);
+        Set<ConstraintViolation<ProductCreateRequest>> validate = validator.validate(request);
 
-        Iterator<ConstraintViolation<ProductRequest>> iterator = validate.iterator();
+        Iterator<ConstraintViolation<ProductCreateRequest>> iterator = validate.iterator();
 
         List<String> messages = new ArrayList<>();
         while (iterator.hasNext()) {
-            ConstraintViolation<ProductRequest> next = iterator.next();
+            ConstraintViolation<ProductCreateRequest> next = iterator.next();
             messages.add(next.getMessage());
         }
 
