@@ -1,10 +1,10 @@
 package cart.dao;
 
+import cart.domain.entity.CartItem;
 import cart.domain.entity.Member;
 import cart.domain.entity.Product;
 import cart.dummydata.MemberInitializer;
 import cart.dummydata.ProductInitializer;
-import cart.domain.entity.CartItem;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -85,7 +85,7 @@ class JdbcCartItemDaoTest {
             final CartItem cartItem = CartItem.of(validMember, validProduct);
             long id = cartItemDao.insert(cartItem);
 
-            int deletedRow = cartItemDao.deleteByIdAndMemberId(id,validMember.getId());
+            int deletedRow = cartItemDao.deleteByIdAndMemberId(id, validMember.getId());
 
             assertThat(deletedRow).isEqualTo(1);
         }

@@ -3,7 +3,6 @@ package cart.service;
 import cart.dao.JdbcCartItemDao;
 import cart.dao.JdbcMemberDao;
 import cart.dao.JdbcProductDao;
-import cart.dao.MemberDao;
 import cart.domain.entity.CartItem;
 import cart.domain.entity.Member;
 import cart.domain.entity.Product;
@@ -26,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)

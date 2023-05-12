@@ -1,7 +1,7 @@
 package cart.dao;
 
-import cart.dummydata.MemberInitializer;
 import cart.domain.entity.Member;
+import cart.dummydata.MemberInitializer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -57,7 +57,8 @@ class JdbcMemberDaoTest {
         void successTest() {
             final Member member = Member.of("irene@email.com", "password1");
             Member selectedMember = memberDao.selectByEmail(member.getEmail())
-                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));;
+                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+            ;
             assertAll(
                     () -> assertThat(selectedMember.getEmail()).isEqualTo(member.getEmail()),
                     () -> assertThat(selectedMember.getPassword()).isEqualTo(member.getPassword())
