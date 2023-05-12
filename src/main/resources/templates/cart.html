@@ -26,6 +26,13 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script th:src="@{/js/cart.js}"></script>
 <script>
+    const currentUrl = window.location.href;
+    const url = new URL(currentUrl);
+    const protocol = url.protocol;
+    const hostname = url.hostname;
+    const port = url.port;
+    const currentServerUrl = protocol + "//" + hostname + ":" + port;
+
     document.addEventListener("DOMContentLoaded", function () {
         const credentials = localStorage.getItem('credentials');
         if (!credentials) {
@@ -34,7 +41,7 @@
             return;
         }
 
-        axios.get('http://localhost:8080/carts', {
+        axios.get(currentServerUrl + '/carts', {
             headers: {
                 'Authorization': `Basic ${credentials}`
             }
