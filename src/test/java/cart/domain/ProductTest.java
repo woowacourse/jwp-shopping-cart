@@ -3,6 +3,7 @@ package cart.domain;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import cart.controller.exception.ProductNotValidException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ class ProductTest {
 
         // expect
         assertThatThrownBy(() -> new Product(nameOver50, 10_000, "치킨사진"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ProductNotValidException.class)
                 .hasMessage("상품 이름은 50자를 넘길 수 없습니다.");
     }
 
@@ -34,7 +35,7 @@ class ProductTest {
     void 가격이_0미만_10억초과이면_예외를_던진다(final int price) {
         // expect
         assertThatThrownBy(() -> new Product("치킨", price, "치킨사진"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ProductNotValidException.class)
                 .hasMessage("가격은 0 미만이거나, 1000000000 초과일 수 없습니다.");
     }
 
@@ -45,7 +46,7 @@ class ProductTest {
 
         // expect
         assertThatThrownBy(() -> new Product("치킨", 10_000, imageOver2000))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ProductNotValidException.class)
                 .hasMessage("이미지 주소는 2000자를 넘길 수 없습니다.");
     }
 }

@@ -1,28 +1,34 @@
 package cart.dto.request;
 
+import cart.domain.Product;
+import cart.dto.ProductDto;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class RequestUpdateProductDto {
+public class CreateProductRequest {
 
-    @NotNull(message = "식별자가 입력되지 않았습니다.")
-    private final Long id;
     @NotEmpty(message = "상품 이름이 입력되지 않았습니다.")
-    private final String name;
+    private String name;
     @NotNull(message = "가격이 입력되지 않았습니다.")
-    private final Integer price;
+    private Integer price;
     @NotEmpty(message = "상품 이미지 주소가 입력되지 않았습니다.")
-    private final String image;
+    private String image;
 
-    public RequestUpdateProductDto(final Long id, final String name, final Integer price, final String image) {
-        this.id = id;
+    public CreateProductRequest() {
+    }
+
+    public CreateProductRequest(final String name, final Integer price, final String image) {
         this.name = name;
         this.price = price;
         this.image = image;
     }
 
-    public Long getId() {
-        return id;
+    public ProductDto toDto() {
+        return new ProductDto(name, price, image);
+    }
+
+    public Product toProduct() {
+        return new Product(name, price, image);
     }
 
     public String getName() {

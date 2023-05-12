@@ -1,66 +1,53 @@
 package cart.service;
 
-import cart.dao.ProductDao;
-import cart.dao.entity.ProductEntity;
-import cart.domain.Product;
-import cart.dto.request.RequestCreateProductDto;
-import cart.dto.request.RequestUpdateProductDto;
-import cart.dto.response.ResponseProductDto;
+import cart.dao.CartDao;
+import cart.domain.Cart;
+import cart.domain.Member;
+import cart.dto.MemberDto;
+import cart.dto.response.CartResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartService {
 
-    private static final int MINIMUM_AFFECTED_ROWS = 1;
-
-    private final ProductDao productDao;
+    private final MemberService memberService;
+    private final ProductService productService;
+    private final CartDao cartDao;
 
     @Autowired
-    public CartService(final ProductDao productDao) {
-        this.productDao = productDao;
+    public CartService(final MemberService memberService, final ProductService productService, final CartDao cartDao) {
+        this.memberService = memberService;
+        this.productService = productService;
+        this.cartDao = cartDao;
     }
 
-    public List<ResponseProductDto> findAll() {
-        final List<ProductEntity> productEntities = productDao.selectAll();
-        return productEntities.stream()
-                .map(entity -> new ResponseProductDto(
-                        entity.getId(),
-                        entity.getName(),
-                        entity.getPrice(),
-                        entity.getImage())
-                ).collect(Collectors.toUnmodifiableList());
+    @Transactional
+    public Long insert(final Long productId, final MemberDto memberDto) {
+        final Member member = memberService.find(memberDto.getEmail());
+        return cartDao.insert(productId, member.getId());
     }
 
-    public void insert(final RequestCreateProductDto requestCreateProductDto) {
-        final Product newProduct = new Product(
-                requestCreateProductDto.getName(),
-                requestCreateProductDto.getPrice(),
-                requestCreateProductDto.getImage()
-        );
-        productDao.insert(newProduct);
+    @Transactional
+    public int delete(final Long id) {
+        final int deletedRow = cartDao.delete(id);
+        return deletedRow;
     }
 
-    public void update(final RequestUpdateProductDto requestUpdateProductDto) {
-        final Product product = new Product(
-                requestUpdateProductDto.getName(),
-                requestUpdateProductDto.getPrice(),
-                requestUpdateProductDto.getImage()
-        );
-        final int updatedRows = productDao.update(product, requestUpdateProductDto.getId());
-        validateAffectedRowsCount(updatedRows);
-    }
-
-    private void validateAffectedRowsCount(final int affectedRows) {
-        if (affectedRows < MINIMUM_AFFECTED_ROWS) {
-            throw new IllegalArgumentException("접근하려는 데이터가 존재하지 않습니다.");
+    @Transactional(readOnly = true)
+    public List<CartResponse> find(final MemberDto memberDto) {
+        final Member member = memberService.find(memberDto.getEmail());
+        final List<Cart> carts = cartDao.findAllByMemberId(member.getId());
+        if (carts.isEmpty()) {
+            return new ArrayList<>();
         }
-    }
-
-    public void delete(final Long id) {
-        final int affectedRows = productDao.delete(id);
-        validateAffectedRowsCount(affectedRows);
+        return carts.stream()
+                .map(cart -> productService.findById(cart.getProductId()))
+                .map(CartResponse::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 }

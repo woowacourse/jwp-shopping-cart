@@ -1,16 +1,17 @@
-package cart.controller;
+package cart.controller.api;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
-import cart.dto.request.RequestCreateProductDto;
-import cart.dto.request.RequestUpdateProductDto;
+import cart.dto.request.CreateProductRequest;
+import cart.dto.request.UpdateProductRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -32,7 +33,7 @@ import org.springframework.jdbc.support.KeyHolder;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+class ProductControllerTest {
 
     @LocalServerPort
     int port;
@@ -49,9 +50,9 @@ class AdminControllerTest {
     void 상품을_등록할_수_있다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", 10_000, "치킨 사진"))
+                .body(new CreateProductRequest("치킨", 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -62,9 +63,9 @@ class AdminControllerTest {
     void 빈_상품을_등록할_수_없다(final String name) {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto(name, 10_000, "치킨 사진"))
+                .body(new CreateProductRequest(name, 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -77,9 +78,9 @@ class AdminControllerTest {
 
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto(overName, 10_000, "치킨 사진"))
+                .body(new CreateProductRequest(overName, 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -91,9 +92,9 @@ class AdminControllerTest {
     void 가격이_빈_상품을_등록할_수_없다(final Integer price) {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
+                .body(new CreateProductRequest("치킨", price, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -105,9 +106,9 @@ class AdminControllerTest {
     void 유효한_가격_범위를_넘긴_상품은_등록할_수_없다(final Integer price) {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
+                .body(new CreateProductRequest("치킨", price, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -119,9 +120,9 @@ class AdminControllerTest {
     void 이미지_주소가_없는_상품을_등록할_수_없다(final String image) {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", 1_000, image))
+                .body(new CreateProductRequest("치킨", 1_000, image))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -134,9 +135,9 @@ class AdminControllerTest {
 
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestCreateProductDto("치킨", 1_000, image))
+                .body(new CreateProductRequest("치킨", 1_000, image))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -149,9 +150,9 @@ class AdminControllerTest {
 
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestUpdateProductDto(insertedId, "피자", 10_000, "피자 사진"))
+                .body(new UpdateProductRequest("피자", 10_000, "피자 사진"))
                 .when()
-                .put("/admin/product")
+                .put("/products/" + insertedId)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -172,19 +173,19 @@ class AdminControllerTest {
                 return preparedStatement;
             }
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     @Test
     void 존재하지_않는_id의_상품은_수정할_수_없다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestUpdateProductDto(0L, "치킨", 10_000, "치킨 사진"))
+                .body(new UpdateProductRequest("치킨", 10_000, "치킨 사진"))
                 .when()
-                .put("/admin/product")
+                .put("/products/" + 0L)
                 .then()
                 .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
@@ -194,20 +195,10 @@ class AdminControllerTest {
         given()
                 .log().all()
                 .when()
-                .delete("/admin/product/" + insertedId)
+                .delete("/products/" + insertedId)
                 .then()
                 .log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.ACCEPTED.value());
     }
 
-    @Test
-    void 존재하지_않는_id의_상품은_삭제할_수_없다() {
-        given()
-                .log().all()
-                .when()
-                .delete("/admin/product/" + 0)
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
 }

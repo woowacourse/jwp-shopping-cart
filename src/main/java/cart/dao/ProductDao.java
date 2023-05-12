@@ -1,11 +1,14 @@
 package cart.dao;
 
-import cart.dao.entity.ProductEntity;
 import cart.domain.Product;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,13 +25,13 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ProductEntity> selectAll() {
+    public List<Product> findAll() {
         final String sql = "SELECT * FROM PRODUCT";
         return jdbcTemplate.query(sql, getProductRowMapper());
     }
 
-    private RowMapper<ProductEntity> getProductRowMapper() {
-        return (resultSet, rowNum) -> new ProductEntity(
+    private RowMapper<Product> getProductRowMapper() {
+        return (resultSet, rowNum) -> new Product(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getInt("price"),
@@ -52,10 +55,10 @@ public class ProductDao {
                 return preparedStatement;
             }
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public int update(final Product product, final Long id) {
+    public int update(final Long id, final Product product) {
         final String sql = "UPDATE PRODUCT SET name = ?, price = ?, image = ? WHERE id = ?";
         return jdbcTemplate.update(
                 sql,
@@ -71,8 +74,12 @@ public class ProductDao {
         return jdbcTemplate.update(sql, id);
     }
 
-    public ProductEntity findById(final Long id) {
+    public Optional<Product> findById(final Long id) {
         final String sql = "SELECT * from product where id = ?";
-        return jdbcTemplate.queryForObject(sql, getProductRowMapper(), id);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, getProductRowMapper(), id));
+        } catch (EmptyResultDataAccessException error) {
+            return Optional.empty();
+        }
     }
 }
