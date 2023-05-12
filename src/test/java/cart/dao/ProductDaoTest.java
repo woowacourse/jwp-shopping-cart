@@ -112,12 +112,9 @@ class ProductDaoTest {
         productDao.insert(new Product("치킨", 1_000, "치킨 이미지 주소"));
 
         // when
-        final Optional<List<Product>> productsOptional = productDao.findAll();
+        final List<Product> products = productDao.findAll();
 
         // then
-        assertSoftly(softly -> {
-            List<Product> productEntities = productsOptional.get();
-            softly.assertThat(productEntities).hasSize(1);
-        });
+        assertThat(products).hasSize(1);
     }
 }

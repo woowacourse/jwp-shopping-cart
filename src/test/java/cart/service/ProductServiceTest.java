@@ -35,7 +35,7 @@ class ProductServiceTest {
     void 상품을_조회한다() {
         //given
         Mockito.when(productDao.findAll())
-                .thenReturn(Optional.ofNullable(List.of(PRODUCT_FIXTURE)));
+                .thenReturn((List.of(PRODUCT_FIXTURE)));
 
         //when
         final List<ProductResponse> productResponses = productService.findAll();

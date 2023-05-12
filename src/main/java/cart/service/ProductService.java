@@ -26,11 +26,11 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
-        final Optional<List<Product>> productsOptional = productDao.findAll();
-        if (productsOptional.isEmpty()) {
+        final List<Product> products = productDao.findAll();
+        if (products.isEmpty()) {
             return new ArrayList<>();
         }
-        return productsOptional.get().stream()
+        return products.stream()
                 .map(ProductResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }

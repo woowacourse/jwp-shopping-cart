@@ -25,13 +25,9 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<List<Product>> findAll() {
+    public List<Product> findAll() {
         final String sql = "SELECT * FROM PRODUCT";
-        try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, getProductRowMapper()));
-        } catch (DataAccessException err) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.query(sql, getProductRowMapper());
     }
 
     private RowMapper<Product> getProductRowMapper() {
