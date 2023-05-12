@@ -1,13 +1,10 @@
 package cart.service;
 
-import cart.dao.ProductDao;
-import cart.dao.entity.ProductEntity;
-import cart.domain.Product;
-import cart.dto.request.RequestCreateProductDto;
-import cart.dto.request.RequestUpdateProductDto;
-import cart.dto.response.ResponseProductDto;
-import java.util.List;
-import java.util.stream.Collectors;
+import cart.domain.Cart;
+import cart.domain.CartProduct;
+import cart.dto.AddCartRequestDto;
+import cart.dto.auth.AuthInfo;
+import cart.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,57 +12,32 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CartService {
 
-    private static final int MINIMUM_AFFECTED_ROWS = 1;
-
-    private final ProductDao productDao;
+    private final CartRepository cartRepository;
 
     @Autowired
-    public CartService(final ProductDao productDao) {
-        this.productDao = productDao;
-    }
-
-    @Transactional(readOnly = true)
-    public List<ResponseProductDto> findAll() {
-        final List<ProductEntity> productEntities = productDao.selectAll();
-        return productEntities.stream()
-                .map(entity -> new ResponseProductDto(
-                        entity.getId(),
-                        entity.getName(),
-                        entity.getPrice(),
-                        entity.getImage())
-                ).collect(Collectors.toUnmodifiableList());
+    public CartService(CartRepository cartRepository) {
+        this.cartRepository = cartRepository;
     }
 
     @Transactional
-    public void insert(final RequestCreateProductDto requestCreateProductDto) {
-        final Product newProduct = new Product(
-                requestCreateProductDto.getName(),
-                requestCreateProductDto.getPrice(),
-                requestCreateProductDto.getImage()
-        );
-        productDao.insert(newProduct);
+    public void addProductToCart(final AddCartRequestDto addCartRequestDto, final AuthInfo authInfo) {
+        final Long memberId = cartRepository.findIdByAuthInfo(authInfo);
+
+        cartRepository.addProductToCart(addCartRequestDto.getProductId(), memberId);
     }
 
     @Transactional
-    public void update(final RequestUpdateProductDto requestUpdateProductDto) {
-        final Product product = new Product(
-                requestUpdateProductDto.getName(),
-                requestUpdateProductDto.getPrice(),
-                requestUpdateProductDto.getImage()
-        );
-        final int updatedRows = productDao.update(product, requestUpdateProductDto.getId());
-        validateAffectedRowsCount(updatedRows);
+    public void deleteProductFromCart(final Long cartId, final AuthInfo authInfo) {
+        final Long memberId = cartRepository.findIdByAuthInfo(authInfo);
+        final Cart cart = cartRepository.getCartProductsByMemberId(memberId);
+        final CartProduct productToDelete = cartRepository.getCartProductByCartId(cartId);
+        cart.deleteProduct(productToDelete);
+
+        cartRepository.deleteProductFromCart(cartId);
     }
 
-    private void validateAffectedRowsCount(final int affectedRows) {
-        if (affectedRows < MINIMUM_AFFECTED_ROWS) {
-            throw new IllegalArgumentException("접근하려는 데이터가 존재하지 않습니다.");
-        }
-    }
-
-    @Transactional
-    public void delete(final Long id) {
-        final int affectedRows = productDao.delete(id);
-        validateAffectedRowsCount(affectedRows);
+    public Cart findCartProductsByMember(AuthInfo authInfo) {
+        final Long memberId = cartRepository.findIdByAuthInfo(authInfo);
+        return cartRepository.getCartProductsByMemberId(memberId);
     }
 }

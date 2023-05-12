@@ -1,19 +1,12 @@
 package cart.controller;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-
 import cart.dto.request.RequestCreateProductDto;
 import cart.dto.request.RequestUpdateProductDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -21,7 +14,6 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,10 +21,22 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-@DisplayNameGeneration(ReplaceUnderscores.class)
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Objects;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class ProductApiControllerTest {
+
+    private static final String EMAIL = "a@a.com";
+    private static final String PASSWORD = "password1";
 
     @LocalServerPort
     int port;
@@ -48,10 +52,11 @@ class AdminControllerTest {
     @Test
     void 상품을_등록할_수_있다() {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -61,10 +66,11 @@ class AdminControllerTest {
     @NullAndEmptySource
     void 빈_상품을_등록할_수_없다(final String name) {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto(name, 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -76,10 +82,11 @@ class AdminControllerTest {
         final String overName = "가비".repeat(50);
 
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto(overName, 10_000, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -90,10 +97,11 @@ class AdminControllerTest {
     @NullSource
     void 가격이_빈_상품을_등록할_수_없다(final Integer price) {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -104,10 +112,11 @@ class AdminControllerTest {
     @ValueSource(ints = {Integer.MAX_VALUE, Integer.MIN_VALUE})
     void 유효한_가격_범위를_넘긴_상품은_등록할_수_없다(final Integer price) {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", price, "치킨 사진"))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -118,10 +127,11 @@ class AdminControllerTest {
     @NullAndEmptySource
     void 이미지_주소가_없는_상품을_등록할_수_없다(final String image) {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 1_000, image))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -133,10 +143,11 @@ class AdminControllerTest {
         final String image = "후추".repeat(2001);
 
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
                 .body(new RequestCreateProductDto("치킨", 1_000, image))
                 .when()
-                .post("/admin/product")
+                .post("/products")
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -148,10 +159,11 @@ class AdminControllerTest {
         final Long insertedId = insertProduct("치킨", 1_000, "치킨 사진");
 
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestUpdateProductDto(insertedId, "피자", 10_000, "피자 사진"))
+                .body(new RequestUpdateProductDto("피자", 10_000, "피자 사진"))
                 .when()
-                .put("/admin/product")
+                .put("/products/" + insertedId)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -172,16 +184,17 @@ class AdminControllerTest {
                 return preparedStatement;
             }
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey().longValue());
     }
 
     @Test
     void 존재하지_않는_id의_상품은_수정할_수_없다() {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all().contentType(ContentType.JSON)
-                .body(new RequestUpdateProductDto(0L, "치킨", 10_000, "치킨 사진"))
+                .body(new RequestUpdateProductDto("치킨", 10_000, "치킨 사진"))
                 .when()
-                .put("/admin/product")
+                .put("/products/" + 0L)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -192,9 +205,10 @@ class AdminControllerTest {
         final Long insertedId = insertProduct("치킨", 1_000, "치킨 사진");
 
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all()
                 .when()
-                .delete("/admin/product/" + insertedId)
+                .delete("/products/" + insertedId)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -203,9 +217,10 @@ class AdminControllerTest {
     @Test
     void 존재하지_않는_id의_상품은_삭제할_수_없다() {
         given()
+                .auth().preemptive().basic(EMAIL, PASSWORD)
                 .log().all()
                 .when()
-                .delete("/admin/product/" + 0)
+                .delete("/products/" + 0)
                 .then()
                 .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
