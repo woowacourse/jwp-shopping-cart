@@ -32,9 +32,11 @@ public class CartService {
 
     @Transactional
     public CartResponse save(Long memberId, Long itemId) {
-        if (cartDao.findByMemberIdAndItemId(memberId, itemId).isPresent()) {
-            throw new CartException(CART_DUPLICATE_MESSAGE);
-        }
+        cartDao.findByMemberIdAndItemId(memberId, itemId).ifPresent(
+                cartEntity -> {
+                    throw new CartException(CART_DUPLICATE_MESSAGE);
+                }
+        );
 
         cartDao.insert(memberId, itemId);
         return new CartResponse(memberId, cartDao.findAllByMemberId(memberId)
