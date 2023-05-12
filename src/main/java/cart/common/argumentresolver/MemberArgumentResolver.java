@@ -1,7 +1,6 @@
 package cart.common.argumentresolver;
 
 import cart.common.auth.AuthHeaderExtractor;
-import cart.controller.member.dto.MemberRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -25,7 +24,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(MemberRequest.class) && parameter.hasParameterAnnotation(Member.class);
+        return parameter.getParameterType().equals(Member.class) && parameter.hasParameterAnnotation(MemberBody.class);
     }
 
     @Override
@@ -35,6 +34,6 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
         String email = authorizationHeaderValues.get(EMAIL_INDEX);
         String password = authorizationHeaderValues.get(PASSWORD_INDEX);
 
-        return new MemberRequest(email, password);
+        return new Member(email, password);
     }
 }

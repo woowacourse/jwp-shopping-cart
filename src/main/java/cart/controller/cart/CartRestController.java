@@ -1,7 +1,7 @@
 package cart.controller.cart;
 
 import cart.common.argumentresolver.Member;
-import cart.controller.member.dto.MemberRequest;
+import cart.common.argumentresolver.MemberBody;
 import cart.service.cart.CartService;
 import cart.service.cart.dto.DeleteCartITemRequest;
 import cart.service.cart.dto.InsertCartItemRequest;
@@ -29,22 +29,22 @@ public class CartRestController {
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<Void> createCart(@Member MemberRequest memberRequest, @PathVariable Long productId) {
-        InsertCartItemRequest InsertCartItemRequest = new InsertCartItemRequest(memberRequest.getEmail(), productId);
+    public ResponseEntity<Void> createCart(@MemberBody Member member, @PathVariable Long productId) {
+        InsertCartItemRequest InsertCartItemRequest = new InsertCartItemRequest(member.getEmail(), productId);
         Long cartId = cartService.createCartItem(InsertCartItemRequest);
         return ResponseEntity.created(URI.create("carts/" + cartId)).build();
     }
 
     @GetMapping("/items")
-    public ResponseEntity<List<ProductResponse>> showCartItems(@Member MemberRequest memberRequest) {
-        InsertCartItemRequest InsertCartItemRequest = new InsertCartItemRequest(memberRequest.getEmail());
+    public ResponseEntity<List<ProductResponse>> showCartItems(@MemberBody Member member) {
+        InsertCartItemRequest InsertCartItemRequest = new InsertCartItemRequest(member.getEmail());
         List<ProductResponse> cartItems = cartService.findProductsByUserIdOnCart(InsertCartItemRequest);
         return ResponseEntity.ok(cartItems);
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteCartItem(@Member MemberRequest memberRequest, @PathVariable long productId) {
-        DeleteCartITemRequest deleteCartITemRequest = new DeleteCartITemRequest(memberRequest.getEmail(), productId);
+    public ResponseEntity<Void> deleteCartItem(@MemberBody Member member, @PathVariable long productId) {
+        DeleteCartITemRequest deleteCartITemRequest = new DeleteCartITemRequest(member.getEmail(), productId);
         cartService.deleteCartItem(deleteCartITemRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

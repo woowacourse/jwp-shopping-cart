@@ -1,12 +1,19 @@
 package cart.common.argumentresolver;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public class Member {
+    private final String email;
+    private final String password;
 
-@Target(ElementType.PARAMETER)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Member {
+    public Member(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }
