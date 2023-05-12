@@ -148,6 +148,31 @@ class JwpCartApplicationTests {
     }
 
     @Test
+    @DisplayName("회원이 상품을 장바구니에서 제거한다.")
+    void deleteCartSuccess() {
+        Long itemId = itemDao.insert(new Item("치킨", "chiken@naver.com", 15000));
+
+        given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", headerValue)
+                .queryParam("itemId", itemId)
+                .when()
+                .post("/carts")
+                .then().log().all()
+                .contentType(ContentType.JSON)
+                .statusCode(HttpStatus.CREATED.value());
+
+        given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", headerValue)
+                .queryParam("itemId", itemId)
+                .when()
+                .delete("/carts")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
     @DisplayName("회원의 장바구니에 담겨 있는 상품을 장바구니에 담으면 예외가 발생한다.")
     void createCartFail() {
         given()
