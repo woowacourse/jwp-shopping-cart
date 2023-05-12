@@ -13,36 +13,30 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class CartControllerTest {
-    private static final String ENCODED_TOKEN = "Z2F2aUB3b293YWhhbi5jb206MTIzNA==";
+    private static final String GAVI_ENCODED_TOKEN = "Z2F2aUB3b293YWhhbi5jb206MTIzNA==";
 
     @LocalServerPort
     int port;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        jdbcTemplate.execute("INSERT INTO MEMBER(email, password) VALUES ('gavi@woowahan.com', '1234')");
     }
 
     @Test
     void 장바구니에_상품을_담을_수_있다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .header("Authorization", "Basic " + ENCODED_TOKEN)
+                .header("Authorization", "Basic " + GAVI_ENCODED_TOKEN)
                 .body(new CreateCartRequest(1L))
                 .when()
                 .post("/carts")
@@ -56,7 +50,7 @@ class CartControllerTest {
     void 상품_정보_없이_카트에_담을_수_없다(final Long wrongId) {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .header("Authorization", "Basic " + ENCODED_TOKEN)
+                .header("Authorization", "Basic " + GAVI_ENCODED_TOKEN)
                 .body(new CreateCartRequest(wrongId))
                 .when()
                 .post("/carts")
@@ -70,7 +64,7 @@ class CartControllerTest {
     void 장바구니의_상품을_삭제할_수_있다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .header("Authorization", "Basic " + ENCODED_TOKEN)
+                .header("Authorization", "Basic " + GAVI_ENCODED_TOKEN)
                 .body(new CreateCartRequest(1L))
                 .when()
                 .post("/carts")
@@ -80,7 +74,7 @@ class CartControllerTest {
 
         given()
                 .log().all().contentType(ContentType.JSON)
-                .header("Authorization", "Basic " + ENCODED_TOKEN)
+                .header("Authorization", "Basic " + GAVI_ENCODED_TOKEN)
                 .body(new DeleteCartRequest(1L))
                 .when()
                 .delete("/carts")
@@ -94,7 +88,7 @@ class CartControllerTest {
     void 상품_정보_없이_장바구니_상품을_삭제할_수_없다(final Long wrongId) {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .header("Authorization", "Basic " + ENCODED_TOKEN)
+                .header("Authorization", "Basic " + GAVI_ENCODED_TOKEN)
                 .body(new DeleteCartRequest(wrongId))
                 .when()
                 .delete("/carts")
@@ -108,7 +102,7 @@ class CartControllerTest {
     void 장바구니_목록을_가져올_수_있다() {
         given()
                 .log().all().contentType(ContentType.JSON)
-                .header("Authorization", "Basic " + ENCODED_TOKEN)
+                .header("Authorization", "Basic " + GAVI_ENCODED_TOKEN)
                 .when()
                 .get("/carts")
                 .then()

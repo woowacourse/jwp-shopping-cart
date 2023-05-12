@@ -4,7 +4,6 @@ import cart.domain.Member;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,17 +33,17 @@ public class MemberDao {
     public Optional<Member> findByEmailAndPassword(final String email, final String password) {
         final String sql = "SELECT * FROM MEMBER WHERE email = ? and password = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, MAPPER, email, password).get(0));
-        } catch (EmptyResultDataAccessException | DuplicateKeyException error) {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, MAPPER, email, password));
+        } catch (EmptyResultDataAccessException error) {
             return EMPTY;
         }
     }
 
     public Optional<Member> findByEmail(final String email) {
-        final String sql = "SELECT * FROM MEMBER WHERE email = ?";
+        final String sql = "SELECT * FROM member WHERE email = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.query(sql, MAPPER, email).get(0));
-        } catch (EmptyResultDataAccessException | DuplicateKeyException error) {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, MAPPER, email));
+        } catch (EmptyResultDataAccessException e) {
             return EMPTY;
         }
     }

@@ -55,9 +55,8 @@ public class CartDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public int delete(final Long productId, final Long memberId) {
+     public int delete(final Long productId, final Long memberId) {
         final String sql = "DELETE FROM CART WHERE product_id = ? and member_id = ?";
         return jdbcTemplate.update(sql, productId, memberId);
     }
-
 }
