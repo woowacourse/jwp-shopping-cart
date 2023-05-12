@@ -21,7 +21,6 @@ import static io.restassured.RestAssured.given;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -49,8 +48,7 @@ public class CartRestControllerTest {
         String header = "Basic " + new String(Base64.getEncoder().encode("cyh6099@gmail.com:qwer1234".getBytes()));
         mockMvc.perform(MockMvcRequestBuilders.post("/carts/1")
                         .header("Authorization", header))
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"));
+                .andExpect(status().isCreated());
     }
 
     @Test

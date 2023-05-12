@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -32,7 +31,8 @@ public class CartRestController {
     public ResponseEntity<Void> createCart(@MemberBody Member member, @PathVariable Long productId) {
         InsertCartItemRequest InsertCartItemRequest = new InsertCartItemRequest(member.getEmail(), productId);
         Long cartId = cartService.createCartItem(InsertCartItemRequest);
-        return ResponseEntity.created(URI.create("carts/" + cartId)).build();
+//        return ResponseEntity.created(URI.create("carts/" + cartId)).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/items")
