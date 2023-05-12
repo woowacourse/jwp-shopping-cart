@@ -25,6 +25,8 @@ class JwpCartApplicationTests {
     @Autowired
     ItemDao itemDao;
 
+    private static final String headerValue = createHeaderValue();
+
     @BeforeEach
     void setUp(@LocalServerPort int port) {
         RestAssured.port = port;
@@ -132,13 +134,14 @@ class JwpCartApplicationTests {
     @Test
     @DisplayName("회원이 상품을 장바구니에 담는다.")
     void createCartSuccess() {
-        Long savedId = itemDao.insert(new Item("치킨", "chiken@naver.com", 15000));
+        Long itemId = itemDao.insert(new Item("치킨", "chiken@naver.com", 15000));
 
         given()
                 .contentType(ContentType.JSON)
-                .header("Authorization", createHeaderValue())
+                .header("Authorization", headerValue)
+                .queryParam("itemId", itemId)
                 .when()
-                .post("/carts/" + savedId)
+                .post("/carts")
                 .then().log().all()
                 .contentType(ContentType.JSON)
                 .statusCode(HttpStatus.CREATED.value());
@@ -149,9 +152,10 @@ class JwpCartApplicationTests {
     void createCartFail() {
         given()
                 .contentType(ContentType.JSON)
-                .header("Authorization", createHeaderValue())
+                .header("Authorization", headerValue)
+                .queryParam("itemId", 1)
                 .when()
-                .post("/carts/" + 1)
+                .post("/carts/")
                 .then().log().all()
                 .contentType(ContentType.JSON)
                 .statusCode(HttpStatus.BAD_REQUEST.value())
@@ -162,7 +166,7 @@ class JwpCartApplicationTests {
     @DisplayName("회원이 담은 장바구니 목록을 가져온다.")
     void findCarts() {
         given()
-                .header("Authorization", createHeaderValue())
+                .header("Authorization", headerValue)
                 .when()
                 .get("/items")
                 .then().log().all()
@@ -170,14 +174,13 @@ class JwpCartApplicationTests {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    private static ItemRequest createItemRequest(String name, String imageUrl, int price) {
+    private ItemRequest createItemRequest(String name, String imageUrl, int price) {
         return new ItemRequest(name, imageUrl, price);
     }
 
     private static String createHeaderValue() {
         String credential = "gray:aaa@aaa.com:helloSpring";
         String encodedCredential = new String(Base64.getEncoder().encode((credential.getBytes())));
-        String header = "Basic " + encodedCredential;
-        return header;
+        return "Basic " + encodedCredential;
     }
 }
