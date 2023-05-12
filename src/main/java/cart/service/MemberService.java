@@ -5,7 +5,6 @@ import cart.domain.Email;
 import cart.domain.MemberEntity;
 import cart.domain.Password;
 import cart.dto.ResponseMemberDto;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,16 +30,14 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberEntity findByEmail(final Email email) {
-        return memberDao.findByEmail(email.getAddress());
+        return memberDao.findByEmail(email.getAddress())
+                .orElseThrow(() -> new IllegalArgumentException("입력한 이메일의 회원이 존재하지 않습니다."));
     }
 
     @Transactional(readOnly = true)
     public boolean hasMember(final Email email, final Password password) {
-        try {
-            final MemberEntity memberEntity = memberDao.findByEmail(email.getAddress());
-            return password.equals(memberEntity.getPassword());
-        } catch (EmptyResultDataAccessException e) {
-            return false;
-        }
+        return memberDao.findByEmail(email.getAddress())
+                .map(memberEntity -> password.equals(memberEntity.getPassword()))
+                .orElse(Boolean.FALSE);
     }
 }

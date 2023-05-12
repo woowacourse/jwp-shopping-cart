@@ -3,6 +3,7 @@ package cart.dao;
 import cart.domain.Email;
 import cart.domain.MemberEntity;
 import cart.domain.Password;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -56,8 +58,12 @@ public class MemberDao {
         return jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_ROW_MAPPER, id);
     }
 
-    public MemberEntity findByEmail(final String email) {
-        final String sql = "SELECT * FROM member WHERE email = ?";
-        return jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_ROW_MAPPER, email);
+    public Optional<MemberEntity> findByEmail(final String email) {
+        try {
+            final String sql = "SELECT * FROM member WHERE email = ?";
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_ROW_MAPPER, email));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 }

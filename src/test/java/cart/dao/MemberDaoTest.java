@@ -104,7 +104,8 @@ class MemberDaoTest {
         final Long id = memberDao.insert(member);
 
         //when
-        final MemberEntity memberEntity = memberDao.findByEmail("huchu@woowahan.com");
+        final MemberEntity memberEntity = memberDao.findByEmail("huchu@woowahan.com")
+                .get();
 
         //then
         assertSoftly(softly -> {
