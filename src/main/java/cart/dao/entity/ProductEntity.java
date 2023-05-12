@@ -99,6 +99,7 @@ public class ProductEntity {
             this.price = price;
             return this;
         }
+
         public Builder image(final String image) {
             this.image = image;
             return this;
