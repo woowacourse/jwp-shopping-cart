@@ -50,38 +50,6 @@ public class ProductEntity {
         return image;
     }
 
-    public static class Builder {
-
-        private Long id;
-        private String name;
-        private Integer price;
-        private String image;
-
-        public ProductEntity build() {
-            return new ProductEntity(id, name, price, image);
-        }
-
-        public Builder id(final Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder name(final String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder price(final Integer price) {
-            this.price = price;
-            return this;
-        }
-
-        public Builder image(final String image) {
-            this.image = image;
-            return this;
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -103,5 +71,38 @@ public class ProductEntity {
                 ", price=" + price +
                 ", image='" + image + '\'' +
                 '}';
+    }
+
+    public static class Builder {
+
+        private Long id;
+        private String name;
+        private Integer price;
+
+        private String image;
+
+        public ProductEntity build() {
+            return new ProductEntity(id, name, price, image);
+        }
+
+        public Builder id(final Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(final String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder price(final Integer price) {
+            this.price = price;
+            return this;
+        }
+        public Builder image(final String image) {
+            this.image = image;
+            return this;
+        }
+
     }
 }

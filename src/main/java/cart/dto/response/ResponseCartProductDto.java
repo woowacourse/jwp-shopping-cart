@@ -27,6 +27,16 @@ public class ResponseCartProductDto {
         );
     }
 
+    @Override
+    public String toString() {
+        return "ResponseCartProductDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", image='" + image + '\'' +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }
@@ -41,15 +51,5 @@ public class ResponseCartProductDto {
 
     public String getImage() {
         return image;
-    }
-
-    @Override
-    public String toString() {
-        return "ResponseCartProductDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", image='" + image + '\'' +
-                '}';
     }
 }

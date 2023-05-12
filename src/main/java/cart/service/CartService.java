@@ -2,7 +2,6 @@ package cart.service;
 
 import cart.domain.Cart;
 import cart.domain.CartProduct;
-import cart.domain.Product;
 import cart.dto.AddCartRequestDto;
 import cart.dto.auth.AuthInfo;
 import cart.repository.CartRepository;
@@ -23,7 +22,6 @@ public class CartService {
     @Transactional
     public void addProductToCart(final AddCartRequestDto addCartRequestDto, final AuthInfo authInfo) {
         final Long memberId = cartRepository.findIdByAuthInfo(authInfo);
-        final Product product = cartRepository.getProductById(addCartRequestDto.getProductId());
 
         cartRepository.addProductToCart(addCartRequestDto.getProductId(), memberId);
     }

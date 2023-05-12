@@ -4,7 +4,6 @@ import cart.dao.entity.MemberEntity;
 import cart.dto.response.ResponseMemberDto;
 import cart.dto.response.ResponseProductDto;
 import cart.repository.ProductDto;
-import cart.service.CartService;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +17,18 @@ import java.util.stream.Collectors;
 @Controller
 public class ViewController {
 
-    private final CartService cartService;
     private final MemberService memberService;
     private final ProductService productService;
 
     @Autowired
-    public ViewController(final CartService cartService, MemberService memberService, ProductService productService) {
-        this.cartService = cartService;
+    public ViewController(MemberService memberService, ProductService productService) {
         this.memberService = memberService;
         this.productService = productService;
     }
 
     @GetMapping("/")
     public String readProducts(final Model model) {
-        List<ResponseProductDto> responseProductDtos = getResponseProductDtos();
+        final List<ResponseProductDto> responseProductDtos = getResponseProductDtos();
         model.addAttribute("products", responseProductDtos);
         return "index";
     }
@@ -43,7 +40,7 @@ public class ViewController {
 
     @GetMapping("/admin")
     public String getAdminProducts(final Model model) {
-        List<ResponseProductDto> responseProductDtos = getResponseProductDtos();
+        final List<ResponseProductDto> responseProductDtos = getResponseProductDtos();
         model.addAttribute("products", responseProductDtos);
         return "admin";
     }

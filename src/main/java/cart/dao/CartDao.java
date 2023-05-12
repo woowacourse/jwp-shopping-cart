@@ -2,7 +2,6 @@ package cart.dao;
 
 import cart.dao.entity.CartEntity;
 import cart.dao.entity.CartProductEntity;
-import cart.dao.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,20 +21,6 @@ public class CartDao {
     private static final boolean HAS_SAME_PRODUCTS = true;
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<CartEntity> cartEntityRowMapper = (resultSet, rowNum) ->
-            new CartEntity.Builder()
-                    .id(resultSet.getLong("id"))
-                    .productId(resultSet.getLong("product_id"))
-                    .memberId(resultSet.getLong("member_id"))
-                    .build();
-
-    private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) ->
-            new ProductEntity.Builder()
-                    .id(resultSet.getLong("id"))
-                    .name(resultSet.getString("name"))
-                    .price(resultSet.getInt("price"))
-                    .image(resultSet.getString("image"))
-                    .build();
     private final RowMapper<CartProductEntity> cartProductEntityRowMapper = (resultSet, rowNum) ->
             new CartProductEntity.Builder()
                     .id(resultSet.getLong("id"))
@@ -56,15 +41,6 @@ public class CartDao {
                 "JOIN member ON cart.member_id = member.id " +
                 "WHERE member_id = ?";
         return jdbcTemplate.query(query, cartProductEntityRowMapper, memberId);
-    }
-
-    public List<CartEntity> findCartsByMemberId(final Long memberId) {
-        final String query = "SELECT cart.id, product_id, member_id " +
-                "FROM cart " +
-                "JOIN product ON cart.product_id = product.id " +
-                "JOIN member ON cart.member_id = member.id " +
-                "WHERE member_id = ?";
-        return jdbcTemplate.query(query, cartEntityRowMapper, memberId);
     }
 
     public Long insert(final CartEntity cartEntity) {

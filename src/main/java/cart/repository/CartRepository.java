@@ -43,10 +43,9 @@ public class CartRepository {
 
     public Cart getCartProductsByMemberId(final Long memberId) {
         List<CartProductEntity> productEntities = cartDao.findProductsByMemberId(memberId);
-        List<CartProduct> cartProducts = productEntities.stream()
-                .map(productEntity -> new CartProduct(productEntity))
-                .collect(Collectors.toList());
-        return new Cart(cartProducts);
+        return productEntities.stream()
+                .map(CartProduct::new)
+                .collect(collectingAndThen(toList(), Cart::new));
     }
 
     public void addProductToCart(final Long productId, final Long memberId) {
@@ -80,7 +79,6 @@ public class CartRepository {
                 .price(product.getPrice())
                 .image(product.getImage())
                 .build();
-
         productDao.insert(newProductEntity);
     }
 
