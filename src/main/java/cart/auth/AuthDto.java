@@ -1,5 +1,7 @@
 package cart.auth;
 
+import cart.dto.MemberDto;
+
 public class AuthDto {
 
     private String email;
@@ -11,6 +13,10 @@ public class AuthDto {
     public AuthDto(final String email, final String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public MemberDto toDto() {
+        return new MemberDto(email, password);
     }
 
     public String getEmail() {

@@ -1,6 +1,6 @@
 package cart.dto.request;
 
-import cart.domain.Product;
+import cart.dto.ProductDto;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -22,8 +22,8 @@ public class UpdateProductRequest {
         this.image = image;
     }
 
-    public Product toProduct() {
-        return new Product(name, price, image);
+    public ProductDto toDto() {
+        return new ProductDto(name, price, image);
     }
 
     public String getName() {

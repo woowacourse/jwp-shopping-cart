@@ -26,13 +26,13 @@ public class ProductController {
 
     @PostMapping("/products")
     public ResponseEntity<Void> createProduct(@RequestBody @Valid final CreateProductRequest createProductRequest) {
-        final Long id = productService.insert(createProductRequest);
+        final Long id = productService.insert(createProductRequest.toDto());
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @PutMapping("/products/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable("id") final Long id, @RequestBody @Valid final UpdateProductRequest updateProductRequest) {
-        productService.update(id, updateProductRequest);
+        productService.update(id, updateProductRequest.toDto());
         return ResponseEntity.ok().build();
     }
 

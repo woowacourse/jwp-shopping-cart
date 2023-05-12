@@ -1,6 +1,5 @@
 package cart.auth;
 
-import cart.dto.MemberDto;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.getParameterType().equals(MemberDto.class) && parameter.hasParameterAnnotation(AuthPrincipal.class);
+        return parameter.getParameterType().equals(AuthDto.class) && parameter.hasParameterAnnotation(AuthPrincipal.class);
     }
 
     @Override
@@ -35,9 +34,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
         final AuthDto authDto = authorizationExtractor.extract(Objects.requireNonNull(request));
 
-        final String email = authDto.getEmail();
-        final String password = authDto.getPassword();
-
-        return new MemberDto(email, password);
+        return authDto;
     }
 }

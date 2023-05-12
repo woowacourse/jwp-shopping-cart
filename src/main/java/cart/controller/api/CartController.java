@@ -1,7 +1,7 @@
 package cart.controller.api;
 
+import cart.auth.AuthDto;
 import cart.auth.AuthPrincipal;
-import cart.dto.MemberDto;
 import cart.dto.request.CreateCartRequest;
 import cart.dto.request.DeleteCartRequest;
 import cart.dto.response.CartResponse;
@@ -28,20 +28,20 @@ public class CartController {
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<CartResponse>> getCarts(@AuthPrincipal final MemberDto memberDto) {
-        final List<CartResponse> productResponses = cartService.find(memberDto);
+    public ResponseEntity<List<CartResponse>> getCarts(@AuthPrincipal AuthDto authDto) {
+        final List<CartResponse> productResponses = cartService.find(authDto.toDto());
         return ResponseEntity.ok(productResponses);
     }
 
     @PostMapping("/carts")
-    public ResponseEntity<Void> addCart(@AuthPrincipal final MemberDto memberDto, @RequestBody @Valid CreateCartRequest createCartRequest) {
-        final Long id = cartService.insert(createCartRequest.getProductId(), memberDto);
+    public ResponseEntity<Void> addCart(@AuthPrincipal AuthDto authDto, @RequestBody @Valid final CreateCartRequest createCartRequest) {
+        final Long id = cartService.insert(createCartRequest.getProductId(), authDto.toDto());
         return ResponseEntity.created(URI.create("/carts/" + id)).build();
     }
 
     @DeleteMapping("/carts")
-    public ResponseEntity<Void> removeCart(@AuthPrincipal final MemberDto memberDto, @RequestBody @Valid DeleteCartRequest deleteCartRequest) {
-        cartService.delete(deleteCartRequest.getProductId(), memberDto);
+    public ResponseEntity<Void> removeCart(@AuthPrincipal AuthDto authDto, @RequestBody @Valid final DeleteCartRequest deleteCartRequest) {
+        cartService.delete(deleteCartRequest.getProductId(), authDto.toDto());
         return ResponseEntity.accepted().build();
     }
 }

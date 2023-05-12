@@ -6,8 +6,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.request.CreateProductRequest;
-import cart.dto.request.UpdateProductRequest;
+import cart.dto.ProductDto;
 import cart.dto.response.ProductResponse;
 import java.util.List;
 import java.util.Optional;
@@ -71,10 +70,10 @@ class ProductServiceTest {
         // given
         Mockito.when(productDao.insert(Mockito.any()))
                 .thenReturn(1L);
-        final CreateProductRequest createProductRequest = new CreateProductRequest("치킨", 1000, "치킨 사진");
+        final ProductDto productDto = new ProductDto("치킨", 1000, "치킨 사진");
 
         // when
-        final Long id = productService.insert(createProductRequest);
+        final Long id = productService.insert(productDto);
 
         // then
         assertThat(id).isEqualTo(1L);
@@ -86,10 +85,10 @@ class ProductServiceTest {
         Mockito.when(productDao.update(Mockito.any(Long.class), Mockito.any(Product.class)))
                 .thenReturn(1);
         final Long id = 1L;
-        final UpdateProductRequest updateProductRequest = new UpdateProductRequest("순대", 1000, "순대 사진");
+        final ProductDto productDto = new ProductDto("순대", 1000, "순대 사진");
 
         // when
-        final int affectedRows = productService.update(id, updateProductRequest);
+        final int affectedRows = productService.update(id, productDto);
 
         // then
         assertThat(affectedRows).isEqualTo(1);
@@ -98,10 +97,10 @@ class ProductServiceTest {
     @Test
     void 존재하지_않은_상품을_수정하면_예외가_발생한다() {
         // given
-        final UpdateProductRequest updateProductRequest = new UpdateProductRequest("순대", 1000, "순대 사진");
+        final ProductDto productDto = new ProductDto("순대", 1000, "순대 사진");
 
         // expect
-        assertThatThrownBy(() -> productService.update(1L, updateProductRequest))
+        assertThatThrownBy(() -> productService.update(1L, productDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 상품입니다.");
     }

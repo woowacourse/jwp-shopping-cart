@@ -4,8 +4,7 @@ import cart.controller.exception.ProductNotFoundException;
 import cart.controller.exception.ProductNotValidException;
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.request.CreateProductRequest;
-import cart.dto.request.UpdateProductRequest;
+import cart.dto.ProductDto;
 import cart.dto.response.ProductResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,14 +42,14 @@ public class ProductService {
     }
 
     @Transactional
-    public Long insert(final CreateProductRequest createProductRequest) {
-        final Product product = createProductRequest.toProduct();
+    public Long insert(final ProductDto productDto) {
+        final Product product = productDto.toProduct();
         return productDao.insert(product);
     }
 
     @Transactional
-    public int update(final Long id, final UpdateProductRequest updateProductRequest) {
-        final Product product = updateProductRequest.toProduct();
+    public int update(final Long id, final ProductDto productDto) {
+        final Product product = productDto.toProduct();
         final int updatedRow = productDao.update(id, product);
         if (updatedRow == 0) {
             throw new ProductNotFoundException();
