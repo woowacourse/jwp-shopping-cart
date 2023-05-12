@@ -59,4 +59,25 @@ class ViewControllerTest {
                 .andExpect(view().name("admin"))
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("/settings를 요청하면 상품 관리 페이지 이름을 반환한다.")
+    void redirectSettingPage() throws Exception {
+        mockMvc.perform(get("/settings"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", is("text/html;charset=UTF-8")))
+                .andExpect(model().attribute("members", notNullValue()))
+                .andExpect(view().name("settings"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("/carts를 요청하면 장바구니 페이지 이름을 반환한다.")
+    void redirectCartPage() throws Exception {
+        mockMvc.perform(get("/cart"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", is("text/html;charset=UTF-8")))
+                .andExpect(view().name("cart"))
+                .andDo(print());
+    }
 }
