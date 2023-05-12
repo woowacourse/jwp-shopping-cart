@@ -2,7 +2,7 @@ package cart.service.cart.dto;
 
 public class ProductResponse {
 
-    private final Long id;
+    private final long id;
     private final String name;
     private final String imageUrl;
     private final int price;

@@ -1,7 +1,7 @@
 package cart.service.member.dto;
 
 public class MemberResponse {
-    private final Long id;
+    private final long id;
     private final String email;
     private final String password;
 

@@ -1,12 +1,12 @@
-package cart.controller.product;
+package cart.controller.product.dto;
 
 public class ProductWebResponse {
-    private final Long id;
+    private final long id;
     private final String name;
     private final String imageUrl;
-    private final Integer price;
+    private final int price;
 
-    public ProductWebResponse(Long id, String name, String imageUrl, Integer price) {
+    public ProductWebResponse(Long id, String name, String imageUrl, int price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -25,7 +25,7 @@ public class ProductWebResponse {
         return imageUrl;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 }
