@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 @ActiveProfiles("test")
-@Sql("/testData.sql")
+@Sql({"/dropTable.sql", "/schema.sql", "/testData.sql"})
 @AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductControllerTest {
