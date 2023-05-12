@@ -17,7 +17,7 @@ public class BasicAuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         return authHeaderExtractor.authenticate(request.getHeader(AUTHORIZATION));
     }
 }

@@ -29,7 +29,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         List<String> authorizationHeaderValues = authHeaderExtractor.extract(webRequest.getHeader("Authorization"));
 
         String email = authorizationHeaderValues.get(EMAIL_INDEX);
