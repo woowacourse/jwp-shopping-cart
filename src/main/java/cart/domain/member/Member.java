@@ -12,7 +12,8 @@ public class Member {
     private final MemberPrivacy memberPrivacy;
 
     private Member(Long id, String email, String password, MemberPrivacy memberPrivacy) {
-        EmailValidator.validate(email);
+        EmailValidator emailValidator = new EmailValidator();
+        emailValidator.validate(email);
         this.id = id;
         this.email = email;
         this.password = password;

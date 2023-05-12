@@ -14,7 +14,8 @@ class PasswordValidatorTest {
     @ValueSource(strings = {" ", "  "})
     @NullAndEmptySource
     void shouldThrowIllegalArgumentExceptionWhenInputNullOrBlankValue(String inputPassword) {
-        assertThatThrownBy(() -> PasswordValidator.validate(inputPassword))
+        PasswordValidator passwordValidator = new PasswordValidator();
+        assertThatThrownBy(() -> passwordValidator.validate(inputPassword))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호 입력이 비어있습니다.");
     }
