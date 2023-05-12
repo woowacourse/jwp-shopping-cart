@@ -13,6 +13,7 @@ import cart.dao.CartDao;
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
 import cart.dto.CartItemDto;
+import cart.dto.request.CartAddRequest;
 import cart.entity.CartItemEntity;
 import cart.entity.MemberEntity;
 import cart.exception.CartNotFoundException;
@@ -27,13 +28,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @WebMvcTest(CartService.class)
 class CartServiceTest {
-
+    public static final CartAddRequest request = new CartAddRequest(1L);
     public static final String EMAIL = "test@email.com";
     public static final MemberEntity MEMBER = MemberEntity.builder()
             .id(1L)
             .email("test@email.com")
             .password("12345678")
             .build();
+
     @MockBean
     private CartDao cartDao;
 
@@ -55,7 +57,7 @@ class CartServiceTest {
         willReturn(1L).given(cartDao).add(anyLong(), anyLong());
 
         // when
-        long cartId = cartService.add(EMAIL, 1);
+        long cartId = cartService.add(EMAIL, request);
 
         // then
         assertThat(cartId).isEqualTo(1);
@@ -65,14 +67,12 @@ class CartServiceTest {
     @DisplayName("카트에 존재하지 않는 상품을 추가할 경우 예외 발생한다.")
     void addCart_ProductNotFound() {
         // given
-        long productId = 1;
-
         willReturn(MEMBER).given(memberDao).findByEmail(anyString());
         willReturn(false).given(productDao).existsById(anyLong());
         willReturn(1L).given(cartDao).add(anyLong(), anyLong());
 
         // when, then
-        assertThatThrownBy(() -> cartService.add(EMAIL, productId))
+        assertThatThrownBy(() -> cartService.add(EMAIL, request))
                 .isInstanceOf(ProductNotFoundException.class)
                 .hasMessage("존재하지 않는 product id 입니다.");
     }

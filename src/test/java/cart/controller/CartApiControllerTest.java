@@ -2,6 +2,7 @@ package cart.controller;
 
 import static org.hamcrest.Matchers.equalTo;
 
+import cart.dto.request.CartAddRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,9 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql(scripts = "/test.sql")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class CartApiControllerTest {
+    public static final CartAddRequest request1 = new CartAddRequest(1L);
+    public static final CartAddRequest request2 = new CartAddRequest(5L);
+
     private final String EMAIL = "test@email.com";
     private final String PASSWORD = "12345678";
 
@@ -28,37 +32,37 @@ class CartApiControllerTest {
     }
 
     @Test
-    @DisplayName("/cart/{productId}로 POST 요청을 보내면 HTTP 201 코드와 함께 카트에 상품이 추가되어야 한다.")
+    @DisplayName("/cart로 POST 요청을 보내면 HTTP 201 코드와 함께 카트에 상품이 추가되어야 한다.")
     void add_success() {
-        long productId = 1L;
         RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/cart/" + productId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request1)
+                .when().post("/cart")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .header("Location", "/cart/2");
     }
 
     @Test
-    @DisplayName("/cart/{productId}로 존재하지 않는 productId로 POST 요청을 보내면 HTTP 400 코드를 응답한다.")
+    @DisplayName("/cart로 존재하지 않는 productId로 POST 요청을 보내면 HTTP 400 코드를 응답한다.")
     void add_notExistProductId() {
-        long productId = 10L;
         RestAssured.given().log().all()
                 .auth().preemptive().basic(EMAIL, PASSWORD)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/cart/" + productId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request2)
+                .when().post("/cart")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
-    @DisplayName("/cart/{productId}로 POST 요청을 보낼 때, 사용자 인증 정보가 없으면 HTTP 401 코드를 응답한다.")
+    @DisplayName("/cart로 POST 요청을 보낼 때, 사용자 인증 정보가 없으면 HTTP 401 코드를 응답한다.")
     void add_unAuthorized() {
-        long productId = 1L;
         RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/cart/" + productId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request1)
+                .when().post("/cart")
                 .then().log().all()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }

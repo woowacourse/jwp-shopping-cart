@@ -1,6 +1,7 @@
 package cart.service;
 
 import cart.dto.CartItemDto;
+import cart.dto.request.CartAddRequest;
 import cart.entity.MemberEntity;
 import cart.exception.CartNotFoundException;
 import cart.exception.ProductNotFoundException;
@@ -22,7 +23,8 @@ public class CartService {
     private final MemberDao memberDao;
     private final ProductDao productDao;
 
-    public long add(final String email, final long productId) {
+    public long add(final String email, final CartAddRequest cartAddRequest) {
+        Long productId = cartAddRequest.getProductId();
         MemberEntity member = memberDao.findByEmail(email);
         validateProductId(productId);
 
