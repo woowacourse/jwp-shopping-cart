@@ -1,8 +1,9 @@
 package cart.controller;
 
-import cart.dto.ProductCreationRequest;
-import cart.dto.ProductModificationRequest;
+import cart.dto.request.ProductCreationRequest;
+import cart.dto.request.ProductModificationRequest;
 import io.restassured.RestAssured;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,32 +19,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 @ActiveProfiles("test")
-@Sql("/testData.sql")
+@Sql({"/dropTable.sql", "/schema.sql", "/testData.sql"})
 @AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AdminControllerTest {
+class ProductControllerTest {
 
     @LocalServerPort
     int port;
-
-    @Nested
-    @DisplayName("관리자 페이지를 조회하는 admin 메서드 테스트")
-    class SelectTest {
-
-        @BeforeEach
-        void setUp() {
-            RestAssured.port = port;
-        }
-
-        @DisplayName("정상 조회가 되었다면 상태코드 200을 반환하는지 확인한다")
-        @Test
-        void successTest() {
-            RestAssured.given().log().all()
-                    .when().get("/admin")
-                    .then().log().all()
-                    .statusCode(HttpStatus.OK.value());
-        }
-    }
 
     @Nested
     @DisplayName("상품을 등록하는 postProducts 메서드 테스트")
@@ -64,7 +46,8 @@ class AdminControllerTest {
                     .body(request)
                     .when().post("/admin/products")
                     .then().log().all()
-                    .statusCode(HttpStatus.CREATED.value());
+                    .statusCode(HttpStatus.CREATED.value())
+                    .header("Location", Matchers.equalTo("/admin/products/3"));
         }
 
         @DisplayName("잘못된 형식의 이름이 들어오면 상태코드 400을 반환하는지 확인한다")

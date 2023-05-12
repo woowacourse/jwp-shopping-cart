@@ -1,21 +1,32 @@
 package cart.dto;
 
+import cart.domain.entity.Product;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ProductDto {
 
     private final Long id;
     private final String name;
     private final String image;
-    private final Integer price;
+    private final int price;
 
-    private ProductDto(final Long id, final String name, final String image, final Integer price) {
+    private ProductDto(final Long id, final String name, final String image, final int price) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
     }
 
-    public static ProductDto from(final Long id) {
-        return new ProductDto(id, null, null, null);
+    public static ProductDto from(final Product product) {
+        return new ProductDto(product.getId(), product.getName(), product.getImage(), product.getPrice());
+    }
+
+    public static List<ProductDto> from(final List<Product> productEntities) {
+        return productEntities.stream()
+                .map(ProductDto::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public static ProductDto of(final String name, final String image, final Integer price) {
@@ -24,6 +35,10 @@ public class ProductDto {
 
     public static ProductDto of(final Long id, final String name, final String image, final Integer price) {
         return new ProductDto(id, name, image, price);
+    }
+
+    public static Product toEntity(final ProductDto productDto) {
+        return Product.of(productDto.id, productDto.name, productDto.image, productDto.price);
     }
 
     public Long getId() {

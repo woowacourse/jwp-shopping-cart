@@ -1,8 +1,8 @@
 package cart.service;
 
 import cart.dao.JdbcProductDao;
+import cart.domain.entity.Product;
 import cart.dto.ProductDto;
-import cart.entity.ProductEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,6 +17,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -36,9 +37,9 @@ class ProductManagementServiceTest {
         @DisplayName("모든 상품 데이터를 가져와서 반환하는지 확인한다")
         @Test
         void successTest() {
-            final List<ProductEntity> data = List.of(
-                    ProductEntity.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000),
-                    ProductEntity.of(2L, "pizza", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 20000)
+            final List<Product> data = List.of(
+                    Product.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000),
+                    Product.of(2L, "pizza", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 20000)
             );
             when(productDao.selectAll()).thenReturn(data);
 
@@ -102,19 +103,17 @@ class ProductManagementServiceTest {
         @DisplayName("상품 데이터가 삭제되는지 확인한다")
         @Test
         void successTest() {
-            final ProductDto productDto = ProductDto.of(1L, null, null, null);
-            when(productDao.delete(any())).thenReturn(1);
+            when(productDao.deleteById(anyLong())).thenReturn(1);
 
-            assertDoesNotThrow(() -> managementService.delete(productDto));
+            assertDoesNotThrow(() -> managementService.delete(1L));
         }
 
         @DisplayName("상품 데이터가 삭제되지 않으면 예외가 발생하는지 확인한다")
         @Test
         void failTest() {
-            final ProductDto productDto = ProductDto.of(3L, "pobi_doll", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000000);
-            when(productDao.update(any())).thenReturn(0);
+            when(productDao.deleteById(anyLong())).thenReturn(0);
 
-            assertThatThrownBy(() -> managementService.update(productDto))
+            assertThatThrownBy(() -> managementService.delete(3L))
                     .isInstanceOf(IllegalArgumentException.class);
         }
     }

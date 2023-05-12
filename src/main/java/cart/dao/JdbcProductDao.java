@@ -1,23 +1,33 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
+import cart.domain.entity.Product;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcProductDao implements ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert simpleInsert;
 
-    public JdbcProductDao(JdbcTemplate jdbcTemplate) {
+    public JdbcProductDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
     }
 
-    private final RowMapper<ProductEntity> productEntityRowMapper = (resultSet, rowNum) -> ProductEntity.of(
+    private final RowMapper<Product> productEntityRowMapper = (resultSet, rowNum) -> Product.of(
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("image"),
@@ -26,26 +36,36 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductEntity> selectAll() {
-        final String sql = "SELECT * FROM product";
+    public List<Product> selectAll() {
+        String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
     @Override
-    public long insert(final ProductEntity productEntity) {
-        final String sql = "INSERT INTO product(name, image, price) VALUES (?, ?, ?)";
-        return jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice());
+    public Optional<Product> selectById(final long id) {
+        String sql = "SELECT * FROM product WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, productEntityRowMapper, id));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public int update(final ProductEntity productEntity) {
-        final String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImage(), productEntity.getPrice(), productEntity.getId());
+    public long insert(final Product product) {
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(product);
+        return simpleInsert.executeAndReturnKey(parameters).longValue();
     }
 
     @Override
-    public int delete(final ProductEntity productEntity) {
-        final String sql = "DELETE FROM product WHERE id = ?";
-        return jdbcTemplate.update(sql, productEntity.getId());
+    public int update(final Product product) {
+        String sql = "UPDATE product SET name = ?, image = ?, price = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, product.getName(), product.getImage(), product.getPrice(), product.getId());
+    }
+
+    @Override
+    public int deleteById(final long id) {
+        String sql = "DELETE FROM product WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 }

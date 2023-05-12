@@ -1,19 +1,19 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
-import org.springframework.validation.annotation.Validated;
+import cart.domain.entity.Product;
 
-import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
-@Validated
 public interface ProductDao {
 
-    List<ProductEntity> selectAll();
+    List<Product> selectAll();
 
-    long insert(@Valid final ProductEntity productEntity);
+    Optional<Product> selectById(final long id);
 
-    int update(@Valid final ProductEntity productEntity);
+    long insert(final Product product);
 
-    int delete(@Valid final ProductEntity productEntity);
+    int update(final Product product);
+
+    int deleteById(final long id);
 }

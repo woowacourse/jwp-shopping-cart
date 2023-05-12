@@ -1,6 +1,7 @@
-package cart.dao;
+package cart.dummydata;
 
-import cart.entity.ProductEntity;
+import cart.dao.ProductDao;
+import cart.domain.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -20,12 +21,11 @@ public class ProductInitializer implements ApplicationRunner {
 
     @Override
     public void run(final ApplicationArguments args) throws Exception {
-        System.out.println("헤ㅔ헤헤헤헤헤ㅔㅖ");
-        final ProductEntity productEntity1 = ProductEntity.of("mouse", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 100000);
-        final ProductEntity productEntity2 = ProductEntity.of("keyboard", "https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/2020/01/진혁.jpg?fit=770%2C418&ssl=1", 250000);
+        Product product1 = Product.of("mouse", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 100000);
+        Product product2 = Product.of("keyboard", "https://i1.wp.com/blog.peoplefund.co.kr/wp-content/uploads/2020/01/진혁.jpg?fit=770%2C418&ssl=1", 250000);
 
-        productDao.insert(productEntity1);
-        productDao.insert(productEntity2);
+        productDao.insert(product1);
+        productDao.insert(product2);
     }
 
 }

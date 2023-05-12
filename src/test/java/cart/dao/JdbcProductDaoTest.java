@@ -1,6 +1,7 @@
 package cart.dao;
 
-import cart.entity.ProductEntity;
+import cart.domain.entity.Product;
+import cart.dummydata.ProductInitializer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,9 +29,20 @@ class JdbcProductDaoTest {
         @DisplayName("모든 상품 데이터를 반환하는지 확인한다")
         @Test
         void returnAllProductsTest() {
-            final List<ProductEntity> productEntities = productDao.selectAll();
+            final List<Product> productEntities = productDao.selectAll();
 
             assertThat(productEntities.size()).isEqualTo(2);
+        }
+    }
+
+    @Nested
+    @DisplayName("id로 상품을 조회하는 selectById 메서드 테스트")
+    class SelectByIdTest {
+
+        @DisplayName("상품 데이터를 반환하는지 확인한다")
+        @Test
+        void returnAllProductsTest() {
+            assertDoesNotThrow(() -> productDao.selectById(1L));
         }
     }
 
@@ -41,9 +53,9 @@ class JdbcProductDaoTest {
         @DisplayName("상품 등록이 되는지 확인한다")
         @Test
         void successTest() {
-            final ProductEntity productEntity = ProductEntity.of("chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
+            final Product product = Product.of("chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
 
-            assertDoesNotThrow(() -> productDao.insert(productEntity));
+            assertDoesNotThrow(() -> productDao.insert(product));
         }
     }
 
@@ -54,8 +66,8 @@ class JdbcProductDaoTest {
         @DisplayName("상품 수정이 되면 1을 반환하는지 확인한다")
         @Test
         void returnOneWhenUpdatedTest() {
-            final ProductEntity productEntity = ProductEntity.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
-            int updatedRow = productDao.update(productEntity);
+            final Product product = Product.of(1L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
+            int updatedRow = productDao.update(product);
 
             assertThat(updatedRow).isEqualTo(1);
         }
@@ -63,8 +75,8 @@ class JdbcProductDaoTest {
         @DisplayName("상품 수정이 되지 않으면 0을 반환하는지 확인한다")
         @Test
         void returnZeroWhenNothingHappenedTest() {
-            final ProductEntity productEntity = ProductEntity.of(3L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
-            int updatedRow = productDao.update(productEntity);
+            final Product product = Product.of(3L, "chicken", "https://cdn.polinews.co.kr/news/photo/201910/427334_3.jpg", 10000);
+            int updatedRow = productDao.update(product);
 
             assertThat(updatedRow).isEqualTo(0);
         }
@@ -77,8 +89,7 @@ class JdbcProductDaoTest {
         @DisplayName("상품 삭제가 되면 1을 반환하는지 확인한다")
         @Test
         void returnOneWhenDeletedTest() {
-            final ProductEntity productEntity = ProductEntity.of(1L, null, null, null);
-            int deletedRow = productDao.delete(productEntity);
+            int deletedRow = productDao.deleteById(1L);
 
             assertThat(deletedRow).isEqualTo(1);
         }
@@ -86,8 +97,7 @@ class JdbcProductDaoTest {
         @DisplayName("상품 삭제가 되지 않으면 0을 반환하는지 확인한다")
         @Test
         void returnZeroWhenNothingHappenedTest() {
-            final ProductEntity productEntity = ProductEntity.of(3L, null, null, null);
-            int deletedRow = productDao.delete(productEntity);
+            int deletedRow = productDao.deleteById(3L);
 
             assertThat(deletedRow).isEqualTo(0);
         }
