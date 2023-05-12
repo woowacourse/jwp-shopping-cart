@@ -8,7 +8,6 @@ import cart.dto.ProductDto;
 import cart.dto.response.ProductResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,9 +59,6 @@ public class ProductService {
     @Transactional
     public int delete(final Long id) {
         final int deletedRow = productDao.delete(id);
-        if (deletedRow == 0) {
-            throw new ProductNotFoundException();
-        }
         return deletedRow;
     }
 }
