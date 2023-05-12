@@ -14,12 +14,10 @@ import java.net.URI;
 @RestController
 public class ProductApiController {
 
-    private final CartService cartService;
     private final ProductService productService;
 
     @Autowired
-    public ProductApiController(CartService cartService, ProductService productService) {
-        this.cartService = cartService;
+    public ProductApiController(ProductService productService) {
         this.productService = productService;
     }
 
