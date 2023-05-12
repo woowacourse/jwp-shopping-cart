@@ -3,32 +3,32 @@ package cart.domain.entity;
 public class CartItem {
 
     private final Long id;
-    private final long memberId;
-    private final long productId;
+    private final Member member;
+    private final Product product;
 
-    private CartItem(final Long id, final long memberId, final long productId) {
+    private CartItem(final Long id, final Member member, final Product product) {
         this.id = id;
-        this.memberId = memberId;
-        this.productId = productId;
+        this.member = member;
+        this.product = product;
     }
 
-    public static CartItem of(final long memberId, final long productId) {
-        return new CartItem(null, memberId, productId);
+    public static CartItem of(final Member member, final Product product) {
+        return new CartItem(null, member, product);
     }
 
-    public static CartItem of(final Long id, final long memberId, final long productId) {
-        return new CartItem(id, memberId, productId);
+    public static CartItem of(final Long id, final Member member, final Product product) {
+        return new CartItem(id, member, product);
     }
 
     public Long getId() {
         return id;
     }
 
-    public long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 }

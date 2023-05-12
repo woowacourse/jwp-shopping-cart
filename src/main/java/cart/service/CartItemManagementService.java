@@ -29,32 +29,31 @@ public class CartItemManagementService {
 
     @Transactional(readOnly = true)
     public List<CartItemDetailsDto> findAll(final String memberEmail) {
-        long memberId = findMemberId(memberEmail);
-        List<CartItem> cartItemEntities = cartItemDao.selectAllByMemberId(memberId);
+        long memberId = findMember(memberEmail).getId();
+        List<CartItem> cartItems = cartItemDao.selectAllByMemberId(memberId);
         List<CartItemDetailsDto> cartItemDetailsDtos = new ArrayList<>();
-        for (CartItem cartItem : cartItemEntities) {
-            Product product = productDao.selectById(cartItem.getProductId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
-            cartItemDetailsDtos.add(CartItemDetailsDto.from(cartItem.getId(), product));
+        for (CartItem cartItem : cartItems) {
+            cartItemDetailsDtos.add(CartItemDetailsDto.from(cartItem.getId(), cartItem.getProduct()));
         }
         return cartItemDetailsDtos;
     }
 
-    private long findMemberId(final String memberEmail) {
-        Member member = memberDao.selectByEmail(memberEmail)
+    private Member findMember(final String memberEmail) {
+        return memberDao.selectByEmail(memberEmail)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-        return member.getId();
     }
 
     @Transactional
     public long save(final String memberEmail, final long productId) {
-        long memberId = findMemberId(memberEmail);
-        return cartItemDao.insert(CartItem.of(memberId, productId));
+        Member member = findMember(memberEmail);
+        Product product = productDao.selectById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+        return cartItemDao.insert(CartItem.of(member, product));
     }
 
     @Transactional
     public void delete(final String memberEmail, final long cartItemId) {
-        long memberId = findMemberId(memberEmail);
+        long memberId = findMember(memberEmail).getId();
         int deletedRowCount = cartItemDao.deleteByIdAndMemberId(cartItemId, memberId);
         if (deletedRowCount == 0) {
             throw new IllegalArgumentException("장바구니에 없는 상품입니다.");
