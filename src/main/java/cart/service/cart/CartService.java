@@ -46,7 +46,7 @@ public class CartService {
                 () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
         );
         CartItems cartItems = cartDao.findCartItemsByMember(member);
-        return cartItems.makeResponseToController();
+        return cartItems.toProductResponse();
     }
 
     public void deleteCartItem(DeleteCartITemRequest deleteCartITemRequest) {

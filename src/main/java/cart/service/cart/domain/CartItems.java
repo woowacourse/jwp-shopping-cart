@@ -13,7 +13,7 @@ public class CartItems {
         this.cartItems = cartItems;
     }
 
-    public List<ProductResponse> makeResponseToController() {
+    public List<ProductResponse> toProductResponse() {
         return cartItems.stream()
                 .map(p -> new ProductResponse(p.getProductId(), p.getProductName(), p.getProductImageUrl(), p.getProductPrice()))
                 .collect(Collectors.toList());
