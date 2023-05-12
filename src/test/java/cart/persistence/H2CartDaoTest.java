@@ -34,7 +34,6 @@ class H2CartDaoTest {
     @Test
     void 장바구니에_상품을_담는다() {
         Member member = memberDao.save(new Member("cyh6099@gmail.com", "qwer1234"));
-        Long memberId = member.getId();
 
         Long productId = productDao.save(new Product(new ProductName("chicken"), new ProductImage("image"), new ProductPrice(1000)));
         Product product = productDao.findById(productId).get();
@@ -46,10 +45,8 @@ class H2CartDaoTest {
     void 장바구니에_있는_유저의_모든_상품_조회() {
         //given
         Member member = memberDao.save(new Member("cyh6099@gmail.com", "qwer1234"));
-        Long memberId = member.getId();
 
         Member memberNoHaveCartItem = memberDao.save(new Member("cyh6099@wooteco.com", "qwer1234"));
-
 
         Long chickenId = productDao.save(new Product(new ProductName("chicken"), new ProductImage("image"), new ProductPrice(1000)));
         Long pizzaId = productDao.save(new Product(new ProductName("pizza"), new ProductImage("image"), new ProductPrice(2000)));
@@ -85,7 +82,5 @@ class H2CartDaoTest {
 
         cartDao.deleteCartItem(chickenCartItemId);
         assertThat(cartDao.findCartItemsByMember(member).getCartItems()).hasSize(1);
-
-
     }
 }

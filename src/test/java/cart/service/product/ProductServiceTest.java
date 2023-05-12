@@ -31,11 +31,9 @@ class ProductServiceTest {
     @Autowired
     private ProductService productService;
 
-
     @Test
     void 상품을_저장한다() {
         productService.create(new ProductServiceRequest("name", "image", 1000));
-
         List<ProductResponse> products = productService.findAll();
 
         assertThat(products).hasSize(1);
@@ -75,7 +73,6 @@ class ProductServiceTest {
     void 존재하지_않는_상품정보를_수정하면_예외가_발생한다() {
         Long productId = 0L;
         ProductServiceRequest updateRequest = new ProductServiceRequest("expectedUrl", "expected", 1000);
-
 
         assertThatThrownBy(() -> productService.update(
                 updateRequest,

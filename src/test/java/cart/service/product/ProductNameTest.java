@@ -4,6 +4,7 @@ import cart.service.product.domain.ProductName;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("NonAsciiCharacters")
 class ProductNameTest {
 
     @Test
@@ -12,7 +13,6 @@ class ProductNameTest {
         Assertions.assertThatThrownBy(() -> new ProductName(invalidName))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("상품 이름은 최대 50자 입니다.");
-
     }
 
 }

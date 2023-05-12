@@ -45,13 +45,10 @@ class CartServiceTest {
         given(productDao.findById(any()))
                 .willReturn(Optional.of(new Product(1L, new ProductName("치킨"), new ProductImage("image"), new ProductPrice(10000))));
 
-//        given(cartDao.addProduct(any()))
-//                .willReturn(1L);
         given(cartDao.addCartItem(any(), any()))
                 .willReturn(1L);
 
         Long cartId = cartService.createCartItem(new CartServiceRequest("cyh6099@gmail.com", 1L));
-
         Assertions.assertThat(cartId).isPositive();
     }
 
@@ -82,7 +79,6 @@ class CartServiceTest {
     void 존재하지_않는_상품을_삭제하려고_하면_예외발생() {
         given(memberDao.findByEmail(any()))
                 .willReturn(Optional.of(new Member(1L, "aa@aa.com", "qwer1234")));
-
 
         assertThatThrownBy(() -> cartService.deleteCartItem(new CartServiceRequest("cyh6099@gmail.com", 1L)))
                 .isInstanceOf(IllegalArgumentException.class)

@@ -1,6 +1,7 @@
 package cart.service.member.domain;
 
 public class Member {
+
     private final Long id;
     private final String email;
     private final String password;

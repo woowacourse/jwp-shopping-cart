@@ -3,6 +3,7 @@ package cart.service.cart.domain;
 import cart.service.product.domain.Product;
 
 public class CartItem {
+
     private final Product product;
 
     public CartItem(Product product) {

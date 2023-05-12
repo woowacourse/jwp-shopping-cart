@@ -1,6 +1,7 @@
 package cart.service.product.domain;
 
 public class ProductName {
+
     private static final int MAX_NAME_LENGTH = 50;
     private final String name;
 

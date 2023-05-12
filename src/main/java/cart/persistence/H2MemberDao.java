@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Repository
 public class H2MemberDao implements MemberDao {
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -26,7 +27,6 @@ public class H2MemberDao implements MemberDao {
 
     private final RowMapper<Member> rowMapper = (rs, rowNum) ->
             new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
-
 
     @Override
     public Member save(Member member) {

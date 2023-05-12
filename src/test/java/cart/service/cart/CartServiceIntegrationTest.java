@@ -43,7 +43,6 @@ public class CartServiceIntegrationTest {
                 new Product(new ProductName("pizza"), new ProductImage("image"), new ProductPrice(20000))
         );
 
-
         Long chickenId = productDao.save(products.get(0));
         Long pizzaId = productDao.save(products.get(1));
 
@@ -68,7 +67,6 @@ public class CartServiceIntegrationTest {
                 new Product(new ProductName("chicken"), new ProductImage("image"), new ProductPrice(20000)),
                 new Product(new ProductName("pizza"), new ProductImage("image"), new ProductPrice(20000))
         );
-
 
         Long chickenId = productDao.save(products.get(0));
         Long pizzaId = productDao.save(products.get(1));
