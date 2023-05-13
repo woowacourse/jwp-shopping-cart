@@ -1,7 +1,9 @@
 package cart.controller;
 
-import cart.dto.ProductResponse;
-import cart.service.ProductService;
+import cart.dto.member.MemberInfoResponse;
+import cart.dto.product.ProductResponse;
+import cart.service.member.MemberService;
+import cart.service.product.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,9 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PageController {
 
     private final ProductService productService;
+    private final MemberService memberService;
 
-    public PageController(final ProductService productService) {
+    public PageController(final ProductService productService, final MemberService memberService) {
         this.productService = productService;
+        this.memberService = memberService;
     }
 
     @GetMapping("/")
@@ -28,5 +32,17 @@ public class PageController {
         List<ProductResponse> products = productService.findAll();
         model.addAttribute("products", products);
         return "admin";
+    }
+
+    @GetMapping("/settings")
+    public String setting(Model model) {
+        List<MemberInfoResponse> members = memberService.findAll();
+        model.addAttribute("members", members);
+        return "settings";
+    }
+
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
     }
 }

@@ -1,9 +1,9 @@
-package cart.service;
+package cart.service.product;
 
-import cart.dao.ProductDao;
-import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
-import cart.entity.Product;
+import cart.dao.product.ProductDao;
+import cart.dto.product.ProductRequest;
+import cart.dto.product.ProductResponse;
+import cart.entity.product.Product;
 import cart.exception.notfound.ProductNotFoundException;
 import java.util.List;
 import java.util.Optional;

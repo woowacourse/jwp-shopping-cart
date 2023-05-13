@@ -1,7 +1,8 @@
 package cart.exception;
 
+import cart.exception.common.CommonException;
+import cart.exception.member.AuthorityException;
 import cart.exception.notfound.NotFoundException;
-import cart.exception.product.ProductException;
 import java.util.stream.Collectors;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
 
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleInvalidValueException(MethodArgumentNotValidException exception) {
         String errorMessage = exception.getFieldErrors().stream()
@@ -22,13 +22,18 @@ public class ExceptionHandlerAdvice {
         return ResponseEntity.badRequest().body(errorMessage);
     }
 
-    @ExceptionHandler(ProductException.class)
-    public ResponseEntity<String> handleProductException(ProductException exception) {
+    @ExceptionHandler({CommonException.class})
+    public ResponseEntity<String> handleInvalidValueException(CommonException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(AuthorityException.class)
+    public ResponseEntity<String> handleAuthorityException(AuthorityException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 }

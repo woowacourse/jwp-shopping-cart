@@ -1,6 +1,9 @@
-package cart.dao;
+package cart.dao.product;
 
-import cart.entity.Product;
+import cart.entity.product.ImageUrl;
+import cart.entity.product.Name;
+import cart.entity.product.Price;
+import cart.entity.product.Product;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -17,9 +20,9 @@ public class ProductDaoImpl implements ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Product> rowMapper = (resultSet, rowNum) -> new Product(
         resultSet.getLong("id"),
-        resultSet.getString("name"),
-        resultSet.getString("image_url"),
-        resultSet.getInt("price")
+        new Name(resultSet.getString("name")),
+        new ImageUrl(resultSet.getString("image_url")),
+        new Price(resultSet.getInt("price"))
     );
 
     public ProductDaoImpl(final JdbcTemplate jdbcTemplate) {
