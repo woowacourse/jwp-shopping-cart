@@ -31,7 +31,7 @@ class UserDaoTest {
         //given
         final int count = countRowsInTable(jdbcTemplate, "users");
 
-        //then
+        //when, then
         assertThat(userDao.findAll()).hasSize(count);
     }
 
@@ -41,7 +41,7 @@ class UserDaoTest {
         //given
         final User user = userDao.findAll().get(0);
 
-        //then
+        //when, then
         assertAll(
                 () -> assertThat(userDao.findByEmail(user.getEmail())).isPresent(),
                 () -> assertThat(userDao.findByEmail(" ")).isNotPresent());
