@@ -13,6 +13,15 @@ public class AuthInfo {
         this.password = new Password(password);
     }
 
+    public String getEmailValue() {
+        return email.getAddress();
+    }
+
+
+    public String getPasswordValue() {
+        return password.getValue();
+    }
+
     public Email getEmail() {
         return email;
     }
