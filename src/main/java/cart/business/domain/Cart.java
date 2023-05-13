@@ -8,7 +8,7 @@ public class Cart {
     private final Integer id;
     private final Integer memberId;
     private final Products products;
-    public static int sequence = 0;
+    public static int sequence = 1;
 
     public Cart(Integer memberId, Products products) {
         this.id = sequence++;
@@ -18,6 +18,10 @@ public class Cart {
 
     public void addProduct(Product product) {
         products.addProduct(product);
+    }
+
+    public void removeProduct(Product product) {
+        products.remove(product);
     }
 
     public Products getProducts() {

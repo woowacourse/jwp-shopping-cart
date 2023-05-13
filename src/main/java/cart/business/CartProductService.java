@@ -24,6 +24,8 @@ public class CartProductService {
         this.cartProductDao = cartProductDao;
     }
 
+    //data.sql에 INSERT...해서 데이터를 미리 넣어주지 않았다면 Cart, Member...등을 Create()할 때 아래와 같은 코드들이 수행될 수 있을 것 같습니다!
+    //하지만 지금은 data.sql INSERT...문을 미리 작성해두고 domain을 후에 추가했기에 이렇게 넣어주었습니다!
     private void initSetting() {
         Product dog = new Product("강아지", "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA0MTJfMTM5%2FMDAxNjgxMjYzNTU2NDI2.wlJys88BgEe2MzQrd2k5jjtXsObAZaOM4eidDcM3iLUg.5eE5nUvqLadE0MwlF9c8XLOgqghimMWQU2psfcRuvFYg.PNG.noblecase%2F20230412_102917_5.png&type=a340", 10000);
         Product cat = new Product("고양이", "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA0MTBfMjcz%2FMDAxNjgxMTAwOTc5Nzg3.MEOt2vmlKWIlW4PQFfgHPILk0dJxwX42KzrDVu4puSwg.GcSSR6FJWup8Uo1H0xo0_4FuIMhJYJpw6tUmpKP9-Wsg.JPEG.catopia9%2FDSC01276.JPG&type=a340", 20000);
@@ -54,26 +56,13 @@ public class CartProductService {
         return cartProductDao.insert(cart, product);
     }
 
-//    @Transactional(readOnly = true)
-//    public List<CartProductEntity> read() {
-//        return cartProductDao.findAll();
-//    }
-
     @Transactional
-    public Integer delete(Integer id) {
-        return cartProductDao.remove(id);
-    }
+    public Integer delete(Integer memberId, Integer id) {
+        Product product = products.findProductById(id);
+        Cart cart = carts.findCartByMemberId(memberId);
+        cart.removeProduct(product);
 
-//    private CartProductEntity makeCartProductFromRequest(Integer productId, Integer memberId) {
-//        return new CartProductEntity(null, productId, memberId);
-//    }
-//
-//    private CartProductEntity makeCartProductFromResponse(CartProductResponse response) {
-//        return new CartProductEntity(response.getId(), response.getProductId(), response.getCartId());
-//    }
-
-    public Carts getCarts() {
-        return carts;
+        return cartProductDao.remove(product);
     }
 
     public Products getProducts() {

@@ -1,6 +1,5 @@
 package cart.business.domain;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Member {
@@ -8,12 +7,10 @@ public class Member {
     private final Integer id;
     private String email;
     private String password;
-    private Cart cart;
     public static int sequence = 1;
 
     public Member(String email, String password) {
         this.id = sequence++;
-        this.cart = new Cart(id, new Products(new ArrayList<>()));
         this.email = email;
         this.password = password;
     }
@@ -21,7 +18,7 @@ public class Member {
     public Integer getId() {
         return id;
     }
-    
+
     public String getEmail() {
         return email;
     }

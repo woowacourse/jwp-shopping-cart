@@ -3,7 +3,6 @@ package cart.business;
 import cart.entity.ProductEntity;
 import cart.persistence.CartDao;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,10 +19,5 @@ public class CartService {
 
     public List<ProductEntity> findProductsByMemberId(Integer memberId) {
         return cartDao.findAllProductsByMemberId(memberId);
-    }
-
-    @Transactional
-    public Integer delete(Integer id) {
-        return cartDao.remove(id);
     }
 }

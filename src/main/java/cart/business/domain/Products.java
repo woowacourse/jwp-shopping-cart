@@ -23,6 +23,10 @@ public class Products {
         throw new IllegalArgumentException("해당 상품은 상품 목록에 없습니다");
     }
 
+    public void remove(Product product) {
+        products.remove(product);
+    }
+
     public List<Product> getProducts() {
         return products;
     }

@@ -73,15 +73,17 @@ public class CartController {
     @DeleteMapping(path = "/cart/products/{product_id}")
     public ResponseEntity<Integer> delete(
             HttpServletRequest request, @PathVariable(value = "product_id") Integer productId) throws AuthenticationException {
-        checkValidLogin(request);
+        String email = checkValidLogin(request);
+        Integer memberId = memberService.findMemberByEmail(email).get().getId();
 
-        return ResponseEntity.ok().body(cartProductService.delete(productId));
+        return ResponseEntity.ok().body(cartProductService.delete(memberId, productId));
     }
 
     private String checkValidLogin(HttpServletRequest request) throws AuthenticationException {
         AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
         String email = authInfo.getEmail();
         String password = authInfo.getPassword();
+        Integer memberId = memberService.findMemberByEmail(email).get().getId();
 
         if (authService.checkInvalidLogin(email, password)) {
             throw new AuthenticationException("유효하지 않은 로그인 요청입니다.");

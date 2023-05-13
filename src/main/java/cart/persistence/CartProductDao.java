@@ -33,21 +33,8 @@ public class CartProductDao {
         return keyHolder.getKey().intValue();
     }
 
-//    public List<CartProductEntity> findAll() {
-//        String sql = "SELECT * FROM CART_PRODUCT";
-//
-//        return jdbcTemplate.query(sql,
-//                (resultSet, rowNum) -> {
-//                    int id = resultSet.getInt("id");
-//                    int productId = resultSet.getInt("product_id");
-//                    int cartId = resultSet.getInt("cart_id");
-//
-//                    return new CartProductEntity(id, productId, cartId);
-//                });
-//    }
-
-    public Integer remove(Integer id) {
-        final var query = "DELETE FROM CART_PRODUCT WHERE id = ?";
-        return jdbcTemplate.update(query, id);
+    public Integer remove(Product product) {
+        final var query = "DELETE FROM CART_PRODUCT WHERE product_id = ?";
+        return jdbcTemplate.update(query, product.getId());
     }
 }
