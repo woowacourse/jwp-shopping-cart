@@ -49,7 +49,7 @@ class CartApiControllerTest {
     @DisplayName("장바구니 조회 테스트")
     @Test
     void showCart() {
-        String credentials = "1:naver.com:1234";
+        String credentials = "1:wuga@naver.com:1234";
         Header header = getHeader(credentials);
 
         RestAssured.given()
@@ -63,7 +63,7 @@ class CartApiControllerTest {
     @DisplayName("장바구니 등록 테스트")
     @Test
     void addCart() {
-        String credentials = "1:naver.com:1234";
+        String credentials = "1:wuga@naver.com:1234";
         Header header = getHeader(credentials);
 
         List<ProductEntity> allProducts = productDao.findAll();
@@ -88,7 +88,7 @@ class CartApiControllerTest {
     @DisplayName("장바구니 삭제 테스트")
     @Test
     void deleteCart() {
-        String credentials = "1:naver.com:1234";
+        String credentials = "1:wuga@naver.com:1234";
         Header header = getHeader(credentials);
 
         List<ProductEntity> allProducts = productDao.findAll();
