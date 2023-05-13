@@ -1,5 +1,6 @@
 package cart.persistence;
 
+import cart.business.domain.Member;
 import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,9 +37,9 @@ public class MemberDao {
     }
 
 
-    public Integer remove(Integer id) {
+    public Integer remove(Member member) {
         final var query = "DELETE FROM MEMBER WHERE id = ?";
-        return jdbcTemplate.update(query, id);
+        return jdbcTemplate.update(query, member.getId());
     }
 
     public Optional<MemberEntity> findByEmail(String email) {

@@ -83,7 +83,6 @@ public class CartController {
         AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
         String email = authInfo.getEmail();
         String password = authInfo.getPassword();
-        Integer memberId = memberService.findMemberByEmail(email).get().getId();
 
         if (authService.checkInvalidLogin(email, password)) {
             throw new AuthenticationException("유효하지 않은 로그인 요청입니다.");

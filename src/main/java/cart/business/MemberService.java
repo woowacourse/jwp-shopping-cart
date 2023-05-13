@@ -1,10 +1,13 @@
 package cart.business;
 
+import cart.business.domain.Member;
+import cart.business.domain.Members;
 import cart.entity.MemberEntity;
 import cart.persistence.MemberDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,8 +15,10 @@ import java.util.Optional;
 public class MemberService {
 
     private MemberDao memberDao;
+    private Members members;
 
     public MemberService(MemberDao memberDao) {
+        this.members = new Members(new ArrayList<>());
         this.memberDao = memberDao;
     }
 
@@ -28,6 +33,9 @@ public class MemberService {
 
     @Transactional
     public Integer delete(Integer id) {
-        return memberDao.remove(id);
+        Member member = members.findMemberById(id);
+        members.removeMember(member);
+
+        return memberDao.remove(member);
     }
 }
