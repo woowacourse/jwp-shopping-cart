@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -58,7 +57,7 @@ class MemberServiceTest {
         //given
         final Email email = new Email("huchu@woowahan.com");
         when(memberDao.findByEmail(email.getAddress()))
-                .thenReturn(Optional.of(new MemberEntity(1L, new Email("huchu@woowahan.com"), new Password("1234567a!"))));
+                .thenReturn(new MemberEntity(1L, new Email("huchu@woowahan.com"), new Password("1234567a!")));
 
         //when
         final MemberEntity member = memberService.findByEmail(email);
@@ -73,7 +72,7 @@ class MemberServiceTest {
         //given
         final String email = "huchu@woowahan.com";
         when(memberDao.findByEmail(email))
-                .thenReturn(Optional.of(new MemberEntity(1L, new Email(email), new Password("1234567a!"))));
+                .thenReturn(new MemberEntity(1L, new Email(email), new Password("1234567a!")));
 
         //when
         final boolean actual = memberService.hasMember(new Email(email), new Password(password));

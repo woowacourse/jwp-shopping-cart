@@ -30,14 +30,16 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberEntity findByEmail(final Email email) {
-        return memberDao.findByEmail(email.getAddress())
-                .orElseThrow(() -> new IllegalArgumentException("입력한 이메일의 회원이 존재하지 않습니다."));
+        return memberDao.findByEmail(email.getAddress());
     }
 
     @Transactional(readOnly = true)
     public boolean hasMember(final Email email, final Password password) {
-        return memberDao.findByEmail(email.getAddress())
-                .map(memberEntity -> password.equals(memberEntity.getPassword()))
-                .orElse(Boolean.FALSE);
+        try {
+            final MemberEntity member = memberDao.findByEmail(email.getAddress());
+            return password.equals(member.getPassword());
+        } catch (IllegalArgumentException exception) {
+            return false;
+        }
     }
 }

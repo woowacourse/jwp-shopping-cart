@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -54,16 +53,20 @@ public class MemberDao {
     }
 
     public MemberEntity findById(final Long id) {
-        final String sql = "SELECT * FROM member WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_ROW_MAPPER, id);
+        try {
+            final String sql = "SELECT * FROM member WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_ROW_MAPPER, id);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new IllegalArgumentException("입력한 정보의 회원이 존재하지 않습니다.");
+        }
     }
 
-    public Optional<MemberEntity> findByEmail(final String email) {
+    public MemberEntity findByEmail(final String email) {
         try {
             final String sql = "SELECT * FROM member WHERE email = ?";
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_ROW_MAPPER, email));
+            return jdbcTemplate.queryForObject(sql, MEMBER_ENTITY_ROW_MAPPER, email);
         } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
+            throw new IllegalArgumentException("입력한 이메일의 회원이 존재하지 않습니다.");
         }
     }
 }
