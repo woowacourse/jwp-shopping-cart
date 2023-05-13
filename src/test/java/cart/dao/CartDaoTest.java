@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -106,6 +107,17 @@ class CartDaoTest {
     }
 
     @Test
+    void 존재하지_않는_id로_데이터를_찾는_경우_예외를_던진다() {
+        //given
+        final Long id = 9999L;
+
+        //expect
+        assertThatThrownBy(() -> cartDao.findById(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("입력한 정보의 장바구니가 존재하지 않습니다.");
+    }
+
+    @Test
     void 사용자_id로_데이터를_찾는다() {
         //given
         final Long memberId = insertMember(EMAIL, PASSWORD);
@@ -125,6 +137,18 @@ class CartDaoTest {
             softly.assertThat(cartEntity.getMember()).isEqualTo(new MemberEntity(memberId, new Email(EMAIL), new Password(PASSWORD)));
             softly.assertThat(cartEntity.getProduct()).isEqualTo(new ProductEntity(productId, NAME, PRICE, IMAGE));
         });
+    }
+
+    @Test
+    void 사용자_id가_존재하지_않는_경우_데이터를_찾지_못한다() {
+        //given
+        final Long wrongMemberId = 9999L;
+
+        //when
+        final List<CartEntity> cartEntities = cartDao.findAllByMemberId(wrongMemberId);
+
+        //then
+        assertThat(cartEntities).isEmpty();
     }
 
     @Test

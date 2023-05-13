@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.*;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -47,8 +48,13 @@ public class CartDao {
     }
 
     public CartEntity findById(final Long id) {
-        final String sql = "SELECT * FROM cart AS c INNER JOIN product AS p ON c.product_id = p.id INNER JOIN member AS m On c.member_id = m.id WHERE c.id = ?";
-        return jdbcTemplate.queryForObject(sql, CART_ENTITY_ROW_MAPPER, id);
+        try {
+            final String sql = "SELECT * FROM cart AS c INNER JOIN product AS p ON c.product_id = p.id INNER JOIN member AS m On c.member_id = m.id WHERE c.id = ?";
+            return jdbcTemplate.queryForObject(sql, CART_ENTITY_ROW_MAPPER, id);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new IllegalArgumentException("입력한 정보의 장바구니가 존재하지 않습니다.");
+        }
+
     }
 
     public List<CartEntity> findAllByMemberId(final Long memberId) {
