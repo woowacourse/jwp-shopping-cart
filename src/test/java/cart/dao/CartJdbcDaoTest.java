@@ -79,7 +79,7 @@ class CartJdbcDaoTest {
         Integer cartId = cartsByMemberId.get(0).getId();
 
         // when
-        cartDao.deleteById(cartId);
+        cartDao.deleteById(cartId, memberId);
         List<CartEntity> cartsByMemberId2 = cartDao.findCartByMemberId(memberId);
 
         // then

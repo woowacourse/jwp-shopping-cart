@@ -8,6 +8,6 @@ public interface CartDao {
 
     List<CartEntity> findCartByMemberId(final int id);
 
-    void deleteById(final int cartId);
+    void deleteById(final int cartId, final int memberId);
 
 }

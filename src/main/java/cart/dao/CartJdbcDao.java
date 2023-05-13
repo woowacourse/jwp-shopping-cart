@@ -33,10 +33,10 @@ public class CartJdbcDao implements CartDao {
     }
 
     @Override
-    public void deleteById(final int cartId) {
-        final String sql = "DELETE FROM CART WHERE id = ?";
+    public void deleteById(final int cartId, final int memberId) {
+        final String sql = "DELETE FROM CART WHERE id = ? and member_id = ?";
 
-        jdbcTemplate.update(sql, cartId);
+        jdbcTemplate.update(sql, cartId, memberId);
     }
 
     @Override

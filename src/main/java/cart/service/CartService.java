@@ -45,8 +45,8 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCart(final int cartId, final Integer memberId) {
-        cartDao.deleteById(cartId);
+    public void deleteCart(final int cartId, final int memberId) {
+        cartDao.deleteById(cartId, memberId);
     }
 
     private void checkExistProduct(final int id) {
