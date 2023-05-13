@@ -3,7 +3,7 @@ package cart.service;
 import cart.auth.UserInfo;
 import cart.dao.CartDao;
 import cart.dao.UserDao;
-import cart.dto.ProductResponse;
+import cart.dto.UserCartResponse;
 import cart.dto.UserResponse;
 import cart.entity.User;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -56,11 +56,11 @@ public class UserService {
         cartDao.deleteProductInCart(user.getId(), userProductId);
     }
 
-    public List<ProductResponse> getAllProductsInCart(final UserInfo userInfo) {
+    public List<UserCartResponse> getAllProductsInCart(final UserInfo userInfo) {
         final User user = getUser(userInfo);
 
-        return cartDao.findAllProductsInCart(user.getId()).stream()
-                .map(ProductResponse::from)
+        return cartDao.findCartItemsByUserId(user.getId()).stream()
+                .map(UserCartResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 }

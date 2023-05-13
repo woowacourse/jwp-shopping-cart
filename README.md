@@ -43,6 +43,7 @@
 - [x] User
     - [x] 이메일로 유저 조회
     - [x] 유저 전체 조회
+- [x] Cart
     - [x] 유저 장바구니 상품 추가 (Authentication)
     - [x] 유저 장바구니 상품 제거 (Authentication)
     - [x] 유저의 장바구니 전체 조회 (Authentication)

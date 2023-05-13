@@ -2,8 +2,8 @@ package cart.controller;
 
 import cart.auth.AuthParam;
 import cart.auth.UserInfo;
-import cart.dto.ProductResponse;
 import cart.dto.UserCartRequest;
+import cart.dto.UserCartResponse;
 import cart.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +38,8 @@ public final class UserRestController {
     }
 
     @GetMapping("/user/cart")
-    public ResponseEntity<List<ProductResponse>> getAllProductsInCart(@AuthParam UserInfo userInfo) {
-        final List<ProductResponse> products = userService.getAllProductsInCart(userInfo);
+    public ResponseEntity<List<UserCartResponse>> getAllProductsInCart(@AuthParam UserInfo userInfo) {
+        final List<UserCartResponse> products = userService.getAllProductsInCart(userInfo);
 
         return ResponseEntity.ok(products);
     }

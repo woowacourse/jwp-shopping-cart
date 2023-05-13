@@ -94,6 +94,6 @@ class CartDaoTest {
         cartDao.addProductToCart(1L, product.getId());
 
         //then
-        assertThat(cartDao.findAllProductsInCart(1L)).hasSize(2);
+        assertThat(cartDao.findCartItemsByUserId(1L)).hasSize(2);
     }
 }
