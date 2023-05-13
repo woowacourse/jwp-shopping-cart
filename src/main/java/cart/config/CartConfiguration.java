@@ -11,6 +11,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class CartConfiguration implements WebMvcConfigurer {
+    private final LoginInterceptor loginInterceptor;
+    private final AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver;
+
+    public CartConfiguration(final LoginInterceptor loginInterceptor,
+                             final AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver) {
+        this.loginInterceptor = loginInterceptor;
+        this.authenticationPrincipalArgumentResolver = authenticationPrincipalArgumentResolver;
+    }
 
     @Override
     public void addViewControllers(final ViewControllerRegistry registry) {
@@ -20,13 +28,13 @@ public class CartConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor())
+        registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/cart/**")
                 .excludePathPatterns("/cart");
     }
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthenticationPrincipalArgumentResolver());
+        resolvers.add(authenticationPrincipalArgumentResolver);
     }
 }

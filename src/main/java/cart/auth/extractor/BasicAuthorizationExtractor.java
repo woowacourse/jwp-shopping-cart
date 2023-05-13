@@ -1,4 +1,4 @@
-package cart.auth;
+package cart.auth.extractor;
 
 import cart.dto.auth.AuthInfo;
 import cart.exception.AuthorizationException;

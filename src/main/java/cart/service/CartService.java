@@ -1,13 +1,12 @@
 package cart.service;
 
+import cart.dao.CartDao;
+import cart.dao.ProductDao;
 import cart.dto.CartItemDto;
+import cart.dto.MemberDto;
 import cart.dto.request.CartAddRequest;
-import cart.entity.MemberEntity;
 import cart.exception.CartNotFoundException;
 import cart.exception.ProductNotFoundException;
-import cart.dao.CartDao;
-import cart.dao.MemberDao;
-import cart.dao.ProductDao;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -20,27 +19,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class CartService {
 
     private final CartDao cartDao;
-    private final MemberDao memberDao;
     private final ProductDao productDao;
 
-    public long add(final String email, final CartAddRequest cartAddRequest) {
+    public long add(final CartAddRequest cartAddRequest, final MemberDto member) {
         Long productId = cartAddRequest.getProductId();
-        MemberEntity member = memberDao.findByEmail(email);
         validateProductId(productId);
 
         return cartDao.add(member.getId(), productId);
     }
 
-    public void delete(final String email, final long cartId) {
-        MemberEntity member = memberDao.findByEmail(email);
+    public void delete(final long cartId, final MemberDto member) {
         validateCartId(cartId);
 
         cartDao.deleteById(member.getId(), cartId);
     }
 
     @Transactional(readOnly = true)
-    public List<CartItemDto> findAllByMemberId(final String email) {
-        MemberEntity member = memberDao.findByEmail(email);
+    public List<CartItemDto> findAllByMemberId(final MemberDto member) {
         return cartDao.findAllByMemberId(member.getId()).stream()
                 .map(CartItemDto::from)
                 .collect(Collectors.toList());

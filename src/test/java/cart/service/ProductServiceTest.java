@@ -18,10 +18,11 @@ import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-@WebMvcTest(ProductService.class)
+@SpringBootTest(webEnvironment = WebEnvironment.NONE)
 class ProductServiceTest {
 
     private static final String NAME = "킨더조이";

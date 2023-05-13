@@ -1,8 +1,8 @@
-package cart.controller;
+package cart.controller.api;
 
 import cart.auth.AuthenticationPrincipal;
 import cart.dto.CartItemDto;
-import cart.dto.auth.AuthInfo;
+import cart.dto.MemberDto;
 import cart.dto.request.CartAddRequest;
 import cart.service.CartService;
 import java.net.URI;
@@ -26,24 +26,24 @@ public class CartApiController {
     private final CartService cartService;
 
     @PostMapping
-    public ResponseEntity<Void> add(@RequestBody @Valid CartAddRequest cartAddRequest, @AuthenticationPrincipal AuthInfo authInfo) {
-        long cartId = cartService.add(authInfo.getEmail(), cartAddRequest);
+    public ResponseEntity<Void> add(@RequestBody @Valid CartAddRequest cartAddRequest, @AuthenticationPrincipal MemberDto member) {
+        long cartId = cartService.add(cartAddRequest, member);
         return ResponseEntity
                 .created(URI.create("/cart/" + cartId))
                 .build();
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<Void> delete(@PathVariable long cartId, @AuthenticationPrincipal AuthInfo authInfo) {
-        cartService.delete(authInfo.getEmail(), cartId);
+    public ResponseEntity<Void> delete(@PathVariable long cartId, @AuthenticationPrincipal MemberDto member) {
+        cartService.delete(cartId, member);
         return ResponseEntity
                 .ok()
                 .build();
     }
 
     @GetMapping("/items")
-    public ResponseEntity<List<CartItemDto>> findAll(@AuthenticationPrincipal AuthInfo authInfo) {
-        List<CartItemDto> allItems = cartService.findAllByMemberId(authInfo.getEmail());
+    public ResponseEntity<List<CartItemDto>> findAll(@AuthenticationPrincipal MemberDto member) {
+        List<CartItemDto> allItems = cartService.findAllByMemberId(member);
         return ResponseEntity
                 .ok()
                 .body(allItems);
