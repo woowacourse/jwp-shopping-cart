@@ -38,7 +38,7 @@ public class CartService {
     }
 
     @Transactional
-    public void addCart(final int productId, final Integer memberId) {
+    public void insertCart(final int productId, final Integer memberId) {
         checkExistProduct(productId);
 
         cartDao.addCart(makeCartEntity(productId, memberId));
