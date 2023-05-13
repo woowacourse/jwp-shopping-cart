@@ -26,7 +26,7 @@ public final class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<String> handleAnyException(Exception e) {
-        logger.info("info log = {}", e.getMessage());
+        logger.error("Internal Server Error = {}", e.getMessage());
         return ResponseEntity.internalServerError().body("예기치 못한 에러가 발생했습니다.");
     }
 }
