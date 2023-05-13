@@ -5,6 +5,7 @@ import cart.domain.product.Name;
 import cart.domain.product.Price;
 import cart.domain.product.Product;
 import cart.dto.product.RequestProductDto;
+import cart.dto.product.ResponseAdminDto;
 import cart.dto.product.ResponseProductDto;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -26,6 +27,13 @@ public class ProductService {
         final List<Product> products = productDao.findAll();
         return products.stream()
                 .map(ResponseProductDto::create)
+                .collect(Collectors.toList());
+    }
+
+    public List<ResponseAdminDto> displayAdmin() {
+        final List<Product> products = productDao.findAll();
+        return products.stream()
+                .map(ResponseAdminDto::create)
                 .collect(Collectors.toList());
     }
     

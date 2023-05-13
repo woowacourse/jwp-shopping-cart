@@ -25,7 +25,7 @@ public class PageController {
     
     @GetMapping("/admin")
     public String renderAdminPage(final Model model) {
-        model.addAttribute("products", productService.display());
+        model.addAttribute("products", productService.displayAdmin());
         return "admin";
     }
 
