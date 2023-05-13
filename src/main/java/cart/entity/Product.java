@@ -57,14 +57,4 @@ public final class Product {
     public int getPrice() {
         return price;
     }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", image='" + image + '\'' +
-                ", price=" + price +
-                '}';
-    }
 }
