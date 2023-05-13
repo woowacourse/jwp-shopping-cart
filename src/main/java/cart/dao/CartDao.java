@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface CartDao {
 
-    void addCart(final CartEntity cartEntity);
+    void insertCart(final CartEntity cartEntity);
 
     List<CartEntity> findCartByMemberId(final int id);
 

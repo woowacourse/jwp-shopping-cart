@@ -36,7 +36,7 @@ class CartJdbcDaoTest {
         CartEntity cartEntityForAdd = new CartEntity(productId, memberId);
 
         // when
-        cartDao.addCart(cartEntityForAdd);
+        cartDao.insertCart(cartEntityForAdd);
         List<CartEntity> findCartsByMemberId = cartDao.findCartByMemberId(memberId);
 
         // then
@@ -52,7 +52,7 @@ class CartJdbcDaoTest {
         Integer productId = jdbcTemplate.queryForObject("select id from Product limit 1",
                 (rs, rowNum) -> rs.getInt("id"));
         CartEntity cartEntityForAdd = new CartEntity(productId, memberId);
-        cartDao.addCart(cartEntityForAdd);
+        cartDao.insertCart(cartEntityForAdd);
 
         // when
         List<CartEntity> findCartsByMemberId = cartDao.findCartByMemberId(memberId);
@@ -70,10 +70,10 @@ class CartJdbcDaoTest {
         Integer productId = jdbcTemplate.queryForObject("select id from Product limit 1",
                 (rs, rowNum) -> rs.getInt("id"));
         CartEntity cartEntityForAdd = new CartEntity(productId, memberId);
-        cartDao.addCart(cartEntityForAdd);
+        cartDao.insertCart(cartEntityForAdd);
 
         CartEntity cartEntityForAdd2 = new CartEntity(productId, memberId);
-        cartDao.addCart(cartEntityForAdd2);
+        cartDao.insertCart(cartEntityForAdd2);
 
         List<CartEntity> cartsByMemberId = cartDao.findCartByMemberId(memberId);
         Integer cartId = cartsByMemberId.get(0).getId();

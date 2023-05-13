@@ -40,7 +40,7 @@ public class CartJdbcDao implements CartDao {
     }
 
     @Override
-    public void addCart(final CartEntity cartEntity) {
+    public void insertCart(final CartEntity cartEntity) {
         final String sql = "INSERT INTO CART (product_id, member_id) values (?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
