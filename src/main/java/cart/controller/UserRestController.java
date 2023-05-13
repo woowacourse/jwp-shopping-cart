@@ -13,6 +13,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@RequestMapping("/user")
 public final class UserRestController {
 
     private final UserService userService;
@@ -21,7 +22,7 @@ public final class UserRestController {
         this.userService = userService;
     }
 
-    @PostMapping("/user/cart")
+    @PostMapping("/cart")
     public ResponseEntity<Void> addProductToCart(@AuthParam UserInfo userInfo,
                                                  @RequestBody @Valid UserCartRequest userCartRequest) {
         final Long productId = userService.addProductToCart(userInfo, userCartRequest.getProductId());
@@ -29,7 +30,7 @@ public final class UserRestController {
         return ResponseEntity.created(URI.create("/user/cart/" + productId)).build();
     }
 
-    @DeleteMapping("/user/cart/{id}")
+    @DeleteMapping("/cart/{id}")
     public ResponseEntity<Void> deleteProductInCart(@AuthParam UserInfo userInfo,
                                                     @PathVariable("id") Long userProductId) {
         userService.deleteProductInCart(userInfo, userProductId);
@@ -37,7 +38,7 @@ public final class UserRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/cart")
+    @GetMapping("/cart")
     public ResponseEntity<List<UserCartResponse>> getAllProductsInCart(@AuthParam UserInfo userInfo) {
         final List<UserCartResponse> products = userService.getAllProductsInCart(userInfo);
 

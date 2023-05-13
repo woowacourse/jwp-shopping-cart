@@ -11,6 +11,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@RequestMapping("/products")
 public final class ProductRestController {
     private final ProductService productService;
 
@@ -18,21 +19,21 @@ public final class ProductRestController {
         this.productService = productService;
     }
 
-    @PostMapping("/products")
+    @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequest productRequest) {
         final Long productId = productService.addProduct(productRequest);
 
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
-    @GetMapping("/products")
+    @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         List<ProductResponse> products = productService.findProducts();
 
         return ResponseEntity.ok().body(products);
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(@RequestBody @Valid ProductRequest productRequest,
                                               @PathVariable Long id) {
         productRequest.setId(id);
@@ -41,7 +42,7 @@ public final class ProductRestController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
 
