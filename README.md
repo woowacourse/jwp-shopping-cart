@@ -93,9 +93,9 @@
     ```mermaid
         erDiagram
           CART {
-          BIGINT product_id PK,FK
-          BIGINT member_id PK,FK
-          INT quantity
+          BIGINT id PK
+          BIGINT product_id FK
+          BIGINT member_id FK
           }
     ```
 
@@ -120,4 +120,4 @@
 - [x] admin과 다른 서비스 간 ResponseDto 분리
 - [x] 데이터를 찾지 못한 경우, Bad Request 상태 코드를 반환하도록 변경
 - [ ] 통합 테스트 수정
-- [ ] 집계 쿼리를 이용하여 상품 수량을 계산하도록 변경
+- [x] 집계 쿼리를 이용하여 상품 수량을 계산하도록 변경

@@ -44,7 +44,7 @@ class CartServiceTest {
     }
 
     @Test
-    @DisplayName("save 할 때, 값이 없을 경우 create 한다.")
+    @DisplayName("save 테스트")
     void saveWhenCreate() {
         // given
         final CartService cartService = new CartService(cartDao, productDao);
@@ -61,22 +61,22 @@ class CartServiceTest {
     }
 
     @Test
-    @DisplayName("save 할 때, 값이 있을 경우 update 한다.")
+    @DisplayName("같은 멤버가 같은 상품을 추가할 수 있다.")
     void saveWhenUpdate() {
         // given
         final CartService cartService = new CartService(cartDao, productDao);
         final Long productId = insertProduct();
         final Long memberId = insertMember();
         final RequestCartDto requestCartDto = new RequestCartDto(productId);
-        cartService.save(memberId, requestCartDto);
         // when
-        final RequestCartDto updateRequestCartDto = new RequestCartDto(productId);
-        cartService.save(memberId, updateRequestCartDto);
+        cartService.save(memberId, requestCartDto);
+        cartService.save(memberId, requestCartDto);
+        cartService.save(memberId, requestCartDto);
         // then
         final Cart cart = cartDao.findByMemberIdAndProductId(memberId, productId).orElseThrow();
         assertEquals(cart.getMemberId(), memberId);
         assertEquals(cart.getProductId(), productId);
-        assertEquals(cart.getQuantity().getValue(), 2);
+        assertEquals(cart.getQuantity().getValue(), 3);
     }
 
     @Test

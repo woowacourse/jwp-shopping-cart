@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import cart.dao.product.JdbcProductDao;
 import cart.dao.product.ProductDao;
 import cart.domain.cart.Cart;
-import cart.domain.cart.Quantity;
 import cart.domain.product.Name;
 import cart.domain.product.Price;
 import cart.domain.product.Product;
@@ -98,6 +97,25 @@ class JdbcCartDaoTest {
     }
 
     @Test
+    @DisplayName("동일한 memberId와 productId를 count 해서 수량을 집계할 수 있다.")
+    void countQuantity() {
+        // given
+        final Long memberId = insertMember();
+        final Long productId = insertProduct();
+        final Cart cart = new Cart(productId, memberId);
+        cartDao.insert(cart);
+        cartDao.insert(cart);
+        cartDao.insert(cart);
+        // when
+        final Cart result = cartDao.findByMemberIdAndProductId(memberId, productId)
+                .orElseThrow(NoSuchElementException::new);
+        // then
+        assertEquals(cart.getProductId(), result.getProductId());
+        assertEquals(cart.getMemberId(), result.getMemberId());
+        assertEquals(3, result.getQuantity().getValue());
+    }
+
+    @Test
     @DisplayName("memberId와 productId로 장바구니를 삭제할 수 있다.")
     void deleteByMemberIdAndProductId() {
         // given
@@ -109,22 +127,5 @@ class JdbcCartDaoTest {
         cartDao.deleteByMemberIdAndProductId(memberId, productId);
         // then
         assertEquals(0, cartDao.findAll().size());
-    }
-
-    @Test
-    @DisplayName("장바구니에 담긴 상품의 수량을 변경할 수 있다.")
-    void update() {
-        // given
-        final Long memberId = insertMember();
-        final Long productId = insertProduct();
-        final Cart cart = new Cart(productId, memberId);
-        cartDao.insert(cart);
-        // when
-        final Cart updateCart = new Cart(productId, memberId, new Quantity(2));
-        cartDao.update(updateCart);
-        final Cart result = cartDao.findByMemberIdAndProductId(memberId, productId)
-                .orElseThrow(NoSuchElementException::new);
-        // then
-        assertEquals(updateCart.getQuantity().getValue(), result.getQuantity().getValue());
     }
 }

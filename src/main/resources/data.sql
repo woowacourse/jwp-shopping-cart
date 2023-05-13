@@ -16,10 +16,9 @@ CREATE TABLE member (
 );
 
 CREATE TABLE cart (
+    id          BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
     product_id  BIGINT          NOT NULL,
     member_id   BIGINT          NOT NULL,
-    quantity    INT             NOT NULL    default 1,
-    PRIMARY KEY (product_id, member_id),
     FOREIGN KEY (product_id) references product (id),
     FOREIGN KEY (member_id) references member (id)
 );

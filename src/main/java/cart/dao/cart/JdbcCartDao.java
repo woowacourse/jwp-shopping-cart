@@ -2,18 +2,21 @@ package cart.dao.cart;
 
 import cart.domain.cart.Cart;
 import cart.domain.cart.Quantity;
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class JdbcCartDao implements CartDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     private final RowMapper<Cart> cartRowMapper = (resultSet, rowNumber) -> {
         Long productId = resultSet.getLong("product_id");
@@ -25,28 +28,30 @@ public class JdbcCartDao implements CartDao {
 
     public JdbcCartDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("cart")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
     public void insert(final Cart cart) {
-        final String sql = "INSERT INTO cart(product_id, member_id) VALUES(?, ?)";
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, cart.getProductId());
-            preparedStatement.setLong(2, cart.getMemberId());
-            return preparedStatement;
-        });
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("product_id", cart.getProductId());
+        parameters.put("member_id", cart.getMemberId());
+
+        simpleJdbcInsert.execute(parameters);
     }
 
     @Override
     public List<Cart> findAll() {
-        final String sql = "select * from cart";
+        final String sql = "select product_id, member_id, COUNT(id) as quantity from cart group by product_id, member_id";
         return jdbcTemplate.query(sql, cartRowMapper);
     }
 
     @Override
     public Optional<Cart> findByMemberIdAndProductId(final Long memberId, final Long productId) {
-        final String sql = "select * from cart where member_id = ? and product_id = ?";
+        final String sql = "select product_id, member_id, COUNT(id) as quantity from cart group by product_id, member_id "
+                + "having member_id = ? and product_id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, cartRowMapper, memberId, productId));
         } catch (EmptyResultDataAccessException e) {
@@ -58,17 +63,5 @@ public class JdbcCartDao implements CartDao {
     public void deleteByMemberIdAndProductId(final Long memberId, final Long productId) {
         final String sql = "delete from cart where member_id = ? and product_id = ?";
         jdbcTemplate.update(sql, memberId, productId);
-    }
-
-    @Override
-    public void update(final Cart cart) {
-        final String sql = "update cart set quantity = ? where product_id = ? and member_id = ?";
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, cart.getQuantity().getValue());
-            preparedStatement.setLong(2, cart.getProductId());
-            preparedStatement.setLong(3, cart.getMemberId());
-            return preparedStatement;
-        });
     }
 }

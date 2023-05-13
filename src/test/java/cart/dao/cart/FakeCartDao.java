@@ -5,6 +5,7 @@ import cart.domain.cart.Quantity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FakeCartDao implements CartDao {
 
@@ -12,31 +13,29 @@ public class FakeCartDao implements CartDao {
 
     @Override
     public void insert(final Cart cart) {
-        carts.add(new Cart(cart.getProductId(), cart.getMemberId(), new Quantity(1)));
+        carts.add(cart);
     }
 
     @Override
     public List<Cart> findAll() {
-        return carts;
+        return carts.stream()
+                .map(it -> findByMemberIdAndProductId(it.getMemberId(), it.getProductId()).orElseThrow())
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<Cart> findByMemberIdAndProductId(final Long memberId, final Long productId) {
+        final int quantity = (int) carts.stream()
+                .filter(cart -> cart.getMemberId().equals(memberId) && cart.getProductId().equals(productId)).count();
+
         return carts.stream()
-            .filter(cart -> cart.getMemberId().equals(memberId) && cart.getProductId().equals(productId))
-            .findFirst();
+                .filter(cart -> cart.getMemberId().equals(memberId) && cart.getProductId().equals(productId))
+                .findAny()
+                .map(cart -> new Cart(cart.getId(), cart.getProductId(), cart.getMemberId(), new Quantity(quantity)));
     }
 
     @Override
     public void deleteByMemberIdAndProductId(final Long memberId, final Long productId) {
         carts.removeIf(cart -> cart.getMemberId().equals(memberId) && cart.getProductId().equals(productId));
-    }
-
-    @Override
-    public void update(final Cart cart) {
-        carts.stream()
-            .filter(it -> it.getMemberId().equals(cart.getMemberId()) && it.getProductId().equals(cart.getProductId()))
-            .findFirst()
-            .ifPresent(it -> carts.set(carts.indexOf(it), cart));
     }
 }
