@@ -5,14 +5,13 @@ import cart.domain.member.Email;
 import cart.domain.member.Member;
 import cart.domain.member.Password;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class AuthenticationResolver implements HandlerMethodArgumentResolver {
-
-    private static final String AUTHORIZATION = "Authorization";
 
     private final AuthorizationParser<AuthInfo> authorizationParser;
     private final MemberJdbcDao memberDao;
@@ -37,7 +36,7 @@ public class AuthenticationResolver implements HandlerMethodArgumentResolver {
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
     ) {
-        final AuthInfo authInfo = authorizationParser.parse(webRequest.getHeader(AUTHORIZATION));
+        final AuthInfo authInfo = authorizationParser.parse(webRequest.getHeader(HttpHeaders.AUTHORIZATION));
 
         final Email givenEmail = new Email(authInfo.getEmail());
         final Password givenPassword = new Password(authInfo.getPassword());
