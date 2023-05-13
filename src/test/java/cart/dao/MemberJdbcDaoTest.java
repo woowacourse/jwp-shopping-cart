@@ -29,7 +29,6 @@ class MemberJdbcDaoTest {
     @DisplayName("전체 멤버 조회 테스트")
     @Test
     void findAllMember() {
-        // data.sql 멤버 네명 등록
         // when
         List<MemberEntity> findMembers = memberDao.findAll();
 
@@ -40,7 +39,6 @@ class MemberJdbcDaoTest {
     @DisplayName("멤버 아이디로 특정 멤버 조회 테스트")
     @Test
     void findMemberById() {
-        // data.sql 멤버 네명 등록
         List<MemberEntity> findMembers = memberDao.findAll();
         MemberEntity findFirstMember = findMembers.get(0);
         int firstMemberId = findFirstMember.getId();
