@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@Sql("classpath:testData.sql")
 class CartJdbcDaoTest {
 
     @Autowired
@@ -70,9 +72,7 @@ class CartJdbcDaoTest {
         CartEntity cartEntityForAdd = new CartEntity(productId, memberId);
         cartDao.addCart(cartEntityForAdd);
 
-        int productId2 = 2;
-        int memberId2 = 1;
-        CartEntity cartEntityForAdd2 = new CartEntity(productId2, memberId2);
+        CartEntity cartEntityForAdd2 = new CartEntity(productId, memberId);
         cartDao.addCart(cartEntityForAdd2);
 
         List<CartEntity> cartsByMemberId = cartDao.findCartByMemberId(memberId);
