@@ -26,6 +26,13 @@ class EmailTest {
     }
 
     @Test
+    void 이메일_형식이_아닐_시_예외를_던진다() {
+        assertThatThrownBy(() -> new Email("blackcat.com"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Email 형식을 입력해주세요.");
+    }
+
+    @Test
     void 이메일은_공백이_아니면_예외를_던지지_않는다() {
         assertDoesNotThrow(() -> new Email("bk@wooteco.com"));
     }
