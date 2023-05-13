@@ -2,19 +2,31 @@ package cart.auth;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cart.dao.MemberDao;
+import cart.dao.MemberJdbcDao;
 import cart.exception.AuthException;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 
+@JdbcTest
 class AuthenticationPrincipalArgumentResolverTest {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private MemberDao memberDao = new MemberJdbcDao(jdbcTemplate);
+
     private final MockHttpServletRequest request = new MockHttpServletRequest();
-    private final AuthenticationPrincipalArgumentResolver resolver = new AuthenticationPrincipalArgumentResolver();
+    private final AuthenticationPrincipalArgumentResolver resolver = new AuthenticationPrincipalArgumentResolver(
+            memberDao);
     private final NativeWebRequest nativeWebRequest = new ServletWebRequest(request);
 
     @DisplayName("헤더에 Authorization 이 없을 때")

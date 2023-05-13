@@ -1,5 +1,8 @@
 package cart.auth;
 
+import cart.dao.MemberDao;
+import cart.dao.MemberEntity;
+import cart.domain.Member;
 import cart.exception.AuthException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +15,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
+    private final MemberDao memberDao;
+
+    public AuthenticationPrincipalArgumentResolver(final MemberDao memberDao) {
+        this.memberDao = memberDao;
+    }
+
     private static final String DELIMITER = ":";
     private static final String AUTHENTICATION_HEADER_NAME = "Basic";
     private static final String EMAIL_REGX = "^(.+)@(.+)$";
@@ -23,8 +32,8 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+    public Integer resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String header = getValidateHeader(webRequest);
         String basicHeaderValue = header.substring(AUTHENTICATION_HEADER_NAME.length()).trim();
         byte[] decodedHeaderValue = Base64.decodeBase64(basicHeaderValue);
@@ -37,7 +46,18 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         String email = splitDecodedStringHeaderValue[1];
         String password = splitDecodedStringHeaderValue[2];
 
-        return new AuthMember(id, email, password);
+        try {
+            MemberEntity findMemberEntity = memberDao.findMemberById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 인증 정보입니다."));
+
+            Member member = toMember(findMemberEntity);
+            member.checkEmail(email);
+            member.checkPassword(password);
+        } catch (IllegalArgumentException exception) {
+            throw new AuthException(exception.getMessage());
+        }
+
+        return id;
     }
 
     private void validateEmail(final String email) {
@@ -87,6 +107,10 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         if (!authorizationHeader.contains(AUTHENTICATION_HEADER_NAME)) {
             throw new AuthException("인증 정보가 없습니다");
         }
+    }
+
+    private Member toMember(final MemberEntity findMemberEntity) {
+        return new Member(findMemberEntity.getId(), findMemberEntity.getEmail(), findMemberEntity.getPassword());
     }
 
 }
