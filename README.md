@@ -119,5 +119,5 @@
 - [x] cart에 있는 상품을 삭제하는 API에서 @PathVariable 대신 @RequestParam을 사용하도록 변경
 - [x] admin과 다른 서비스 간 ResponseDto 분리
 - [x] 데이터를 찾지 못한 경우, Bad Request 상태 코드를 반환하도록 변경
-- [ ] 통합 테스트 수정
+- [x] 통합 테스트 수정
 - [x] 집계 쿼리를 이용하여 상품 수량을 계산하도록 변경
