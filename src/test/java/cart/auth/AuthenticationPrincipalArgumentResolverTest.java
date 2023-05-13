@@ -2,7 +2,7 @@ package cart.auth;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cart.exception.CustomAuthException;
+import cart.exception.AuthException;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,7 +21,7 @@ class AuthenticationPrincipalArgumentResolverTest {
     @Test
     void validateHeader() {
         assertThatThrownBy(() -> resolver.resolveArgument(null, null, nativeWebRequest, null))
-                .isInstanceOf(CustomAuthException.class);
+                .isInstanceOf(AuthException.class);
     }
 
     @DisplayName("헤더에 Authorization 은 있지만 null 인 경우")
@@ -29,7 +29,7 @@ class AuthenticationPrincipalArgumentResolverTest {
     void validateNullBasicHeaderValue() {
         request.addHeader("Authorization", "");
         assertThatThrownBy(() -> resolver.resolveArgument(null, null, nativeWebRequest, null))
-                .isInstanceOf(CustomAuthException.class);
+                .isInstanceOf(AuthException.class);
     }
 
     @DisplayName("헤더에 Basic 값이 없을 때")
@@ -39,7 +39,7 @@ class AuthenticationPrincipalArgumentResolverTest {
         String basicCredentials = "wuga " + encodedCredentials;
         request.addHeader("Authorization", basicCredentials);
         assertThatThrownBy(() -> resolver.resolveArgument(null, null, nativeWebRequest, null))
-                .isInstanceOf(CustomAuthException.class);
+                .isInstanceOf(AuthException.class);
     }
 
     @DisplayName("헤더 Basic 테스트")
@@ -51,7 +51,7 @@ class AuthenticationPrincipalArgumentResolverTest {
         void validateOnlyBasicHeaderValue() {
             request.addHeader("Authorization", getHeaderValue(""));
             assertThatThrownBy(() -> resolver.resolveArgument(null, null, nativeWebRequest, null))
-                    .isInstanceOf(CustomAuthException.class);
+                    .isInstanceOf(AuthException.class);
         }
 
         @DisplayName("Basic 값은 정상적이지만 구분자가 없을 경우")
@@ -59,7 +59,7 @@ class AuthenticationPrincipalArgumentResolverTest {
         void validateDelimiterBasicHeaderValue() {
             request.addHeader("Authorization", getHeaderValue("1;wuga@naver.com;1234"));
             assertThatThrownBy(() -> resolver.resolveArgument(null, null, nativeWebRequest, null))
-                    .isInstanceOf(CustomAuthException.class);
+                    .isInstanceOf(AuthException.class);
         }
 
         @DisplayName("Basic 값이 있지만 아이디가 없을 경우")
@@ -67,7 +67,7 @@ class AuthenticationPrincipalArgumentResolverTest {
         void validateIdBasicHeaderValue() {
             request.addHeader("Authorization", getHeaderValue("wuga@naver.com:1234"));
             assertThatThrownBy(() -> resolver.resolveArgument(null, null, nativeWebRequest, null))
-                    .isInstanceOf(CustomAuthException.class);
+                    .isInstanceOf(AuthException.class);
         }
 
         @DisplayName("Basic 값이 있지만 이메일이 없을 경우")
@@ -75,7 +75,7 @@ class AuthenticationPrincipalArgumentResolverTest {
         void validateEmailBasicHeaderValue() {
             request.addHeader("Authorization", getHeaderValue("1:1234"));
             assertThatThrownBy(() -> resolver.resolveArgument(null, null, nativeWebRequest, null))
-                    .isInstanceOf(CustomAuthException.class);
+                    .isInstanceOf(AuthException.class);
         }
 
         @DisplayName("Basic 값이 있지만 아이디 범위가 유효하지 않을 경우")
@@ -83,7 +83,7 @@ class AuthenticationPrincipalArgumentResolverTest {
         void validateIdRangeBasicHeaderValue() {
             request.addHeader("Authorization", getHeaderValue("1000000000000:wuga@naver.com:1234"));
             assertThatThrownBy(() -> resolver.resolveArgument(null, null, nativeWebRequest, null))
-                    .isInstanceOf(CustomAuthException.class);
+                    .isInstanceOf(AuthException.class);
         }
 
         @DisplayName("Basic 값이 있지만 이메일이 형식이 맞지 않을 경우")
@@ -91,7 +91,7 @@ class AuthenticationPrincipalArgumentResolverTest {
         void validateEmailTypeBasicHeaderValue() {
             request.addHeader("Authorization", getHeaderValue("1:wuga.com:1234"));
             assertThatThrownBy(() -> resolver.resolveArgument(null, null, nativeWebRequest, null))
-                    .isInstanceOf(CustomAuthException.class);
+                    .isInstanceOf(AuthException.class);
         }
 
     }
