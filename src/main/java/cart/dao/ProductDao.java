@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.ProductEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -76,7 +77,11 @@ public class ProductDao {
     }
 
     public ProductEntity findById(final Long id) {
-        final String sql = "SELECT * from product where id = ?";
-        return jdbcTemplate.queryForObject(sql, PRODUCT_ENTITY_ROW_MAPPER, id);
+        try {
+            final String sql = "SELECT * from product where id = ?";
+            return jdbcTemplate.queryForObject(sql, PRODUCT_ENTITY_ROW_MAPPER, id);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new IllegalArgumentException("입력한 정보의 상품이 존재하지 않습니다.");
+        }
     }
 }

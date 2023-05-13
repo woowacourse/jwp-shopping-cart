@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -101,7 +100,8 @@ class ProductDaoTest {
 
         // then
         assertThatThrownBy(() -> productDao.findById(id))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("입력한 정보의 상품이 존재하지 않습니다.");
     }
 
     @Test
