@@ -3,7 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.dao.dto.ItemDto;
+import cart.dao.entity.ItemEntity;
 import cart.domain.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,7 +41,7 @@ class ItemDaoTest {
         Item item = new Item("맥북", "image", 10000);
         Long savedId = itemDao.insert(item);
 
-        ItemDto findItem = itemDao.findById(savedId).get();
+        ItemEntity findItem = itemDao.findById(savedId).get();
 
         assertAll(
                 () -> assertThat(findItem.getId()).isEqualTo(savedId),
@@ -59,7 +59,7 @@ class ItemDaoTest {
         Item updateItem = new Item(originItem.getName(), originItem.getImageUrl(), 50000);
 
         itemDao.update(savedId, updateItem);
-        ItemDto findItem = itemDao.findById(savedId).get();
+        ItemEntity findItem = itemDao.findById(savedId).get();
 
         assertAll(
                 () -> assertThat(findItem.getId()).isEqualTo(savedId),

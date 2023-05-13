@@ -1,4 +1,13 @@
-const addCartItem = (productId) => {
+const currentUrl = window.location.href;
+const url = new URL(currentUrl);
+const protocol = url.protocol;
+const hostname = url.hostname;
+const port = url.port;
+const currentServerUrl = protocol + "//" + hostname + ":" + port;
+
+
+
+const addCartItem = (itemId) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
@@ -6,20 +15,21 @@ const addCartItem = (productId) => {
         return;
     }
 
-    // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
-    axios.request({
-        url: '',
+    const params = new URLSearchParams();
+    params.append('itemId', itemId);
+    axios.post(currentServerUrl + '/carts?' + params.toString(), {}, {
         headers: {
             'Authorization': `Basic ${credentials}`
         }
     }).then((response) => {
         alert('장바구니에 담았습니다.');
     }).catch((error) => {
+        alert(error.response.data.message);
         console.error(error);
     });
 }
 
-const removeCartItem = (id) => {
+const removeCartItem = (itemId) => {
     const credentials = localStorage.getItem('credentials');
     if (!credentials) {
         alert('사용자 정보가 없습니다.');
@@ -27,9 +37,9 @@ const removeCartItem = (id) => {
         return;
     }
 
-    // TODO: [2단계] 장바구니 CRUD API에 맞게 변경
-    axios.request({
-        url: '',
+    const params = new URLSearchParams();
+    params.append('itemId', itemId);
+    axios.delete(currentServerUrl + '/carts?' + params.toString(),  {
         headers: {
             'Authorization': `Basic ${credentials}`
         }

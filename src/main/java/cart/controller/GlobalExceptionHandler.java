@@ -1,11 +1,12 @@
 package cart.controller;
 
 import cart.controller.dto.ExceptionResponse;
+import cart.exception.AuthException;
+import cart.exception.CartException;
 import cart.exception.DataBaseSearchException;
 import cart.exception.ItemException;
 import cart.exception.ItemNotFoundException;
-import cart.exception.NameRangeException;
-import cart.exception.PriceRangeException;
+import cart.exception.MemberException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest().body(new ExceptionResponse(PATH_VARIABLE_ERROR_MESSAGE));
     }
 
-    @ExceptionHandler({NameRangeException.class, PriceRangeException.class})
+    @ExceptionHandler(ItemException.class)
     private ResponseEntity<ExceptionResponse> handleItemException(ItemException ex) {
         logger.warn(ex.getMessage());
         return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getMessage()));
@@ -66,9 +67,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.internalServerError().body(new ExceptionResponse(ex.getMessage()));
     }
 
+    @ExceptionHandler(AuthException.class)
+    private ResponseEntity<ExceptionResponse> handleAuthException(AuthException ex) {
+        logger.warn(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(MemberException.class)
+    private ResponseEntity<ExceptionResponse> handleMemberException(MemberException ex) {
+        logger.warn(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(CartException.class)
+    private ResponseEntity<ExceptionResponse> handleCartDuplicateException(CartException ex) {
+        logger.warn(ex.getMessage());
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     private ResponseEntity<ExceptionResponse> handleException(Exception ex) {
-        logger.warn(ex.getMessage());
+        logger.error(ex.getMessage());
         ex.printStackTrace();
         return ResponseEntity.internalServerError().body(new ExceptionResponse(INTERNAL_ERROR_MESSAGE));
     }

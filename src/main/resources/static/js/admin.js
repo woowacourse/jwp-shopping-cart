@@ -46,7 +46,7 @@ form.addEventListener('submit', (event) => {
 
 const createProduct = (product) => {
     axios.post('/items', {
-        name : product.name,
+        name: product.name,
         price: product.price,
         imageUrl: product.imageUrl
     }).then((response) => {
@@ -63,7 +63,7 @@ const createProduct = (product) => {
         let alertMessage = "";
 
         for (let i = 0; i < fields.length; i++) {
-           alertMessage += message[fields[i]] + "\n";
+            alertMessage += message[fields[i]] + "\n";
         }
         alert(alertMessage)
         console.error(error);
@@ -71,10 +71,10 @@ const createProduct = (product) => {
 };
 
 const updateProduct = (product) => {
-    const { id } = product;
+    const {id} = product;
 
     axios.put('/items/' + id, {
-        name : product.name,
+        name: product.name,
         price: product.price,
         imageUrl: product.imageUrl
     }).then((response) => {
@@ -100,9 +100,9 @@ const updateProduct = (product) => {
 
 const deleteProduct = (id) => {
     axios.delete('/items/' + id)
-    .then((response) => {
-        window.location.reload();
-    }).catch((error) => {
+        .then((response) => {
+            window.location.reload();
+        }).catch((error) => {
         alert(error.response.data.message);
         console.error(error);
     });

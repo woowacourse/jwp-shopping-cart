@@ -16,14 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
 class ItemServiceTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-
     ItemService itemService;
 
     @BeforeEach
@@ -49,8 +47,8 @@ class ItemServiceTest {
 
     @Test
     @DisplayName("모든 상품을 찾는다.")
-    @Sql("/truncate.sql")
     void findAllItemSuccess() {
+        int initialSize = itemService.findAll().size();
         ItemRequest itemRequest1 = createItemRequest();
         ItemRequest itemRequest2 = createItemRequest();
         itemService.add(itemRequest1);
@@ -58,7 +56,7 @@ class ItemServiceTest {
 
         List<ItemResponse> itemResponses = itemService.findAll();
 
-        assertThat(itemResponses).hasSize(2);
+        assertThat(itemResponses).hasSize(initialSize + 2);
     }
 
     @Test
@@ -87,20 +85,18 @@ class ItemServiceTest {
 
     @Test
     @DisplayName("존재하지 않는 상품 ID를 조회하면 예외가 발생한다.")
-    @Sql("/truncate.sql")
     void updateItemRequestFailWithNotExistID() {
         ItemRequest itemRequest = createItemRequest();
 
-        assertThatThrownBy(() -> itemService.update(1L, itemRequest))
+        assertThatThrownBy(() -> itemService.update(Long.MAX_VALUE, itemRequest))
                 .isInstanceOf(ItemException.class)
                 .hasMessage("일치하는 상품을 찾을 수 없습니다.");
     }
 
     @Test
     @DisplayName("존재하지 않는 상품 ID를 삭제하면 예외가 발생한다.")
-    @Sql("/truncate.sql")
     void deleteItemRequestFailWithNotExistID() {
-        assertThatThrownBy(() -> itemService.delete(1L))
+        assertThatThrownBy(() -> itemService.delete(Long.MAX_VALUE))
                 .isInstanceOf(ItemException.class)
                 .hasMessage("일치하는 상품을 찾을 수 없습니다.");
     }

@@ -1,13 +1,13 @@
-package cart.dao.dto;
+package cart.dao.entity;
 
-public class ItemDto {
+public class ItemEntity {
 
     private final Long id;
     private final String name;
     private final String imageUrl;
     private final Integer price;
 
-    public ItemDto(Long id, String name, String imageUrl, int price) {
+    public ItemEntity(Long id, String name, String imageUrl, int price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
