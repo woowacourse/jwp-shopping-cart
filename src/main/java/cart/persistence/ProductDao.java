@@ -56,17 +56,8 @@ public class ProductDao {
         return jdbcTemplate.update(sql, product.getName(), product.getUrl(), product.getPrice(), id);
     }
 
-    public Integer remove(Integer id) {
+    public Integer remove(Product product) {
         final var query = "DELETE FROM PRODUCT WHERE id = ?";
-        return jdbcTemplate.update(query, id);
+        return jdbcTemplate.update(query, product.getId());
     }
-
-//    public void findSameProductExist(ProductEntity product) {
-//        final var query = "SELECT COUNT(*) FROM PRODUCT WHERE name = ? AND url = ? AND price = ?";
-//        int count = jdbcTemplate.queryForObject(query, Integer.class, product.getName(), product.getUrl(), product.getPrice());
-//
-//        if (count > 0) {
-//            throw new IllegalArgumentException("같은 상품이 존재합니다.");
-//        }
-//    }
 }

@@ -23,10 +23,10 @@ public class Products {
         throw new IllegalArgumentException("해당 상품은 상품 목록에 없습니다");
     }
 
-    public Boolean isSameProductExist(Product product) {
+    public boolean isSameProductExist(Product product) {
         for (Product searchProduct : products) {
             if (searchProduct.equals(product)) {
-                return true;
+                throw new IllegalArgumentException("상품이 이미 존재합니다");
             }
         }
         return false;

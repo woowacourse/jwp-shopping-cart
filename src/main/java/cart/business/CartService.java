@@ -10,11 +10,11 @@ import java.util.List;
 public class CartService {
 
     private CartDao cartDao;
-    private CartProductService cartProductService;
+    private ProductService productService;
 
-    public CartService(CartDao cartDao, CartProductService cartProductService) {
+    public CartService(CartDao cartDao, ProductService productService) {
         this.cartDao = cartDao;
-        this.cartProductService = cartProductService;
+        this.productService = productService;
     }
 
     public List<ProductEntity> findProductsByMemberId(Integer memberId) {

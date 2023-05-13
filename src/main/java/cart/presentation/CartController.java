@@ -3,9 +3,9 @@ package cart.presentation;
 import cart.auth.AuthService;
 import cart.auth.BasicAuthorizationExtractor;
 import cart.auth.dto.AuthInfo;
-import cart.business.CartProductService;
 import cart.business.CartService;
 import cart.business.MemberService;
+import cart.business.ProductService;
 import cart.entity.ProductEntity;
 import cart.presentation.dto.ProductResponse;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +24,14 @@ import java.util.stream.Collectors;
 @RestController
 public class CartController {
 
-    private final CartProductService cartProductService;
+    private final ProductService productService;
     private final MemberService memberService;
     private final CartService cartService;
     private BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
     private AuthService authService;
 
-    public CartController(CartProductService cartProductService, MemberService memberService, CartService cartService, AuthService authService) {
-        this.cartProductService = cartProductService;
+    public CartController(ProductService productService, MemberService memberService, CartService cartService, AuthService authService) {
+        this.productService = productService;
         this.memberService = memberService;
         this.cartService = cartService;
         this.authService = authService;
@@ -51,7 +51,7 @@ public class CartController {
         }
 
         return ResponseEntity.created(URI.create("/cart/products/" + productId))
-                .body(cartProductService.create(productId, memberId));
+                .body(productService.createProductInCart(productId, memberId));
     }
 
     @GetMapping(path = "/cart/products")
@@ -76,7 +76,7 @@ public class CartController {
         String email = checkValidLogin(request);
         Integer memberId = memberService.findMemberByEmail(email).get().getId();
 
-        return ResponseEntity.ok().body(cartProductService.delete(memberId, productId));
+        return ResponseEntity.ok().body(productService.deleteProductInCart(memberId, productId));
     }
 
     private String checkValidLogin(HttpServletRequest request) throws AuthenticationException {
