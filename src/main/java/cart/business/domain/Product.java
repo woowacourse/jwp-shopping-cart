@@ -8,7 +8,6 @@ public class Product {
     private final String name;
     private final String url;
     private final Integer price;
-
     public static int sequence = 1;
 
     public Product(String name, String url, Integer price) {

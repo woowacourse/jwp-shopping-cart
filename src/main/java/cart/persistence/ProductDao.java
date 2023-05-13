@@ -1,5 +1,6 @@
 package cart.persistence;
 
+import cart.business.domain.Product;
 import cart.entity.ProductEntity;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Repository
 @Primary
-public class ProductDao implements ProductRepository {
+public class ProductDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -21,8 +22,7 @@ public class ProductDao implements ProductRepository {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Override
-    public Integer insert(ProductEntity product) {
+    public Integer insert(Product product) {
         String sql = "INSERT INTO PRODUCT (name, url, price) values(?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -37,7 +37,6 @@ public class ProductDao implements ProductRepository {
         return keyHolder.getKey().intValue();
     }
 
-    @Override
     public List<ProductEntity> findAll() {
         String sql = "SELECT * FROM PRODUCT";
 
@@ -52,25 +51,22 @@ public class ProductDao implements ProductRepository {
                 });
     }
 
-    @Override
-    public Integer update(Integer id, ProductEntity product) {
+    public Integer update(Integer id, Product product) {
         String sql = "UPDATE PRODUCT SET name = ?, url = ?, price = ? WHERE id = ?";
         return jdbcTemplate.update(sql, product.getName(), product.getUrl(), product.getPrice(), id);
     }
 
-    @Override
     public Integer remove(Integer id) {
         final var query = "DELETE FROM PRODUCT WHERE id = ?";
         return jdbcTemplate.update(query, id);
     }
 
-    @Override
-    public void findSameProductExist(ProductEntity product) {
-        final var query = "SELECT COUNT(*) FROM PRODUCT WHERE name = ? AND url = ? AND price = ?";
-        int count = jdbcTemplate.queryForObject(query, Integer.class, product.getName(), product.getUrl(), product.getPrice());
-
-        if (count > 0) {
-            throw new IllegalArgumentException("같은 상품이 존재합니다.");
-        }
-    }
+//    public void findSameProductExist(ProductEntity product) {
+//        final var query = "SELECT COUNT(*) FROM PRODUCT WHERE name = ? AND url = ? AND price = ?";
+//        int count = jdbcTemplate.queryForObject(query, Integer.class, product.getName(), product.getUrl(), product.getPrice());
+//
+//        if (count > 0) {
+//            throw new IllegalArgumentException("같은 상품이 존재합니다.");
+//        }
+//    }
 }

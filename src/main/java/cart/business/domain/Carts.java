@@ -3,7 +3,6 @@ package cart.business.domain;
 import java.util.List;
 
 public class Carts {
-    //TODO: cart에 담아야할듯 
 
     private final List<Cart> carts;
 
