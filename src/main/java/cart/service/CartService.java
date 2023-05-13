@@ -1,6 +1,9 @@
 package cart.service;
 
+import cart.controller.authentication.AuthInfo;
 import cart.dao.CartDao;
+import cart.dao.MemberDao;
+import cart.dao.ProductDao;
 import cart.domain.CartEntity;
 import cart.domain.MemberEntity;
 import cart.domain.ProductEntity;
@@ -15,13 +18,18 @@ import java.util.stream.Collectors;
 public class CartService {
 
     private final CartDao cartDao;
+    private final MemberDao memberDao;
+    private final ProductDao productDao;
 
-    public CartService(final CartDao cartDao) {
+    public CartService(final CartDao cartDao, final MemberDao memberDao, final ProductDao productDao) {
         this.cartDao = cartDao;
+        this.memberDao = memberDao;
+        this.productDao = productDao;
     }
 
     @Transactional(readOnly = true)
-    public List<ResponseProductDto> findCartProducts(final MemberEntity member) {
+    public List<ResponseProductDto> findCartProducts(final AuthInfo authInfo) {
+        final MemberEntity member = findMember(authInfo);
         final List<CartEntity> cartEntities = cartDao.findAllByMemberId(member.getId());
         return cartEntities.stream()
                 .map(CartEntity::getProduct)
@@ -29,13 +37,25 @@ public class CartService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    @Transactional
-    public Long insert(final MemberEntity member, final ProductEntity product) {
-        return cartDao.insert(new CartEntity(member, product));
+    private MemberEntity findMember(final AuthInfo authInfo) {
+        return memberDao.findByEmail(authInfo.getEmailValue());
     }
 
     @Transactional
-    public int delete(final MemberEntity member, final ProductEntity product) {
+    public Long insert(final AuthInfo authInfo, final Long productId) {
+        final MemberEntity member = findMember(authInfo);
+        final ProductEntity product = findProductById(productId);
+        return cartDao.insert(new CartEntity(member, product));
+    }
+
+    private ProductEntity findProductById(final Long productId) {
+        return productDao.findById(productId);
+    }
+
+    @Transactional
+    public int delete(final AuthInfo authInfo, final Long productId) {
+        final MemberEntity member = findMember(authInfo);
+        final ProductEntity product = findProductById(productId);
         return cartDao.delete(member.getId(), product.getId());
     }
 }

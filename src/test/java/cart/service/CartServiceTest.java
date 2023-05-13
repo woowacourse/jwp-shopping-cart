@@ -1,6 +1,9 @@
 package cart.service;
 
+import cart.controller.authentication.AuthInfo;
 import cart.dao.CartDao;
+import cart.dao.MemberDao;
+import cart.dao.ProductDao;
 import cart.domain.*;
 import cart.dto.ResponseProductDto;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -23,11 +26,17 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CartServiceTest {
 
+    private static final AuthInfo AUTH_INFO = new AuthInfo("huchu@woowahan.com", "1234567a!");
+    private static final Long PRODUCT_ID = 1L;
     private static final MemberEntity MEMBER_ENTITY = new MemberEntity(1L, new Email("huchu@woowahan.com"), new Password("1234567a!"));
-    private static final ProductEntity PRODUCT_ENTITY = new ProductEntity(1L, "치킨", 10_000, "치킨 사진");
+    private static final ProductEntity PRODUCT_ENTITY = new ProductEntity(PRODUCT_ID, "치킨", 10_000, "치킨 사진");
 
     @Mock
     private CartDao cartDao;
+    @Mock
+    private MemberDao memberDao;
+    @Mock
+    private ProductDao productDao;
 
     @InjectMocks
     private CartService cartService;
@@ -35,11 +44,14 @@ class CartServiceTest {
     @Test
     void 회원의_장바구니_상품_목록을_찾는다() {
         //given
+        when(memberDao.findByEmail(any(String.class)))
+                .thenReturn(MEMBER_ENTITY);
+
         when(cartDao.findAllByMemberId(any(Long.class)))
                 .thenReturn(List.of(new CartEntity(MEMBER_ENTITY, PRODUCT_ENTITY)));
 
         //when
-        final List<ResponseProductDto> productIds = cartService.findCartProducts(MEMBER_ENTITY);
+        final List<ResponseProductDto> productIds = cartService.findCartProducts(AUTH_INFO);
 
         //then
         assertSoftly(softly -> {
@@ -58,7 +70,7 @@ class CartServiceTest {
                 .thenReturn(1L);
 
         //when
-        final Long id = cartService.insert(MEMBER_ENTITY, PRODUCT_ENTITY);
+        final Long id = cartService.insert(AUTH_INFO, PRODUCT_ID);
 
         //then
         assertThat(id).isEqualTo(1L);
@@ -67,11 +79,17 @@ class CartServiceTest {
     @Test
     void 장바구니_상품을_삭제한다() {
         //given
+        when(memberDao.findByEmail(any(String.class)))
+                .thenReturn(MEMBER_ENTITY);
+
+        when(productDao.findById(any(Long.class)))
+                .thenReturn(PRODUCT_ENTITY);
+
         when(cartDao.delete(any(Long.class), any(Long.class)))
                 .thenReturn(1);
 
         //when
-        final int affectedRows = cartService.delete(MEMBER_ENTITY, PRODUCT_ENTITY);
+        final int affectedRows = cartService.delete(AUTH_INFO, PRODUCT_ID);
 
         //then
         assertThat(affectedRows).isEqualTo(1);

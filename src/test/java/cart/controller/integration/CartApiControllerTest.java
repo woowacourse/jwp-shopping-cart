@@ -166,7 +166,7 @@ class CartApiControllerTest {
                     .then()
                     .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body(containsString("접근하려는 데이터가 존재하지 않습니다."));
+                    .body(containsString("입력한 정보의 상품이 존재하지 않습니다."));
         }
 
         @Test
