@@ -19,7 +19,7 @@ public final class UserInfo {
         return password;
     }
 
-    public boolean isCorrect(User user) {
-        return email.equals(user.getEmail()) && password.equals(user.getPassword());
+    public boolean notEquals(User user) {
+        return !email.equals(user.getEmail()) || !password.equals(user.getPassword());
     }
 }
