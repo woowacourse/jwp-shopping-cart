@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequestMapping("/products")
 @RestController
 public class ProductController {
 
@@ -22,20 +24,20 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping("/products")
+    @PostMapping
     public ResponseEntity<Void> save(@Valid @RequestBody final ProductSaveRequestDto request) {
         final Long id = productService.save(request);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<Void> update(@PathVariable final Long id,
                                        @Valid @RequestBody ProductUpdateRequestDto request) {
         productService.update(id, request);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable final Long id) {
         productService.delete(id);
         return ResponseEntity.noContent().build();
