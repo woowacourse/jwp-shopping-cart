@@ -1,18 +1,18 @@
 package cart.presentation.dto;
 
-import cart.entity.Product;
+import cart.entity.ProductEntity;
 
 import java.util.List;
 
 public class CartRequest {
 
     private Integer memberId;
-    private List<Product> products;
+    private List<ProductEntity> products;
 
     public CartRequest() {
     }
 
-    public CartRequest(Integer memberId, List<Product> products) {
+    public CartRequest(Integer memberId, List<ProductEntity> products) {
         this.memberId = memberId;
         this.products = products;
     }
@@ -21,7 +21,7 @@ public class CartRequest {
         return memberId;
     }
 
-    public List<Product> getProducts() {
+    public List<ProductEntity> getProducts() {
         return products;
     }
 }

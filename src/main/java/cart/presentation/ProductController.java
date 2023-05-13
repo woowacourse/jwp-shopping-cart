@@ -2,7 +2,7 @@ package cart.presentation;
 
 
 import cart.business.ProductService;
-import cart.entity.Product;
+import cart.entity.ProductEntity;
 import cart.presentation.dto.ProductRequest;
 import cart.presentation.dto.ProductResponse;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +24,10 @@ public class ProductController {
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
-    
+
     @GetMapping(path = "/products")
     public ResponseEntity<List<ProductResponse>> read() {
-        List<Product> products = productService.read();
+        List<ProductEntity> products = productService.read();
 
         List<ProductResponse> response = products.stream()
                 .map(product -> new ProductResponse(product.getId(),

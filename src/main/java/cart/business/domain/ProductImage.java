@@ -5,6 +5,7 @@ import java.net.URL;
 
 public class ProductImage {
 
+
     private final URL url;
 
     public ProductImage(String url) {

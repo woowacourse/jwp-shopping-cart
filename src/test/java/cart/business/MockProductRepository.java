@@ -1,6 +1,6 @@
 package cart.business;
 
-import cart.entity.Product;
+import cart.entity.ProductEntity;
 import cart.persistence.ProductRepository;
 
 import java.util.List;
@@ -10,20 +10,20 @@ import java.util.stream.Collectors;
 
 public class MockProductRepository implements ProductRepository {
 
-    private final Map<Integer, Product> store = new ConcurrentHashMap<>();
+    private final Map<Integer, ProductEntity> store = new ConcurrentHashMap<>();
     private int sequence = 1;
 
     @Override
-    public Integer insert(Product product) {
+    public Integer insert(ProductEntity product) {
         store.put(sequence, product);
         return sequence++;
     }
 
     @Override
-    public List<Product> findAll() {
+    public List<ProductEntity> findAll() {
         return store.entrySet()
                 .stream()
-                .map(entry -> new Product(entry.getKey(),
+                .map(entry -> new ProductEntity(entry.getKey(),
                         (entry.getValue().getName()),
                         (entry.getValue().getUrl()),
                         (entry.getValue().getPrice())))
@@ -31,7 +31,7 @@ public class MockProductRepository implements ProductRepository {
     }
 
     @Override
-    public Integer update(Integer id, Product product) {
+    public Integer update(Integer id, ProductEntity product) {
         store.replace(id, product);
         return id;
     }
@@ -43,7 +43,7 @@ public class MockProductRepository implements ProductRepository {
     }
 
     @Override
-    public void findSameProductExist(Product product) {
+    public void findSameProductExist(ProductEntity product) {
         if (store.containsValue(product)) {
             throw new IllegalArgumentException("동일한 상품이 존재합니다");
         }

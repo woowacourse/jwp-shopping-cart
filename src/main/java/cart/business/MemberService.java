@@ -1,6 +1,6 @@
 package cart.business;
 
-import cart.entity.Member;
+import cart.entity.MemberEntity;
 import cart.persistence.MemberDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +18,11 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<Member> read() {
+    public List<MemberEntity> read() {
         return memberDao.findAll();
     }
 
-    public Optional<Member> findMemberByEmail(String email) {
+    public Optional<MemberEntity> findMemberByEmail(String email) {
         return memberDao.findByEmail(email);
     }
 

@@ -1,6 +1,6 @@
 package cart.persistence;
 
-import cart.entity.Product;
+import cart.entity.ProductEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +15,7 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Product> findAllProductsByMemberId(Integer memberId) {
+    public List<ProductEntity> findAllProductsByMemberId(Integer memberId) {
         String query = "SELECT p.* " +
                 "FROM CART c " +
                 "JOIN CART_PRODUCT cp ON c.id = cp.cart_id " +
@@ -28,7 +28,7 @@ public class CartDao {
             String url = resultSet.getString("url");
             int price = resultSet.getInt("price");
 
-            return new Product(id, name, url, price);
+            return new ProductEntity(id, name, url, price);
         }, memberId);
     }
 

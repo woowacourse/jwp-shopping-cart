@@ -1,6 +1,6 @@
 package cart.persistence;
 
-import cart.entity.Product;
+import cart.entity.ProductEntity;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,7 +22,7 @@ public class ProductDao implements ProductRepository {
     }
 
     @Override
-    public Integer insert(Product product) {
+    public Integer insert(ProductEntity product) {
         String sql = "INSERT INTO PRODUCT (name, url, price) values(?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -38,7 +38,7 @@ public class ProductDao implements ProductRepository {
     }
 
     @Override
-    public List<Product> findAll() {
+    public List<ProductEntity> findAll() {
         String sql = "SELECT * FROM PRODUCT";
 
         return jdbcTemplate.query(sql,
@@ -48,12 +48,12 @@ public class ProductDao implements ProductRepository {
                     String url = resultSet.getString("url");
                     int price = resultSet.getInt("price");
 
-                    return new Product(id, name, url, price);
+                    return new ProductEntity(id, name, url, price);
                 });
     }
 
     @Override
-    public Integer update(Integer id, Product product) {
+    public Integer update(Integer id, ProductEntity product) {
         String sql = "UPDATE PRODUCT SET name = ?, url = ?, price = ? WHERE id = ?";
         return jdbcTemplate.update(sql, product.getName(), product.getUrl(), product.getPrice(), id);
     }
@@ -65,7 +65,7 @@ public class ProductDao implements ProductRepository {
     }
 
     @Override
-    public void findSameProductExist(Product product) {
+    public void findSameProductExist(ProductEntity product) {
         final var query = "SELECT COUNT(*) FROM PRODUCT WHERE name = ? AND url = ? AND price = ?";
         int count = jdbcTemplate.queryForObject(query, Integer.class, product.getName(), product.getUrl(), product.getPrice());
 

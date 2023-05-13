@@ -1,6 +1,6 @@
 package cart.persistence;
 
-import cart.entity.Member;
+import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -17,7 +17,7 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Member> findAll() {
+    public List<MemberEntity> findAll() {
         String sql = "SELECT * FROM MEMBER";
 
         return jdbcTemplate.query(sql,
@@ -26,11 +26,11 @@ public class MemberDao {
                     String email = resultSet.getString("email");
                     String password = resultSet.getString("password");
 
-                    return new Member(id, email, password);
+                    return new MemberEntity(id, email, password);
                 });
     }
 
-    public Integer update(Integer id, Member member) {
+    public Integer update(Integer id, MemberEntity member) {
         String sql = "UPDATE MEMBER SET email = ?, password = ? WHERE id = ?";
         return jdbcTemplate.update(sql, member.getEmail(), member.getPassword(), id);
     }
@@ -41,20 +41,20 @@ public class MemberDao {
         return jdbcTemplate.update(query, id);
     }
 
-    public Optional<Member> findByEmail(String email) {
+    public Optional<MemberEntity> findByEmail(String email) {
         final var query = "SELECT * FROM MEMBER WHERE email = ?";
-        Member member = jdbcTemplate.queryForObject(query, getMemberRowMapper(), email);
+        MemberEntity member = jdbcTemplate.queryForObject(query, getMemberRowMapper(), email);
 
         return Optional.of(member);
     }
 
-    private RowMapper<Member> getMemberRowMapper() {
+    private RowMapper<MemberEntity> getMemberRowMapper() {
         return (resultSet, rowNum) -> {
             int id = resultSet.getInt("id");
             String mail = resultSet.getString("email");
             String password = resultSet.getString("password");
 
-            return new Member(id, mail, password);
+            return new MemberEntity(id, mail, password);
         };
     }
 }

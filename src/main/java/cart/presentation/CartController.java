@@ -6,7 +6,7 @@ import cart.auth.dto.AuthInfo;
 import cart.business.CartProductService;
 import cart.business.CartService;
 import cart.business.MemberService;
-import cart.entity.Product;
+import cart.entity.ProductEntity;
 import cart.presentation.dto.ProductResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -58,7 +58,7 @@ public class CartController {
     public ResponseEntity<List<ProductResponse>> readProducts(HttpServletRequest request) throws AuthenticationException {
         String email = checkValidLogin(request);
         Integer memberId = memberService.findMemberByEmail(email).get().getId();
-        List<Product> products = cartService.findProductsByMemberId(memberId);
+        List<ProductEntity> products = cartService.findProductsByMemberId(memberId);
 
         List<ProductResponse> response = products.stream()
                 .map(product -> new ProductResponse(product.getId(),

@@ -1,6 +1,6 @@
 package cart.business;
 
-import cart.entity.Product;
+import cart.entity.ProductEntity;
 import cart.persistence.CartDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,12 +11,14 @@ import java.util.List;
 public class CartService {
 
     private CartDao cartDao;
+    private CartProductService cartProductService;
 
-    public CartService(CartDao cartDao) {
+    public CartService(CartDao cartDao, CartProductService cartProductService) {
         this.cartDao = cartDao;
+        this.cartProductService = cartProductService;
     }
 
-    public List<Product> findProductsByMemberId(Integer memberId) {
+    public List<ProductEntity> findProductsByMemberId(Integer memberId) {
         return cartDao.findAllProductsByMemberId(memberId);
     }
 

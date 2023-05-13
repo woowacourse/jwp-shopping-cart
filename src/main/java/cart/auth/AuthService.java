@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.entity.Member;
+import cart.entity.MemberEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +18,13 @@ public class AuthService {
     public boolean checkInvalidLogin(String principal, String credentials) {
         String sql = "SELECT * FROM MEMBER WHERE email = ? AND password = ?";
 
-        List<Member> members = jdbcTemplate.query(sql,
+        List<MemberEntity> members = jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> {
                     int id = resultSet.getInt("id");
                     String email = resultSet.getString("email");
                     String password = resultSet.getString("password");
 
-                    return new Member(id, email, password);
+                    return new MemberEntity(id, email, password);
                 }, principal, credentials);
 
         if (members.size() < 0) {

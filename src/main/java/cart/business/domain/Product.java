@@ -1,4 +1,4 @@
-package cart.entity;
+package cart.business.domain;
 
 import java.util.Objects;
 
@@ -9,8 +9,10 @@ public class Product {
     private final String url;
     private final Integer price;
 
-    public Product(Integer id, String name, String url, Integer price) {
-        this.id = id;
+    public static int sequence = 1;
+
+    public Product(String name, String url, Integer price) {
+        this.id = sequence++;
         this.name = name;
         this.url = url;
         this.price = price;
@@ -31,7 +33,7 @@ public class Product {
     public Integer getPrice() {
         return price;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

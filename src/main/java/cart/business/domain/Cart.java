@@ -1,15 +1,27 @@
-package cart.entity;
+package cart.business.domain;
 
 import java.util.Objects;
+
 
 public class Cart {
 
     private final Integer id;
     private final Integer memberId;
+    private final Products products;
+    public static int sequence = 0;
 
-    public Cart(Integer id, Integer memberId) {
-        this.id = id;
+    public Cart(Integer memberId, Products products) {
+        this.id = sequence++;
         this.memberId = memberId;
+        this.products = products;
+    }
+
+    public void addProduct(Product product) {
+        products.addProduct(product);
+    }
+
+    public Products getProducts() {
+        return products;
     }
 
     public Integer getId() {
@@ -32,4 +44,5 @@ public class Cart {
     public int hashCode() {
         return Objects.hash(memberId);
     }
+
 }

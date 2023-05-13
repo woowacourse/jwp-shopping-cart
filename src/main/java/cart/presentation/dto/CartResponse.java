@@ -1,6 +1,6 @@
 package cart.presentation.dto;
 
-import cart.entity.Product;
+import cart.entity.ProductEntity;
 
 import java.util.List;
 
@@ -8,12 +8,12 @@ public class CartResponse {
 
     private Integer id;
     private Integer memberId;
-    private List<Product> products;
+    private List<ProductEntity> products;
 
     public CartResponse() {
     }
 
-    public CartResponse(Integer id, Integer memberId, List<Product> products) {
+    public CartResponse(Integer id, Integer memberId, List<ProductEntity> products) {
         this.id = id;
         this.memberId = memberId;
         this.products = products;
@@ -27,7 +27,7 @@ public class CartResponse {
         return memberId;
     }
 
-    public List<Product> getProducts() {
+    public List<ProductEntity> getProducts() {
         return products;
     }
 }

@@ -1,12 +1,12 @@
 package cart.entity;
 
-public class CartProduct {
+public class CartProductEntity {
 
     private Integer id;
     private Integer productId;
     private Integer cartId;
 
-    public CartProduct(Integer id, Integer productId, Integer cartId) {
+    public CartProductEntity(Integer id, Integer productId, Integer cartId) {
         this.id = id;
         this.productId = productId;
         this.cartId = cartId;

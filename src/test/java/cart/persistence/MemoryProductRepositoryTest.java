@@ -1,6 +1,6 @@
 package cart.persistence;
 
-import cart.entity.Product;
+import cart.entity.ProductEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +31,7 @@ class MemoryProductRepositoryTest {
 //                new ProductImage("https://www.salmonlover.com"),
 //                new ProductPrice(17000));
 
-        Product salmon = new Product(null, "salmon", "https://www.salmonlover.com", 17000);
+        ProductEntity salmon = new ProductEntity(null, "salmon", "https://www.salmonlover.com", 17000);
 
         //when
         Integer actualId = memoryProductRepository.insert(salmon);
@@ -54,12 +54,12 @@ class MemoryProductRepositoryTest {
 //                new ProductImage("http://www.pizzalover.com"),
 //                new ProductPrice(40000));
 
-        Product salmon = new Product(1,
+        ProductEntity salmon = new ProductEntity(1,
                 ("salmon"),
                 ("https://www.salmonlover.com"),
                 (17000));
 
-        Product pizza = new Product(2,
+        ProductEntity pizza = new ProductEntity(2,
                 ("pizza"),
                 ("http://www.pizzalover.com"),
                 (40000));
@@ -68,7 +68,7 @@ class MemoryProductRepositoryTest {
         Integer actualSalmonId = memoryProductRepository.insert(salmon);
         Integer actualPizzaId = memoryProductRepository.insert(pizza);
 
-        List<Product> allProducts = memoryProductRepository.findAll();
+        List<ProductEntity> allProducts = memoryProductRepository.findAll();
 
         //then
         assertThat(allProducts.size()).isEqualTo(2);
@@ -78,14 +78,14 @@ class MemoryProductRepositoryTest {
     @DisplayName("Product 객체를 업데이트 할 수 있다")
     void update() {
         //given
-        Product salmon = new Product(1,
+        ProductEntity salmon = new ProductEntity(1,
                 ("before"),
                 ("https://www.salmonlover.com"),
                 (17000));
 
         Integer salmonId = memoryProductRepository.insert(salmon);
 
-        Product pizza = new Product(salmonId,
+        ProductEntity pizza = new ProductEntity(salmonId,
                 ("after"),
                 ("http://www.pizzalover.com"),
                 (40000));
@@ -101,7 +101,7 @@ class MemoryProductRepositoryTest {
     @DisplayName("해당하는 Product 객체를 삭제할 수 있다")
     void remove() {
         //given
-        Product salmon = new Product(1,
+        ProductEntity salmon = new ProductEntity(1,
                 ("before"),
                 ("https://www.salmonlover.com"),
                 (17000));
