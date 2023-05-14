@@ -2,7 +2,7 @@ package cart.controller;
 
 import cart.service.ProductService;
 import cart.service.dto.product.ProductModifyRequest;
-import cart.service.dto.product.ProductRegisterRequest;
+import cart.service.dto.product.ProductAddRequest;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,8 +26,8 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> registerProduct(
-            @Validated @RequestBody final ProductRegisterRequest productRegisterRequest) {
-        Long id = productService.registerProduct(productRegisterRequest);
+            @Validated @RequestBody final ProductAddRequest productAddRequest) {
+        Long id = productService.registerProduct(productAddRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 

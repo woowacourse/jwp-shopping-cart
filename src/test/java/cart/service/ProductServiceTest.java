@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import cart.service.dto.product.ProductModifyRequest;
-import cart.service.dto.product.ProductRegisterRequest;
+import cart.service.dto.product.ProductAddRequest;
 import cart.service.dto.product.ProductSearchResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -30,12 +30,12 @@ class ProductServiceTest {
         final int price = 10000;
         final String imageUrl = "imageUrl";
 
-        final ProductRegisterRequest productRegisterRequest = new ProductRegisterRequest(name, price, imageUrl);
+        final ProductAddRequest productAddRequest = new ProductAddRequest(name, price, imageUrl);
 
         //when
         final int beforeSize = productService.searchAllProducts().size();
 
-        productService.registerProduct(productRegisterRequest);
+        productService.registerProduct(productAddRequest);
 
         final int afterSize = productService.searchAllProducts().size();
 

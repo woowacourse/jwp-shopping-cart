@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-public class ProductRegisterRequest {
+public class ProductAddRequest {
 
     @NotBlank(message = "상품의 이름은 공백일 수 없습니다.")
     private String name;
@@ -16,10 +16,10 @@ public class ProductRegisterRequest {
     @NotBlank(message = "이미지 url은 공백일 수 없습니다.")
     private String imageUrl;
 
-    private ProductRegisterRequest() {
+    private ProductAddRequest() {
     }
 
-    public ProductRegisterRequest(final String name, final Integer price, final String imageUrl) {
+    public ProductAddRequest(final String name, final Integer price, final String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
