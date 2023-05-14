@@ -2,7 +2,7 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.domain.product.Product;
+import cart.domain.Product;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

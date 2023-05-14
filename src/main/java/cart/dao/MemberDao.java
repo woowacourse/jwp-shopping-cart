@@ -1,6 +1,6 @@
 package cart.dao;
 
-import cart.domain.member.Member;
+import cart.domain.Member;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.DataAccessException;

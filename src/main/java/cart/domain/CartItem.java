@@ -1,6 +1,4 @@
-package cart.domain.cart;
-
-import cart.domain.product.Product;
+package cart.domain;
 
 public class CartItem {
 

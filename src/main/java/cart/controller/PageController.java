@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.domain.member.Member;
+import cart.domain.Member;
 import cart.dto.MemberResponse;
 import cart.dto.ProductResponse;
 import cart.service.MemberService;
@@ -24,14 +24,18 @@ public class PageController {
 
     @GetMapping("/")
     public String productPageView(Model model) {
-        List<ProductResponse> products = productService.findProductResponses();
+        List<ProductResponse> products = productService.findProducts().stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
         model.addAttribute("products", products);
         return "index";
     }
 
     @GetMapping("/admin")
     public String adminPageView(Model model) {
-        List<ProductResponse> products = productService.findProductResponses();
+        List<ProductResponse> products = productService.findProducts().stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
         model.addAttribute("products", products);
         return "admin";
     }

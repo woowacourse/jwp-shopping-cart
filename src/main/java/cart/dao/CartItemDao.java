@@ -1,7 +1,7 @@
-package cart.dao.cart;
+package cart.dao;
 
-import cart.domain.cart.CartItem;
-import cart.domain.product.Product;
+import cart.domain.CartItem;
+import cart.domain.Product;
 import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

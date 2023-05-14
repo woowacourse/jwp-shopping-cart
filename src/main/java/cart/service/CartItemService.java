@@ -2,9 +2,9 @@ package cart.service;
 
 import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.dao.cart.CartItemDao;
-import cart.domain.cart.CartItem;
-import cart.domain.product.Product;
+import cart.dao.CartItemDao;
+import cart.domain.CartItem;
+import cart.domain.Product;
 import cart.dto.CartItemRequest;
 import cart.exception.NotFoundException;
 import java.util.List;

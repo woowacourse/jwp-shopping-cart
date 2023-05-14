@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.MemberDao;
-import cart.domain.member.Member;
+import cart.domain.Member;
 import cart.dto.MemberRequest;
 import cart.exception.NotFoundException;
 import java.util.List;

@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dao.ProductDao;
-import cart.domain.product.Product;
+import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.exception.NotFoundException;
 import java.util.List;

@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.dao.ProductDao;
-import cart.domain.product.Product;
+import cart.domain.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;
 import cart.service.ProductService;

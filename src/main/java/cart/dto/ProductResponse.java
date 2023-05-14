@@ -1,6 +1,6 @@
 package cart.dto;
 
-import cart.domain.product.Product;
+import cart.domain.Product;
 import java.math.BigDecimal;
 
 public class ProductResponse {
