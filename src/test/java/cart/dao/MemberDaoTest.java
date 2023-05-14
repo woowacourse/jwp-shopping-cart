@@ -1,7 +1,8 @@
-package cart.dao.member;
+package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import cart.domain.member.Member;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,14 +31,14 @@ class MemberDaoTest {
     @Test
     void insert() {
         //given
-        MemberEntity memberEntity = new MemberEntity(null, null, "sdf@naver.com", "12345");
+        Member member = new Member(null, null, "sdf@naver.com", "12345");
         //when
-        assertThat(memberDao.insert(memberEntity)).isEqualTo(1L);
+        assertThat(memberDao.insert(member)).isEqualTo(1L);
     }
 
     @Test
     void findAll() {
-        List<MemberEntity> allMembers = memberDao.findAll();
+        List<Member> allMembers = memberDao.findAll();
 
         assertThat(allMembers).isNotNull();
     }
@@ -50,22 +51,22 @@ class MemberDaoTest {
     @Test
     void updateMember() {
         //given
-        MemberEntity savedMember = new MemberEntity(null, null, "sdf@naver.com", "12345");
+        Member savedMember = new Member(null, null, "sdf@naver.com", "12345");
         Long memberId = memberDao.insert(savedMember);
 
         //when
-        MemberEntity productToUpdate = new MemberEntity(memberId, "내이름은", "sdf@naver.com", "12345");
-        memberDao.update(productToUpdate);
+        Member memberToUpdate = new Member(memberId, "내이름은", "sdf@naver.com", "12345");
+        memberDao.update(memberToUpdate);
 
         //then
-        MemberEntity updatedroduct = memberDao.findById(memberId).get();
-        assertThat(updatedroduct).usingRecursiveComparison().isEqualTo(productToUpdate);
+        Member updatedMember = memberDao.findById(memberId).get();
+        assertThat(updatedMember).usingRecursiveComparison().isEqualTo(memberToUpdate);
     }
 
     @Test
     void deleteMember() {
         //given
-        MemberEntity product = new MemberEntity(null, null, "sdf@naver.com", "12345");
+        Member product = new Member(null, null, "sdf@naver.com", "12345");
         Long memberId = memberDao.insert(product);
         assertThat(memberDao.findAll()).hasSize(1);
 

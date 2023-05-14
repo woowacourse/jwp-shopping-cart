@@ -29,14 +29,14 @@ public class MemberApiController {
 
     @GetMapping
     public ResponseEntity<List<MemberResponse>> findAllMembers() {
-        List<MemberResponse> allMembers = memberService.findAllMembers();
+        List<MemberResponse> allMembers = memberService.findAllMemberResponses();
         return ResponseEntity.ok(allMembers);
     }
 
     @PostMapping
-    public ResponseEntity<MemberResponse> createMember (@RequestBody @Valid MemberRequest memberRequest) {
-        MemberResponse savedMember = memberService.createMember(memberRequest);
-        return ResponseEntity.created(URI.create("members"+ savedMember.getId())).body(savedMember);
+    public ResponseEntity<Void> createMember (@RequestBody @Valid MemberRequest memberRequest) {
+        Long savedMemberId = memberService.createMember(memberRequest);
+        return ResponseEntity.created(URI.create("members"+ savedMemberId)).build();
     }
 
     @PutMapping("/{id}")

@@ -1,5 +1,7 @@
 package cart.dto;
 
+import cart.domain.member.Member;
+
 public class MemberResponse {
 
     private final Long id;
@@ -12,6 +14,10 @@ public class MemberResponse {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public static MemberResponse from(Member member) {
+        return new MemberResponse(member.getId(), member.getName(), member.getEmail(), member.getPassword());
     }
 
     public Long getId() {

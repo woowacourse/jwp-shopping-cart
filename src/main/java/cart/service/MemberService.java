@@ -1,13 +1,10 @@
 package cart.service;
 
-import cart.dao.member.MemberRepository;
-import cart.domain.Id;
+import cart.dao.MemberDao;
 import cart.domain.member.Member;
-import cart.domain.member.MemberEmail;
-import cart.domain.member.MemberName;
-import cart.domain.member.MemberPassword;
 import cart.dto.MemberRequest;
 import cart.dto.MemberResponse;
+import cart.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -15,48 +12,45 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberService {
 
-    private final MemberRepository memberRepository;
+    private final MemberDao memberDao;
 
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
+    public MemberService(MemberDao memberDao) {
+        this.memberDao = memberDao;
+    }
+    public Long createMember(MemberRequest request) {
+        Member member = new Member(request.getName(), request.getEmail(), request.getPassword());
+        return memberDao.insert(member);
     }
 
-    public List<MemberResponse> findAllMembers() {
-        List<Member> members = memberRepository.getAllMembers();
-        return members.stream()
-                .map(member -> new MemberResponse(member.getId(), member.getName(), member.getEmail(),
-                        member.getPassword()))
+    public List<Member> findAllMembers() {
+        return memberDao.findAll();
+    }
+
+    public List<MemberResponse> findAllMemberResponses() {
+        return findAllMembers().stream()
+                .map(MemberResponse::from)
                 .collect(Collectors.toList());
     }
 
-    public MemberResponse findMember(Long id) {
-        Member member = memberRepository.getMember(id);
-        return new MemberResponse(member.getId(), member.getName(), member.getEmail(), member.getPassword());
-    }
+    public Member findMember(Long id) {
+        return memberDao.findById(id)
+                .orElseThrow(()-> new NotFoundException("해당 회원이 존재하지 않습니다."));
+   }
 
-    public MemberResponse createMember(MemberRequest request) {
-        Member member = new Member(
-                new Id(request.getId()),
-                new MemberName(request.getName()),
-                new MemberEmail(request.getEmail()),
-                new MemberPassword(request.getPassword()));
-        Long memberId = memberRepository.addMember(member);
-        return new MemberResponse(memberId, member.getName(), member.getEmail(), member.getPassword());
+    public MemberResponse findMemberResponse(Long id) {
+        return MemberResponse.from(findMember(id));
     }
 
     public MemberResponse updateMember(Long memberId, MemberRequest request) {
-        Member member = new Member(
-                new Id(memberId),
-                new MemberName(request.getName()),
-                new MemberEmail(request.getEmail()),
-                new MemberPassword(request.getPassword()));
-        memberRepository.updateMember(member);
-        return new MemberResponse(memberId, member.getName(), member.getEmail(), member.getPassword());
+        findMember(memberId); //checkIfExist
+        Member updateMember = new Member(memberId, request.getName(), request.getEmail(), request.getPassword());
+        memberDao.update(updateMember);
+        return MemberResponse.from(updateMember);
     }
 
-    public void removeMember(Long productId) {
-        memberRepository.removeMember(productId);
+    public void removeMember(Long memberId) {
+        findMember(memberId);
+        memberDao.delete(memberId);
     }
-
 
 }

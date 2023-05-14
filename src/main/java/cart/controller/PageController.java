@@ -22,21 +22,21 @@ public class PageController {
 
     @GetMapping("/")
     public String productPageView(Model model) {
-        List<ProductResponse> products = productService.findAllProducts();
+        List<ProductResponse> products = productService.findProductResponses();
         model.addAttribute("products", products);
         return "index";
     }
 
     @GetMapping("/admin")
     public String adminPageView(Model model) {
-        List<ProductResponse> products = productService.findAllProducts();
+        List<ProductResponse> products = productService.findProductResponses();
         model.addAttribute("products", products);
         return "admin";
     }
 
     @GetMapping("/settings")
     public String settingPageView(Model model) {
-        List<MemberResponse> members = memberService.findAllMembers();
+        List<MemberResponse> members = memberService.findAllMemberResponses();
         model.addAttribute("members", members);
         return "settings";
     }

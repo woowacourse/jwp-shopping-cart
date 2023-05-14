@@ -1,5 +1,6 @@
-package cart.dao.member;
+package cart.dao;
 
+import cart.domain.member.Member;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.DataAccessException;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MemberDao {
 
-    private static final RowMapper<MemberEntity> memeberRowMapper = (rs, rowNum) -> new MemberEntity(
+    private static final RowMapper<Member> memeberRowMapper = (rs, rowNum) -> new Member(
             rs.getLong("member_id"),
             rs.getString("name"),
             rs.getString("email"),
@@ -27,14 +28,14 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long insert(MemberEntity memberEntity) {
+    public Long insert(Member member) {
         String sql = "insert into MEMBER(name, email, password) values (:name,:email,:password)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("name", memberEntity.getName())
-                .addValue("email", memberEntity.getEmail())
-                .addValue("password", memberEntity.getPassword());
+                .addValue("name", member.getName())
+                .addValue("email", member.getEmail())
+                .addValue("password", member.getPassword());
 
         jdbcTemplate.update(sql, paramSource, keyHolder);
 
@@ -42,17 +43,16 @@ public class MemberDao {
 
     }
 
-
-    public List<MemberEntity> findAll() {
+    public List<Member> findAll() {
         String sql = "select * from MEMBER";
         return jdbcTemplate.query(sql, memeberRowMapper);
 
     }
 
-    public Optional<MemberEntity> findById(Long id) {
+    public Optional<Member> findById(Long memberId) {
         String sql = "select * from MEMBER where member_id = :member_id";
 
-        SqlParameterSource paramSource = new MapSqlParameterSource().addValue("member_id", id);
+        SqlParameterSource paramSource = new MapSqlParameterSource().addValue("member_id", memberId);
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, paramSource, memeberRowMapper));
         } catch (DataAccessException e) {
@@ -61,13 +61,13 @@ public class MemberDao {
 
     }
 
-    public void update(MemberEntity memberEntity) {
+    public void update(Member member) {
         String sql = "update MEMBER set name = :name, email = :email, password = :password where member_id = :member_id";
         SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("member_id", memberEntity.getId())
-                .addValue("name", memberEntity.getName())
-                .addValue("email", memberEntity.getEmail())
-                .addValue("password", memberEntity.getPassword());
+                .addValue("member_id", member.getId())
+                .addValue("name", member.getName())
+                .addValue("email", member.getEmail())
+                .addValue("password", member.getPassword());
 
         jdbcTemplate.update(sql, paramSource);
 
