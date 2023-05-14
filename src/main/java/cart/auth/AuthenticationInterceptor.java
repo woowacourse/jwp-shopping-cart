@@ -8,6 +8,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
+    public static final String AUTH_KEY = "memberId";
     private final BasicAuthorizationExtractor basicAuthorizationExtractor;
     private final CredentialDao credentialDao;
 
@@ -25,7 +26,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if(!credential.getPassword().equals(savedCredential.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
         }
-        request.setAttribute("memberId", savedCredential.getMemberId());
+        request.setAttribute(AUTH_KEY, savedCredential.getMemberId());
         return true;
     }
 
