@@ -46,20 +46,18 @@ form.addEventListener('submit', (event) => {
 
 const createProduct = (product) => {
     try {
-        validImage(product.image)
-        axios.request({
-            url: '/products',
-            method: "POST",
-            data: product
-        }).then((response) => {
-            window.location.reload();
-        }).catch((error) => {
-            let errorMessages = '';
-            for (let message of error.response.data.messages) {
-                errorMessages += (message + '\n');
-            }
-            alert(errorMessages)
-        });
+        validImage(product.imageUrl)
+        axios.post('/products', product)
+            .then((response) => {
+                window.location.reload();
+            })
+            .catch((error) => {
+                let errorMessages = '';
+                for (let message of error.response.data.messages) {
+                    errorMessages += (message + '\n');
+                }
+                alert(errorMessages)
+            });
     } catch (error) {
         alert(error.message)
     }
@@ -70,15 +68,13 @@ const updateProduct = (product) => {
         validImage(product.image)
         const {id} = product;
 
-        axios.request({
-            url: '/products/' + id,
-            method: "PUT",
-            data: product
-        }).then((response) => {
-            window.location.reload();
-        }).catch((error) => {
-            alert(error.response.data.messages)
-        });
+        axios.put('/products/' + id, product)
+            .then((response) => {
+                window.location.reload();
+            })
+            .catch((error) => {
+                alert(error.response.data.messages)
+            });
     } catch (error) {
         alert(error.message)
     }
@@ -92,12 +88,11 @@ const validImage = (imageUrl) => {
 };
 
 const deleteProduct = (id) => {
-    axios.request({
-        url: '/products/' + id,
-        method: "DELETE"
-    }).then((response) => {
-        window.location.reload();
-    }).catch((error) => {
-        alert(error.response.data.messages)
-    });
+    axios.delete('/products/' + id)
+        .then((response) => {
+            window.location.reload();
+        })
+        .catch((error) => {
+            alert(error.response.data.messages)
+        });
 };

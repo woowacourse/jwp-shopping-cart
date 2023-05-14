@@ -21,7 +21,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
+@Sql({"classpath:testData.sql"})
 @DisplayName("상품 api 테스트")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ProductApiControllerTest {
@@ -45,7 +47,7 @@ class ProductApiControllerTest {
     @DisplayName("상품 등록 테스트")
     @Test
     void insert() {
-        ProductInsertRequest request = new ProductInsertRequest("name", "image", 1000);
+        ProductInsertRequest request = new ProductInsertRequest("name", "http://www.naver.com", 1000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -63,10 +65,10 @@ class ProductApiControllerTest {
     @Test
     void update() {
         // given
-        ProductEntity productEntity = new ProductEntity("name", "image", 1000);
+        ProductEntity productEntity = new ProductEntity("name", "http://www.naver.com", 1000);
         int createdProductId = productDao.insert(productEntity);
 
-        ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest("name", "changeImage", 2000);
+        ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest("name", "http://www.update.com", 2000);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

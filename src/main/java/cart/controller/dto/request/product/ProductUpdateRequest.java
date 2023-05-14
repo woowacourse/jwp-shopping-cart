@@ -5,23 +5,24 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.URL;
 
 public class ProductUpdateRequest {
 
     @NotBlank(message = "이름을 다시 입력해주세요.")
     private final String name;
 
-    @NotBlank(message = "이미지 주소를 다시 입력해주세요.")
-    private final String image;
+    @URL(message = "이미지 주소를 다시 입력해주세요.")
+    private final String imageUrl;
 
-    @NotNull(message = "가격은 최소 100원, 최대 10000000원입니다.")
+    @NotNull(message = "가격은 최소 100원, 최대 10,000,000원입니다.")
     @Min(100)
     @Max(10_000_000)
     private final Integer price;
 
-    public ProductUpdateRequest(final String name, final String image, final Integer price) {
+    public ProductUpdateRequest(final String name, final String imageUrl, final Integer price) {
         this.name = name;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.price = price;
     }
 
@@ -29,8 +30,8 @@ public class ProductUpdateRequest {
         return name;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public Integer getPrice() {
@@ -38,6 +39,7 @@ public class ProductUpdateRequest {
     }
 
     public Product toProduct() {
-        return new Product(name, image, price);
+        return new Product(name, imageUrl, price);
     }
+
 }

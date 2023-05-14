@@ -3,6 +3,7 @@ package cart.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -44,7 +45,7 @@ public class ProductJdbcDao implements ProductDao {
             PreparedStatement pstmt = con.prepareStatement(
                     sql, new String[]{"id"});
             pstmt.setString(1, productEntity.getName());
-            pstmt.setString(2, productEntity.getImage());
+            pstmt.setString(2, productEntity.getImageUrl());
             pstmt.setInt(3, productEntity.getPrice());
             return pstmt;
         }, keyHolder);
@@ -54,18 +55,18 @@ public class ProductJdbcDao implements ProductDao {
     @Override
     public Optional<ProductEntity> findById(final int id) {
         final String sql = "SELECT * FROM PRODUCT WHERE id = ?";
-        ProductEntity productEntity = jdbcTemplate.queryForObject(sql, getProductEntityRowMapper(), id);
-        if (productEntity == null) {
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, getProductEntityRowMapper(), id));
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
-        return Optional.of(productEntity);
     }
 
     @Override
     public void update(final ProductEntity updatedEntity) {
         final String sql = "UPDATE PRODUCT SET name = ?, image = ?, price = ? WHERE id = ?";
 
-        jdbcTemplate.update(sql, updatedEntity.getName(), updatedEntity.getImage(), updatedEntity.getPrice(),
+        jdbcTemplate.update(sql, updatedEntity.getName(), updatedEntity.getImageUrl(), updatedEntity.getPrice(),
                 updatedEntity.getId());
     }
 
