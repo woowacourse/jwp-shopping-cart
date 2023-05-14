@@ -142,6 +142,6 @@ class CartControllerTest {
         mockMvc.perform(delete("/carts/products/" + deletedId)
                         .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                 )
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 }
