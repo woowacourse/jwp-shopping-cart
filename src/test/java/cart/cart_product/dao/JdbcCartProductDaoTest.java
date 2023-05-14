@@ -26,11 +26,11 @@ class JdbcCartProductDaoTest extends DaoTest {
     @Test
     void 특정_사용자_id에_대한_상품_id_목록을_확인한다() {
         final Long memberId = 1L;
-        final List<Product> productEntities = cartProductDao.findAllProductByCartId(memberId);
+        final List<Product> products = cartProductDao.findAllProductByCartId(memberId);
 
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(productEntities.size()).isEqualTo(1);
-            softAssertions.assertThat(productEntities.get(0).getId()).isEqualTo(2L);
+            softAssertions.assertThat(products.size()).isEqualTo(1);
+            softAssertions.assertThat(products.get(0).getId()).isEqualTo(2L);
         });
     }
 

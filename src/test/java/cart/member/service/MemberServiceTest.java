@@ -2,7 +2,6 @@ package cart.member.service;
 
 import cart.member.dao.JdbcMemberDao;
 import cart.member.domain.Member;
-import cart.member.service.MemberService;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

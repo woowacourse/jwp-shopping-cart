@@ -1,10 +1,8 @@
 package cart.cart_product.dao;
 
-import cart.cart_product.domain.CartProduct;
 import cart.product.domain.Product;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CartProductDao {
 

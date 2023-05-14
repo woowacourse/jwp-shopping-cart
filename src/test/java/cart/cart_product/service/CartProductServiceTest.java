@@ -2,7 +2,6 @@ package cart.cart_product.service;
 
 import cart.cart.service.CartService;
 import cart.cart_product.dao.JdbcCartProductDao;
-import cart.cart_product.service.CartProductService;
 import cart.member.service.MemberService;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;

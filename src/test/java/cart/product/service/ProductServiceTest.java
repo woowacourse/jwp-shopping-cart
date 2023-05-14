@@ -2,7 +2,6 @@ package cart.product.service;
 
 import cart.product.dao.JdbcProductDao;
 import cart.product.domain.Product;
-import cart.product.service.ProductService;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;

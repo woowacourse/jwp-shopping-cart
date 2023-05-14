@@ -1,6 +1,5 @@
 package cart.product.domain;
 
-import cart.product.domain.ImageUrl;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
