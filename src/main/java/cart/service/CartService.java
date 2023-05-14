@@ -38,7 +38,6 @@ public class CartService {
     }
 
     private CartResponse toResponse(Long cartId, Product product) {
-        System.out.println("c: " + product.getImageUrl() + product.getName() + product.getPrice());
         return new CartResponse(cartId, product.getImageUrl(), product.getName(), product.getPrice());
     }
 
