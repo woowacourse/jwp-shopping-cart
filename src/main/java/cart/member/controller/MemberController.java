@@ -1,6 +1,8 @@
 package cart.member.controller;
 
 import cart.member.domain.Member;
+import cart.member.dto.MemberResponse;
+import cart.member.mapper.MemberResponseMapper;
 import cart.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +20,17 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/")
-    public ResponseEntity<List<Member>> getAllMember() {
+    @GetMapping
+    public ResponseEntity<List<MemberResponse>> getAllMember() {
         final List<Member> members = memberService.findAll();
 
-        return ResponseEntity.ok(members);
+        return ResponseEntity.ok(MemberResponseMapper.from(members));
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<Member> getMember(@PathVariable final Long memberId) {
+    public ResponseEntity<MemberResponse> getMember(@PathVariable final Long memberId) {
         final Member member = memberService.find(memberId);
 
-        return ResponseEntity.ok(member);
+        return ResponseEntity.ok(MemberResponseMapper.from(member));
     }
 }

@@ -1,6 +1,7 @@
 package cart;
 
 import cart.cart_product.dao.CartProductDao;
+import cart.member.dao.MemberDao;
 import cart.product.dao.ProductDao;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,9 @@ public abstract class ApiControllerTest {
 
     @Autowired
     ProductDao productDao;
+
+    @Autowired
+    MemberDao memberDao;
 
     @BeforeEach
     void setUp() {
