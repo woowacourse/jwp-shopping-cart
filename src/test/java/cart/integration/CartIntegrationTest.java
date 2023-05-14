@@ -96,8 +96,6 @@ public class CartIntegrationTest {
     public void 장바구니에서_상품을_삭제한다() {
         멤버를_생성한다();
         final Long 상품_ID = 상품을_등록한다(상품);
-        final CartAddProductRequest 요청 = 장바구니_상품_등록_요청을_생성한다(상품_ID);
-        장바구니_상품_등록_요청(멤버, 요청);
 
         ExtractableResponse<Response> response = 장바구니_상품_삭제_요청(멤버, 상품_ID);
 
@@ -114,16 +112,27 @@ public class CartIntegrationTest {
     }
 
     @Test
+    public void 장바구니에_존재하지_않는_상품을_삭제하려는_경우_예외가_발생한다() {
+        멤버를_생성한다();
+        상품을_등록한다(상품);
+
+        final Long 없는_상품_ID = 2L;
+
+        ExtractableResponse<Response> response = 장바구니_상품_삭제_요청(멤버, 없는_상품_ID);
+
+        assertAll(
+
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
+                () -> assertThat(response.body().asString()).isEqualTo(ExceptionStatus.NOT_FOUND_CART_PRODUCT.getMessage())
+        );
+    }
+
+    @Test
     public void 장바구니에서_상품을_조회한다() {
         멤버를_생성한다();
-        final Long 상품_ID = 상품을_등록한다(상품);
-        final Long 상품_ID2 = 상품을_등록한다(new ProductEntity("치킨", 20000,
+        상품을_등록한다(상품);
+        상품을_등록한다(new ProductEntity("치킨", 20000,
                 "https://pelicana.co.kr/resources/images/menu/best_menu03_200623.jpg"));
-        final CartAddProductRequest 요청 = 장바구니_상품_등록_요청을_생성한다(상품_ID);
-        final CartAddProductRequest 요청2 = 장바구니_상품_등록_요청을_생성한다(상품_ID2);
-
-        장바구니_상품_등록_요청(멤버, 요청);
-        장바구니_상품_등록_요청(멤버, 요청2);
 
         ExtractableResponse<Response> response = 장바구니_상품_조회_요청(멤버);
         System.out.println();
