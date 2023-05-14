@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cart.dao.product.ProductDao;
+import cart.dao.ProductDao;
 import cart.domain.product.Product;
 import cart.dto.ProductRequest;
 import cart.dto.ProductResponse;

@@ -2,7 +2,6 @@ package cart.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cart.dao.product.ProductDao;
 import cart.domain.product.Product;
 import java.math.BigDecimal;
 import java.util.List;

@@ -1,4 +1,4 @@
-package cart.dao.product;
+package cart.dao;
 
 import cart.domain.product.Product;
 import java.util.List;
