@@ -1,7 +1,7 @@
-package cart.repository;
+package cart.dao;
 
-import cart.dto.ProductRequestDto;
 import cart.entity.ProductEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductDao {
@@ -32,6 +33,10 @@ public class ProductDao {
                 .usingGeneratedKeyColumns("id");
     }
 
+    private static RowMapper<Object> nullMapper() {
+        return (rs, cn) -> null;
+    }
+
     public int create(ProductEntity productEntity) {
         final SqlParameterSource params = new BeanPropertySqlParameterSource(productEntity);
         return simpleJdbcInsert.executeAndReturnKey(params).intValue();
@@ -42,14 +47,13 @@ public class ProductDao {
         return jdbcTemplate.query(sql, productEntityRowMapper);
     }
 
-    public void update(final ProductRequestDto productRequestDto, final int id) {
-        validId(id);
+    public void update(ProductEntity productEntity) {
         final String updateSql = "update product set name = ?, image = ?, price = ? where id = ?";
         jdbcTemplate.update(updateSql,
-                productRequestDto.getName(),
-                productRequestDto.getImage(),
-                productRequestDto.getPrice(),
-                id
+                productEntity.getName(),
+                productEntity.getImage(),
+                productEntity.getPrice(),
+                productEntity.getId()
         );
     }
 
@@ -58,8 +62,24 @@ public class ProductDao {
         jdbcTemplate.update(sql, id);
     }
 
-    private void validId(final int id) {
+    public boolean exitingProduct(final int id) {
         final String sql = "select * from product where id = ?";
-        jdbcTemplate.query(sql, (rs, rsnum) -> null, id);
+        final List<Object> findItems = jdbcTemplate.query(sql, nullMapper(), id);
+        return !findItems.isEmpty();
+    }
+
+    public boolean exitingProductName(final String name) {
+        final String sql = "select * from product where name = ?";
+        final List<Object> findItems = jdbcTemplate.query(sql, nullMapper(), name);
+        return !findItems.isEmpty();
+    }
+
+    public Optional<ProductEntity> findBy(final int id) {
+        final String sql = "select * from product where id = ?";
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, productEntityRowMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }
