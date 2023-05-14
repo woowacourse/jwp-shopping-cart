@@ -22,7 +22,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
+        return parameter.hasParameterAnnotation(AuthenticationPrincipal.class) || parameter.getParameterType().isInstance(MemberRequest.class);
     }
 
     @Override
