@@ -16,13 +16,13 @@ public class ProductImageUrl {
 
     private void validateIsNull(String url) {
         if (url == null) {
-            throw new IllegalArgumentException("[ERROR] 상품 이미지 url이 null입니다.");
+            throw new IllegalArgumentException("상품 이미지 url이 null입니다.");
         }
     }
 
     private void validateIsBlank(String url) {
         if (url.strip().isBlank()) {
-            throw new IllegalArgumentException("[ERROR] 상품 이미지 url이 비어있습니다.");
+            throw new IllegalArgumentException("상품 이미지 url이 비어있습니다.");
         }
     }
 

@@ -1,5 +1,7 @@
 package cart.domain.product;
 
+import java.util.Objects;
+
 public class Product {
 
     private final Long id;
@@ -22,7 +24,7 @@ public class Product {
                 new ProductImageUrl(imageUrl));
     }
 
-    public static Product createWithoutId(String name, long price, String imageUrl) {
+    public static Product createToSave(String name, long price, String imageUrl) {
         return create(null, name, price, imageUrl);
     }
 
@@ -40,5 +42,22 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl.getUrl();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

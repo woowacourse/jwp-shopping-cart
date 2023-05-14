@@ -45,8 +45,18 @@ form.addEventListener('submit', (event) => {
 });
 
 const createProduct = (product) => {
+    const credentials = localStorage.getItem('credentials');
+    if (!credentials) {
+        alert('사용자 정보가 없습니다.');
+        window.location.href = '/users';
+        return;
+    }
+
     axios.request({
-        url: '/admin/product',
+        url: '/products',
+        headers: {
+            'Authorization': `Basic ${credentials}`
+        },
         method: 'POST',
         data: {
             "name": product["name"],
@@ -61,8 +71,18 @@ const createProduct = (product) => {
 };
 
 const updateProduct = (product) => {
+    const credentials = localStorage.getItem('credentials');
+    if (!credentials) {
+        alert('사용자 정보가 없습니다.');
+        window.location.href = '/users';
+        return;
+    }
+
     axios.request({
-        url: '/admin/product/' + product['id'],
+        url: '/products/' + product['id'],
+        headers: {
+            'Authorization': `Basic ${credentials}`
+        },
         method: 'PUT',
         data: {
             "name": product["name"],
@@ -77,9 +97,19 @@ const updateProduct = (product) => {
 };
 
 const deleteProduct = (id) => {
+    const credentials = localStorage.getItem('credentials');
+    if (!credentials) {
+        alert('사용자 정보가 없습니다.');
+        window.location.href = '/users';
+        return;
+    }
+
     axios.request({
-        url: '/admin/product/' + id,
+        url: '/products/' + id,
         method: 'DELETE',
+        headers: {
+            'Authorization': `Basic ${credentials}`
+        },
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {

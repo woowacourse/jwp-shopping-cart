@@ -15,7 +15,7 @@ class ProductImageUrlTest {
     void shouldThrowExceptionWhenUrlIsNull() {
         assertThatThrownBy(() -> new ProductImageUrl(null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 상품 이미지 url이 null입니다.");
+                .hasMessage("상품 이미지 url이 null입니다.");
     }
 
     @DisplayName("상품 이미지 url이 공백이면 예외를 반환한다.")
@@ -25,6 +25,6 @@ class ProductImageUrlTest {
     void shouldThrowExceptionWhenUrlIsBlank(String inputUrl) {
         assertThatThrownBy(() -> new ProductImageUrl(inputUrl))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 상품 이미지 url이 비어있습니다.");
+                .hasMessage("상품 이미지 url이 비어있습니다.");
     }
 }
