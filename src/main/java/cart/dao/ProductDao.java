@@ -1,20 +1,28 @@
 package cart.dao;
 
-import cart.dao.entity.ProductEntity;
-import cart.domain.Product;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
+import cart.domain.ProductEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
+
 @Repository
 public class ProductDao {
+
+    private static final RowMapper<ProductEntity> PRODUCT_ENTITY_ROW_MAPPER = (resultSet, rowNum) -> new ProductEntity(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getInt("price"),
+            resultSet.getString("image")
+    );
+    private static final String[] GENERATED_ID_COLUMN = {"id"};
+    private static final int MINIMUM_AFFECTED_ROWS = 1;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -22,57 +30,58 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ProductEntity> selectAll() {
-        final String sql = "SELECT * FROM PRODUCT";
-        return jdbcTemplate.query(sql, getProductRowMapper());
+    public List<ProductEntity> findAll() {
+        final String sql = "SELECT * FROM product";
+        return jdbcTemplate.query(sql, PRODUCT_ENTITY_ROW_MAPPER);
     }
 
-    private RowMapper<ProductEntity> getProductRowMapper() {
-        return (resultSet, rowNum) -> new ProductEntity(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getInt("price"),
-                resultSet.getString("image")
-        );
-    }
-
-    public Long insert(final Product product) {
-        final String sql = "INSERT INTO PRODUCT (name, price, image) VALUES (?, ?, ?)";
+    public Long insert(final ProductEntity productEntity) {
+        final String sql = "INSERT INTO product (name, price, image) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(final Connection con) throws SQLException {
-                final PreparedStatement preparedStatement = con.prepareStatement(
-                        sql, new String[]{"ID"}
-                );
-                preparedStatement.setString(1, product.getName());
-                preparedStatement.setInt(2, product.getPrice());
-                preparedStatement.setString(3, product.getImage());
-                return preparedStatement;
-            }
+        jdbcTemplate.update(con -> {
+            final PreparedStatement preparedStatement = con.prepareStatement(sql, GENERATED_ID_COLUMN);
+            preparedStatement.setString(1, productEntity.getName());
+            preparedStatement.setInt(2, productEntity.getPrice());
+            preparedStatement.setString(3, productEntity.getImage());
+            return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public int update(final Product product, final Long id) {
-        final String sql = "UPDATE PRODUCT SET name = ?, price = ?, image = ? WHERE id = ?";
-        return jdbcTemplate.update(
+    public int update(final Long id, final ProductEntity productEntity) {
+        final String sql = "UPDATE product SET name = ?, price = ?, image = ? WHERE id = ?";
+        final int affectedRows = jdbcTemplate.update(
                 sql,
-                product.getName(),
-                product.getPrice(),
-                product.getImage(),
+                productEntity.getName(),
+                productEntity.getPrice(),
+                productEntity.getImage(),
                 id
         );
+        validateAffectedRowsCount(affectedRows);
+        return affectedRows;
+    }
+
+    private void validateAffectedRowsCount(final int affectedRows) {
+        if (affectedRows < MINIMUM_AFFECTED_ROWS) {
+            throw new IllegalArgumentException("접근하려는 데이터가 존재하지 않습니다.");
+        }
     }
 
     public int delete(final Long id) {
         final String sql = "DELETE FROM product WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+        final int affectedRows = jdbcTemplate.update(sql, id);
+        validateAffectedRowsCount(affectedRows);
+        return affectedRows;
     }
 
     public ProductEntity findById(final Long id) {
-        final String sql = "SELECT * from product where id = ?";
-        return jdbcTemplate.queryForObject(sql, getProductRowMapper(), id);
+        try {
+            final String sql = "SELECT * from product where id = ?";
+            return jdbcTemplate.queryForObject(sql, PRODUCT_ENTITY_ROW_MAPPER, id);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new IllegalArgumentException("입력한 정보의 상품이 존재하지 않습니다.");
+        }
     }
 }

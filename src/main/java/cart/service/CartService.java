@@ -1,66 +1,61 @@
 package cart.service;
 
+import cart.controller.authentication.AuthInfo;
+import cart.dao.CartDao;
+import cart.dao.MemberDao;
 import cart.dao.ProductDao;
-import cart.dao.entity.ProductEntity;
-import cart.domain.Product;
-import cart.dto.RequestCreateProductDto;
-import cart.dto.RequestUpdateProductDto;
+import cart.domain.CartEntity;
+import cart.domain.MemberEntity;
+import cart.domain.ProductEntity;
 import cart.dto.ResponseProductDto;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class CartService {
 
-    private static final int MINIMUM_AFFECTED_ROWS = 1;
-
+    private final CartDao cartDao;
+    private final MemberDao memberDao;
     private final ProductDao productDao;
 
-    @Autowired
-    public CartService(final ProductDao productDao) {
+    public CartService(final CartDao cartDao, final MemberDao memberDao, final ProductDao productDao) {
+        this.cartDao = cartDao;
+        this.memberDao = memberDao;
         this.productDao = productDao;
     }
 
-    public List<ResponseProductDto> findAll() {
-        final List<ProductEntity> productEntities = productDao.selectAll();
-        return productEntities.stream()
-                .map(entity -> new ResponseProductDto(
-                        entity.getId(),
-                        entity.getName(),
-                        entity.getPrice(),
-                        entity.getImage())
-                ).collect(Collectors.toUnmodifiableList());
+    @Transactional(readOnly = true)
+    public List<ResponseProductDto> findCartProducts(final AuthInfo authInfo) {
+        final MemberEntity member = findMember(authInfo);
+        final List<CartEntity> cartEntities = cartDao.findAllByMemberId(member.getId());
+        return cartEntities.stream()
+                .map(CartEntity::getProduct)
+                .map(ResponseProductDto::new)
+                .collect(Collectors.toUnmodifiableList());
     }
 
-    public void insert(final RequestCreateProductDto requestCreateProductDto) {
-        final Product newProduct = new Product(
-                requestCreateProductDto.getName(),
-                requestCreateProductDto.getPrice(),
-                requestCreateProductDto.getImage()
-        );
-        productDao.insert(newProduct);
+    private MemberEntity findMember(final AuthInfo authInfo) {
+        return memberDao.findByEmail(authInfo.getEmailValue());
     }
 
-    public void update(final RequestUpdateProductDto requestUpdateProductDto) {
-        final Product product = new Product(
-                requestUpdateProductDto.getName(),
-                requestUpdateProductDto.getPrice(),
-                requestUpdateProductDto.getImage()
-        );
-        final int updatedRows = productDao.update(product, requestUpdateProductDto.getId());
-        validateAffectedRowsCount(updatedRows);
+    @Transactional
+    public Long insert(final AuthInfo authInfo, final Long productId) {
+        final MemberEntity member = findMember(authInfo);
+        final ProductEntity product = findProductById(productId);
+        return cartDao.insert(new CartEntity(member, product));
     }
 
-    private void validateAffectedRowsCount(final int affectedRows) {
-        if (affectedRows < MINIMUM_AFFECTED_ROWS) {
-            throw new IllegalArgumentException("접근하려는 데이터가 존재하지 않습니다.");
-        }
+    private ProductEntity findProductById(final Long productId) {
+        return productDao.findById(productId);
     }
 
-    public void delete(final Long id) {
-        final int affectedRows = productDao.delete(id);
-        validateAffectedRowsCount(affectedRows);
+    @Transactional
+    public int delete(final AuthInfo authInfo, final Long productId) {
+        final MemberEntity member = findMember(authInfo);
+        final ProductEntity product = findProductById(productId);
+        return cartDao.delete(member.getId(), product.getId());
     }
 }
