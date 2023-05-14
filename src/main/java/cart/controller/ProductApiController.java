@@ -5,6 +5,7 @@ import cart.dto.ProductRequest;
 import cart.service.ProductService;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +29,9 @@ public class ProductApiController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> findAllProducts() {
-        List<ProductResponse> allProducts = productService.findProductResponses();
+        List<ProductResponse> allProducts = productService.findProducts().stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(allProducts);
     }
 
@@ -40,7 +43,7 @@ public class ProductApiController {
 
     @PutMapping("/{productId}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long productId, @RequestBody @Valid ProductRequest productRequest) {
-        ProductResponse updatedProduct = productService.updateProduct(productId, productRequest);
+        ProductResponse updatedProduct = ProductResponse.from(productService.updateProduct(productId, productRequest));
         return ResponseEntity.ok(updatedProduct);
     }
 

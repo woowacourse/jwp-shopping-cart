@@ -1,10 +1,12 @@
 package cart.controller;
 
+import cart.domain.member.Member;
 import cart.dto.MemberResponse;
 import cart.dto.MemberRequest;
 import cart.service.MemberService;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,8 +31,11 @@ public class MemberApiController {
 
     @GetMapping
     public ResponseEntity<List<MemberResponse>> findAllMembers() {
-        List<MemberResponse> allMembers = memberService.findAllMemberResponses();
-        return ResponseEntity.ok(allMembers);
+        List<Member> allMembers = memberService.findAllMembers();
+        List<MemberResponse> memberResponses = allMembers.stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(memberResponses);
     }
 
     @PostMapping
@@ -41,7 +46,7 @@ public class MemberApiController {
 
     @PutMapping("/{id}")
     public ResponseEntity<MemberResponse> updateMember(@PathVariable Long id, @RequestBody @Valid MemberRequest memberRequest) {
-        MemberResponse updatedMember = memberService.updateMember(id, memberRequest);
+        MemberResponse updatedMember = MemberResponse.from(memberService.updateMember(id, memberRequest));
         return ResponseEntity.ok(updatedMember);
     }
 

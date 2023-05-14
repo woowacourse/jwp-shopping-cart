@@ -1,10 +1,12 @@
 package cart.controller;
 
+import cart.domain.member.Member;
 import cart.dto.MemberResponse;
 import cart.dto.ProductResponse;
 import cart.service.MemberService;
 import cart.service.ProductService;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +38,11 @@ public class PageController {
 
     @GetMapping("/settings")
     public String settingPageView(Model model) {
-        List<MemberResponse> members = memberService.findAllMemberResponses();
-        model.addAttribute("members", members);
+        List<Member> members = memberService.findAllMembers();
+        List<MemberResponse> memberResponses = members.stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
+        model.addAttribute("members", memberResponses);
         return "settings";
     }
 

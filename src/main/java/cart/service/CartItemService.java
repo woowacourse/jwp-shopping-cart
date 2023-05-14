@@ -6,11 +6,9 @@ import cart.dao.cart.CartItemDao;
 import cart.domain.cart.CartItem;
 import cart.domain.product.Product;
 import cart.dto.CartItemRequest;
-import cart.dto.ProductResponse;
 import cart.exception.NotFoundException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,12 +31,9 @@ public class CartItemService {
         cartItemDao.insert(memberId, cartItem);
     }
 
-    public List<ProductResponse> findAllProducts(Long memberId) {
+    public List<Product> findAllProducts(Long memberId) {
         checkIfExistMember(memberId);
-        List<Product>  products = cartItemDao.findAll(memberId);
-        return products.stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getImageUrl(), product.getPrice()))
-                .collect(Collectors.toList());
+        return cartItemDao.findAll(memberId);
     }
 
     public void removeProduct(Long memberId, CartItemRequest cartItemRequest) {

@@ -3,17 +3,17 @@ package cart.auth;
 import cart.auth.credential.Credential;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BasicAuthorizationExtractor {
 
-    private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
     public Credential extract(HttpServletRequest request) {
-        String header = request.getHeader(AUTHORIZATION);
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (header == null) {
             return null;
         }
