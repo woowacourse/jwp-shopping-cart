@@ -6,21 +6,27 @@ import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemberDao implements Dao<MemberEntity> {
 
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<MemberEntity> rowMapper = (rs, rowNum) ->
             new MemberEntity(
                     rs.getLong("id"),
                     rs.getString("email"),
                     rs.getString("password")
             );
-    private final JdbcTemplate jdbcTemplate;
 
     public MemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("member")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -37,7 +43,7 @@ public class MemberDao implements Dao<MemberEntity> {
 
     @Override
     public Long save(final MemberEntity memberEntity) {
-        throw new UnsupportedOperationException();
+        return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(memberEntity)).longValue();
     }
 
     @Override
