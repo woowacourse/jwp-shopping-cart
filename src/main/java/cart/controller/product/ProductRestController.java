@@ -3,7 +3,7 @@ package cart.controller.product;
 import cart.controller.product.dto.ProductCreateRequest;
 import cart.controller.product.dto.ProductWebResponse;
 import cart.service.product.ProductService;
-import cart.service.product.dto.ProductInsertRequest;
+import cart.service.product.dto.InsertProductRequest;
 import cart.service.product.dto.ProductResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +30,14 @@ public class ProductRestController {
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody @Valid ProductCreateRequest productRequest) {
-        ProductInsertRequest productServiceRequest = new ProductInsertRequest(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        InsertProductRequest productServiceRequest = new InsertProductRequest(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
         long productId = productService.create(productServiceRequest);
         return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductWebResponse> update(@RequestBody ProductCreateRequest productRequest, @PathVariable Long id) {
-        ProductInsertRequest productServiceRequest = new ProductInsertRequest(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
+        InsertProductRequest productServiceRequest = new InsertProductRequest(productRequest.getName(), productRequest.getImageUrl(), productRequest.getPrice());
         ProductResponse updated = productService.update(productServiceRequest, id);
         ProductWebResponse updateResponse = new ProductWebResponse(updated.getId(), updated.getName(), updated.getImageUrl(), updated.getPrice());
         return ResponseEntity.ok(updateResponse);

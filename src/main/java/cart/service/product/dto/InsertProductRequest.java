@@ -1,11 +1,11 @@
 package cart.service.product.dto;
 
-public class ProductInsertRequest {
+public class InsertProductRequest {
     private final String imageUrl;
     private final String name;
-    private final Integer price;
+    private final int price;
 
-    public ProductInsertRequest(String imageUrl, String name, Integer price) {
+    public InsertProductRequest(String imageUrl, String name, int price) {
         this.imageUrl = imageUrl;
         this.name = name;
         this.price = price;
@@ -19,7 +19,7 @@ public class ProductInsertRequest {
         return name;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 }
