@@ -1,7 +1,11 @@
 const selectMember = (member) => {
-    <!-- TODO: [2단계] 사용자 정보에 맞게 변경 -->
-    const { email, password } = member;
+    const {email, password} = member;
     const string = `${email}:${password}`;
-    localStorage.setItem('credentials', btoa(string));
+    localStorage.setItem('credentials', Base64Encode(string));
     alert(`${email} 사용자로 설정 했습니다.`);
+}
+
+function Base64Encode(str) {
+    let bytes = new (TextEncoder || TextEncoderLite)('utf-8').encode(str);
+    return base64js.fromByteArray(bytes);
 }

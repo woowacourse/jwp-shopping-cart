@@ -1,6 +1,8 @@
 package cart.entity;
 
-public class Product {
+import static java.lang.String.format;
+
+public final class Product {
     private static final int MAX_NAME_LENGTH = 20;
     private static final int MAX_PRICE = 100000000;
     private static final int MIN_PRICE = 0;
@@ -25,15 +27,18 @@ public class Product {
 
     private void validate(String name, final int price) {
         if (name.isBlank() || MAX_NAME_LENGTH < name.length()) {
-            throw new IllegalArgumentException("상품 이름은 1 ~ 20 길이여야 합니다.");
+            throw new IllegalArgumentException(
+                    format("상품 이름은 1 ~ %d 길이여야 합니다.", MAX_NAME_LENGTH));
         }
 
         if (price < MIN_PRICE || MAX_PRICE < price) {
-            throw new IllegalArgumentException("상품 가격은 0원 이상 1억원 이하여야 합니다.");
+            throw new IllegalArgumentException(
+                    format("상품 가격은 %d원 이상 %d원 이하여야 합니다.", MIN_PRICE, MAX_PRICE));
         }
 
         if (price % UNIT_OF_PRICE != 0) {
-            throw new IllegalArgumentException("상품 가격은 10원 단위여야 합니다.");
+            throw new IllegalArgumentException(
+                    format("상품 가격은 %d원 단위여야 합니다.", UNIT_OF_PRICE));
         }
     }
 
@@ -52,6 +57,4 @@ public class Product {
     public int getPrice() {
         return price;
     }
-
-
 }
