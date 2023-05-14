@@ -10,10 +10,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.auth.BasicAuthorizationExtractor;
+import cart.auth.credential.CredentialDao;
 import cart.dao.ProductDao;
 import cart.domain.Product;
 import cart.dto.ProductRequest;
-import cart.dto.ProductResponse;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
@@ -46,6 +47,12 @@ class ProductApiControllerUnitTest {
 
     @MockBean
     ProductDao productDao;
+
+    @MockBean
+    BasicAuthorizationExtractor basicAuthorizationExtractor;
+
+    @MockBean
+    CredentialDao credentialDao;
 
     @Test
     @DisplayName("/products로 POST 요청과 상품의 정보를 보내면, HTTP 201 코드와 상품이 등록된다.")
@@ -155,7 +162,7 @@ class ProductApiControllerUnitTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.productId").value(1L))
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("치킨"))
                 .andExpect(jsonPath("$.image").value("치킨image"))
                 .andExpect(jsonPath("$.price").value(20000));
@@ -174,7 +181,7 @@ class ProductApiControllerUnitTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("해당 상품이 존재하지 않습니다"));
+                .andExpect(jsonPath("$.message").value("해당 상품이 존재하지 않습니다."));
     }
 
     @Test
@@ -219,15 +226,15 @@ class ProductApiControllerUnitTest {
         mockMvc.perform(delete("/products/" + productId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("해당 상품이 존재하지 않습니다"));
+                .andExpect(jsonPath("$.message").value("해당 상품이 존재하지 않습니다."));
     }
 
     @Test
     @DisplayName("/products로 GET 요청을 보내면 HTTP 200 코드와 함께 상품이 조회되어야 한다.")
     void findAllProducts_success() throws Exception {
         // given
-        List<ProductResponse> products = List.of(new ProductResponse(1L, "치킨", "치킨image", BigDecimal.valueOf(20000L)),
-                new ProductResponse(2L, "치킨", "치킨image", BigDecimal.valueOf(20000L)));
+        List<Product> products = List.of(new Product(1L, "치킨", "치킨image", BigDecimal.valueOf(20000L)),
+                new Product(2L, "치킨", "치킨image", BigDecimal.valueOf(20000L)));
 
         willReturn(products)
                 .given(productService)
@@ -236,10 +243,11 @@ class ProductApiControllerUnitTest {
         // expect
         mockMvc.perform(get("/products"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].productId").value(1L))
+                .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("치킨"))
                 .andExpect(jsonPath("$[0].image").value("치킨image"))
                 .andExpect(jsonPath("$[0].price").value(20000L))
                 .andDo(print());
     }
+
 }

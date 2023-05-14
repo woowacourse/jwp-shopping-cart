@@ -2,9 +2,9 @@ package cart.auth.credential;
 
 public class Credential {
 
-    private Long memberId;
-    private String email;
-    private String password;
+    private final Long memberId;
+    private final String email;
+    private final String password;
 
     public Credential(Long memberId, String email, String password) {
         this.memberId = memberId;
