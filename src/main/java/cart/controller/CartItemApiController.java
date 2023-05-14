@@ -24,9 +24,6 @@ public class CartItemApiController {
         this.cartItemService = cartItemService;
     }
 
-
-    //todo 질문: productId의 상품 존재 여부는 어디서 확인하나요?
-    //todo 질문:  cartProduct의 로케이션을 /cart-product/{memberId}로 하고 싶은데 어떻게 해야하나요?
     @PostMapping
     public ResponseEntity<Void> addProduct(@Authorization Long memberId,
             @RequestBody CartItemRequest cartItemRequest) {
