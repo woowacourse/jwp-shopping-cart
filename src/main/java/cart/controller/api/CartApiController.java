@@ -1,12 +1,15 @@
 package cart.controller.api;
 
 import cart.config.AuthenticationPrincipal;
+import cart.controller.dto.CartRequest;
 import cart.controller.dto.CartResponse;
 import cart.controller.dto.MemberRequest;
 import cart.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -25,13 +28,16 @@ public class CartApiController {
         return ResponseEntity.ok(carts);
     }
 
-    @PostMapping("{productId}")
+    @PostMapping
     public ResponseEntity<Long> addCart(
-            @PathVariable Long productId,
-            @AuthenticationPrincipal MemberRequest memberRequest
+            @AuthenticationPrincipal MemberRequest memberRequest,
+            @RequestBody CartRequest cartRequest
     ) {
-        Long id = cartService.addCart(productId, memberRequest);
-        return ResponseEntity.ok(id);
+        Long id = cartService.addCart(cartRequest.getProductId(), memberRequest);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/cart-products/{id}")
+                .buildAndExpand(id).toUri();
+        return ResponseEntity.created(location).body(id);
     }
 
     @DeleteMapping("{cartId}")
