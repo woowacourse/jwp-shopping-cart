@@ -10,7 +10,7 @@ public class MemberRequest {
     @NotBlank(message = "비밀번호는 공백이어서는 안됩니다.")
     private String password;
 
-    public MemberRequest() {
+    private MemberRequest() {
     }
 
     public MemberRequest(final String email, final String password) {
