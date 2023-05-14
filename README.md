@@ -166,3 +166,16 @@
    - WebMvcConfiguration할때, @EnableWebMvc 붙이면, 다른 js, css 파일들 인식을 못함. 왜????
     - 질문!!! 서버 데이터베이스의 사용자 정보를 초기화시켜도 localStorage에는 사용자정보가 남아있는 것 같아.
       localStorage를 어떻게 함꼐 초기화 할 수 있을까요?
+
+---
+
+## 2단계 1차 리팩터링
+1. 구조 변경
+   1. 상품 api 
+      - [x] request(name, image, price) -> service -> dao(product) - productDB저장
+   2. 회원 api  
+      - [x] request(name, email, password) -> service -> dao(member) - memberDB저장
+   3. 카트-아이템 api
+      - [x] request(memberId, productId) -> service -> memberdao(memberId) - memberDB조회
+                                              -> productdao(productId) - productDB조회
+                                              -> cartItemDao(memberId) - cartItemDB, productDB join으로 조회
