@@ -1,11 +1,14 @@
 package cart.controller;
 
 import cart.dto.ProductRequestDto;
+import cart.service.AdminService;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -13,20 +16,29 @@ import org.springframework.http.MediaType;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AdminControllerTest {
+class AdminControllerTest {
 
     @LocalServerPort
-    int port;
+    private int port;
+
+    @Autowired
+    private AdminService adminService;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
     }
 
+    @AfterEach
+    void clean() {
+        adminService.deleteAll();
+    }
+
     @DisplayName("상품 정상 등록 테스트")
     @Test
     void successPostTest() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+        ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000,
+                "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -39,7 +51,8 @@ public class AdminControllerTest {
     @DisplayName("상품 실패 테스트 - 이름 길이 검증")
     @Test
     void validateNameLengthTest() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("", 1000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+        ProductRequestDto productRequestDto = new ProductRequestDto("", 1000,
+                "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -53,7 +66,8 @@ public class AdminControllerTest {
     @DisplayName("상품 실패 테스트 - 가격 범위 검증")
     @Test
     void validatePriceTest() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 10, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+        ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 10,
+                "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -81,23 +95,61 @@ public class AdminControllerTest {
     @DisplayName("상품 수정 요청 확인 테스트")
     @Test
     void updateProduct() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000, "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+        ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000,
+                "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+        int productId = adminService.addProduct(productRequestDto);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(productRequestDto)
-                .when().put("/admin/products/1")
+                .when().put("/admin/products/{productId}", productId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("상품 수정 요청 실패 테스트")
+    @Test
+    void failUpdateProduct() {
+        ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000,
+                "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+        int productId = adminService.addProduct(productRequestDto);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productRequestDto)
+                .when().put("/admin/products/{productId}", productId + 1)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(Matchers.containsStringIgnoringCase("수정하려는 제품이 존재하지 않습니다."));
     }
 
     @DisplayName("상품 삭제 요청 확인 테스트")
     @Test
     void deleteProduct() {
+        ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000,
+                "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+        int productId = adminService.addProduct(productRequestDto);
+
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/admin/products/1")
+                .when().delete("/admin/products/{productId}", productId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
+
+    @DisplayName("상품 삭제 요청 실패 테스트")
+    @Test
+    void failDeleteProduct() {
+        ProductRequestDto productRequestDto = new ProductRequestDto("케로로", 1000,
+                "https://i.namu.wiki/i/fXDC6tkjS6607gZSXSBdzFq_-12PLPWMcmOddg0dsqRq7Nl30Ek1r23BxxOTiERjGP4eyGmJuVPhxhSpOx2GDw.webp");
+        int productId = adminService.addProduct(productRequestDto);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/admin/products/{productId}", productId + 1)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(Matchers.containsStringIgnoringCase("삭제하려는 제품이 존재하지 않습니다."));
+    }
+
 }

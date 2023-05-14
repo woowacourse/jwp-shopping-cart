@@ -51,4 +51,5 @@ public class ProductEntity {
     public void setImage(String image) {
         this.image = image;
     }
+
 }

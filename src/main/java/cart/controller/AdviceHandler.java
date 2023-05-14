@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class AdviceHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handler(MethodArgumentNotValidException exception) {
+    public ResponseEntity<String> MethodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception) {
         BindingResult result = exception.getBindingResult();
         StringBuilder errMessage = new StringBuilder();
 
@@ -26,4 +26,17 @@ public class AdviceHandler {
         return ResponseEntity.badRequest()
                 .body(errMessage.toString());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> MethodIllegalArgumentExceptionHandler(IllegalArgumentException exception) {
+        return ResponseEntity.badRequest()
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> OtherExceptionHandler(Exception exception) {
+        return ResponseEntity.badRequest()
+                .body("런타임 에러 발생");
+    }
+
 }
