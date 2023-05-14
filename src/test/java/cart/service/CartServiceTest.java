@@ -12,10 +12,10 @@ import cart.dao.ProductDao;
 import cart.dao.ProductEntity;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -28,12 +28,8 @@ class CartServiceTest {
     @Mock
     CartDao cartDao;
 
+    @InjectMocks
     CartService cartService;
-
-    @BeforeEach
-    void setUp() {
-        cartService = new CartService(productDao, cartDao);
-    }
 
     @DisplayName("장바구니 조회")
     @Test
