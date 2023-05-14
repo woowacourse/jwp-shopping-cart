@@ -17,9 +17,9 @@ public class MemberDao {
     private SimpleJdbcInsert simpleJdbcInsert;
     private RowMapper<Member> rowMapper = ((rs, rowNum) ->
             new Member(
-                    rs.getLong(1),
-                    rs.getString(2),
-                    rs.getString(3)
+                    rs.getLong("id"),
+                    rs.getString("email"),
+                    rs.getString("password")
             ));
 
     public MemberDao(final JdbcTemplate template) {

@@ -17,10 +17,10 @@ public class ProductDao {
 
     private static final RowMapper<Product> productRowMapper =
             (rs, rowNum) -> new Product(
-                    rs.getLong(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getInt(4));
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("image_url"),
+                    rs.getInt("price"));
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert simpleJdbcInsert;

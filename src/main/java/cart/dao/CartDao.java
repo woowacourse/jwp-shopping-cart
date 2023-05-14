@@ -21,9 +21,9 @@ public class CartDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper cartRowMapper =
             (rs, rowNum) -> new Cart(
-                    rs.getLong(1),
-                    rs.getLong(2),
-                    rs.getLong(3)
+                    rs.getLong("id"),
+                    rs.getLong("member_id"),
+                    rs.getLong("product_id")
             );
 
     public CartDao(JdbcTemplate template) {
