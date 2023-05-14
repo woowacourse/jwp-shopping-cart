@@ -7,9 +7,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class CartItemDao {
 
     private static final RowMapper<Product> productRowMapper = (rs, rowNum) -> new Product(
@@ -32,7 +32,7 @@ public class CartItemDao {
         SqlParameterSource paramSource = new MapSqlParameterSource()
                 .addValue("member_id", memberId)
                 .addValue("product_id", cartItem.getProductId())
-                .addValue("amount", cartItem.getAmount());
+                .addValue("new_amount", cartItem.getAmount());
 
         jdbcTemplate.update(sql, paramSource);
     }
