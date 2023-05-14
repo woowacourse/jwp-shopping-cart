@@ -1,36 +1,42 @@
 package cart.domain;
 
+import java.math.BigDecimal;
+
 public class Product {
 
-    private final Long productId;
+    private final Long id;
     private final String name;
-    private final String image;
-    private final Long price;
+    private final String imageUrl;
+    private final BigDecimal price;
 
-    public Product(String name, String image, long price) {
-        this(null, name, image, price);
-    }
-
-    public Product(Long productId, String name, String image, long price) {
-        this.productId = productId;
+    public Product(Long id, String name, String imageUrl, BigDecimal price) {
+        this.id = id;
         this.name = name;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.price = price;
     }
 
-    public long getProductId() {
-        return productId;
+    public Product(String name, String imageUrl, BigDecimal price) {
+        this.id = null;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.price = price;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
+
 }

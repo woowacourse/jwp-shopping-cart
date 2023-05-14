@@ -10,12 +10,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cart.auth.BasicAuthorizationExtractor;
+import cart.auth.credential.CredentialDao;
 import cart.dao.ProductDao;
 import cart.domain.Product;
-import cart.dto.ProductDto;
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductRequest;
 import cart.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -40,21 +42,23 @@ class ProductApiControllerUnitTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    //    @MockBean
-//    ProductService productService;
     @SpyBean
     ProductService productService;
 
     @MockBean
     ProductDao productDao;
 
+    @MockBean
+    BasicAuthorizationExtractor basicAuthorizationExtractor;
+
+    @MockBean
+    CredentialDao credentialDao;
+
     @Test
     @DisplayName("/products로 POST 요청과 상품의 정보를 보내면, HTTP 201 코드와 상품이 등록된다.")
     void saveProduct는_상품을_저장하고_created상태코드를_반환한다() throws Exception {
         //given
-        ProductRequestDto request = new ProductRequestDto("치킨", "치킨image", 20000L);
-//        given(productService.saveProduct(request))
-//                .willReturn(1L);
+        ProductRequest request = new ProductRequest("치킨", "치킨image", BigDecimal.valueOf(20000L));
 
         //when
         mockMvc.perform(post("/products")
@@ -68,10 +72,8 @@ class ProductApiControllerUnitTest {
     @DisplayName("상품을 생성할 때 이름이 25자를 초과하면, HTTP 400 코드와 에러 메시지가 반환된다")
     void saveProduct예외1_name의_길이가_25자_초과() throws Exception {
         // given
-        ProductRequestDto request = new ProductRequestDto("치킨ㄴㅇ라ㅣ낭러;ㅣㅁㄴ얼;ㅣㅁㄴ아ㅓㄹ;ㅣㄴ멍리;ㄴ얼;ㅣㅁ넝ㄹ;ㅣㄴ마얼;ㅁㄴㅇㄹㅁㄴㅇㄹㅇㄴㄹㄴㅇㄹ",
-                "치킨image", 20000L);
-//        given(productService.saveProduct(request))
-//                .willReturn(1L);
+        ProductRequest request = new ProductRequest("치킨ㄴㅇ라ㅣ낭러;ㅣㅁㄴ얼;ㅣㅁㄴ아ㅓㄹ;ㅣㄴ멍리;ㄴ얼;ㅣㅁ넝ㄹ;ㅣㄴ마얼;ㅁㄴㅇㄹㅁㄴㅇㄹㅇㄴㄹㄴㅇㄹ",
+                "치킨image", BigDecimal.valueOf(20000L));
 
         // when
         mockMvc.perform(post("/products")
@@ -87,10 +89,7 @@ class ProductApiControllerUnitTest {
     @DisplayName("상품을 생성할 때 이름이 null이면, HTTP 400 코드와 검증 메시지가 반환된다.")
     void saveProduct예외2_name이_Blank(String name) throws Exception {
         // given
-        ProductRequestDto request = new ProductRequestDto(name, "치킨image", 20000L);
-//        given(productService.saveProduct(request))
-//                .willReturn(1L);
-
+        ProductRequest request = new ProductRequest(name, "치킨image", BigDecimal.valueOf(20000L));
         // when
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -105,7 +104,7 @@ class ProductApiControllerUnitTest {
     @DisplayName("상품을 생성할 때 가격이 음수이거나 1억 이상이면 HTTP 400 코드와 검증 메시지가 반환된다.")
     void saveProduct예외3_price가_음수이거나_1억_초과(Long price) throws Exception {
         // given
-        ProductRequestDto request = new ProductRequestDto("치킨", "치킨image", price);
+        ProductRequest request = new ProductRequest("치킨", "치킨image", BigDecimal.valueOf(price));
         // when
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -119,7 +118,7 @@ class ProductApiControllerUnitTest {
     @DisplayName("상품을 생성할 때 가격이 null이면, HTTP 400 코드와 검증 메시지가 반환된다.")
     void saveProduct예외4_price가_Blank() throws Exception {
         // given
-        ProductRequestDto request = new ProductRequestDto("치킨", "치킨image", null);
+        ProductRequest request = new ProductRequest("치킨", "치킨image", null);
         // when
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -135,9 +134,9 @@ class ProductApiControllerUnitTest {
     @DisplayName("상품을 생성할 때 이미지가 빈 값이면 HTTP 400 코드와 검증 메시지가 반환된다.")
     void saveProduct예외5_image가_Blank(String image) throws Exception {
         // given
-        ProductRequestDto request = new ProductRequestDto("치킨", image, 20000L);
+        ProductRequest request = new ProductRequest("치킨", image, BigDecimal.valueOf(20000L));
 
-        // expect
+        // when
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -151,22 +150,22 @@ class ProductApiControllerUnitTest {
     @DisplayName("/products/{id}로 put 요청과 상품의 정보를 보내면, HTTP 200 코드와 함께 상품이 수정된다.")
     void updateProduct는_요청한_id를_가진_상품의_정보를_수정하고_200코드를_반환한다() throws Exception {
         // given
-        long productId = 1;
-        Product savedProduct = new Product(1L, "치킨", "치킨image", 15000L);
-        ProductRequestDto request = new ProductRequestDto("치킨", "치킨image", 20000L);
+        long productId = 1L;
+        Optional<Product> savedProduct = Optional.of(new Product(productId, "치킨", "치킨image", BigDecimal.valueOf(15000)));
+        ProductRequest request = new ProductRequest("치킨", "치킨image", BigDecimal.valueOf(20000));
 
-        given(productDao.findProductById(productId))
-                .willReturn(Optional.of(savedProduct));
+        given(productDao.findById(productId))
+                .willReturn(savedProduct);
 
-        // expect
+        // when
         mockMvc.perform(put("/products/" + productId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.productId").value(1L))
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("치킨"))
                 .andExpect(jsonPath("$.image").value("치킨image"))
-                .andExpect(jsonPath("$.price").value(20000L));
+                .andExpect(jsonPath("$.price").value(20000));
     }
 
 
@@ -175,17 +174,14 @@ class ProductApiControllerUnitTest {
     void updateProduct예외1_productId가_db에_없을때() throws Exception {
         // given
         long productId = 1;
-        ProductRequestDto request = new ProductRequestDto("치킨", "치킨image", 20000L);
+        ProductRequest request = new ProductRequest("치킨", "치킨image", BigDecimal.valueOf(20000L));
 
-        given(productDao.findProductById(productId))
-                .willReturn(Optional.empty());
-
-        // expect
+        // when
         mockMvc.perform(put("/products/" + productId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("해당 상품이 존재하지 않습니다"));
+                .andExpect(jsonPath("$.message").value("해당 상품이 존재하지 않습니다."));
     }
 
     @Test
@@ -193,10 +189,10 @@ class ProductApiControllerUnitTest {
     void updateProduct예외2_name의_길이가_25자_초과() throws Exception {
         // given
         long productId = 1;
-        ProductRequestDto request = new ProductRequestDto("치킨ㅁㄴ아룸니ㅏㅇ러;민아ㅓㄹ;ㅣㅁ나얼;미ㅏㅈ더리;맞더맂더라ㅣㅁㅈ덜ㄷㄹ저ㅣㄷ러짇란ㄹㄷㄹㄴㅈㄸㅈㄹㅈㄷㄹㅈㄷ",
-                "치킨image", 20000L);
+        ProductRequest request = new ProductRequest("치킨ㅁㄴ아룸니ㅏㅇ러;민아ㅓㄹ;ㅣㅁ나얼;미ㅏㅈ더리;맞더맂더라ㅣㅁㅈ덜ㄷㄹ저ㅣㄷ러짇란ㄹㄷㄹㄴㅈㄸㅈㄹㅈㄷㄹㅈㄷ",
+                "치킨image", BigDecimal.valueOf(20000L));
 
-        // expect
+        // when
         mockMvc.perform(put("/products/" + productId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -209,11 +205,12 @@ class ProductApiControllerUnitTest {
     @DisplayName("/products/{productId}로 DELETE 요청을 보내면, HTTP 204 코드와 상품이 삭제된다.")
     void deleteProduct는_상품을_삭제하고_200상태코드를_반환한다() throws Exception {
         // given
-        long productId = 1;
-        given(productDao.findProductById(productId))
-                .willReturn(Optional.of(new Product(productId, "치킨", "치킨image", 20000L)));
+        long productId = 1L;
+        Optional<Product> savedProduct = Optional.of(new Product(productId, "치킨", "치킨image", BigDecimal.valueOf(15000)));
+        given(productDao.findById(productId))
+                .willReturn(savedProduct);
 
-        // expect
+        // when
         mockMvc.perform(delete("/products/" + productId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -224,34 +221,33 @@ class ProductApiControllerUnitTest {
     void deleteProduct예외1_삭제하려는_상품의_productId가_db에_없을때() throws Exception {
         // given
         long productId = 1;
-        given(productDao.findProductById(productId))
-                .willReturn(Optional.empty());
 
         // expect
         mockMvc.perform(delete("/products/" + productId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("해당 상품이 존재하지 않습니다"));
+                .andExpect(jsonPath("$.message").value("해당 상품이 존재하지 않습니다."));
     }
 
     @Test
     @DisplayName("/products로 GET 요청을 보내면 HTTP 200 코드와 함께 상품이 조회되어야 한다.")
     void findAllProducts_success() throws Exception {
         // given
-        List<ProductDto> products = List.of(new ProductDto(1L, "치킨", "치킨image", 20000L),
-                new ProductDto(2L, "치킨", "치킨image", 20000L));
+        List<Product> products = List.of(new Product(1L, "치킨", "치킨image", BigDecimal.valueOf(20000L)),
+                new Product(2L, "치킨", "치킨image", BigDecimal.valueOf(20000L)));
 
         willReturn(products)
                 .given(productService)
-                .findAllProducts();
+                .findProducts();
 
         // expect
         mockMvc.perform(get("/products"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].productId").value(1L))
+                .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].name").value("치킨"))
                 .andExpect(jsonPath("$[0].image").value("치킨image"))
                 .andExpect(jsonPath("$[0].price").value(20000L))
                 .andDo(print());
     }
+
 }

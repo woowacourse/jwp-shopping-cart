@@ -1,14 +1,16 @@
 package cart.dto;
 
+import java.util.List;
+
 public class ExceptionResponse {
 
-    private final String message;
+    private final List<String> message;
 
-    public ExceptionResponse(String message) {
+    public ExceptionResponse(List<String> message) {
         this.message = message;
     }
 
-    public String getMessage() {
+    public List<String> getMessage() {
         return message;
     }
 

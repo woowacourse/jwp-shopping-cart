@@ -6,6 +6,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/base.css}">
     <link rel="stylesheet" th:href="@{/css/cart.css}">
+    <link rel="stylesheet" th:href="@{/css/setting.css}">
 </head>
 <body>
 <header class="gnb">
@@ -18,19 +19,57 @@
         </ul>
     </nav>
 </header>
+
 <div class="container">
     <h1>사용자 선택</h1>
-    <div class="cart-items">
-        <!-- TODO: [2단계] 사용자 정보에 맞게 변경 -->
-        <div class="cart-item" th:each="member : ${members}">
-            <div class="cart-item-info">
-                <div class="cart-item-name"></div> <!-- 사용자 이메일 -->
-                <div class="cart-item-price"></div> <!-- 사용자 비밀번호 -->
+<!--  내가 추가한것 1 --> <!--    사용자 추가 버튼 생성-->
+    <div class="btn-group">
+        <button class="add-btn" onclick="showAddModal()">사용자 추가</button>
+    </div>
+    <table>
+        <tr>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>비밀번호</th>
+            <th>Actions</th>
+        </tr>
+        <tbody class="member-list">
+        <!--  [1단계] 상품 정보에 맞게 변경 -->
+        <tr th:each="member : ${members}">
+            <td th:text="${member.name}" class="cart-item-name" ></td>
+            <td th:text="${member.email}" class="cart-item-name" ></td> <!-- 상품 이름 -->
+            <td th:text="${member.password}" class="cart-item-name" ></td> <!-- 상품 가격 -->
+
+            <td>
                 <button type="submit" id="delete-btn" class="cart-item-delete" th:onclick="selectMember([[${member}]])">Select</button>
-            </div>
+                <button type="submit" class="cart-item-delete" th:onclick="showEditModal([[${member}]])">수정</button>
+                <button type="submit" class="cart-item-delete" th:onclick="deleteMember([[${member.id}]])">삭제</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+<!--  내가 추가한것 2 -->
+    <div id="modal" class="modal" data-form-type="add">
+        <div class="modal-content">
+            <span class="close" onclick="hideAddModal()">&times;</span>
+            <!-- [1단계] 상품 정보에 맞게 변경 -->
+            <form id="form">
+                <label for="name">이름</label><br>
+                <input type="text" id="name" name="name" ><br>
+
+                <label for="email">이메일</label><br>
+                <input type="email" id="email" name="email" required><br>
+
+                <label for="password">비밀번호</label><br>
+                <input type="password" id="password" name="password" required><br>
+
+                <button type="submit">제출</button>
+            </form>
         </div>
     </div>
+
 </div>
-<script th:src="@{/js/settings.js}"> </script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:src="@{/js/settings.js?ver=1}"> </script>
 </body>
 </html>

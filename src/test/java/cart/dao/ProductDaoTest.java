@@ -3,6 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cart.domain.Product;
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,42 +31,53 @@ class ProductDaoTest {
 
     @Test
     void save는_상품을_저장한다() {
-        Product product = new Product("치킨",
+        //given
+        Product product = new Product(null, "치킨",
                 "https://img.freepik.com/free-photo/crispy-fried-chicken-on-a-plate-with-salad-and-carrot_1150-20212.jpg",
-                19000);
+                BigDecimal.valueOf(19000));
 
-        productDao.save(product);
-
-        List<Product> allProducts = productDao.findAllProducts();
-        assertThat(allProducts.get(0)).usingRecursiveComparison().ignoringFields("productId").isEqualTo(product);
+        assertThat(productDao.insert(product)).isEqualTo(1L);
     }
 
     @Test
     void findAllProducts는_저장된_모든_상품을_조회한다() {
-        List<Product> allProducts = productDao.findAllProducts();
+        List<Product> allProducts = productDao.findAll();
+
         assertThat(allProducts).isNotNull();
+    }
+
+    @Test
+    void findById는_해당Id를_가진__상품을_조회한다() {
+        assertThat(productDao.findById(1L)).isEmpty();
     }
 
 
     @Test
     void updateProduct는_상품_정보를_수정한다() {
-        Product before = new Product("chicken", "imagelink", 100);
-        long productId = productDao.save(before);
+        //given
+        Product savedProduct = new Product(null, "chicken", "imagelink", BigDecimal.valueOf(100));
+        Long productId = productDao.insert(savedProduct);
 
-        Product after = new Product(productId, "chicken", "imagelink",19000);
-        productDao.updateProduct(after);
+        //when
+        Product productToUpdate = new Product(productId, "chicken", "imagelink",BigDecimal.valueOf(19000));
+        productDao.update(productToUpdate);
 
-        Product savedProduct = productDao.findProductById(productId).get();
-        assertThat(savedProduct).usingRecursiveComparison().isEqualTo(after);
+        //then
+        Product updatedroduct = productDao.findById(productId).get();
+        assertThat(updatedroduct).usingRecursiveComparison().isEqualTo(productToUpdate);
     }
 
     @Test
     void deleteProduct는_상품을_삭제한다() {
-        Product product = new Product("chicken", "imagelink", 100);
-        long productId = productDao.save(product);
-        assertThat(productDao.findAllProducts()).hasSize(1);
+        //given
+        Product product = new Product(null, "chicken", "imagelink", BigDecimal.valueOf(100));
+        Long productId = productDao.insert(product);
+        assertThat(productDao.findAll()).hasSize(1);
 
-        productDao.deleteProduct(productId);
-        assertThat(productDao.findAllProducts()).isEmpty();
+        //when
+        productDao.delete(productId);
+
+        //then
+        assertThat(productDao.findAll()).isEmpty();
     }
 }
