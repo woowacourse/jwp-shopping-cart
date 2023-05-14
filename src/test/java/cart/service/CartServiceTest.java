@@ -76,7 +76,10 @@ class CartServiceTest {
         int afterSize = cartService.searchAllCartProducts(credential).size();
 
         // expected
-        assertThat(beforeSize + 1).isEqualTo(afterSize);
+        assertAll(
+                () -> assertThat(beforeSize + 1).isEqualTo(afterSize),
+                () -> assertThat(cartDao.findById(productId)).isNotNull()
+        );
     }
 
     @Test
