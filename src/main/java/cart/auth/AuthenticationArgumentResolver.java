@@ -22,4 +22,5 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         return (Long) request.getAttribute("memberId");
     }
+
 }

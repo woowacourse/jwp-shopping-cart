@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CredentialDao {
 
-    private static final RowMapper<CredentialEntity> credentialRowMapper = (rs, rowNum) -> new CredentialEntity(
+    private static final RowMapper<Credential> credentialRowMapper = (rs, rowNum) -> new Credential(
             rs.getLong("member_id"),
             rs.getString("email"),
             rs.getString("password")
@@ -23,7 +23,7 @@ public class CredentialDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<CredentialEntity> findByEmail(String email) {
+    public Optional<Credential> findByEmail(String email) {
         String sql = "select * from MEMBER where email = :email";
         SqlParameterSource paramSource = new MapSqlParameterSource()
                 .addValue("email", email);
@@ -33,4 +33,5 @@ public class CredentialDao {
             return Optional.empty();
         }
     }
+
 }

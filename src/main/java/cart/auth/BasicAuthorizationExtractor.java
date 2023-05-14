@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.auth.credential.CredentialEntity;
+import cart.auth.credential.Credential;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ public class BasicAuthorizationExtractor {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
-    public CredentialEntity extract(HttpServletRequest request) {
+    public Credential extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
         if (header == null) {
             return null;
@@ -27,7 +27,7 @@ public class BasicAuthorizationExtractor {
             String email = credentials[0];
             String password = credentials[1];
 
-            return new CredentialEntity(null, email, password);
+            return new Credential(null, email, password);
         }
 
         return null;

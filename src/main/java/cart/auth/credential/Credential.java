@@ -1,30 +1,27 @@
 package cart.auth.credential;
 
-import cart.domain.Id;
-import cart.domain.member.MemberEmail;
-import cart.domain.member.MemberPassword;
-
 public class Credential {
 
-    private final Id memberId;
-    private final MemberEmail email;
-    private final MemberPassword password;
+    private Long memberId;
+    private String email;
+    private String password;
 
-    public Credential(Id memberId, MemberEmail email, MemberPassword password) {
+    public Credential(Long memberId, String email, String password) {
         this.memberId = memberId;
         this.email = email;
         this.password = password;
     }
 
-    public Id getMemberId() {
+    public Long getMemberId() {
         return memberId;
     }
 
-    public MemberEmail getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public MemberPassword getPassword() {
+    public String getPassword() {
         return password;
     }
+
 }
