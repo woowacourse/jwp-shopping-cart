@@ -49,6 +49,10 @@ const createProduct = (product) => {
     console.log(product);
     axios.request({
         url: '/products',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
         method: 'post',
         data: product
     }).then((response) => {
@@ -65,6 +69,10 @@ const updateProduct = (product) => {
 
     axios.request({
         url: '/products/' + id,
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
         method: 'patch',
         data: product
     }).then((response) => {
