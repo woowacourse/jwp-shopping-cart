@@ -4,11 +4,11 @@ import cart.global.exception.common.ExceptionStatus;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ErrorResponse extends Response {
+public class ProductErrorResponse extends Response {
 
     private final Map<String, String> validation = new HashMap<>();
 
-    public ErrorResponse(ExceptionStatus exceptionResponse) {
+    public ProductErrorResponse(ExceptionStatus exceptionResponse) {
         super(exceptionResponse.getStatus(), exceptionResponse.getMessage(),
                 exceptionResponse.getHttpStatus().name());
     }

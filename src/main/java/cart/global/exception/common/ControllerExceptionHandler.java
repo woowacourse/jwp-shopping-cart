@@ -1,12 +1,9 @@
 package cart.global.exception.common;
 
-import cart.global.exception.auth.AuthorizationNotFoundException;
-import cart.global.exception.auth.InvalidAuthorizationException;
-import cart.global.exception.cart.ProductNotFoundInCartException;
-import cart.global.exception.product.ProductNotFoundException;
-import cart.global.exception.response.ErrorResponse;
+import cart.global.exception.response.ProductErrorResponse;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,37 +16,31 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        ErrorResponse errorResponse = new ErrorResponse(ExceptionStatus.BAD_INPUT_VALUE_EXCEPTION);
+    public ProductErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        ProductErrorResponse productErrorResponse = new ProductErrorResponse(ExceptionStatus.BAD_INPUT_VALUE_EXCEPTION);
         List<FieldError> errors = exception.getBindingResult().getFieldErrors();
         for (FieldError error : errors) {
-            errorResponse.addValidation(error.getField(), error.getDefaultMessage());
+            productErrorResponse.addValidation(error.getField(), error.getDefaultMessage());
         }
 
-        return errorResponse;
+        return productErrorResponse;
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleHttpMessageNotReadableException() {
-        return new ErrorResponse(ExceptionStatus.BAD_INPUT_VALUE_EXCEPTION);
+    public ResponseEntity<String> handleHttpMessageNotReadableException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ExceptionStatus.BAD_INPUT_VALUE_EXCEPTION.getMessage());
     }
 
-    @ExceptionHandler({InvalidAuthorizationException.class, AuthorizationNotFoundException.class})
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse handleAuthorizationException(final CartException e) {
-        return new ErrorResponse(e.getExceptionStatus());
-    }
-
-    @ExceptionHandler({ProductNotFoundException.class, ProductNotFoundInCartException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleProductNotFoundException(final CartException e) {
-        return new ErrorResponse(e.getExceptionStatus());
+    @ExceptionHandler(CartException.class)
+    public ResponseEntity<String> handleAuthorizationException(final CartException e) {
+        return ResponseEntity.status(e.getExceptionStatus().getHttpStatus())
+                .body(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleInternalServerException() {
-        return new ErrorResponse(ExceptionStatus.INTERNAL_SERVER_EXCEPTION);
+    public ResponseEntity<String> handleInternalServerException() {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ExceptionStatus.INTERNAL_SERVER_EXCEPTION.getMessage());
     }
 }
