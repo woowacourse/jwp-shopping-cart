@@ -1,17 +1,15 @@
 package cart.dao.cart;
 
+import cart.dao.product.ProductEntity;
+
 public class CartProductDto {
 
     private final Long cartId;
-    private final String name;
-    private final Integer price;
-    private final String imageUrl;
+    private final ProductEntity productEntity;
 
     public CartProductDto(final Long cartId, final String name, final Integer price, final String imageUrl) {
         this.cartId = cartId;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.productEntity = new ProductEntity(name, price, imageUrl);
     }
 
     public Long getCartId() {
@@ -19,14 +17,14 @@ public class CartProductDto {
     }
 
     public String getName() {
-        return name;
+        return productEntity.getName();
     }
 
     public Integer getPrice() {
-        return price;
+        return productEntity.getPrice();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return productEntity.getImageUrl();
     }
 }
