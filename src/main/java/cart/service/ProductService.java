@@ -15,18 +15,18 @@ public class ProductService {
     }
 
     public void save(ProductRequest request) {
-        productDao.save(toProduct(request));
+        productDao.save(toEntity(request));
     }
 
     public void update(Long id, ProductRequest request) {
-        productDao.update(id, toProduct(request));
+        productDao.update(id, toEntity(request));
     }
 
     public void delete(Long id) {
         productDao.deleteById(id);
     }
 
-    private Product toProduct(ProductRequest request) {
+    private Product toEntity(ProductRequest request) {
         return new Product(request.getName(), request.getImageUrl(), request.getPrice());
     }
 }
