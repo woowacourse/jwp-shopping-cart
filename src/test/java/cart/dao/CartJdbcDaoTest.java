@@ -3,9 +3,9 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,12 +18,8 @@ class CartJdbcDaoTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @InjectMocks
     private CartDao cartDao;
-
-    @BeforeEach
-    void init() {
-        cartDao = new CartJdbcDao(jdbcTemplate);
-    }
 
     @DisplayName("장바구니 추가 테스트")
     @Test
