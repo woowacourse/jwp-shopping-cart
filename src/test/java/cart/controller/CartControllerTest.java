@@ -8,9 +8,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Collections;
+import cart.auth.BasicAuthorizationExtractor;
+import cart.controller.dto.CartResponse;
+import cart.controller.dto.ProductResponse;
+import cart.dao.CartDao;
+import cart.dao.ProductDao;
+import cart.domain.Product;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +25,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import cart.auth.BasicAuthorizationExtractor;
-import cart.controller.dto.CartResponse;
-import cart.dao.CartDao;
-import cart.dao.ProductDao;
-import cart.domain.Product;
 
 @Import(BasicAuthorizationExtractor.class)
 @WebMvcTest(CartController.class)
@@ -59,7 +56,7 @@ class CartControllerTest {
     void findAllProductsByMember() throws Exception {
         // given
         Product product = new Product(1L, "닭다리", "image.url", 12000);
-        List<CartResponse> cartResponses = Collections.singletonList(CartResponse.from(product));
+        CartResponse cartResponse = new CartResponse(List.of(ProductResponse.from(product)));
 
         given(cartDao.findCartItemsByMemberEmail(any())).willReturn(List.of(product));
 
@@ -68,7 +65,7 @@ class CartControllerTest {
                         .header(HttpHeaders.AUTHORIZATION, "Basic amVvbXhvbkBnbWFpbC5jb206cGFzc3dvcmQxMjM="))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(content().json(objectMapper.writeValueAsString(cartResponses)));
+                .andExpect(content().json(objectMapper.writeValueAsString(cartResponse.getProductResponses())));
     }
 
     @DisplayName("removeProduct의 DELETE가 정상적으로 요청된다.")
