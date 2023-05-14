@@ -3,13 +3,12 @@ package cart.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.lang.Nullable;
 
 public class MemberRequest {
 
     @Nullable
-    @Range(min = 1, max = 50, message = "회원 이름은 {min} ~ {max}자여야 합니다.")
+    @Length(min = 1, max = 50, message = "회원 이름은 {min} ~ {max}자여야 합니다.")
     private final String name;
     @NotBlank (message = "회원의 이메일은 비어있을 수 없습니다.")
     @Email
