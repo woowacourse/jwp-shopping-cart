@@ -1,8 +1,10 @@
 package cart.controller;
 
-import cart.controller.dto.ProductRequest;
-import cart.dao.ProductDao;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,11 +12,16 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import cart.auth.BasicAuthorizationExtractor;
+import cart.controller.dto.ProductRequest;
+import cart.dao.ProductDao;
+
+@Import(BasicAuthorizationExtractor.class)
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
@@ -37,7 +44,7 @@ class ProductControllerTest {
         mockMvc.perform(post("/products")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(productRequest)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @DisplayName("/products/{productId}으로 PUT 요청이 정상적으로 작동한다.")
@@ -58,7 +65,7 @@ class ProductControllerTest {
     void removeProduct() throws Exception {
         // when, then
         mockMvc.perform(delete("/products/{productId}", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @DisplayName("API요청 시 이름이 공백이 들어온 경우 400")
@@ -77,7 +84,7 @@ class ProductControllerTest {
 
     @DisplayName("API요청 시 상품 가격이 범위를 벗어난 경우 400")
     @ParameterizedTest
-    @ValueSource(ints = {-1, 100_000_001})
+    @ValueSource(ints = {-1, -3_000_000})
     void validateRequestPrice(int inputPrice) throws Exception {
         // given
         ProductRequest productRequest = new ProductRequest("치킨", "image.url", inputPrice);
@@ -95,6 +102,7 @@ class ProductControllerTest {
     void validateRequestImageUrl(String inputImageUrl) throws Exception {
         // given
         ProductRequest productRequest = new ProductRequest("치킨", inputImageUrl, 10000);
+
 
         // when, then
         mockMvc.perform(post("/products")

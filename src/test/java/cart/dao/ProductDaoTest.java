@@ -1,7 +1,11 @@
 package cart.dao;
 
-import cart.controller.dto.ProductRequest;
-import cart.domain.Product;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,11 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import cart.controller.dto.ProductRequest;
+import cart.domain.Product;
 
 @JdbcTest
 class ProductDaoTest {
@@ -34,8 +35,9 @@ class ProductDaoTest {
         name = "치킨";
         imageUrl = "image.img";
         price = 10000;
-
         request = new ProductRequest(name, imageUrl, price);
+
+        productDao.deleteAll();
     }
 
     @DisplayName("상품을 정상적으로 추가한다.")

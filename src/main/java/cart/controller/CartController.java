@@ -1,32 +1,54 @@
 package cart.controller;
 
-import cart.controller.dto.ProductDto;
-import cart.dao.ProductDao;
+import cart.auth.Auth;
+import cart.auth.AuthInfo;
+import cart.controller.dto.CartResponse;
+import cart.controller.dto.ProductResponse;
+import cart.dao.CartDao;
 import cart.domain.Product;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+@RequestMapping("/cart/products")
 public class CartController {
 
-    private final ProductDao productDao;
+    private final CartDao cartDao;
 
-    public CartController(final ProductDao productDao) {
-        this.productDao = productDao;
+    public CartController(final CartDao cartDao) {
+        this.cartDao = cartDao;
     }
 
-    @GetMapping("/")
-    public String findAllProducts(final Model model) {
-        List<Product> products = productDao.findAll();
-        List<ProductDto> productDtos = products.stream()
-                .map(ProductDto::from)
-                .collect(Collectors.toList());
-        model.addAttribute("products", productDtos);
+    @PostMapping("/{productId}")
+    public ResponseEntity<Void> addProduct(@PathVariable final Long productId, @Auth final AuthInfo authInfo) {
+        cartDao.saveCartItemByMemberEmail(authInfo.getEmail(), productId);
 
-        return "index";
+        return ResponseEntity.created(URI.create("/cart/products" + productId)).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> findAllProductsByMember(@Auth final AuthInfo authInfo) {
+        List<Product> cartItems = cartDao.findCartItemsByMemberEmail(authInfo.getEmail());
+        List<ProductResponse> productResponses = cartItems.stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
+        CartResponse cartResponse = new CartResponse(productResponses);
+
+        return ResponseEntity.ok().body(cartResponse.getProductResponses());
+    }
+
+    @DeleteMapping("/{cartId}")
+    public ResponseEntity<Void> removeProduct(@PathVariable final Long cartId) {
+        cartDao.deleteCartItemById(cartId);
+
+        return ResponseEntity.noContent().build();
     }
 }
