@@ -29,7 +29,12 @@ public class LoginIdArgumentResolver implements HandlerMethodArgumentResolver {
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
     ) {
-        return authRequest.getId();
+
+        final Long id = authRequest.getId();
+        if (id == null) {
+            throw new LoginBindingException();
+        }
+        return id;
     }
 
 }

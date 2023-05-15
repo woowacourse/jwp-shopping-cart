@@ -1,14 +1,12 @@
 package cart.controller;
 
 import cart.controller.dto.AddCartRequest;
-import cart.persistance.dao.CartDao;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
@@ -22,9 +20,6 @@ class CartControllerTest {
 
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private CartDao cartDao;
 
     @BeforeEach
     void setUp() {

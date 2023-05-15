@@ -1,6 +1,7 @@
 package cart.controller;
 
 import cart.controller.auth.AuthorizationException;
+import cart.controller.auth.LoginBindingException;
 import cart.persistance.dao.exception.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,12 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(final Exception exception) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(LoginBindingException.class)
+    public ResponseEntity<String> handleLoginBindingException(final LoginBindingException exception) {
+        return ResponseEntity.internalServerError()
                 .body(exception.getMessage());
     }
 }
