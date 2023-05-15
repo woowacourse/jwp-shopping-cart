@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.auth.interceptor.AuthorizationException;
 import cart.controller.dto.response.ExceptionResponse;
 import cart.exception.NotFoundResultException;
 import org.slf4j.Logger;
@@ -12,12 +13,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class ExceptionItemControllerAdvice {
+public class GlobalExceptionItemAdvice {
 
-    private static final Logger log = LoggerFactory.getLogger(ExceptionItemControllerAdvice.class);
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionItemAdvice.class);
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    @ExceptionHandler({MethodArgumentNotValidException.class, AuthorizationException.class})
+    public ResponseEntity<ExceptionResponse> handleClientException(Exception exception) {
         log.info(exception.getMessage());
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
