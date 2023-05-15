@@ -1,11 +1,8 @@
 package cart.dto.response;
 
 public class MemberResponse {
-    private String email;
-    private String password;
-
-    public MemberResponse() {
-    }
+    private final String email;
+    private final String password;
 
     public MemberResponse(String email, String password) {
         this.email = email;

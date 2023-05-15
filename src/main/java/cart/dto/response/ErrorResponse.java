@@ -3,12 +3,9 @@ package cart.dto.response;
 import cart.exception.ErrorCode;
 
 public class ErrorResponse {
-    private String code;
-    private String message;
-    private String detail;
-
-    public ErrorResponse() {
-    }
+    private final String code;
+    private final String message;
+    private final String detail;
 
     private ErrorResponse(String code, String message, String detail) {
         this.code = code;

@@ -1,14 +1,11 @@
 package cart.dto.response;
 
 public class CartResponse {
-    private int id;
-    private String name;
-    private String imgUrl;
-    private int price;
-    private int count;
-
-    public CartResponse() {
-    }
+    private final int id;
+    private final String name;
+    private final String imgUrl;
+    private final int price;
+    private final int count;
 
     public CartResponse(int id, String name, String imgUrl, int price, int count) {
         this.id = id;
