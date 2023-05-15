@@ -8,8 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
-class CartIntegartionTest extends IntegrationTest {
+class CartIntegrationTest extends IntegrationTest {
 
     @DisplayName("GET /cart/products 요청시 존재하는 아이디 비밀번호일 시 OK 반환")
     @Test
@@ -21,7 +22,9 @@ class CartIntegartionTest extends IntegrationTest {
                 .then().log().all()
                 .statusCode(HttpStatus.SC_OK)
                 .assertThat()
-                .body("id", hasSize(2));
+                .body("id", hasSize(2))
+                .body("productName[1]", is("product2"))
+                .body("productPrice[1]", is(100));
     }
 
     @DisplayName("GET /cart/products 요청시 존재하지 않는 아이디 비밀번호일 시 unauthorized 반환")
