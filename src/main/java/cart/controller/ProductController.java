@@ -1,8 +1,8 @@
 package cart.controller;
 
 import cart.service.ProductService;
-import cart.service.dto.ProductModifyRequest;
-import cart.service.dto.ProductRegisterRequest;
+import cart.service.dto.product.ProductModifyRequest;
+import cart.service.dto.product.ProductAddRequest;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequestMapping("/products")
+@RestController
 public class ProductController {
 
     private final ProductService productService;
@@ -26,8 +26,8 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> registerProduct(
-            @Validated @RequestBody final ProductRegisterRequest productRegisterRequest) {
-        Long id = productService.registerProduct(productRegisterRequest);
+            @Validated @RequestBody final ProductAddRequest productAddRequest) {
+        Long id = productService.registerProduct(productAddRequest);
         return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
@@ -45,6 +45,6 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable("product-id") final Long productId) {
         productService.deleteProduct(productId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

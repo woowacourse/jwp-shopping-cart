@@ -11,4 +11,16 @@ public abstract class Response {
         this.message = message;
         this.status = status;
     }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getStatus() {
+        return status;
+    }
 }

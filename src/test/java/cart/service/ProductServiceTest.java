@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import cart.service.dto.ProductModifyRequest;
-import cart.service.dto.ProductRegisterRequest;
-import cart.service.dto.ProductSearchResponse;
+import cart.service.dto.product.ProductModifyRequest;
+import cart.service.dto.product.ProductAddRequest;
+import cart.service.dto.product.ProductSearchResponse;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,12 +30,12 @@ class ProductServiceTest {
         final int price = 10000;
         final String imageUrl = "imageUrl";
 
-        final ProductRegisterRequest productRegisterRequest = new ProductRegisterRequest(name, price, imageUrl);
+        final ProductAddRequest productAddRequest = new ProductAddRequest(name, price, imageUrl);
 
         //when
         final int beforeSize = productService.searchAllProducts().size();
 
-        productService.registerProduct(productRegisterRequest);
+        productService.registerProduct(productAddRequest);
 
         final int afterSize = productService.searchAllProducts().size();
 
@@ -64,7 +64,7 @@ class ProductServiceTest {
     @DisplayName("deleteProduct() : 물품을 삭제할 수 있다.")
     void test_deleteProduct() throws Exception {
         //given
-        final Long id = 3L;
+        final Long id = 1L;
 
         //when
         final int beforeSize = productService.searchAllProducts().size();
@@ -81,7 +81,7 @@ class ProductServiceTest {
     @DisplayName("modifyProduct() : 물품을 수정할 수 있다.")
     void test_modifyProduct() throws Exception {
         //given
-        final Long id = 3L;
+        final Long id = 1L;
         final String name = "수정된 피자";
         final int price = 20000;
         final String imageUrl = "수정된 imageUrl";

@@ -1,19 +1,19 @@
 package cart.service;
 
-import cart.dao.ProductDao;
-import cart.dao.ProductEntity;
-import cart.domain.Product;
-import cart.global.exception.ProductNotFoundException;
-import cart.service.dto.ProductModifyRequest;
-import cart.service.dto.ProductRegisterRequest;
-import cart.service.dto.ProductSearchResponse;
+import cart.dao.product.ProductDao;
+import cart.dao.product.ProductEntity;
+import cart.domain.product.Product;
+import cart.global.exception.product.ProductNotFoundException;
+import cart.service.dto.product.ProductModifyRequest;
+import cart.service.dto.product.ProductAddRequest;
+import cart.service.dto.product.ProductSearchResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @Transactional
+@Service
 public class ProductService {
 
     private final ProductDao productDao;
@@ -22,11 +22,11 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public Long registerProduct(final ProductRegisterRequest productRegisterRequest) {
+    public Long registerProduct(final ProductAddRequest productAddRequest) {
         ProductEntity productEntity = new ProductEntity(
-                productRegisterRequest.getName(),
-                productRegisterRequest.getPrice(),
-                productRegisterRequest.getImageUrl()
+                productAddRequest.getName(),
+                productAddRequest.getPrice(),
+                productAddRequest.getImageUrl()
         );
 
         return productDao.save(productEntity);

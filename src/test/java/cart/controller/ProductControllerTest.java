@@ -2,6 +2,7 @@ package cart.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -10,8 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.service.ProductService;
-import cart.service.dto.ProductModifyRequest;
-import cart.service.dto.ProductRegisterRequest;
+import cart.service.dto.product.ProductModifyRequest;
+import cart.service.dto.product.ProductAddRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,14 +42,13 @@ class ProductControllerTest {
         final int price = 10000;
         final String imageUrl = "imageUrl";
 
-        final ProductRegisterRequest productRegisterRequest = new ProductRegisterRequest(name, price, imageUrl);
+        final ProductAddRequest productAddRequest = new ProductAddRequest(name, price, imageUrl);
 
         //when
-        doNothing()
-                .when(productService)
-                .registerProduct(any());
+        given(productService.registerProduct(any()))
+                .willReturn(1L);
 
-        final String requestBody = objectMapper.writeValueAsString(productRegisterRequest);
+        final String requestBody = objectMapper.writeValueAsString(productAddRequest);
 
         //then
         mockMvc.perform(post("/products")
@@ -62,8 +62,8 @@ class ProductControllerTest {
     @DisplayName("modifyProduct() : 물품을 수정할 수 있다.")
     void test_modifyProduct() throws Exception {
         //given
-        final Long id = 1L;
-        final String name = "피자";
+        final Long id = 2L;
+        final String name = "수정된 피자";
         final int price = 10000;
         final String imageUrl = "imageUrl";
 

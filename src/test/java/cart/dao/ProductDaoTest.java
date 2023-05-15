@@ -3,6 +3,8 @@ package cart.dao;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import cart.dao.product.ProductDao;
+import cart.dao.product.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,7 +63,7 @@ class ProductDaoTest {
     @DisplayName("modify() : 저장된 물품을 수정할 수 있다.")
     void test_modify() throws Exception {
         //given
-        final Long id = 3L;
+        final Long id = 1L;
         final String name = "수정된 피자";
         final int price = 20000;
         final String imageUrl = "수정된 imageUrl";
@@ -72,10 +74,10 @@ class ProductDaoTest {
         productDao.update(modifiedProductEntity);
 
         final ProductEntity savedProductEntity = productDao.findAll()
-                                                           .stream()
-                                                           .filter(it -> it.getId().equals(id))
-                                                           .findFirst()
-                                                           .orElseThrow();
+                .stream()
+                .filter(it -> it.getId().equals(id))
+                .findFirst()
+                .orElseThrow();
 
         //then
         assertAll(
@@ -89,7 +91,7 @@ class ProductDaoTest {
     @DisplayName("deleteById() : 저장된 물품을 삭제할 수 있다.")
     void test_deleteById() throws Exception {
         //given
-        final Long id = 3L;
+        final Long id = 1L;
 
         //when
         final int beforeSize = productDao.findAll().size();
