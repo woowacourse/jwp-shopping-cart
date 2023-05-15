@@ -49,11 +49,12 @@ public class CartDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void removeById(final long id) {
+    public void removeById(final long productId, final long memberId) {
         final String sql = "DELETE FROM cart " +
-                "WHERE id = :id";
+                "WHERE id = :productId " +
+                "AND member_id = :memberId";
         final var sqlParameterSource =
-                new MapSqlParameterSource("id", id);
+                new MapSqlParameterSource(Map.of("productId", productId, "memberId", memberId));
         final int affected = jdbcTemplate.update(sql, sqlParameterSource);
 
         if (affected == 0) {

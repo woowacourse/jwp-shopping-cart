@@ -49,11 +49,12 @@ public class CartController {
         return ResponseEntity.created(new URI("/cart/products/" + createdId)).build();
     }
 
-    @DeleteMapping("/cart/products/{id}")
+    @DeleteMapping("/cart/products/{product-id}")
     public ResponseEntity<Void> removeProductFromCart(
-            @Positive @PathVariable final Long id
+            @Positive @PathVariable("product-id") final Long id,
+            @LoginId final Long memberId
     ) {
-        cartDao.removeById(id);
+        cartDao.removeById(id, memberId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
