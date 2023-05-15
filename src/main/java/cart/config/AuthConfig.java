@@ -13,19 +13,14 @@ import java.util.List;
 public class AuthConfig implements WebMvcConfigurer {
 
     private final BasicAuthorizeInterceptor basicAuthorizeInterceptor;
-    private final LoginIdArgumentResolver loginIdArgumentResolver;
 
-    public AuthConfig(
-            final BasicAuthorizeInterceptor basicAuthorizeInterceptor,
-            final LoginIdArgumentResolver loginIdArgumentResolver
-    ) {
+    public AuthConfig(final BasicAuthorizeInterceptor basicAuthorizeInterceptor) {
         this.basicAuthorizeInterceptor = basicAuthorizeInterceptor;
-        this.loginIdArgumentResolver = loginIdArgumentResolver;
     }
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(loginIdArgumentResolver);
+        resolvers.add(new LoginIdArgumentResolver());
     }
 
     @Override

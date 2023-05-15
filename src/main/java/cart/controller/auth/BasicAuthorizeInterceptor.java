@@ -17,11 +17,9 @@ public class BasicAuthorizeInterceptor implements HandlerInterceptor {
     private static final String DELIMITER = ":";
 
     private final MemberDao memberDao;
-    private final AuthRequest authRequest;
 
-    public BasicAuthorizeInterceptor(final MemberDao memberDao, final AuthRequest authRequest) {
+    public BasicAuthorizeInterceptor(final MemberDao memberDao) {
         this.memberDao = memberDao;
-        this.authRequest = authRequest;
     }
 
     @Override
@@ -31,7 +29,7 @@ public class BasicAuthorizeInterceptor implements HandlerInterceptor {
         final String password = info[1];
         final Long id = authorize(email, password);
 
-        authRequest.setId(id);
+        request.setAttribute("auth-info", id);
         return true;
     }
 
