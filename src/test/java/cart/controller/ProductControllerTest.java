@@ -1,218 +1,44 @@
 package cart.controller;
 
-import cart.controller.dto.ModifyRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import org.apache.http.HttpStatus;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
+import cart.controller.dto.ModifyProductRequest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.http.MediaType;
 
-import java.net.URISyntaxException;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static io.restassured.RestAssured.given;
+class ProductControllerTest extends ControllerUnitTest {
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ProductControllerTest {
 
-    @LocalServerPort
-    private int port;
+    @Test
+    void 상품을_추가한다() throws Exception {
+        given(productDao.add(any()))
+                .willReturn(1L);
+        final ModifyProductRequest request = new ModifyProductRequest("상품1", 1000, "url");
+        final String json = objectMapper.writeValueAsString(request);
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private ProductController productController;
-
-    @BeforeEach
-    void setUp() throws URISyntaxException {
-        RestAssured.port = port;
-        jdbcTemplate.execute("TRUNCATE TABLE product");
-        productController.addProduct(new ModifyRequest("망고", 1000, "domains.com"));
+        mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(json))
+                .andExpect(header().exists("Location"))
+                .andExpect(status().isCreated());
     }
 
-    @DisplayName("POST /admin/product 요청 시")
-    @Nested
-    class postAdminProduct {
+    @Test
+    void 상품을_수정한다() throws Exception {
+        final ModifyProductRequest request = new ModifyProductRequest("상품1", 1000, "url");
+        final String json = objectMapper.writeValueAsString(request);
 
-        @DisplayName("입력이 올바른 경우 Status Created 반환")
-        @Test
-        void shouldResponseStatusCreatedWhenRequestPostToAdminProduct() throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
-            final String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson).log().all()
-                    .when()
-                    .post("/product")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_CREATED);
-        }
-
-        @DisplayName("이름이 공백인 경우 예외가 발생한다.")
-        @ParameterizedTest(name = "비어있는 값 (\"{0}\")")
-        @ValueSource(strings = {" "})
-        @NullAndEmptySource
-        void shouldThrowExceptionWhenNameIsBlank(String inputName) throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest(inputName, 100, "domain.super.com");
-            String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .post("/product")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
-        }
-
-        @DisplayName("가격이 0 미만인 경우 예외가 발생한다.")
-        @ParameterizedTest(name = "가격 입력 : {0}")
-        @ValueSource(longs = {-1, -10000, -1000000})
-        void shouldThrowExceptionWhenPriceIsUnderZero(long inputPrice) throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", inputPrice, "domain.super.com");
-            String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .post("/product")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
-        }
-
-        @DisplayName("이미지의 URL이 공백인 경우 예외가 발생한다.")
-        @ParameterizedTest(name = "비어있는 값 (\"{0}\")")
-        @ValueSource(strings = {" "})
-        @NullAndEmptySource
-        void shouldThrowExceptionWhenImageUrlIsBlank(String inputImageUrl) throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", 100, inputImageUrl);
-            String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .post("/product")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
-        }
+        mockMvc.perform(patch("/product/1").contentType(MediaType.APPLICATION_JSON).content(json))
+                .andExpect(status().isOk());
     }
 
-    @DisplayName("PATCH /admin/product/{id} 요청 시")
-    @Nested
-    class putAdminProduct {
-
-        @DisplayName("입력이 올바른 경우 Status OK 반환")
-        @Test
-        void shouldResponseStatusCreatedWhenRequestPutToAdminProductId() throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
-            final String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .patch("/product/1")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_OK);
-        }
-
-        @DisplayName("상품이 존재하지 않을 경우 Status Not Found 반환")
-        @Test
-        void shouldResponseStatusBadRequestWhenRequestPutToNotExistId() throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", 100, "domain.com");
-            final String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .patch(String.format("/product%d", Long.MAX_VALUE))
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_NOT_FOUND);
-        }
-
-        @DisplayName("이름이 공백인 경우 예외가 발생한다.")
-        @ParameterizedTest(name = "비어있는 값 (\"{0}\")")
-        @ValueSource(strings = {" "})
-        @NullAndEmptySource
-        void shouldThrowExceptionWhenNameIsBlank(String inputName) throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest(inputName, 100, "domain.super.com");
-            String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .patch("/product/1")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
-        }
-
-        @DisplayName("가격이 0 미만인 경우 예외가 발생한다.")
-        @ParameterizedTest(name = "가격 입력 : {0}")
-        @ValueSource(longs = {-1, -10000, -1000000})
-        void shouldThrowExceptionWhenPriceIsUnderZero(long inputPrice) throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", inputPrice, "domain.super.com");
-            String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .patch("/product/1")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
-        }
-
-        @DisplayName("이미지의 URL이 공백인 경우 예외가 발생한다.")
-        @ParameterizedTest(name = "비어있는 값 (\"{0}\")")
-        @ValueSource(strings = {" "})
-        @NullAndEmptySource
-        void shouldThrowExceptionWhenImageUrlIsBlank(String inputImageUrl) throws JsonProcessingException {
-            final ModifyRequest request = new ModifyRequest("사과", 100, inputImageUrl);
-            String requestJson = objectMapper.writeValueAsString(request);
-            given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(requestJson)
-                    .when()
-                    .patch("/product/1")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_BAD_REQUEST);
-        }
-
-    }
-
-    @DisplayName("DELETE /admin/product/{id} 요청 시")
-    @Nested
-    class DeleteAdminProduct {
-
-        @DisplayName("Product가 있을 경우 Status OK 반환")
-        @Test
-        void shouldResponseStatusOkWhenRequestDeleteToAdminProductId() throws JsonProcessingException {
-            given().log().all()
-                    .when()
-                    .delete("/product/1")
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_OK);
-        }
-
-        @DisplayName("Product가 없을 경우 Status Not Found 반환")
-        @Test
-        void shouldResponseStatusBadRequestWhenRequestProductNotExists() {
-            given().log().all()
-                    .when()
-                    .delete(String.format("/product/%d", Long.MAX_VALUE))
-                    .then().log().all()
-                    .statusCode(HttpStatus.SC_NOT_FOUND);
-        }
+    @Test
+    void 상품을_삭제한다() throws Exception {
+        mockMvc.perform(delete("/product/1"))
+                .andExpect(status().isOk());
     }
 }

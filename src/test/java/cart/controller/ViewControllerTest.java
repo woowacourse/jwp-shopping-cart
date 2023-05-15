@@ -1,36 +1,52 @@
 package cart.controller;
 
-import io.restassured.http.ContentType;
-import org.apache.http.HttpStatus;
-import org.junit.jupiter.api.DisplayName;
+import cart.domain.product.Product;
+import cart.domain.user.Member;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
-import static io.restassured.RestAssured.given;
+import java.util.List;
 
-@WebMvcTest(ViewControllerTest.class)
-class ViewControllerTest {
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-    @DisplayName("GET / 요청 시 Status OK 및 HTML 반환")
+public class ViewControllerTest extends ControllerUnitTest {
+
     @Test
-    void shouldResponseHtmlWithStatusOkWhenRequestGetHome() {
-        given().log().all()
-                .when()
-                .get("/")
-                .then().log().all()
-                .contentType(ContentType.HTML)
-                .statusCode(HttpStatus.SC_OK);
+    void 상품을_조회한다() throws Exception {
+        given(productDao.findAll())
+                .willReturn(List.of(Product.create(1L, "상품테스트", 100, "url")));
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"));
     }
 
-    @DisplayName("GET /admin 요청 시 Status OK 및 HTML 반환")
     @Test
-    void shouldResponseHtmlWithStatusOkWhenRequestGetToAdmin() {
-        given().log().all()
-                .when()
-                .get("/admin")
-                .then().log().all()
-                .statusCode(HttpStatus.SC_OK)
-                .contentType(ContentType.HTML);
+    void 어드민_상품_목록을_조회한다() throws Exception {
+        given(productDao.findAll())
+                .willReturn(List.of(Product.create(1L, "상품테스트", 100, "url")));
+
+        mockMvc.perform(get("/admin"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin"));
     }
 
+    @Test
+    void 카트_상품_목록을_조회한다() throws Exception {
+        mockMvc.perform(get("/cart"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("cart"));
+
+    }
+
+    @Test
+    void 회원_목록을_조회한다() throws Exception {
+        given(memberDao.findAll())
+                .willReturn(List.of(new Member(1L, "회원1", "비밀번호")));
+        mockMvc.perform(get("/settings"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings"));
+    }
 }

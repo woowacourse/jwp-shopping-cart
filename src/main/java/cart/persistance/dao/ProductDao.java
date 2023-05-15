@@ -1,17 +1,15 @@
-package cart.dao;
+package cart.persistance.dao;
 
-import cart.dao.exception.ProductNotFoundException;
 import cart.domain.product.Product;
+import cart.persistance.dao.exception.ProductNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
 @Repository
 public class ProductDao {
 

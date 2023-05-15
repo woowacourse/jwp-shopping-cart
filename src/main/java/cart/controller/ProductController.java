@@ -1,8 +1,8 @@
 package cart.controller;
 
-import cart.controller.dto.ModifyRequest;
-import cart.dao.ProductDao;
+import cart.controller.dto.ModifyProductRequest;
 import cart.domain.product.Product;
+import cart.persistance.dao.ProductDao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,12 +26,12 @@ public final class ProductController {
 
     @PostMapping("/product")
     public ResponseEntity<Void> addProduct(
-            @Valid @RequestBody final ModifyRequest modifyRequest
+            @Valid @RequestBody final ModifyProductRequest modifyProductRequest
     ) throws URISyntaxException {
         final Product product = Product.createWithoutId(
-                modifyRequest.getName(),
-                modifyRequest.getPrice(),
-                modifyRequest.getImageUrl()
+                modifyProductRequest.getName(),
+                modifyProductRequest.getPrice(),
+                modifyProductRequest.getImageUrl()
         );
         final long id = productDao.add(product);
         return ResponseEntity.created(new URI(String.format("/product/%d", id))).build();
@@ -39,14 +39,14 @@ public final class ProductController {
 
     @PatchMapping("/product/{id}")
     public ResponseEntity<Void> updateProduct(
-            @Valid @RequestBody final ModifyRequest modifyRequest,
+            @Valid @RequestBody final ModifyProductRequest modifyProductRequest,
             @PathVariable final Long id
     ) throws URISyntaxException {
         final Product product = Product.create(
                 id,
-                modifyRequest.getName(),
-                modifyRequest.getPrice(),
-                modifyRequest.getImageUrl()
+                modifyProductRequest.getName(),
+                modifyProductRequest.getPrice(),
+                modifyProductRequest.getImageUrl()
         );
         productDao.update(product);
         return ResponseEntity.ok().build();
