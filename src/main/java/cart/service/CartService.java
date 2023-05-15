@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CartService {
-    private static final int ZERO = 0;
+    private static final int NOTHING_UPDATED = 0;
 
     private final CartDao cartDao;
     private final ProductService productService;
@@ -47,7 +47,7 @@ public class CartService {
         int memberId = memberService.findByEmailWithPassword(credentials.getEmail(), credentials.getPassword());
         List<CartEntity> cartByProduct = cartDao.findByProductIdAndMemberId(memberId, productId);
 
-        if (cartByProduct.size() == ZERO) {
+        if (cartByProduct.isEmpty()) {
             return cartDao.save(new CartEntity(memberId, productId));
         }
 
@@ -57,14 +57,14 @@ public class CartService {
 
     private void updateCount(int productId, int productCount) {
         int updateRowNumber = cartDao.updateCount(productCount, productId);
-        if (updateRowNumber == ZERO) {
+        if (updateRowNumber == NOTHING_UPDATED) {
             throw new NotFoundException(ErrorCode.ID_NOT_FOUND);
         }
     }
 
     public void delete(int id) {
         int deleteRowNumber = cartDao.delete(id);
-        if (deleteRowNumber == ZERO) {
+        if (deleteRowNumber == NOTHING_UPDATED) {
             throw new NotFoundException(ErrorCode.ID_NOT_FOUND);
         }
     }
