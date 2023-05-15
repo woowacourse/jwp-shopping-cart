@@ -31,7 +31,7 @@ class CartDaoTest {
     @Test
     @DisplayName("카트 데이터베이스에 카트 데이터를 추가한다")
     void insert() {
-        int cartId = cartDao.insert("roy@gamail.com", 1);
+        int cartId = cartDao.insert(1, 1);
 
         assertThat(cartId).isEqualTo(1);
     }
@@ -39,12 +39,11 @@ class CartDaoTest {
     @Test
     @DisplayName("특정 id에 해당하는 카트 정보를 제거한다.")
     void delete() {
-        String memberId = "roy@gamail.com";
-        int cartId = cartDao.insert(memberId, 1);
+        int cartId = cartDao.insert(1, 1);
 
         cartDao.deleteById(cartId);
 
-        assertThat(cartDao.findAll(memberId)).hasSize(0);
+        assertThat(cartDao.findAll(1)).hasSize(0);
     }
 
     @Test
@@ -53,10 +52,10 @@ class CartDaoTest {
         long productId1 = productDao.insert(new ProductEntity("pizza", "img", 10000));
         long productId2 = productDao.insert(new ProductEntity("chicken", "img", 20000));
         String memberId = "roy@gamail.com";
-        cartDao.insert(memberId, (int) productId1);
-        cartDao.insert(memberId, (int) productId2);
+        cartDao.insert(1, (int) productId1);
+        cartDao.insert(1, (int) productId2);
 
-        assertThat(cartDao.findAll(memberId)).hasSize(2);
+        assertThat(cartDao.findAll(1)).hasSize(2);
     }
 
     @AfterEach

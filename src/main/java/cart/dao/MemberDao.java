@@ -23,6 +23,7 @@ public class MemberDao {
 
     private static RowMapper<MemberEntity> getMemberEntityRowMapper() {
         return (rs, rowNum) -> new MemberEntity(
+                rs.getInt("id"),
                 rs.getString("email"),
                 rs.getString("password")
 

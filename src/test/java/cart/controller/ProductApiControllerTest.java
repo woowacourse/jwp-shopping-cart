@@ -47,7 +47,7 @@ class ProductApiControllerTest {
                 .body(request)
                 .when().post("/products")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test

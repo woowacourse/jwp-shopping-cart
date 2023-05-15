@@ -2,15 +2,19 @@ package cart.domain;
 
 public class MemberEntity {
 
+    private final int id;
     private final String email;
     private final String password;
 
-
-    public MemberEntity(String email, String password) {
+    public MemberEntity(int id, String email, String password) {
+        this.id = id;
         this.email = email;
         this.password = password;
     }
 
+    public int getId() {
+        return id;
+    }
     public String getEmail() {
         return email;
     }
@@ -21,8 +25,14 @@ public class MemberEntity {
 
     public static class Builder {
 
+        private int id;
         private String email;
         private String password;
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder email(String email) {
             this.email = email;
@@ -35,7 +45,7 @@ public class MemberEntity {
         }
 
         public MemberEntity build() {
-            return new MemberEntity(email, password);
+            return new MemberEntity(id, email, password);
         }
     }
 

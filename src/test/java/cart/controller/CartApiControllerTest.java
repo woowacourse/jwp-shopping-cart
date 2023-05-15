@@ -45,7 +45,7 @@ class CartApiControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/cart/items/3")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
 
     }
 

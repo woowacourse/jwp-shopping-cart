@@ -20,11 +20,13 @@ public class CartDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<CartEntity> findAll(String memberEmail) {
-        String sqlForFindAll = "SELECT c.id, p.name, p.price, p.image FROM Carts c JOIN Products p "
-                + "ON c.product_id = p.id WHERE c.email = ?";
+    public List<CartEntity> findAll(int memberId) {
+        String sqlForFindAll = "SELECT c.id, p.name, p.price, p.image "
+                + "FROM Carts c JOIN Products p "
+                + "ON c.product_id = p.id "
+                + "WHERE c.member_id = ?";
 
-        return jdbcTemplate.query(sqlForFindAll, cartItemRowMapper, memberEmail);
+        return jdbcTemplate.query(sqlForFindAll, cartItemRowMapper, memberId);
     }
 
     private final RowMapper<CartEntity> cartItemRowMapper = (resultSet, rowNum) -> {
@@ -39,12 +41,12 @@ public class CartDao {
                 .build();
     };
 
-    public int insert(String memberId, int productId) {
-        String sql = "INSERT INTO CARTS(email, product_id) VALUES(?, ?)";
+    public int insert(int memberId, int productId) {
+        String sql = "INSERT INTO CARTS(member_Id, product_id) VALUES(?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"ID"});
-            preparedStatement.setString(1, memberId);
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"Id"});
+            preparedStatement.setInt(1, memberId);
             preparedStatement.setInt(2, productId);
             return preparedStatement;
         }, keyHolder);
