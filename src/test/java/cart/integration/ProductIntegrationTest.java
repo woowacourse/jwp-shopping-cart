@@ -70,7 +70,8 @@ class ProductIntegrationTest {
                     .then()
                     .log().all()
                     .assertThat()
-                    .body("id", equalTo(1));
+                    .statusCode(HttpStatus.CREATED.value())
+                    .header("Location", "/products/1");
         }
 
         @DisplayName("상품 가격이 음수일 경우 예외가 발생한다.")
@@ -153,7 +154,8 @@ class ProductIntegrationTest {
                     .put("/products/{id}", 1)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.CREATED.value())
+                    .header("Location", "/products/1");
 
             ProductEntity product = productDao.findAll().get(0);
 
@@ -260,7 +262,7 @@ class ProductIntegrationTest {
                     .delete("/products/{id}", 1)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.NO_CONTENT.value());
 
             assertThat(productDao.findAll().size()).isEqualTo(0);
         }

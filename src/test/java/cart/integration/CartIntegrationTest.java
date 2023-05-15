@@ -1,7 +1,6 @@
 package cart.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 
 import cart.dao.CartDao;
 import cart.dao.ProductDao;
@@ -74,8 +73,8 @@ public class CartIntegrationTest {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body("id", equalTo(1));
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location", "/carts/1");
     }
 
     @DisplayName("장바구니에 상품이 있을 때 개수 증가되는 테스트")
@@ -108,6 +107,6 @@ public class CartIntegrationTest {
                 .delete("/carts/1")
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

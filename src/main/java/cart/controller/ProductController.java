@@ -3,10 +3,8 @@ package cart.controller;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
 import cart.service.ProductService;
-import java.util.HashMap;
+import java.net.URI;
 import java.util.List;
-import java.util.Map;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -31,47 +29,28 @@ public class ProductController {
     public ResponseEntity<List<ProductResponse>> productList() {
         List<ProductResponse> response = productService.findAll();
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Integer>> productAdd(
-            @Validated @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Void> productAdd(@Validated @RequestBody ProductRequest productRequest) {
         int productId = productService.save(productRequest);
 
-        Map<String, Integer> response = new HashMap<>();
-        response.put("id", productId);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return ResponseEntity.created(URI.create("/products/" + productId)).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> productModify(
-            @Validated @RequestBody ProductRequest productRequest,
-            @PathVariable int id) {
+    public ResponseEntity<Void> productModify(@Validated @RequestBody ProductRequest productRequest,
+                                              @PathVariable int id) {
         productService.update(productRequest, id);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "success");
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return ResponseEntity.created(URI.create("/products/" + id)).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> productRemove(@PathVariable int id) {
+    public ResponseEntity<Void> productRemove(@PathVariable int id) {
         productService.delete(id);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "success");
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return ResponseEntity.noContent().build();
     }
 }

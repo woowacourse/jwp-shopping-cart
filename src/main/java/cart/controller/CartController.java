@@ -4,10 +4,8 @@ import cart.auth.Auth;
 import cart.auth.Credentials;
 import cart.dto.response.CartResponse;
 import cart.service.CartService;
-import java.util.HashMap;
+import java.net.URI;
 import java.util.List;
-import java.util.Map;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,33 +24,21 @@ public class CartController {
     @GetMapping("/carts")
     public ResponseEntity<List<CartResponse>> cartList(@Auth Credentials credentials) {
         List<CartResponse> response = cartService.findAllByEmailWithPassword(credentials);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/carts/{productId}")
-    public ResponseEntity<Map<String, Integer>> cartAdd(@Auth Credentials credentials,
-                                                        @PathVariable int productId) {
+    public ResponseEntity<Void> cartAdd(@Auth Credentials credentials, @PathVariable int productId) {
         int cartId = cartService.save(credentials, productId);
 
-        Map<String, Integer> response = new HashMap<>();
-        response.put("id", cartId);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return ResponseEntity.created(URI.create("/carts/" + cartId)).build();
     }
 
     @DeleteMapping("/carts/{id}")
-    public ResponseEntity<Map<String, String>> cartRemove(@PathVariable int id) {
+    public ResponseEntity<Void> cartRemove(@PathVariable int id) {
         cartService.delete(id);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "success");
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return ResponseEntity.noContent().build();
     }
 }

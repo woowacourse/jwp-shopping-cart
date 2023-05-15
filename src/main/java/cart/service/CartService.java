@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CartService {
-    public static final int ZERO = 0;
+    private static final int ZERO = 0;
 
     private final CartDao cartDao;
     private final ProductService productService;
