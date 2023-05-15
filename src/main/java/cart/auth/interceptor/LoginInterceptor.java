@@ -10,7 +10,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null) {
-            throw new AuthorizationException();
+            throw new AuthorizationException("로그인 인증 과정에서 문제가 발생했습니다.");
         }
 
         return super.preHandle(request, response, handler);
