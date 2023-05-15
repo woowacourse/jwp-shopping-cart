@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.auth.BasicAuth;
+import cart.auth.Auth;
 import cart.auth.Credentials;
 import cart.dto.response.CartResponse;
 import cart.service.CartService;
@@ -24,7 +24,7 @@ public class CartController {
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<CartResponse>> cartList(@BasicAuth Credentials credentials) {
+    public ResponseEntity<List<CartResponse>> cartList(@Auth Credentials credentials) {
         List<CartResponse> response = cartService.findAllByEmailWithPassword(credentials);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -32,7 +32,7 @@ public class CartController {
     }
 
     @PostMapping("/carts/{productId}")
-    public ResponseEntity<Map<String, Integer>> cartAdd(@BasicAuth Credentials credentials,
+    public ResponseEntity<Map<String, Integer>> cartAdd(@Auth Credentials credentials,
                                                         @PathVariable int productId) {
         int cartId = cartService.save(credentials, productId);
 
