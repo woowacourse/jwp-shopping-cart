@@ -39,8 +39,8 @@ public class CartController {
 
     // 인증안에 이미 header로 memberId 혹은 email(중복 없으니까)을 주지 않을까? 이것만 알면 cart의 id를 알 필요 없을 것 같은데... 흠 ㅠ...ㅠㅜ....
     @PostMapping(path = "/cart/products/{product_id}")
-    public ResponseEntity<Integer> insertProductInCart(HttpServletRequest request,
-                                                       @PathVariable(value = "product_id") Integer productId) throws AuthenticationException {
+    public ResponseEntity<Integer> addProductInCart(HttpServletRequest request,
+                                                    @PathVariable(value = "product_id") Integer productId) throws AuthenticationException {
         AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
         String email = authInfo.getEmail();
         String password = authInfo.getPassword();
@@ -55,7 +55,7 @@ public class CartController {
     }
 
     @GetMapping(path = "/cart/products")
-    public ResponseEntity<List<ProductResponse>> readProducts(HttpServletRequest request) throws AuthenticationException {
+    public ResponseEntity<List<ProductResponse>> getProducts(HttpServletRequest request) throws AuthenticationException {
         String email = checkValidLogin(request);
         Integer memberId = memberService.findMemberByEmail(email).get().getId();
         List<ProductEntity> products = cartService.findProductsByMemberId(memberId);
@@ -71,7 +71,7 @@ public class CartController {
     }
 
     @DeleteMapping(path = "/cart/products/{product_id}")
-    public ResponseEntity<Integer> delete(
+    public ResponseEntity<Integer> removeProduct(
             HttpServletRequest request, @PathVariable(value = "product_id") Integer productId) throws AuthenticationException {
         String email = checkValidLogin(request);
         Integer memberId = memberService.findMemberByEmail(email).get().getId();

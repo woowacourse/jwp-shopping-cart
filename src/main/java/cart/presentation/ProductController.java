@@ -26,7 +26,7 @@ public class ProductController {
     }
 
     @GetMapping(path = "/products")
-    public ResponseEntity<List<ProductResponse>> read() {
+    public ResponseEntity<List<ProductResponse>> getProducts() {
         List<ProductEntity> products = productService.read();
 
         List<ProductResponse> response = products.stream()
@@ -40,12 +40,12 @@ public class ProductController {
     }
 
     @PutMapping(path = "/products/{id}")
-    public ResponseEntity<Integer> update(@PathVariable Integer id, @RequestBody ProductRequest request) {
+    public ResponseEntity<Integer> set(@PathVariable Integer id, @RequestBody ProductRequest request) {
         return ResponseEntity.ok().body(productService.update(id, request));
     }
 
     @DeleteMapping(path = "/products/{id}")
-    public ResponseEntity<Integer> delete(@PathVariable Integer id) {
+    public ResponseEntity<Integer> remove(@PathVariable Integer id) {
         return ResponseEntity.ok().body(productService.delete(id));
     }
 }

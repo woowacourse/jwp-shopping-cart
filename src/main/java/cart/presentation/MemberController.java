@@ -16,7 +16,7 @@ public class MemberController {
     }
 
     @DeleteMapping(path = "/settings/{id}")
-    public ResponseEntity<Integer> delete(@PathVariable Integer id) {
+    public ResponseEntity<Integer> remove(@PathVariable Integer id) {
         return ResponseEntity.ok().body(memberService.delete(id));
     }
 }
