@@ -15,6 +15,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -61,6 +62,15 @@ class CartControllerTest extends ControllerUnitTest {
                 )
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"));
+    }
+
+    @Test
+    void 카트의_상품을_삭제한다() throws Exception {
+        given(memberDao.findByEmail(anyString()))
+                .willReturn(new Member(1L, "email", "123456"));
+
+        mockMvc.perform(delete("/cart/products/1").header(AUTH, CODE))
+                .andExpect(status().isNoContent());
     }
 
 }
