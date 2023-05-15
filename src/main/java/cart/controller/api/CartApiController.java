@@ -5,6 +5,7 @@ import cart.controller.dto.CartRequest;
 import cart.controller.dto.CartResponse;
 import cart.controller.dto.MemberRequest;
 import cart.service.CartService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -29,15 +30,13 @@ public class CartApiController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Long> addCart(
             @AuthenticationPrincipal MemberRequest memberRequest,
             @RequestBody CartRequest cartRequest
     ) {
-        Long id = cartService.addCart(cartRequest.getProductId(), memberRequest);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/cart-products/{id}")
-                .buildAndExpand(id).toUri();
-        return ResponseEntity.created(location).body(id);
+        Long cartId = cartService.addCart(cartRequest.getProductId(), memberRequest);
+        return ResponseEntity.created(URI.create("/carts/" + cartId)).body(cartId);
     }
 
     @DeleteMapping("{cartId}")
