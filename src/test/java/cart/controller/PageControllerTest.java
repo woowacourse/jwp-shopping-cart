@@ -12,7 +12,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.dao.ProductJdbcDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
+import cart.dto.MembetDto;
+import cart.fixture.MemberFixture;
 import cart.fixture.ProductFixture.BLACKCAT;
 import cart.fixture.ProductFixture.HERB;
 import org.hamcrest.Matcher;
@@ -48,6 +50,16 @@ class PageControllerTest {
                 hasProperty("name", is(name)),
                 hasProperty("image", is(image)),
                 hasProperty("price", is(price))
+        );
+    }
+
+    private Matcher<Object> generateMemberPropertiesMatcher(
+            final String email,
+            final String password
+    ) {
+        return allOf(
+                hasProperty("email", is(email)),
+                hasProperty("password", is(password))
         );
     }
 
@@ -131,6 +143,26 @@ class PageControllerTest {
         mockMvc.perform(get("/products/" + 99999999L))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("상품을 찾을 수 없습니다."))
+                .andDo(print());
+    }
+
+    @Test
+    void 세팅_페이지에_접근한다() throws Exception {
+        // given
+        final MembetDto herb = MemberFixture.HERB.MEMBET_DTO;
+        final MembetDto blackcat = MemberFixture.BLACKCAT.MEMBET_DTO;
+
+        // expect
+        mockMvc.perform(get("/settings"))
+                .andExpect(model().attribute("members", hasSize(2)))
+                .andExpect(model().attribute(
+                        "members",
+                        hasItem(generateMemberPropertiesMatcher(herb.getEmail(), herb.getPassword()))
+                ))
+                .andExpect(model().attribute(
+                        "members",
+                        hasItem(generateMemberPropertiesMatcher(blackcat.getEmail(), blackcat.getPassword()))
+                ))
                 .andDo(print());
     }
 }

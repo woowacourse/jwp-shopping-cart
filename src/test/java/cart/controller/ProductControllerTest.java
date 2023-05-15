@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cart.dao.ProductJdbcDao;
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.dto.ProductSaveRequestDto;
 import cart.dto.ProductUpdateRequestDto;
 import cart.fixture.ProductFixture.BLACKCAT;

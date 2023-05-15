@@ -1,4 +1,4 @@
-package cart.domain;
+package cart.domain.product;
 
 import java.net.URI;
 import java.net.URISyntaxException;

@@ -3,10 +3,10 @@ package cart.service;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
 import cart.dao.ProductJdbcDao;
-import cart.domain.ImageUrl;
-import cart.domain.Name;
-import cart.domain.Price;
-import cart.domain.Product;
+import cart.domain.product.ImageUrl;
+import cart.domain.product.Name;
+import cart.domain.product.Price;
+import cart.domain.product.Product;
 import cart.dto.ProductDto;
 import cart.dto.ProductSaveRequestDto;
 import cart.dto.ProductUpdateRequestDto;
@@ -35,12 +35,14 @@ public class ProductService {
                 .orElseThrow(() -> new IllegalStateException("상품을 저장할 수 없습니다."));
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findAll() {
         return productDao.findAll().stream()
                 .map(ProductDto::from)
                 .collect(toUnmodifiableList());
     }
 
+    @Transactional(readOnly = true)
     public ProductDto findById(final Long id) {
         final Product product = productDao.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));

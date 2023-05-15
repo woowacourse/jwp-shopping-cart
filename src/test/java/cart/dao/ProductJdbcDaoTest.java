@@ -3,7 +3,7 @@ package cart.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import cart.domain.Product;
+import cart.domain.product.Product;
 import cart.fixture.ProductFixture;
 import cart.fixture.ProductFixture.BLACKCAT;
 import cart.fixture.ProductFixture.HERB;
