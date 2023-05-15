@@ -37,6 +37,6 @@ public class BasicAuthArgumentResolver implements HandlerMethodArgumentResolver 
         String email = credentials[0];
         String password = credentials[1];
 
-        return new AuthInfo(email, password);
+        return new Credentials(email, password);
     }
 }

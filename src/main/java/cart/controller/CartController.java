@@ -1,7 +1,7 @@
 package cart.controller;
 
-import cart.auth.AuthInfo;
 import cart.auth.BasicAuth;
+import cart.auth.Credentials;
 import cart.dto.response.CartResponse;
 import cart.service.CartService;
 import java.util.HashMap;
@@ -24,16 +24,17 @@ public class CartController {
     }
 
     @GetMapping("/carts")
-    public ResponseEntity<List<CartResponse>> cartList(@BasicAuth AuthInfo authInfo) {
-        List<CartResponse> response = cartService.findAllByEmailWithPassword(authInfo);
+    public ResponseEntity<List<CartResponse>> cartList(@BasicAuth Credentials credentials) {
+        List<CartResponse> response = cartService.findAllByEmailWithPassword(credentials);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
     }
 
     @PostMapping("/carts/{productId}")
-    public ResponseEntity<Map<String, Integer>> cartAdd(@BasicAuth AuthInfo authInfo, @PathVariable int productId) {
-        int cartId = cartService.save(authInfo, productId);
+    public ResponseEntity<Map<String, Integer>> cartAdd(@BasicAuth Credentials credentials,
+                                                        @PathVariable int productId) {
+        int cartId = cartService.save(credentials, productId);
 
         Map<String, Integer> response = new HashMap<>();
         response.put("id", cartId);

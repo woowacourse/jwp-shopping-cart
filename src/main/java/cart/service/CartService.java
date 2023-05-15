@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.auth.AuthInfo;
+import cart.auth.Credentials;
 import cart.dao.CartDao;
 import cart.dto.entity.CartEntity;
 import cart.dto.entity.ProductEntity;
@@ -25,8 +25,8 @@ public class CartService {
         this.memberService = memberService;
     }
 
-    public List<CartResponse> findAllByEmailWithPassword(AuthInfo authInfo) {
-        int memberId = memberService.findByEmailWithPassword(authInfo.getEmail(), authInfo.getPassword());
+    public List<CartResponse> findAllByEmailWithPassword(Credentials credentials) {
+        int memberId = memberService.findByEmailWithPassword(credentials.getEmail(), credentials.getPassword());
         List<CartEntity> carts = cartDao.findByMemberId(memberId);
 
         return carts.stream()
@@ -43,8 +43,8 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public int save(AuthInfo authInfo, int productId) {
-        int memberId = memberService.findByEmailWithPassword(authInfo.getEmail(), authInfo.getPassword());
+    public int save(Credentials credentials, int productId) {
+        int memberId = memberService.findByEmailWithPassword(credentials.getEmail(), credentials.getPassword());
         List<CartEntity> cartByProduct = cartDao.findByProductIdAndMemberId(memberId, productId);
 
         if (cartByProduct.size() == ZERO) {
