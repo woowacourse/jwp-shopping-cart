@@ -38,6 +38,13 @@
     margin-right: 20px;
 }
 
+.cart-item-quantity {
+    font-weight: 600;
+    font-size: 20px;
+    margin-right: 20px;
+    margin-left: auto;
+}
+
 .cart-item img {
     width: 80px;
     height: 80px;

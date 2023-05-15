@@ -61,3 +61,63 @@
 - [x] Product 테스트 추가
 - [x] findById() 테스트 추가
 - [ ] 엔드포인트간 DTO 분리?
+
+---
+
+## 2단계 기능 요구사항
+
+### 사용자 기능 구현
+
+- [x] 사용자는 아래와 같은 필드를 가지고 있다.
+    ```mermaid
+        erDiagram
+          MEMBER {
+          BIGINT id PK
+          VARCHAR email
+          VARCHAR password
+          }
+    ```
+
+### 사용자 설정 페이지 연동
+
+- [x] 컨트롤러는 아래와 같은 요청을 처리한다.
+    - [x] '/settings' 경로로 get 요청이 들어올 경우, settings.html 페이지를 반환한다.
+
+- [x] 사용자 서비스는 아래와 같은 기능을 한다.
+    - [x] 전체 사용자 목록을 DB에서 가져온다.
+    - [x] 전체 사용자 목록을 컨트롤러에 보낸다.
+
+### 장바구니 기능 구현
+
+- [x] 장바구니는 아래와 같은 필드를 가지고 있다.
+    ```mermaid
+        erDiagram
+          CART {
+          BIGINT id PK
+          BIGINT product_id FK
+          BIGINT member_id FK
+          }
+    ```
+
+- [x] 장바구니 CRUD
+    - [x] Basic Auth 방식의 `Authorization` header를 통해 사용자를 인증한다.
+
+    | Method | Path                          |
+    |--------|-------------------------------|
+    | GET    | /carts                        |
+    | POST   | /carts                        |
+    | DELETE | /carts/?productId={productId} |
+
+
+### 장바구니 페이지 연동
+
+---
+
+## 2단계 리팩토링 요구사항
+
+- [x] addViewControllers를 이용한 Configuration 방식에서 실제 Controller의 메서드를 만드는 방식으로 변경
+- [x] cart에 있는 상품을 삭제하는 API에서 @PathVariable 대신 @RequestParam을 사용하도록 변경
+- [x] admin과 다른 서비스 간 ResponseDto 분리
+- [x] 데이터를 찾지 못한 경우, Bad Request 상태 코드를 반환하도록 변경
+- [x] 통합 테스트 수정
+- [x] 집계 쿼리를 이용하여 상품 수량을 계산하도록 변경
