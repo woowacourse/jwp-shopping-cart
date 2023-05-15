@@ -98,12 +98,8 @@ Host: localhost:8080
 **Response**
 
 ```http request
-HTTP/1.1 200
-Content-Type: application/json
-
-{
-    "id": 1
-}
+HTTP/1.1 201
+Location: /products/1
 ```
 
 ### 상품 수정 : PUT
@@ -124,13 +120,8 @@ Host: localhost:8080
 **Response**
 
 ```http request
-HTTP/1.1 200
-Content-Type: application/json
-
-
-{
-    "status": "success"
-}
+HTTP/1.1 201
+Location: /products/1
 ```
 
 ### 상품 삭제 : DELETE
@@ -145,12 +136,7 @@ Host: localhost:8080
 **Response**
 
 ```http request
-HTTP/1.1 200
-Content-Type: application/json
-
-{
-    "status": "success"
-}
+HTTP/1.1 204
 ```
 
 ## Cart
@@ -194,11 +180,8 @@ Authorization: Basic YUBhLmNvbTpwYXNzd29yZDE=
 **Response**
 
 ```http request
-HTTP/1.1 200
-Content-Type: application/json
-{
-    "id": 1
-}
+HTTP/1.1 201
+Location: /carts/1
 ```
 
 ### 장바구니 상품 삭제 : DELETE
@@ -214,11 +197,7 @@ Authorization: Basic YUBhLmNvbTpwYXNzd29yZDE=
 **Response**
 
 ```http request
-HTTP/1.1 200
-Content-Type: application/json
-{
-    "status": "success"
-}
+HTTP/1.1 204
 ```
 
 --- 
