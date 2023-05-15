@@ -30,7 +30,7 @@ class MemberDaoTest {
         final Long id = memberDao.save(new Member("chae@email.com", "aaaa"));
 
         // then
-        assertThat(id).isEqualTo(1L);
+        assertThat(memberDao.findByEmail("chae@email.com")).isNotNull();
     }
 
     @Test
