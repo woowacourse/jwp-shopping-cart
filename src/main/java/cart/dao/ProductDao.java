@@ -1,4 +1,4 @@
-package cart.repository;
+package cart.dao;
 
 import cart.domain.Product;
 import cart.entity.ProductEntity;
@@ -11,11 +11,11 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ProductRepository {
+public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ProductRepository(JdbcTemplate jdbcTemplate) {
+    public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("product")
@@ -60,6 +60,12 @@ public class ProductRepository {
 
     public boolean existsById(Long id) {
         String sql = "SELECT COUNT(*) FROM PRODUCT WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
+        Integer integer = jdbcTemplate.queryForObject(sql, Integer.class, id);
+
+        if (integer == null) {
+            return false;
+        }
+
+        return integer > 0;
     }
 }

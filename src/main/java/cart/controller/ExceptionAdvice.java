@@ -3,8 +3,10 @@ package cart.controller;
 import cart.dto.response.ErrorResponse;
 import cart.dto.response.Response;
 import cart.dto.response.SimpleResponse;
-import cart.exception.ProductNotFoundException;
+import cart.exception.AuthorizationException;
+import cart.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -33,11 +35,19 @@ public class ExceptionAdvice {
                 .body(errorResponse);
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<Response> handle(ProductNotFoundException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Response> handle(NotFoundException e) {
         Response response = SimpleResponse.badRequest(e.getMessage());
         return ResponseEntity
                 .badRequest()
+                .body(response);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<Response> handle(AuthorizationException e) {
+        Response response = SimpleResponse.unAuthorized(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(response);
     }
 }
