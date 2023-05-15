@@ -14,8 +14,8 @@ public class ProductService {
         this.productDao = productDao;
     }
 
-    public void save(ProductRequest request) {
-        productDao.save(toEntity(request));
+    public Long save(ProductRequest request) {
+        return productDao.save(toEntity(request));
     }
 
     public void update(Long id, ProductRequest request) {
