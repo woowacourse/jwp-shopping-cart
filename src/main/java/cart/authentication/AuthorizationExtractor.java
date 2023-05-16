@@ -6,4 +6,5 @@ public interface AuthorizationExtractor<T> {
     String AUTHORIZATION = "authorization";
 
     T extract(HttpServletRequest request);
+
 }

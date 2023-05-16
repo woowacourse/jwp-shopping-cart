@@ -38,8 +38,6 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
             return new AuthInfo(email, password);
         }
         throw new AuthorizationException("인증 정보가 Delimiter를 포함하지 않습니다.");
-
-
     }
 
 }
