@@ -67,6 +67,17 @@ public class UserDao {
         }
     }
 
+    public Optional<User> findByEmailAndPassword(final User user) {
+        final String sql = "SELECT id, email, password FROM users WHERE email = :email AND password = :password";
+        MapSqlParameterSource param = new MapSqlParameterSource().addValue("email", user.getEmail())
+                                                                 .addValue("password", user.getPassword());
+        try {
+            return Optional.of(namedParameterJdbcTemplate.queryForObject(sql, param, actorRowMapper));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
     public void update(final User user) {
         final String sql = "UPDATE users SET email = :email, password = :password WHERE id = :id";
         BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(user);

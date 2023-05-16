@@ -13,7 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class BasicAuthenticationPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final BasicAuthorizationExtractor basicAuthorizationExtractor = new BasicAuthorizationExtractor();
+    private final BasicAuthorizationExtractor basicAuthorizationExtractor;
+
+    public BasicAuthenticationPrincipalArgumentResolver(BasicAuthorizationExtractor basicAuthorizationExtractor) {
+        this.basicAuthorizationExtractor = basicAuthorizationExtractor;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {

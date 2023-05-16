@@ -1,5 +1,6 @@
 package cart.service;
 
+import cart.controller.dto.auth.AuthInfoDto;
 import cart.controller.dto.request.UserRequest;
 import cart.controller.dto.response.UserResponse;
 import cart.dao.UserDao;
@@ -90,6 +91,33 @@ class UserServiceTest {
         //then
         assertThatThrownBy(() ->
                 userService.loadUser(100L)
+        ).isInstanceOf(NotFoundResultException.class);
+    }
+
+    @DisplayName("특정 이메일과 비밀번호를 사용하는 사용자가 존재하는지 확인한다")
+    @Test
+    void isExistUser() {
+        //given
+        User user = new User.Builder().id(1L)
+                                      .email(new Email("test1@email.com"))
+                                      .password(new Password("test1Password"))
+                                      .build();
+        when(userDao.findByEmailAndPassword(any())).thenReturn(Optional.of(user));
+        //when
+        boolean isExistUser = userService.isExistUser(
+                new AuthInfoDto("test1@email.com", "test1Password"));
+        //then
+        assertThat(isExistUser).isTrue();
+    }
+
+    @DisplayName("존재하지 않는 이메일과 비밀번호를 사용하는 사용자가 존재하는지 확인하면 예외가 발생한다")
+    @Test
+    void isExistUserException() {
+        //given
+        when(userDao.findByEmailAndPassword(any())).thenReturn(Optional.empty());
+        //then
+        assertThatThrownBy(() ->
+                userService.isExistUser(new AuthInfoDto("test1@email.com", "wrongPassword"))
         ).isInstanceOf(NotFoundResultException.class);
     }
 

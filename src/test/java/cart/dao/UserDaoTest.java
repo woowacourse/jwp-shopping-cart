@@ -128,6 +128,40 @@ class UserDaoTest {
         assertThat(findUser).isEmpty();
     }
 
+    @DisplayName("이메일과 비밀번호가 모두 동일한 사용자를 조회한다")
+    @Test
+    void findByEmailAndPassword() {
+        //given
+        User user = new User.Builder().
+                email(new Email("test1@gmail.com"))
+                .password(new Password("test1pw1234"))
+                .build();
+        //when
+        User findUser = userDao.findByEmailAndPassword(user)
+                               .orElseThrow();
+        //then
+        assertThat(findUser).isEqualTo(new User.Builder()
+                .id(1L)
+                .email(new Email("test1@gmail.com"))
+                .password(new Password("test1pw1234"))
+                .build()
+        );
+    }
+
+    @DisplayName("이메일은 동일하지만 비밀번호가 다른 경우 empty를 반환한다")
+    @Test
+    void findByEmailWithWrongPassword() {
+        //given
+        User user = new User.Builder().
+                email(new Email("test1@gmail.com"))
+                .password(new Password("wrongPassword"))
+                .build();
+        //when
+        Optional<User> findUser = userDao.findByEmailAndPassword(user);
+        //then
+        assertThat(findUser).isEmpty();
+    }
+
     @DisplayName("사용자를 수정한다")
     @Test
     void update() {

@@ -1,10 +1,13 @@
 package cart.auth;
 
+import cart.auth.interceptor.AuthorizationException;
 import cart.controller.dto.auth.AuthInfoDto;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Component
 public class BasicAuthorizationExtractor {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_TYPE = "Basic";
@@ -14,7 +17,7 @@ public class BasicAuthorizationExtractor {
         String header = request.getHeader(AUTHORIZATION);
 
         if (header == null) {
-            return null;
+            throw new AuthorizationException("로그인 정보가 존재하지 않습니다.");
         }
 
         if ((header.toLowerCase()
