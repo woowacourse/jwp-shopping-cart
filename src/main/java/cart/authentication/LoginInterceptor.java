@@ -13,7 +13,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         AuthorizationExtractor<AuthInfo> authorizationExtractor = new BasicAuthorizationExtractor();
         AuthInfo authInfo = authorizationExtractor.extract(request);
         if (authInfo == null) {
-            throw new AuthorizationException("사용자의 권한이 없습니다.");
+            throw new AuthorizationException("사용자 인증에 실패했습니다.");
         }
         return super.preHandle(request, response, handler);
     }
