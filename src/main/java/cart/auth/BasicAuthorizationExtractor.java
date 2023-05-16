@@ -1,6 +1,6 @@
 package cart.auth;
 
-import cart.controller.dto.auth.AuthInfo;
+import cart.controller.dto.auth.AuthInfoDto;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +10,7 @@ public class BasicAuthorizationExtractor {
     private static final String BASIC_TYPE = "Basic";
     private static final String DELIMITER = ":";
 
-    public AuthInfo extract(HttpServletRequest request) {
+    public AuthInfoDto extract(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
 
         if (header == null) {
@@ -28,7 +28,7 @@ public class BasicAuthorizationExtractor {
             String email = credentials[0];
             String password = credentials[1];
 
-            return new AuthInfo(email, password);
+            return new AuthInfoDto(email, password);
         }
 
         return null;

@@ -1,7 +1,7 @@
 package cart.controller;
 
 import cart.auth.resolver.BasicAuthenticationPrincipal;
-import cart.controller.dto.auth.AuthInfo;
+import cart.controller.dto.auth.AuthInfoDto;
 import cart.controller.dto.response.CartResponse;
 import cart.service.CartService;
 import org.springframework.http.HttpStatus;
@@ -23,17 +23,17 @@ public class CartController {
     }
 
     @PostMapping("{itemId}")
-    public ResponseEntity<Void> addCart(@BasicAuthenticationPrincipal AuthInfo authInfo,
+    public ResponseEntity<Void> addCart(@BasicAuthenticationPrincipal AuthInfoDto authInfoDto,
                                         @PathVariable final Long itemId) {
-        cartService.saveCart(authInfo, itemId);
+        cartService.saveCart(authInfoDto, itemId);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/"))
                              .build();
     }
 
     @GetMapping
-    public ResponseEntity<List<CartResponse>> loadAllCart(@BasicAuthenticationPrincipal AuthInfo authInfo) {
-        List<CartResponse> allCart = cartService.loadAllCart(authInfo);
+    public ResponseEntity<List<CartResponse>> loadAllCart(@BasicAuthenticationPrincipal AuthInfoDto authInfoDto) {
+        List<CartResponse> allCart = cartService.loadAllCart(authInfoDto);
         return ResponseEntity.status(HttpStatus.OK)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(allCart);

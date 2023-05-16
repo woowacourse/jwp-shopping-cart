@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.controller.dto.auth.AuthInfo;
+import cart.controller.dto.auth.AuthInfoDto;
 import cart.controller.dto.response.CartResponse;
 import cart.dao.CartDao;
 import cart.dao.ItemDao;
@@ -31,8 +31,8 @@ public class CartService {
         this.itemDao = itemDao;
     }
 
-    public Long saveCart(final AuthInfo authInfo, final Long itemId) {
-        Long userId = findUserIdByEmail(authInfo);
+    public Long saveCart(final AuthInfoDto authInfoDto, final Long itemId) {
+        Long userId = findUserIdByEmail(authInfoDto);
         validateExistItem(itemId);
         Cart cart = new Cart.Builder()
                 .userId(userId)
@@ -42,8 +42,8 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartResponse> loadAllCart(final AuthInfo authInfo) {
-        Long userId = findUserIdByEmail(authInfo);
+    public List<CartResponse> loadAllCart(final AuthInfoDto authInfoDto) {
+        Long userId = findUserIdByEmail(authInfoDto);
         List<CartData> allCart = cartDao.findAll(userId);
         return allCart.stream()
                       .map(CartResponse::from)
@@ -55,8 +55,8 @@ public class CartService {
         cartDao.deleteBy(cartId);
     }
 
-    private Long findUserIdByEmail(final AuthInfo authInfo) {
-        Optional<User> findUser = userDao.findByEmail(authInfo.getEmail());
+    private Long findUserIdByEmail(final AuthInfoDto authInfoDto) {
+        Optional<User> findUser = userDao.findByEmail(authInfoDto.getEmail());
         User user = findUser.orElseThrow(() -> new NotFoundResultException("존재하지 않는 사용자 입니다."));
         return user.getId();
     }

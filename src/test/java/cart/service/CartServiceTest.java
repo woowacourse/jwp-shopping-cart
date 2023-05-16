@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.controller.dto.auth.AuthInfo;
+import cart.controller.dto.auth.AuthInfoDto;
 import cart.controller.dto.response.CartResponse;
 import cart.dao.CartDao;
 import cart.dao.ItemDao;
@@ -58,7 +58,7 @@ class CartServiceTest {
                         .build()
         ));
         //when
-        Long id = cartService.saveCart(new AuthInfo("test@email.com", "testPW"), 1L);
+        Long id = cartService.saveCart(new AuthInfoDto("test@email.com", "testPW"), 1L);
         //then
         assertThat(id).isEqualTo(1L);
     }
@@ -77,7 +77,7 @@ class CartServiceTest {
         ));
         when(cartDao.findAll(1L)).thenReturn(List.of(cartData));
         //when
-        List<CartResponse> carts = cartService.loadAllCart(new AuthInfo("test@email.com", "testPW"));
+        List<CartResponse> carts = cartService.loadAllCart(new AuthInfoDto("test@email.com", "testPW"));
         //then
         assertThat(carts).contains(CartResponse.from(cartData));
     }

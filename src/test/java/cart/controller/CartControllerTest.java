@@ -1,6 +1,6 @@
 package cart.controller;
 
-import cart.controller.dto.auth.AuthInfo;
+import cart.controller.dto.auth.AuthInfoDto;
 import cart.controller.dto.response.CartResponse;
 import cart.domain.CartData;
 import cart.domain.ImageUrl;
@@ -54,7 +54,7 @@ class CartControllerTest {
     @Test
     void addCartMappingURL() throws Exception {
         //given
-        String value = objectMapper.writeValueAsString(new AuthInfo("test@email.com", "testPW"));
+        String value = objectMapper.writeValueAsString(new AuthInfoDto("test@email.com", "testPW"));
         when(mockCartService.saveCart(any(), anyLong())).thenReturn(1L);
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/carts/1")
@@ -67,7 +67,7 @@ class CartControllerTest {
     @Test
     void loadAllCartMappingURL() throws Exception {
         //given
-        String value = objectMapper.writeValueAsString(new AuthInfo("test@email.com", "testPW"));
+        String value = objectMapper.writeValueAsString(new AuthInfoDto("test@email.com", "testPW"));
         when(mockCartService.loadAllCart(any())).thenReturn(Collections.emptyList());
         //when
         mockMvc.perform(MockMvcRequestBuilders.get("/carts")
@@ -80,7 +80,7 @@ class CartControllerTest {
     @Test
     void deleteCartMappingURL() throws Exception {
         //given
-        String value = objectMapper.writeValueAsString(new AuthInfo("test@email.com", "testPW"));
+        String value = objectMapper.writeValueAsString(new AuthInfoDto("test@email.com", "testPW"));
         doNothing().when(mockCartService)
                    .deleteItem(anyLong());
         //when
@@ -94,7 +94,7 @@ class CartControllerTest {
     @Test
     void addCart() {
         //given
-        AuthInfo value = new AuthInfo("test@email.com", "testPW");
+        AuthInfoDto value = new AuthInfoDto("test@email.com", "testPW");
         when(cartService.saveCart(any(), anyLong())).thenReturn(1L);
         //then
         ResponseEntity<Void> responseEntity = cartController.addCart(value, 1L);
@@ -121,7 +121,7 @@ class CartControllerTest {
         );
         when(cartService.loadAllCart(any())).thenReturn(carts);
         //then
-        ResponseEntity<List<CartResponse>> responseEntity = cartController.loadAllCart(new AuthInfo("test@email.com", "testPW"));
+        ResponseEntity<List<CartResponse>> responseEntity = cartController.loadAllCart(new AuthInfoDto("test@email.com", "testPW"));
         Assertions.assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),
                 () -> assertThat(responseEntity.getBody()).contains(carts.get(0))
