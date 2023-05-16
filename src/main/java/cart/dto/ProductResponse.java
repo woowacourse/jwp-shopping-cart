@@ -1,14 +1,14 @@
 package cart.dto;
 
-import cart.domain.Product;
+import cart.entity.Product;
 
-public class ProductResponseDto {
+public class ProductResponse {
     private final Long id;
     private final String name;
     private final String imgUrl;
     private final int price;
 
-    public ProductResponseDto(Product product) {
+    public ProductResponse(Product product) {
         this.id = product.getId();
         this.name = product.getName();
         this.imgUrl = product.getImgUrl();

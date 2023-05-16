@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS product
     imgURL  VARCHAR(8000)   NOT NULL,
     price   INT             NOT NULL,
     PRIMARY KEY (id)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS member
 (
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS member
     email       VARCHAR(255)    NOT NULL,
     password    VARCHAR(255)    NOT NULL,
     PRIMARY KEY (id)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS cart
 (

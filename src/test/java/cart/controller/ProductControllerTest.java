@@ -13,15 +13,20 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import cart.dto.ProductRequestDto;
+import cart.dto.ProductRequest;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class JwpCartControllerTest {
+class ProductControllerTest {
 
     @LocalServerPort
     int port;
 
+    static Stream<Arguments> makeDto() {
+        return Stream.of(Arguments.arguments(new ProductRequest("a".repeat(256), "https://naver.com", 1000)),
+            Arguments.arguments(new ProductRequest("aaa", "https://naver" + "a".repeat(8001) + ".com", 1000)),
+            Arguments.arguments(new ProductRequest("aaa", "https://naver.com", -1000)));
+    }
 
     @BeforeEach
     void setUp() {
@@ -29,36 +34,14 @@ class JwpCartControllerTest {
     }
 
     @Test
-    @DisplayName("상품 목록 페이지를 조회한다.")
-    void index() {
-        RestAssured.given().log().all()
-            .accept(MediaType.TEXT_HTML_VALUE)
-            .when().get("/")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .contentType(MediaType.TEXT_HTML_VALUE);
-    }
-
-    @Test
-    @DisplayName("관리자 페이지를 조회한다.")
-    void admin() {
-        RestAssured.given().log().all()
-            .accept(MediaType.TEXT_HTML_VALUE)
-            .when().get("/admin")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .contentType(MediaType.TEXT_HTML_VALUE);
-    }
-
-    @Test
     @DisplayName("상품을 추가한다.")
     void addProduct() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("리오", "http://asdf.asdf", 3000);
+        ProductRequest productRequest = new ProductRequest("리오", "http://asdf.asdf", 3000);
 
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
-            .when().post("/admin/products")
+            .body(productRequest)
+            .when().post("/products")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value());
     }
@@ -66,12 +49,12 @@ class JwpCartControllerTest {
     @ParameterizedTest
     @MethodSource("makeDto")
     @DisplayName("상품을 추가한다. - 잘못된 입력을 검증한다.")
-    void addProductInvalidInput(ProductRequestDto productRequestDto) {
+    void addProductInvalidInput(ProductRequest productRequest) {
 
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
-            .when().post("/admin/products")
+            .body(productRequest)
+            .when().post("/products")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -79,12 +62,12 @@ class JwpCartControllerTest {
     @Test
     @DisplayName("상품 정보를 수정한다.")
     void updateProduct() {
-        ProductRequestDto productRequestDto = new ProductRequestDto("리오", "http://asdf.asdf", 3000);
+        ProductRequest productRequest = new ProductRequest("리오", "http://asdf.asdf", 3000);
 
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
-            .when().put("/admin/products/1")
+            .body(productRequest)
+            .when().put("/products/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -92,12 +75,12 @@ class JwpCartControllerTest {
     @ParameterizedTest
     @MethodSource("makeDto")
     @DisplayName("상품 정보를 수정한다. - 잘못된 입력을 검증한다.")
-    void updateProductInvalidInput(ProductRequestDto productRequestDto) {
+    void updateProductInvalidInput(ProductRequest productRequest) {
 
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(productRequestDto)
-            .when().put("/admin/products")
+            .body(productRequest)
+            .when().put("/products/1")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -106,14 +89,8 @@ class JwpCartControllerTest {
     @DisplayName("상품을 삭제한다.")
     void deleteProduct() {
         RestAssured.given().log().all()
-            .when().delete("/admin/products/1")
+            .when().delete("/products/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
-    }
-
-    static Stream<Arguments> makeDto() {
-        return Stream.of(Arguments.arguments(new ProductRequestDto("a".repeat(256), "https://naver.com", 1000)),
-            Arguments.arguments(new ProductRequestDto("aaa", "https://naver" + "a".repeat(8001) + ".com", 1000)),
-            Arguments.arguments(new ProductRequestDto("aaa", "https://naver.com", -1000)));
     }
 }

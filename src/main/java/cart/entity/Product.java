@@ -1,4 +1,7 @@
-package cart.domain;
+package cart.entity;
+
+import cart.exception.DomainException;
+import cart.exception.ExceptionCode;
 
 public class Product {
     private final Long id;
@@ -13,31 +16,27 @@ public class Product {
         this.price = validatePrice(price);
     }
 
-    public static Product createWithId(Long id, String name, String imgURL, int price) {
+    public static Product of(Long id, String name, String imgURL, int price) {
         return new Product(id, name, imgURL, price);
-    }
-
-    public static Product createWithoutId(String name, String imgURL, int price) {
-        return new Product(null, name, imgURL, price);
     }
 
     private int validatePrice(int price) {
         if (price < 0) {
-            throw new IllegalArgumentException("가격은 0원부터 21억원 미만입니다.");
+            throw new DomainException(ExceptionCode.INVALID_PRICE_RANGE);
         }
         return price;
     }
 
     private String validateImgUrl(String imgUrl) {
         if (imgUrl.length() > 8000) {
-            throw new IllegalArgumentException("URL은 영문기준 8000자 이하입니다.");
+            throw new DomainException(ExceptionCode.INVALID_URL_LENGTH);
         }
         return imgUrl;
     }
 
     private String validateName(String name) {
         if (name.length() > 255) {
-            throw new IllegalArgumentException("상품명은 영문기준 255자 이하입니다.");
+            throw new DomainException(ExceptionCode.INVALID_PRODUCT_NAME_LENGTH);
         }
         return name;
     }

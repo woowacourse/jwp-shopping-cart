@@ -1,59 +1,98 @@
 package cart.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
-import cart.domain.Product;
-import cart.domain.ProductRepository;
-import cart.dto.ProductDto;
-import cart.dto.ProductRequestDto;
-import cart.dto.ProductResponseDto;
+import cart.dto.AuthInfo;
+import cart.dto.CartRequest;
+import cart.dto.CartResponse;
+import cart.dto.MemberResponse;
+import cart.dto.ProductRequest;
+import cart.dto.ProductResponse;
+import cart.entity.CartItem;
+import cart.entity.CartItemRepository;
+import cart.entity.Member;
+import cart.entity.MemberRepository;
+import cart.entity.Product;
+import cart.entity.ProductRepository;
+import cart.exception.DomainException;
+import cart.exception.ExceptionCode;
 
+@Sql("/setup.sql")
 @Service
 @Transactional(readOnly = true)
 public class JwpCartService {
 
     private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public JwpCartService(ProductRepository productRepository) {
+    public JwpCartService(ProductRepository productRepository, MemberRepository memberRepository,
+        CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
-    public List<ProductResponseDto> findAll() {
-        List<Product> products = productRepository.findAll()
+    public List<ProductResponse> findAllProducts() {
+        return productRepository.findAll()
             .stream()
-            .map(productDto -> Product.createWithId(
-                productDto.getId(),
-                productDto.getName(),
-                productDto.getImgUrl(),
-                productDto.getPrice()))
+            .map(ProductResponse::new)
             .collect(Collectors.toList());
-
-        return products.stream().map(ProductResponseDto::new).collect(Collectors.toList());
     }
 
-    public void add(ProductRequestDto productRequestDto) {
-        Product product = Product.createWithoutId(
-            productRequestDto.getName(),
-            productRequestDto.getImgUrl(),
-            productRequestDto.getPrice()
-        );
-        productRepository.save(new ProductDto(product));
+    @Transactional
+    public void addProduct(ProductRequest productRequest) {
+        Product product = productRequest.toProduct();
+        productRepository.save(product);
     }
 
-    public void updateById(ProductRequestDto productRequestDto, Long id) {
-        Product product = Product.createWithoutId(
-            productRequestDto.getName(),
-            productRequestDto.getImgUrl(),
-            productRequestDto.getPrice()
-        );
-        productRepository.updateById(new ProductDto(product), id);
+    @Transactional
+    public void updateProductById(ProductRequest productRequest, Long id) {
+        Product product = productRequest.toProduct();
+        productRepository.updateById(product, id);
     }
 
-    public void deleteById(Long id) {
+    @Transactional
+    public void deleteProductById(Long id) {
+        cartItemRepository.deleteByProductID(id);
         productRepository.deleteById(id);
+
+    }
+
+    public List<MemberResponse> findAllMembers() {
+        return memberRepository.findAll()
+            .stream()
+            .map(MemberResponse::new)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void addProductToCart(AuthInfo authInfo, CartRequest cartRequest) {
+        Member member = memberRepository.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
+        cartItemRepository.save(CartItem.of(null, member.getId(), cartRequest.getProductId()));
+    }
+
+    @Transactional
+    public void deleteProductFromCart(AuthInfo authInfo, Long id) {
+        Member member = memberRepository.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword());
+        if (Objects.equals(member.getId(), cartItemRepository.findById(id).getMemberId())) {
+            cartItemRepository.deleteById(id);
+            return;
+        }
+        throw new DomainException(ExceptionCode.AUTHORIZATION_FAIL);
+    }
+
+    public List<CartResponse> findAllCartItems(AuthInfo authInfo) {
+        Long memberId = memberRepository.findByEmailAndPassword(authInfo.getEmail(), authInfo.getPassword()).getId();
+        return cartItemRepository.findAll(memberId)
+            .stream()
+            .map(cart -> new CartResponse(cart, productRepository.findById(cart.getProductId())))
+            .collect(Collectors.toList());
     }
 }
