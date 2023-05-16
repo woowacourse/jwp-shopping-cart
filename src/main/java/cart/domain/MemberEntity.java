@@ -6,10 +6,10 @@ public class MemberEntity {
     private final String email;
     private final String password;
 
-    public MemberEntity(int id, String email, String password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
+    public MemberEntity(Builder builder) {
+        this.id = builder.id;
+        this.email = builder.email;
+        this.password = builder.password;
     }
 
     public int getId() {
@@ -45,7 +45,7 @@ public class MemberEntity {
         }
 
         public MemberEntity build() {
-            return new MemberEntity(id, email, password);
+            return new MemberEntity(this);
         }
     }
 

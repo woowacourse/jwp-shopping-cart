@@ -22,12 +22,11 @@ public class MemberDao {
     }
 
     private static RowMapper<MemberEntity> getMemberEntityRowMapper() {
-        return (rs, rowNum) -> new MemberEntity(
-                rs.getInt("id"),
-                rs.getString("email"),
-                rs.getString("password")
-
-        );
+        return (rs, rowNum) -> new MemberEntity.Builder()
+                .id(rs.getInt("id"))
+                .email(rs.getString("email"))
+                .password(rs.getString("password"))
+                .build();
     }
 
     public MemberEntity findBy(String email) {

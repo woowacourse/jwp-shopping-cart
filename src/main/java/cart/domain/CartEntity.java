@@ -5,9 +5,9 @@ public class CartEntity {
     private final int id;
     private final ProductEntity product;
 
-    public CartEntity(int id, ProductEntity product) {
-        this.id = id;
-        this.product = product;
+    public CartEntity(Builder builder) {
+        this.id = builder.id;
+        this.product = builder.product;
     }
 
     public int getId() {
@@ -34,7 +34,7 @@ public class CartEntity {
         }
 
         public CartEntity build() {
-            return new CartEntity(id, product);
+            return new CartEntity(this);
         }
     }
 

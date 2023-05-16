@@ -53,12 +53,12 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     private RowMapper<ProductEntity> productEntityRowMapper() {
-        return (rs, rowNum) -> new ProductEntity(
-                rs.getInt("id"),
-                rs.getString("name"),
-                rs.getString("image"),
-                rs.getInt("price")
-        );
+        return (rs, rowNum) -> new ProductEntity.Builder()
+                .id(rs.getInt("id"))
+                .name(rs.getString("name"))
+                .image(rs.getString("image"))
+                .price(rs.getInt("price"))
+                .build();
     }
 
     @Override

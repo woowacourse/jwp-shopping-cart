@@ -21,8 +21,12 @@ public class ProductService {
     }
 
     public void insert(final ProductDto productDto) {
-        ProductEntity productEntity = new ProductEntity(productDto.getName(), productDto.getImage(),
-                productDto.getPrice());
+        ProductEntity productEntity =
+                new ProductEntity.Builder()
+                        .name(productDto.getName())
+                        .image(productDto.getImage())
+                        .price(productDto.getPrice())
+                        .build();
         productDao.insert(productEntity);
     }
 
