@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.domain.ProductEntity;
 import cart.dto.ProductDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
+
+import static org.hamcrest.Matchers.is;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -79,6 +82,36 @@ class ProductApiControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @Test
+    @DisplayName("존재하지 않는 상품을 수정하면 예외가 발생한다.")
+    void modifyNonExistProduct() {
+        ProductEntity productEntity = new ProductEntity.Builder().name("pizza").image("image1").price(10000).build();
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productEntity)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch("/products/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("상품 id를 확인해주세요."));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품을 삭제하면 예외가 발생한다.")
+    void deleteNonExistProduct() {
+        ProductEntity productEntity = new ProductEntity.Builder().name("pizza").image("image1").price(10000).build();
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productEntity)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/products/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("상품 id를 확인해주세요."));
+    }
+
     private int insertProduct(final String name, final Integer price, final String image) {
         final String sql = "INSERT INTO PRODUCTS (name, price, image) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -93,5 +126,6 @@ class ProductApiControllerTest {
         }, keyHolder);
         return keyHolder.getKey().intValue();
     }
+
 
 }

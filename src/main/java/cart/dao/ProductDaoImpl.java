@@ -1,6 +1,7 @@
 package cart.dao;
 
 import cart.domain.ProductEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -45,11 +46,11 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Optional<ProductEntity> findById(final int id) {
         final String sql = "SELECT * FROM PRODUCTS WHERE id = ?";
-        ProductEntity productEntity = jdbcTemplate.queryForObject(sql, productEntityRowMapper(), id);
-        if (productEntity == null) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, productEntityRowMapper(), id));
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-        return Optional.of(productEntity);
     }
 
     private RowMapper<ProductEntity> productEntityRowMapper() {

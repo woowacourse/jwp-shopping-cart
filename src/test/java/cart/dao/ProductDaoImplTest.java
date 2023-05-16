@@ -9,8 +9,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @JdbcTest
 @Transactional
@@ -70,6 +73,15 @@ class ProductDaoImplTest {
         productDao.delete(id);
 
         assertThat(productDao.findAll()).hasSize(0);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 ID로 제품을 조회할 경우 Optional Empty가 반환된다.")
+    void findByIdWithInvalidId() {
+
+        final Optional<ProductEntity> productEntity = productDao.findById(1);
+
+        assertTrue(productEntity.isEmpty());
     }
 
 }

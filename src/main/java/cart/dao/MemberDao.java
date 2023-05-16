@@ -1,11 +1,13 @@
 package cart.dao;
 
 import cart.domain.MemberEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberDao {
@@ -29,9 +31,13 @@ public class MemberDao {
                 .build();
     }
 
-    public MemberEntity findBy(String email) {
+    public Optional<MemberEntity> findBy(String email) {
         String sql = "SELECT * FROM MEMBERS WHERE email = ?";
-        return jdbcTemplate.queryForObject(sql, getMemberEntityRowMapper(), email);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, getMemberEntityRowMapper(), email));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
 }
