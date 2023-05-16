@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +32,6 @@ public class JwpCartService {
     private final MemberRepository memberRepository;
     private final CartItemRepository cartItemRepository;
 
-
     public JwpCartService(ProductRepository productRepository, MemberRepository memberRepository,
         CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
@@ -45,34 +42,19 @@ public class JwpCartService {
     public List<ProductResponse> findAllProducts() {
         return productRepository.findAll()
             .stream()
-            .map(productDto -> Product.of(
-                productDto.getId(),
-                productDto.getName(),
-                productDto.getImgUrl(),
-                productDto.getPrice()))
             .map(ProductResponse::new)
             .collect(Collectors.toList());
     }
 
     @Transactional
     public void addProduct(ProductRequest productRequest) {
-        Product product = Product.of(
-            null,
-            productRequest.getName(),
-            productRequest.getImgUrl(),
-            productRequest.getPrice()
-        );
+        Product product = productRequest.toProduct();
         productRepository.save(product);
     }
 
     @Transactional
     public void updateProductById(ProductRequest productRequest, Long id) {
-        Product product = Product.of(
-            null,
-            productRequest.getName(),
-            productRequest.getImgUrl(),
-            productRequest.getPrice()
-        );
+        Product product = productRequest.toProduct();
         productRepository.updateById(product, id);
     }
 
@@ -88,12 +70,6 @@ public class JwpCartService {
             .stream()
             .map(MemberResponse::new)
             .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public void addMember(String email, String password) {
-        Member member = Member.of(null, email, password);
-        memberRepository.save(member);
     }
 
     @Transactional

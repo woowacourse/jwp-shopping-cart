@@ -5,6 +5,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.URL;
 
+import cart.entity.Product;
+
 public class ProductRequest {
 
     @NotEmpty
@@ -22,6 +24,15 @@ public class ProductRequest {
         this.name = name;
         this.imgUrl = imgUrl;
         this.price = price;
+    }
+
+    public Product toProduct() {
+        return Product.of(
+            null,
+            this.name,
+            this.imgUrl,
+            this.price
+        );
     }
 
     public String getName() {
