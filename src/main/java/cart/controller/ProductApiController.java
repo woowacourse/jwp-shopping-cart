@@ -3,7 +3,6 @@ package cart.controller;
 import cart.dto.ProductDto;
 import cart.service.ProductService;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,10 +20,7 @@ public class ProductApiController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public String insert(@Valid @RequestBody ProductDto productDto, Errors errors) {
-        if (errors.hasErrors()) {
-            return errors.getFieldError().getField();
-        }
+    public String insert(@Valid @RequestBody ProductDto productDto) {
         productService.insert(productDto);
 
         return "ok";

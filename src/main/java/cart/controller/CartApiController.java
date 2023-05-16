@@ -8,6 +8,7 @@ import cart.service.CartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,14 +23,14 @@ public class CartApiController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/items/{productId}")
-    public String addItem(@PathVariable int productId, @AuthenticationPrincipal AuthInfo authInfo) {
+    public String addItem(@PathVariable int productId, @Valid @AuthenticationPrincipal AuthInfo authInfo) {
         cartService.addItem(authInfo, productId);
         return "ok";
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/items")
-    public List<CartEntity> itemList(@AuthenticationPrincipal AuthInfo authInfo) {
+    public List<CartEntity> itemList(@Valid @AuthenticationPrincipal AuthInfo authInfo) {
         List<CartEntity> cartEntities = cartService.searchItems(authInfo);
         return cartEntities;
     }
