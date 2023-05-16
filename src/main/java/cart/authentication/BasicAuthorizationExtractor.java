@@ -15,14 +15,14 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (header == null) {
-            return null;
+            throw new AuthorizationException("Authorization 헤더가 존재하지 않습니다");
         }
 
         if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
             return makeAuthInfo(header);
         }
 
-        return null;
+        throw new AuthorizationException("Basic 타입 인증이 아닙니다.");
     }
 
     private AuthInfo makeAuthInfo(String header) {
