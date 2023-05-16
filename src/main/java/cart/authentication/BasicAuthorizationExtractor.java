@@ -19,18 +19,22 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
         }
 
         if ((header.toLowerCase().startsWith(BASIC_TYPE.toLowerCase()))) {
-            String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
-            byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
-            String decodedString = new String(decodedBytes);
-
-            String[] credentials = decodedString.split(DELIMITER);
-            String email = credentials[0];
-            String password = credentials[1];
-
-            return new AuthInfo(email, password);
+            return makeAuthInfo(header);
         }
 
         return null;
+    }
+
+    private AuthInfo makeAuthInfo(String header) {
+        String authHeaderValue = header.substring(BASIC_TYPE.length()).trim();
+        byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
+        String decodedString = new String(decodedBytes);
+
+        String[] credentials = decodedString.split(DELIMITER);
+        String email = credentials[0];
+        String password = credentials[1];
+
+        return new AuthInfo(email, password);
     }
 
 }
