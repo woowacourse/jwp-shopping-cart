@@ -49,7 +49,7 @@ class CartServiceTest {
                         .password(new Password("testPW"))
                         .build()
         ));
-        when(itemDao.findBy(anyLong())).thenReturn(Optional.of(
+        when(itemDao.findById(anyLong())).thenReturn(Optional.of(
                 new Item.Builder()
                         .id(1L)
                         .name(new Name("test"))
@@ -89,7 +89,7 @@ class CartServiceTest {
         Cart cart = new Cart.Builder().userId(1L)
                                       .itemId(1L)
                                       .build();
-        when(cartDao.findBy(1L)).thenReturn(Optional.of(cart));
+        when(cartDao.findById(1L)).thenReturn(Optional.of(cart));
         doNothing().when(cartDao)
                    .deleteBy(1L);
         //when
@@ -102,7 +102,7 @@ class CartServiceTest {
     @Test
     void deleteItemExceptionWithNotExist() {
         //given
-        when(cartDao.findBy(100L)).thenReturn(Optional.empty());
+        when(cartDao.findById(100L)).thenReturn(Optional.empty());
         //then
         assertThatThrownBy(() ->
                 cartService.deleteItem(100L)

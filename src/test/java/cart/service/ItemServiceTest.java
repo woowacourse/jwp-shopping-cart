@@ -80,7 +80,7 @@ class ItemServiceTest {
                                        .price(new Price(123))
                                        .imageUrl(new ImageUrl("1번URL"))
                                        .build();
-        when(itemDao.findBy(1L)).thenReturn(Optional.of(item1));
+        when(itemDao.findById(1L)).thenReturn(Optional.of(item1));
         doNothing().when(itemDao)
                    .update(item1);
         //when
@@ -93,7 +93,7 @@ class ItemServiceTest {
     @Test
     void updateItemExceptionWithNotExist() {
         //given
-        when(itemDao.findBy(100L)).thenReturn(Optional.empty());
+        when(itemDao.findById(100L)).thenReturn(Optional.empty());
         //then
         assertThatThrownBy(() ->
                 itemService.updateItem(100L, new ItemRequest("1번", 123, "1번URL"))
@@ -109,7 +109,7 @@ class ItemServiceTest {
                                        .price(new Price(123))
                                        .imageUrl(new ImageUrl("1번URL"))
                                        .build();
-        when(itemDao.findBy(1L)).thenReturn(Optional.of(item1));
+        when(itemDao.findById(1L)).thenReturn(Optional.of(item1));
         doNothing().when(itemDao)
                    .deleteBy(1L);
         //when
@@ -122,7 +122,7 @@ class ItemServiceTest {
     @Test
     void deleteItemExceptionWithNotExist() {
         //given
-        when(itemDao.findBy(100L)).thenReturn(Optional.empty());
+        when(itemDao.findById(100L)).thenReturn(Optional.empty());
         //then
         assertThatThrownBy(() ->
                 itemService.deleteItem(100L)
@@ -138,7 +138,7 @@ class ItemServiceTest {
                                        .price(new Price(123))
                                        .imageUrl(new ImageUrl("1번URL"))
                                        .build();
-        when(itemDao.findBy(1L)).thenReturn(Optional.of(item1));
+        when(itemDao.findById(1L)).thenReturn(Optional.of(item1));
         //when
         ItemResponse itemResponse = itemService.loadItem(1L);
         //then

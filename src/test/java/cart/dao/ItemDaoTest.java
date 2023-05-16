@@ -48,9 +48,10 @@ class ItemDaoTest {
 
     @DisplayName("아이디를 통해 아이템을 조회한다")
     @Test
-    void findBy() {
+    void findById() {
         //when
-        Item findItem = itemDao.findBy(1L).orElseThrow();
+        Item findItem = itemDao.findById(1L)
+                               .orElseThrow();
         //then
         assertThat(findItem).isEqualTo(new Item.Builder()
                 .id(1L)
@@ -64,7 +65,7 @@ class ItemDaoTest {
     @Test
     void findByNotExistId() {
         //when
-        Optional<Item> findItem = itemDao.findBy(100L);
+        Optional<Item> findItem = itemDao.findById(100L);
         //then
         assertThat(findItem).isEmpty();
     }

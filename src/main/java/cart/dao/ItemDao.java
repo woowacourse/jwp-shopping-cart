@@ -37,7 +37,7 @@ public class ItemDao {
         return namedParameterJdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public Optional<Item> findBy(final Long itemId) {
+    public Optional<Item> findById(final Long itemId) {
         final String sql = "SELECT id, name, image_url, price FROM items WHERE id = :id";
         MapSqlParameterSource param = new MapSqlParameterSource("id", itemId);
         try {

@@ -62,14 +62,14 @@ public class CartService {
     }
 
     private void validateExistItem(final Long itemId) {
-        Optional<Item> findItem = itemDao.findBy(itemId);
+        Optional<Item> findItem = itemDao.findById(itemId);
         if (findItem.isEmpty()) {
             throw new NotFoundResultException("존재하지 않는 아이템 입니다.");
         }
     }
 
     private void validateExistCart(Long cartId) {
-        Optional<Cart> findCart = cartDao.findBy(cartId);
+        Optional<Cart> findCart = cartDao.findById(cartId);
         if (findCart.isEmpty()) {
             throw new NotFoundResultException("존재하지 않는 장바구니 아이템 입니다.");
         }

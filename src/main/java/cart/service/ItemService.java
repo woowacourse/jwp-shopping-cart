@@ -35,7 +35,7 @@ public class ItemService {
 
     @Transactional(readOnly = true)
     public ItemResponse loadItem(final Long itemId) {
-        Optional<Item> findItem = itemDao.findBy(itemId);
+        Optional<Item> findItem = itemDao.findById(itemId);
         Item item = findItem.orElseThrow(() -> new NotFoundResultException("존재하지 않는 아이템 입니다."));
         return ItemResponse.from(item);
     }
@@ -66,7 +66,7 @@ public class ItemService {
     }
 
     private void validateExistItem(Long itemId) {
-        Optional<Item> findItem = itemDao.findBy(itemId);
+        Optional<Item> findItem = itemDao.findById(itemId);
         if (findItem.isEmpty()) {
             throw new NotFoundResultException("존재하지 않는 아이템 입니다.");
         }

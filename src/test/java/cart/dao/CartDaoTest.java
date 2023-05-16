@@ -74,9 +74,9 @@ class CartDaoTest {
 
     @DisplayName("아이디를 통해 장바구니를 조회한다")
     @Test
-    void findBy() {
+    void findById() {
         //when
-        Cart findCart = cartDao.findBy(1L)
+        Cart findCart = cartDao.findById(1L)
                                .orElseThrow();
         //then
         assertThat(findCart).isEqualTo(
@@ -92,7 +92,7 @@ class CartDaoTest {
     @Test
     void findByNotExistId() {
         //when
-        Optional<Cart> findCart = cartDao.findBy(100L);
+        Optional<Cart> findCart = cartDao.findById(100L);
         //then
         assertThat(findCart).isEmpty();
     }
