@@ -49,9 +49,8 @@ class CartDaoTest {
     @Test
     @DisplayName("DB에 등록된 모든 카트 정보를 찾는다")
     void findAll() {
-        long productId1 = productDao.insert(new ProductEntity("pizza", "img", 10000));
-        long productId2 = productDao.insert(new ProductEntity("chicken", "img", 20000));
-        String memberId = "roy@gamail.com";
+        long productId1 = productDao.insert(new ProductEntity.Builder().name("pizza").image("image1").price(10000).build());
+        long productId2 = productDao.insert(new ProductEntity.Builder().name("chiken").image("image2").price(20000).build());
         cartDao.insert(1, (int) productId1);
         cartDao.insert(1, (int) productId2);
 

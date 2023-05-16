@@ -29,7 +29,7 @@ class ProductDaoImplTest {
     @Test
     @DisplayName("제품 데이터베이스에 상품 데이터를 추가한다")
     void insert() {
-        productDao.insert(new ProductEntity("pizza", "img", 10000));
+        productDao.insert(new ProductEntity.Builder().name("pizza").image("image").price(10000).build());
 
         assertThat(productDao.findAll()).hasSize(1);
     }
@@ -37,8 +37,8 @@ class ProductDaoImplTest {
     @Test
     @DisplayName("데이터베이스에 등록된 모든 상품 정보를 찾는다")
     void findAll() {
-        productDao.insert(new ProductEntity("pizza", "img", 10000));
-        productDao.insert(new ProductEntity("chicken", "img", 20000));
+        productDao.insert(new ProductEntity.Builder().name("pizza").image("image1").price(10000).build());
+        productDao.insert(new ProductEntity.Builder().name("chiken").image("image2").price(20000).build());
 
         assertThat(productDao.findAll()).hasSize(2);
     }
@@ -47,9 +47,9 @@ class ProductDaoImplTest {
     @DisplayName("특정 Id에 해당하는 제품을 조회한다.")
     void findById() {
         String name = "pizza";
-        String image = "img";
+        String image = "image1";
         int price = 10000;
-        ProductEntity product = new ProductEntity(name, image, price);
+        ProductEntity product = new ProductEntity.Builder().name("pizza").image("image1").price(10000).build();
 
         int id = (int) productDao.insert(product);
 
@@ -65,7 +65,7 @@ class ProductDaoImplTest {
     @Test
     @DisplayName("특정 id에 해당하는 제품을 제거한다.")
     void delete() {
-        int id = (int) productDao.insert(new ProductEntity("pizza", "img", 10000));
+        int id = (int) productDao.insert(new ProductEntity.Builder().name("pizza").image("image1").price(10000).build());
 
         productDao.delete(id);
 

@@ -27,7 +27,7 @@ class AdminControllerTest {
     @DisplayName("Admin 컨트롤러의 맵핑 기능이 정상적으로 작동한다")
     void adminController() {
 
-        ProductEntity productEntity = new ProductEntity(1, "pizza", "https://www.hmj2k.com/data/photos/20210936/art_16311398425635_31fd17.jpg", 1000);
+        ProductEntity productEntity = new ProductEntity.Builder().name("pizza").image("image1").price(10000).build();
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
