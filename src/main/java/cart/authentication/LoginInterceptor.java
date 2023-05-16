@@ -1,6 +1,7 @@
 package cart.authentication;
 
 import cart.dto.AuthInfo;
+import cart.exception.AuthorizationException;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;

@@ -1,6 +1,7 @@
 package cart.authentication;
 
 import cart.dto.AuthInfo;
+import cart.exception.AuthorizationException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpHeaders;
 
@@ -30,11 +31,15 @@ public class BasicAuthorizationExtractor implements AuthorizationExtractor<AuthI
         byte[] decodedBytes = Base64.decodeBase64(authHeaderValue);
         String decodedString = new String(decodedBytes);
 
-        String[] credentials = decodedString.split(DELIMITER);
-        String email = credentials[0];
-        String password = credentials[1];
+        if (decodedString.contains(DELIMITER)) {
+            String[] credentials = decodedString.split(DELIMITER);
+            String email = credentials[0];
+            String password = credentials[1];
+            return new AuthInfo(email, password);
+        }
+        throw new AuthorizationException("인증 정보가 Delimiter를 포함하지 않습니다.");
 
-        return new AuthInfo(email, password);
+
     }
 
 }
