@@ -1,5 +1,8 @@
 package cart.controller;
 
+import cart.auth.BasicAuthorizationExtractor;
+import cart.auth.interceptor.LoginInterceptor;
+import cart.auth.resolver.BasicAuthenticationPrincipalArgumentResolver;
 import cart.controller.dto.request.ItemRequest;
 import cart.controller.dto.response.ItemResponse;
 import cart.domain.ImageUrl;
@@ -37,6 +40,15 @@ class ItemControllerTest {
 
     @MockBean
     ItemController mockController;
+
+    @MockBean
+    LoginInterceptor loginInterceptor;
+
+    @MockBean
+    BasicAuthorizationExtractor extractor;
+
+    @MockBean
+    BasicAuthenticationPrincipalArgumentResolver basicAuthenticationPrincipalArgumentResolver;
 
     @Mock
     ItemService itemService;

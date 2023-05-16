@@ -52,7 +52,7 @@ public class UserService {
     public boolean isExistUser(final AuthInfoDto authInfoDto) {
         User user = new User.Builder()
                 .email(new Email(authInfoDto.getEmail()))
-                .password(new Password(authInfoDto.getEmail()))
+                .password(new Password(authInfoDto.getPassword()))
                 .build();
         userDao.findByEmailAndPassword(user)
                .orElseThrow(() -> new NotFoundResultException("존재하지 않는 사용자입니다."));

@@ -57,7 +57,7 @@ public class CartService {
 
     private Long findUserIdByEmail(final AuthInfoDto authInfoDto) {
         Optional<User> findUser = userDao.findByEmail(authInfoDto.getEmail());
-        User user = findUser.orElseThrow(() -> new NotFoundResultException("존재하지 않는 사용자 입니다."));
+        User user = findUser.orElseThrow(() -> new NotFoundResultException("존재하지 않는 사용자입니다."));
         return user.getId();
     }
 

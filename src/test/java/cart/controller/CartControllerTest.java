@@ -1,5 +1,8 @@
 package cart.controller;
 
+import cart.auth.BasicAuthorizationExtractor;
+import cart.auth.interceptor.LoginInterceptor;
+import cart.auth.resolver.BasicAuthenticationPrincipalArgumentResolver;
 import cart.controller.dto.auth.AuthInfoDto;
 import cart.controller.dto.response.CartResponse;
 import cart.domain.CartData;
@@ -38,6 +41,15 @@ class CartControllerTest {
     @MockBean
     CartController mockCartController;
 
+    @MockBean
+    LoginInterceptor loginInterceptor;
+
+    @MockBean
+    BasicAuthorizationExtractor extractor;
+
+    @MockBean
+    BasicAuthenticationPrincipalArgumentResolver basicAuthenticationPrincipalArgumentResolver;
+
     @Mock
     CartService cartService;
 
@@ -56,6 +68,7 @@ class CartControllerTest {
         //given
         String value = objectMapper.writeValueAsString(new AuthInfoDto("test@email.com", "testPW"));
         when(mockCartService.saveCart(any(), anyLong())).thenReturn(1L);
+        when(loginInterceptor.preHandle(any(), any(), any())).thenReturn(true);
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/carts/1")
                                               .header("Authorization", value));
@@ -69,6 +82,7 @@ class CartControllerTest {
         //given
         String value = objectMapper.writeValueAsString(new AuthInfoDto("test@email.com", "testPW"));
         when(mockCartService.loadAllCart(any())).thenReturn(Collections.emptyList());
+        when(loginInterceptor.preHandle(any(), any(), any())).thenReturn(true);
         //when
         mockMvc.perform(MockMvcRequestBuilders.get("/carts")
                                               .header("Authorization", value));
@@ -83,6 +97,7 @@ class CartControllerTest {
         String value = objectMapper.writeValueAsString(new AuthInfoDto("test@email.com", "testPW"));
         doNothing().when(mockCartService)
                    .deleteItem(anyLong());
+        when(loginInterceptor.preHandle(any(), any(), any())).thenReturn(true);
         //when
         mockMvc.perform(MockMvcRequestBuilders.delete("/carts/1")
                                               .header("Authorization", value));

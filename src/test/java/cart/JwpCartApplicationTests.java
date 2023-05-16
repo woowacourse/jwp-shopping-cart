@@ -314,7 +314,7 @@ class JwpCartApplicationTests {
                    .put("/users/100")
                    .then()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                   .body(containsString("존재하지 않는 사용자 입니다."));
+                   .body(containsString("존재하지 않는 사용자입니다."));
     }
 
     @DisplayName("DELETE /users/{id} 요청 정상 응답")
@@ -336,7 +336,7 @@ class JwpCartApplicationTests {
                    .delete("/users/100")
                    .then()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                   .body(containsString("존재하지 않는 사용자 입니다."));
+                   .body(containsString("존재하지 않는 사용자입니다."));
     }
 
     @DisplayName("POST /carts/itemId 요청 정상 응답")

@@ -1,5 +1,8 @@
 package cart.controller;
 
+import cart.auth.BasicAuthorizationExtractor;
+import cart.auth.interceptor.LoginInterceptor;
+import cart.auth.resolver.BasicAuthenticationPrincipalArgumentResolver;
 import cart.controller.dto.request.UserRequest;
 import cart.controller.dto.response.UserResponse;
 import cart.domain.Email;
@@ -37,6 +40,15 @@ class UserControllerTest {
 
     @MockBean
     UserController mockUserController;
+
+    @MockBean
+    LoginInterceptor loginInterceptor;
+
+    @MockBean
+    BasicAuthorizationExtractor extractor;
+
+    @MockBean
+    BasicAuthenticationPrincipalArgumentResolver basicAuthenticationPrincipalArgumentResolver;
 
     @Mock
     UserService userService;
