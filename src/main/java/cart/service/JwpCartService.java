@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Service;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import cart.dto.AuthInfo;
@@ -24,6 +25,7 @@ import cart.entity.ProductRepository;
 import cart.exception.DomainException;
 import cart.exception.ExceptionCode;
 
+@Sql("/setup.sql")
 @Service
 @Transactional(readOnly = true)
 public class JwpCartService {
@@ -32,19 +34,12 @@ public class JwpCartService {
     private final MemberRepository memberRepository;
     private final CartItemRepository cartItemRepository;
 
+
     public JwpCartService(ProductRepository productRepository, MemberRepository memberRepository,
         CartItemRepository cartItemRepository) {
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
         this.cartItemRepository = cartItemRepository;
-    }
-
-    @PostConstruct
-    private void setUp() {
-        addMember("email1@email.com", "password1");
-        addMember("email2@email.com", "password2");
-        addProduct(new ProductRequest("asdf", "http://www.naver.com", 1234));
-        addProduct(new ProductRequest("qwer", "http://www.naver.com", 1234));
     }
 
     public List<ProductResponse> findAllProducts() {
