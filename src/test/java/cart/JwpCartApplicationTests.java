@@ -8,6 +8,9 @@ import cart.domain.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,8 +26,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -541,5 +546,60 @@ class JwpCartApplicationTests {
                    .all()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
                    .body(containsString("존재하지 않는 장바구니 아이템 입니다."));
+    }
+
+    @DisplayName("POST /carts/itemId 요청 시 잘못된 인증 정보를 넘기는 경우의 응답")
+    @Test
+    void postRequestCartExceptionAuth() {
+        String authorization = "Basic dGVzdDFAZ21haWwuY29tOnRlc3QxcHcxMjM0 more credential";
+        final ExtractableResponse<Response> response = RestAssured.given()
+                                                                  .log()
+                                                                  .all()
+                                                                  .header("Authorization", authorization)
+                                                                  .when()
+                                                                  .log()
+                                                                  .all()
+                                                                  .post("/carts/1")
+                                                                  .then()
+                                                                  .log()
+                                                                  .all()
+                                                                  .statusCode(HttpStatus.BAD_REQUEST.value())
+                                                                  .extract();
+
+        JsonPath result = response.jsonPath();
+        assertAll(
+                () -> assertThat(result.getString("code")).isEqualTo("400"),
+                () -> assertThat(result.getString("status")).isEqualTo("Bad Request"),
+                () -> assertThat(result.getString("message")).isEqualTo("잘못된 인증 정보입니다.")
+        );
+    }
+
+    @DisplayName("POST /carts/itemId 요청 시 없는 계정에 대한 정보를 Auth로 넘기는 경우의 응답")
+    @Test
+    void postRequestCartNotExistAuth() {
+        String email = "notExist@gmail.com";
+        String password = "notExistPassword";
+        final ExtractableResponse<Response> response = RestAssured.given()
+                                                                  .log()
+                                                                  .all()
+                                                                  .auth()
+                                                                  .preemptive()
+                                                                  .basic(email, password)
+                                                                  .when()
+                                                                  .log()
+                                                                  .all()
+                                                                  .post("/carts/1")
+                                                                  .then()
+                                                                  .log()
+                                                                  .all()
+                                                                  .statusCode(HttpStatus.BAD_REQUEST.value())
+                                                                  .extract();
+
+        JsonPath result = response.jsonPath();
+        assertAll(
+                () -> assertThat(result.getString("code")).isEqualTo("400"),
+                () -> assertThat(result.getString("status")).isEqualTo("Bad Request"),
+                () -> assertThat(result.getString("message")).isEqualTo("존재하지 않는 사용자입니다.")
+        );
     }
 }
