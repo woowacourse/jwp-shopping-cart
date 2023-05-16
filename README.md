@@ -1,1 +1,1 @@
-# jwp-shopping-cartItem
+# jwp-shopping-cart
