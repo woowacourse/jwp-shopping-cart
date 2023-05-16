@@ -43,7 +43,7 @@ public class CartDao {
 
     public List<CartData> findAll(final Long userId) {
         final String sql = "SELECT carts.id, items.name, items.image_url, items.price " +
-                "FROM items JOIN carts " +
+                "FROM items INNER JOIN carts " +
                 "ON items.id = carts.item_id " +
                 "WHERE carts.user_id = :user_id";
         MapSqlParameterSource param = new MapSqlParameterSource("user_id", userId);
