@@ -125,11 +125,17 @@ class JwpCartApplicationTests {
     void postRequestItem() throws Exception {
         String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "url"));
         RestAssured.given()
+                   .log()
+                   .all()
                    .body(content)
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                    .when()
+                   .log()
+                   .all()
                    .post("/items")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.CREATED.value())
                    .header("Location", "/");
     }
@@ -138,10 +144,16 @@ class JwpCartApplicationTests {
     @Test
     void getRequestItem() {
         RestAssured.given()
+                   .log()
+                   .all()
                    .accept(MediaType.APPLICATION_JSON_VALUE)
                    .when()
+                   .log()
+                   .all()
                    .get("/items")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.OK.value())
                    .body("size()", is(3));
     }
@@ -151,11 +163,17 @@ class JwpCartApplicationTests {
     void putRequestItem() throws JsonProcessingException {
         String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "url"));
         RestAssured.given()
+                   .log()
+                   .all()
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                    .body(content)
                    .when()
+                   .log()
+                   .all()
                    .put("/items/1")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.CREATED.value())
                    .header("Location", "/");
     }
@@ -164,9 +182,15 @@ class JwpCartApplicationTests {
     @Test
     void deleteRequestItem() {
         RestAssured.given()
+                   .log()
+                   .all()
                    .when()
+                   .log()
+                   .all()
                    .delete("/items/1")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.OK.value())
                    .header("Location", "/");
     }
@@ -176,11 +200,17 @@ class JwpCartApplicationTests {
     void postRequestItemException() throws Exception {
         String content = objectMapper.writeValueAsString(new ItemRequest("", 150000, "url"));
         RestAssured.given()
+                   .log()
+                   .all()
                    .body(content)
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                    .when()
+                   .log()
+                   .all()
                    .post("/items")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
                    .body(containsString("이름을 입력해주세요."));
     }
@@ -190,11 +220,17 @@ class JwpCartApplicationTests {
     void putRequestItemException() throws Exception {
         String content = objectMapper.writeValueAsString(new ItemRequest("", 150000, "url"));
         RestAssured.given()
+                   .log()
+                   .all()
                    .body(content)
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                    .when()
+                   .log()
+                   .all()
                    .put("/items/1")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
                    .body(containsString("이름을 입력해주세요."));
     }
@@ -204,11 +240,17 @@ class JwpCartApplicationTests {
     void putRequestItemExceptionWithNotExist() throws Exception {
         String content = objectMapper.writeValueAsString(new ItemRequest("레드북", 150000, "url"));
         RestAssured.given()
+                   .log()
+                   .all()
                    .body(content)
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                    .when()
+                   .log()
+                   .all()
                    .put("/items/100")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
                    .body(containsString("존재하지 않는 아이템 입니다."));
     }
@@ -219,6 +261,8 @@ class JwpCartApplicationTests {
         RestAssured.when()
                    .delete("/items/100")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
                    .body(containsString("존재하지 않는 아이템 입니다."));
     }
@@ -228,11 +272,17 @@ class JwpCartApplicationTests {
     void postRequestUser() throws Exception {
         String content = objectMapper.writeValueAsString(new UserRequest("test@email.com", "testPW"));
         RestAssured.given()
+                   .log()
+                   .all()
                    .body(content)
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                    .when()
+                   .log()
+                   .all()
                    .post("/users")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.CREATED.value())
                    .header("Location", "/settings");
     }
@@ -242,11 +292,17 @@ class JwpCartApplicationTests {
     void postRequestUserException() throws Exception {
         String content = objectMapper.writeValueAsString(new UserRequest("", "testPW"));
         RestAssured.given()
+                   .log()
+                   .all()
                    .body(content)
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                    .when()
+                   .log()
+                   .all()
                    .post("/users")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
                    .body(containsString("이메일은 빈 값일 수 없습니다."));
     }
@@ -255,10 +311,16 @@ class JwpCartApplicationTests {
     @Test
     void getRequestAllUser() {
         RestAssured.given()
+                   .log()
+                   .all()
                    .accept(MediaType.APPLICATION_JSON_VALUE)
                    .when()
+                   .log()
+                   .all()
                    .get("/users")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.OK.value())
                    .body("size()", is(3));
     }
@@ -267,10 +329,16 @@ class JwpCartApplicationTests {
     @Test
     void getRequestUser() {
         RestAssured.given()
+                   .log()
+                   .all()
                    .accept(MediaType.APPLICATION_JSON_VALUE)
                    .when()
+                   .log()
+                   .all()
                    .get("/users/1")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.OK.value());
     }
 
@@ -279,11 +347,17 @@ class JwpCartApplicationTests {
     void putRequestUser() throws JsonProcessingException {
         String content = objectMapper.writeValueAsString(new UserRequest("edit@email.com", "editPW"));
         RestAssured.given()
+                   .log()
+                   .all()
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                    .body(content)
                    .when()
+                   .log()
+                   .all()
                    .put("/users/1")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.CREATED.value())
                    .header("Location", "/settings");
     }
@@ -294,11 +368,17 @@ class JwpCartApplicationTests {
     void putRequestUserException() throws Exception {
         String content = objectMapper.writeValueAsString(new UserRequest("test@email.com", ""));
         RestAssured.given()
+                   .log()
+                   .all()
                    .body(content)
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                    .when()
+                   .log()
+                   .all()
                    .put("/users/1")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
                    .body(containsString("비밀번호는 빈 값일 수 없습니다."));
     }
@@ -308,11 +388,17 @@ class JwpCartApplicationTests {
     void putRequestUserExceptionWithNotExist() throws Exception {
         String content = objectMapper.writeValueAsString(new UserRequest("test@email.com", "testPW"));
         RestAssured.given()
+                   .log()
+                   .all()
                    .body(content)
                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                    .when()
+                   .log()
+                   .all()
                    .put("/users/100")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
                    .body(containsString("존재하지 않는 사용자입니다."));
     }
@@ -321,9 +407,15 @@ class JwpCartApplicationTests {
     @Test
     void deleteRequestUser() {
         RestAssured.given()
+                   .log()
+                   .all()
                    .when()
+                   .log()
+                   .all()
                    .delete("/users/1")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.OK.value())
                    .header("Location", "/settings");
     }
@@ -335,6 +427,8 @@ class JwpCartApplicationTests {
         RestAssured.when()
                    .delete("/users/100")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
                    .body(containsString("존재하지 않는 사용자입니다."));
     }
@@ -345,12 +439,18 @@ class JwpCartApplicationTests {
         String email = "test1@gmail.com";
         String password = "test1pw1234";
         RestAssured.given()
+                   .log()
+                   .all()
                    .auth()
                    .preemptive()
                    .basic(email, password)
                    .when()
+                   .log()
+                   .all()
                    .post("/carts/1")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.CREATED.value())
                    .header("Location", "/");
     }
@@ -361,12 +461,18 @@ class JwpCartApplicationTests {
         String email = "test1@gmail.com";
         String password = "test1pw1234";
         RestAssured.given()
+                   .log()
+                   .all()
                    .auth()
                    .preemptive()
                    .basic(email, password)
                    .when()
+                   .log()
+                   .all()
                    .post("/carts/100")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
                    .body(containsString("존재하지 않는 아이템 입니다."));
     }
@@ -377,12 +483,18 @@ class JwpCartApplicationTests {
         String email = "test1@gmail.com";
         String password = "test1pw1234";
         RestAssured.given()
+                   .log()
+                   .all()
                    .auth()
                    .preemptive()
                    .basic(email, password)
                    .when()
+                   .log()
+                   .all()
                    .get("/carts")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.OK.value())
                    .body("size()", is(2));
     }
@@ -393,12 +505,18 @@ class JwpCartApplicationTests {
         String email = "test1@gmail.com";
         String password = "test1pw1234";
         RestAssured.given()
+                   .log()
+                   .all()
                    .auth()
                    .preemptive()
                    .basic(email, password)
                    .when()
+                   .log()
+                   .all()
                    .delete("/carts/1")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.OK.value())
                    .header("Location", "/");
     }
@@ -409,12 +527,18 @@ class JwpCartApplicationTests {
         String email = "test1@gmail.com";
         String password = "test1pw1234";
         RestAssured.given()
+                   .log()
+                   .all()
                    .auth()
                    .preemptive()
                    .basic(email, password)
                    .when()
+                   .log()
+                   .all()
                    .delete("/carts/100")
                    .then()
+                   .log()
+                   .all()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
                    .body(containsString("존재하지 않는 장바구니 아이템 입니다."));
     }
