@@ -1,7 +1,6 @@
 package cart.dao;
 
-import cart.dto.ProductDto;
-import cart.dto.ProductRequest;
+import cart.dto.entity.ProductEntity;
 import java.util.List;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,38 +18,44 @@ public class ProductDao {
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    public int save(ProductRequest productRequest) {
+    public int save(ProductEntity productEntity) {
         GeneratedKeyHolder keyholder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO product (name, imgUrl, price) VALUES (:name, :imgUrl, :price)";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(productRequest);
+        final String sql = "INSERT INTO product (name, imgUrl, price) VALUES (:name, :imgUrl, :price)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(productEntity);
         namedParameterJdbcTemplate.update(sql, namedParameters, keyholder, new String[]{"id"});
 
         return keyholder.getKey().intValue();
     }
 
-    public List<ProductDto> findAll() {
-        String sql = "SELECT * FROM product";
-        BeanPropertyRowMapper<ProductDto> mapper = BeanPropertyRowMapper.newInstance(ProductDto.class);
+    public List<ProductEntity> findAll() {
+        final String sql = "SELECT * FROM product";
+        BeanPropertyRowMapper<ProductEntity> mapper = BeanPropertyRowMapper.newInstance(ProductEntity.class);
         return jdbcTemplate.query(sql, mapper);
     }
 
-    public int update(ProductRequest productRequest, int id) {
-        String sql = "UPDATE product SET name=:name, imgUrl=:imgUrl, price=:price WHERE id=:id";
+    public int update(ProductEntity productEntity) {
+        final String sql = "UPDATE product SET name=:name, imgUrl=:imgUrl, price=:price WHERE id=:id";
         MapSqlParameterSource mapSqlParameters = new MapSqlParameterSource()
-                .addValue("name", productRequest.getName())
-                .addValue("imgUrl", productRequest.getImgUrl())
-                .addValue("price", productRequest.getPrice())
-                .addValue("id", id);
+                .addValue("id", productEntity.getId())
+                .addValue("name", productEntity.getName())
+                .addValue("imgUrl", productEntity.getImgUrl())
+                .addValue("price", productEntity.getPrice());
         return namedParameterJdbcTemplate.update(sql, mapSqlParameters);
     }
 
     public int delete(int id) {
-        String sql = "DELETE FROM product WHERE id=:id";
+        final String sql = "DELETE FROM product WHERE id=:id";
         MapSqlParameterSource mapSqlParameters = new MapSqlParameterSource()
                 .addValue("id", id);
         return namedParameterJdbcTemplate.update(sql, mapSqlParameters);
+    }
+
+    public List<ProductEntity> findById(int productId) {
+        final String sql = "SELECT * FROM product WHERE id = ?";
+        BeanPropertyRowMapper<ProductEntity> mapper = BeanPropertyRowMapper.newInstance(ProductEntity.class);
+        return jdbcTemplate.query(sql, mapper, productId);
     }
 }

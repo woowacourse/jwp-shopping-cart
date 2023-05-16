@@ -1,15 +1,21 @@
-package cart.dto;
+package cart.dto.entity;
 
-public class ProductDto {
+public class ProductEntity {
     private int id;
     private String name;
     private String imgUrl;
     private int price;
 
-    public ProductDto() {
+    public ProductEntity() {
     }
 
-    public ProductDto(int id, String name, String imgUrl, int price) {
+    public ProductEntity(String name, String imgUrl, int price) {
+        this.name = name;
+        this.imgUrl = imgUrl;
+        this.price = price;
+    }
+
+    public ProductEntity(int id, String name, String imgUrl, int price) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
