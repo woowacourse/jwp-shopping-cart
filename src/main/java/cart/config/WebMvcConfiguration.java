@@ -12,6 +12,14 @@ import java.util.List;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
+
+    private final BasicAuthenticationPrincipalArgumentResolver basicAuthenticationPrincipalArgumentResolver;
+
+    public WebMvcConfiguration(BasicAuthenticationPrincipalArgumentResolver basicAuthenticationPrincipalArgumentResolver) {
+        this.basicAuthenticationPrincipalArgumentResolver = basicAuthenticationPrincipalArgumentResolver;
+    }
+
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/cart")
@@ -26,6 +34,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new BasicAuthenticationPrincipalArgumentResolver());
+        resolvers.add(basicAuthenticationPrincipalArgumentResolver);
     }
 }
