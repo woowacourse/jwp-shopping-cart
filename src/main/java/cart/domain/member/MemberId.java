@@ -13,7 +13,7 @@ public class MemberId {
 		return new MemberId(id);
 	}
 
-	public long getId() {
+	public long getValue() {
 		return id;
 	}
 

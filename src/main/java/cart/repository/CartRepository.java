@@ -37,7 +37,7 @@ public class CartRepository {
 
 	public CartId insert(final MemberId memberId, final ProductId productId) {
 		SqlParameterSource params = new MapSqlParameterSource()
-			.addValue("memberId", memberId.getId())
+			.addValue("memberId", memberId.getValue())
 			.addValue("productId", productId.getId());
 		final long cartId = jdbcInsert.executeAndReturnKey(params).longValue();
 		return CartId.from(cartId);
@@ -45,7 +45,7 @@ public class CartRepository {
 
 	public List<Cart> findAllByMemberId(final MemberId memberId) {
 		final String sql = "SELECT * FROM carts WHERE memberId = ?";
-		return jdbcTemplate.query(sql, cartRowMapper, memberId.getId());
+		return jdbcTemplate.query(sql, cartRowMapper, memberId.getValue());
 	}
 
 	public List<Cart> findAllByEmail(final String email) {
@@ -60,7 +60,7 @@ public class CartRepository {
 
 	public boolean deleteById(final MemberId memberId, final long cartId) {
 		final String sql = "DELETE FROM carts WHERE id = ? AND memberId = ?";
-		final int deleteCount = jdbcTemplate.update(sql, cartId, memberId.getId());
+		final int deleteCount = jdbcTemplate.update(sql, cartId, memberId.getValue());
 
 		return deleteCount == DELETED_COUNT;
 	}

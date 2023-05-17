@@ -50,7 +50,7 @@ public class MemberRepository {
 	public Member findByMemberId(final MemberId memberId) {
 		final String sql = "SELECT * FROM members WHERE id = ?";
 		try {
-			return jdbcTemplate.queryForObject(sql, memberRowMapper, memberId.getId());
+			return jdbcTemplate.queryForObject(sql, memberRowMapper, memberId.getValue());
 		} catch (EmptyResultDataAccessException e) {
 			return null;
 		}

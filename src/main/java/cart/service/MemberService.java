@@ -26,18 +26,18 @@ public class MemberService {
 	public List<MemberResponse> findAll() {
 		return memberRepository.findAll()
 			.stream()
-			.map(member -> new MemberResponse(member.getId().getId(), member.getName(), member.getEmail(),
+			.map(member -> new MemberResponse(member.getId().getValue(), member.getName(), member.getEmail(),
 				member.getPassword()))
 			.collect(Collectors.toList());
 	}
 
 	public MemberResponse findByMemberId(final MemberId memberId) {
 		final Member member = memberRepository.findByMemberId(memberId);
-		return new MemberResponse(member.getId().getId(), member.getName(), member.getEmail(), member.getPassword());
+		return new MemberResponse(member.getId().getValue(), member.getName(), member.getEmail(), member.getPassword());
 	}
 
 	public MemberResponse findByEmail(final String email) {
 		final Member member = memberRepository.findByEmail(email);
-		return new MemberResponse(member.getId().getId(), member.getName(), member.getEmail(), member.getPassword());
+		return new MemberResponse(member.getId().getValue(), member.getName(), member.getEmail(), member.getPassword());
 	}
 }

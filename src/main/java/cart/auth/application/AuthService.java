@@ -18,6 +18,6 @@ public class AuthService {
 
 	public MemberResponse findMember(final String email) {
 		final Member member = memberRepository.findByEmail(email);
-		return new MemberResponse(member.getId().getId(), member.getName(), member.getEmail(), member.getPassword());
+		return new MemberResponse(member.getId().getValue(), member.getName(), member.getEmail(), member.getPassword());
 	}
 }
