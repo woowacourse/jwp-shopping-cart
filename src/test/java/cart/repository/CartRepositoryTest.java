@@ -11,7 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import cart.domain.cart.Cart;
@@ -25,32 +24,32 @@ import cart.domain.product.ProductId;
 @Transactional
 class CartRepositoryTest {
 
-	private static final Member MEMBER = new Member("kiara", "email@email.com", "pw");
-	private static final Product CHICKEN = new Product("치킨", 10000, "치킨이미지");
-	private static final Product PIZZA = new Product("피자", 20000, "피자이미지");
-
-	CartRepository cartRepository;
-	MemberRepository memberRepository;
-	ProductRepository productRepository;
+	MemberId memberId;
+	ProductId chickenId;
+	ProductId pizzaId;
 
 	@Autowired
-	JdbcTemplate jdbcTemplate;
+	CartRepository cartRepository;
+
+	@Autowired
+	MemberRepository memberRepository;
+
+	@Autowired
+	ProductRepository productRepository;
 
 	@BeforeEach
 	void setUp() {
-		cartRepository = new CartRepository(jdbcTemplate);
-		memberRepository = new MemberRepository(jdbcTemplate);
-		productRepository = new ProductRepository(jdbcTemplate);
+		final Member MEMBER = new Member("kiara", "email@email.com", "pw");
+		final Product CHICKEN = new Product("치킨", 10000, "치킨이미지");
+		final Product PIZZA = new Product("피자", 20000, "피자이미지");
+		memberId = memberRepository.insert(MEMBER);
+		chickenId = productRepository.insert(CHICKEN);
+		pizzaId = productRepository.insert(PIZZA);
 	}
 
 	@DisplayName("장바구니 상품 저장 및 조회 테스트")
 	@Test
 	void insert() {
-		// given
-		final MemberId memberId = memberRepository.insert(MEMBER);
-		final ProductId chickenId = productRepository.insert(CHICKEN);
-		final ProductId pizzaId = productRepository.insert(PIZZA);
-
 		// when
 		cartRepository.insert(memberId, chickenId);
 		cartRepository.insert(memberId, pizzaId);
@@ -65,9 +64,6 @@ class CartRepositoryTest {
 	@Test
 	void findAllByEmail() {
 		// given
-		final MemberId memberId = memberRepository.insert(MEMBER);
-		final ProductId chickenId = productRepository.insert(CHICKEN);
-		final ProductId pizzaId = productRepository.insert(PIZZA);
 		final String email = "email@email.com";
 
 		// when
@@ -88,11 +84,6 @@ class CartRepositoryTest {
 	@DisplayName("장바구니 상품 삭제 테스트")
 	@Test
 	void delete() {
-		// given
-		final MemberId memberId = memberRepository.insert(MEMBER);
-		final ProductId chickenId = productRepository.insert(CHICKEN);
-		final ProductId pizzaId = productRepository.insert(PIZZA);
-
 		// when
 		final CartId cartId = cartRepository.insert(memberId, chickenId);
 		cartRepository.insert(memberId, pizzaId);
