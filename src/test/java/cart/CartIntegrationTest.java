@@ -1,5 +1,8 @@
 package cart;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +57,11 @@ public class CartIntegrationTest {
 			.then().log().all()
 			.extract();
 
-		Assertions.assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+		assertAll(
+			() -> assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value()),
+			() -> assertThat(result.jsonPath().getString("name")).isEqualTo("[사과]"),
+			() -> assertThat(result.jsonPath().getString("image")).isEqualTo("[사과이미지]")
+		);
 	}
 
 	@Test
@@ -73,7 +80,7 @@ public class CartIntegrationTest {
 			.then().log().all()
 			.extract();
 
-		Assertions.assertThat(result.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+		assertThat(result.statusCode()).isEqualTo(HttpStatus.CREATED.value());
 	}
 
 	@Test
@@ -92,6 +99,6 @@ public class CartIntegrationTest {
 			.then().log().all()
 			.extract();
 
-		Assertions.assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
+		assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
 	}
 }
