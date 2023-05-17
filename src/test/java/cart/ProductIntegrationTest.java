@@ -7,11 +7,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
 public class ProductIntegrationTest {
 
     @LocalServerPort
@@ -23,11 +25,12 @@ public class ProductIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void getProducts() {
         var result = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/product/read")
+                .get("/products")
                 .then()
                 .extract();
 

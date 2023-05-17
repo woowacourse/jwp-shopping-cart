@@ -26,8 +26,4 @@ public class ProductName {
             throw new IllegalArgumentException("이름은 공백일 수 없습니다.");
         }
     }
-
-    public String getValue() {
-        return name;
-    }
 }

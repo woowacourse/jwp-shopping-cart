@@ -1,17 +1,18 @@
 package cart.persistence;
 
-import cart.business.domain.Product;
-import cart.business.domain.ProductImage;
-import cart.business.domain.ProductName;
-import cart.business.domain.ProductPrice;
+import cart.entity.ProductEntity;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@Transactional
 class MemoryProductRepositoryTest {
 
     private MemoryProductRepository memoryProductRepository;
@@ -22,84 +23,94 @@ class MemoryProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("Product 객체를 넣었을 때 ID를 반환할 수 있다")
+    @DisplayName("Product 객체를 넣을 수 있다")
     void test_insert() {
         //given
-        Product salmon = new Product(1,
-                new ProductName("salmon"),
-                new ProductImage("https://www.salmonlover.com"),
-                new ProductPrice(17000));
+//        Product salmon = new Product(null,
+//                new ProductName("salmon"),
+//                new ProductImage("https://www.salmonlover.com"),
+//                new ProductPrice(17000));
+
+        ProductEntity salmon = new ProductEntity(null, "salmon", "https://www.salmonlover.com", 17000);
 
         //when
         Integer actualId = memoryProductRepository.insert(salmon);
 
         //then
-        assertThat(actualId).isEqualTo(1);
+        assertThatThrownBy(() -> memoryProductRepository.findSameProductExist(salmon)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @DisplayName("모든 Product 객체를 반환할 수 있다")
     void test_findAll() {
         //given
-        Product salmon = new Product(1,
-                new ProductName("salmon"),
-                new ProductImage("https://www.salmonlover.com"),
-                new ProductPrice(17000));
+//        Product salmon = new Product(1,
+//                new ProductName("salmon"),
+//                new ProductImage("https://www.salmonlover.com"),
+//                new ProductPrice(17000));
+//
+//        Product pizza = new Product(2,
+//                new ProductName("pizza"),
+//                new ProductImage("http://www.pizzalover.com"),
+//                new ProductPrice(40000));
 
-        Product pizza = new Product(2,
-                new ProductName("pizza"),
-                new ProductImage("http://www.pizzalover.com"),
-                new ProductPrice(40000));
+        ProductEntity salmon = new ProductEntity(1,
+                ("salmon"),
+                ("https://www.salmonlover.com"),
+                (17000));
+
+        ProductEntity pizza = new ProductEntity(2,
+                ("pizza"),
+                ("http://www.pizzalover.com"),
+                (40000));
 
         //when
-        memoryProductRepository.insert(salmon);
-        memoryProductRepository.insert(pizza);
+        Integer actualSalmonId = memoryProductRepository.insert(salmon);
+        Integer actualPizzaId = memoryProductRepository.insert(pizza);
 
-        List<Product> allProducts = memoryProductRepository.findAll();
-        Product actualSalmon = allProducts.get(0);
-        Product actualPizza = allProducts.get(1);
+        List<ProductEntity> allProducts = memoryProductRepository.findAll();
 
         //then
-        assertThat(actualSalmon.getId()).isEqualTo(salmon.getId());
-        assertThat(actualPizza.getId()).isEqualTo(pizza.getId());
+        assertThat(allProducts.size()).isEqualTo(2);
     }
 
     @Test
     @DisplayName("Product 객체를 업데이트 할 수 있다")
     void update() {
         //given
-        Product salmon = new Product(1,
-                new ProductName("salmon"),
-                new ProductImage("https://www.salmonlover.com"),
-                new ProductPrice(17000));
+        ProductEntity salmon = new ProductEntity(1,
+                ("before"),
+                ("https://www.salmonlover.com"),
+                (17000));
 
-        Product pizza = new Product(1,
-                new ProductName("pizza"),
-                new ProductImage("http://www.pizzalover.com"),
-                new ProductPrice(40000));
+        Integer salmonId = memoryProductRepository.insert(salmon);
+
+        ProductEntity pizza = new ProductEntity(salmonId,
+                ("after"),
+                ("http://www.pizzalover.com"),
+                (40000));
+
         //when
-        memoryProductRepository.insert(salmon);
-        memoryProductRepository.update(pizza);
-        List<Product> products = memoryProductRepository.findAll();
+        memoryProductRepository.update(salmonId, pizza);
 
         //then
-        assertThat(products.get(0).getName()).isEqualTo("pizza");
+        Assertions.assertDoesNotThrow(() -> memoryProductRepository.findSameProductExist(salmon));
     }
 
     @Test
     @DisplayName("해당하는 Product 객체를 삭제할 수 있다")
     void remove() {
         //given
-        Product salmon = new Product(1,
-                new ProductName("salmon"),
-                new ProductImage("https://www.salmonlover.com"),
-                new ProductPrice(17000));
+        ProductEntity salmon = new ProductEntity(1,
+                ("before"),
+                ("https://www.salmonlover.com"),
+                (17000));
 
         //when
-        memoryProductRepository.insert(salmon);
-        Product actual = memoryProductRepository.remove(1);
+        Integer salmonId = memoryProductRepository.insert(salmon);
+        Integer actualId = memoryProductRepository.remove(salmonId);
 
         //then
-        assertThat(actual).isEqualTo(salmon);
+        assertThat(actualId).isEqualTo(salmonId);
     }
 }

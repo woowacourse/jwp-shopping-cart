@@ -1,9 +1,7 @@
 package cart.business;
 
-import cart.business.domain.Product;
-import cart.business.domain.ProductImage;
-import cart.business.domain.ProductName;
-import cart.business.domain.ProductPrice;
+import cart.entity.ProductEntity;
+import cart.persistence.ProductRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -12,33 +10,42 @@ import java.util.stream.Collectors;
 
 public class MockProductRepository implements ProductRepository {
 
-    private final Map<Integer, Product> store = new ConcurrentHashMap<>();
+    private final Map<Integer, ProductEntity> store = new ConcurrentHashMap<>();
     private int sequence = 1;
 
     @Override
-    public Integer insert(Product product) {
+    public Integer insert(ProductEntity product) {
         store.put(sequence, product);
         return sequence++;
     }
 
     @Override
-    public List<Product> findAll() {
+    public List<ProductEntity> findAll() {
         return store.entrySet()
                 .stream()
-                .map(entry -> new Product(entry.getKey(),
-                        new ProductName(entry.getValue().getName()),
-                        new ProductImage(entry.getValue().getUrl()),
-                        new ProductPrice(entry.getValue().getPrice())))
+                .map(entry -> new ProductEntity(entry.getKey(),
+                        (entry.getValue().getName()),
+                        (entry.getValue().getUrl()),
+                        (entry.getValue().getPrice())))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Product update(Product product) {
-        return store.replace(product.getId(), product);
+    public Integer update(Integer id, ProductEntity product) {
+        store.replace(id, product);
+        return id;
     }
 
     @Override
-    public Product remove(Integer productId) {
-        return store.remove(productId);
+    public Integer remove(Integer id) {
+        store.remove(id);
+        return id;
+    }
+
+    @Override
+    public void findSameProductExist(ProductEntity product) {
+        if (store.containsValue(product)) {
+            throw new IllegalArgumentException("동일한 상품이 존재합니다");
+        }
     }
 }

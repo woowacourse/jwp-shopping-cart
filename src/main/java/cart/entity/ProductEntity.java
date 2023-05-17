@@ -1,17 +1,16 @@
-package cart.business.domain;
+package cart.entity;
 
 import java.util.Objects;
 
-public class Product {
+public class ProductEntity {
 
     private final Integer id;
     private final String name;
     private final String url;
     private final Integer price;
-    public static int sequence = 1;
 
-    public Product(String name, String url, Integer price) {
-        this.id = sequence++;
+    public ProductEntity(Integer id, String name, String url, Integer price) {
+        this.id = id;
         this.name = name;
         this.url = url;
         this.price = price;
@@ -37,7 +36,7 @@ public class Product {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
+        ProductEntity product = (ProductEntity) o;
         return Objects.equals(name, product.name) && Objects.equals(url, product.url) && Objects.equals(price, product.price);
     }
 
