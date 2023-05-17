@@ -14,7 +14,10 @@ import cart.auth.infrastructure.AuthenticationArgumentResolver;
 import cart.auth.infrastructure.LoginInterceptor;
 
 @Configuration
+@EnableWebMvc
 public class CartConfiguration implements WebMvcConfigurer {
+	AuthService authService;
+
 	@Override
 	public void addViewControllers(final ViewControllerRegistry registry) {
 		registry.addViewController("/cart")
@@ -30,6 +33,6 @@ public class CartConfiguration implements WebMvcConfigurer {
 
 	@Override
 	public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-		resolvers.add(new AuthenticationPrincipalArgumentResolver());
+		resolvers.add(new AuthenticationArgumentResolver(authService));
 	}
 }
