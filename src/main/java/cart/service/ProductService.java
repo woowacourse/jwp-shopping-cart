@@ -47,8 +47,8 @@ public class ProductService {
 	@Transactional
 	public ProductResponse update(final ProductId productId, final ProductUpdateRequest request) {
 		final Product product = productRepository.findByProductId(productId);
-		productRepository.updateByProductId(productId,
-			new Product(request.getName(), request.getPrice(), request.getImage()));
+		productRepository.updateByProductId(
+			new Product(productId, request.getName(), request.getPrice(), request.getImage()));
 
 		return new ProductResponse(product.getId().getId(), product.getName(), product.getPrice(),
 			product.getImage());

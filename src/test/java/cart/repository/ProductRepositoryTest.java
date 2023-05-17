@@ -79,12 +79,12 @@ class ProductRepositoryTest {
 	@Test
 	void update() {
 		// given
-		final Product product = new Product("사과", 10000, "사과.png");
+		final Product product = new Product(new ProductId(1L),"사과", 10000, "사과.png");
 
 		productRepository.insert(product);
 
 		// when
-		final ProductId productId = productRepository.updateByProductId(ProductId.from(1L), product);
+		final ProductId productId = productRepository.updateByProductId(product);
 
 		// then
 		assertThat(productId).isEqualTo(ProductId.from(1L));

@@ -78,7 +78,7 @@ class ProductServiceTest {
 	@Test
 	void update() {
 		// given
-		given(productRepository.updateByProductId(any(), any())).willReturn(ProductId.from(1L));
+		given(productRepository.updateByProductId(any())).willReturn(ProductId.from(1L));
 		given(productRepository.findByProductId(any()))
 			.willReturn(new Product(ProductId.from(1L), "hyena", 400, "이미지"));
 

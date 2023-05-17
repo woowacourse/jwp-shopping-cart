@@ -64,15 +64,15 @@ public class ProductRepository {
 		return deleteCount == DELETED_COUNT;
 	}
 
-	public ProductId updateByProductId(final ProductId productId, final Product product) {
+	public ProductId updateByProductId(final Product newProduct) {
 		final String updateSql = "UPDATE products SET name = ?, price = ?, image = ? WHERE id = ?";
-		final int updateCount = jdbcTemplate.update(updateSql, product.getName(), product.getPrice(),
-			product.getImage(), productId.getId());
+		final int updateCount = jdbcTemplate.update(updateSql, newProduct.getName(), newProduct.getPrice(),
+			newProduct.getImage(), newProduct.getId().getId());
 
 		if (updateCount != UPDATED_COUNT) {
 			throw new IllegalStateException(String.format("1개 이상의 상품이 수정되었습니다. 수정된 상품 수 : %d", updateCount));
 		}
 
-		return productId;
+		return newProduct.getId();
 	}
 }
