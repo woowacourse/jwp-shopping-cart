@@ -1,15 +1,16 @@
 package cart.dao;
 
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Optional;
-
 import cart.domain.ProductEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -22,19 +23,17 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<ProductEntity> findAll() {
-        final String sql = "SELECT * FROM PRODUCT";
+        final String sql = "SELECT * FROM PRODUCTS";
 
         return jdbcTemplate.query(sql, productEntityRowMapper());
     }
 
     @Override
     public long insert(ProductEntity productEntity) {
-        final String sql = "INSERT INTO PRODUCT(name, image, price) values (?, ?, ?)";
+        final String sql = "INSERT INTO PRODUCTS(name, image, price) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            final PreparedStatement preparedStatement = con.prepareStatement(
-                    sql, new String[]{"ID"}
-            );
+            final PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"ID"});
             preparedStatement.setString(1, productEntity.getName());
             preparedStatement.setString(2, productEntity.getImage());
             preparedStatement.setInt(3, productEntity.getPrice());
@@ -46,26 +45,26 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Optional<ProductEntity> findById(final int id) {
-        final String sql = "SELECT * FROM PRODUCT WHERE id = ?";
-        ProductEntity productEntity = jdbcTemplate.queryForObject(sql, productEntityRowMapper(), id);
-        if (productEntity == null) {
+        final String sql = "SELECT * FROM PRODUCTS WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, productEntityRowMapper(), id));
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-        return Optional.of(productEntity);
     }
 
     private RowMapper<ProductEntity> productEntityRowMapper() {
-        return (rs, rowNum) -> new ProductEntity(
-                rs.getInt("id"),
-                rs.getString("name"),
-                rs.getString("image"),
-                rs.getInt("price")
-        );
+        return (rs, rowNum) -> new ProductEntity.Builder()
+                .id(rs.getInt("id"))
+                .name(rs.getString("name"))
+                .image(rs.getString("image"))
+                .price(rs.getInt("price"))
+                .build();
     }
 
     @Override
     public void update(final ProductEntity updatedEntity) {
-        final String sql = "UPDATE PRODUCT SET name = ?, image = ?, price = ? WHERE id = ?";
+        final String sql = "UPDATE PRODUCTS SET name = ?, image = ?, price = ? WHERE id = ?";
 
         jdbcTemplate.update(sql, updatedEntity.getName(), updatedEntity.getImage(), updatedEntity.getPrice(),
                 updatedEntity.getId());
@@ -73,7 +72,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public void delete(final int id) {
-        final String sql = "DELETE FROM PRODUCT WHERE id = ?";
+        final String sql = "DELETE FROM PRODUCTS WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
     }

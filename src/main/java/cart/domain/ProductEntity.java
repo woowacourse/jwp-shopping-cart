@@ -9,17 +9,12 @@ public class ProductEntity {
     private String image;
     private int price;
 
-    public ProductEntity(final String name, final String image, final int price) {
-        this.name = name;
-        this.image = image;
-        this.price = price;
-    }
 
-    public ProductEntity(final int id, final String name, final String image, final int price) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.price = price;
+    public ProductEntity(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.image = builder.image;
+        this.price = builder.price;
     }
 
     public ProductEntity update(final ProductDto productDto) {
@@ -43,6 +38,38 @@ public class ProductEntity {
 
     public int getPrice() {
         return price;
+    }
+
+    public static class Builder {
+
+        private int id;
+        private String name;
+        private String image;
+        private int price;
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder image(String image) {
+            this.image = image;
+            return this;
+        }
+
+        public Builder price(int price) {
+            this.price = price;
+            return this;
+        }
+
+        public ProductEntity build() {
+            return new ProductEntity(this);
+        }
     }
 
 }

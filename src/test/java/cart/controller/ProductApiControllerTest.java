@@ -1,5 +1,6 @@
 package cart.controller;
 
+import cart.domain.ProductEntity;
 import cart.dto.ProductDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
+
+import static org.hamcrest.Matchers.is;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -42,17 +45,12 @@ class ProductApiControllerTest {
         ProductDto productDto = new ProductDto("pizza", "https://www.hmj2k.com/data/photos/20210936/art_16311398425635_31fd17.jpg", 10000);
         String request = objectMapper.writeValueAsString(productDto);
 
-        RestAssured.given()
-                .log()
-                .all()
+        RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when()
-                .post("/products")
-                .then()
-                .log()
-                .all()
-                .statusCode(HttpStatus.OK.value());
+                .when().post("/products")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
@@ -64,16 +62,11 @@ class ProductApiControllerTest {
         ProductDto modifiedProduct = new ProductDto("chicken", "https://www.hmj2k.com/data/photos/20210936/art_16311398425635_31fd17.jpg", 30000);
         String request = objectMapper.writeValueAsString(modifiedProduct);
 
-        RestAssured.given()
-                .log()
-                .all()
+        RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
-                .when()
-                .patch("/products/{id}", id)
-                .then()
-                .log()
-                .all()
+                .when().patch("/products/{id}", id)
+                .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -82,20 +75,45 @@ class ProductApiControllerTest {
     void delete() {
         int id = insertProduct("pizza", 10000, "https://www.hmj2k.com/data/photos/20210936/art_16311398425635_31fd17.jpg");
 
-        RestAssured.given()
-                .log()
-                .all()
+        RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .delete("/products/{id}", id)
-                .then()
-                .log()
-                .all()
+                .when().delete("/products/{id}", id)
+                .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @Test
+    @DisplayName("존재하지 않는 상품을 수정하면 예외가 발생한다.")
+    void modifyNonExistProduct() {
+        ProductEntity productEntity = new ProductEntity.Builder().name("pizza").image("image1").price(10000).build();
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productEntity)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch("/products/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("상품 id를 확인해주세요."));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품을 삭제하면 예외가 발생한다.")
+    void deleteNonExistProduct() {
+        ProductEntity productEntity = new ProductEntity.Builder().name("pizza").image("image1").price(10000).build();
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(productEntity)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/products/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(is("상품 id를 확인해주세요."));
+    }
+
     private int insertProduct(final String name, final Integer price, final String image) {
-        final String sql = "INSERT INTO PRODUCT (name, price, image) VALUES (?, ?, ?)";
+        final String sql = "INSERT INTO PRODUCTS (name, price, image) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             final PreparedStatement preparedStatement = con.prepareStatement(
@@ -108,4 +126,6 @@ class ProductApiControllerTest {
         }, keyHolder);
         return keyHolder.getKey().intValue();
     }
+
+
 }

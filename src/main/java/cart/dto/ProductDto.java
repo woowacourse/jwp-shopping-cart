@@ -5,13 +5,13 @@ import javax.validation.constraints.NotNull;
 
 public class ProductDto {
 
-    @NotBlank
+    @NotBlank(message = "이름은 공백일 수 없습니다.")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "이미지는 공백일 수 없습니다.")
     private String image;
 
-    @NotNull
+    @NotNull(message = "가격은 Null일 수 없습니다.")
     private Integer price;
 
 

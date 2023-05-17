@@ -1,7 +1,9 @@
 package cart;
 
-import cart.domain.ProductEntity;
+import cart.domain.CartEntity;
+import cart.dto.AuthInfo;
 import cart.dto.ProductDto;
+import cart.service.CartService;
 import cart.service.ProductService;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +20,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProductIntegrationTest {
+class CartIntegrationTest {
 
     @LocalServerPort
     private int port;
@@ -29,24 +31,37 @@ public class ProductIntegrationTest {
     }
 
     @Autowired
+    CartService cartService;
+
+    @Autowired
     ProductService productService;
 
     @Test
-    public void getProducts() {
+    void getCartItems() {
 
         productService.insert(new ProductDto("pizza", "https://www.hmj2k.com/data/photos/20210936/art_16311398425635_31fd17.jpg", 1000));
         productService.insert(new ProductDto("chicken", "https://www.hmj2k.com/data/photos/20210936/art_16311398425635_31fd17.jpg", 2000));
 
-        List<ProductEntity> products = productService.findAll();
+        String email = "roy@gmail.com";
+        String password = "1234";
+
+        AuthInfo authInfo = new AuthInfo(email, password);
+
+        cartService.addItem(authInfo, 1);
+        cartService.addItem(authInfo, 2);
+
+        List<CartEntity> cartItems = cartService.searchItems(authInfo);
 
         var result = given()
+                .auth().preemptive().basic(email, password)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(products)
-                .when().get("/")
+                .body(cartItems)
+                .when().get("/cart/items")
                 .then()
                 .extract();
 
         assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
+
 
 }
