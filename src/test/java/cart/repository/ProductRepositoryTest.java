@@ -76,14 +76,17 @@ class ProductRepositoryTest {
 	@Test
 	void update() {
 		// given
-		final Product product = new Product(new ProductId(1L),"사과", 10000, "사과.png");
-
+		final ProductId productId = new ProductId(1L);
+		final Product product = new Product(productId,"사과", 10000, "사과.png");
 		productRepository.insert(product);
 
+		final Product newProduct = new Product(productId, "오렌지", 1500," 오렌지.png");
+
 		// when
-		final ProductId productId = productRepository.updateByProductId(product);
+		final ProductId foundProductId = productRepository.updateByProductId(newProduct);
+		final Product foundProduct = productRepository.findByProductId(foundProductId);
 
 		// then
-		assertThat(productId).isEqualTo(ProductId.from(1L));
+		assertThat(foundProduct.getName()).isEqualTo("오렌지");
 	}
 }
