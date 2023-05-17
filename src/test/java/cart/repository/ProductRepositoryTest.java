@@ -10,25 +10,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import cart.domain.product.Product;
 import cart.domain.product.ProductId;
 import cart.service.request.ProductUpdateRequest;
 
 @SpringBootTest
+@Transactional
 class ProductRepositoryTest {
 	ProductUpdateRequest request;
 	@Autowired
 	private ProductRepository productRepository;
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
 
 	@BeforeEach
 	void setUp() {
 		request = new ProductUpdateRequest("사과", 10000, "사과.png");
-		jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
-		jdbcTemplate.execute("TRUNCATE TABLE products RESTART IDENTITY");
-		jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
 	}
 
 	@DisplayName("전체 상품 조회 테스트")
@@ -42,7 +39,7 @@ class ProductRepositoryTest {
 		final List<Product> allProducts = productRepository.findAll();
 
 		// then
-		assertThat(1).isEqualTo(allProducts.size());
+		assertThat(allProducts).hasSize(4);
 
 	}
 
@@ -53,11 +50,11 @@ class ProductRepositoryTest {
 		final Product product = new Product("사과", 10000, "사과.png");
 
 		// when
-		final ProductId productId = productRepository.insert(product);
-		final int count = productRepository.findAll().size();
+		productRepository.insert(product);
+		final List<Product> products = productRepository.findAll();
 
 		// then
-		assertThat(count).isEqualTo(1);
+		assertThat(products).hasSize(4);
 	}
 
 	@DisplayName("상품 삭제 테스트")
