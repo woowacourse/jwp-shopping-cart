@@ -1,8 +1,10 @@
-package cart.auth.infrastructure;
+package cart.auth.application;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface AuthorizationExtractor<T> {
+import cart.auth.dto.AuthInfo;
+
+public interface AuthorizationExtractor<T extends AuthInfo> {
 	String AUTHORIZATION = "Authorization";
 
 	T extract(HttpServletRequest request);

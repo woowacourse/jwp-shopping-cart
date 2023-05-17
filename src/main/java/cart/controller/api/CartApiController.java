@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cart.auth.dto.AuthInfo;
-import cart.auth.infrastructure.AuthenticationPrincipal;
+import cart.auth.application.Auth;
 import cart.domain.cart.CartId;
 import cart.domain.product.ProductId;
 import cart.service.CartService;
@@ -27,13 +27,13 @@ public class CartApiController {
 	private final CartService cartService;
 
 	@GetMapping("/items")
-	public ResponseEntity<List<CartResponse>> findAllByEmail(@AuthenticationPrincipal AuthInfo authInfo) {
+	public ResponseEntity<List<CartResponse>> findAllByEmail(@Auth AuthInfo authInfo) {
 		List<CartResponse> allItems = cartService.findAllByEmail(authInfo.getEmail());
 		return ResponseEntity.ok().body(allItems);
 	}
 
 	@PostMapping("/{productId}")
-	public ResponseEntity<Void> add(@PathVariable long productId, @AuthenticationPrincipal AuthInfo authInfo) {
+	public ResponseEntity<Void> add(@PathVariable long productId, @Auth AuthInfo authInfo) {
 		final CartId cartId = cartService.insert(authInfo.getEmail(), ProductId.from(productId));
 		return ResponseEntity
 			.created(URI.create("/cart/" + productId))
@@ -41,7 +41,7 @@ public class CartApiController {
 	}
 
 	@DeleteMapping("/{cartId}")
-	public ResponseEntity<Void> delete(@PathVariable long cartId, @AuthenticationPrincipal AuthInfo authInfo) {
+	public ResponseEntity<Void> delete(@PathVariable long cartId, @Auth AuthInfo authInfo) {
 		cartService.deleteById(authInfo.getEmail(), cartId);
 		return ResponseEntity.ok().build();
 	}
