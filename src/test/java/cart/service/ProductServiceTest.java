@@ -5,6 +5,7 @@ import static org.mockito.BDDMockito.*;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -78,19 +79,23 @@ class ProductServiceTest {
 	@Test
 	void update() {
 		// given
+		final String name = "hyena";
+		final double price = 400;
+		final String image = "이미지";
 		given(productRepository.updateByProductId(any())).willReturn(ProductId.from(1L));
 		given(productRepository.findByProductId(any()))
-			.willReturn(new Product(ProductId.from(1L), "hyena", 400, "이미지"));
+			.willReturn(new Product(ProductId.from(1L), name, price, image));
 
 		// when
-		final ProductUpdateRequest request = new ProductUpdateRequest("hyena", 400, "이미지");
+		final ProductUpdateRequest request = new ProductUpdateRequest(name, price, image);
 		final ProductResponse response = productService.update(ProductId.from(1L), request);
 
 		// then
-		assertThat(response)
-			.hasFieldOrPropertyWithValue("id", 1L)
-			.hasFieldOrPropertyWithValue("name", "hyena")
-			.hasFieldOrPropertyWithValue("price", 400.0)
-			.hasFieldOrPropertyWithValue("image", "이미지");
+		Assertions.assertAll(
+			() -> assertThat(response.getId()).isEqualTo(1L),
+			() -> assertThat(response.getName()).isEqualTo(name),
+			() -> assertThat(response.getPrice()).isEqualTo(price),
+			() -> assertThat(response.getImage()).isEqualTo(image)
+		);
 	}
 }
