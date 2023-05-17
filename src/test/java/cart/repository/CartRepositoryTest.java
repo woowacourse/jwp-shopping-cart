@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import cart.domain.cart.Cart;
 import cart.domain.cart.CartId;
@@ -21,6 +22,7 @@ import cart.domain.product.Product;
 import cart.domain.product.ProductId;
 
 @SpringBootTest
+@Transactional
 class CartRepositoryTest {
 
 	private static final Member MEMBER = new Member("kiara", "email@email.com", "pw");
@@ -39,7 +41,6 @@ class CartRepositoryTest {
 		cartRepository = new CartRepository(jdbcTemplate);
 		memberRepository = new MemberRepository(jdbcTemplate);
 		productRepository = new ProductRepository(jdbcTemplate);
-		jdbcTemplate.execute("TRUNCATE TABLE carts RESTART IDENTITY");
 	}
 
 	@DisplayName("장바구니 상품 저장 및 조회 테스트")

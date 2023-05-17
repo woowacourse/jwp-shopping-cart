@@ -1,32 +1,22 @@
 package cart.repository;
 
-import cart.domain.member.Member;
-import cart.domain.member.MemberId;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import cart.domain.member.Member;
+import cart.domain.member.MemberId;
 
 @SpringBootTest
+@Transactional
 public class MemberRepositoryTest {
 	@Autowired
 	MemberRepository memberRepository;
-
-	@Autowired
-	JdbcTemplate jdbcTemplate;
-
-	@BeforeEach
-	void setUp() {
-		jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0");
-		jdbcTemplate.execute("TRUNCATE TABLE members RESTART IDENTITY");
-		jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1");
-	}
 
 	@DisplayName("회원 저장 테스트")
 	@Test
@@ -36,9 +26,10 @@ public class MemberRepositoryTest {
 
 		// when
 		MemberId insertId = memberRepository.insert(member);
+		final Member foundMember = memberRepository.findByMemberId(insertId);
 
 		// then
-		Assertions.assertThat(new MemberId(1L)).isEqualTo(insertId);
+		Assertions.assertThat(foundMember.getEmail()).isEqualTo(member.getEmail());
 	}
 
 	@DisplayName("전체 회원 조회 테스트")
@@ -52,13 +43,13 @@ public class MemberRepositoryTest {
 		List<Member> allMembers = memberRepository.findAll();
 
 		// then
-		Assertions.assertThat(1).isEqualTo(allMembers.size());
+		Assertions.assertThat(allMembers.size()).isEqualTo(3);
 	}
 
 	@DisplayName("ID로 회원 조회 테스트")
 	@Test
 	void findByMemberId() {
-		// given
+		// given거
 		MemberId memberId = memberRepository.insert(new Member("kiara", "email@email", "pw"));
 
 		// when

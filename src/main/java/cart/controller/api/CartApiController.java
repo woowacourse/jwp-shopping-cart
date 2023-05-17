@@ -36,7 +36,7 @@ public class CartApiController {
 	public ResponseEntity<Void> add(@PathVariable long productId, @AuthenticationPrincipal AuthInfo authInfo) {
 		final CartId cartId = cartService.insert(authInfo.getEmail(), ProductId.from(productId));
 		return ResponseEntity
-			.created(URI.create("/cart/" + cartId.getId()))
+			.created(URI.create("/cart/" + productId))
 			.build();
 	}
 
