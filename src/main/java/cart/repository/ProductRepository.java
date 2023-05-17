@@ -50,11 +50,11 @@ public class ProductRepository {
 
 	public Product findByProductId(final ProductId productId) {
 		final String sql = "SELECT * FROM products WHERE id = ?";
-		try {
-			return jdbcTemplate.queryForObject(sql, productRowMapper, productId.getId());
-		} catch (EmptyResultDataAccessException e) {
-			return null;
+		final Product product = jdbcTemplate.queryForObject(sql, productRowMapper, productId.getId());
+		if (product == null) {
+			throw new EmptyResultDataAccessException(1);
 		}
+		return product;
 	}
 
 	public boolean deleteByProductId(final ProductId productId) {
