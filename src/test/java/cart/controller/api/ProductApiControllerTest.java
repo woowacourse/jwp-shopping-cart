@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cart.controller.dto.ProductRequest;
 import cart.dao.ProductDao;
 import cart.domain.Product;
+import cart.service.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -23,7 +24,8 @@ import org.springframework.http.MediaType;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @DisplayName("ProductController 는")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ProductControllerTest {
+class
+ProductApiControllerTest {
 
     @LocalServerPort
     private int port;
@@ -33,6 +35,9 @@ class ProductControllerTest {
 
     @Autowired
     private ProductDao productDao;
+
+    @Autowired
+    private ProductService productService;
 
     @BeforeEach
     void setUp() {

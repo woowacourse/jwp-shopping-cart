@@ -1,8 +1,6 @@
 package cart.dao;
 
 import cart.domain.Product;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,14 +9,18 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class ProductDao {
 
     private static final RowMapper<Product> productRowMapper =
-            (rs, rowNum) -> new Product(rs.getLong(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getInt(4));
+            (rs, rowNum) -> new Product(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("image_url"),
+                    rs.getInt("price"));
 
     private final JdbcTemplate template;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -50,9 +52,9 @@ public class ProductDao {
         return template.query(sql, productRowMapper);
     }
 
-    public void update(final Product product) {
-        final String sql = "update product set name = ?, image_url = ?, price = ?";
-        template.update(sql, product.getName(), product.getImageUrl(), product.getPrice());
+    public void update(final Long id, final Product product) {
+        final String sql = "update product set name = ?, image_url = ?, price = ? where id =?";
+        template.update(sql, product.getName(), product.getImageUrl(), product.getPrice(), id);
     }
 
     public void deleteById(final Long id) {

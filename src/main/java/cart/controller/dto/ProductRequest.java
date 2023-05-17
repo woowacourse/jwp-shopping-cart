@@ -15,7 +15,7 @@ public class ProductRequest {
     @Positive(message = "가격은 양수여야 합니다.")
     private int price;
 
-    public ProductRequest() {
+    private ProductRequest() {
     }
 
     public ProductRequest(final String name, final String imageUrl, final int price) {
