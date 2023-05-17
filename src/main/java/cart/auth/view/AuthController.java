@@ -6,10 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import cart.auth.application.AuthService;
-import cart.auth.application.AuthorizationException;
+import cart.auth.application.AuthorizationExtractor;
+import cart.auth.application.BasicAuthorizationExtractor;
 import cart.auth.dto.AuthInfo;
-import cart.auth.infrastructure.AuthorizationExtractor;
-import cart.auth.infrastructure.BasicAuthorizationExtractor;
 import cart.service.response.MemberResponse;
 
 public class AuthController {
@@ -26,13 +25,8 @@ public class AuthController {
 	public ResponseEntity showCart(HttpServletRequest request) {
 		final AuthInfo authInfo = basicAuthorizationExtractor.extract(request);
 		String email = authInfo.getEmail();
-		String password = authInfo.getPassword();
-
-		if (authService.checkInvalidLogin(email, password)) {
-			throw new AuthorizationException();
-		}
-
 		MemberResponse member = authService.findMember(email);
+
 		return ResponseEntity.ok().body(member);
 	}
 }
