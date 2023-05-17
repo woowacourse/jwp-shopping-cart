@@ -9,11 +9,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
-import cart.domain.Product;
-import cart.service.dto.ProductUpdateRequest;
+import cart.domain.product.Product;
+import cart.domain.product.ProductId;
+import cart.service.request.ProductUpdateRequest;
 
 @SpringBootTest
+@Transactional
 class ProductRepositoryTest {
 	ProductUpdateRequest request;
 	@Autowired
@@ -28,14 +32,14 @@ class ProductRepositoryTest {
 	@Test
 	void findAll() {
 		// given
-		final List<Product> products = List.of(new Product(1L, "사과", 10000, "사과.png"));
+		final Product product = new Product("사과", 10000, "사과.png");
 
 		// when
-		productRepository.save(request);
-		final List<Product> findProducts = productRepository.findAll();
+		productRepository.insert(product);
+		final List<Product> allProducts = productRepository.findAll();
 
 		// then
-		assertThat(findProducts.get(0)).isEqualTo(products.get(0));
+		assertThat(allProducts).hasSize(4);
 
 	}
 
@@ -43,24 +47,26 @@ class ProductRepositoryTest {
 	@Test
 	void save() {
 		// given
-		productRepository.clear();
+		final Product product = new Product("사과", 10000, "사과.png");
 
 		// when
-		final long saveId = productRepository.save(request);
-		final int count = productRepository.findAll().size();
+		productRepository.insert(product);
+		final List<Product> products = productRepository.findAll();
 
 		// then
-		assertThat(count).isEqualTo(1);
+		assertThat(products).hasSize(4);
 	}
 
 	@DisplayName("상품 삭제 테스트")
 	@Test
 	void deleteByProductId() {
 		// given
-		productRepository.save(request);
+		final Product product = new Product("사과", 10000, "사과.png");
+
+		productRepository.insert(product);
 
 		// when
-		final boolean isDelete = productRepository.deleteByProductId(1L);
+		final boolean isDelete = productRepository.deleteByProductId(ProductId.from(1L));
 
 		// then
 		assertThat(isDelete).isTrue();
@@ -68,15 +74,19 @@ class ProductRepositoryTest {
 
 	@DisplayName("상품 갱신 테스트")
 	@Test
-	void updateProduct() {
+	void update() {
 		// given
-		productRepository.save(request);
-		final ProductUpdateRequest newRequest = new ProductUpdateRequest("kiara", 300.0, "이미지2");
+		final ProductId productId = new ProductId(1L);
+		final Product product = new Product(productId,"사과", 10000, "사과.png");
+		productRepository.insert(product);
+
+		final Product newProduct = new Product(productId, "오렌지", 1500," 오렌지.png");
 
 		// when
-		final long updateProductId = productRepository.updateByProductId(1L, newRequest);
+		final ProductId foundProductId = productRepository.updateByProductId(newProduct);
+		final Product foundProduct = productRepository.findByProductId(foundProductId);
 
 		// then
-		assertThat(updateProductId).isEqualTo(1L);
+		assertThat(foundProduct.getName()).isEqualTo("오렌지");
 	}
 }

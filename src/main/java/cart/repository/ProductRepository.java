@@ -1,28 +1,30 @@
 package cart.repository;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import cart.domain.Product;
-import cart.service.dto.ProductUpdateRequest;
+import cart.domain.product.Product;
+import cart.domain.product.ProductId;
 
 @Repository
 public class ProductRepository {
 	private static final int UPDATED_COUNT = 1;
 	private static final int DELETED_COUNT = 1;
 	private final JdbcTemplate jdbcTemplate;
+	private final SimpleJdbcInsert jdbcInsert;
+
 	private final RowMapper<Product> productRowMapper =
 
 		(resultSet, rowNum) ->
 			new Product(
-				resultSet.getLong("id"),
+				ProductId.from(resultSet.getLong("id")),
 				resultSet.getString("name"),
 				resultSet.getDouble("price"),
 				resultSet.getString("image")
@@ -30,6 +32,15 @@ public class ProductRepository {
 
 	public ProductRepository(final JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+			.withTableName("products")
+			.usingGeneratedKeyColumns("id");
+	}
+
+	public ProductId insert(final Product product) {
+		SqlParameterSource params = new BeanPropertySqlParameterSource(product);
+		long id = jdbcInsert.executeAndReturnKey(params).longValue();
+		return ProductId.from(id);
 	}
 
 	public List<Product> findAll() {
@@ -37,50 +48,31 @@ public class ProductRepository {
 		return jdbcTemplate.query(sql, productRowMapper);
 	}
 
-	public Optional<Product> findByProductId(final long productId) {
+	public Product findByProductId(final ProductId productId) {
 		final String sql = "SELECT * FROM products WHERE id = ?";
-		final Product findProduct = jdbcTemplate.queryForObject(sql, productRowMapper, productId);
-
-		return Optional.ofNullable(findProduct);
+		final Product product = jdbcTemplate.queryForObject(sql, productRowMapper, productId.getId());
+		if (product == null) {
+			throw new EmptyResultDataAccessException(1);
+		}
+		return product;
 	}
 
-	public long save(final ProductUpdateRequest request) {
-		final String sql = "INSERT INTO products(name, price, image) VALUES(?, ?, ?)";
-		final KeyHolder key = new GeneratedKeyHolder();
-
-		jdbcTemplate.update(con -> {
-			final PreparedStatement ps = con.prepareStatement(sql, new String[] {"id"});
-			ps.setString(1, request.getName());
-			ps.setDouble(2, request.getPrice());
-			ps.setString(3, request.getImage());
-			return ps;
-		}, key);
-
-		return key.getKey().longValue();
-	}
-
-	public boolean deleteByProductId(final long productId) {
+	public boolean deleteByProductId(final ProductId productId) {
 		final String sql = "DELETE FROM products WHERE id = ?";
-		final int deleteCount = jdbcTemplate.update(sql, productId);
+		final int deleteCount = jdbcTemplate.update(sql, productId.getId());
 
 		return deleteCount == DELETED_COUNT;
 	}
 
-	public long updateByProductId(final long productId, final ProductUpdateRequest request) {
+	public ProductId updateByProductId(final Product newProduct) {
 		final String updateSql = "UPDATE products SET name = ?, price = ?, image = ? WHERE id = ?";
-		final int updateCount = jdbcTemplate.update(updateSql, request.getName(), request.getPrice(),
-			request.getImage(),
-			productId);
+		final int updateCount = jdbcTemplate.update(updateSql, newProduct.getName(), newProduct.getPrice(),
+			newProduct.getImage(), newProduct.getId().getId());
 
 		if (updateCount != UPDATED_COUNT) {
-			throw new IllegalStateException("상품 갱신 도충 오류가 발생하여 실패하였습니다.");
+			throw new IllegalStateException(String.format("1개 이상의 상품이 수정되었습니다. 수정된 상품 수 : %d", updateCount));
 		}
 
-		return productId;
-	}
-
-	public void clear(){
-		final String clearSql = "DELETE FROM products";
-		final int clear = jdbcTemplate.update(clearSql);
+		return newProduct.getId();
 	}
 }

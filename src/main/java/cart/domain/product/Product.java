@@ -1,16 +1,20 @@
-package cart.domain;
+package cart.domain.product;
 
 import java.util.Objects;
 
 public class Product {
-	private final long id;
 	private final String name;
 	private final double price;
 	private final String image;
+	private ProductId id;
 
-	public Product(long id, String name, double price, String image) {
-		validate(name, price, image);
+	public Product(ProductId id, String name, double price, String image) {
+		this(name, price, image);
 		this.id = id;
+	}
+
+	public Product(String name, double price, String image) {
+		validate(name, price, image);
 		this.name = name;
 		this.price = price;
 		this.image = image;
@@ -23,7 +27,7 @@ public class Product {
 		if (price < 0) {
 			throw new IllegalArgumentException("금액은 음수일 수 없습니다.");
 		}
-		if (Objects.isNull(image)) {
+		if (image == null) {
 			throw new IllegalArgumentException("이미지 주소가 올바르지 않습니다.");
 		}
 	}
@@ -44,7 +48,7 @@ public class Product {
 		return Objects.hash(name, price, image);
 	}
 
-	public long getId() {
+	public ProductId getId() {
 		return id;
 	}
 

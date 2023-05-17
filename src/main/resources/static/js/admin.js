@@ -45,10 +45,13 @@ form.addEventListener('submit', (event) => {
 });
 
 const createProduct = (product) => {
-    axios.post('http://localhost:8080/products', {
-            "name" : product.name,
-            "price" : product.price,
-            "image" : product.image
+    axios.request({
+            method: 'post',
+            url: '/products',
+            data: product,
+            headers: {
+                'Content-Type': 'application/json',
+            },
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -58,10 +61,13 @@ const createProduct = (product) => {
 
 const updateProduct = (product) => {
     const { id } = product;
-    axios.patch(`http://localhost:8080/products/${id}`, {
-            "name" : product.name,
-            "price" : product.price,
-            "image" : product.image
+    axios.request({
+            method: 'patch',
+            url: `/products/${id}`,
+            data: product,
+            header: {
+                'Content-Type': 'application/json',
+            }
     }).then((response) => {
         window.location.reload();
     }).catch((error) => {
@@ -70,7 +76,12 @@ const updateProduct = (product) => {
 };
 
 const deleteProduct = (id) => {
-    axios.delete(`http://localhost:8080/products/${id}`)
+    axios.request({
+            method: 'delete',
+            url: `/products/${id}`,
+            header: {
+                'Content-Type': 'application/json',
+            }
     .then((response) => {
         window.location.reload();
     }).catch((error) => {
