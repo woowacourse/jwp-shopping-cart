@@ -43,7 +43,7 @@ public class MemberRepositoryTest {
 		List<Member> allMembers = memberRepository.findAll();
 
 		// then
-		Assertions.assertThat(allMembers.size()).isEqualTo(3);
+		Assertions.assertThat(allMembers).hasSize(3);
 	}
 
 	@DisplayName("ID로 회원 조회 테스트")
