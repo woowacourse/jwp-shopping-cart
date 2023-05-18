@@ -16,9 +16,12 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.stream.Stream;
 
+
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CartIntegrationTest {
 
@@ -42,9 +45,6 @@ public class CartIntegrationTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        jdbcTemplate.update("delete from cart");
-        jdbcTemplate.update("delete from product");
-        jdbcTemplate.update("delete from member");
         memeberDao.save(EMAIL, PASSWORD);
         productId = productDao.save(new Product("이름", 1000, "url"));
     }
