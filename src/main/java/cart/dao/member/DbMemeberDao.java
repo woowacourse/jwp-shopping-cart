@@ -1,7 +1,6 @@
 package cart.dao.member;
 
 import cart.domain.Member;
-import cart.dto.MemeberDto;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -40,9 +39,9 @@ public class DbMemeberDao implements MemeberDao {
     }
 
     @Override
-    public void save(MemeberDto memeberDto) {
+    public void save(String email, String password) {
         String sql = "insert into member(email, password) values (?, ?)";
-        jdbcTemplate.update(sql, memeberDto.getEmail(), memeberDto.getPassowrd());
+        jdbcTemplate.update(sql, email, password);
     }
 
     @Override

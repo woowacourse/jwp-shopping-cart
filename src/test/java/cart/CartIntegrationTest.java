@@ -3,7 +3,6 @@ package cart;
 import cart.dao.member.MemeberDao;
 import cart.dao.product.ProductDao;
 import cart.domain.Product;
-import cart.dto.MemeberDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,7 +45,7 @@ public class CartIntegrationTest {
         jdbcTemplate.update("delete from cart");
         jdbcTemplate.update("delete from product");
         jdbcTemplate.update("delete from member");
-        memeberDao.save(new MemeberDto(EMAIL, PASSWORD));
+        memeberDao.save(EMAIL, PASSWORD);
         productId = productDao.save(new Product("이름", 1000, "url"));
     }
 
