@@ -2,6 +2,7 @@ package cart.service;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 import cart.dto.AuthInfoRequest;
 import cart.repository.dao.JdbcCartDao;
@@ -46,11 +47,10 @@ public class CartServiceTest {
         final CartEntity cartEntity = new CartEntity(memberEntity.getId(), productId);
         given(memberDao.findByEmailAndPassword(authInfoRequest.getEmail(), authInfoRequest.getPassword()))
                 .willReturn(memberEntity);
-        given(cartDao.save(cartEntity))
-                .willReturn(null);
 
-        assertThatCode(() -> cartService.addProductByAuthInfo(productId, authInfoRequest))
-                .doesNotThrowAnyException();
+        cartService.addProductByAuthInfo(productId, authInfoRequest);
+
+        verify(cartDao).save(cartEntity);
     }
 
     @Test

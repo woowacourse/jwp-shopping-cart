@@ -1,10 +1,10 @@
 package cart.service;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+import cart.domain.Product;
 import cart.dto.CreateProductRequest;
 import cart.dto.ProductDto;
 import cart.dto.UpdateProductRequest;
@@ -60,10 +60,12 @@ public class ProductServiceTest {
     void 상품을_업데이트한다() {
         final Long id = 1L;
         final UpdateProductRequest request = new UpdateProductRequest("name", "imageUrl", 1000);
+        final Product product = new Product(request.getName(), request.getImageUrl(), request.getPrice());
         given(productDao.update(any())).willReturn(1);
 
-        assertThatCode(() -> productService.updateProduct(id, request))
-                .doesNotThrowAnyException();
+        productService.updateProduct(id, request);
+
+        verify(productDao).update(ProductEntity.of(id, product));
     }
 
     @Test
@@ -71,7 +73,8 @@ public class ProductServiceTest {
         final Long id = 1L;
         given(productDao.delete(any())).willReturn(1);
 
-        assertThatCode(() -> productService.deleteProduct(id))
-                .doesNotThrowAnyException();
+        productService.deleteProduct(id);
+
+        verify(productDao).delete(id);
     }
 }
