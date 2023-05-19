@@ -10,10 +10,35 @@ public class MemberEntity {
     private final String password;
 
     public MemberEntity(final Long id, final String name, final String email, final String password) {
+        validate(name, email, password);
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    private void validate(final String name, final String email, final String password) {
+        validateName(name);
+        validateEmail(email);
+        validatePassword(password);
+    }
+
+    private void validateName(final String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("이름은 공백일 수 없습니다.");
+        }
+    }
+
+    private void validateEmail(final String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("이메일은 공백일 수 없습니다.");
+        }
+    }
+
+    private void validatePassword(final String password) {
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("비밀번호는 공백일 수 없습니다.");
+        }
     }
 
     public Long getId() {
