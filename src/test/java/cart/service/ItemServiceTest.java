@@ -1,7 +1,7 @@
 package cart.service;
 
-import cart.controller.dto.ItemRequest;
-import cart.controller.dto.ItemResponse;
+import cart.controller.dto.request.ItemRequest;
+import cart.controller.dto.response.ItemResponse;
 import cart.dao.ItemDao;
 import cart.domain.ImageUrl;
 import cart.domain.Item;
@@ -21,7 +21,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-// TODO: 2023/04/26 서비스 테스트가 할게 없음 -> Mockito를 쓰는게 맞을까?
 @ExtendWith(MockitoExtension.class)
 class ItemServiceTest {
 
@@ -81,7 +80,7 @@ class ItemServiceTest {
                                        .price(new Price(123))
                                        .imageUrl(new ImageUrl("1번URL"))
                                        .build();
-        when(itemDao.findBy(1L)).thenReturn(Optional.of(item1));
+        when(itemDao.findById(1L)).thenReturn(Optional.of(item1));
         doNothing().when(itemDao)
                    .update(item1);
         //when
@@ -94,7 +93,7 @@ class ItemServiceTest {
     @Test
     void updateItemExceptionWithNotExist() {
         //given
-        when(itemDao.findBy(100L)).thenReturn(Optional.empty());
+        when(itemDao.findById(100L)).thenReturn(Optional.empty());
         //then
         assertThatThrownBy(() ->
                 itemService.updateItem(100L, new ItemRequest("1번", 123, "1번URL"))
@@ -110,7 +109,7 @@ class ItemServiceTest {
                                        .price(new Price(123))
                                        .imageUrl(new ImageUrl("1번URL"))
                                        .build();
-        when(itemDao.findBy(1L)).thenReturn(Optional.of(item1));
+        when(itemDao.findById(1L)).thenReturn(Optional.of(item1));
         doNothing().when(itemDao)
                    .deleteBy(1L);
         //when
@@ -123,7 +122,7 @@ class ItemServiceTest {
     @Test
     void deleteItemExceptionWithNotExist() {
         //given
-        when(itemDao.findBy(100L)).thenReturn(Optional.empty());
+        when(itemDao.findById(100L)).thenReturn(Optional.empty());
         //then
         assertThatThrownBy(() ->
                 itemService.deleteItem(100L)
@@ -139,7 +138,7 @@ class ItemServiceTest {
                                        .price(new Price(123))
                                        .imageUrl(new ImageUrl("1번URL"))
                                        .build();
-        when(itemDao.findBy(1L)).thenReturn(Optional.of(item1));
+        when(itemDao.findById(1L)).thenReturn(Optional.of(item1));
         //when
         ItemResponse itemResponse = itemService.loadItem(1L);
         //then

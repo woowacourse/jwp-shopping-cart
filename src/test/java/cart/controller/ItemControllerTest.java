@@ -1,7 +1,10 @@
 package cart.controller;
 
-import cart.controller.dto.ItemRequest;
-import cart.controller.dto.ItemResponse;
+import cart.auth.BasicAuthorizationExtractor;
+import cart.auth.interceptor.LoginInterceptor;
+import cart.auth.resolver.BasicAuthenticationPrincipalArgumentResolver;
+import cart.controller.dto.request.ItemRequest;
+import cart.controller.dto.response.ItemResponse;
 import cart.domain.ImageUrl;
 import cart.domain.Item;
 import cart.domain.Name;
@@ -14,8 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,11 +29,10 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(ItemController.class)
 class ItemControllerTest {
 
     @MockBean
@@ -39,6 +40,15 @@ class ItemControllerTest {
 
     @MockBean
     ItemController mockController;
+
+    @MockBean
+    LoginInterceptor loginInterceptor;
+
+    @MockBean
+    BasicAuthorizationExtractor extractor;
+
+    @MockBean
+    BasicAuthenticationPrincipalArgumentResolver basicAuthenticationPrincipalArgumentResolver;
 
     @Mock
     ItemService itemService;
@@ -78,7 +88,7 @@ class ItemControllerTest {
         verify(mockController, times(1)).loadAllItem();
     }
 
-    @DisplayName("GET /items 요청 시 loadAllItem 메서드가 호출된다")
+    @DisplayName("GET /items/{id} 요청 시 loadAllItem 메서드가 호출된다")
     @Test
     void loadItemMappingURL() throws Exception {
         //given
@@ -93,7 +103,7 @@ class ItemControllerTest {
         verify(mockController, times(1)).loadItem(anyLong());
     }
 
-    @DisplayName("PUT /items/{itemsId} 요청 시 updateItem 메서드가 호출된다")
+    @DisplayName("PUT /items/{itemId} 요청 시 updateItem 메서드가 호출된다")
     @Test
     void updateItemMappingURL() throws Exception {
         //given
@@ -108,7 +118,7 @@ class ItemControllerTest {
         verify(mockController, times(1)).updateItem(anyLong(), any());
     }
 
-    @DisplayName("DELETE /items/{itemsId} 요청 시 deleteItem 메서드가 호출된다")
+    @DisplayName("DELETE /items/{itemId} 요청 시 deleteItem 메서드가 호출된다")
     @Test
     void deleteItemMappingURL() throws Exception {
         //given
@@ -127,7 +137,7 @@ class ItemControllerTest {
         ItemRequest value = new ItemRequest("레드북", 50000, "url");
         when(itemService.saveItem(any())).thenReturn(1L);
         //then
-        ResponseEntity responseEntity = itemController.addItem(value);
+        ResponseEntity<Void> responseEntity = itemController.addItem(value);
         Assertions.assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED),
                 () -> assertThat(responseEntity.getHeaders()
@@ -135,7 +145,7 @@ class ItemControllerTest {
         );
     }
 
-    @DisplayName("아이템 조회시  ResponseEntity<List<ItemResponse>>를 응답한다")
+    @DisplayName("아이템 조회 시 ResponseEntity<List<ItemResponse>>를 응답한다")
     @Test
     void loadAllItem() {
         //given
@@ -156,7 +166,7 @@ class ItemControllerTest {
         );
     }
 
-    @DisplayName("아이템 조회시 ResponseEntity<ItemResponse>를 응답한다")
+    @DisplayName("아이템 조회 시 ResponseEntity<ItemResponse>를 응답한다")
     @Test
     void loadItem() {
         //given
@@ -184,7 +194,7 @@ class ItemControllerTest {
         Long itemId = 1L;
         doNothing().when(itemService).updateItem(anyLong(), any());
         //then
-        ResponseEntity responseEntity = itemController.updateItem(itemId, value);
+        ResponseEntity<Void> responseEntity = itemController.updateItem(itemId, value);
         Assertions.assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED),
                 () -> assertThat(responseEntity.getHeaders()
@@ -200,7 +210,7 @@ class ItemControllerTest {
         doNothing().when(itemService)
                    .deleteItem(anyLong());
         //then
-        ResponseEntity responseEntity = itemController.deleteItem(itemId);
+        ResponseEntity<Void> responseEntity = itemController.deleteItem(itemId);
         Assertions.assertAll(
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),
                 () -> assertThat(responseEntity.getHeaders()

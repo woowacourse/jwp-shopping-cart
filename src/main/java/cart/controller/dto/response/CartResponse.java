@@ -1,29 +1,29 @@
-package cart.controller.dto;
+package cart.controller.dto.response;
 
-import cart.domain.Item;
+import cart.domain.CartData;
 
 import java.util.Objects;
 
-public class ItemResponse {
+public class CartResponse {
 
     private final Long id;
     private final String name;
     private final String imageUrl;
     private final Integer price;
 
-    private ItemResponse(Long id, String name, String imageUrl, Integer price) {
+    private CartResponse(Long id, String name, String imageUrl, Integer price) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
     }
 
-    public static ItemResponse from(final Item item) {
-        return new ItemResponse(
-                item.getId(),
-                item.getName(),
-                item.getImageUrl(),
-                item.getPrice()
+    public static CartResponse from(CartData cartData) {
+        return new CartResponse(
+                cartData.getId(),
+                cartData.getName(),
+                cartData.getImageUrl(),
+                cartData.getPrice()
         );
     }
 
@@ -47,11 +47,8 @@ public class ItemResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ItemResponse that = (ItemResponse) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(name, that.name)
-                && Objects.equals(imageUrl, that.imageUrl)
-                && Objects.equals(price, that.price);
+        CartResponse that = (CartResponse) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(price, that.price);
     }
 
     @Override
@@ -61,7 +58,7 @@ public class ItemResponse {
 
     @Override
     public String toString() {
-        return "ItemResponse{" +
+        return "CartResponse{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +

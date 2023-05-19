@@ -64,12 +64,12 @@ const updateProduct = (product) => {
     const { id } = product;
 
     axios.request({
-        url: '/items/' + id,
-        method: 'PUT',
-        data: {
-            name: product.name,
+        url   : '/items/' + id,
+        method: 'put',
+        data  : {
+            name    : product.name,
             imageUrl: product.imageUrl,
-            price: product.price
+            price   : product.price
         }
     }).then((response) => {
         location.href = response.headers.get("location")

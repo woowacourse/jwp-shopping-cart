@@ -1,32 +1,29 @@
 package cart.controller;
 
-import cart.controller.dto.ItemRequest;
-import cart.controller.dto.ItemResponse;
+import cart.controller.dto.request.ItemRequest;
+import cart.controller.dto.response.ItemResponse;
 import cart.service.ItemService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("items")
 public class ItemController {
 
     private final ItemService itemService;
 
-    @Autowired
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
 
     @PostMapping
-    public ResponseEntity<Void> addItem(@RequestBody @Validated final ItemRequest itemRequest) {
+    public ResponseEntity<Void> addItem(@RequestBody @Valid final ItemRequest itemRequest) {
         itemService.saveItem(itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/"))
@@ -41,7 +38,7 @@ public class ItemController {
                              .body(items);
     }
 
-    @GetMapping("/{itemId}")
+    @GetMapping("{itemId}")
     public ResponseEntity<ItemResponse> loadItem(@PathVariable final Long itemId) {
         ItemResponse item = itemService.loadItem(itemId);
         return ResponseEntity.status(HttpStatus.OK)
@@ -49,16 +46,16 @@ public class ItemController {
                              .body(item);
     }
 
-    @PutMapping("/{itemId}")
+    @PutMapping("{itemId}")
     public ResponseEntity<Void> updateItem(@PathVariable final Long itemId,
-                                     @RequestBody @Validated final ItemRequest itemRequest) {
+                                           @RequestBody @Valid final ItemRequest itemRequest) {
         itemService.updateItem(itemId, itemRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/"))
                              .build();
     }
 
-    @DeleteMapping("/{itemId}")
+    @DeleteMapping("{itemId}")
     public ResponseEntity<Void> deleteItem(@PathVariable final Long itemId) {
         itemService.deleteItem(itemId);
         return ResponseEntity.status(HttpStatus.OK)

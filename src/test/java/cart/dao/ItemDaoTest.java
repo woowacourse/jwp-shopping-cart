@@ -8,20 +8,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 @JdbcTest
+@Sql("classpath:initializeTestDb.sql")
 class ItemDaoTest {
 
     private final ItemDao itemDao;
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final RowMapper<Item> actorRowMapper = (resultSet, rowNumber) -> new Item.Builder()
             .id(resultSet.getLong("id"))
             .name(new Name(resultSet.getString("name")))
@@ -30,14 +32,13 @@ class ItemDaoTest {
             .build();
 
     @Autowired
-    ItemDaoTest(final JdbcTemplate jdbcTemplate) {
-        this.itemDao = new ItemDao(jdbcTemplate);
-        this.jdbcTemplate = jdbcTemplate;
+    ItemDaoTest(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.itemDao = new ItemDao(namedParameterJdbcTemplate);
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     @DisplayName("아이템의 전체 목록을 조회한다")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void findAll() {
         // when
         List<Item> items = itemDao.findAll();
@@ -47,10 +48,10 @@ class ItemDaoTest {
 
     @DisplayName("아이디를 통해 아이템을 조회한다")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
-    void findBy() {
+    void findById() {
         //when
-        Item findItem = itemDao.findBy(1L).orElseThrow();
+        Item findItem = itemDao.findById(1L)
+                               .orElseThrow();
         //then
         assertThat(findItem).isEqualTo(new Item.Builder()
                 .id(1L)
@@ -62,17 +63,15 @@ class ItemDaoTest {
 
     @DisplayName("없는 아이디를 조회하면 빈값을 반환한다")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void findByNotExistId() {
         //when
-        Optional<Item> findItem = itemDao.findBy(100L);
+        Optional<Item> findItem = itemDao.findById(100L);
         //then
         assertThat(findItem).isEmpty();
     }
 
     @DisplayName("아이템을 저장한다.")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void save() {
         // given
         Item item = new Item.Builder()
@@ -83,10 +82,10 @@ class ItemDaoTest {
         // when
         Long itemId = itemDao.save(item);
         // then
-        Item findItem = jdbcTemplate.queryForObject(
-                "SELECT * FROM items WHERE id = ?",
-                actorRowMapper,
-                itemId
+        Item findItem = namedParameterJdbcTemplate.queryForObject(
+                "SELECT * FROM items WHERE id = :id",
+                new MapSqlParameterSource("id", itemId),
+                actorRowMapper
         );
         assertThat(findItem).isEqualTo(new Item.Builder()
                 .id(itemId)
@@ -96,9 +95,8 @@ class ItemDaoTest {
                 .build());
     }
 
-    @DisplayName("아에템을 수정한다")
+    @DisplayName("아이템을 수정한다")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void update() {
         //given
         Item editItem = new Item.Builder()
@@ -110,28 +108,27 @@ class ItemDaoTest {
         //when
         itemDao.update(editItem);
         //then
-        Item findItem = jdbcTemplate.queryForObject(
-                "SELECT * FROM items WHERE id = ?",
-                actorRowMapper,
-                editItem.getId()
+        Item findItem = namedParameterJdbcTemplate.queryForObject(
+                "SELECT * FROM items WHERE id = :id",
+                new MapSqlParameterSource("id", editItem.getId()),
+                actorRowMapper
         );
         assertThat(findItem).isEqualTo(editItem);
     }
 
     @DisplayName("아이템을 삭제한다")
     @Test
-    @Sql("classpath:initializeTestDb.sql")
     void delete() {
         //given
-        Item targetItem = jdbcTemplate.queryForObject(
-                "SELECT * FROM items WHERE id = ?",
-                actorRowMapper,
-                1L
+        Item targetItem = namedParameterJdbcTemplate.queryForObject(
+                "SELECT * FROM items WHERE id = :id",
+                new MapSqlParameterSource("id", 1L),
+                actorRowMapper
         );
         //when
         itemDao.deleteBy(targetItem.getId());
         //then
-        List<Item> findItems = jdbcTemplate.query(
+        List<Item> findItems = namedParameterJdbcTemplate.query(
                 "SELECT * FROM items",
                 actorRowMapper
         );
