@@ -1,6 +1,6 @@
 package cart.service;
 
-import cart.dao.ProductDao;
+import cart.dao.product.ProductDao;
 import cart.domain.Product;
 import cart.dto.request.ProductRequest;
 import cart.dto.response.ProductResponse;
@@ -39,5 +39,9 @@ public class ProductService {
     public void update(Long productId, ProductRequest productRequest) {
         Product product = productRequest.toEntity();
         productDao.updateById(productId, product);
+    }
+
+    public Product findById(Long productId) {
+        return productDao.findById(productId);
     }
 }
