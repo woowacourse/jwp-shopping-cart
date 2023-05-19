@@ -22,7 +22,7 @@ public class JdbcMemberDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private MemberDao memberDao;
+    private JdbcMemberDao memberDao;
 
     @BeforeEach
     void setUp() {

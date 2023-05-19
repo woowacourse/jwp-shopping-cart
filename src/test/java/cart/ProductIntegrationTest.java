@@ -5,7 +5,7 @@ import static io.restassured.RestAssured.given;
 import cart.domain.Product;
 import cart.dto.CreateProductRequest;
 import cart.dto.UpdateProductRequest;
-import cart.repository.dao.ProductDao;
+import cart.repository.dao.JdbcProductDao;
 import cart.repository.entity.ProductEntity;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +24,7 @@ import org.springframework.http.MediaType;
 public class ProductIntegrationTest {
 
     @Autowired
-    private ProductDao productDao;
+    private JdbcProductDao productDao;
 
     @LocalServerPort
     private int port;

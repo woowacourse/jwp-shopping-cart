@@ -1,7 +1,7 @@
 package cart.service;
 
 import cart.dto.MemberDto;
-import cart.repository.dao.MemberDao;
+import cart.repository.dao.JdbcMemberDao;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
+    private final JdbcMemberDao memberDao;
 
-    public MemberService(final MemberDao memberDao) {
+    public MemberService(final JdbcMemberDao memberDao) {
         this.memberDao = memberDao;
     }
 

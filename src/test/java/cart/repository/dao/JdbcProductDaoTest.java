@@ -26,7 +26,7 @@ public class JdbcProductDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private ProductDao productDao;
+    private JdbcProductDao productDao;
 
     @BeforeEach
     void setUp() {

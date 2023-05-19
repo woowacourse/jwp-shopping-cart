@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcProductDao implements ProductDao {
+public class JdbcProductDao implements Dao<ProductEntity> {
 
     private final JdbcTemplate jdbcTemplate;
 

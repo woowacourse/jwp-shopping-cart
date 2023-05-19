@@ -3,7 +3,7 @@ package cart.service;
 import static org.mockito.BDDMockito.given;
 
 import cart.dto.MemberDto;
-import cart.repository.dao.MemberDao;
+import cart.repository.dao.JdbcMemberDao;
 import cart.repository.entity.MemberEntity;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
@@ -24,7 +24,7 @@ public class MemberServiceTest {
     private MemberService memberService;
 
     @Mock
-    private MemberDao memberDao;
+    private JdbcMemberDao memberDao;
 
     @Test
     void 모든_사용자를_조회한다() {

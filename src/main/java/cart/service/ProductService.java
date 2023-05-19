@@ -4,7 +4,7 @@ import cart.domain.Product;
 import cart.dto.CreateProductRequest;
 import cart.dto.ProductDto;
 import cart.dto.UpdateProductRequest;
-import cart.repository.dao.ProductDao;
+import cart.repository.dao.JdbcProductDao;
 import cart.repository.entity.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final JdbcProductDao productDao;
 
-    public ProductService(final ProductDao productDao) {
+    public ProductService(final JdbcProductDao productDao) {
         this.productDao = productDao;
     }
 

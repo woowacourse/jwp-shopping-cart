@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.BDDMockito.given;
 
 import cart.dto.AuthInfoRequest;
-import cart.repository.dao.CartDao;
-import cart.repository.dao.MemberDao;
-import cart.repository.dao.ProductDao;
+import cart.repository.dao.JdbcCartDao;
+import cart.repository.dao.JdbcMemberDao;
+import cart.repository.dao.JdbcProductDao;
 import cart.repository.entity.CartEntity;
 import cart.repository.entity.MemberEntity;
 import cart.repository.entity.ProductEntity;
@@ -29,13 +29,13 @@ public class CartServiceTest {
     private CartService cartService;
 
     @Mock
-    private ProductDao productDao;
+    private JdbcProductDao productDao;
 
     @Mock
-    private MemberDao memberDao;
+    private JdbcMemberDao memberDao;
 
     @Mock
-    private CartDao cartDao;
+    private JdbcCartDao cartDao;
 
     @Test
     void 사용자의_장바구니에_상품을_추가한다() {

@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 import cart.dto.CreateProductRequest;
 import cart.dto.ProductDto;
 import cart.dto.UpdateProductRequest;
-import cart.repository.dao.ProductDao;
+import cart.repository.dao.JdbcProductDao;
 import cart.repository.entity.ProductEntity;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
@@ -29,7 +29,7 @@ public class ProductServiceTest {
     private ProductService productService;
 
     @Mock
-    private ProductDao productDao;
+    private JdbcProductDao productDao;
 
     @Test
     void 상품을_추가한다() {

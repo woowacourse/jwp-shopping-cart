@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcCartDao implements CartDao {
+public class JdbcCartDao implements Dao<CartEntity> {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -41,12 +41,30 @@ public class JdbcCartDao implements CartDao {
     }
 
     @Override
+    public CartEntity findById(final Long id) {
+        throw new UnsupportedOperationException("지원하지 않는 메서드입니다.");
+    }
+
+    @Override
+    public List<CartEntity> findAll() {
+        throw new UnsupportedOperationException("지원하지 않는 메서드입니다.");
+    }
+
+    @Override
+    public int update(final CartEntity cartEntity) {
+        throw new UnsupportedOperationException("지원하지 않는 메서드입니다.");
+    }
+
+    @Override
+    public int delete(final Long id) {
+        throw new UnsupportedOperationException("지원하지 않는 메서드입니다.");
+    }
+
     public List<CartEntity> findByMemberId(final Long memberId) {
         final String sql = "SELECT cart_id, member_id, product_id FROM cart WHERE member_id = ?";
         return jdbcTemplate.query(sql, actorRowMapper, memberId);
     }
 
-    @Override
     public int delete(final Long memberId, final Long productId) {
         final String sql = "DELETE FROM cart WHERE member_id = ? AND product_id = ?";
         return jdbcTemplate.update(sql, memberId, productId);

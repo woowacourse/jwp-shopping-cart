@@ -1,9 +1,9 @@
 package cart.service;
 
 import cart.dto.AuthInfoRequest;
-import cart.repository.dao.CartDao;
-import cart.repository.dao.MemberDao;
-import cart.repository.dao.ProductDao;
+import cart.repository.dao.JdbcCartDao;
+import cart.repository.dao.JdbcMemberDao;
+import cart.repository.dao.JdbcProductDao;
 import cart.repository.entity.CartEntity;
 import cart.repository.entity.MemberEntity;
 import cart.repository.entity.ProductEntity;
@@ -17,11 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CartService {
 
-    private final ProductDao productDao;
-    private final MemberDao memberDao;
-    private final CartDao cartDao;
+    private final JdbcProductDao productDao;
+    private final JdbcMemberDao memberDao;
+    private final JdbcCartDao cartDao;
 
-    public CartService(final ProductDao productDao, final MemberDao memberDao, final CartDao cartDao) {
+    public CartService(final JdbcProductDao productDao, final JdbcMemberDao memberDao, final JdbcCartDao cartDao) {
         this.productDao = productDao;
         this.memberDao = memberDao;
         this.cartDao = cartDao;
