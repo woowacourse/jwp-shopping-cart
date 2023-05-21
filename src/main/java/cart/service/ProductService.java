@@ -4,20 +4,21 @@ import cart.domain.Product;
 import cart.dto.CreateProductRequest;
 import cart.dto.ProductDto;
 import cart.dto.UpdateProductRequest;
-import cart.repository.dao.ProductDao;
+import cart.repository.dao.JdbcProductDao;
 import cart.repository.entity.ProductEntity;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service
-public class ProductManagementService {
+public class ProductService {
 
-    private final ProductDao productDao;
+    private final JdbcProductDao productDao;
 
-    public ProductManagementService(final ProductDao productDao) {
+    public ProductService(final JdbcProductDao productDao) {
         this.productDao = productDao;
     }
 
@@ -26,6 +27,7 @@ public class ProductManagementService {
         productDao.save(ProductEntity.from(product));
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> findAllProduct() {
         return productDao.findAll().stream()
                 .map(ProductDto::from)
@@ -34,10 +36,16 @@ public class ProductManagementService {
 
     public void updateProduct(final Long id, final UpdateProductRequest request) {
         final Product product = new Product(request.getName(), request.getImageUrl(), request.getPrice());
-        productDao.update(ProductEntity.of(id, product));
+        final int affected = productDao.update(ProductEntity.of(id, product));
+        if (affected == 0) {
+            throw new EmptyResultDataAccessException(1);
+        }
     }
 
     public void deleteProduct(final Long id) {
-        productDao.delete(id);
+        final int affected = productDao.delete(id);
+        if (affected == 0) {
+            throw new EmptyResultDataAccessException(1);
+        }
     }
 }

@@ -18,10 +18,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 public class JdbcProductDaoTest {
 
+    private static final int PIZZA_INDEX = 0;
+    private static final int CHICKEN_INDEX = 1;
+    private static final int JOKBAL_INDEX = 2;
+    private static final int SUSHI_INDEX = 3;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private ProductDao productDao;
+    private JdbcProductDao productDao;
 
     @BeforeEach
     void setUp() {
@@ -29,39 +34,33 @@ public class JdbcProductDaoTest {
     }
 
     @Test
-    void 엔티티를_저장하고_조회한다() {
-        final ProductEntity firstProductEntity = new ProductEntity("kokodak", "localhost:8080/test", 1000);
-        final ProductEntity secondProductEntity = new ProductEntity("hardy", "localhost:8080/test", 1000);
-        productDao.save(firstProductEntity);
-        productDao.save(secondProductEntity);
-
+    void 모든_상품을_조회한다() {
         final List<ProductEntity> products = productDao.findAll();
 
         SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(products.size()).isEqualTo(2);
-        softAssertions.assertThat(products.get(0).getName()).isEqualTo(firstProductEntity.getName());
-        softAssertions.assertThat(products.get(1).getName()).isEqualTo(secondProductEntity.getName());
+        softAssertions.assertThat(products.size()).isEqualTo(4);
+        softAssertions.assertThat(products.get(PIZZA_INDEX).getName()).isEqualTo("피자");
+        softAssertions.assertThat(products.get(CHICKEN_INDEX).getName()).isEqualTo("치킨");
+        softAssertions.assertThat(products.get(JOKBAL_INDEX).getName()).isEqualTo("족발");
+        softAssertions.assertThat(products.get(SUSHI_INDEX).getName()).isEqualTo("초밥");
         softAssertions.assertAll();
     }
 
     @Test
-    void 엔티티를_업데이트한다() {
-        final ProductEntity productEntity = new ProductEntity("kokodak", "localhost:8080/test", 1000);
-        productDao.save(productEntity);
-        final ProductEntity updatedProductEntity = new ProductEntity(1L, "hardy", "localhost:8080/test", 2000);
+    void 상품을_업데이트한다() {
+        final ProductEntity updatedProductEntity = new ProductEntity(1L, "감자", "gamja.png", 2000);
         productDao.update(updatedProductEntity);
 
         final List<ProductEntity> products = productDao.findAll();
-
-        assertThat(products.get(0).getName()).isEqualTo(updatedProductEntity.getName());
+        assertThat(products.get(PIZZA_INDEX).getName()).isEqualTo(updatedProductEntity.getName());
     }
 
     @Test
-    void 엔티티를_삭제한다() {
-        final ProductEntity productEntity = new ProductEntity("kokodak", "localhost:8080/test", 1000);
-        productDao.save(productEntity);
-
+    void 상품을_삭제한다() {
         productDao.delete(1L);
+        productDao.delete(2L);
+        productDao.delete(3L);
+        productDao.delete(4L);
 
         assertThat(productDao.findAll()).isEmpty();
     }

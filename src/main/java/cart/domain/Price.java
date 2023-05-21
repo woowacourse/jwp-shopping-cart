@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Price {
 
-    private static final int LOWER_BOUND = 0;
-    private static final int UPPER_BOUND = 1_000_000_000;
+    public static final int LOWER_BOUND = 0;
+    public static final int UPPER_BOUND = 1_000_000_000;
 
     private final int value;
 

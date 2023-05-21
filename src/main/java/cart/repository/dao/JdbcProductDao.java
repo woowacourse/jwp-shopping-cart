@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcProductDao implements ProductDao {
+public class JdbcProductDao implements Dao<ProductEntity> {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -43,6 +43,12 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
+    public ProductEntity findById(final Long id) {
+        final String sql = "SELECT product_id, name, image_url, price FROM product WHERE product_id = ?";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
+    }
+
+    @Override
     public List<ProductEntity> findAll() {
         final String sql = "SELECT product_id, name, image_url, price FROM product";
         return jdbcTemplate.query(sql, actorRowMapper);
@@ -50,8 +56,8 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public int update(final ProductEntity productEntity) {
-        final String sql = "UPDATE product SET name = ?, image_url = ?, price = ?";
-        return jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImageUrl(), productEntity.getPrice());
+        final String sql = "UPDATE product SET name = ?, image_url = ?, price = ? WHERE product_id = ?";
+        return jdbcTemplate.update(sql, productEntity.getName(), productEntity.getImageUrl(), productEntity.getPrice(), productEntity.getId());
     }
 
     @Override
